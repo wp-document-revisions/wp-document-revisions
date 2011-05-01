@@ -10,7 +10,7 @@ WordPress Document Revisions
 
 == Description ==
 
-WordPress Document Management Ð a workflow management and version control system for WordPress building on its existing core competencies. By treating documents as a custom post type, users can leverage the power of WordPressÕs extensive attachment, revision, taxonomy, and URL rewriting functionalities. Document permalinks can be routed through the traditional rewrite structure such that the latest revision of a file always remains at a static, authenticated URL, and users can toggle the visibility of documents (both internally and externally) as they currently do with post statuses and permissions. Similarly, file locking can extend WordPressÕs autosave functionality (as a ping), revision logs can extend WordPressÕs existing revision relationship and can be outputted as a traditional RSS feed, etc.
+WordPress Document Management â€“ a workflow management and version control system for WordPress building on its existing core competencies. By treating documents as a custom post type, users can leverage the power of WordPressâ€™s extensive attachment, revision, taxonomy, and URL rewriting functionalities. Document permalinks can be routed through the traditional rewrite structure such that the latest revision of a file always remains at a static, authenticated URL, and users can toggle the visibility of documents (both internally and externally) as they currently do with post statuses and permissions. Similarly, file locking can extend WordPressâ€™s autosave functionality (as a ping), revision logs can extend WordPressâ€™s existing revision relationship and can be outputted as a traditional RSS feed, etc.
 
 ***Google Summer of Code 2011 project. Still under development.***
 
