@@ -1,26 +1,34 @@
 <?php
 
-class Document_Revisions_Admin extends Document_Revisions {
+class Document_Revisions_Admin {
+
+	static $parent;
 
 	/**
 	 * Register's admin hooks
 	 * Note: we are at admin_menu, first possible hook is admin_init
 	 * @since 0.5
 	 */
-	function __construct() {
+	function __construct( &$instance = null) {
 	
+		//create or store parent instance
+		if ( $instance === null ) 
+			self::$parent = new Document_Revisions;
+		else
+			self::$parent = &$instance;
+			
 		//help and messages
 		add_filter( 'post_updated_messages', array(&$this, 'update_messages') );
 		add_action( 'contextual_help',array(&$this, 'add_help_text'), 10, 3 );
 
 		//edit document screen
 	 	add_action( 'admin_head', array( &$this, 'make_private' ) );
-		add_action( 'admin_init', array( &$this, 'disable_richeditor' ), 1 );
 	 	add_filter( 'media_meta', array( &$this, 'media_meta_hack'), 10, 1);
 		add_filter( 'media_upload_form_url', array( &$this, 'post_upload_handler' ) );
 		add_action( 'save_post', array( &$this, 'workflow_state_save' ) );
-		add_action( 'admin_init', array( &$this, 'enqueue_autosave' ) );
-
+		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
+		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter'), 10, 1 );
+		
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
@@ -38,7 +46,40 @@ class Document_Revisions_Admin extends Document_Revisions {
 		
 		//Queue up JS
 		add_action( 'admin_init', array( &$this, 'enqueue_js' ) );
+		
+		//media filters
+		add_action( 'posts_where', array( &$this, 'filter_from_media' ) );
 	
+	}
+	
+	/**
+	 * Provides support to call functions of the parent class natively
+	 * @since 1.0
+	 * @param function $function the function to call
+	 * @param array $args the arguments to pass to the function
+	 * @returns mixed the result of the function
+	 */
+	function __call( $function, $args ) {
+		
+		if ( method_exists( self::$parent, $function ) ) {
+			return call_user_func_array( array( &self::$parent, $function ), $args );		
+		} else {
+			//function does not exist, provide error info
+			$backtrace = debug_backtrace();
+			trigger_error( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][line] . ' of ' . $backtrace[1][file], E_USER_ERROR );
+			die();
+		}
+	
+	}
+	
+	/**
+	 * Provides support to call properties of the parent class natively
+	 * @since 1.0
+	 * @param string $name the property to fetch
+	 * @returns mixed the property's value
+	 */
+	function __get( $name ) {
+		return Document_Revisions::$$name;
 	}
 
 	/**
@@ -102,18 +143,18 @@ class Document_Revisions_Admin extends Document_Revisions {
 		remove_meta_box( 'workflow_statediv', 'document', 'side' );
 		
 		//add our meta boxes
-		add_meta_box( 'revision-summary', 'Revision Summary', array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
-		add_meta_box( 'document', 'Document', array(&$this, 'document_metabox'), 'document', 'normal', 'high' );
+		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
+		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'high' );
 		
-		if ( sizeof( wp_get_post_revisions( $post->ID ) ) > 0 )
+		if ( $post->post_content != '' )
 			add_meta_box('revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
 		
-		add_meta_box( 'workflow-state', 'Workflow State', array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
+		add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
 		add_action( 'admin_head', array( &$this, 'admin_css') );
 
 		//move author div to make room for ours
 		remove_meta_box( 'authordiv', 'document', 'normal' );
-		add_meta_box( 'authordiv', 'Author', array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
+		add_meta_box( 'authordiv', __('Author', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
 
 		//lock notice
 		add_action( 'admin_notices', array( &$this,'lock_notice' ) );
@@ -135,9 +176,11 @@ class Document_Revisions_Admin extends Document_Revisions {
 			#workflow-state select {margin-left: 25px; width: 150px;}
 			#authordiv select {width: 150px;}
 			#lock_override {float:right; text-align: right; margin-top: 10px; padding-bottom: 5px; }
+			#revision-summary {display:none;}
 			<?php if ( $this->get_document_lock( $post ) ) { ?>
 			#publish, #add_media, #lock-notice {display: none;}
 			<?php } ?>
+			<?php do_action('document_admin_css'); ?>
 		</style>
 	<?php }
 
@@ -146,9 +189,15 @@ class Document_Revisions_Admin extends Document_Revisions {
 	 * @param object $post the post object
 	 * @since 0.5
 	 */
-	function document_metabox($post) {
+	function document_metabox($post) {?>
+		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content) ; ?>" />
+		<?php
 		if ( $lock_holder = $this->get_document_lock( $post ) ) { ?>
-		<div id="lock_override"> <?php printf( __('$s has prevented other users from making changes.<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions'), $lock_holder ); ?></div>
+		<div id="lock_override"> <?php printf( __('%s has prevented other users from making changes.', 'wp-document-revisions'), $lock_holder ); ?>
+		<?php if ( current_user_can( 'override_document_lock' ) ) { ?>
+			<?php _e('<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions'); ?>
+		<?php } ?>
+		</div>
 		<?php } ?>
 		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1&document=1' id='add_media' class='thickbox button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
 		<?php
@@ -157,7 +206,7 @@ class Document_Revisions_Admin extends Document_Revisions {
 		?>
 		<p><strong><?php _e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 		<strong><a href="<?php echo get_permalink( $post->ID ); ?>" target="_BLANK"><?php _e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
-			<em><?php printf( __( 'Checked in %1$s ago by %2$s', 'wp-document-revisions' ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></em>
+			<em><abbr class="timestamp" title="<?php echo  get_the_modified_time( 'U' ); ?>" id="<?php echo strtotime( $latest_version->post_date ); ?>"><?php printf( __( 'Checked in %1$s ago by %2$s', 'wp-document-revisions' ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
 		</p>
 		<?php } //end if latest version ?>
 		<div class="clear"></div>	
@@ -182,15 +231,12 @@ class Document_Revisions_Admin extends Document_Revisions {
  	
  		$can_edit_post = current_user_can( 'edit_post', $post->ID );
 		$revisions = wp_get_post_revisions( $post->ID );
-		
 		$post->post_date = date( 'Y-m-d H:i:s', get_the_modified_time( 'U' ) );
-				
-		if ( sizeof( $revisions ) > 0 ) {
-			
-			//include currrent version in the revision list	
-			array_unshift( $revisions, $post );
-			
-			?>			
+		
+		//include currrent version in the revision list	
+		array_unshift( $revisions, $post );
+
+		?>			
 		<table id="document-revisions">
 			<tr class="header">
 				<th><?php _e( 'Modified', 'wp_document_revisions'); ?></th>
@@ -206,12 +252,16 @@ class Document_Revisions_Admin extends Document_Revisions {
 				continue;
 		?>
 		<tr>
-			<td><a href="<?php echo get_permalink( $revision->ID ); ?>" title="<?php echo $revision->post_date; ?>"><?php echo human_time_diff( strtotime( $revision->post_date ), current_time('timestamp') ); ?></a></td>
+			<td><a href="<?php echo get_permalink( $revision->ID ); ?>" title="<?php echo $revision->post_date; ?>" class="timestamp" id="<?php echo strtotime( $revision->post_date ); ?>"><?php echo human_time_diff( strtotime( $revision->post_date ), current_time('timestamp') ); ?></a></td>
 			<td><?php echo get_the_author_meta( 'display_name', $revision->post_author ); ?></td>
 			<td><?php echo $revision->post_excerpt; ?></td>
-			<?php if ( $can_edit_post ) { ?><td><?php if ( $post->ID != $revision->ID )
-				echo '<a href="' . wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$post->ID|$revision->ID" ) . '" class="revision">' . __( 'Restore', 'wp-document-revisions') . '</a>'; ?></td><?php } ?>
-		</tr>
+			<?php if ( $can_edit_post ) { ?><td>
+				<?php if ( $post->ID != $revision->ID ) { ?>
+					<a href="<?php echo wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$post->ID|$revision->ID" ); ?>" class="revision"><?php _e( 'Restore', 'wp-document-revisions'); ?></a>
+				<?php } ?>
+				</td>
+			<?php } ?>				
+	</tr>
 		<?php		
 		}
 		?>
@@ -219,32 +269,22 @@ class Document_Revisions_Admin extends Document_Revisions {
 		<?php $key = $this->get_feed_key(); ?>
 		<p style="padding-top: 10px;";><a href="<?php echo add_query_arg( 'key', $key, get_permalink( $post->ID ) . '/feed/' ); ?>"><?php _e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
 		<?php
- 		}
  	
- 	}
-	
-	/**
-	 * Disables the rich editor
-	 * @since 0.5
-	 */
-	function disable_richeditor() { 
- 	
- 	if ( $this->verify_post_type() )
- 		 	add_filter( 'get_user_option_rich_editing', '__return_false' ); 	
- 		
- 	}
+ 	} 	
  	
 	/**
 	 * Forces autosave to load
 	 * By default, if there's a lock on the post, auto save isn't loaded; we want it in case lock is overridden
 	 * @since 0.5
 	 */
- 	function enqueue_autosave() {
+ 	function enqueue_edit_scripts() {
  	
  		if ( !$this->verify_post_type() )
 			return;
 			
  		wp_enqueue_script( 'autosave' );
+		add_thickbox();
+		wp_enqueue_script('media-upload');
 
  	}
  	
@@ -253,10 +293,48 @@ class Document_Revisions_Admin extends Document_Revisions {
  	 * @since 0.5
  	 */
  	function settings_fields() { 
- 		register_setting( 'media', 'document_upload_directory' ); 
+ 		register_setting( 'media', 'document_upload_directory', array( &$this, 'sanitize_upload_dir') ); 
 	 	add_settings_field( 'document_upload_directory', 'Document Upload Directory', array( &$this, 'upload_location_cb' ), 'media', 'uploads' ); 
  	
  	}
+	
+	/**
+	 * Verifies that upload directory is a valid directory before updating the setting
+	 * Attempts to create the directory if it does not exist
+	 * @param string $dir path to the new directory
+	 * @returns bool|string false on fail, path to new dir on sucess
+	 * @since 1.0
+	 */
+	function sanitize_upload_dir( $dir) {
+	
+		//directory does not exist
+		if ( !is_dir( $dir ) ) {
+		
+			//attempt to make the directory
+			if ( !mkdir( $dir )	) {
+
+				//could not make the directory
+				$msg = __( 'Please enter a valid document upload directory.', 'wp-document-revisions' );
+				add_settings_error( 'document_upload_directory', 'invalid-document-upload-dir', $msg, 'error' );
+				return false;
+			
+			}
+			
+		}
+		
+		//dir didn't change
+		if ( $dir == get_option( 'document_upload_directory' ) ) 
+			return $dir;
+		
+		//dir changed, throw warning
+		$msg = __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessable.', 'wp-document-revisions' );
+		add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
+
+		//trim and return
+		return rtrim($dir,"/");
+
+	}
+
  	
  	/**
  	 * Callback to create the upload location settings field
@@ -409,7 +487,7 @@ class Document_Revisions_Admin extends Document_Revisions {
 	 */
 	function get_feed_key( $user = null ) {
 		
-		$key = get_user_option( self::meta_key, $user );
+		$key = get_user_option( $this->meta_key, $user );
 		
 		if ( !$key )
 			$key = $this->generate_new_feed_key();
@@ -429,8 +507,8 @@ class Document_Revisions_Admin extends Document_Revisions {
 		if ( !$user )
 			$user = get_current_user_id();
 	
-		$key = wp_generate_password( self::key_length, false, false );
-		update_user_option( $user, self::meta_key, $key );
+		$key = wp_generate_password( $this->key_length, false, false );
+		update_user_option( $user, $this->meta_key, $key );
 		
 		return $key;
 	}
@@ -593,14 +671,62 @@ class Document_Revisions_Admin extends Document_Revisions {
 			'restoreConfirmation' => __( 'Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp_document_revisions'),
 			'lockNeedle' => __( 'is currently editing this'), //purposely left out text domain
 			'postUploadNotice' => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>'),
-			'lostLockNotice' => __( 'CHANGE THIS: You no longer have this file checked out.', 'wp_document_revisions' ),
+			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
 			'lockError' => __( 'An error has occured, please try reloading the page.', 'wp_document_revisions' ),
+			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
+			'minute' => __('%d mins', 'wp-document-revisions'),
+			'minutes' => __('%d mins', 'wp-document-revisions' ),
+			'hour' => __('%d hour', 'wp-document-revisions'),
+			'hours' => __('%d hours', 'wp-document-revisions'),
+			'day' => __('%d day', 'wp-document-revisions'),
+			'days' => __('%d days', 'wp-document-revisions'),
+			'offset' => get_option( 'gmt_offset' ) * 3600,
 		);
 		
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script( 'wp_document_revisions',plugins_url('/wp-document-revisions' . $suffix . '.js', __FILE__), array('jquery') );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 	
+	}
+
+	/**
+	 * Filters documents from media galleries
+	 * @param string $query the raw WHERE clause of the SQL query
+	 * @returns string the modified query
+	 */
+	function filter_from_media( $query ) {
+		
+		global $wpdb;
+		global $pagenow;
+		
+		//verify the page
+		if ( $pagenow != 'upload.php' && $pagenow != 'media-upload.php' )
+			return $query;
+		
+		//get a list of document IDs and add to query as post_parent not in clause
+		$docs = $wpdb->get_col("SELECT ID from $wpdb->posts WHERE post_type = 'document'");
+		$query .= ' AND post_parent NOT IN (' . implode(', ', $docs) . ')';
+		
+		return $query;
+			
+	}
+	
+	/**
+	 * Requires all document revisions to have attachments
+	 * Prevents initial autosave drafts from appearing as a revision after document upload
+	 * @param int $id the post id
+	 * @since 1.0
+	 */
+	function revision_filter( $id ) {
+		
+		//verify post type
+		if ( !$this->verify_post_type( ) )
+			return;
+		
+		$post = get_post( $id );
+		if ( strlen( $post->post_content ) == 0 )
+			wp_delete_post( $id, true );
+				
 	}
 		 
 }

@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
 Requires at least: 3.2
 Tested up to: 3.2
-Stable tag: 0.5
+Stable tag: trunk
 
 WordPress Document Revisions – a workflow management and version control system for WordPress
 
@@ -38,6 +38,12 @@ Please feel free to download and kick the tires. Community feedback is greatly a
 
 1. Download and Install
 1. Upload a new document by clicking "Add Document" under the "Documents" Menu
+
+== Frequently Asked Questions ==
+
+= How do permissions work? =
+
+There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](http://wordpress.org/extend/plugins/members/), or for developers, via the <code>document_permissions</code> filter.
 
 == Changelog ==
 

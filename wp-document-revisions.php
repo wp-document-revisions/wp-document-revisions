@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5
+Version: 1.0
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -11,14 +11,9 @@ License: GPL2
 
 class Document_Revisions {
 	static $instance;
-	const key_length = 32;
-	const meta_key = 'document_revisions_feed_key';
-	public 	$default_states = array( 	
-						'In Progress' => 'Document is in the process of being written', 
-					'Initial Draft' => 'Document is being edited and refined', 
-					'Under Review' => 'Document is pending final review', 
-					'Final' => 'Document is in its final form', 
-				);
+	static $key_length = 32;
+	static $meta_key = 'document_revisions_feed_key';
+	
 	/**
 	 * Initiates an instance of the class and adds hooks
 	 * @since 0.5
@@ -34,6 +29,7 @@ class Document_Revisions {
 		add_action( 'init', array( &$this, 'register_cpt' ) );
 		add_action( 'init', array( &$this, 'register_ct' ) );
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
+		add_action( 'init', array( &$this, 'add_caps' ), 1 );
 
 		//rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );		
@@ -56,12 +52,7 @@ class Document_Revisions {
 		
 		//locking
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
-
-
-		//debug
-		if ( WP_DEBUG ) 
-			add_action ( 'wp_loaded', 'flush_rewrite_rules' );
-		
+	
 	}
 
 	/**
@@ -70,7 +61,7 @@ class Document_Revisions {
 	 */
 	function admin_init() {
 		include( dirname( __FILE__ ) . '/admin.php' );
-		$this->admin = new Document_Revisions_Admin;
+		$this->admin = new Document_Revisions_Admin( self::$instance );
 	}
 
 	/** 
@@ -102,13 +93,13 @@ class Document_Revisions {
 		'show_in_menu' => true, 
 		'query_var' => true,
 		'rewrite' => true,
-		'capability_type' => 'post',
+		'capability_type' => array( 'documents', 'document'),
 		'map_meta_cap' => true,
 		'has_archive' => false, 
 		'hierarchical' => false,
 		'menu_position' => null,
 		'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
-		'supports' => array( 'title', 'author', 'editor', 'revisions', 'excerpt', 'custom-fields' )
+		'supports' => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' )
 		); 
 		
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
@@ -158,22 +149,19 @@ class Document_Revisions {
 		if ( !empty( $terms ) )
 			return false;
 			
-		$states = $this->get_default_states();
+		$states = array( 	
+					__('In Progress', 'wp_document_revisions') => __('Document is in the process of being written', 'wp_document_revisions'), 
+					__('Initial Draft', 'wp_document_revisions') => __('Document is being edited and refined','wp_document_revisions'), 
+					__('Under Review', 'wp_document_revisions') => __('Document is pending final review', 'wp_document_revisions'), 
+					__('Final', 'wp_document_revisions') => __('Document is in its final form', 'wp_document_revisions'), 
+				);
+		
+		$states = apply_filters( 'default_workflow_states', $states );
 		
 		foreach ( $states as $state => $desc ) {
 			wp_insert_term( $state, 'workflow_state', array( 'description' => $desc ) );
 		}
 	
-	}
-	
-	/**
-	 * Filters and returns the default_states public to allow users to override
-	 * @since 0.5
-	 * @returns array of default states
-	 */
-	function get_default_states() {
-		$states = $this->default_states;
-		return apply_filters( 'document_revisions_default_states', $states );
 	}
 	
 	/**
@@ -183,8 +171,8 @@ class Document_Revisions {
 	function make_private() {
 		global $post;	
 		
-		//verify that this is a document		
-		if ( !isset( $post) || !$this->verify_post_type() )
+		//verify that this is a new document		
+		if ( !isset( $post) || !$this->verify_post_type() || strlen( $post->post_content ) > 0 )
 			return;
 		
 		$post_pre = $post;
@@ -255,6 +243,10 @@ class Document_Revisions {
 
 		$extension = '.' . pathinfo( $file, PATHINFO_EXTENSION );
 
+		//don't return a . extension
+		if ( $extension == '.' )
+			return '';
+			
  		return apply_filters( 'document_extension', $extension, $file );
 	
 	}
@@ -281,8 +273,6 @@ class Document_Revisions {
 	function inject_rules(){
 	
 		global $wp_rewrite;
-
-		//$rw_structure = '/documents/%year%/%monthnum%/%document%';					
 		$wp_rewrite->add_rewrite_tag( "%document%", '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
  								
 	}
@@ -578,7 +568,7 @@ class Document_Revisions {
 			return $dir;
 		
 		//If no options set, default to wp-content/uploads
-		return get_home_path() . '/wp-content/uploads';
+		return get_home_path() . 'wp-content/uploads';
 						 	
  	}
  	
@@ -724,6 +714,9 @@ class Document_Revisions {
 	 */
 	function revision_feed_auth() {
 		global $wpdb;
+		
+		if ( !$this->verify_post_type() )
+			return;
 
 		if ( is_feed() && !$this->validate_feed_key() ) 
 			wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) );
@@ -769,7 +762,7 @@ class Document_Revisions {
 			
 		//verify current user can edit
 		//consider a specific permission check here
-		if ( !$_POST['post_id'] || !current_user_can( 'edit_post' , $_POST['post_id'] ) )
+		if ( !$_POST['post_id'] || !current_user_can( 'edit_post' , $_POST['post_id'] ) || !current_user_can( 'override_document_lock' ) )
 			wp_die( __( 'Not authorized', 'wp_document_revisions') );
 			
 		//verify that there is a lock
@@ -784,6 +777,8 @@ class Document_Revisions {
 		
 		if ( $send_notice )
 			$this->send_override_notice( $_POST['post_id'], $current_owner, $current_user->ID );
+			
+		do_action( 'document_lock_override', $_POST['post_id'], $current_user->ID, $current_owner );
 		
 		die( '1' );
 	
@@ -815,17 +810,123 @@ class Document_Revisions {
 		
 		//build the message
 		$message = sprintf( __('Dear %s:', 'wp_document_revisions' ), $lock_owner->display-name) . "\n\n";
-		$message .= $current_user->display-name . ' (' . $current_user->user_email . ') ';
-		$message .= sprintf( __('has overridden your lock on the document %1$s (%2$s)', 'wp_document_revisions' ), $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
+		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp_document_revisions' ), $current_user->display-name,  $current_user->user_email, $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
 		$message .= __('Any changes you have made will be lost.', 'wp_document_revisions' ) . "\n\n";
 		$message .= sprintf( __('- The %s Team', 'wp_document_revisions' ), get_bloginfo( 'name' ) );
 		$message = apply_filters( 'lock_override_notice_message', $message );
+		
+		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
 		
 		//send mail
 		return wp_mail( $lock_owner->user_email, $subject , $message );
 	
 	}
+		
+	/**
+	 * Adds doc-specific caps to all roles so that 3rd party plugins can manage them
+	 * Gives admins all caps
+	 
+	 * @since 1.0
+	 */
+	function add_caps() {
 	
+		$wp_roles = new WP_Roles();
+		
+		//default role => capability mapping; based off of _post options
+		//can be overridden by 3d party plugins
+		$defaults = array( 
+				'administrator' => 
+					array( 
+					    'edit_document' => true,
+					    'edit_others_documents' => true, 
+					    'edit_private_documents' => true, 						
+					    'edit_published_documents' => true, 
+					    'read_document' => true, 
+					    'read_private_document' => true, 
+					    'delete_document' => true, 
+					    'delete_others_documents' => true, 
+					    'delete_private_documents' => true, 
+					    'delete_published_documents' => true, 
+					    'publish_document' => true, 
+					    'override_document_lock' => true, 
+					),
+				'editor' => 
+					array( 
+					    'edit_document' => true,
+					    'edit_others_documents' => true, 
+					    'edit_private_documents' => true, 						
+					    'edit_published_documents' => true, 
+					    'read_document' => true, 
+					    'read_private_document' => false, 
+					    'delete_document' => true, 
+					    'delete_others_documents' => true, 
+					    'delete_private_documents' => true, 
+					    'delete_published_documents' => true, 
+					    'publish_document' => true, 
+					    'override_document_lock' => true, 
+					),
+				'author' =>
+					array( 
+					    'edit_document' => true,
+					    'edit_others_documents' => false, 
+					    'edit_private_documents' => false, 						
+					    'edit_published_documents' => true, 
+					    'read_document' => true, 
+					    'read_private_document' => false, 
+					    'delete_document' => true, 
+					    'delete_others_documents' => false, 
+					    'delete_private_documents' => false, 
+					    'delete_published_documents' => true, 
+					    'publish_document' => true, 
+					    'override_document_lock' => false, 
+					),
+				'contributor' =>
+					array( 
+					    'edit_document' => true,
+					    'edit_others_documents' => false, 
+					    'edit_private_documents' => false, 						
+					    'edit_published_documents' => false, 
+					    'read_document' => true, 
+					    'read_private_document' => false, 
+					    'delete_document' => true, 
+					    'delete_others_documents' => false, 
+					    'delete_private_documents' => false, 
+					    'delete_published_documents' => false, 
+					    'publish_document' => false, 
+					    'override_document_lock' => false, 
+					),
+				'subscriber' =>
+					array( 
+					    'edit_document' => false,
+					    'edit_others_documents' => false, 
+					    'edit_private_documents' => false, 						
+					    'edit_published_documents' => false, 
+					    'read_document' => true, 
+					    'read_private_document' => false, 
+					    'delete_document' => false, 
+					    'delete_others_documents' => false, 
+					    'delete_private_documents' => false, 
+					    'delete_published_documents' => false, 
+					    'publish_document' => false, 
+					    'override_document_lock' => false, 
+					),
+				);
+
+		foreach (  $wp_roles->role_names as $role=>$label ) { 
+			
+			//if the role is a standard role, map the default caps, otherwise, map as a subscriber
+			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[$role] : $defaults['subscriber'];
+			
+			$caps = apply_filters( 'document_caps', $caps, $role );
+					
+			//loop and assign
+			foreach ( $caps as $cap=>$grant )				
+				$wp_roles->add_cap( $role, $cap, $grant );
+		
+		}
+	
+	}
+
 	/**
 	 * Remove before final
 	 */
