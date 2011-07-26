@@ -28,6 +28,7 @@ class Document_Revisions_Admin {
 		add_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter'), 10, 1 );
+		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
 		
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
@@ -118,11 +119,26 @@ class Document_Revisions_Admin {
 			return $contextual_help;
 		
 		if ( $screen_id == 'document' ) {
-			$contextual_help = __( 'Document Edit Help Here' );
+			$contextual_help = __( '
+			<h4>Basic Usage</h4>
+			<p>This screen allows users to colaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
+			<p>Once sucefully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
+			<p>When done, simply click <code>Update</code> to save your changes</p>
+			<h4>Revision Log</h4>
+			<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
+			<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>
+			<h4>Workflow State</h4>
+			<p>The workflow state field can be used to help team memebers understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>
+			<h4>Publishing Documents</h4>
+			<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessable to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>', 'wp-document-revisions' );
 		}
 		
 		if ( $screen_id == 'edit-document' ) {
-			$contextual_help = __( 'Document List Help Here' );
+			$contextual_help = __( '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> 
+			
+			<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
+			
+			<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>', 'wp-document-revisions' );
 		}		
 		
 		return apply_filters( 'document_help', $contextual_help );
@@ -139,8 +155,7 @@ class Document_Revisions_Admin {
 		//remove unused meta boxes
 		remove_meta_box( 'revisionsdiv', 'document', 'normal' );
 		remove_meta_box( 'postexcerpt', 'document', 'normal' );	
-		remove_meta_box( 'postcustom', 'document', 'normal' );
-		remove_meta_box( 'workflow_statediv', 'document', 'side' );
+		remove_meta_box( 'tagsdiv-workflow_state', 'document', 'side' );
 		
 		//add our meta boxes
 		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
@@ -160,6 +175,23 @@ class Document_Revisions_Admin {
 		add_action( 'admin_notices', array( &$this,'lock_notice' ) );
 		
 		do_action( 'document_edit' );
+	}
+	
+	/**
+	 * Forces postcustom metabox to be hidden by default, despite the fact that the CPT creates it
+	 * @since 1.0
+	 * @param array $hidden the default hidden metaboxes
+	 * @param array $screen the current screen
+	 * @returns array defaults with postcustom
+	 */
+	function hide_postcustom_metabox( $hidden, $screen ) {
+		
+		if ( !$screen->id == 'document' )
+			return $hidden;
+		
+		$hidden[] = 'postcustom';
+		
+		return $hidden;
 	}
 	
 	/**
@@ -589,7 +621,7 @@ class Document_Revisions_Admin {
 		<select name="workflow_state" id="workflow_state">
 			<option></option>
 			<?php foreach ( $states as $state ) { ?>
-			<option value="<?php echo $state->term_id; ?>" <?php if ( $current_state ) selected( $current_state[0]->slug, $state->slug ); ?>><?php echo $state->name; ?></option>
+			<option value="<?php echo $state->slug; ?>" <?php if ( $current_state ) selected( $current_state[0]->slug, $state->slug ); ?>><?php echo $state->name; ?></option>
 			<?php } ?>
 		</select>
 		<?php

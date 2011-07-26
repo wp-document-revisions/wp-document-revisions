@@ -96,6 +96,14 @@ jQuery(document).ready( function($) {
 		$(':button, :submit', '#submitpost').removeAttr('disabled');
 		
 	});
+	
+	//if any metabox is changed, allow submission
+	$('.postbox input, .postbox select, .postbox text area').change( function() {
+		
+		//re-enabled the submit button
+		$(':button, :submit', '#submitpost').removeAttr('disabled');
+		
+	});
 
 	$(document).bind('documentUpload', function() {
 		

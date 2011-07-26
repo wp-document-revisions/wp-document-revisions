@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.1
+Version: 0.5.2
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -52,7 +52,7 @@ class Document_Revisions {
 		
 		//locking
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
-	
+		
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Document_Revisions {
 		'show_in_menu' => true, 
 		'query_var' => true,
 		'rewrite' => true,
-		'capability_type' => array( 'documents', 'document'),
+		'capability_type' => array( 'document', 'documents'),
 		'map_meta_cap' => true,
 		'has_archive' => false, 
 		'hierarchical' => false,
@@ -128,7 +128,7 @@ class Document_Revisions {
  		); 	
  	
  		register_taxonomy( 'workflow_state', array('document'), apply_filters( 'document_revisions_ct', array(
- 	 		'hierarchical' => true,
+ 	 		'hierarchical' => false,
  	 		'labels' => $labels,
  	 		'show_ui' => true,
  	 		'query_var' => false,
@@ -288,7 +288,7 @@ class Document_Revisions {
 		$my_rules = array();
 		
 		//revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-## 
-		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)-revision-([0-9]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 		
 		//revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
 		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
@@ -330,7 +330,7 @@ class Document_Revisions {
 		if ( $post->post_type == 'revision' ) {
 			$parent = get_post( $post->post_parent );
 			$revision_num = $this->get_revision_number( $post->ID );
-			$parent->post_name = $parent->post_name . '-revision-' . $revision_num;
+			$parent->post_name = $parent->post_name . __('-revision-', 'wp-document-revisions') . $revision_num;
 			$post = $parent;
 		}
 
@@ -338,7 +338,9 @@ class Document_Revisions {
 		$extension = $this->get_file_type( $post );
 			
 		$timestamp = strtotime($post->post_date);
-		$link =( '/documents/' . date('Y',$timestamp) . '/' . date('m',$timestamp) . '/' . $post->post_name . $extension );
+		$link = '/documents/' . date('Y',$timestamp) . '/' . date('m',$timestamp) . '/';
+		$link .= ( $leavename ) ? '%postname%' : $post->post_name;
+		$link .= $extension ;
 				
 		$link = apply_filters( 'document_permalink', $link, $post );
 				
@@ -377,7 +379,7 @@ class Document_Revisions {
 	 * @returns array array of revisions
 	 * @since 0.5
 	 */
-	function get_revision_index( $post_id ) {
+	function get_revision_indices( $post_id ) {
 	
 		$revs = wp_get_post_revisions( $post_id, array( 'order' => 'ASC' ) );
 		
@@ -402,7 +404,7 @@ class Document_Revisions {
 		if ( !isset( $revision->post_parent ) )
 			return false;
 				
-		$index = $this->get_revision_index( $revision->post_parent );
+		$index = $this->get_revision_indices( $revision->post_parent );
 		
 		return array_search( $revision_id, $index );
 		
@@ -417,7 +419,7 @@ class Document_Revisions {
 	 */
 	function get_revision_id( $revision_num, $post_id ) {
 	
-		$index = $this->get_revision_index( $post_id );
+		$index = $this->get_revision_indices( $post_id );
 		
 		return ( isset( $index[ $revision_num ] ) ) ? $index[ $revision_num ] : false;
 	
@@ -439,19 +441,20 @@ class Document_Revisions {
 			$revision = $this->get_latest_version( $post->ID );
 		} else { 
 			$rev_id = $this->get_revision_id ( $version, $post->ID );
-			$revision = get_post ( $rev_id );
+			$rev_post = get_post ( $rev_id );
+			$revision = get_post( $rev_post->post_content );
 		}
-			
+				
 		//get file
 		$file = get_attached_file( $revision->ID );
-
+		
 		//return 404 if the file is a dud or malformed
 		if ( validate_file( $file ) || !is_file( $file ) ) {
 			status_header( 404 );
 			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
 		}
 
-		if ( !current_user_can( 'read_post', $post->ID ) )
+		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revsisions' ) ) );
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
 		
 		do_action( 'serve_document', $revision->ID, $file );
@@ -468,9 +471,12 @@ class Document_Revisions {
 			$mimetype = $mime[ 'type' ];
 		else
 			$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
-
+			
 		//fake the filename
-		header ( 'Content-Disposition: attachment; filename="' . $post->post_name . $this->get_extension( wp_get_attachment_url( $revision->ID ) ) . '"' );
+		$filename = $post->post_name;
+		$filename .= ( $version == '' ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version;
+		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
+		header ( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 
 		//filetype and length
 		header( 'Content-Type: ' . $mimetype ); // always send this
@@ -837,77 +843,82 @@ class Document_Revisions {
 		$defaults = array( 
 				'administrator' => 
 					array( 
-					    'edit_document' => true,
+					    'edit_documents' => true,
 					    'edit_others_documents' => true, 
 					    'edit_private_documents' => true, 						
 					    'edit_published_documents' => true, 
-					    'read_document' => true, 
-					    'read_private_document' => true, 
-					    'delete_document' => true, 
+					    'read_documents' => true, 
+						'read_document_revisions' => true,
+					    'read_private_documents' => true, 
+					    'delete_documents' => true, 
 					    'delete_others_documents' => true, 
 					    'delete_private_documents' => true, 
 					    'delete_published_documents' => true, 
-					    'publish_document' => true, 
+					    'publish_documents' => true, 
 					    'override_document_lock' => true, 
 					),
 				'editor' => 
 					array( 
-					    'edit_document' => true,
+					    'edit_documents' => true,
 					    'edit_others_documents' => true, 
 					    'edit_private_documents' => true, 						
 					    'edit_published_documents' => true, 
-					    'read_document' => true, 
-					    'read_private_document' => false, 
-					    'delete_document' => true, 
+					    'read_documents' => true, 
+						'read_document_revisions' => true,
+					    'read_private_documents' => true, 
+					    'delete_documents' => true, 
 					    'delete_others_documents' => true, 
 					    'delete_private_documents' => true, 
 					    'delete_published_documents' => true, 
-					    'publish_document' => true, 
+					    'publish_documents' => true, 
 					    'override_document_lock' => true, 
 					),
 				'author' =>
 					array( 
-					    'edit_document' => true,
+					    'edit_documenst' => true,
 					    'edit_others_documents' => false, 
 					    'edit_private_documents' => false, 						
 					    'edit_published_documents' => true, 
-					    'read_document' => true, 
-					    'read_private_document' => false, 
-					    'delete_document' => true, 
+					    'read_documents' => true, 
+						'read_document_revisions' => true,
+					    'read_private_documents' => false, 
+					    'delete_documents' => true, 
 					    'delete_others_documents' => false, 
 					    'delete_private_documents' => false, 
 					    'delete_published_documents' => true, 
-					    'publish_document' => true, 
+					    'publish_documents' => true, 
 					    'override_document_lock' => false, 
 					),
 				'contributor' =>
 					array( 
-					    'edit_document' => true,
+					    'edit_documents' => true,
 					    'edit_others_documents' => false, 
 					    'edit_private_documents' => false, 						
 					    'edit_published_documents' => false, 
-					    'read_document' => true, 
-					    'read_private_document' => false, 
-					    'delete_document' => true, 
+					    'read_documents' => true, 
+						'read_document_revisions' => true,
+					    'read_private_documents' => false, 
+					    'delete_documents' => true, 
 					    'delete_others_documents' => false, 
 					    'delete_private_documents' => false, 
 					    'delete_published_documents' => false, 
-					    'publish_document' => false, 
+					    'publish_documents' => false, 
 					    'override_document_lock' => false, 
 					),
 				'subscriber' =>
 					array( 
-					    'edit_document' => false,
+					    'edit_documents' => false,
 					    'edit_others_documents' => false, 
 					    'edit_private_documents' => false, 						
 					    'edit_published_documents' => false, 
-					    'read_document' => true, 
-					    'read_private_document' => false, 
-					    'delete_document' => false, 
+					    'read_documents' => true, 
+						'read_document_revisions' => true,
+					    'read_private_documents' => false, 
+					    'delete_documents' => false, 
 					    'delete_others_documents' => false, 
 					    'delete_private_documents' => false, 
 					    'delete_published_documents' => false, 
-					    'publish_document' => false, 
+					    'publish_documents' => false, 
 					    'override_document_lock' => false, 
 					),
 				);
