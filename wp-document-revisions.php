@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.2
+Version: 0.5.3
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -21,7 +21,7 @@ class Document_Revisions {
 	function __construct() {
 	
 		self::$instance = $this;
-				
+
 		//admin
 		add_action( 'admin_menu', array( &$this, 'admin_init' ) );
 		
@@ -49,7 +49,7 @@ class Document_Revisions {
 		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter'), 10, 2);
 		add_filter( 'wp_handle_upload_prefilter', array(&$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2);
-		
+
 		//locking
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
 		
@@ -274,9 +274,9 @@ class Document_Revisions {
 	
 		global $wp_rewrite;
 		$wp_rewrite->add_rewrite_tag( "%document%", '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
- 								
+
 	}
-	
+
 	/**
 	 * Adds document rewrite rules to the rewrite array
 	 * @since 0.5
@@ -300,7 +300,7 @@ class Document_Revisions {
 			
 		return $my_rules + $rules;
 	}
-	
+
 	/**
 	 * Tell's WP to recognize document query vars
 	 * @since 0.5
@@ -312,7 +312,7 @@ class Document_Revisions {
 		$vars[] = "document";
 		return $vars;
 	}
-	
+
 	/**
 	 * Builds document post type permalink
 	 * @param string $link original permalink
@@ -324,7 +324,7 @@ class Document_Revisions {
 
 		//if this isn't our post type, kick
 		if( !$this->verify_post_type( $post ) )
-		 return $link;
+			return $link;
 
 		//check if it's a revision
 		if ( $post->post_type == 'revision' ) {
@@ -336,10 +336,10 @@ class Document_Revisions {
 
 		// build documents/yyyy/mm/slug		 
 		$extension = $this->get_file_type( $post );
-			
+		
 		$timestamp = strtotime($post->post_date);
-		$link = '/documents/' . date('Y',$timestamp) . '/' . date('m',$timestamp) . '/';
-		$link .= ( $leavename ) ? '%postname%' : $post->post_name;
+		$link = home_url() . '/documents/' . date('Y',$timestamp) . '/' . date('m',$timestamp) . '/';
+		$link .= ( $leavename ) ? '%document%' : $post->post_name;
 		$link .= $extension ;
 				
 		$link = apply_filters( 'document_permalink', $link, $post );

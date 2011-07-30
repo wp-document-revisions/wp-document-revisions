@@ -50,6 +50,9 @@ class Document_Revisions_Admin {
 		
 		//media filters
 		add_action( 'posts_where', array( &$this, 'filter_from_media' ) );
+		
+		//cleanup
+		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 	
 	}
 	
@@ -225,11 +228,11 @@ class Document_Revisions_Admin {
 		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content) ; ?>" />
 		<?php
 		if ( $lock_holder = $this->get_document_lock( $post ) ) { ?>
-		<div id="lock_override"> <?php printf( __('%s has prevented other users from making changes.', 'wp-document-revisions'), $lock_holder ); ?>
-		<?php if ( current_user_can( 'override_document_lock' ) ) { ?>
-			<?php _e('<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions'); ?>
-		<?php } ?>
-		</div>
+			<div id="lock_override"> <?php printf( __('%s has prevented other users from making changes.', 'wp-document-revisions'), $lock_holder ); ?>
+			<?php if ( current_user_can( 'override_document_lock' ) ) { ?>
+				<?php _e('<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions'); ?>
+			<?php } ?>
+			</div>
 		<?php } ?>
 		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1&document=1' id='add_media' class='thickbox button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
 		<?php
@@ -367,59 +370,59 @@ class Document_Revisions_Admin {
 
 	}
 
- 	
- 	/**
- 	 * Callback to create the upload location settings field
- 	 * @since 0.5
- 	 */
- 	function upload_location_cb() { ?>
- 	<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="regular-text code" /> 
+	
+	/**
+	 * Callback to create the upload location settings field
+	 * @since 0.5
+	 */
+	function upload_location_cb() { ?>
+	<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="regular-text code" /> 
 <span class="description"><?php _e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder, but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span> 
- 	<?php }
- 	
- 	/**
- 	 * Callback to inject JavaScript in page after upload is complete
- 	 * @param int $id the ID of the attachment
- 	 * @since 0.5
- 	 */ 
- 	function post_upload_js( $id ) {
- 	
- 		//can this be appended to the wp_document_revisions localization object?
- 		
- 		//get the post object
- 		$post = get_post( $id );
- 		
- 		//get the extension from the post object to pass along to the client
- 		$extension = $this->get_file_type( $post );
- 		
- 		//begin output buffer so the javascript can be returned as a string, rather than output directly to the browser
- 		ob_start();
- 		
- 		?><script>
- 		var attachmentID = <?php echo $id; ?>;
- 		var extension = '<?php echo $extension; ?>';
- 		jQuery(document).ready(function($) { $(this).trigger('documentUpload') });
- 		</script><?php 
- 		
- 		//get contents of output buffer
- 		$js = ob_get_contents();
- 		
- 		//dump output buffer
- 		ob_end_clean();
- 		
- 		//return javascript
- 		return $js;
- 	}
- 	
- 	/**
- 	 * Ugly, Ugly hack to sneak post-upload JS into the iframe
- 	 * If there was a hook there, I wouldn't have to do this
- 	 * @param string $meta dimensions / post meta
- 	 * @returns string meta + js to process post
- 	 * @since 0.5
- 	 */
- 	function media_meta_hack( $meta ) {
- 		 
+	<?php }
+	
+	/**
+	 * Callback to inject JavaScript in page after upload is complete
+	 * @param int $id the ID of the attachment
+	 * @since 0.5
+	 */ 
+	function post_upload_js( $id ) {
+	
+		//can this be appended to the wp_document_revisions localization object?
+		
+		//get the post object
+		$post = get_post( $id );
+		
+		//get the extension from the post object to pass along to the client
+		$extension = $this->get_file_type( $post );
+		
+		//begin output buffer so the javascript can be returned as a string, rather than output directly to the browser
+		ob_start();
+		
+		?><script>
+		var attachmentID = <?php echo $id; ?>;
+		var extension = '<?php echo $extension; ?>';
+		jQuery(document).ready(function($) { $(this).trigger('documentUpload') });
+		</script><?php 
+		
+		//get contents of output buffer
+		$js = ob_get_contents();
+		
+		//dump output buffer
+		ob_end_clean();
+		
+		//return javascript
+		return $js;
+	}
+	
+	/**
+	 * Ugly, Ugly hack to sneak post-upload JS into the iframe
+	 * If there was a hook there, I wouldn't have to do this
+	 * @param string $meta dimensions / post meta
+	 * @returns string meta + js to process post
+	 * @since 0.5
+	 */
+	function media_meta_hack( $meta ) {
+		 
 		if ( !$this->verify_post_type( ) )
 			return $meta;
 			
@@ -429,10 +432,10 @@ class Document_Revisions_Admin {
 		$meta .= $this->post_upload_js( $latest->ID );
 		
 		return $meta;
- 	
- 	}
- 	
- 	/**
+	
+	}
+	
+	/**
 	 * Hook to follow file uploads to automate attaching the document to the post
 	 * @param string $filter whatever we really should be filtering
 	 * @returns string the same stuff they gave us, like we were never here
@@ -457,8 +460,8 @@ class Document_Revisions_Admin {
 		//should probably give this back...
 		return $filter; 
 
- }
-	 
+	}
+
 	 /**
 	* Retrieves the most recent file attached to a post
 	* @param int $post_id the parent post
@@ -658,20 +661,9 @@ class Document_Revisions_Admin {
 		//all's good, let's save		
 		wp_set_post_terms( $post_id, array( $_POST['workflow_state'] ), 'workflow_state' );
 	
-	}
-	
-	/**
-	 * Filters permalink displayed on edit screen in the event that there is no attachment yet uploaded
-	 * @param string $html original HTML
-	 * @param int $id Post ID
-	 * @rerurns string modified HTML
-	 * @since 0.5
-	 */
-	function sample_permalink_filter($html, $id ) {
-
-		return $html;
+		do_action( 'change_document_workflow_state', $post_id, $_POST['workflow_state'] );
 		
- 	}
+	}
  	
  	/**
  	 * Slightly modified document author metabox because the current one is ugly
@@ -759,6 +751,21 @@ class Document_Revisions_Admin {
 		if ( strlen( $post->post_content ) == 0 )
 			wp_delete_post( $id, true );
 				
+	}
+	
+	/**
+	 * Deletes all attachments associated with a document or revision
+	 * @since 1.0
+	 * @param int $postID the id of the deleted post
+	 */
+	function delete_attachments_with_document( $postID ) {
+	
+		if ( !$this->verify_post_type( $postID ) )
+			return;
+			
+		if ( is_numeric( $post->post_content ) && get_post( $post->post_content ) ) 
+			wp_delete_attachment( $post->post_content, false );
+		
 	}
 		 
 }

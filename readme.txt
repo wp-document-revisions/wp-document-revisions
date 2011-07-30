@@ -3,36 +3,57 @@ Contributors: benbalter
 Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
 Requires at least: 3.2
-Tested up to: 3.2
+Tested up to: 3.3
 Stable tag: trunk
 
-WordPress Document Revisions – a workflow management and version control system for WordPress
+WordPress Document Revisions – a document management and version control plugin that allows teams of any size to collaboratively edit files
 
 == Description ==
-
-WordPress Document Management – a workflow management and version control system for WordPress building on its existing core competencies. By treating documents as a custom post type, users can leverage the power of WordPress’s extensive attachment, revision, taxonomy, and URL rewriting functionalities. Document permalinks can be routed through the traditional rewrite structure such that the latest revision of a file always remains at a static, authenticated URL, and users can toggle the visibility of documents (both internally and externally) as they currently do with post statuses and permissions. Similarly, file locking can extend WordPress’s autosave functionality (as a ping), revision logs can extend WordPress’s existing revision relationship and can be outputted as a traditional RSS feed, etc.
-
-[Read More in my original post "When all you have is a pair of bolt cutters..."](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/)
 
 **Google Summer of Code 2011 project. Still under development. Not for production. This will break.**
 
 Please feel free to download and kick the tires. Community feedback is greatly appreciated, but please note that this project is still under development, and is not quite ready for production environments.
 
-**Features**
+Read More in my original post ["When all you have is a pair of bolt cutters…](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/)
 
-* Support for any file type (docs, spreadsheets, images, PDFs, etc.)
-* Stores unlimited revisions with a revision log message for each
-* Each file gets a permanent URL that always points to the latest version of the file
-* Each revision gets its own unique url (e.g., my-document-revision-3.doc)
-* Toggle documents between public, private, and password protected
+--------------------------------
+
+[WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
+
+**Powerful Collaboration Tools ***With great power does not have to come great complexity. *Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries -- posts, attachments, revisions, taxonomies, authentication, and permalinks -- to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
+
+**Document History **At each step of the authoring process, WP Document Revisions gives you an instant snapshot of your team's progress and the document's history. It even gives you the option to revert back to a previous revision -- so don't fret if you make a mistake -- or receive updates on changes to the document right in your favorite feed reader.
+
+**Access Control **Each document is given a persistent URL (e.g., yourcompany.com/documents/2011/08/TPS-Report.doc) which can be private (securely delivered only to members of your organization), password protected (available only to those you select), or public (published and hosted for the world to see). If you catch a typo and upload a new version, that URL will continue to point to the latest version, regardless of how many changes you make.
+
+**Enterprise Security** Worried about storing propriety or sensitive information? WP Document Revisions was built from the first line of code with government- and enterprise-grade security in mind. Each file is masked behind an anonymous 128-bit [MD5 hash](http://en.wikipedia.org/wiki/MD5) as soon as it touches the server, and requests for files are transparently routed through WordPress's time-tested URL rewriting, authentication, and permission systems (which can even [integrate with existing enterprise active directory](http://wordpress.org/extend/plugins/active-directory-integration/) or [LDAP servers](http://wordpress.org/extend/plugins/simple-ldap-login/)). Need more security? WP Document Revisions allows you to store documents in a folder above the `htdocs` or `public_html` [web root](http://httpd.apache.org/docs/2.0/mod/core.html#documentroot), further ensuring that only those you authorize have access to your work.
+
+**Customization** WP Document Revisions recognizes that no two teams are identical, and as a result, molds to your firm's needs, not the other way around. Need to track additional information associated with a document? Departments, editors, issues, sections, even arbitrary key-value pairs -- whatever you can throw at it, it can handle. Development and customization costs are further minimized by its extensive plugin API, and the [WP Document Revisions Custom Taxonomy Generator](#) makes it easy for even the uninitiated to add custom fields and taxonomies to documents. Simply put, virtually every aspect of the plugin's functionality from workflow states to user-level permissions can be fully customized to your team's unique needs.
+
+**The Vitals:**
+
+* Support for any file type (docs, spreadsheets, images, PDFs -- anything!)
+* Securely stores unlimited revisions of your business's essential files
+* Provides a full file history in the form of a revision log, accessible via RSS
+* Helps you track and organize documents as they move through your organization's existing workflow
+* Each file gets a permanent, authenticated URL that always points to the latest version
+* Each revision gets its own unique url (e.g.,TPS-Report-revision-3.doc) accessible only to those you deem
+* Files are intuitively checked out and locked to prevent revisions from colliding
+* Toggle documents between public, private, and password protected with a single mouse click
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
-* Can move document upload folder to location outside of web root to further secure files
-* Helps you track and organize documents as they move through your organization's workflow
-* RSS Feeds of revisions
+* Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
+* Easily translated to your local language
+
+Want to give it a try? Simply [download WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) from the WordPress Plugin Repository.
+
+*WP Document Revisions was **developed by a [law student and a business student](http://ben.balter.com) **with a [grant from Google](http://code.google.com/soc/),** and in close coordination with and under the watchful eye of WordPress.org's lead developers.*** (Neither relationship should imply a formal endorsement.) **
 
 **Known Issues**
 
 * See the [development backlog](http://gsoc.trac.wordpress.org/query?status=accepted&status=assigned&status=new&status=reopened&component=Document+Revisions&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component&order=priority) for a list of known issues
+
+== Screenshots ==
+1. A typical WP Document Revisions edit document screen.
 
 == Installation ==
 

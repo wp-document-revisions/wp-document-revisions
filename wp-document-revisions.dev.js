@@ -2,11 +2,11 @@ jQuery(document).ready( function($) {
 
 	//Revision restore confirmation
 	$('.revision').click(function(event){
-	    event.preventDefault();
-	    if (confirm( wp_document_revisions.restoreConfirmation ) )
-	    	window.location.href = jQuery(this).attr('href');
+		event.preventDefault();
+		if (confirm( wp_document_revisions.restoreConfirmation ) )
+		window.location.href = jQuery(this).attr('href');
 	});
-	   	
+
 	//lock override toggle	
 	$('#override_link').click( function() {
 
@@ -22,9 +22,9 @@ jQuery(document).ready( function($) {
 				} else {
 					alert( wp_document_revisions.lockError );
 				}
-            }
+			}
 		);   
-	   	    	
+
 	});
 	
 	//HTML5 Lock Override Notifications permission check on document download
@@ -35,22 +35,22 @@ jQuery(document).ready( function($) {
 
 	//HTML5 Lock Override Notifications
 	function lock_override_notice( notice ) {
-	  if ( window.webkitNotifications.checkPermission() > 0 ) {
-	  	window.webkitNotifications.RequestPermission( lock_override_notice );
-	  } else {
-		window.webkitNotifications.createNotification(
-        'icon.png', wp_document_revisions.lostLockNoticeTitle, notice ).show();
-	  }
+		if ( window.webkitNotifications.checkPermission() > 0 ) {
+			window.webkitNotifications.RequestPermission( lock_override_notice );
+		} else {
+			window.webkitNotifications.createNotification(
+			'icon.png', wp_document_revisions.lostLockNoticeTitle, notice ).show();
+		}
 	}
 	
 	//disbale the update button until a doc has been uploaded
-	if ( adminpage && adminpage == 'post-php' && typenow && typenow == 'document' ) {
-	    
-	    //set a flag to let us know if there's been an upload yet
-	    hasUpload = false;
-	    
-	    //disable the button (from autosave.js)
-	    jQuery(':button, :submit', '#submitpost').prop('disabled', true);
+	if ( adminpage && ( adminpage == 'post-php' || adminpage == 'post-new-php' ) && typenow && typenow == 'document' ) {
+
+		//set a flag to let us know if there's been an upload yet
+		hasUpload = false;
+		
+		//disable the button (from autosave.js)
+		jQuery(':button, :submit', '#submitpost').prop('disabled', true);
 
 		//rename the function the autosave.js uses to enable the button to check our flag
 		wp_document_revisions_autosave_enable_buttons = autosave_enable_buttons;		
@@ -60,7 +60,7 @@ jQuery(document).ready( function($) {
 			
 			//trigger a post-autosave event to check the lock
 			$(document).trigger('autosaveComplete');
-		
+				
 			if ( hasUpload )
 				wp_document_revisions_autosave_enable_buttons();
 		}
@@ -73,33 +73,33 @@ jQuery(document).ready( function($) {
 		//it will be new if lock-notice is still present, also prevents notice from firing on initial load if document is locked
 		if ( $('#autosave-alert').length > 0  && $('#lock-notice').length > 0 && $('#lock-notice').is(":visible") ) {
 		    
-		    wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace('%s', $('#title').val() );
-		    		    
-		    if ( window.webkitNotifications ) {
-		    	//browser supports html5 Notifications
-		    	lock_override_notice( wp_document_revisions.lostLockNotice );
-		    } else {
-		    	//browser does not support lock override notice, send old school alert
-		    	alert( convertEntities( wp_document_revisions.lostLockNotice ) );
-		    }
+			wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace('%s', $('#title').val() );
+						
+			if ( window.webkitNotifications ) {
+				//browser supports html5 Notifications
+				lock_override_notice( wp_document_revisions.lostLockNotice );
+			} else {
+				//browser does not support lock override notice, send old school alert
+				alert( convertEntities( wp_document_revisions.lostLockNotice ) );
+			}
 		    
 		    //reload the page to lock them out and prevent duplicate alerts
-		    location.reload(true);
+			location.reload(true);
 		}
 	
 	});
 	
 	//if post status is changed, enable the submit button so the change can be saved
 	$('#misc-publishing-actions a').click( function(){
-		
-		//re-enabled the submit button
+
+	//re-enabled the submit button
 		$(':button, :submit', '#submitpost').removeAttr('disabled');
 		
 	});
 	
 	//if any metabox is changed, allow submission
-	$('.postbox input, .postbox select, .postbox text area').change( function() {
-		
+	$('input, select, textarea').live('change', function() {
+
 		//re-enabled the submit button
 		$(':button, :submit', '#submitpost').removeAttr('disabled');
 		
@@ -134,13 +134,10 @@ jQuery(document).ready( function($) {
 		
 		//notify user of success by adding the post upload notice before the #post div
 		//to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
-		win.jQuery('#post').before( convertEntities( wp_document_revisions.postUploadNotice ) ).prev().fadeIn().fadeOut().fadeIn();
+		win.jQuery('#post').before( wp_document_revisions.postUploadNotice ).prev().fadeIn().fadeOut().fadeIn();
 		    		
 		//If they already have a permalink, update it with the current extension in case it changed
-		//otherwise, tell WP that we're ready for it to generate a permalink for the first time
-		if ( win.jQuery('#sample-permalink').length == 0 ) {
-		    win.autosave_update_slug( post_id );
-		} else {
+		if ( win.jQuery('#sample-permalink').length != 0 ) {
 		    win.jQuery('#sample-permalink').html( win.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?$/i, wp_document_revisions.extension ) );
 		}
 
