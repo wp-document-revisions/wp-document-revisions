@@ -6,7 +6,7 @@ Requires at least: 3.2
 Tested up to: 3.3
 Stable tag: trunk
 
-WordPress Document Revisions – a document management and version control plugin that allows teams of any size to collaboratively edit files
+A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
 == Description ==
 
@@ -20,7 +20,7 @@ Read More in my original post ["When all you have is a pair of bolt cutters…](
 
 [WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
-**Powerful Collaboration Tools ***With great power does not have to come great complexity. *Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries -- posts, attachments, revisions, taxonomies, authentication, and permalinks -- to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
+**Powerful Collaboration Tools ** *With great power does not have to come great complexity. * Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries -- posts, attachments, revisions, taxonomies, authentication, and permalinks -- to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
 
 **Document History **At each step of the authoring process, WP Document Revisions gives you an instant snapshot of your team's progress and the document's history. It even gives you the option to revert back to a previous revision -- so don't fret if you make a mistake -- or receive updates on changes to the document right in your favorite feed reader.
 
@@ -46,7 +46,7 @@ Read More in my original post ["When all you have is a pair of bolt cutters…](
 
 Want to give it a try? Simply [download WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) from the WordPress Plugin Repository.
 
-*WP Document Revisions was **developed by a [law student and a business student](http://ben.balter.com) **with a [grant from Google](http://code.google.com/soc/),** and in close coordination with and under the watchful eye of WordPress.org's lead developers.*** (Neither relationship should imply a formal endorsement.) **
+*WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers. (Neither relationship should imply an endorsement.) *
 
 **Known Issues**
 
