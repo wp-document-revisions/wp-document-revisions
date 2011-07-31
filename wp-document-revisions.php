@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.3
+Version: 0.5.4
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -23,7 +23,7 @@ class Document_Revisions {
 		self::$instance = $this;
 
 		//admin
-		add_action( 'admin_menu', array( &$this, 'admin_init' ) );
+		add_action( 'auth_redirect', array( &$this, 'admin_init' ) );
 		
 		//CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -454,7 +454,7 @@ class Document_Revisions {
 			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
 		}
 
-		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revsisions' ) ) );
+		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revsisions' ) ) )
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
 		
 		do_action( 'serve_document', $revision->ID, $file );
@@ -568,10 +568,10 @@ class Document_Revisions {
 		//If user has specified, that's it
 		if ( $dir = get_option( 'document_upload_directory' ) )
 			return $dir;
-		
+					
 		//If user hasn't specified, see if they have specified a generic upload path
 		if ( $dir = get_option( 'upload_path' ) )
-			return $dir;
+			return ABSPATH . $dir;
 		
 		//If no options set, default to wp-content/uploads
 		return get_home_path() . 'wp-content/uploads';

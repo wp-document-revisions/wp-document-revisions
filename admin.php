@@ -6,11 +6,11 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Register's admin hooks
-	 * Note: we are at admin_menu, first possible hook is admin_init
+	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 * @since 0.5
 	 */
 	function __construct( &$instance = null) {
-	
+			
 		//create or store parent instance
 		if ( $instance === null ) 
 			self::$parent = new Document_Revisions;
@@ -35,7 +35,11 @@ class Document_Revisions_Admin {
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 
 		//settings
-		add_action( 'admin_init', array( &$this, 'settings_fields') );	
+		add_action( 'admin_init', array( &$this, 'settings_fields') );
+		add_action( 'update_wpmu_options', array( &$this, 'network_upload_location_save' ) );	
+		add_action( 'wpmu_options', array( &$this, 'network_upload_location_cb' ) );
+		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
+		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 		
 		//profile
 		add_action( 'show_user_profile', array( $this, 'rss_key_display' ) );
@@ -212,6 +216,7 @@ class Document_Revisions_Admin {
 			#authordiv select {width: 150px;}
 			#lock_override {float:right; text-align: right; margin-top: 10px; padding-bottom: 5px; }
 			#revision-summary {display:none;}
+			#autosave-alert {display:none;}
 			<?php if ( $this->get_document_lock( $post ) ) { ?>
 			#publish, #add_media, #lock-notice {display: none;}
 			<?php } ?>
@@ -340,8 +345,12 @@ class Document_Revisions_Admin {
 	 * @returns bool|string false on fail, path to new dir on sucess
 	 * @since 1.0
 	 */
-	function sanitize_upload_dir( $dir) {
-	
+	function sanitize_upload_dir( $dir ) {
+
+		//if the path is not absolute, assume it's relative to ABSPATH
+		if ( substr( $dir, 0, 1) != '/' )
+			$dir = ABSPATH . $dir;
+		
 		//directory does not exist
 		if ( !is_dir( $dir ) ) {
 		
@@ -369,7 +378,81 @@ class Document_Revisions_Admin {
 		return rtrim($dir,"/");
 
 	}
+	
+	/**
+	 * Adds upload directory option to network admin page
+	 * @since 1.0
+	 */
+	function network_upload_location_cb() { ?>
+		<h3><?php _e( 'Document Settings', 'wp-document-revisions'); ?></h3>
+		<table id="document_settings" class="form-table">
+			<tr valign="top">
+				<th scope="row"><?php _e('Document Upload Directory', 'wp-document-revisions'); ?></th>
+				<td>
+					<?php $this->upload_location_cb(); ?>
+					<?php wp_nonce_field( 'network_documnet_upload_location', 'document_upload_location_nonce' ); ?>			
+				</td>
+			</tr>
+		</table>
+	<?php }
 
+	/**
+	 * Callback to validate and save the network upload directory
+	 * @since 1.0
+	 */
+	function network_upload_location_save() {
+
+		if ( !isset( $_POST['document_upload_location_nonce'] ) )
+			return;
+		
+		//verify nonce	
+		if ( !wp_verify_nonce( $_POST['document_upload_location_nonce'], 'network_documnet_upload_location' ) )
+			wp_die( __('Not authorized' ) );
+		
+		//auth
+		if ( !current_user_can( 'manage_network_options' ) )
+			wp_die( __('Not authorized' ) );
+				
+		//verify upload dir
+		$dir = $this->sanitize_upload_dir( $_POST['document_upload_directory'] );
+		
+		//becuase there's a redirect, and there's no settings API, force settings errors into a transient
+		global $wp_settings_errors;
+		set_transient( 'settings_errors', $wp_settings_errors );
+		
+		//if the dir didn't validate, kick	
+		if ( !$dir )
+			return;
+		
+		//save the dir
+		update_option( 'document_upload_directory', $dir );
+	
+	}
+
+	/**
+	 * Adds settings errors to network settings page for document upload directory CB
+	 * @since 1.0
+	 */
+	function network_settings_errors() {
+		settings_errors( 'document_upload_directory' );
+	}
+	
+	/**
+	 * Appends the settings-updated query arg to the network admin settings redirect so that the settings API can work
+	 * @param string $location the URL being redirected to
+	 * @returns string the modified location
+	 * @since 1.0
+	 */
+	function network_settings_redirect( $location ) {
+		
+		//Verify redirect string from /wp-admin/network/edit.php line 164
+		if ( $location != add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) ) )
+			return $location;
+		
+		//append the settings-updated query arg and return	
+		return add_query_arg( 'settings-updated', 'true', $location );
+		
+	}
 	
 	/**
 	 * Callback to create the upload location settings field
@@ -657,7 +740,11 @@ class Document_Revisions_Admin {
 		//check permissions
 		if ( !current_user_can( 'edit_post', $post_id ) )
 			return;
-
+			
+		//associate taxonomy with parent, not revision
+		if ( wp_is_post_revision( $post_id ) )
+			$post_id = wp_is_post_revision( $post_id );
+			
 		//all's good, let's save		
 		wp_set_post_terms( $post_id, array( $_POST['workflow_state'] ), 'workflow_state' );
 	
@@ -698,6 +785,7 @@ class Document_Revisions_Admin {
 			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
 			'lockError' => __( 'An error has occured, please try reloading the page.', 'wp_document_revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
+			'lostLockNoticeLogo' => get_admin_url() . 'images/logo.gif',
 			'minute' => __('%d mins', 'wp-document-revisions'),
 			'minutes' => __('%d mins', 'wp-document-revisions' ),
 			'hour' => __('%d hour', 'wp-document-revisions'),
@@ -709,7 +797,10 @@ class Document_Revisions_Admin {
 		
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script( 'wp_document_revisions',plugins_url('/wp-document-revisions' . $suffix . '.js', __FILE__), array('jquery') );
-		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
+		if ( function_exists( 'wp_add_script_data' ) )
+			wp_add_script_data( 'wp_document_revisions', 'wp_document_revisions', $data ); //3.3, prevent deprecated warning
+		else
+			wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data ); //pre 3.3 back compat
 	
 	}
 
@@ -762,6 +853,8 @@ class Document_Revisions_Admin {
 	
 		if ( !$this->verify_post_type( $postID ) )
 			return;
+		
+		$post = get_post( $postID );
 			
 		if ( is_numeric( $post->post_content ) && get_post( $post->post_content ) ) 
 			wp_delete_attachment( $post->post_content, false );
