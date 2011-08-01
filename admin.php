@@ -797,10 +797,7 @@ class Document_Revisions_Admin {
 		
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script( 'wp_document_revisions',plugins_url('/wp-document-revisions' . $suffix . '.js', __FILE__), array('jquery') );
-		if ( function_exists( 'wp_add_script_data' ) )
-			wp_add_script_data( 'wp_document_revisions', 'wp_document_revisions', $data ); //3.3, prevent deprecated warning
-		else
-			wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data ); //pre 3.3 back compat
+		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data ); 
 	
 	}
 

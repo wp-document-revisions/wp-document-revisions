@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.5
+Version: 0.5.6
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -36,7 +36,7 @@ class Document_Revisions {
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array(&$this,'permalink'), 10, 4 );
 		add_action( 'post_link', array(&$this,'permalink'), 10, 4 );
-		add_filter( 'single_template', array(&$this, 'serve_file') );
+		add_filter( 'single_template', array(&$this, 'serve_file'), 10, 1 );
 	 	add_filter( 'query_vars', array(&$this, 'add_query_var'), 10, 4 );
 		register_activation_hook( __FILE__, 'flush_rewrite_rules' );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2);
@@ -430,8 +430,11 @@ class Document_Revisions {
 	 * @param int $version ID of revision to serve
 	 * @since 0.5
 	 */
-	function serve_file( $version = '' ) {
+	function serve_file( $template ) {
 		global $post;
+		
+		if ( !$this->verify_post_type( $post ) )
+			return $template;
 				
 		//grab the post revision if any
 		$version = get_query_var( 'revision' );

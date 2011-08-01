@@ -80,7 +80,7 @@ jQuery(document).ready( function($) {
 				lock_override_notice( wp_document_revisions.lostLockNotice );
 			} else {
 				//browser does not support lock override notice, send old school alert
-				alert( convertEntities( wp_document_revisions.lostLockNotice ) );
+				alert( wp_document_revisions.lostLockNotice );
 			}
 		    
 		    //reload the page to lock them out and prevent duplicate alerts
