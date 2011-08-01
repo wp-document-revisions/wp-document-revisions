@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.4
+Version: 0.5.5
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -574,7 +574,7 @@ class Document_Revisions {
 			return ABSPATH . $dir;
 		
 		//If no options set, default to wp-content/uploads
-		return get_home_path() . 'wp-content/uploads';
+		return ABSPATH . 'wp-content/uploads';
 						 	
  	}
  	
@@ -747,11 +747,11 @@ class Document_Revisions {
 		$key = preg_replace( '/[^a-z0-9]/i', '', $_GET['key'] );
 
 		//verify length
-		if ( self::key_length != strlen( $key ) )
+		if ( self::$key_length != strlen( $key ) )
 			return false;
 
 		//lookup key
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", 'wp_' . self::meta_key, $key ) ) )
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", 'wp_' . self::$meta_key, $key ) ) )
 			return true;
 
 		return false;
