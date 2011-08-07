@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.6
+Version: 0.5.7
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -43,7 +43,12 @@ class Document_Revisions {
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
-
+		
+		//RSS
+		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
+		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
+		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 1 );
+		
 		//uploads
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
 		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter'), 10, 2);
@@ -99,7 +104,8 @@ class Document_Revisions {
 		'hierarchical' => false,
 		'menu_position' => null,
 		'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
-		'supports' => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' )
+		'supports' => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' ),
+		'menu_icon' => plugins_url( '/menu-icon.png', __FILE__ ),
 		); 
 		
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
@@ -400,7 +406,7 @@ class Document_Revisions {
 	function get_revision_number( $revision_id ) {
 	
 		$revision = get_post( $revision_id );
-	
+			
 		if ( !isset( $revision->post_parent ) )
 			return false;
 				
@@ -457,7 +463,7 @@ class Document_Revisions {
 			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
 		}
 
-		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revsisions' ) ) )
+		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revisions' ) ) )
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
 		
 		do_action( 'serve_document', $revision->ID, $file );
@@ -683,9 +689,12 @@ class Document_Revisions {
 		if ( !is_object( $post ) )
 			$post = get_post ( $post );
 						
-		//support for revissions amd attachments
-		if ( isset( $post->post_type ) && ( $post->post_type == 'revision' || $post->post_type == 'attachment' ) )
-			$post = get_post( $post->post_parent );
+		//support for revissions amd attachments 
+		//must be done separately so as not to override global post with post parent and cause all sorts of headaches elsewhere
+		if ( isset( $post->post_type ) && ( $post->post_type == 'revision' || $post->post_type == 'attachment' ) ) {
+			$parent = get_post( $post->post_parent );
+			return ( isset( $parent->post_type ) && $parent->post_type == 'document' );	
+		}
 		
 		return ( isset( $post->post_type ) && $post->post_type == 'document' );
 		
@@ -696,7 +705,15 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function do_feed_revision_log() {
-	
+		
+		//because we're in function scope, pass $post as a global
+		global $post; 
+		
+		//remove this filter to A) prevent trimming and B) to prevent WP from using the attachID if there's no revision log
+		remove_filter( 'get_the_excerpt', 'wp_trim_excerpt'  );
+		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
+
+		//include feed and die
 		include('revision-feed.php');
 		exit();	
 	
@@ -940,9 +957,56 @@ class Document_Revisions {
 		}
 	
 	}
+	
+	/**
+	 * Removes Private or Protected from document titles in RSS feeds
+	 * @param string $prepend the sprintf formatted string to prepend to the title
+	 * @return string just the string
+	 * @since 1.0
+	 */
+	function no_title_prepend( $prepend ) {
+
+		if ( !$this->verify_post_type() ) 
+			return $prepend;
+						
+		return '%s';
+	
+	}
+	
+	/**
+	 * Adds revision number to document tiles
+	 * @param string $title the title
+	 * @return string the title possibly with the revision number
+	 * @since 1.0
+	 */
+	function add_revision_num_to_title( $title ) {
+		global $post;
+		
+		//verify post type
+		if ( !$this->verify_post_type() ) 
+			return $title;
+		
+		//if this is a document, and not a revision, just filter and return the title
+		if ( $post->post_type != 'revision' )
+			return apply_filters( 'document_title', $title );
+		
+		//get revision num
+		$revision_num = $this->get_revision_number( $post->ID );
+
+		//if for some reason there's no revision num
+		if ( !$revision_num )
+			return apply_filters( 'document_title', $title );
+		
+		//add title, apply filters, and return				
+		return apply_filters( 'document_title', sprintf( __('%s - Revision %d', 'wp-document-revisions' ), $title, $revision_num ) );	
+	}
 
 	/**
-	 * Remove before final
+	 * Used internal for debugging
+	 * Only visible to admins if WP_DEBUG is on
+	 * @param mixed $var the var to debug
+	 * @param bool $die whether to die after outputting
+	 * @since 0.5
 	 */
 	function debug( $var, $die = true ) {
 	

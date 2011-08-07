@@ -143,7 +143,7 @@ jQuery(document).ready( function($) {
 
 	});
 	
-	setTimeout( 'updateTimestamps', 3000 );
+	setInterval( "updateTimestamps()", 60000 ); //60k = 1 minute
  	
 });
 

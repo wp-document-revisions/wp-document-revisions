@@ -4,7 +4,7 @@
  * Inspired by WP's feed-rss2.php
  */
 
-header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
+//header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 
 echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 
@@ -29,8 +29,8 @@ echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 	<sy:updateFrequency><?php echo apply_filters( 'rss_update_frequency', '1' ); ?></sy:updateFrequency>
 	<?php do_action( 'rss2_head' ); ?>
 	
-	<?php 	//NOTE TO SELF: RUNNING LOOP TWICE, ONCE FOR THE POST, ONCE FOR CHILDREN; THIS CAN BE DONE SMARTER! ?>
-	<?php while( have_posts()) : the_post(); ?>
+	<?php while( have_posts()) : the_post(); 
+	$parent = get_the_ID(); ?>
 	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>
@@ -40,13 +40,12 @@ echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 
 		<guid isPermaLink="false"><?php the_guid(); ?></guid>
 		<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
-<?php rss_enclosure(); ?>
 	<?php do_action( 'rss2_item' ); ?>
 	</item>
 	<?php endwhile; ?>
-	<?php global $post; $args = array( 'post_type' => array( 'revision','document' ), 'post_status'=> array( 'inherit', 'private', 'publish' ), 'post_parent' => $post->ID ); ?>
-	<?php $rev_query = new WP_Query( $args ); ?>
-	<?php while( $rev_query->have_posts()) : $rev_query->the_post(); ?>
+	<?php $args = array( 'post_type' => array( 'revision' ), 'post_status'=> array( 'inherit' ), 'post_parent' => $parent ); ?>
+	<?php $q = New WP_Query( $args ); ?>
+	<?php while( $q->have_posts() ) : $q->the_post(); ?>
 	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>
