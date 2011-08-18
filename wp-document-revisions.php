@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.7
+Version: 0.5.8
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -200,13 +200,22 @@ class Document_Revisions {
 		
 		if ($post == '')
 			global $post;
-			
+		
+		//verify that it's an object	
 		if ( !is_object( $post ) )
 			$post = get_post( $post );
+			
+		//check for revisions
+		if ( $parent = wp_is_post_revision( $post ) )
+			$post = get_post( $parent );
+
+		//check for attachments
+		if ( $post->post_type == 'attachment' ) 
+			$post = get_post( $post->post_parent );
 		
 		if ( !isset( $post->ID ) )
 			return false;
-
+		
 		$args = array(	
 				'post_parent' => $post->ID, 
 				'post_status' => 'inherit', 
@@ -216,7 +225,7 @@ class Document_Revisions {
 				);
 
 		$args = apply_filters( 'document_revision_query', $args );
-		
+
 		return get_children( $args );
 	
 	}
@@ -231,8 +240,14 @@ class Document_Revisions {
 	
 		//get the post lock
 		if ( !( $user = wp_check_post_lock( $post->ID ) ) ) 
+			$user = false;
+		
+		//allow others to shortcircuit
+		$user = apply_filters( 'document_lock_check', $user, $post );
+
+		if ( !$user )
 			return false;
-			 
+		
 		//get displayname from userID
 		$last_user = get_userdata( $user );
 		return ( $last_user ) ? $last_user->display_name : __( 'Somebody' );
@@ -453,8 +468,7 @@ class Document_Revisions {
 			$rev_post = get_post ( $rev_id );
 			$revision = get_post( $rev_post->post_content );
 		}
-				
-		//get file
+			
 		$file = get_attached_file( $revision->ID );
 		
 		//return 404 if the file is a dud or malformed
@@ -466,7 +480,7 @@ class Document_Revisions {
 		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revisions' ) ) )
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
 		
-		do_action( 'serve_document', $revision->ID, $file );
+		do_action( 'serve_document', $post->ID, $file );
 
 		// We may override this later.
 		status_header( 200 );
@@ -801,7 +815,7 @@ class Document_Revisions {
 		//get the current user ID
 		$current_user = wp_get_current_user();
 		
-		if ( $send_notice )
+		if ( apply_filters( 'send_document_override_notice', $send_notice ) )
 			$this->send_override_notice( $_POST['post_id'], $current_owner, $current_user->ID );
 			
 		do_action( 'document_lock_override', $_POST['post_id'], $current_user->ID, $current_owner );

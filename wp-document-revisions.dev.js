@@ -132,6 +132,10 @@ jQuery(document).ready( function($) {
 		//close TB
 		win.tb_remove();
 		
+		//3.2 requires convertEntities, 3.3 doesn't
+		if (typeof convertEntities == 'function')
+			 wp_document_revisions.postUploadNotice  = convertEntities( wp_document_revisions.postUploadNotice );
+		
 		//notify user of success by adding the post upload notice before the #post div
 		//to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
 		win.jQuery('#post').before( wp_document_revisions.postUploadNotice ).prev().fadeIn().fadeOut().fadeIn();

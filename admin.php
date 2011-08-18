@@ -246,7 +246,7 @@ class Document_Revisions_Admin {
 		?>
 		<p><strong><?php _e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 		<strong><a href="<?php echo get_permalink( $post->ID ); ?>" target="_BLANK"><?php _e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
-			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$d" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), get_the_modified_time( 'U' ), strtotime( $latest_version->post_date ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
+			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
 		</p>
 		<?php } //end if latest version ?>
 		<div class="clear"></div>	
@@ -469,9 +469,7 @@ class Document_Revisions_Admin {
 	 * @since 0.5
 	 */ 
 	function post_upload_js( $id ) {
-	
-		//can this be appended to the wp_document_revisions localization object?
-		
+				
 		//get the post object
 		$post = get_post( $id );
 		
@@ -508,10 +506,10 @@ class Document_Revisions_Admin {
 		 
 		if ( !$this->verify_post_type( ) )
 			return $meta;
-			
-		global $post;			
+
+		global $post;
 		$latest = $this->get_latest_attachment( $post->ID );
-		
+
 		$meta .= $this->post_upload_js( $latest->ID );
 		
 		return $meta;
@@ -525,7 +523,7 @@ class Document_Revisions_Admin {
 	 * @since 0.5
 	 */
 	function post_upload_handler( $filter ) {
-		
+
 		//if we're not posting this is the initial form load, kick
 		if ( !$_POST )
 			return $filter;
