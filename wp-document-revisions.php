@@ -2,8 +2,8 @@
 /*
 Plugin Name: WP Document Revisions
 Plugin URI: http://
-Description: Document Revisioning and Version Control for WordPress; GSoC 2011.
-Version: 0.5.8
+Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
+Version: 0.5.9
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -29,7 +29,7 @@ class Document_Revisions {
 		add_action( 'init', array( &$this, 'register_cpt' ) );
 		add_action( 'init', array( &$this, 'register_ct' ) );
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		add_action( 'init', array( &$this, 'add_caps' ), 1 );
+		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
 
 		//rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );		
@@ -909,7 +909,7 @@ class Document_Revisions {
 					),
 				'author' =>
 					array( 
-					    'edit_documenst' => true,
+					    'edit_document' => true,
 					    'edit_others_documents' => false, 
 					    'edit_private_documents' => false, 						
 					    'edit_published_documents' => true, 

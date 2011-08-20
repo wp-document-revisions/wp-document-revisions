@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: benbalter, mitcho, jorbin, duck_, nacin
+Contributors: benbalter, mitchoyoshitaka, jorbin, duck_, nacin
 Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
 Requires at least: 3.2
@@ -10,21 +10,13 @@ A document management and version control plugin that allows teams of any size t
 
 == Description ==
 
-**Google Summer of Code 2011 project. Still under development. Not for production. This will break.**
-
-Please feel free to download and kick the tires. Community feedback is greatly appreciated, but please note that this project is still under development, and is not quite ready for production environments.
-
-Read More in my original post ["When all you have is a pair of bolt cutters…](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/)
-
---------------------------------
-
 [WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
-WP Document Revisions is three things: 
+**WP Document Revisions is three things:**
 
-1. A document management system (DMS), to track, store, and organize files of any format
-2. A collaboration tool to empower teams to collaboratively draft, edit, and refine documents
-3. A file hosting solution to publish and securely deliver files to a team, to clients, or to the public
+1. A **document management system** (DMS), to track, store, and organize files of any format
+2. A **collaboration tool** to empower teams to collaboratively draft, edit, and refine documents
+3. A **file hosting solution** to publish and securely deliver files to a team, to clients, or to the public
 
 **Powerful Collaboration Tools** - *With great power does not have to come great complexity.* Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries -- posts, attachments, revisions, taxonomies, authentication, and permalinks -- to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
 
