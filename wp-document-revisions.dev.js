@@ -39,7 +39,7 @@ jQuery(document).ready( function($) {
 			window.webkitNotifications.RequestPermission( lock_override_notice );
 		} else {
 			window.webkitNotifications.createNotification(
-			'icon.png', wp_document_revisions.lostLockNoticeTitle, notice ).show();
+			wp_document_revisions.lostLockNoticeLogo, wp_document_revisions.lostLockNoticeTitle, notice ).show();
 		}
 	}
 	

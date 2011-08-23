@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: trunk
+Stable tag: 0.6
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -72,6 +72,10 @@ In short, any. By default, WordPress accepts [most common file types](http://en.
 WP Document Revisions was built from the ground up with security in mind. Each request for a file is run through WordPress's time-tested and proven authentication system (the same system that prevents private or un-published posts from being viewed) and documents filenames are hashed upon upload, thus preventing them from being accessed directly. For additional security, you can move the document upload folder above the web root, (via settings->media->document upload folder). Because WP Document Revisions relies on a custom capability, user permissions can be further refined to prevent certain user roles from accessing certain documents.
 
 == Changelog ==
+
+= 0.6 =
+* Release Candidate 1
+* [Revision Log](http://gsoc.trac.wordpress.org/log/2011/BenBalter)
 
 = 0.5 =
 * Initial release

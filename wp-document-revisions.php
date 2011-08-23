@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 0.5.9
+Version: 0.6
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -392,6 +392,49 @@ class Document_Revisions {
 		
 		//otherwise return html unfiltered
 		return $html;
+ 	}
+ 	
+ 	/**
+ 	 * Retrieves all revisions for a given post (including the current post)
+ 	 * Workaround for #16215 to ensure revision author is accurate
+ 	 * http://core.trac.wordpress.org/ticket/16215
+ 	 * @since 1.0
+ 	 * @param int $postID the post ID
+ 	 * @returns array array of post objects 
+ 	 */
+ 	function get_revisions( $postID ) {
+
+		// Revision authors are actually shifted by one
+		// This moves each revision author up one, and then uses the post_author as the initial revision
+		
+		//get the actual post
+		$post = get_post( $postID );
+		
+		//correct the modified date
+		$post->post_date = date( 'Y-m-d H:i:s', get_the_modified_time( 'U' ) );
+		
+		//grab the post author
+		$post_author = $post->post_author;
+		
+		//get revisions, and prepend the post
+ 		$revs = wp_get_post_revisions( $postID, array( 'order' => 'DESC' ) );
+ 		array_unshift( $revs, $post );
+		
+		//loop through revisions
+		foreach ( $revs as $ID => &$rev ) {
+		
+			//if this is anything other than the first revision, shift author 1
+			if ( $ID < sizeof( $revs ) - 1) 
+				$rev->post_author = $revs[$ID+1]->post_author;
+			
+			//if last revision, get the post author
+			else 
+				$rev->post_author = $post_author;
+		
+		}
+
+		return $revs;
+				
  	}
 	
 	/**
@@ -845,12 +888,12 @@ class Document_Revisions {
 		$post = get_post( $post_id );
 
 		//build the subject
-		$subject = sprintf( __( '%1$s: %2$s has overridden your lock on %3$2', 'wp_document_revisions' ), get_bloginfo( 'name' ), $current_user->display-name, $post->post_title );
+		$subject = sprintf( __( '%1$s: %2$s has overridden your lock on %3$s', 'wp_document_revisions' ), get_bloginfo( 'name' ), $current_user->display_name, $post->post_title );
 		$subject = apply_filters( 'lock_override_notice_subject', $subject );
 		
 		//build the message
-		$message = sprintf( __('Dear %s:', 'wp_document_revisions' ), $lock_owner->display-name) . "\n\n";
-		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp_document_revisions' ), $current_user->display-name,  $current_user->user_email, $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
+		$message = sprintf( __('Dear %s:', 'wp_document_revisions' ), $lock_owner->display_name) . "\n\n";
+		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp_document_revisions' ), $current_user->display_name,  $current_user->user_email, $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
 		$message .= __('Any changes you have made will be lost.', 'wp_document_revisions' ) . "\n\n";
 		$message .= sprintf( __('- The %s Team', 'wp_document_revisions' ), get_bloginfo( 'name' ) );
 		$message = apply_filters( 'lock_override_notice_message', $message );
@@ -956,7 +999,7 @@ class Document_Revisions {
 					    'override_document_lock' => false, 
 					),
 				);
-
+		
 		foreach (  $wp_roles->role_names as $role=>$label ) { 
 			
 			//if the role is a standard role, map the default caps, otherwise, map as a subscriber
@@ -965,9 +1008,12 @@ class Document_Revisions {
 			$caps = apply_filters( 'document_caps', $caps, $role );
 					
 			//loop and assign
-			foreach ( $caps as $cap=>$grant )				
-				$wp_roles->add_cap( $role, $cap, $grant );
-		
+			foreach ( $caps as $cap=>$grant ) {	
+			
+				//check to see if the user already has this capability, if so, don't re-add as that would override grant		
+				if ( !isset( $wp_roles->roles[$role]['capabilities'][$cap] ) )	
+					$wp_roles->add_cap( $role, $cap, $grant );
+			}
 		}
 	
 	}

@@ -176,7 +176,7 @@ class Document_Revisions_Admin {
 
 		//move author div to make room for ours
 		remove_meta_box( 'authordiv', 'document', 'normal' );
-		add_meta_box( 'authordiv', __('Author', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
+		add_meta_box( 'authordiv', __('Owner', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
 
 		//lock notice
 		add_action( 'admin_notices', array( &$this,'lock_notice' ) );
@@ -270,11 +270,7 @@ class Document_Revisions_Admin {
 	function revision_metabox( $post ) {
  	
  		$can_edit_post = current_user_can( 'edit_post', $post->ID );
-		$revisions = wp_get_post_revisions( $post->ID );
-		$post->post_date = date( 'Y-m-d H:i:s', get_the_modified_time( 'U' ) );
-		
-		//include currrent version in the revision list	
-		array_unshift( $revisions, $post );
+		$revisions = $this->get_revisions( $post->ID );
 
 		?>			
 		<table id="document-revisions">
@@ -758,8 +754,8 @@ class Document_Revisions_Admin {
  	function post_author_meta_box( $post ) {
 		global $user_ID;
 		?>
-		<label class="screen-reader-text" for="post_author_override"><?php _e( 'Author', 'wp_document_revisions' ); ?></label>
-		<?php _e( 'Document Author', 'wp_document_revisions' ); ?>: 
+		<label class="screen-reader-text" for="post_author_override"><?php _e( 'Owner', 'wp_document_revisions' ); ?></label>
+		<?php _e( 'Document Owner', 'wp_document_revisions' ); ?>: 
 		<?php
 		wp_dropdown_users( array(
 			'who' => 'authors',
@@ -783,7 +779,7 @@ class Document_Revisions_Admin {
 			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
 			'lockError' => __( 'An error has occured, please try reloading the page.', 'wp_document_revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
-			'lostLockNoticeLogo' => get_admin_url() . 'images/logo.gif',
+			'lostLockNoticeLogo' => admin_url('images/logo.gif'),
 			'minute' => __('%d mins', 'wp-document-revisions'),
 			'minutes' => __('%d mins', 'wp-document-revisions' ),
 			'hour' => __('%d hour', 'wp-document-revisions'),
