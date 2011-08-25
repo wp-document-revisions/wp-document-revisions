@@ -1085,7 +1085,3 @@ class Document_Revisions {
 }
 
 new Document_Revisions;
-
-
-
-?>

@@ -853,4 +853,3 @@ class Document_Revisions_Admin {
 	}
 		 
 }
-?>
