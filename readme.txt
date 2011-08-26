@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.6
+Stable tag: 1.0
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -103,6 +103,9 @@ WP Document Revisions was built from the ground up with security in mind. Each r
 In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
 
 == Changelog ==
+
+= 1.0 =
+* Stable Release
 
 = 0.6 =
 * Release Candidate 1
