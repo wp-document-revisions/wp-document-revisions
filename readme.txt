@@ -12,6 +12,8 @@ A document management and version control plugin that allows teams of any size t
 
 [WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
+*Additional information, including a screencast of a typical use case, is available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).*
+
 **WP Document Revisions is three things:**
 
 1. A **document management system** (DMS), to track, store, and organize files of any format
@@ -45,8 +47,6 @@ A document management and version control plugin that allows teams of any size t
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Easily translated to your local language
 
-Want to give it a try? Simply [download WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) from the WordPress Plugin Repository.
-
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
 == Screenshots ==
@@ -59,6 +59,33 @@ Want to give it a try? Simply [download WP Document Revisions](http://wordpress.
 
 == Frequently Asked Questions ==
 
+= Does it work on Mac? PC? Mobile? =
+
+WP Document Revisions should work on just about any system with a browser. You can easily collaborate between, Mac, PC, and even Linux systems. Mobile browsers, such as iOS or Android should be able to download files, but may not be able to upload new versions in all cases.
+
+= What are the different levels of visibility? =
+
+Each document can have one of three "visibilities":
+* Private - visible only to logged in users (this can be further refined either based on users or based on the document's status)
+* Password Protected - Non-logged in users can view files, but they will require a document-specific password
+* Public - Anyone with the document's URL can download and view the file
+
+= How many people can access a document at a time? =
+
+A virtually unlimited number of people can *view* a document at the same time, but only one user can *edit* a document at a time.
+
+= While a file is "checked out" can others view it? What about a previous versions? =
+
+Yes.
+
+= Is there a time limit for checking out a file? =
+
+No. So long as the user remains on the document page (it's okay if the window is minimized, etc.), the user will retain the file lock. By default, administrators can override this lock at any time. The origin lock-holder will receive a notification.
+
+= Does it keep track of each individual's changes? =
+
+Yes and no. It will track who uploaded each version of the file, and will provide an opportunity to describe those changes. For more granular history, the plugin is designed to work with a format's unique history features, such as tracked changes in Microsoft Word.
+
 = How do permissions work? =
 
 There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](http://wordpress.org/extend/plugins/members/), or for developers, via the <code>document_permissions</code> filter.
@@ -70,6 +97,10 @@ In short, any. By default, WordPress accepts [most common file types](http://en.
 = Are the documents I upload secure? =
 
 WP Document Revisions was built from the ground up with security in mind. Each request for a file is run through WordPress's time-tested and proven authentication system (the same system that prevents private or un-published posts from being viewed) and documents filenames are hashed upon upload, thus preventing them from being accessed directly. For additional security, you can move the document upload folder above the web root, (via settings->media->document upload folder). Because WP Document Revisions relies on a custom capability, user permissions can be further refined to prevent certain user roles from accessing certain documents.
+
+= Is there any additional documentation? =
+
+In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
 
 == Changelog ==
 

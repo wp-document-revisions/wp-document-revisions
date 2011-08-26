@@ -773,7 +773,7 @@ class Document_Revisions_Admin {
 	
 		//translation strings
 		$data = array(
-			'restoreConfirmation' => __( 'Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp_document_revisions'),
+			'restoreConfirmation' => __( "Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.", 'wp_document_revisions'),
 			'lockNeedle' => __( 'is currently editing this'), //purposely left out text domain
 			'postUploadNotice' => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>'),
 			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
