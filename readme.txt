@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: benbalter, mitchoyoshitaka, jorbin, duck_, nacin
 Donate link: http://ben.balter.com/
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
 Tested up to: 3.3
 Stable tag: 1.0
