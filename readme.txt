@@ -114,6 +114,9 @@ WP Document Revisions will "ping" the server every minute to let it know that yo
 
 In short, "no", because everyone's use would be different. The long answer, is "it's really easy to adapt a front end to your needs." One site I know of uses a combination of two plugins [count shortcode](http://wordpress.org/extend/plugins/count-shortcode/), which can make a front end to browse documents, especially in coordination with a [faceted search widget](http://wordpress.org/extend/plugins/faceted-search-widget/). Because documents are really posts, many built in WordPress features should work based on the query. You can modify it with a handful of filters or URL changes, e.g., <code>?post_type=document</code>. Also of note, the [code cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) has an example of how to implement a [revision shortcode](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/revision-shortcode.php).
 
+= Can WP Document Revisions work in my language? = 
+Yes! WP Document Revisions has not been translated *yet*, but is designed to by fully internationalized.  If you enjoy the plugin and are interested in contributing a translation (it's super easy), please take a look at the [Translating WordPress](http://codex.wordpress.org/Translating_WordPress) page. If you do translate the plugin, please be sure to [contact the plugin author](http://ben.balter.com/contact/) so that it can be included in future releases for other to use.
+
 == Changelog ==
 
 = 1.0 =
