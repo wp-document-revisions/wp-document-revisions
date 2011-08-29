@@ -102,6 +102,14 @@ WP Document Revisions was built from the ground up with security in mind. Each r
 
 In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
 
+= I keep getting a "file not found" every time I try to download a document, what gives? =
+
+Make sure you have [pretty permalinks](http://codex.wordpress.org/Using_Permalinks#Using_.22Pretty.22_permalinks) enabled, and that other posts are available via the domain.com/yyyy/mm/post/ format (rather than domain.com/?p=1234).
+
+= What happens if I lose internet connectivity while I have a file checked out? =
+
+WP Document Revisions will "ping" the server every minute to let it know that you have the file open. If for some reason you lose connectivity, the server will give you roughly a two minute grace period before it lifts the file lock. If it's brief (e.g., WiFi disconnected), you should be fine, but if it's for an extended period of time (e.g., a flight), you may find that someone else has checked the file out. You do not need to re-download the file (if no one else has modified it), simply remain on the document page to maintain the file lock.
+
 == Changelog ==
 
 = 1.0 =
