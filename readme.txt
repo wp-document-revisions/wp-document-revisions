@@ -117,6 +117,12 @@ In short, "no", because everyone's use would be different. The long answer, is "
 = Can WP Document Revisions work in my language? = 
 Yes! WP Document Revisions has not been translated *yet*, but is designed to by fully internationalized.  If you enjoy the plugin and are interested in contributing a translation (it's super easy), please take a look at the [Translating WordPress](http://codex.wordpress.org/Translating_WordPress) page. If you do translate the plugin, please be sure to [contact the plugin author](http://ben.balter.com/contact/) so that it can be included in future releases for other to use.
 
+= Will in work with WordPress MultiSite = 
+Yes! Each site can have its own document repository (with the ability to give users different permissions on each repository), or you can create one shared document repository across all sites.
+
+= Will it work over HTTPS (SSL) =
+Yes. Just follow the [standard WordPress SSL instructions](http://codex.wordpress.org/Administration_Over_SSL).
+
 == Changelog ==
 
 = 1.0 =
