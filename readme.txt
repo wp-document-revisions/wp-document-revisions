@@ -110,6 +110,10 @@ Make sure you have [pretty permalinks](http://codex.wordpress.org/Using_Permalin
 
 WP Document Revisions will "ping" the server every minute to let it know that you have the file open. If for some reason you lose connectivity, the server will give you roughly a two minute grace period before it lifts the file lock. If it's brief (e.g., WiFi disconnected), you should be fine, but if it's for an extended period of time (e.g., a flight), you may find that someone else has checked the file out. You do not need to re-download the file (if no one else has modified it), simply remain on the document page to maintain the file lock.
 
+= Do you have any plans to implement a front end? =
+
+In short, "no", because everyone's use would be different. The long answer, is "it's really easy to adapt a front end to your needs." One site I know of uses a combination of two plugins [count shortcode](http://wordpress.org/extend/plugins/count-shortcode/), which can make a front end to browse documents, especially in coordination with a [faceted search widget](http://wordpress.org/extend/plugins/faceted-search-widget/). Because documents are really posts, many built in WordPress features should work based on the query. You can modify it with a handful of filters or URL changes, e.g., <code>?post_type=document</code>. Also of note, the [code cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) has an example of how to implement a [revision shortcode](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/revision-shortcode.php).
+
 == Changelog ==
 
 = 1.0 =
