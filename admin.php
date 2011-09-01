@@ -29,7 +29,8 @@ class Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter'), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
-		
+		add_filter( 'plupload_success_handler', array(&$this, 'post_upload_cb_filter' ) );
+
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
@@ -57,7 +58,7 @@ class Document_Revisions_Admin {
 		
 		//cleanup
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
-	
+			
 	}
 	
 	/**
@@ -492,7 +493,7 @@ class Document_Revisions_Admin {
 	}
 	
 	/**
-	 * Ugly, Ugly hack to sneak post-upload JS into the iframe
+	 * Ugly, Ugly hack to sneak post-upload JS into the iframe *pre 3.3*
 	 * If there was a hook there, I wouldn't have to do this
 	 * @param string $meta dimensions / post meta
 	 * @returns string meta + js to process post
@@ -510,6 +511,21 @@ class Document_Revisions_Admin {
 		
 		return $meta;
 	
+	}
+	
+	/**
+	 * Post Upload Handle Callback filter for 3.3+ Plupload system
+	 * @param string $cb the original callback
+	 * @returns string the modified callback, default for all but document
+	 * @since 1.1
+	 */
+	function post_upload_cb_filter( $cb ) {
+		
+		if ( !$this->verify_post_type() )
+			return $cb;
+			
+		return 'postDocumentUpload';
+		
 	}
 	
 	/**

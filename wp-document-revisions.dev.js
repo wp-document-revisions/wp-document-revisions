@@ -67,6 +67,7 @@ jQuery(document).ready( function($) {
 		
 	}	
 	
+	//Callback to handle post autosave action
 	$(document).bind('autosaveComplete', function() {
 	
 		//look for autosave alert
@@ -105,52 +106,25 @@ jQuery(document).ready( function($) {
 		
 	});
 
+	//backwards compatibility for pre, 3.3 versions
+	//variables are passed as globals and jQuery event is triggered inline
 	$(document).bind('documentUpload', function() {
+	
+		//grab globals
+		var attachmentID;
+		var extension;
 		
-		//Because we're in an iFrame, we need to traverse to parrent
-		var win = window.dialogArguments || opener || parent || top;
-		
-		//prevent from firing more than once
-		if ( win.hasUpload )
-			return;
-
-		//stuff most recent version URL into hidden content field
-		win.jQuery('#content').val( attachmentID );
-		
-		//kill any "document updated" messages to prevent confusion
-		win.jQuery('#message').hide();
-		
-		//present the user with the revision summary box
-		win.jQuery('#revision-summary').show();
-		
-		//re-enabled the submit button
-		win.jQuery(':button, :submit', '#submitpost').removeAttr('disabled');
-		
-		//flip the upload flag to enable the update button
-		win.hasUpload = true;
-		
-		//close TB
-		win.tb_remove();
-		
-		//3.2 requires convertEntities, 3.3 doesn't
-		if (typeof convertEntities == 'function')
-			 wp_document_revisions.postUploadNotice  = convertEntities( wp_document_revisions.postUploadNotice );
-		
-		//notify user of success by adding the post upload notice before the #post div
-		//to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
-		win.jQuery('#post').before( wp_document_revisions.postUploadNotice ).prev().fadeIn().fadeOut().fadeIn();
-		    		
-		//If they already have a permalink, update it with the current extension in case it changed
-		if ( win.jQuery('#sample-permalink').length != 0 ) {
-		    win.jQuery('#sample-permalink').html( win.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?$/i, wp_document_revisions.extension ) );
-		}
+		//call 3.3+ post upload callback
+		postDocumentUpload( )
 
 	});
 	
+	//automatically refresh all timestamps every minute with actual human time diff
 	setInterval( "updateTimestamps()", 60000 ); //60k = 1 minute
  	
 });
 
+//Javscript version of the WP human time diff PHP function, allows time stamps to by dynamically updated
 function human_time_diff( from, to  ) {
 
 		//allow $to to be optional; adjust to server's GMT offset so timezones stay in sync
@@ -207,15 +181,63 @@ function human_time_diff( from, to  ) {
  				return wp_document_revisions.day.replace( '%d', days);
 			else //plural
 				return wp_document_revisions.days.replace( '%d', days);
-			}
-	}
-	
-	function updateTimestamps() {
-	
-		//loop through all timestamps and update the timestamp
-		jQuery('.timestamp').each( function(){
-			jQuery(this).text( human_time_diff( jQuery(this).attr('id') ) ); 
-		});
+		}
+}
+
+//loop through all timestamps and update
+function updateTimestamps() {
+
+    //loop through all timestamps and update the timestamp
+    jQuery('.timestamp').each( function(){
+    	jQuery(this).text( human_time_diff( jQuery(this).attr('id') ) ); 
+    });
+    
+}
+
+//callback to handle post document upload event
+function postDocumentUpload( file, attachmentID ) {
+
+	//if this is 3.3+, we are getting the file and attachment directly from the postUpload hook
+	//must convert the file object into an extension for backwards compatability
+	if ( file instanceof Object)
+		file = file.name.split('.').pop();
 		
-	}
-	
+    //Because we're in an iFrame, we need to traverse to parrent
+    var win = window.dialogArguments || opener || parent || top;
+    
+    //prevent from firing more than once
+    if ( win.hasUpload )
+    	return;
+
+    //stuff most recent version URL into hidden content field
+    win.jQuery('#content').val( attachmentID );
+    
+    //kill any "document updated" messages to prevent confusion
+    win.jQuery('#message').hide();
+    
+    //present the user with the revision summary box
+    win.jQuery('#revision-summary').show();
+    
+    //re-enabled the submit button
+    win.jQuery(':button, :submit', '#submitpost').removeAttr('disabled');
+    
+    //flip the upload flag to enable the update button
+    win.hasUpload = true;
+    
+    //close TB
+    win.tb_remove();
+    
+    //3.2 requires convertEntities, 3.3 doesn't
+    if (typeof convertEntities == 'function')
+    	 wp_document_revisions.postUploadNotice  = convertEntities( wp_document_revisions.postUploadNotice );
+    
+    //notify user of success by adding the post upload notice before the #post div
+    //to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
+    win.jQuery('#post').before( wp_document_revisions.postUploadNotice ).prev().fadeIn().fadeOut().fadeIn();
+        		
+    //If they already have a permalink, update it with the current extension in case it changed
+    if ( win.jQuery('#sample-permalink').length != 0 ) {
+        win.jQuery('#sample-permalink').html( win.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?$/i, wp_document_revisions.extension ) );
+    }
+    
+}
