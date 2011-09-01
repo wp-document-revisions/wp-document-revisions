@@ -472,6 +472,8 @@ class Document_Revisions_Admin {
 		
 		//get the extension from the post object to pass along to the client
 		$extension = $this->get_file_type( $post );
+		echo "EXTENSION: ";
+		die( $extension );
 		
 		//begin output buffer so the javascript can be returned as a string, rather than output directly to the browser
 		ob_start();

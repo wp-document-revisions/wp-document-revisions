@@ -282,7 +282,7 @@ class Document_Revisions {
 	 	
 	 	if ( $post == '' )
 	 		global $post;
-	 		 
+
 		return $this->get_extension( $this->get_latest_version_url( $post->ID ) );
 			
 	}
@@ -617,7 +617,7 @@ class Document_Revisions {
 	function get_latest_version_url( $id ) {
 	
 		$latest = $this->get_latest_version( $id );
-		
+
 		if ( !$latest )
 			return false;
 

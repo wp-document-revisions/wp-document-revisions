@@ -109,13 +109,9 @@ jQuery(document).ready( function($) {
 	//backwards compatibility for pre, 3.3 versions
 	//variables are passed as globals and jQuery event is triggered inline
 	$(document).bind('documentUpload', function() {
-	
-		//grab globals
-		var attachmentID;
-		var extension;
-		
+
 		//call 3.3+ post upload callback
-		postDocumentUpload( )
+		postDocumentUpload( attachmentID, extension )
 
 	});
 	
