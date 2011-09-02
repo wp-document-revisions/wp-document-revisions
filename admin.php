@@ -739,14 +739,14 @@ class Document_Revisions_Admin {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 			return;
 		
-		//nonce is a funny word	
-		if ( !wp_verify_nonce( $_POST['workflow_state_nonce'], plugin_basename( __FILE__ ) ) )
-			return;
-		
 		//verify CPT
 		if ( !$this->verify_post_type( $post_id ) )
 			return;
-		
+			
+		//nonce is a funny word	
+		if ( !wp_verify_nonce( $_POST['workflow_state_nonce'], plugin_basename( __FILE__ ) ) )
+			return;
+	
 		//check permissions
 		if ( !current_user_can( 'edit_post', $post_id ) )
 			return;

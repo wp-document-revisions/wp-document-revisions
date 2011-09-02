@@ -138,6 +138,7 @@ Yes. Just follow the [standard WordPress SSL instructions](http://codex.wordpres
 = 1.0.1 =
 * Better handling of uploads in WordPress versions 3.3 and above
 * Added shadow to document menu icon (thanks to Ryan Imel of WPCandy.com)
+* Fixed E_WARNING level error for undefined index on workflow_state_nonce when saving posts with WP_DEBUG on
 
 = 1.0 =
 * Stable Release
