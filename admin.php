@@ -461,7 +461,7 @@ class Document_Revisions_Admin {
 	<?php }
 	
 	/**
-	 * Callback to inject JavaScript in page after upload is complete
+	 * Callback to inject JavaScript in page after upload is complete (pre 3.3)
 	 * @param int $id the ID of the attachment
 	 * @since 0.5
 	 */ 

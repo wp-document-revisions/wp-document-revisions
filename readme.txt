@@ -135,6 +135,10 @@ Yes. Just follow the [standard WordPress SSL instructions](http://codex.wordpres
 
 == Changelog ==
 
+= 1.0.1 =
+* Better handling of uploads in WordPress versions 3.3 and above
+* Added shadow to document menu icon (thanks to Ryan Imel of WPCandy.com)
+
 = 1.0 =
 * Stable Release
 
