@@ -129,16 +129,16 @@ class Document_Revisions_Admin {
 		if ( $screen_id == 'document' ) {
 			$contextual_help = __( '
 			<h4>Basic Usage</h4>
-			<p>This screen allows users to colaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
-			<p>Once sucefully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
+			<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
+			<p>Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
 			<p>When done, simply click <code>Update</code> to save your changes</p>
 			<h4>Revision Log</h4>
 			<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
 			<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>
 			<h4>Workflow State</h4>
-			<p>The workflow state field can be used to help team memebers understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>
+			<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>
 			<h4>Publishing Documents</h4>
-			<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessable to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>', 'wp-document-revisions' );
+			<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>', 'wp-document-revisions' );
 		}
 		
 		if ( $screen_id == 'edit-document' ) {
@@ -793,7 +793,7 @@ class Document_Revisions_Admin {
 			'lockNeedle' => __( 'is currently editing this'), //purposely left out text domain
 			'postUploadNotice' => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>'),
 			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
-			'lockError' => __( 'An error has occured, please try reloading the page.', 'wp_document_revisions' ),
+			'lockError' => __( 'An error has occurred, please try reloading the page.', 'wp_document_revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
 			'lostLockNoticeLogo' => admin_url('images/logo.gif'),
 			'minute' => __('%d mins', 'wp-document-revisions'),
