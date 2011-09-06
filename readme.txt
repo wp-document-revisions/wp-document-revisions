@@ -133,6 +133,12 @@ Yes! Each site can have its own document repository (with the ability to give us
 = Will it work over HTTPS (SSL) =
 Yes. Just follow the [standard WordPress SSL instructions](http://codex.wordpress.org/Administration_Over_SSL).
 
+= Can I tag my documents? =
+Yes. You can use the [WP Document Revisions Custom Field Generator](http://wordpress.org/extend/plugins/wp-document-revisions-custom-taxonomy-and-field-generator/) to add tags, or can share your existing tags (e.g., the ones you use for posts) with documents.
+
+= Can I put my documents in folders? =
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [WP Document Revisions Custom Field Generator](http://wordpress.org/extend/plugins/wp-document-revisions-custom-taxonomy-and-field-generator/). Be sure to select the "Hierarchical (like categories)" option.
+
 == Changelog ==
 
 = 1.0.1 =
