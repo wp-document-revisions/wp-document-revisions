@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -141,6 +141,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Changelog ==
 
+= 1.0.2 =
+* Fixed bug where RSS feeds would erroneously deny access to authorized users in multisite installs
+
 = 1.0.1 =
 * Better handling of uploads in WordPress versions 3.3 and above
 * Added shadow to document menu icon (thanks to Ryan Imel of WPCandy.com)
@@ -164,5 +167,8 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 1.0.2 =
+* Fix for authentication of RSS feeds in multisite installs
+
+= 1.0.1 =
 Minor fixes and improvements
