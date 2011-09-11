@@ -243,7 +243,7 @@ class Document_Revisions_Admin {
 		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1&document=1' id='add_media' class='thickbox button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
 		<?php
 			$latest_version = $this->get_latest_version( $post->ID ); 
-			if ( $latest_version) {			
+			if ( $latest_version ) {			
 		?>
 		<p><strong><?php _e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 		<strong><a href="<?php echo get_permalink( $post->ID ); ?>" target="_BLANK"><?php _e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
@@ -479,7 +479,7 @@ class Document_Revisions_Admin {
 		?><script>
 		var attachmentID = <?php echo $id; ?>;
 		var extension = '<?php echo $extension; ?>';
-		jQuery(document).ready(function($) { $(this).trigger('documentUpload') });
+		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
 		</script><?php 
 		
 		//get contents of output buffer

@@ -193,8 +193,8 @@ function updateTimestamps() {
 //callback to handle post document upload event
 function postDocumentUpload( file, attachmentID ) {
 	
-	//verify the upload was successful
-	if ( attachmentID.indexOf( 'error' ) != -1 ) {
+	//3.3+ verify the uploaded was successful
+	if ( typeof( attachmentID ) == 'string' && attachmentID.indexOf( 'error' ) != -1 ) {
 		jQuery('.media-item:first').html( attachmentID );
 		return;
 	}
