@@ -520,7 +520,9 @@ class Document_Revisions {
 			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
 		}
 
-		if ( !current_user_can( 'read_document', $post->ID ) || ( $version && !current_user_can( 'read_document_revisions' ) ) )
+		if ( $post->post_status != 'publish' && 
+				( !current_user_can( 'read_document', $post->ID ) || 
+				( $version && !current_user_can( 'read_document_revisions' ) ) ) )
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
 		
 		do_action( 'serve_document', $post->ID, $file );
