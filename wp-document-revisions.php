@@ -817,6 +817,7 @@ class Document_Revisions {
 	function validate_feed_key() {
 	
 		global $wpdb;
+	 
 	
 		//verify key exists
 		if ( empty( $_GET['key'] ) )
@@ -830,7 +831,7 @@ class Document_Revisions {
 			return false;
 
 		//lookup key
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", 'wp_' . self::$meta_key, $key ) ) )
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) ) )
 			return true;
 
 		return false;
