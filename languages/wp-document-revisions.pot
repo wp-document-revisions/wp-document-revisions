@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 0.6\n"
+"Project-Id-Version: WP Document Revisions 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-document-revisions\n"
-"POT-Creation-Date: 2011-08-25 16:33:06+00:00\n"
+"POT-Creation-Date: 2011-09-11 04:19:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,63 +12,64 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin.php:103
+#: admin.php:104
 msgid "Document updated. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:104
+#: admin.php:105
 msgid "Custom field updated."
 msgstr ""
 
-#: admin.php:105
+#: admin.php:106
 msgid "Custom field deleted."
 msgstr ""
 
-#: admin.php:106
+#: admin.php:107
 msgid "Document updated."
 msgstr ""
 
-#: admin.php:107
+#: admin.php:108
 msgid "Document restored to revision from %s"
 msgstr ""
 
-#: admin.php:108
+#: admin.php:109
 msgid "Document published. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:109
+#: admin.php:110
 msgid "Document saved."
 msgstr ""
 
-#: admin.php:110
+#: admin.php:111
 msgid ""
 "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:111
+#: admin.php:112
 msgid ""
 "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2"
 "$s\">Preview document</a>"
 msgstr ""
 
-#: admin.php:111
+#: admin.php:112
 msgid "M j, Y @ G:i"
 msgstr ""
 
-#: admin.php:112
+#: admin.php:113
 msgid ""
 "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
 "a>"
 msgstr ""
 
-#: admin.php:129
+#: admin.php:130
 msgid ""
 "\n"
 "\t\t\t<h4>Basic Usage</h4>\n"
-"\t\t\t<p>This screen allows users to colaboratively edit documents and track "
-"their revision history. To begin, enter a title for the document, click "
-"<code>Upload New Version</code> and select the file from your computer.</p>\n"
-"\t\t\t<p>Once sucefully uploaded, you can enter a revision log message, "
+"\t\t\t<p>This screen allows users to collaboratively edit documents and "
+"track their revision history. To begin, enter a title for the document, "
+"click <code>Upload New Version</code> and select the file from your computer."
+"</p>\n"
+"\t\t\t<p>Once successfully uploaded, you can enter a revision log message, "
 "assign the document an author, and describe its current workflow state.</p>\n"
 "\t\t\t<p>When done, simply click <code>Update</code> to save your changes</"
 "p>\n"
@@ -80,20 +81,20 @@ msgid ""
 "clicking the timestamp in the revision log. You can also restore revisions "
 "by clicking the <code>restore</code> button beside the revision.</p>\n"
 "\t\t\t<h4>Workflow State</h4>\n"
-"\t\t\t<p>The workflow state field can be used to help team memebers "
+"\t\t\t<p>The workflow state field can be used to help team members "
 "understand at what stage a document sits within a particular "
 "organization&quot;s workflow. The field is optional, and can be customized "
 "or queried by clicking <code>Workflow States</code> on the left-hand side.</"
 "p>\n"
 "\t\t\t<h4>Publishing Documents</h4>\n"
 "\t\t\t<p>By default, uploaded documents are only accessible to logged in "
-"users. Documents can be published, thus making them accessable to the world, "
+"users. Documents can be published, thus making them accessible to the world, "
 "by toggling their visibility in the \"Publish\" box in the top right corner. "
 "Any document marked as published will be accessible to anyone with the "
 "proper URL.</p>"
 msgstr ""
 
-#: admin.php:144
+#: admin.php:145
 msgid ""
 "<p>Below is a all documents to which you have access. Click the document "
 "title to edit the document or download the latest version.</p> \n"
@@ -105,100 +106,100 @@ msgid ""
 "<strong>Workflow States</strong> in the menu on the left.</p>"
 msgstr ""
 
-#: admin.php:168 admin.php:260
+#: admin.php:169 admin.php:261
 msgid "Revision Summary"
 msgstr ""
 
-#: admin.php:169
+#: admin.php:170
 msgid "Document"
 msgstr ""
 
-#: admin.php:174 admin.php:651
+#: admin.php:175 admin.php:667
 msgid "Workflow State"
 msgstr ""
 
-#: admin.php:179 admin.php:757
+#: admin.php:180 admin.php:773
 msgid "Owner"
 msgstr ""
 
-#: admin.php:236
+#: admin.php:237
 msgid "%s has prevented other users from making changes."
 msgstr ""
 
-#: admin.php:238
+#: admin.php:239
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" id="
 "\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 
-#: admin.php:247
+#: admin.php:248
 msgid "Latest Version of the Document"
 msgstr ""
 
-#: admin.php:248
+#: admin.php:249
 msgid "Download"
 msgstr ""
 
-#: admin.php:249
+#: admin.php:250
 msgid ""
 "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
 "ago by %4$s"
 msgstr ""
 
-#: admin.php:262
+#: admin.php:263
 msgid ""
 "Revision summaries are optional notes to store along with this revision that "
 "allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 
-#: admin.php:278
+#: admin.php:279
 msgid "Modified"
 msgstr ""
 
-#: admin.php:279
+#: admin.php:280
 msgid "User"
 msgstr ""
 
-#: admin.php:280
+#: admin.php:281
 msgid "Summary"
 msgstr ""
 
-#: admin.php:281
+#: admin.php:282
 msgid "Actions"
 msgstr ""
 
-#: admin.php:296
+#: admin.php:297
 msgid "Restore"
 msgstr ""
 
-#: admin.php:306
+#: admin.php:307
 msgid "RSS Feed"
 msgstr ""
 
-#: admin.php:357
+#: admin.php:358
 msgid "Please enter a valid document upload directory."
 msgstr ""
 
-#: admin.php:370
+#: admin.php:371
 msgid ""
 "Document upload directory changed, but existing uploads may need to be moved "
 "to the new folder to ensure they remain accessable."
 msgstr ""
 
-#: admin.php:383
+#: admin.php:384
 msgid "Document Settings"
 msgstr ""
 
-#: admin.php:386
+#: admin.php:387
 msgid "Document Upload Directory"
 msgstr ""
 
-#: admin.php:406 admin.php:410 wp-document-revisions.php:849
+#: admin.php:407 admin.php:411 wp-document-revisions.php:851
 msgid "Not authorized"
 msgstr ""
 
-#: admin.php:459
+#: admin.php:460
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp_content/uploads</code> folder, but it may be moved to a folder "
@@ -206,86 +207,87 @@ msgid ""
 "added security."
 msgstr ""
 
-#: admin.php:567
+#: admin.php:583
 msgid ""
 "You currently have this file checked out. No other user can edit this "
 "document so long as you remain on this page."
 msgstr ""
 
-#: admin.php:578
+#: admin.php:594
 msgid "Feed Privacy"
 msgstr ""
 
-#: admin.php:581
+#: admin.php:597
 msgid "Secret Feed Key"
 msgstr ""
 
-#: admin.php:584
+#: admin.php:600
 msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
 msgstr ""
 
-#: admin.php:586
+#: admin.php:602
 msgid "Generate New Key"
 msgstr ""
 
-#: admin.php:700
+#: admin.php:716
 msgid "Current State"
 msgstr ""
 
-#: admin.php:758
+#: admin.php:774
 msgid "Document Owner"
 msgstr ""
 
-#: admin.php:776
+#: admin.php:792
 msgid ""
-"Are you sure you want to restore this revision?\\n\\nIf you do, no history "
-"will be lost. This revision will be copied and become the most recent "
-"revision."
+"Are you sure you want to restore this revision?\n"
+"\n"
+"If you do, no history will be lost. This revision will be copied and become "
+"the most recent revision."
 msgstr ""
 
-#: admin.php:777
+#: admin.php:793
 msgid "is currently editing this"
 msgstr ""
 
-#: admin.php:778
+#: admin.php:794
 msgid ""
 "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File "
 "uploaded successfully. Add a revision summary below (optional) or press "
 "<em>Update</em> to save your changes.</p></div>"
 msgstr ""
 
-#: admin.php:779
+#: admin.php:795
 msgid ""
 "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr ""
 
-#: admin.php:780
-msgid "An error has occured, please try reloading the page."
+#: admin.php:796
+msgid "An error has occurred, please try reloading the page."
 msgstr ""
 
-#: admin.php:781
+#: admin.php:797
 msgid "Lost Document Lock"
 msgstr ""
 
-#: admin.php:783 admin.php:784
+#: admin.php:799 admin.php:800
 msgid "%d mins"
 msgstr ""
 
-#: admin.php:785
+#: admin.php:801
 msgid "%d hour"
 msgstr ""
 
-#: admin.php:786
+#: admin.php:802
 msgid "%d hours"
 msgstr ""
 
-#: admin.php:787
+#: admin.php:803
 msgid "%d day"
 msgstr ""
 
-#: admin.php:788
+#: admin.php:804
 msgid "%d days"
 msgstr ""
 
@@ -422,7 +424,7 @@ msgstr ""
 msgid "revision"
 msgstr ""
 
-#: wp-document-revisions.php:354 wp-document-revisions.php:543
+#: wp-document-revisions.php:354 wp-document-revisions.php:545
 msgid "-revision-"
 msgstr ""
 
@@ -430,35 +432,35 @@ msgstr ""
 msgid "404 &#8212; File not found."
 msgstr ""
 
-#: wp-document-revisions.php:524
+#: wp-document-revisions.php:526
 msgid "You are not authorized to access that file."
 msgstr ""
 
-#: wp-document-revisions.php:805
+#: wp-document-revisions.php:807
 msgid "Sorry, this is a private feed."
 msgstr ""
 
-#: wp-document-revisions.php:891
+#: wp-document-revisions.php:893
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr ""
 
-#: wp-document-revisions.php:895
+#: wp-document-revisions.php:897
 msgid "Dear %s:"
 msgstr ""
 
-#: wp-document-revisions.php:896
+#: wp-document-revisions.php:898
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr ""
 
-#: wp-document-revisions.php:897
+#: wp-document-revisions.php:899
 msgid "Any changes you have made will be lost."
 msgstr ""
 
-#: wp-document-revisions.php:898
+#: wp-document-revisions.php:900
 msgid "- The %s Team"
 msgstr ""
 
-#: wp-document-revisions.php:1061
+#: wp-document-revisions.php:1063
 msgid "%s - Revision %d"
 msgstr ""
 
