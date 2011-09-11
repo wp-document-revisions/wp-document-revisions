@@ -146,6 +146,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Added shadow to document menu icon (thanks to Ryan Imel of WPCandy.com)
 * Fixed E_WARNING level error for undefined index on workflow_state_nonce when saving posts with WP_DEBUG on
 * Corrected typos in contextual help dropdown
+* Fixed permission issue where published documents were not accessible to non-logged in users
 
 = 1.0 =
 * Stable Release
