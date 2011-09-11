@@ -147,6 +147,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Fixed E_WARNING level error for undefined index on workflow_state_nonce when saving posts with WP_DEBUG on
 * Corrected typos in contextual help dropdown
 * Fixed permission issue where published documents were not accessible to non-logged in users
+* Fixed last-modified author not displaying the proper author on document-edit screen
 
 = 1.0 =
 * Stable Release
