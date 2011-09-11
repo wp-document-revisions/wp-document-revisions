@@ -192,7 +192,13 @@ function updateTimestamps() {
 
 //callback to handle post document upload event
 function postDocumentUpload( file, attachmentID ) {
-
+	
+	//verify the upload was successful
+	if ( attachmentID.indexOf( 'error' ) != -1 ) {
+		jQuery('.media-item:first').html( attachmentID );
+		return;
+	}
+	
 	//if this is 3.3+, we are getting the file and attachment directly from the postUpload hook
 	//must convert the file object into an extension for backwards compatability
 	if ( file instanceof Object)
