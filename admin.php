@@ -242,12 +242,12 @@ class Document_Revisions_Admin {
 		<?php } ?>
 		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1&document=1' id='add_media' class='thickbox button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
 		<?php
-			$latest_version = $this->get_latest_version( $post->ID ); 
+			$latest_version = $this->get_latest_revision( $post->ID ); 
 			if ( $latest_version ) {			
 		?>
 		<p><strong><?php _e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 		<strong><a href="<?php echo get_permalink( $post->ID ); ?>" target="_BLANK"><?php _e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
-			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $post->post_author ) ) ?></a></em>
+			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
 		</p>
 		<?php } //end if latest version ?>
 		<div class="clear"></div>	

@@ -141,6 +141,10 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Changelog ==
 
+= 1.0.3 =
+* Changed functions get_latest_version and get_latest_version_url to "revision" instead of "version" for consistency
+* Forces get_latest_revision to rely on get_revisions to fix inconsistencies in WP revision author bug
+
 = 1.0.2 =
 * Fixed bug where RSS feeds would erroneously deny access to authorized users in multisite installs
 

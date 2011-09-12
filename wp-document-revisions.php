@@ -410,6 +410,9 @@ class Document_Revisions {
 		//get the actual post
 		$post = get_post( $postID );
 		
+		if ( !$post )
+			return false;
+		
 		//correct the modified date
 		$post->post_date = date( 'Y-m-d H:i:s', get_the_modified_time( 'U' ) );
 		
@@ -505,7 +508,7 @@ class Document_Revisions {
 		
 		//if there's not a post revision given, default to the latest
 		if ( !$version ) {
-			$revision = $this->get_latest_version( $post->ID );
+			$revision = $this->get_latest_revision( $post->ID );
 		} else { 
 			$rev_id = $this->get_revision_id ( $version, $post->ID );
 			$rev_post = get_post ( $rev_id );
@@ -589,25 +592,40 @@ class Document_Revisions {
 	}
 	
 	/**
+	 * Depricated for consistency of terms
+	 */
+	function get_latest_version( $id ) {
+		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_version' );
+		return $this->get_latest_revision( $id );
+	}
+	
+	/**
 	 * Given a post ID, returns the latest revision attachment
 	 * @param int $id Post ID
 	 * @returns object latest revision object
 	 *
 	 */
-	function get_latest_version( $id ) {
+	function get_latest_revision( $id ) {
 	
-		$post = get_post( $id );
+		$revisions = $this->get_revisions( $id );
 		
-		//verify post type
-		if ( !$this->verify_post_type( $post ) )
+		if ( !$revisions )
 			return false;
 		
 		//verify that there's an upload ID in the content field
-		if ( !is_numeric( $post->post_content ) )
+		if ( !is_numeric( $revisions[0]->post_content ) )
 			return false;
 			
-		return get_post( $post->post_content );	
+		return $revisions[0];
 		
+	}
+	
+	/**
+	 * Deprecated for consistency sake
+	 */
+	function get_latest_version_url( $id ) {
+		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_revision_url' );
+		return $this->get_latest_revision_url( $id );
 	}
 	
 	/**
@@ -616,9 +634,9 @@ class Document_Revisions {
 	 * @return string|bool URL to revision or false if no attachment
 	 * @since 0.5
 	 */
-	function get_latest_version_url( $id ) {
+	function get_latest_revision_url( $id ) {
 	
-		$latest = $this->get_latest_version( $id );
+		$latest = $this->get_latest_revision( $id );
 
 		if ( !$latest )
 			return false;

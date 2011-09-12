@@ -64,7 +64,7 @@ jQuery(document).ready( function($) {
 			if ( hasUpload )
 				wp_document_revisions_autosave_enable_buttons();
 		}
-		
+				
 	}	
 	
 	//Callback to handle post autosave action
