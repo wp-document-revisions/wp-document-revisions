@@ -283,7 +283,7 @@ class Document_Revisions {
 	 	if ( $post == '' )
 	 		global $post;
 
-		return $this->get_extension( $this->get_latest_version_url( $post->ID ) );
+		return $this->get_extension( $this->get_latest_revision_url( $post->ID ) );
 			
 	}
 	
@@ -357,7 +357,7 @@ class Document_Revisions {
 
 		// build documents/yyyy/mm/slug		 
 		$extension = $this->get_file_type( $post );
-		
+
 		$timestamp = strtotime($post->post_date);
 		$link = home_url() . '/documents/' . date('Y',$timestamp) . '/' . date('m',$timestamp) . '/';
 		$link .= ( $leavename ) ? '%document%' : $post->post_name;
@@ -507,14 +507,14 @@ class Document_Revisions {
 		$version = get_query_var( 'revision' );
 		
 		//if there's not a post revision given, default to the latest
-		if ( !$version ) {
-			$revision = $this->get_latest_revision( $post->ID );
-		} else { 
+		if ( !$version ) 
+			$rev_id = $this->get_latest_revision( $post->ID );
+		else 
 			$rev_id = $this->get_revision_id ( $version, $post->ID );
-			$rev_post = get_post ( $rev_id );
-			$revision = get_post( $rev_post->post_content );
-		}
-			
+		
+		$rev_post = get_post ( $rev_id );
+		$revision = get_post( $rev_post->post_content );
+
 		$file = get_attached_file( $revision->ID );
 		
 		//return 404 if the file is a dud or malformed
@@ -603,7 +603,6 @@ class Document_Revisions {
 	 * Given a post ID, returns the latest revision attachment
 	 * @param int $id Post ID
 	 * @returns object latest revision object
-	 *
 	 */
 	function get_latest_revision( $id ) {
 	
@@ -641,7 +640,7 @@ class Document_Revisions {
 		if ( !$latest )
 			return false;
 
-		return wp_get_attachment_url( $latest->ID );				
+		return wp_get_attachment_url( $latest->post_content );				
 	}
 
 	/**
