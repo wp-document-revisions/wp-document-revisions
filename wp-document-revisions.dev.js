@@ -64,6 +64,28 @@ jQuery(document).ready( function($) {
 			if ( hasUpload )
 				wp_document_revisions_autosave_enable_buttons();
 		}
+	
+		//if post status is changed, enable the submit button so the change can be saved
+		$('#misc-publishing-actions a').click( function(){
+		
+			//re-enabled the submit button
+			$(':button, :submit', '#submitpost').removeAttr('disabled');
+			
+			//give them the option to submit a revision summary for this change
+			$('#revision-summary').fadeIn('slow');
+			
+		});
+		
+		//if any metabox is changed, allow submission
+		$('input, select, textarea').live('change', function() {
+		
+			//re-enabled the submit button
+			$(':button, :submit', '#submitpost').removeAttr('disabled');
+			
+			//give them the option to submit a revision summary for this change
+			$('#revision-summary').fadeIn('slow');
+			
+		});
 				
 	}	
 	
@@ -88,22 +110,6 @@ jQuery(document).ready( function($) {
 			location.reload(true);
 		}
 	
-	});
-	
-	//if post status is changed, enable the submit button so the change can be saved
-	$('#misc-publishing-actions a').click( function(){
-
-	//re-enabled the submit button
-		$(':button, :submit', '#submitpost').removeAttr('disabled');
-		
-	});
-	
-	//if any metabox is changed, allow submission
-	$('input, select, textarea').live('change', function() {
-
-		//re-enabled the submit button
-		$(':button, :submit', '#submitpost').removeAttr('disabled');
-		
 	});
 
 	//backwards compatibility for pre, 3.3 versions
