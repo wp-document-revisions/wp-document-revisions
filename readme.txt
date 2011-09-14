@@ -47,6 +47,18 @@ A document management and version control plugin that allows teams of any size t
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Easily translated to your local language
 
+**Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
+
+* **Audit Trail** - creates check in / check out audit trail for all documents
+* **State Permissions** - allows setting user-level permissions based on a custom taxonomy such as workflow state or other document status
+* **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
+* **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
+* **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
+* **Bulk Import** - how to batch import a directory (or other list) of files as documents
+* **Recently Revised Widget** - example of how to list recently revised documents in a widget
+* **Filetype Taxonomy** - Adds support to filter by filetype
+* **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
 == Screenshots ==
