@@ -755,9 +755,15 @@ class Document_Revisions_Admin {
 		if ( wp_is_post_revision( $post_id ) )
 			$post_id = wp_is_post_revision( $post_id );
 			
+		$old = wp_get_post_terms( $post_id,  'workflow_state', true );
+		
+		//no change, keep moving
+		if ( $old[0]->term_id == $_POST['workflow_state'] )
+			return;
+			
 		//all's good, let's save		
 		wp_set_post_terms( $post_id, array( $_POST['workflow_state'] ), 'workflow_state' );
-	
+
 		do_action( 'change_document_workflow_state', $post_id, $_POST['workflow_state'] );
 		
 	}

@@ -317,6 +317,9 @@ class Document_Revisions {
 		//documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/
 		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 		
+		// site.com/documents/ should list all documents that user has access to (private, public)
+		$my_rules['documents/?$'] = 'index.php?post_type=document';
+		
 		$my_rules = apply_filters( 'document_rewrite_rules', $my_rules, $rules );
 			
 		return $my_rules + $rules;

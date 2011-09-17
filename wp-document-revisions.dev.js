@@ -71,21 +71,24 @@ jQuery(document).ready( function($) {
 			//re-enabled the submit button
 			$(':button, :submit', '#submitpost').removeAttr('disabled');
 			
-			//give them the option to submit a revision summary for this change
-			$('#revision-summary').fadeIn('slow');
-			
 		});
 		
 		//if any metabox is changed, allow submission
-		$('input, select, textarea').live('change', function() {
+		$('input, select').live('change', function() {
 		
 			//re-enabled the submit button
 			$(':button, :submit', '#submitpost').removeAttr('disabled');
 			
-			//give them the option to submit a revision summary for this change
-			$('#revision-summary').fadeIn('slow');
-			
 		});
+		
+		//if any metabox is changed, allow submission
+		$('input[type=text], textarea').live('keyUp', function() {
+		
+			//re-enabled the submit button
+			$(':button, :submit', '#submitpost').removeAttr('disabled');
+			
+		});		
+		
 				
 	}	
 	
