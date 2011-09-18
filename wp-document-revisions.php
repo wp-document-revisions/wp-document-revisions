@@ -422,6 +422,9 @@ class Document_Revisions {
 		//grab the post author
 		$post_author = $post->post_author;
 		
+		//fix for Quotes in the most recent post because it comes from get_post
+		$post->post_excerpt = html_entity_decode( $post->post_excerpt );
+		
 		//get revisions, and prepend the post
  		$revs = wp_get_post_revisions( $postID, array( 'order' => 'DESC' ) );
  		array_unshift( $revs, $post );
@@ -438,7 +441,7 @@ class Document_Revisions {
 				$rev->post_author = $post_author;
 		
 		}
-
+		
 		return $revs;
 				
  	}
