@@ -345,6 +345,8 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function permalink( $link, $post, $leavename, $sample = '' ) {
+	
+		global $wp_rewrite;
 
 		//if this isn't our post type, kick
 		if( !$this->verify_post_type( $post ) )
@@ -357,6 +359,10 @@ class Document_Revisions {
 			$parent->post_name = $parent->post_name . __('-revision-', 'wp-document-revisions') . $revision_num;
 			$post = $parent;
 		}
+		
+		//if no permastruct
+		if ( $wp_rewrite->permalink_structure == '' ) 
+			return '?p=' . $post->ID;
 
 		// build documents/yyyy/mm/slug		 
 		$extension = $this->get_file_type( $post );

@@ -158,6 +158,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Forces get_latest_revision to rely on get_revisions to fix inconsistencies in WP revision author bug
 * Changing metabox options does not enable the publish button on non-document pages
 * Changing metabox options displays the revision summary metabox
+* Support for ugly permalink structures
 
 = 1.0.2 =
 * Fixed bug where RSS feeds would erroneously deny access to authorized users in multisite installs
