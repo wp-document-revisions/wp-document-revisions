@@ -159,6 +159,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Changing metabox options does not enable the publish button on non-document pages
 * Changing metabox options displays the revision summary metabox
 * Support for ugly permalink structures
+* Fix for authors not having capability to edit documents by default
 
 = 1.0.2 =
 * Fixed bug where RSS feeds would erroneously deny access to authorized users in multisite installs

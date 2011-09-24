@@ -984,7 +984,7 @@ class Document_Revisions {
 					),
 				'author' =>
 					array( 
-					    'edit_document' => true,
+					    'edit_documents' => true,
 					    'edit_others_documents' => false, 
 					    'edit_private_documents' => false, 						
 					    'edit_published_documents' => true, 
