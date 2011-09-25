@@ -659,7 +659,7 @@ class Document_Revisions_Admin {
 	 * @returns array our spliced columns
 	 */
 	function add_workflow_state_column( $defaults ) {
-			return $defaults;
+
 		//get checkbox and title
 		$output = array_slice( $defaults, 0, 2 );
 		
