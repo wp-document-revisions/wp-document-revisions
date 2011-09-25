@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.0.2
+Version: 1.0.3
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -30,6 +30,7 @@ class Document_Revisions {
 		add_action( 'init', array( &$this, 'register_ct' ) );
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
+		add_filter( 'the_content', array( &$this, 'content_filter' ) );
 
 		//rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );		
@@ -362,7 +363,7 @@ class Document_Revisions {
 		
 		//if no permastruct
 		if ( $wp_rewrite->permalink_structure == '' ) 
-			return '?p=' . $post->ID;
+			return site_url( '?post_type=document&p=' . $post->ID );
 
 		// build documents/yyyy/mm/slug		 
 		$extension = $this->get_file_type( $post );
@@ -1091,6 +1092,22 @@ class Document_Revisions {
 		
 		//add title, apply filters, and return				
 		return apply_filters( 'document_title', sprintf( __('%s - Revision %d', 'wp-document-revisions' ), $title, $revision_num ) );	
+	}
+	
+	/**
+	 * Prevents Attachment ID from being displayed on front end
+	 * @param string $content the post content
+	 * @param int $postID the post ID
+	 * @returns string either the original content or none
+	 * @since 1.0.3
+	 */
+	function content_filter( $content ) {
+		
+		if ( !$this->verify_post_type( ) )
+			return $content;
+	
+		return '';
+		
 	}
 
 	/**

@@ -82,7 +82,7 @@ jQuery(document).ready( function($) {
 		});
 		
 		//if any metabox is changed, allow submission
-		$('input[type=text], textarea').live('keyUp', function() {
+		$('input[type=text], textarea').live('keyup', function() {
 		
 			//re-enabled the submit button
 			$(':button, :submit', '#submitpost').removeAttr('disabled');
