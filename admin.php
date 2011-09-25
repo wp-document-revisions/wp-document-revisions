@@ -3,6 +3,7 @@
 class Document_Revisions_Admin {
 
 	static $parent;
+	static $instance;
 
 	/**
 	 * Register's admin hooks
@@ -11,6 +12,8 @@ class Document_Revisions_Admin {
 	 */
 	function __construct( &$instance = null) {
 			
+		self::$instance = &$this;
+
 		//create or store parent instance
 		if ( $instance === null ) 
 			self::$parent = new Document_Revisions;
