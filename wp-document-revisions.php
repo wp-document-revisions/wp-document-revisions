@@ -30,7 +30,7 @@ class Document_Revisions {
 		add_action( 'init', array( &$this, 'register_ct' ) );
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
-		add_filter( 'the_content', array( &$this, 'content_filter' ) );
+		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 
 		//rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );		
