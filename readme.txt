@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -124,7 +124,7 @@ WP Document Revisions was built from the ground up with security in mind. Each r
 
 In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
 
-= I keep getting a "file not found" every time I try to download a document, what gives? =
+= I keep getting a "file not found" (404) every time I try to download a document, what gives? =
 
 Make sure you have [pretty permalinks](http://codex.wordpress.org/Using_Permalinks#Using_.22Pretty.22_permalinks) enabled, and that other posts are available via the domain.com/yyyy/mm/post/ format (rather than domain.com/?p=1234).
 
@@ -181,12 +181,15 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * [Revision Log](http://gsoc.trac.wordpress.org/log/2011/BenBalter)
 
 = 0.5 =
-* Initial release
+* Initial beta
 
 = 0.1 =
 * Proof of concept prototype
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+* Minor improvements to revision handling, permalinks, permissions, the edit document screen, and front-end compatibility
 
 = 1.0.2 =
 * Fix for authentication of RSS feeds in multisite installs
