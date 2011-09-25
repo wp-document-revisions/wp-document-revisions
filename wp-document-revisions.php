@@ -945,8 +945,10 @@ class Document_Revisions {
 	 * @since 1.0
 	 */
 	function add_caps() {
-	
-		$wp_roles = new WP_Roles();
+		
+		global $wp_roles;
+		if ( ! isset( $wp_roles ) )
+    		$wp_roles = new WP_Roles;
 
 		//default role => capability mapping; based off of _post options
 		//can be overridden by 3d party plugins
