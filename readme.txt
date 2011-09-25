@@ -154,6 +154,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 == Changelog ==
 
 = 1.0.3 =
+* A list of all documents a user (or visitor) has permission to view is now available at yourdomain.com/documents/
 * Changed functions get_latest_version and get_latest_version_url to "revision" instead of "version" for consistency
 * Forces get_latest_revision to rely on get_revisions to fix inconsistencies in WP revision author bug
 * Support for ugly permalink structures
