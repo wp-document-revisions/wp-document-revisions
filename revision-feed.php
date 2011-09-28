@@ -4,7 +4,14 @@
  * Inspired by WP's feed-rss2.php
  */
 
-//header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
+global $post;
+global $wpdr;
+if ( !$wpdr )
+    $wpdr = &Document_Revisions::$instance;
+    
+$rev_query = $wpdr->get_revision_query( $post->ID );
+
+header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 
 echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 
@@ -15,9 +22,7 @@ echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 	xmlns:atom="http://www.w3.org/2005/Atom"
 	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
 	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
-	<?php do_action( 'rss2_ns '); ?>
->
-
+	<?php do_action( 'rss2_ns '); ?>>
 <channel>
 	<title><?php bloginfo_rss( 'name' ); wp_title_rss(); ?></title>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
@@ -27,37 +32,18 @@ echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 	<language><?php echo get_option( 'rss_language' ); ?></language>
 	<sy:updatePeriod><?php echo apply_filters( 'rss_update_period', 'hourly' ); ?></sy:updatePeriod>
 	<sy:updateFrequency><?php echo apply_filters( 'rss_update_frequency', '1' ); ?></sy:updateFrequency>
-	<?php do_action( 'rss2_head' ); ?>
-	
-	<?php while( have_posts()) : the_post(); 
-	$parent = get_the_ID(); ?>
-	<item>
+	<?php do_action( 'rss2_head' ); 	
+	while( $rev_query->have_posts()) : $rev_query->the_post(); 
+	?>	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>
 		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
 		<dc:creator><?php the_author() ?></dc:creator>
-		<?php the_category_rss( 'rss2' ) ?>
-
+<?php the_category_rss( 'rss2' ) ?>
 		<guid isPermaLink="false"><?php the_guid(); ?></guid>
 		<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
 	<?php do_action( 'rss2_item' ); ?>
-	</item>
-	<?php endwhile; ?>
-	<?php $args = array( 'post_type' => array( 'revision' ), 'post_status'=> array( 'inherit' ), 'post_parent' => $parent ); ?>
-	<?php $q = New WP_Query( $args ); ?>
-	<?php while( $q->have_posts() ) : $q->the_post(); ?>
-	<item>
-		<title><?php the_title_rss() ?></title>
-		<link><?php the_permalink_rss() ?></link>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
-		<dc:creator><?php the_author() ?></dc:creator>
-		<?php the_category_rss( 'rss2' ) ?>
-
-		<guid isPermaLink="false"><?php the_guid(); ?></guid>
-		<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
-<?php rss_enclosure(); ?>
-	<?php do_action( 'rss2_item' ); ?>
-	</item>
-	<?php endwhile; ?>
+</item>
+<?php endwhile; ?>
 </channel>
 </rss>

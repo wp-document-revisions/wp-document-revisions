@@ -460,6 +460,30 @@ class Document_Revisions {
 		return $revs;
 				
  	}
+ 	
+ 	/**
+ 	 * Returns a modified WP Query object of a document and its revisions
+ 	 * Corrects the authors bug
+ 	 * @since 1.0.4
+ 	 * @param int $postID the ID of the document
+ 	 * @param bool $feed whether this is a feed
+ 	 * @returns obj|bool the WP_Query object, false on failure
+ 	 */
+ 	function get_revision_query( $postID, $feed = false ) {
+ 	
+ 		$posts = $this->get_revisions( $postID );
+ 		
+ 		if ( !$posts )
+ 			return false;
+ 			
+		$rev_query = new WP_Query();
+		$rev_query->posts = $posts;
+		$rev_query->post_count = sizeof( $posts );
+		$rev_query->is_feed = $feed;
+		
+		return $rev_query;
+ 	
+ 	}
 	
 	/**
 	 * For a given post, builds a 1-indexed array of revision post ID's
@@ -1116,7 +1140,7 @@ class Document_Revisions {
 		
 		//if this is a document, and not a revision, just filter and return the title
 		if ( $post->post_type != 'revision' )
-			return apply_filters( 'document_title', $title );
+			return apply_filters( 'document_title', sprintf( __( '%s - Latest Revision', 'wp-document-revisions'), $title ) );
 		
 		//get revision num
 		$revision_num = $this->get_revision_number( $post->ID );
