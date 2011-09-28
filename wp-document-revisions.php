@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.1
+Version: 1.0.4
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -58,6 +58,9 @@ class Document_Revisions {
 
 		//locking
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
+		
+		//cache
+		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 		
 	}
 
@@ -422,9 +425,12 @@ class Document_Revisions {
 		
 		if ( !$post )
 			return false;
+			
+		if ( $cache = wp_cache_get( $postID, 'document_revisions' ) ) 
+			return $cache;
 		
 		//correct the modified date
-		$post->post_date = date( 'Y-m-d H:i:s', get_the_modified_time( 'U' ) );
+		$post->post_date = date( 'Y-m-d H:i:s', get_post_modified_time( 'U', null, $postID ) );
 		
 		//grab the post author
 		$post_author = $post->post_author;
@@ -449,6 +455,8 @@ class Document_Revisions {
 		
 		}
 		
+		wp_cache_set( $postID, $revs, 'document_revisions' );
+		
 		return $revs;
 				
  	}
@@ -461,11 +469,16 @@ class Document_Revisions {
 	 */
 	function get_revision_indices( $post_id ) {
 	
+		if ( $cache = wp_cache_get( $post_id, 'document_revision_indices' ) )
+			return $cache; 
+	
 		$revs = wp_get_post_revisions( $post_id, array( 'order' => 'ASC' ) );
 		
 		$i = 1;
 		foreach ( $revs as $rev )
 			$output[ $i++ ] = $rev->ID;
+			
+		wp_cache_set( $post_id, $output, 'document_revision_indices' );
 		
 		return $output;		
 		
@@ -763,8 +776,12 @@ class Document_Revisions {
 			return true;
 			
 		//allow the argument to be called without arguments if post is a global
-		if ( $post == '')
+		if ( $post == '') 
 			global $post;
+		
+		//check for cache
+		if ( is_object( $post ) && $cache = wp_cache_get( $post->ID, 'document_post_type' ) )
+			return $cache;
 		
 		//if post isn't set, try get vars
 		if ( !$post ) 
@@ -782,11 +799,27 @@ class Document_Revisions {
 		//must be done separately so as not to override global post with post parent and cause all sorts of headaches elsewhere
 		if ( isset( $post->post_type ) && ( $post->post_type == 'revision' || $post->post_type == 'attachment' ) ) {
 			$parent = get_post( $post->post_parent );
-			return ( isset( $parent->post_type ) && $parent->post_type == 'document' );	
-		}
+			$return = ( isset( $parent->post_type ) && $parent->post_type == 'document' );
+		} else {
+			$return = ( isset( $post->post_type ) && $post->post_type == 'document' );
+		}	
 		
-		return ( isset( $post->post_type ) && $post->post_type == 'document' );
+		//it's possible that we still don't know the post at this point, if so don't cache
+		if ( is_object( $post ) )
+			wp_cache_set( $post->ID, $return, 'document_post_type' );
 		
+		return $return;
+		
+	}
+	
+	/**
+	 * Clears cache on post_save
+	 * @param int $postID the post ID
+	 */
+	function clear_cache( $postID ) {
+		wp_cache_delete( $postID, 'document_post_type' );
+		wp_cache_delete( $postID, 'document_revision_indices' );
+		wp_cache_delete( $postID, 'document_revisions' );
 	}
 	
 	/**
