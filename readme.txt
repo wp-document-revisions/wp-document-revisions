@@ -155,7 +155,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 = 1.0.4 =
 * Significant performance improvements (now relies on wp_cache)
-* Feed improvements (performance improvements, more consistant handling of authors and timestamps)
+* Feed improvements (performance improvements, more consistent handling of authors and timestamps)
 
 = 1.0.3 =
 * A list of all documents a user (or visitor) has permission to view is now available at yourdomain.com/documents/
