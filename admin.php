@@ -35,6 +35,7 @@ class Document_Revisions_Admin {
 		add_filter( 'plupload_success_handler', array(&$this, 'post_upload_cb_filter' ) );
 
 		//document list
+		//add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 
@@ -655,6 +656,8 @@ class Document_Revisions_Admin {
 	
 	}
 	
+
+	
 	/**
 	 * Splices workflow state column as 2nd (3rd) column on documents page
 	 * @since 0.5
@@ -662,7 +665,7 @@ class Document_Revisions_Admin {
 	 * @returns array our spliced columns
 	 */
 	function add_workflow_state_column( $defaults ) {
-
+		
 		//get checkbox and title
 		$output = array_slice( $defaults, 0, 2 );
 		
@@ -700,7 +703,7 @@ class Document_Revisions_Admin {
 			return;
 		
 		//output (no return)
-		echo '<a href="' . add_query_arg( 'workflow_state', $state[0]->slug) . '">' . $state[0]->name . '</a>';
+		echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug) ) . '">' . $state[0]->name . '</a>';
 		
 	}
 	
