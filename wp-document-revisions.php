@@ -141,7 +141,6 @@ class Document_Revisions {
  	 		'hierarchical' => false,
  	 		'labels' => $labels,
  	 		'show_ui' => true,
- 	 		'query_var' => false,
  	 		'rewrite' => false,
  	 	) ) );
 	

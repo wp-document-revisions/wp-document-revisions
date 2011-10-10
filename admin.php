@@ -700,7 +700,7 @@ class Document_Revisions_Admin {
 			return;
 		
 		//output (no return)
-		echo $state[0]->name;
+		echo '<a href="' . add_query_arg( 'workflow_state', $state[0]->slug) . '">' . $state[0]->name . '</a>';
 		
 	}
 	
