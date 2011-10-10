@@ -35,7 +35,7 @@ class Document_Revisions_Admin {
 		add_filter( 'plupload_success_handler', array(&$this, 'post_upload_cb_filter' ) );
 
 		//document list
-		//add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
+		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 
@@ -656,7 +656,19 @@ class Document_Revisions_Admin {
 	
 	}
 	
-
+	/**
+	 * Renames author column on document list to "owner"
+	 * @param array $defaults the default column labels
+	 * @returns array the modified column labels
+	 * @since 1.0.4
+	 */
+	function rename_author_column ( $defaults ) {
+	
+		if ( isset( $defaults['author'] ) )
+			$defaults['author'] = __( 'Owner', 'wp-document-revisions' );
+				
+		return $defaults;
+	}
 	
 	/**
 	 * Splices workflow state column as 2nd (3rd) column on documents page
