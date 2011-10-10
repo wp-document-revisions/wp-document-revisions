@@ -157,6 +157,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Significant performance improvements (now relies on wp_cache)
 * Feed improvements (performance improvements, more consistent handling of authors and timestamps)
 * Workflow States in documents list are now link to a list of all documents in that workflow state
+* Changed "Author" column heading to "Owner" in documents list to prevent confusion
 
 = 1.0.3 =
 * A list of all documents a user (or visitor) has permission to view is now available at yourdomain.com/documents/
