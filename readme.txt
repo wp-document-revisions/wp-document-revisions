@@ -196,6 +196,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Upgrade Notice ==
 
+= 1.0.4 =
+* Significant performance improvements, interface improvements, better feed handling, and bug fixes
+
 = 1.0.3 =
 * Minor improvements to revision handling, permalinks, permissions, the edit document screen, and front-end compatibility
 
