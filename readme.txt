@@ -158,6 +158,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Feed improvements (performance improvements, more consistent handling of authors and timestamps)
 * Workflow States in documents list are now link to a list of all documents in that workflow state
 * Changed "Author" column heading to "Owner" in documents list to prevent confusion
+* If a revision's attachment ID is unknown, the plugin now defaults to the latest attached file, rather than serving a 404
 
 = 1.0.3 =
 * A list of all documents a user (or visitor) has permission to view is now available at yourdomain.com/documents/
