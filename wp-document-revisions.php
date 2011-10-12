@@ -399,7 +399,7 @@ class Document_Revisions {
 		$attachments = $this->get_attachments( $post );
 			
 		//if no attachments, return nothing
-		if ( sizeof( $attachments ) == 0)
+		if ( empty( $attachments ) )
 			return '';
 		
 		//otherwise return html unfiltered
@@ -661,8 +661,18 @@ class Document_Revisions {
 			return false;
 		
 		//verify that there's an upload ID in the content field
-		if ( !is_numeric( $revisions[0]->post_content ) )
-			return false;
+		//if there's no upload ID for some reason, default to latest attached upload
+		if ( !is_numeric( $revisions[0]->post_content ) ) {
+			
+			$attachments = $this->get_attachments( $id );
+			
+			if ( empty( $attachments ) )
+				return false;
+
+			$latest_attachment = reset( $attachments );
+			$revisions[0]->post_content = $latest_attachment->ID;
+			
+		}
 			
 		return $revisions[0];
 		
