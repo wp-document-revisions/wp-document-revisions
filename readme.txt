@@ -153,6 +153,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed bug where password-protected documents would not prompt for password under certain circumstances
+
 = 1.0.4 =
 * Significant performance improvements (now relies on wp_cache)
 * Feed improvements (performance improvements, more consistent handling of authors and timestamps)
@@ -195,6 +198,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 * Proof of concept prototype
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+* Fixed bug where password-protected documents would not prompt for password under certain circumstances
 
 = 1.0.4 =
 * Significant performance improvements, interface improvements, better feed handling, and bug fixes
