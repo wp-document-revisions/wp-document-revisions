@@ -1153,8 +1153,14 @@ class Document_Revisions {
 			return $title;
 		
 		//if this is a document, and not a revision, just filter and return the title
-		if ( $post->post_type != 'revision' )
-			return apply_filters( 'document_title', sprintf( __( '%s - Latest Revision', 'wp-document-revisions'), $title ) );
+		if ( $post->post_type != 'revision' ) {
+		
+			if ( is_feed() )
+				$title = sprintf( __( '%s - Latest Revision', 'wp-document-revisions'), $title );
+		
+			return apply_filters( 'document_title',  $title ); 
+		
+		}	
 		
 		//get revision num
 		$revision_num = $this->get_revision_number( $post->ID );
