@@ -551,6 +551,11 @@ class Document_Revisions {
 		
 		if ( !$this->verify_post_type( $post ) )
 			return $template;
+		
+		//if this is a passworded document and no password is sent
+		//use the normal template which should prompt for password
+		if ( post_password_required( $post ) )
+			return $template;
 				
 		//grab the post revision if any
 		$version = get_query_var( 'revision' );
@@ -576,7 +581,7 @@ class Document_Revisions {
 				( !current_user_can( 'read_document', $post->ID ) || 
 				( $version && !current_user_can( 'read_document_revisions' ) ) ) )
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
-		
+				
 		do_action( 'serve_document', $post->ID, $file );
 
 		// We may override this later.
@@ -1172,6 +1177,10 @@ class Document_Revisions {
 	function content_filter( $content ) {
 		
 		if ( !$this->verify_post_type( ) )
+			return $content;
+		
+		//allow password prompt to display
+		if ( post_password_required() )
 			return $content;
 	
 		return '';
