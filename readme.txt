@@ -155,6 +155,7 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 = 1.0.6 =
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
+* "- Latest Revision" only appended to titles on feeds
 
 = 1.0.5 =
 * Fixed bug where password-protected documents would not prompt for password under certain circumstances
