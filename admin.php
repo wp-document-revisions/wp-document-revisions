@@ -851,6 +851,11 @@ class Document_Revisions_Admin {
 		
 		//get a list of document IDs and add to query as post_parent not in clause
 		$docs = $wpdb->get_col("SELECT ID from $wpdb->posts WHERE post_type = 'document'");
+		
+		//no docs found, prevent SQL error, see http://bit.ly/oGrvlb 
+		if ( empty( $docs ) )
+			return $query;
+			
 		$query .= ' AND post_parent NOT IN (' . implode(', ', $docs) . ')';
 		
 		return $query;

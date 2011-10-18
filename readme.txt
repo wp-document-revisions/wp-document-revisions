@@ -153,6 +153,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Changelog ==
 
+= 1.0.6 =
+* Fixed bug where media library would trigger an SQL error when no documents had been uploaded
+
 = 1.0.5 =
 * Fixed bug where password-protected documents would not prompt for password under certain circumstances
 
