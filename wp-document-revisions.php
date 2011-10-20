@@ -62,6 +62,9 @@ class Document_Revisions {
 		//cache
 		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 		
+		//edit flow
+		add_action( 'plugins_loaded', array( &$this, 'edit_flow_support' ) );
+		
 	}
 
 	/**
@@ -1191,6 +1194,30 @@ class Document_Revisions {
 	
 		return '';
 		
+	}
+	
+	/**
+	 * Provides support for edit flow and disables the default workflow state taxonomy
+	 */
+	function edit_flow_support() {
+		
+		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+			return false;
+
+		//post caps
+		add_post_type_support( 'document',  array( 
+						'ef_custom_statuses', 
+						'ef_editorial_comments', 
+						'ef_notifications', 
+						'ef_editorial_metadata',
+						'ef_calendar', 
+					) 		
+				 );
+		
+		//remove workflow state CT
+		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
+		remove_action( 'init', array( &$this, 'register_ct' ) );
+	
 	}
 
 	/**

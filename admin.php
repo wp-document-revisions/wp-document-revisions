@@ -62,6 +62,9 @@ class Document_Revisions_Admin {
 		
 		//cleanup
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
+		
+		//edit flow support
+		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ) );
 			
 	}
 	
@@ -170,13 +173,15 @@ class Document_Revisions_Admin {
 		remove_meta_box( 'tagsdiv-workflow_state', 'document', 'side' );
 		
 		//add our meta boxes
-		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
+		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'high', 'default' );
 		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'high' );
 		
 		if ( $post->post_content != '' )
 			add_meta_box('revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
 		
-		add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
+		if ( taxonomy_exists( 'workflow_state' ) )
+			add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
+		
 		add_action( 'admin_head', array( &$this, 'admin_css') );
 
 		//move author div to make room for ours
@@ -895,6 +900,21 @@ class Document_Revisions_Admin {
 		if ( is_numeric( $post->post_content ) && get_post( $post->post_content ) ) 
 			wp_delete_attachment( $post->post_content, false );
 		
+	}
+	
+	/**
+	 * Provides support for edit flow and disables the default workflow state taxonomy
+	 */
+	function edit_flow_admin_support() {
+		
+		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+			return false;
+	
+		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
+		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
+		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
+	 	remove_action( 'admin_head', array( &$this, 'make_private' ) );
+	
 	}
 		 
 }

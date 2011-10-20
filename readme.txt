@@ -153,7 +153,8 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Changelog ==
 
-= 1.0.6 =
+= 1.1 =
+* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed 
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
 * "- Latest Revision" only appended to titles on feeds
 
