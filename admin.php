@@ -139,12 +139,12 @@ class Document_Revisions_Admin {
 
 		$help = $this->get_help_text( );
 		
-		//loop through each tab in the help array and translate before adding
+		//loop through each tab in the help array and add
 		foreach ( $help as $title => $content ) {
 			$screen->add_help_tab( array( 
-				'title' => __( $title, 'wp-document-revisions' ),
+				'title' => $title,
 				'id' => str_replace( ' ', '_', $title ),
-				'content' => __( $content, 'wp-document-revisions' ),
+				'content' => $content,
 			) );
 		}
 			
@@ -167,18 +167,23 @@ class Document_Revisions_Admin {
 		//value is the help text (as HTML)
 		$help = array( 
 				'document' => array( 
-					'Basic Usage' => 	'<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
+					__( 'Basic Usage', 'wp-document-revisions' ) => 	
+									__(	'<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
 										<p>Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
-										<p>When done, simply click <code>Update</code> to save your changes</p>',
-					'Revision Log' => 	'<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
-										<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>',
-					'Workflow State' => '<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>',
-					'Publishing Documents' => '<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>'
+										<p>When done, simply click <code>Update</code> to save your changes</p>', 'wp-document-revisions' ),
+					__( 'Revision Log', 'wp-document-revisions' ) => 	
+									__( '<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
+										<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>', 'wp-document-revisions' ),
+					__( 'Workflow State', 'wp-document-revisions' ) => 
+									__( '<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>', 'wp-document-revisions' ) ,
+					__( 'Publishing Documents', 'wp-document-revisions' ) => 
+									__( '<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>', 'wp-document-revisions' ),
 								),
 				'edit-document' => array(
-					'Documents' => '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> 
+					__( 'Documents', 'wp-document-revisions' ) => 
+									__( '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> 
 									<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
-									<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>'
+									<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>', 'wp-document-revisions' ), 
 								),
 				);
 		
@@ -431,7 +436,7 @@ class Document_Revisions_Admin {
 			return $dir;
 		
 		//dir changed, throw warning
-		$msg = __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessable.', 'wp-document-revisions' );
+		$msg = __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' );
 		add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
 
 		//trim and return
