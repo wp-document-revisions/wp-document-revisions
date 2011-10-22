@@ -167,6 +167,7 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 * Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed 
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
 * "- Latest Revision" only appended to titles on feeds
+* Added support for new help tabs in WordPress versions 3.3 and greater
 
 = 1.0.5 =
 * Fixed bug where password-protected documents would not prompt for password under certain circumstances
