@@ -155,6 +155,12 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 = What if I want even more control over my workflow? =
 Take a look at the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if Edit Flow is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
 
+= How do I present documents on the front end? =
+There is a recently revised document widget in the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook), and a list of all documents a user has accessed to can be seen at yourdomain.com/documents/. Moreover, Public documents should act similar to posts on the front end (searching, categories, etc.). 
+
+= Can I make it so that users can only access documents assigned to them (or documents that they create)? =
+Yes. Each document has an "owner" which can be changed from a dialog on the edit-document screen at the time you create it, or later in the process (by default, the document owner is the person that creates it). If the document is marked as private, only users with the read_private_documents capability can access it. Out of the box, this is set to Authors and below, but you can customize things via the  [Members plugin](http://wordpress.org/extend/plugins/members/) (head over to roles after installing).
+
 == Changelog ==
 
 = 1.1 =
