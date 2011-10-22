@@ -204,6 +204,9 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 == Upgrade Notice ==
 
+= 1.1 =
+* Edit Flow support, bug fixes, ui improvements
+
 = 1.0.5 =
 * Fixed bug where password-protected documents would not prompt for password under certain circumstances
 
