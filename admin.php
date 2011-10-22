@@ -22,8 +22,9 @@ class Document_Revisions_Admin {
 			
 		//help and messages
 		add_filter( 'post_updated_messages', array(&$this, 'update_messages') );
-		add_action( 'contextual_help',array(&$this, 'add_help_text'), 10, 3 );
-
+		add_action( 'contextual_help', array(&$this, 'add_help_text'), 10, 3 ); //pre-3.3
+		add_action( 'admin_head', array(&$this, 'add_help_tab') ); //3.3+
+		
 		//edit document screen
 	 	add_action( 'admin_head', array( &$this, 'make_private' ) );
 	 	add_filter( 'media_meta', array( &$this, 'media_meta_hack'), 10, 1);
@@ -124,37 +125,90 @@ class Document_Revisions_Admin {
 	}
 	
 	/**
-	 * Registers help text with WP
-	 * @todo the help text
+	 * Adds help tabs to 3.3+ help tab API
+	 * @since 1.1
+	 * @uses get_help_text()
+	 */
+	function add_help_tab( ) {
+
+		$screen = get_current_screen();
+
+		//the class WP_Screen won't exist pre-3.3
+		if ( !class_exists( 'WP_Screen' ) || !$screen || $screen->post_type != 'document' )
+			return $screen;
+
+		$help = $this->get_help_text( );
+		
+		//loop through each tab in the help array and translate before adding
+		foreach ( $help as $title => $content ) {
+			$screen->add_help_tab( array( 
+				'title' => __( $title, 'wp-document-revisions' ),
+				'id' => str_replace( ' ', '_', $title ),
+				'content' => __( $content, 'wp-document-revisions' ),
+			) );
+		}
+			
+	}
+	
+	/**
+	 * Helper function to provide help text as either an array or as a string
+	 * @param object $screen the current screen
+	 * @param bool $return_array whether to return as an array or string
+	 * @returns array|string the help text
+	 * @since 1.1
+	 */
+	function get_help_text( $screen = null, $return_array = true ) {
+		
+		if ( $screen == null )	
+			$screen = get_current_screen();
+
+		//parent key is the id of the current screen
+		//child key is the title of the tab
+		//value is the help text (as HTML)
+		$help = array( 
+				'document' => array( 
+					'Basic Usage' => 	'<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
+										<p>Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
+										<p>When done, simply click <code>Update</code> to save your changes</p>',
+					'Revision Log' => 	'<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
+										<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>',
+					'Workflow State' => '<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>',
+					'Publishing Documents' => '<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>'
+								),
+				'edit-document' => array(
+					'Documents' => '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> 
+									<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
+									<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>'
+								),
+				);
+		
+		//if we don't have any help text for this screen, just kick		
+		if ( !isset( $help[ $screen->id] ) )
+			return false;
+		
+		if ( $return_array )
+			return apply_filters( 'document_help_array', $help[ $screen->id], $screen );
+		
+		//convert array into string for pre-3.3 compatability
+		$output = '';
+		foreach ( $help[ $screen->id] as $label => $text )
+			$output .= '<h4>' . __( $label, 'wp-document-revisions' ) . '</h4>' . __( $text, 'wp-document-revisions' );
+		
+		return apply_filters( 'document_help', $output, $screen );
+		
+	}
+	
+	/**
+	 * Registers help text with WP for pre-3.3 versions
+	 * @uses get_hel_text()
 	 * @since 0.5
 	 */
 	function add_help_text( $contextual_help, $screen_id, $screen ) { 
 
 		if ( isset( $screen->post_type) && $screen->post_type != 'document' )
 			return $contextual_help;
-		
-		if ( $screen_id == 'document' ) {
-			$contextual_help = __( '
-			<h4>Basic Usage</h4>
-			<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>
-			<p>Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>
-			<p>When done, simply click <code>Update</code> to save your changes</p>
-			<h4>Revision Log</h4>
-			<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>
-			<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>
-			<h4>Workflow State</h4>
-			<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>
-			<h4>Publishing Documents</h4>
-			<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>', 'wp-document-revisions' );
-		}
-		
-		if ( $screen_id == 'edit-document' ) {
-			$contextual_help = __( '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> 
-			
-			<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
-			
-			<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>', 'wp-document-revisions' );
-		}		
+	
+		$contextual_help = $this->get_help_text( $screen, false );
 		
 		return apply_filters( 'document_help', $contextual_help );
 	}
