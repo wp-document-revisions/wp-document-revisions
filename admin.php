@@ -39,6 +39,8 @@ class Document_Revisions_Admin {
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
+		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
+		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
@@ -782,6 +784,52 @@ class Document_Revisions_Admin {
 		echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug) ) . '">' . $state[0]->name . '</a>';
 		
 	}
+	
+	/**
+	 * Splices in Currently Editing column to document list
+	 * @param array $defaults the original columns
+	 * @returns array our spliced columns
+	 * @since 1.1
+	 */
+	function add_currently_editing_column( $defaults ) {
+		
+		//get checkbox, title, and workflow state
+		$output = array_slice( $defaults, 0, 3 );
+		
+		//splice in workflow state
+		$output['currently_editing'] = __( 'Currently Editing', 'wp-document-revisions' );
+		
+		//get the rest of the columns
+		$output = array_merge( $output, array_slice( $defaults, 2 ) );
+		
+		//return
+		return $output;
+	}
+	
+	/**
+	 * Callback to output data for currently editing column
+	 * @param string $column_name the name of the column being propegated
+	 * @param int $post_id the ID of the post being displayed
+	 * @since 1.1
+	 */
+	function currently_editing_column_cb( $column_name, $post_id ) {
+
+		//verify column
+		if ( $column_name != 'currently_editing' )
+			return;
+		
+		//verify post type
+		if ( !$this->verify_post_type( $post_id ) )
+			return;
+		
+		$lock = $this->get_document_lock( $post_id );
+
+		//output will be display name, if any
+		if ( $lock )
+			echo $lock;
+		
+	}
+
 	
 	/**
 	 * Callback to generate metabox for workflow state

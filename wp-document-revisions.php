@@ -238,12 +238,18 @@ class Document_Revisions {
 
 	/**
 	 * Checks if document is locked, if so, returns the lock holder's name
-	 * @param object $post the post object
+	 * @param object|int $post the post object or postID
 	 * @returns bool|string false if no lock, user's display name if locked
 	 * @since 0.5
 	 */
 	function get_document_lock( $post ) {
 	
+		if ( !is_object( $post ) )
+			$post = get_post( $post );
+	
+		if ( !$post )
+			return false;
+
 		//get the post lock
 		if ( !( $user = wp_check_post_lock( $post->ID ) ) ) 
 			$user = false;
