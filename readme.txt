@@ -60,6 +60,9 @@ A document management and version control plugin that allows teams of any size t
 * **Recently Revised Widget** - example of how to list recently revised documents in a widget
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+* **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
+* **Revision Shortcode** - Code sample to demonstrate short code to list revisions
+* **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
@@ -126,10 +129,6 @@ WP Document Revisions was built from the ground up with security in mind. Each r
 
 In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
 
-= I keep getting a "file not found" (404) every time I try to download a document, what gives? =
-
-Make sure you have [pretty permalinks](http://codex.wordpress.org/Using_Permalinks#Using_.22Pretty.22_permalinks) enabled, and that other posts are available via the domain.com/yyyy/mm/post/ format (rather than domain.com/?p=1234).
-
 = What happens if I lose internet connectivity while I have a file checked out? =
 
 WP Document Revisions will "ping" the server every minute to let it know that you have the file open. If for some reason you lose connectivity, the server will give you roughly a two minute grace period before it lifts the file lock. If it's brief (e.g., WiFi disconnected), you should be fine, but if it's for an extended period of time (e.g., a flight), you may find that someone else has checked the file out. You do not need to re-download the file (if no one else has modified it), simply remain on the document page to maintain the file lock.
@@ -152,6 +151,9 @@ Yes. You can use the [WP Document Revisions Custom Field Generator](http://wordp
 
 = Can I put my documents in folders? =
 WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [WP Document Revisions Custom Field Generator](http://wordpress.org/extend/plugins/wp-document-revisions-custom-taxonomy-and-field-generator/). Be sure to select the "Hierarchical (like categories)" option.
+
+= What if I want even more control over my workflow? =
+Take a look at the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if Edit Flow is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
 
 == Changelog ==
 
