@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 1.0\n"
+"Project-Id-Version: WP Document Revisions 1.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-document-revisions\n"
-"POT-Creation-Date: 2011-09-11 04:19:49+00:00\n"
+"POT-Creation-Date: 2011-10-22 18:51:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,194 +12,326 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin.php:104
+#: wp-document-revisions.php:86
+msgctxt "post type general name"
+msgid "Documents"
+msgstr ""
+
+#: wp-document-revisions.php:87
+msgctxt "post type singular name"
+msgid "Document"
+msgstr ""
+
+#: wp-document-revisions.php:88
+msgctxt "document"
+msgid "Add Document"
+msgstr ""
+
+#: wp-document-revisions.php:89
+msgid "Add New Document"
+msgstr ""
+
+#: wp-document-revisions.php:90
+msgid "Edit Document"
+msgstr ""
+
+#: wp-document-revisions.php:91
+msgid "New Document"
+msgstr ""
+
+#: wp-document-revisions.php:92
+msgid "View Document"
+msgstr ""
+
+#: wp-document-revisions.php:93
+msgid "Search Documents"
+msgstr ""
+
+#: wp-document-revisions.php:94
+msgid "No documents found"
+msgstr ""
+
+#: wp-document-revisions.php:95
+msgid "No documents found in Trash"
+msgstr ""
+
+#: wp-document-revisions.php:97
+msgid "Documents"
+msgstr ""
+
+#: wp-document-revisions.php:130
+msgctxt "taxonomy general name"
+msgid "Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:131
+msgctxt "taxonomy singular name"
+msgid "Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:132
+msgid "Search Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:133
+msgid "All Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:134
+msgid "Parent Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:135
+msgid "Parent Workflow State:"
+msgstr ""
+
+#: wp-document-revisions.php:136
+msgid "Edit Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:137
+msgid "Update Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:138
+msgid "Add New Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:139
+msgid "New Workflow State Name"
+msgstr ""
+
+#: wp-document-revisions.php:140
+msgid "Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:165
+msgid "In Progress"
+msgstr ""
+
+#: wp-document-revisions.php:165
+msgid "Document is in the process of being written"
+msgstr ""
+
+#: wp-document-revisions.php:166
+msgid "Initial Draft"
+msgstr ""
+
+#: wp-document-revisions.php:166
+msgid "Document is being edited and refined"
+msgstr ""
+
+#: wp-document-revisions.php:167
+msgid "Under Review"
+msgstr ""
+
+#: wp-document-revisions.php:167
+msgid "Document is pending final review"
+msgstr ""
+
+#: wp-document-revisions.php:168
+msgid "Final"
+msgstr ""
+
+#: wp-document-revisions.php:168
+msgid "Document is in its final form"
+msgstr ""
+
+#: wp-document-revisions.php:259
+msgid "Somebody"
+msgstr ""
+
+#: wp-document-revisions.php:318
+msgid "revision"
+msgstr ""
+
+#: wp-document-revisions.php:365 wp-document-revisions.php:605
+msgid "-revision-"
+msgstr ""
+
+#: wp-document-revisions.php:580
+msgid "404 &#8212; File not found."
+msgstr ""
+
+#: wp-document-revisions.php:586
+msgid "You are not authorized to access that file."
+msgstr ""
+
+#: wp-document-revisions.php:911
+msgid "Sorry, this is a private feed."
+msgstr ""
+
+#: wp-document-revisions.php:956 admin.php:470 admin.php:474
+msgid "Not authorized"
+msgstr ""
+
+#: wp-document-revisions.php:998
+msgid "%1$s: %2$s has overridden your lock on %3$s"
+msgstr ""
+
+#: wp-document-revisions.php:1002
+msgid "Dear %s:"
+msgstr ""
+
+#: wp-document-revisions.php:1003
+msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
+msgstr ""
+
+#: wp-document-revisions.php:1004
+msgid "Any changes you have made will be lost."
+msgstr ""
+
+#: wp-document-revisions.php:1005
+msgid "- The %s Team"
+msgstr ""
+
+#: wp-document-revisions.php:1162
+msgid "%s - Latest Revision"
+msgstr ""
+
+#: wp-document-revisions.php:1176
+msgid "%s - Revision %d"
+msgstr ""
+
+#: admin.php:112
 msgid "Document updated. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:105
+#: admin.php:113
 msgid "Custom field updated."
 msgstr ""
 
-#: admin.php:106
+#: admin.php:114
 msgid "Custom field deleted."
 msgstr ""
 
-#: admin.php:107
+#: admin.php:115
 msgid "Document updated."
 msgstr ""
 
-#: admin.php:108
+#: admin.php:116
 msgid "Document restored to revision from %s"
 msgstr ""
 
-#: admin.php:109
+#: admin.php:117
 msgid "Document published. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:110
+#: admin.php:118
 msgid "Document saved."
 msgstr ""
 
-#: admin.php:111
+#: admin.php:119
 msgid ""
 "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
-#: admin.php:112
+#: admin.php:120
 msgid ""
 "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2"
 "$s\">Preview document</a>"
 msgstr ""
 
-#: admin.php:112
+#: admin.php:120
 msgid "M j, Y @ G:i"
 msgstr ""
 
-#: admin.php:113
+#: admin.php:121
 msgid ""
 "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
 "a>"
 msgstr ""
 
-#: admin.php:130
-msgid ""
-"\n"
-"\t\t\t<h4>Basic Usage</h4>\n"
-"\t\t\t<p>This screen allows users to collaboratively edit documents and "
-"track their revision history. To begin, enter a title for the document, "
-"click <code>Upload New Version</code> and select the file from your computer."
-"</p>\n"
-"\t\t\t<p>Once successfully uploaded, you can enter a revision log message, "
-"assign the document an author, and describe its current workflow state.</p>\n"
-"\t\t\t<p>When done, simply click <code>Update</code> to save your changes</"
-"p>\n"
-"\t\t\t<h4>Revision Log</h4>\n"
-"\t\t\t<p>The revision log provides a short summary of the changes reflected "
-"in a particular revision. Used widely in the open-source community, it "
-"provides a comprehensive history of the document at a glance.</p>\n"
-"\t\t\t<p>You can download and view previous versions of the document by "
-"clicking the timestamp in the revision log. You can also restore revisions "
-"by clicking the <code>restore</code> button beside the revision.</p>\n"
-"\t\t\t<h4>Workflow State</h4>\n"
-"\t\t\t<p>The workflow state field can be used to help team members "
-"understand at what stage a document sits within a particular "
-"organization&quot;s workflow. The field is optional, and can be customized "
-"or queried by clicking <code>Workflow States</code> on the left-hand side.</"
-"p>\n"
-"\t\t\t<h4>Publishing Documents</h4>\n"
-"\t\t\t<p>By default, uploaded documents are only accessible to logged in "
-"users. Documents can be published, thus making them accessible to the world, "
-"by toggling their visibility in the \"Publish\" box in the top right corner. "
-"Any document marked as published will be accessible to anyone with the "
-"proper URL.</p>"
-msgstr ""
-
-#: admin.php:145
-msgid ""
-"<p>Below is a all documents to which you have access. Click the document "
-"title to edit the document or download the latest version.</p> \n"
-"\t\t\t\n"
-"\t\t\t<p>To add a new document, click <strong>Add Document</strong> on the "
-"left-hand side.</p>\n"
-"\t\t\t\n"
-"\t\t\t<p>To view all documents at a particular workflow state, click "
-"<strong>Workflow States</strong> in the menu on the left.</p>"
-msgstr ""
-
-#: admin.php:169 admin.php:261
+#: admin.php:230 admin.php:324
 msgid "Revision Summary"
 msgstr ""
 
-#: admin.php:170
+#: admin.php:231
 msgid "Document"
 msgstr ""
 
-#: admin.php:175 admin.php:667
+#: admin.php:237 admin.php:744
 msgid "Workflow State"
 msgstr ""
 
-#: admin.php:180 admin.php:773
+#: admin.php:243 admin.php:727 admin.php:856
 msgid "Owner"
 msgstr ""
 
-#: admin.php:237
+#: admin.php:300
 msgid "%s has prevented other users from making changes."
 msgstr ""
 
-#: admin.php:239
+#: admin.php:302
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" id="
 "\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 
-#: admin.php:248
+#: admin.php:311
 msgid "Latest Version of the Document"
 msgstr ""
 
-#: admin.php:249
+#: admin.php:312
 msgid "Download"
 msgstr ""
 
-#: admin.php:250
+#: admin.php:313
 msgid ""
 "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
 "ago by %4$s"
 msgstr ""
 
-#: admin.php:263
+#: admin.php:326
 msgid ""
 "Revision summaries are optional notes to store along with this revision that "
 "allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 
-#: admin.php:279
+#: admin.php:342
 msgid "Modified"
 msgstr ""
 
-#: admin.php:280
+#: admin.php:343
 msgid "User"
 msgstr ""
 
-#: admin.php:281
+#: admin.php:344
 msgid "Summary"
 msgstr ""
 
-#: admin.php:282
+#: admin.php:345
 msgid "Actions"
 msgstr ""
 
-#: admin.php:297
+#: admin.php:360
 msgid "Restore"
 msgstr ""
 
-#: admin.php:307
+#: admin.php:370
 msgid "RSS Feed"
 msgstr ""
 
-#: admin.php:358
+#: admin.php:421
 msgid "Please enter a valid document upload directory."
 msgstr ""
 
-#: admin.php:371
+#: admin.php:434
 msgid ""
 "Document upload directory changed, but existing uploads may need to be moved "
 "to the new folder to ensure they remain accessable."
 msgstr ""
 
-#: admin.php:384
+#: admin.php:447
 msgid "Document Settings"
 msgstr ""
 
-#: admin.php:387
+#: admin.php:450
 msgid "Document Upload Directory"
 msgstr ""
 
-#: admin.php:407 admin.php:411 wp-document-revisions.php:851
-msgid "Not authorized"
-msgstr ""
-
-#: admin.php:460
+#: admin.php:523
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp_content/uploads</code> folder, but it may be moved to a folder "
@@ -207,39 +339,39 @@ msgid ""
 "added security."
 msgstr ""
 
-#: admin.php:583
+#: admin.php:646
 msgid ""
 "You currently have this file checked out. No other user can edit this "
 "document so long as you remain on this page."
 msgstr ""
 
-#: admin.php:594
+#: admin.php:657
 msgid "Feed Privacy"
 msgstr ""
 
-#: admin.php:597
+#: admin.php:660
 msgid "Secret Feed Key"
 msgstr ""
 
-#: admin.php:600
+#: admin.php:663
 msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
 msgstr ""
 
-#: admin.php:602
+#: admin.php:665
 msgid "Generate New Key"
 msgstr ""
 
-#: admin.php:716
+#: admin.php:793
 msgid "Current State"
 msgstr ""
 
-#: admin.php:774
+#: admin.php:857
 msgid "Document Owner"
 msgstr ""
 
-#: admin.php:792
+#: admin.php:875
 msgid ""
 "Are you sure you want to restore this revision?\n"
 "\n"
@@ -247,221 +379,48 @@ msgid ""
 "the most recent revision."
 msgstr ""
 
-#: admin.php:793
+#: admin.php:876
 msgid "is currently editing this"
 msgstr ""
 
-#: admin.php:794
+#: admin.php:877
 msgid ""
 "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File "
 "uploaded successfully. Add a revision summary below (optional) or press "
 "<em>Update</em> to save your changes.</p></div>"
 msgstr ""
 
-#: admin.php:795
+#: admin.php:878
 msgid ""
 "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr ""
 
-#: admin.php:796
+#: admin.php:879
 msgid "An error has occurred, please try reloading the page."
 msgstr ""
 
-#: admin.php:797
+#: admin.php:880
 msgid "Lost Document Lock"
 msgstr ""
 
-#: admin.php:799 admin.php:800
+#: admin.php:882 admin.php:883
 msgid "%d mins"
 msgstr ""
 
-#: admin.php:801
+#: admin.php:884
 msgid "%d hour"
 msgstr ""
 
-#: admin.php:802
+#: admin.php:885
 msgid "%d hours"
 msgstr ""
 
-#: admin.php:803
+#: admin.php:886
 msgid "%d day"
 msgstr ""
 
-#: admin.php:804
+#: admin.php:887
 msgid "%d days"
-msgstr ""
-
-#: wp-document-revisions.php:79
-msgctxt "post type general name"
-msgid "Documents"
-msgstr ""
-
-#: wp-document-revisions.php:80
-msgctxt "post type singular name"
-msgid "Document"
-msgstr ""
-
-#: wp-document-revisions.php:81
-msgctxt "document"
-msgid "Add Document"
-msgstr ""
-
-#: wp-document-revisions.php:82
-msgid "Add New Document"
-msgstr ""
-
-#: wp-document-revisions.php:83
-msgid "Edit Document"
-msgstr ""
-
-#: wp-document-revisions.php:84
-msgid "New Document"
-msgstr ""
-
-#: wp-document-revisions.php:85
-msgid "View Document"
-msgstr ""
-
-#: wp-document-revisions.php:86
-msgid "Search Documents"
-msgstr ""
-
-#: wp-document-revisions.php:87
-msgid "No documents found"
-msgstr ""
-
-#: wp-document-revisions.php:88
-msgid "No documents found in Trash"
-msgstr ""
-
-#: wp-document-revisions.php:90
-msgid "Documents"
-msgstr ""
-
-#: wp-document-revisions.php:123
-msgctxt "taxonomy general name"
-msgid "Workflow States"
-msgstr ""
-
-#: wp-document-revisions.php:124
-msgctxt "taxonomy singular name"
-msgid "Workflow State"
-msgstr ""
-
-#: wp-document-revisions.php:125
-msgid "Search Workflow States"
-msgstr ""
-
-#: wp-document-revisions.php:126
-msgid "All Workflow States"
-msgstr ""
-
-#: wp-document-revisions.php:127
-msgid "Parent Workflow State"
-msgstr ""
-
-#: wp-document-revisions.php:128
-msgid "Parent Workflow State:"
-msgstr ""
-
-#: wp-document-revisions.php:129
-msgid "Edit Workflow State"
-msgstr ""
-
-#: wp-document-revisions.php:130
-msgid "Update Workflow State"
-msgstr ""
-
-#: wp-document-revisions.php:131
-msgid "Add New Workflow State"
-msgstr ""
-
-#: wp-document-revisions.php:132
-msgid "New Workflow State Name"
-msgstr ""
-
-#: wp-document-revisions.php:133
-msgid "Workflow States"
-msgstr ""
-
-#: wp-document-revisions.php:159
-msgid "In Progress"
-msgstr ""
-
-#: wp-document-revisions.php:159
-msgid "Document is in the process of being written"
-msgstr ""
-
-#: wp-document-revisions.php:160
-msgid "Initial Draft"
-msgstr ""
-
-#: wp-document-revisions.php:160
-msgid "Document is being edited and refined"
-msgstr ""
-
-#: wp-document-revisions.php:161
-msgid "Under Review"
-msgstr ""
-
-#: wp-document-revisions.php:161
-msgid "Document is pending final review"
-msgstr ""
-
-#: wp-document-revisions.php:162
-msgid "Final"
-msgstr ""
-
-#: wp-document-revisions.php:162
-msgid "Document is in its final form"
-msgstr ""
-
-#: wp-document-revisions.php:253
-msgid "Somebody"
-msgstr ""
-
-#: wp-document-revisions.php:312
-msgid "revision"
-msgstr ""
-
-#: wp-document-revisions.php:354 wp-document-revisions.php:545
-msgid "-revision-"
-msgstr ""
-
-#: wp-document-revisions.php:520
-msgid "404 &#8212; File not found."
-msgstr ""
-
-#: wp-document-revisions.php:526
-msgid "You are not authorized to access that file."
-msgstr ""
-
-#: wp-document-revisions.php:807
-msgid "Sorry, this is a private feed."
-msgstr ""
-
-#: wp-document-revisions.php:893
-msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr ""
-
-#: wp-document-revisions.php:897
-msgid "Dear %s:"
-msgstr ""
-
-#: wp-document-revisions.php:898
-msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr ""
-
-#: wp-document-revisions.php:899
-msgid "Any changes you have made will be lost."
-msgstr ""
-
-#: wp-document-revisions.php:900
-msgid "- The %s Team"
-msgstr ""
-
-#: wp-document-revisions.php:1063
-msgid "%s - Revision %d"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -469,7 +428,9 @@ msgid "WP Document Revisions"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://"
+msgid ""
+"http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-"
+"version-control-wordpress/"
 msgstr ""
 
 #. Description of the plugin/theme
