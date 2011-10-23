@@ -168,6 +168,7 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 * Added "Currently Editing" column to documents list to display document's lock holder, if any
 * Added support for new help tabs in WordPress versions 3.3 and greater
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
+* Fixed bug where owner dropdown on edit screen would only list "author" level users
 * "- Latest Revision" only appended to titles on feeds
 
 = 1.0.5 =
