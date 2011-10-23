@@ -11,7 +11,7 @@ class Document_Revisions_Admin {
 	 * @since 0.5
 	 */
 	function __construct( &$instance = null) {
-			
+		
 		self::$instance = &$this;
 
 		//create or store parent instance
@@ -910,7 +910,7 @@ class Document_Revisions_Admin {
 		<?php _e( 'Document Owner', 'wp_document_revisions' ); ?>: 
 		<?php
 		wp_dropdown_users( array(
-			'who' => 'authors',
+			'who' => apply_filters( 'document_revisions_owners', '' ),
 			'name' => 'post_author_override',
 			'selected' => empty($post->ID) ? $user_ID : $post->post_author,
 			'include_selected' => true
