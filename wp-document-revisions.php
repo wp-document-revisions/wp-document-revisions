@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.1
+Version: 1.2
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -44,6 +44,7 @@ class Document_Revisions {
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
+		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 		
 		//RSS
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
@@ -65,6 +66,10 @@ class Document_Revisions {
 		//edit flow
 		add_action( 'plugins_loaded', array( &$this, 'edit_flow_support' ) );
 		
+		//load front-end features (shortcode, widgets, etc.)
+		include( dirname( __FILE__ ) . '/includes/front-end.php' );
+		new Document_Revisions_Front_End( &$this );
+		
 	}
 
 	/**
@@ -72,7 +77,7 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function admin_init() {
-		include( dirname( __FILE__ ) . '/admin.php' );
+		include( dirname( __FILE__ ) . '/includes/admin.php' );
 		$this->admin = new Document_Revisions_Admin( self::$instance );
 	}
 
@@ -199,7 +204,7 @@ class Document_Revisions {
 	/**
 	 * Given a post object, returns all attached uploads
 	 * @param object $post post object
-	 * @returns object all attached uploads
+	 * @return object all attached uploads
 	 * @since 0.5
 	 */
 	function get_attachments( $post = '' ) {
@@ -239,7 +244,7 @@ class Document_Revisions {
 	/**
 	 * Checks if document is locked, if so, returns the lock holder's name
 	 * @param object|int $post the post object or postID
-	 * @returns bool|string false if no lock, user's display name if locked
+	 * @return bool|string false if no lock, user's display name if locked
 	 * @since 0.5
 	 */
 	function get_document_lock( $post ) {
@@ -269,7 +274,7 @@ class Document_Revisions {
 	/**
 	 * Given a file, returns the file's extension
 	 * @param string $file URL, path, or filename to file
-	 * @returns string extension
+	 * @return string extension
 	 * @since 0.5
 	 */
 	function get_extension( $file ) {
@@ -287,7 +292,7 @@ class Document_Revisions {
 	/**
 	 * Gets a file extension from a post
 	 * @param object $post post object
-	 * @returns string the extension to the latest revision
+	 * @return string the extension to the latest revision
 	 * @since 0.5
 	 */
 	function get_file_type( $post = '' ) {
@@ -314,7 +319,7 @@ class Document_Revisions {
 	 * Adds document rewrite rules to the rewrite array
 	 * @since 0.5
 	 * @param $rules array rewrite rules
-	 * @returns array rewrite rules
+	 * @return array rewrite rules
 	 */
 	function revision_rewrite( $rules ) {
 	
@@ -341,7 +346,7 @@ class Document_Revisions {
 	 * Tell's WP to recognize document query vars
 	 * @since 0.5
 	 * @param array $vars the query vars
-	 * @returns array the modified query vars
+	 * @return array the modified query vars
 	 */
 	function add_query_var( $vars ) {
 		$vars[] = "revision";
@@ -353,7 +358,7 @@ class Document_Revisions {
 	 * Builds document post type permalink
 	 * @param string $link original permalink
 	 * @param object $post post object
-	 * @returns string the real permalink 
+	 * @return string the real permalink 
 	 * @since 0.5
 	 */
 	function permalink( $link, $post, $leavename, $sample = '' ) {
@@ -421,7 +426,7 @@ class Document_Revisions {
  	 * http://core.trac.wordpress.org/ticket/16215
  	 * @since 1.0
  	 * @param int $postID the post ID
- 	 * @returns array array of post objects 
+ 	 * @return array array of post objects 
  	 */
  	function get_revisions( $postID ) {
 
@@ -475,7 +480,7 @@ class Document_Revisions {
  	 * @since 1.0.4
  	 * @param int $postID the ID of the document
  	 * @param bool $feed whether this is a feed
- 	 * @returns obj|bool the WP_Query object, false on failure
+ 	 * @return obj|bool the WP_Query object, false on failure
  	 */
  	function get_revision_query( $postID, $feed = false ) {
  	
@@ -496,7 +501,7 @@ class Document_Revisions {
 	/**
 	 * For a given post, builds a 1-indexed array of revision post ID's
 	 * @param int $post_id the parent post id
-	 * @returns array array of revisions
+	 * @return array array of revisions
 	 * @since 0.5
 	 */
 	function get_revision_indices( $post_id ) {
@@ -519,7 +524,7 @@ class Document_Revisions {
 	/**
 	 * Given a revision id (post->ID) returns the revisions spot in the sequence
 	 * @param int $revisiion_id the post ID of the revision
-	 * @returns int revision #
+	 * @return int revision #
 	 * @since 0.5
 	 */
 	function get_revision_number( $revision_id ) {
@@ -539,7 +544,7 @@ class Document_Revisions {
 	 * Given a revision number (e.g., 4 from foo-revision-4) returns the revision ID
 	 * @param int $revision_num the 1-indexed revision #
 	 * @param int $post_id the ID of the parent post
-	 * @returns int the ID of the revision
+	 * @return int the ID of the revision
 	 * @since 0.5
 	 */
 	function get_revision_id( $revision_num, $post_id ) {
@@ -609,7 +614,12 @@ class Document_Revisions {
 		//fake the filename
 		$filename = $post->post_name;
 		$filename .= ( $version == '' ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version;
+
+		//we want the true attachment URL, not the permalink, so temporarily remove our filter		
+		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
 		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
+		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
+
 		header ( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 
 		//filetype and length
@@ -665,7 +675,7 @@ class Document_Revisions {
 	/**
 	 * Given a post ID, returns the latest revision attachment
 	 * @param int $id Post ID
-	 * @returns object latest revision object
+	 * @return object latest revision object
 	 */
 	function get_latest_revision( $id ) {
 	
@@ -712,8 +722,13 @@ class Document_Revisions {
 
 		if ( !$latest )
 			return false;
+		
+		//temporarily remove our filter to get the true URL, not the permalink
+		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
+		$url = wp_get_attachment_url( $latest->post_content );				
+		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
-		return wp_get_attachment_url( $latest->post_content );				
+		return $url;
 	}
 
 	/**
@@ -739,7 +754,7 @@ class Document_Revisions {
  	/**
  	 * Modifies location of uploaded document revisions
  	 * @param array $dir defaults passed from WP
- 	 * @returns array $dir modified directory
+ 	 * @return array $dir modified directory
  	 * @since 0.5
  	 */
  	function document_upload_dir_filter( $dir ) {
@@ -760,7 +775,7 @@ class Document_Revisions {
  	 * Hides file's true location from users in the Gallery
  	 * @param string $link URL to file's tru location
  	 * @param int $id attachment ID
- 	 * @returns string empty string
+ 	 * @return string empty string
  	 * @since 0.5
  	 */
  	function attachment_link_filter ( $link, $id ) {
@@ -774,7 +789,7 @@ class Document_Revisions {
  	/**
  	 * Rewrites uploaded revisions filename with secure hash to mask true location
  	 * @param array $file file data from WP
- 	 * @returns array $file file with new filename
+ 	 * @return array $file file with new filename
  	 * @since 0.5
  	 */
  	function filename_rewrite( $file ) {
@@ -795,7 +810,7 @@ class Document_Revisions {
 	/**
 	 * Rewrites a file URL to it's public URL
 	 * @param array $file file object from WP
-	 * @returns array modified file array
+	 * @return array modified file array
 	 * @since 0.5
 	 */
 	function rewrite_file_url( $file ) {
@@ -813,7 +828,7 @@ class Document_Revisions {
 	/**
 	 * Checks if a given post is a document
 	 * @param object|int either a post object or a postID
-	 * @returns bool true if document, false if not
+	 * @return bool true if document, false if not
 	 * @since 0.5
 	 */
 	function verify_post_type( $post = '' ) {
@@ -891,7 +906,7 @@ class Document_Revisions {
 	/**
 	 * Intercepts RSS feed redirect and forces our custom feed
 	 * @param string $default the original feed
-	 * @returns string the slug for our feed
+	 * @return string the slug for our feed
 	 * @since 0.5
 	 */
 	function hijack_feed( $default ) {
@@ -921,7 +936,7 @@ class Document_Revisions {
 	
 	/**
 	 * Checks feed key before serving revision RSS feed
-	 * @returns bool
+	 * @return bool
 	 * @since 0.5
 	 */
 	function validate_feed_key() {
@@ -986,7 +1001,7 @@ class Document_Revisions {
 	 * @param int $post_id id of document lock being overridden
 	 * @param int $owner_id id of current document owner
 	 * @param int $current_user_id id of user overriding lock
-	 * @returns bool true on sucess, false on fail
+	 * @return bool true on sucess, false on fail
 	 * @since 0.5
 	 */
 	function send_override_notice( $post_id, $owner_id , $current_user_id ) {
@@ -1186,7 +1201,7 @@ class Document_Revisions {
 	 * Prevents Attachment ID from being displayed on front end
 	 * @param string $content the post content
 	 * @param int $postID the post ID
-	 * @returns string either the original content or none
+	 * @return string either the original content or none
 	 * @since 1.0.3
 	 */
 	function content_filter( $content ) {
@@ -1225,9 +1240,83 @@ class Document_Revisions {
 		remove_action( 'init', array( &$this, 'register_ct' ) );
 	
 	}
+	
+	/**
+	 * Returns array of document objects matching supplied criteria.
+	 *
+	 * @param array $args an array of WP_Query arguments
+	 * See http://codex.wordpress.org/Class_Reference/WP_Query#Parameters for more information on potential parameters
+	 * @param bool $return_attchments whether to return document or attachment objects, default is documents
+	 * @return array an array of post objects
+	 */
+	function get_documents( $args = array(), $return_attachments = false ) {
+	
+		$args = (array) $args;
+		$args['post_type'] = 'document';
+		$documents = get_posts( $args );
+		$output = array();
+				
+		if ( $return_attachments ) {
+		
+			//loop through each document and build an array of attachment objects
+			//this would be the same output as a query for post_type = attachment
+			//but allows querying of document metadata and returns only latest revision		
+			foreach ( $documents as $document ) {
+				$docObj = $this->get_latest_revision( $document->ID );
+				$output[] = get_post( $docObj->post_content );
+			}
+		
+		} else {
+			
+			//used internal get_revision function so that filter work and revision bug is offset
+			foreach ( $documents as $document )
+				$output[] = $this->get_latest_revision( $document->ID );
+		
+		}
+		
+		//remove empty rows, e.g., created by autodraft, etc.
+		$output = array_filter( $output );
+		
+		return $output;
+	
+	}
+	
+	/**
+	 * Filter's calls for attachment URLs for files attached to documents
+	 * Returns the document or revision URL instead of the file's true location
+	 * Prevents direct access to files and ensures authentication
+	 * @param string $url the original URL
+	 * @param int $postID the attachment ID
+	 * @return string the modified URL
+	 * @since 1.2
+	 */
+	function attachment_url_filter( $url, $postID ) {
+		
+		//not an attached attachment
+		if ( !$this->verify_post_type( $postID ) )
+			return $url;
+		
+		$post = get_post( $postID );
+		
+		//user can't read revisions anyways, so just give them the URL of the latest revision
+		if ( !current_user_can( 'read_document_revisions' ) )
+			return get_latest_revision_url( $post->post_parent );
+			
+		//we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it
+		global $wpdb;
+		$revisionID = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_parent = %n AND post_content = %n LIMIT 1", $post->post_parent, $postID ) );
+		
+		//couldn't find it, just return the true URL
+		if ( !$revisionID )
+			return $url;
+		
+		//run through standard permalink filters and return
+		return get_permalink( $revisionID );
+		
+	}
 
 	/**
-	 * Used internal for debugging
+	 * Used internally for debugging
 	 * Only visible to admins if WP_DEBUG is on
 	 * @param mixed $var the var to debug
 	 * @param bool $die whether to die after outputting
@@ -1251,3 +1340,6 @@ class Document_Revisions {
 
 // $wpdr is a global reference to the class
 $wpdr = new Document_Revisions;
+
+//declare global functions
+include_once( dirname( __FILE__ ) . '/includes/template-functions.php' );

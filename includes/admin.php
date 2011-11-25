@@ -942,7 +942,7 @@ class Document_Revisions_Admin {
 		);
 		
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		wp_enqueue_script( 'wp_document_revisions',plugins_url('/wp-document-revisions' . $suffix . '.js', __FILE__), array('jquery') );
+		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array('jquery') );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data ); 
 	
 	}

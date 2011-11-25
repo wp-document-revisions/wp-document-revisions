@@ -161,7 +161,30 @@ There is a recently revised document widget in the [Code Cookbook](https://githu
 = Can I make it so that users can only access documents assigned to them (or documents that they create)? =
 Yes. Each document has an "owner" which can be changed from a dialog on the edit-document screen at the time you create it, or later in the process (by default, the document owner is the person that creates it). If the document is marked as private, only users with the read_private_documents capability can access it. Out of the box, this is set to Authors and below, but you can customize things via the  [Members plugin](http://wordpress.org/extend/plugins/members/) (head over to roles after installing).
 
+= How do I use the documents shortcode? =
+In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts [Standary WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numposts="5"]`.
+
+= How do I use the document revisions shortcode? =
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. You can find the ID in the URL of the edit document page. To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
+
+= How do I use the recently revised documents widget? =
+Go to your theme's widgets page (if your theme supports widgets), and drag the widget to a sidebar of you choice. Once in a sidebar, you will be presented with options to customize the widget's functionality.
+
+= How do I use the `get_documents` function in my theme or plugin? =
+Simply call `get_documents()`. Get documents accepts an array of [Standary WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) as an argument. Use it as you would get_posts. It returns an array of document objects. The `post_content` of each document object is the attachment ID of the revision. `get_permalink()` with that document's ID will also get the proper document permalink (e.g., to link to the document).
+
+= How do I use the `get_document_revisions` function in my theme or plugin? =
+Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
+
 == Changelog ==
+
+= 1.2 =
+* Added shortcode to display list of documents meeting specified criteria
+* Added shortcode to display a document's revisions (formely in code cookbook)
+* Addded widget to display recently revised documents (formerly in code cookbook)
+* Created new global get_documents and get_document_revisions functions to help build and customize themes and plugins
+* Added filter to wp_get_attachment_url to force document/revision urls when attachments are queried directly
+* Better organization of plugin files within plugin folder
 
 = 1.1 =
 * Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed 
@@ -216,6 +239,9 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 * Proof of concept prototype
 
 == Upgrade Notice ==
+
+= 1.2 =
+* Widgets, shortcodes, and templating functions, oh my!
 
 = 1.1 =
 * Edit Flow support, bug fixes, ui improvements
