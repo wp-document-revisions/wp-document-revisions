@@ -898,7 +898,7 @@ class Document_Revisions {
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
 		//include feed and die
-		include('revision-feed.php');
+		include( dirname( __FILE__ ) . '/includes/revision-feed.php' );
 		exit();	
 	
 	}	
