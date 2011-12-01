@@ -195,9 +195,11 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		echo "<ul>\n";
 		foreach ( $documents as $document ) {
+	
+		$link = ( current_user_can( 'edit_post', $document->ID ) ) ? admin_url( 'post.php?post=' . $document->ID . '&action=edit' ) : get_permalink( $document->ID );
 
 		?>
-			<li><a href="<?php echo get_permalink( $document->ID ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
+			<li><a href="<?php echo $link ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
 			
 			<?php if ( $instance['show_author'] ) {
 			
