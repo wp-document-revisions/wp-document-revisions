@@ -179,21 +179,30 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$wpdr = Document_Revisions::$instance;
 		
 		extract( $args );
- 		
- 		echo $before_widget; 
- 		
-		echo $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title;	
-		
+ 				
+		//enabled statuses are stored as status => bool, but we want an array of only activated statuses
+		$statuses = array_filter( (array) $instance['post_status'] );
+		$statuses = array_keys( $statuses );
+
 		$query = array( 
 				'orderby' => 'modified',
 				'order' => 'DESC',
 				'numberposts' => (int) $instance['numberposts'],
-				'post_status' => (array) $instance['post_status'],
+				'post_status' => $statuses,
 		);
 		
 		$documents = $wpdr->get_documents( $query );
 
+		//no documents, don't bother
+		if ( !$documents )
+			return;
+	
+		echo $before_widget; 
+ 		
+		echo $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title;	
+
 		echo "<ul>\n";
+		
 		foreach ( $documents as $document ) {
 	
 		$link = ( current_user_can( 'edit_post', $document->ID ) ) ? admin_url( 'post.php?post=' . $document->ID . '&action=edit' ) : get_permalink( $document->ID );
@@ -268,8 +277,9 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		//merge post statuses into an array
 		foreach ( $this->defaults['post_status'] as $status => $value )
 			$instance[ 'post_status'][ $status ] = (bool) isset( $new_instance[ 'post_status_' . $status ] );
-			
+				
 		return $instance;
+		
 	}
 
 }
