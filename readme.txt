@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 1.1
+Stable tag: 1.2
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
