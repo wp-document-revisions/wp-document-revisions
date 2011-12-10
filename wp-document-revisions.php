@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.2
+Version: 1.2.1
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL2
@@ -45,6 +45,7 @@ class Document_Revisions {
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
+		add_filter( 'document_permalink', array( &$this, 'windows_permalink_filter' ), 9, 1 );
 		
 		//RSS
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
@@ -586,7 +587,7 @@ class Document_Revisions {
 		$file = get_attached_file( $revision->ID );
 		
 		//return 404 if the file is a dud or malformed
-		if ( validate_file( $file ) || !is_file( $file ) ) {
+		if ( !is_file( $file ) ) {
 			status_header( 404 );
 			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
 		}
@@ -1316,24 +1317,15 @@ class Document_Revisions {
 	}
 
 	/**
-	 * Used internally for debugging
-	 * Only visible to admins if WP_DEBUG is on
-	 * @param mixed $var the var to debug
-	 * @param bool $die whether to die after outputting
-	 * @since 0.5
+	 * Prevents permalinks from breaking on windows systems (Xampp, etc.)
+	 * Code inspired by includes/class.wp.filesystem.php
+	 * @since 1.2.1
+	 * @param string $url the permalink
+	 * @return string the modified permalink
 	 */
-	function debug( $var, $die = true ) {
-	
-		if ( !current_user_can( 'manage_options' ) || !WP_DEBUG )
-			return;
-			
-		echo "<PRE>\n";
-		print_r( $var );
-		echo "\n</PRE>\n";
-		
-		if ( $die )
-			die();
-	
+	function windows_permalink_filter( $url ) {
+		$url = preg_replace('|^([a-z]{1}):|i', '', $url); //Strip out windows drive letter if it's there.
+		return str_replace('\\', '/', $url); //Windows path sanitization
 	}
 	
 }
