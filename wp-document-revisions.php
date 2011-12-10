@@ -45,7 +45,7 @@ class Document_Revisions {
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
-		add_filter( 'document_permalink', array( &$this, 'windows_permalink_filter' ), 9, 1 );
+		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
 		
 		//RSS
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
@@ -585,6 +585,9 @@ class Document_Revisions {
 		$revision = get_post( $rev_post->post_content );
 
 		$file = get_attached_file( $revision->ID );
+		
+		//flip slashes for WAMP settups to prevent 404ing on the next line
+		$file = apply_filters( 'document_path', $file );
 		
 		//return 404 if the file is a dud or malformed
 		if ( !is_file( $file ) ) {
@@ -1317,13 +1320,14 @@ class Document_Revisions {
 	}
 
 	/**
-	 * Prevents permalinks from breaking on windows systems (Xampp, etc.)
+	 * Prevents internal calls to files from breaking when apache is running on windows systems (Xampp, etc.)
 	 * Code inspired by includes/class.wp.filesystem.php
+	 * See generally http://wordpress.org/support/topic/plugin-wp-document-revisions-404-error-and-permalinks-are-set-correctly
 	 * @since 1.2.1
 	 * @param string $url the permalink
 	 * @return string the modified permalink
 	 */
-	function windows_permalink_filter( $url ) {
+	function wamp_document_path_filter( $url ) {
 		$url = preg_replace('|^([a-z]{1}):|i', '', $url); //Strip out windows drive letter if it's there.
 		return str_replace('\\', '/', $url); //Windows path sanitization
 	}

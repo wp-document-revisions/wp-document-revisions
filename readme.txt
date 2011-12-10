@@ -177,6 +177,9 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 == Changelog ==
 
+= 1.2.1 =
+* Enhanced support for running on WAMP systems (XAMPP, etc.)
+
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria
 * Added shortcode to display a document's revisions (formerly in code cookbook)
