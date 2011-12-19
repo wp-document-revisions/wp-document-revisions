@@ -844,8 +844,8 @@ class Document_Revisions {
 		//allow the argument to be called without arguments if post is a global
 		if ( $post == '') 
 			global $post;
-		
-		//check for cache
+			
+		//check for cache and hopefully save a get_post DB call
 		if ( is_object( $post ) && $cache = wp_cache_get( $post->ID, 'document_post_type' ) )
 			return $cache;
 		
@@ -860,6 +860,11 @@ class Document_Revisions {
 		//if post is the postID, grab the object
 		if ( !is_object( $post ) )
 			$post = get_post ( $post );
+			
+		//check for cache again,
+		//if this is an attachment or revision, we can potentially shed a DB call
+		if ( $cache = wp_cache_get( $post->ID, 'document_post_type' ) )
+			return $cache;
 						
 		//support for revissions amd attachments 
 		//must be done separately so as not to override global post with post parent and cause all sorts of headaches elsewhere
@@ -1308,7 +1313,7 @@ class Document_Revisions {
 			
 		//we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it
 		global $wpdb;
-		$revisionID = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_parent = %n AND post_content = %n LIMIT 1", $post->post_parent, $postID ) );
+		$revisionID = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_parent = %d AND post_content = %d LIMIT 1", $post->post_parent, $postID ) );
 		
 		//couldn't find it, just return the true URL
 		if ( !$revisionID )

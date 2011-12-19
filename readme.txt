@@ -179,6 +179,8 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 = 1.2.1 =
 * Enhanced support for running on WAMP systems (XAMPP, etc.)
+* Fix for wp_get_attachment_url returning the attachment URL, rather than the document permalink when called directly
+* Performance improvements to `verify_post_type()` function
 
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria

@@ -64,7 +64,7 @@ class Document_Revisions_Front_End {
 	 * @since 1.2
 	 */
 	function revisions_shortcode( $atts ) {
-	
+
 		//extract args
 		extract( shortcode_atts( array(
 			'id' => null,
