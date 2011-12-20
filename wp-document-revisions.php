@@ -66,7 +66,7 @@ class Document_Revisions {
 		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 		
 		//edit flow
-		add_action( 'plugins_loaded', array( &$this, 'edit_flow_support' ) );
+		add_action( 'ef_loaded', array( &$this, 'edit_flow_support' ) );
 		
 		//load front-end features (shortcode, widgets, etc.)
 		include( dirname( __FILE__ ) . '/includes/front-end.php' );
@@ -1344,7 +1344,7 @@ class Document_Revisions {
 	 */
 	function register_term_count_cb() {
 			
-		foreach ( get_taxonomies( array( 'post_type' => $document ), 'objects' ) as $tax )
+		foreach ( get_taxonomies( array( 'post_type' => 'document' ), 'objects' ) as $tax )
 			if ( $tax->update_count_callback == '' )
 				$tax->update_count_callback = array( &$this, 'term_count_cb' );		
 		

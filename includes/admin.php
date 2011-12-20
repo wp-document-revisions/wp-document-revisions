@@ -67,7 +67,7 @@ class Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 		
 		//edit flow support
-		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ) );
+		add_action( 'ef_loaded', array( &$this, 'edit_flow_admin_support' ) );
 			
 	}
 	
