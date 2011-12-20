@@ -181,6 +181,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 * Enhanced support for running on WAMP systems (XAMPP, etc.)
 * Fix for wp_get_attachment_url returning the attachment URL, rather than the document permalink when called directly
 * Significant performance improvements to `verify_post_type()` method
+* Menu item now reads "All Documents" (rather than simply "Documents") for clarity
 
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria

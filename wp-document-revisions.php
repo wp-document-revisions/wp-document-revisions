@@ -101,6 +101,7 @@ class Document_Revisions {
 		'not_found_in_trash' => __( 'No documents found in Trash', 'wp_document_revisions' ), 
 		'parent_item_colon' => '',
 		'menu_name' => __( 'Documents', 'wp_document_revisions' ),
+		'all_items' => __( 'All Documents', 'wp_document_revisions' ),
 		);
 		
 		$args = array(
