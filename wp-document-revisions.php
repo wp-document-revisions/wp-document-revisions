@@ -1343,10 +1343,11 @@ class Document_Revisions {
 	 * @since 1.2.1
 	 */
 	function register_term_count_cb() {
-			
-		foreach ( get_taxonomies( array( 'post_type' => 'document' ), 'objects' ) as $tax )
-			if ( $tax->update_count_callback == '' )
-				$tax->update_count_callback = array( &$this, 'term_count_cb' );		
+	
+		$taxs = get_taxonomies( array( 'object_type' => 'document', 'update_count_callback' => '' ), 'objects' );
+		
+		foreach ( $taxs as $tax )
+			$tax->update_count_callback = array( &$this, 'term_count_cb' );		
 		
 	}
 	
