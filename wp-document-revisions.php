@@ -831,55 +831,32 @@ class Document_Revisions {
 	
 	/**
 	 * Checks if a given post is a document
+	 * note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
 	 * @param object|int either a post object or a postID
 	 * @return bool true if document, false if not
 	 * @since 0.5
 	 */
-	function verify_post_type( $post = '' ) {
-	
-		//check for post_type query arg
-		if ( $post == '' && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
-			return true;
-			
-		//allow the argument to be called without arguments if post is a global
-		if ( $post == '') 
-			global $post;
-			
-		//check for cache and hopefully save a get_post DB call
-		if ( is_object( $post ) && $cache = wp_cache_get( $post->ID, 'document_post_type' ) )
-			return $cache;
+	function verify_post_type( $post = null ) {
 		
-		//if post isn't set, try get vars
-		if ( !$post ) 
+		//check for post_type query arg (post new)
+		if ( $post != null && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
+			return true;
+		
+		//if post isn't set, try get vars (edit post)
+		if ( $post == null ) 
 			$post = ( isset( $_GET['post'] ) ) ? $_GET['post'] : null;
 		
 		//look for post_id via post or get (media upload)
-		if ( !$post ) 
+		if ( $post == null ) 
 			$post = ( isset( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : null;
-			
-		//if post is the postID, grab the object
-		if ( !is_object( $post ) )
-			$post = get_post ( $post );
-			
-		//check for cache again,
-		//if this is an attachment or revision, we can potentially shed a DB call
-		if ( $cache = wp_cache_get( $post->ID, 'document_post_type' ) )
-			return $cache;
-						
-		//support for revissions amd attachments 
-		//must be done separately so as not to override global post with post parent and cause all sorts of headaches elsewhere
-		if ( isset( $post->post_type ) && ( $post->post_type == 'revision' || $post->post_type == 'attachment' ) ) {
-			$parent = get_post( $post->post_parent );
-			$return = ( isset( $parent->post_type ) && $parent->post_type == 'document' );
-		} else {
-			$return = ( isset( $post->post_type ) && $post->post_type == 'document' );
-		}	
 		
-		//it's possible that we still don't know the post at this point, if so don't cache
-		if ( is_object( $post ) )
-			wp_cache_set( $post->ID, $return, 'document_post_type' );
+		$post_type = get_post_type( $post );
 		
-		return $return;
+		//if post is really an attachment or revision, look to the post's parent
+		if ( $post_type == 'attachment' || $post_type == 'revision' )
+			$post_type ==  get_post_type( get_post( $post )->post_parent );
+		
+		return ( $post_type == 'document' );
 		
 	}
 	

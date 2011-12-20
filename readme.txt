@@ -3,7 +3,7 @@ Contributors: benbalter
 Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
-Tested up to: 3.3
+Tested up to: 3.4
 Stable tag: 1.2
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
@@ -180,7 +180,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 = 1.2.1 =
 * Enhanced support for running on WAMP systems (XAMPP, etc.)
 * Fix for wp_get_attachment_url returning the attachment URL, rather than the document permalink when called directly
-* Performance improvements to `verify_post_type()` function
+* Significant performance improvements to `verify_post_type()` method
 
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria
