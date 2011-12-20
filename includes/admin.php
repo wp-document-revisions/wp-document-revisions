@@ -304,13 +304,13 @@ class Document_Revisions_Admin {
 		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content) ; ?>" />
 		<?php
 		if ( $lock_holder = $this->get_document_lock( $post ) ) { ?>
-			<div id="lock_override"> <?php printf( __('%s has prevented other users from making changes.', 'wp-document-revisions'), $lock_holder ); ?>
+			<div id="lock_override" class="hide-if-no-js"><?php printf( __('%s has prevented other users from making changes.', 'wp-document-revisions'), $lock_holder ); ?>
 			<?php if ( current_user_can( 'override_document_lock' ) ) { ?>
 				<?php _e('<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions'); ?>
 			<?php } ?>
 			</div>
 		<?php } ?>
-		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1&document=1' id='add_media' class='thickbox button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
+		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1' id='content-add_media' class='thickbox add_media button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
 		<?php
 			$latest_version = $this->get_latest_revision( $post->ID ); 
 			if ( $latest_version ) {			

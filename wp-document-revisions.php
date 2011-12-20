@@ -839,7 +839,7 @@ class Document_Revisions {
 	function verify_post_type( $post = null ) {
 		
 		//check for post_type query arg (post new)
-		if ( $post != null && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
+		if ( $post == null && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
 			return true;
 		
 		//if post isn't set, try get vars (edit post)
