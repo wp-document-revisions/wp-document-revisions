@@ -191,7 +191,7 @@ class Document_Revisions_Admin {
 		
 		//if we don't have any help text for this screen, just kick		
 		if ( !isset( $help[ $screen->id] ) )
-			return false;
+			return ( $return_array ) ? array() : '';
 		
 		if ( $return_array )
 			return apply_filters( 'document_help_array', $help[ $screen->id], $screen );
