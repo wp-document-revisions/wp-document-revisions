@@ -152,6 +152,7 @@ class Document_Revisions {
  	 		'labels' => $labels,
  	 		'show_ui' => true,
  	 		'rewrite' => false,
+ 	 		'update_count_callback' => array( &$this, 'term_count_cb' ),
  	 	) ) );
 	
 	}
@@ -837,20 +838,20 @@ class Document_Revisions {
 	 * @return bool true if document, false if not
 	 * @since 0.5
 	 */
-	function verify_post_type( $post = null ) {
+	function verify_post_type( $post = false ) {
 		
 		//check for post_type query arg (post new)
-		if ( $post == null && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
+		if ( $post == false && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
 			return true;
 		
 		//if post isn't set, try get vars (edit post)
-		if ( $post == null ) 
-			$post = ( isset( $_GET['post'] ) ) ? $_GET['post'] : null;
+		if ( $post == false ) 
+			$post = ( isset( $_GET['post'] ) ) ? $_GET['post'] : false;
 		
 		//look for post_id via post or get (media upload)
-		if ( $post == null ) 
-			$post = ( isset( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : null;
-		
+		if ( $post == false ) 
+			$post = ( isset( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : false;
+			
 		$post_type = get_post_type( $post );
 		
 		//if post is really an attachment or revision, look to the post's parent
@@ -1313,6 +1314,26 @@ class Document_Revisions {
 	function wamp_document_path_filter( $url ) {
 		$url = preg_replace('|^([a-z]{1}):|i', '', $url); //Strip out windows drive letter if it's there.
 		return str_replace('\\', '/', $url); //Windows path sanitization
+	}
+	
+	/**
+	 * Term Count Callback that applies custom filter
+	 * Allows Workflow State counts to include non-published posts
+	 * @since 1.2.1
+	 */
+	function term_count_cb( $terms, $taxonomy ) {
+		add_filter( 'query', array( &$this, 'term_count_query_filter' ) );
+		_update_post_term_count( $terms, $taxonomy );
+		remove_filter( 'query', array( &$this, 'term_count_query_filter' ) );
+	}
+	
+	/**
+	 * Alters term count query to include all non-trashed posts.
+	 * See generally, #17548
+	 * @since 1.2.1
+	 */
+	function term_count_query_filter( $query ) {
+		return str_replace( "post_status = 'publish'", "post_status != 'trash'", $query );
 	}
 	
 }
