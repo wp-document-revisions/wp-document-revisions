@@ -31,6 +31,7 @@ class Document_Revisions {
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
+		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
 
 		//rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );		
@@ -1334,6 +1335,19 @@ class Document_Revisions {
 	 */
 	function term_count_query_filter( $query ) {
 		return str_replace( "post_status = 'publish'", "post_status != 'trash'", $query );
+	}
+	
+	/**
+	 * Extends the modified term_count_cb to all custom taxonomies associated with documents
+	 * Unless taxonomy already has a custom callback
+	 * @since 1.2.1
+	 */
+	function register_term_count_cb() {
+			
+		foreach ( get_taxonomies( array( 'post_type' => $document ), 'objects' ) as $tax )
+			if ( $tax->update_count_callback == '' )
+				$tax->update_count_callback = array( &$this, 'term_count_cb' );		
+		
 	}
 	
 }

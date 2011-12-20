@@ -183,6 +183,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 * Significant performance improvements to `verify_post_type()` method
 * Menu item now reads "All Documents" (rather than simply "Documents") for clarity
 * Fix for E_WARNING level error on edit-tags.php with custom taxonomies
+* Taxonomy counts (e.g., workflow states) now reflects non-published documents
 
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria
