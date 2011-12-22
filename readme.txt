@@ -3,7 +3,7 @@ Contributors: benbalter
 Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
 Requires at least: 3.2
-Tested up to: 3.3
+Tested up to: 3.4
 Stable tag: 1.2
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
@@ -65,6 +65,8 @@ A document management and version control plugin that allows teams of any size t
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
+
+[Photo via [antphotos(http://www.flickr.com/photos/antphotos/3903433061/)]
 
 == Screenshots ==
 1. A typical WP Document Revisions edit document screen.
