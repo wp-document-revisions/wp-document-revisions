@@ -55,8 +55,9 @@ class Document_Revisions_Admin {
 		add_action( 'edit_user_profile_update', array( &$this, 'profile_update_cb' ) );
 				
 		//translation
-		load_plugin_textdomain( 'wp-document-revisions', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-		
+		//note, because admin.php is in /includes, we need to traverse the path up a level before passing
+		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( dirname( __FILE__ ) ) ) . '/languages/' );
+
 		//Queue up JS
 		add_action( 'admin_init', array( &$this, 'enqueue_js' ) );
 		
@@ -111,16 +112,16 @@ class Document_Revisions_Admin {
 	 	global $post, $post_ID;
 	
 		$messages['document'] = array(
-			1 => sprintf( __( 'Document updated. <a href="%s">Download document</a>' ), esc_url( get_permalink($post_ID) ) ),
-			2 => __( 'Custom field updated.' ),
-			3 => __( 'Custom field deleted.' ),
-			4 => __( 'Document updated.' ),
-			5 => isset($_GET['revision']) ? sprintf( __( 'Document restored to revision from %s' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6 => sprintf( __( 'Document published. <a href="%s">Download document</a>' ), esc_url( get_permalink($post_ID) ) ),
-			7 => __( 'Document saved.' ),
-			8 => sprintf( __( 'Document submitted. <a target="_blank" href="%s">Download document</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-			9 => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>'), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Download document</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			1 => sprintf( __( 'Document updated. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink($post_ID) ) ),
+			2 => __( 'Custom field updated.', 'wp-document-revisions' ),
+			3 => __( 'Custom field deleted.', 'wp-document-revisions' ),
+			4 => __( 'Document updated.', 'wp-document-revisions' ),
+			5 => isset($_GET['revision']) ? sprintf( __( 'Document restored to revision from %s', 'wp-document-revisions' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6 => sprintf( __( 'Document published. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink($post_ID) ) ),
+			7 => __( 'Document saved.', 'wp-document-revisions' ),
+			8 => sprintf( __( 'Document submitted. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			9 => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
+			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 			);
 	
 		return $messages;
@@ -310,7 +311,7 @@ class Document_Revisions_Admin {
 			<?php } ?>
 			</div>
 		<?php } ?>
-		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1' id='content-add_media' class='thickbox add_media button' title='Upload Document' onclick='return false;' >Upload New Version</a></div>
+		<div id="lock_override"><a href='media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1' id='content-add_media' class='thickbox add_media button' title='Upload Document' onclick='return false;' ><?php _e( 'Upload New Version', 'wp-document-revisions' ); ?></a></div>
 		<?php
 			$latest_version = $this->get_latest_revision( $post->ID ); 
 			if ( $latest_version ) {			
@@ -346,10 +347,10 @@ class Document_Revisions_Admin {
 		?>			
 		<table id="document-revisions">
 			<tr class="header">
-				<th><?php _e( 'Modified', 'wp_document_revisions'); ?></th>
-				<th><?php _e( 'User', 'wp_document_revisions' ); ?></th>
-				<th style="width:50%"><?php _e( 'Summary', 'wp_document_revisions' ); ?></th>
-				<?php if ( $can_edit_post ) { ?><th><?php _e( 'Actions', 'wp_document_revisions' ); ?></th><?php } ?>
+				<th><?php _e( 'Modified', 'wp-document-revisions'); ?></th>
+				<th><?php _e( 'User', 'wp-document-revisions' ); ?></th>
+				<th style="width:50%"><?php _e( 'Summary', 'wp-document-revisions' ); ?></th>
+				<?php if ( $can_edit_post ) { ?><th><?php _e( 'Actions', 'wp-document-revisions' ); ?></th><?php } ?>
 			</tr>
 		<?php
 		
@@ -843,7 +844,7 @@ class Document_Revisions_Admin {
 		$current_state = wp_get_post_terms( $post->ID, 'workflow_state' );
 		$states = get_terms( 'workflow_state', array( 'hide_empty'=> false ) );
 		?>
-		<label for="workflow_state"><?php _e( 'Current State', 'wp_document_revisions' ); ?>:</label>
+		<label for="workflow_state"><?php _e( 'Current State', 'wp-document-revisions' ); ?>:</label>
 		<select name="workflow_state" id="workflow_state">
 			<option></option>
 			<?php foreach ( $states as $state ) { ?>
@@ -906,8 +907,8 @@ class Document_Revisions_Admin {
  	function post_author_meta_box( $post ) {
 		global $user_ID;
 		?>
-		<label class="screen-reader-text" for="post_author_override"><?php _e( 'Owner', 'wp_document_revisions' ); ?></label>
-		<?php _e( 'Document Owner', 'wp_document_revisions' ); ?>: 
+		<label class="screen-reader-text" for="post_author_override"><?php _e( 'Owner', 'wp-document-revisions' ); ?></label>
+		<?php _e( 'Document Owner', 'wp-document-revisions' ); ?>: 
 		<?php
 		wp_dropdown_users( array(
 			'who' => apply_filters( 'document_revisions_owners', '' ),
@@ -925,11 +926,11 @@ class Document_Revisions_Admin {
 	
 		//translation strings
 		$data = array(
-			'restoreConfirmation' => __( "Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.", 'wp_document_revisions'),
+			'restoreConfirmation' => __( "Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.", 'wp-document-revisions'),
 			'lockNeedle' => __( 'is currently editing this'), //purposely left out text domain
 			'postUploadNotice' => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>'),
-			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp_document_revisions' ),
-			'lockError' => __( 'An error has occurred, please try reloading the page.', 'wp_document_revisions' ),
+			'lostLockNotice' => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
+			'lockError' => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
 			'lostLockNoticeLogo' => admin_url('images/logo.gif'),
 			'minute' => __('%d mins', 'wp-document-revisions'),

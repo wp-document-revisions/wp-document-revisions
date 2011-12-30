@@ -72,6 +72,17 @@ class Document_Revisions {
 		include( dirname( __FILE__ ) . '/includes/front-end.php' );
 		new Document_Revisions_Front_End( &$this );
 		
+//		add_filter( 'gettext', array( &$this, 'gettext', 10, 3 ) );
+		
+	}
+	
+	function gettext( $trans, $text, $domain ) {
+		//if ( $domain != 'wp-document-revisions' )
+			//return $trans;
+			
+		echo "DOMAIN: $domain ";
+		
+		return $trans;
 	}
 
 	/**
@@ -90,19 +101,19 @@ class Document_Revisions {
 	function register_cpt(){
 		
 		$labels = array(
-		'name' => _x( 'Documents', 'post type general name', 'wp_document_revisions' ),
-		'singular_name' => _x( 'Document', 'post type singular name', 'wp_document_revisions' ),
-		'add_new' => _x( 'Add Document', 'document', 'wp_document_revisions' ),
-		'add_new_item' => __( 'Add New Document', 'wp_document_revisions' ),
-		'edit_item' => __( 'Edit Document', 'wp_document_revisions' ),
-		'new_item' => __( 'New Document', 'wp_document_revisions' ),
-		'view_item' => __( 'View Document', 'wp_document_revisions' ),
-		'search_items' => __( 'Search Documents', 'wp_document_revisions' ),
-		'not_found' =>__( 'No documents found', 'wp_document_revisions' ),
-		'not_found_in_trash' => __( 'No documents found in Trash', 'wp_document_revisions' ), 
+		'name' => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
+		'singular_name' => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
+		'add_new' => _x( 'Add Document', 'document', 'wp-document-revisions' ),
+		'add_new_item' => __( 'Add New Document', 'wp-document-revisions' ),
+		'edit_item' => __( 'Edit Document', 'wp-document-revisions' ),
+		'new_item' => __( 'New Document', 'wp-document-revisions' ),
+		'view_item' => __( 'View Document', 'wp-document-revisions' ),
+		'search_items' => __( 'Search Documents', 'wp-document-revisions' ),
+		'not_found' =>__( 'No documents found', 'wp-document-revisions' ),
+		'not_found_in_trash' => __( 'No documents found in Trash', 'wp-document-revisions' ), 
 		'parent_item_colon' => '',
-		'menu_name' => __( 'Documents', 'wp_document_revisions' ),
-		'all_items' => __( 'All Documents', 'wp_document_revisions' ),
+		'menu_name' => __( 'Documents', 'wp-document-revisions' ),
+		'all_items' => __( 'All Documents', 'wp-document-revisions' ),
 		);
 		
 		$args = array(
@@ -135,17 +146,17 @@ class Document_Revisions {
 	function register_ct() {
 	
  		$labels = array(
- 		 'name' => _x( 'Workflow States', 'taxonomy general name', 'wp_document_revisions' ),
- 		 'singular_name' => _x( 'Workflow State', 'taxonomy singular name', 'wp_document_revisions'),
- 		 'search_items' =>__( 'Search Workflow States', 'wp_document_revisions' ),
- 		 'all_items' => __( 'All Workflow States', 'wp_document_revisions' ),
- 		 'parent_item' => __( 'Parent Workflow State', 'wp_document_revisions' ),
- 		 'parent_item_colon' => __( 'Parent Workflow State:', 'wp_document_revisions' ),
- 		 'edit_item' => __( 'Edit Workflow State', 'wp_document_revisions' ), 
- 		 'update_item' => __( 'Update Workflow State', 'wp_document_revisions' ),
- 		 'add_new_item' => __( 'Add New Workflow State', 'wp_document_revisions' ),
- 		 'new_item_name' => __( 'New Workflow State Name', 'wp_document_revisions' ),
- 		 'menu_name' => __( 'Workflow States', 'wp_document_revisions' ),
+ 		 'name' => _x( 'Workflow States', 'taxonomy general name', 'wp-document-revisions' ),
+ 		 'singular_name' => _x( 'Workflow State', 'taxonomy singular name', 'wp-document-revisions'),
+ 		 'search_items' =>__( 'Search Workflow States', 'wp-document-revisions' ),
+ 		 'all_items' => __( 'All Workflow States', 'wp-document-revisions' ),
+ 		 'parent_item' => __( 'Parent Workflow State', 'wp-document-revisions' ),
+ 		 'parent_item_colon' => __( 'Parent Workflow State:', 'wp-document-revisions' ),
+ 		 'edit_item' => __( 'Edit Workflow State', 'wp-document-revisions' ), 
+ 		 'update_item' => __( 'Update Workflow State', 'wp-document-revisions' ),
+ 		 'add_new_item' => __( 'Add New Workflow State', 'wp-document-revisions' ),
+ 		 'new_item_name' => __( 'New Workflow State Name', 'wp-document-revisions' ),
+ 		 'menu_name' => __( 'Workflow States', 'wp-document-revisions' ),
  		); 	
  	
  		register_taxonomy( 'workflow_state', array('document'), apply_filters( 'document_revisions_ct', array(
@@ -171,10 +182,10 @@ class Document_Revisions {
 			return false;
 			
 		$states = array( 	
-					__('In Progress', 'wp_document_revisions') => __('Document is in the process of being written', 'wp_document_revisions'), 
-					__('Initial Draft', 'wp_document_revisions') => __('Document is being edited and refined','wp_document_revisions'), 
-					__('Under Review', 'wp_document_revisions') => __('Document is pending final review', 'wp_document_revisions'), 
-					__('Final', 'wp_document_revisions') => __('Document is in its final form', 'wp_document_revisions'), 
+					__('In Progress', 'wp-document-revisions') => __('Document is in the process of being written', 'wp-document-revisions'), 
+					__('Initial Draft', 'wp-document-revisions') => __('Document is being edited and refined','wp-document-revisions'), 
+					__('Under Review', 'wp-document-revisions') => __('Document is pending final review', 'wp-document-revisions'), 
+					__('Final', 'wp-document-revisions') => __('Document is in its final form', 'wp-document-revisions'), 
 				);
 		
 		$states = apply_filters( 'default_workflow_states', $states );
@@ -963,7 +974,7 @@ class Document_Revisions {
 		//verify current user can edit
 		//consider a specific permission check here
 		if ( !$_POST['post_id'] || !current_user_can( 'edit_post' , $_POST['post_id'] ) || !current_user_can( 'override_document_lock' ) )
-			wp_die( __( 'Not authorized', 'wp_document_revisions') );
+			wp_die( __( 'Not authorized', 'wp-document-revisions') );
 			
 		//verify that there is a lock
 		if ( !( $current_owner = wp_check_post_lock($_POST['post_id'] ) ) ) 
@@ -1005,14 +1016,14 @@ class Document_Revisions {
 		$post = get_post( $post_id );
 
 		//build the subject
-		$subject = sprintf( __( '%1$s: %2$s has overridden your lock on %3$s', 'wp_document_revisions' ), get_bloginfo( 'name' ), $current_user->display_name, $post->post_title );
+		$subject = sprintf( __( '%1$s: %2$s has overridden your lock on %3$s', 'wp-document-revisions' ), get_bloginfo( 'name' ), $current_user->display_name, $post->post_title );
 		$subject = apply_filters( 'lock_override_notice_subject', $subject );
 		
 		//build the message
-		$message = sprintf( __('Dear %s:', 'wp_document_revisions' ), $lock_owner->display_name) . "\n\n";
-		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp_document_revisions' ), $current_user->display_name,  $current_user->user_email, $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
-		$message .= __('Any changes you have made will be lost.', 'wp_document_revisions' ) . "\n\n";
-		$message .= sprintf( __('- The %s Team', 'wp_document_revisions' ), get_bloginfo( 'name' ) );
+		$message = sprintf( __('Dear %s:', 'wp-document-revisions' ), $lock_owner->display_name) . "\n\n";
+		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name,  $current_user->user_email, $post->post_title,get_permalink( $post->ID ) ) . "\n\n";
+		$message .= __('Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
+		$message .= sprintf( __('- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
 		$message = apply_filters( 'lock_override_notice_message', $message );
 		
 		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
