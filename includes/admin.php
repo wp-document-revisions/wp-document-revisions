@@ -53,10 +53,6 @@ class Document_Revisions_Admin {
 		add_action( 'show_user_profile', array( $this, 'rss_key_display' ) );
 		add_action( 'personal_options_update', array( &$this, 'profile_update_cb' ) );
 		add_action( 'edit_user_profile_update', array( &$this, 'profile_update_cb' ) );
-				
-		//translation
-		//note, because admin.php is in /includes, we need to traverse the path up a level before passing
-		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( dirname( __FILE__ ) ) ) . '/languages/' );
 
 		//Queue up JS
 		add_action( 'admin_init', array( &$this, 'enqueue_js' ) );

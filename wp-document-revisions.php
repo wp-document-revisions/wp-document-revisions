@@ -24,6 +24,7 @@ class Document_Revisions {
 
 		//admin
 		add_action( 'auth_redirect', array( &$this, 'admin_init' ) );
+		add_action( 'init', array( &$this, 'i18n' ), 5 );
 		
 		//CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -72,6 +73,14 @@ class Document_Revisions {
 		include( dirname( __FILE__ ) . '/includes/front-end.php' );
 		new Document_Revisions_Front_End( &$this );
 				
+	}
+	
+	/**
+	 * Init i18n files
+	 * Must be done early on init because they need to be in place when register_cpt is called
+	 */
+	function i18n() {
+		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
