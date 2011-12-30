@@ -48,6 +48,7 @@ class Document_Revisions {
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
+		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
 		
 		//RSS
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
@@ -1357,6 +1358,21 @@ class Document_Revisions {
 		
 		foreach ( $taxs as $tax )
 			$tax->update_count_callback = array( &$this, 'term_count_cb' );		
+		
+	}
+	
+	/**
+	 * Removes auto-appended trailing slash from document requests prior to serving
+	 * WordPress SEO rules properly dictate that all post requests should be 301 redirected with a trailing slash
+	 * Because documents end with a phaux file extension, we don't want that
+	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working
+	 */
+	function redirect_canonical_filter( $redirect, $request ) {
+	
+		if ( !$this->verify_post_type() )
+			return $redirect;
+			
+		return untrailingslashit( $redirect );
 		
 	}
 	
