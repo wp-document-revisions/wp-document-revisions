@@ -195,7 +195,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 * Added shortcode to display list of documents meeting specified criteria
 * Added shortcode to display a document's revisions (formerly in code cookbook)
 * Addded widget to display recently revised documents (formerly in code cookbook)
-* Created new global `get_documents()` and `get_document_revisions() functions to help build and customize themes and plugins
+* Created new global `get_documents()` and `get_document_revisions()` functions to help build and customize themes and plugins
 * Added filter to `wp_get_attachment_url` to force document/revision urls when attachments are queried directly
 * Better organization of plugin files within plugin folder
 * Fixed bug where revision summary would not display under certain circumstances 
