@@ -71,18 +71,7 @@ class Document_Revisions {
 		//load front-end features (shortcode, widgets, etc.)
 		include( dirname( __FILE__ ) . '/includes/front-end.php' );
 		new Document_Revisions_Front_End( &$this );
-		
-//		add_filter( 'gettext', array( &$this, 'gettext', 10, 3 ) );
-		
-	}
-	
-	function gettext( $trans, $text, $domain ) {
-		//if ( $domain != 'wp-document-revisions' )
-			//return $trans;
-			
-		echo "DOMAIN: $domain ";
-		
-		return $trans;
+				
 	}
 
 	/**
