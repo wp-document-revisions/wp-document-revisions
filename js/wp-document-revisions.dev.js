@@ -127,6 +127,10 @@ jQuery(document).ready( function($) {
 	//automatically refresh all timestamps every minute with actual human time diff
 	setInterval( "updateTimestamps()", 60000 ); //60k = 1 minute
  	
+ 	if ( adminpage == 'media-upload-popup' ) {
+ 		setTimeout( 'bindPostDocumentUploadCB();', 1 );
+ 	}
+ 	
 });
 
 //Javscript version of the WP human time diff PHP function, allows time stamps to by dynamically updated
@@ -251,4 +255,23 @@ function postDocumentUpload( file, attachmentID ) {
         win.jQuery('#sample-permalink').html( win.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?$/i, wp_document_revisions.extension ) );
     }
     
+}
+
+//registers our callback with plupload on media-upload.php
+function bindPostDocumentUploadCB() {
+	
+	//prevent errors pre-3.3
+	if ( typeof uploader == 'undefined' )
+		return;
+	
+	uploader.bind( 'FileUploaded', function( up, file, response ) {
+					
+		//if error, kick
+		if ( response.response.match('media-upload-error') )
+			return;
+					
+		postDocumentUpload( file.name, response.response );
+					
+	});
+
 }

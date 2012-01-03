@@ -33,7 +33,7 @@ class Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter'), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
-		add_filter( 'plupload_success_handler', array(&$this, 'post_upload_cb_filter' ) );
+		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
 
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
@@ -544,7 +544,7 @@ class Document_Revisions_Admin {
 		ob_start();
 		
 		?><script>
-		var attachmentID = <?php echo $id; ?>;
+		var attachmentID = <?php echo (int) $id; ?>;
 		var extension = '<?php echo $extension; ?>';
 		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
 		</script><?php 
@@ -560,6 +560,19 @@ class Document_Revisions_Admin {
 	}
 	
 	/**
+	 * Binds our post-upload javascript callback to the plupload event
+	 * Note: in footer because it has to be called after handler.js is loaded and initialized
+	 * @since 1.2.1
+	 */
+	function bind_upload_cb() { 
+		global $pagenow;
+		if ( $pagenow != 'media-upload.php' )
+			return;
+		?>
+		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+	<?php }
+	
+	/**
 	 * Ugly, Ugly hack to sneak post-upload JS into the iframe *pre 3.3*
 	 * If there was a hook there, I wouldn't have to do this
 	 * @param string $meta dimensions / post meta
@@ -567,32 +580,19 @@ class Document_Revisions_Admin {
 	 * @since 0.5
 	 */
 	function media_meta_hack( $meta ) {
-		 
+			
 		if ( !$this->verify_post_type( ) )
 			return $meta;
 
 		global $post;
 		$latest = $this->get_latest_attachment( $post->ID );
+		
+		do_action('document_upload', $latest, $post->ID );
 
 		$meta .= $this->post_upload_js( $latest->ID );
 		
 		return $meta;
 	
-	}
-	
-	/**
-	 * Post Upload Handle Callback filter for 3.3+ Plupload system
-	 * @param string $cb the original callback
-	 * @returns string the modified callback, default for all but document
-	 * @since 1.1
-	 */
-	function post_upload_cb_filter( $cb ) {
-		
-		if ( !$this->verify_post_type() )
-			return $cb;
-			
-		return 'postDocumentUpload';
-		
 	}
 	
 	/**
@@ -612,10 +612,13 @@ class Document_Revisions_Admin {
 			
 		//get the object that is our new attachment
 		$latest = $this->get_latest_attachment( $_POST['post_id'] );
-		
+
 		do_action('document_upload', $latest, $_POST['post_id'] );
 		
 		echo $this->post_upload_js( $latest->ID );
+		
+		//prevent hook from fireing a 2nd time
+	 	remove_filter( 'media_meta', array( &$this, 'media_meta_hack'), 10, 1);
 		
 		//should probably give this back...
 		return $filter; 
@@ -630,6 +633,7 @@ class Document_Revisions_Admin {
 	*/
 	 function get_latest_attachment( $post_id ) {
 	 	$attachments = $this->get_attachments( $post_id );
+		
 		return reset( $attachments );
 	 }
 

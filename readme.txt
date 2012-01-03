@@ -182,14 +182,15 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))
 * Enhanced support for running on WAMP systems (XAMPP, etc.)
+* Improved integration with WordPress 3.3's new upload handler
 * Significant performance improvements to `verify_post_type()` method
 * Document requests no longer canonically 301 redirect with a trailing slash
 * Fix for wp_get_attachment_url returning the attachment URL, rather than the document permalink when called directly
 * Menu item now reads "All Documents" (rather than simply "Documents") for clarity
 * Fix for E_WARNING level error on edit-tags.php with custom taxonomies
 * Taxonomy counts (e.g., workflow states) now reflects non-published documents
-* Better translation support (see the [FAQ](http://wordpress.org/extend/plugins/wp-document-revisions/faq/) if you are interested in translating the plugin into your langauge)
-* Computability fix for WordPress SEO's "Clean Permalinks" mode
+* Better translation support (see the [FAQ](http://wordpress.org/extend/plugins/wp-document-revisions/faq/) if you are interested in translating the plugin into your language)
+* Compatability fix for WordPress SEO's "Clean Permalinks" mode
 
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria

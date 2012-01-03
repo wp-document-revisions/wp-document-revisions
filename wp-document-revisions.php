@@ -305,7 +305,7 @@ class Document_Revisions {
 	
 	/**
 	 * Gets a file extension from a post
-	 * @param object $post post object
+	 * @param object|int $post document or attachment
 	 * @return string the extension to the latest revision
 	 * @since 0.5
 	 */
@@ -313,8 +313,16 @@ class Document_Revisions {
 	 	
 	 	if ( $post == '' )
 	 		global $post;
-
-		return $this->get_extension( $this->get_latest_revision_url( $post->ID ) );
+	 		
+	 	if ( !is_object( $post ) )
+	 		$post = get_post( $post );
+	 		 	
+	 	if ( get_post_type( $post ) == 'attachment' )
+			$file = get_attached_file( $post->ID );
+		else 
+			$file = $this->get_latest_revision_url( $post->ID );
+			 
+		return $this->get_extension( $file );
 			
 	}
 	
@@ -854,7 +862,7 @@ class Document_Revisions {
 		//check for post_type query arg (post new)
 		if ( $post == false && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
 			return true;
-		
+				
 		//if post isn't set, try get vars (edit post)
 		if ( $post == false ) 
 			$post = ( isset( $_GET['post'] ) ) ? $_GET['post'] : false;
@@ -862,13 +870,14 @@ class Document_Revisions {
 		//look for post_id via post or get (media upload)
 		if ( $post == false ) 
 			$post = ( isset( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : false;
-			
-		$post_type = get_post_type( $post );
 		
+				
+		$post_type = get_post_type( $post );
+	
 		//if post is really an attachment or revision, look to the post's parent
 		if ( $post_type == 'attachment' || $post_type == 'revision' )
-			$post_type ==  get_post_type( get_post( $post )->post_parent );
-		
+			$post_type = get_post_type( get_post( $post )->post_parent );
+					
 		return ( $post_type == 'document' );
 		
 	}
