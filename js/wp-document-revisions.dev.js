@@ -127,10 +127,6 @@ jQuery(document).ready( function($) {
 	//automatically refresh all timestamps every minute with actual human time diff
 	setInterval( "updateTimestamps()", 60000 ); //60k = 1 minute
  	
- 	if ( adminpage == 'media-upload-popup' ) {
- 		setTimeout( 'bindPostDocumentUploadCB();', 1 );
- 	}
- 	
 });
 
 //Javscript version of the WP human time diff PHP function, allows time stamps to by dynamically updated
