@@ -1,0 +1,560 @@
+# Copyright (C) {year} WP Document Revisions
+# This file is distributed under the same license as the WP Document Revisions package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Document Revisions 1.2.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-document-revisions\n"
+"POT-Creation-Date: 2011-12-30 21:07:17+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2011-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: wp-document-revisions.php:93
+msgctxt "post type general name"
+msgid "Documents"
+msgstr ""
+
+#: wp-document-revisions.php:94
+msgctxt "post type singular name"
+msgid "Document"
+msgstr ""
+
+#: wp-document-revisions.php:95
+msgctxt "document"
+msgid "Add Document"
+msgstr ""
+
+#: wp-document-revisions.php:96
+msgid "Add New Document"
+msgstr ""
+
+#: wp-document-revisions.php:97
+msgid "Edit Document"
+msgstr ""
+
+#: wp-document-revisions.php:98
+msgid "New Document"
+msgstr ""
+
+#: wp-document-revisions.php:99
+msgid "View Document"
+msgstr ""
+
+#: wp-document-revisions.php:100
+msgid "Search Documents"
+msgstr ""
+
+#: wp-document-revisions.php:101
+msgid "No documents found"
+msgstr ""
+
+#: wp-document-revisions.php:102
+msgid "No documents found in Trash"
+msgstr ""
+
+#: wp-document-revisions.php:104 includes/admin.php:186
+msgid "Documents"
+msgstr ""
+
+#: wp-document-revisions.php:105
+msgid "All Documents"
+msgstr ""
+
+#: wp-document-revisions.php:138
+msgctxt "taxonomy general name"
+msgid "Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:139
+msgctxt "taxonomy singular name"
+msgid "Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:140
+msgid "Search Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:141
+msgid "All Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:142
+msgid "Parent Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:143
+msgid "Parent Workflow State:"
+msgstr ""
+
+#: wp-document-revisions.php:144
+msgid "Edit Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:145
+msgid "Update Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:146
+msgid "Add New Workflow State"
+msgstr ""
+
+#: wp-document-revisions.php:147
+msgid "New Workflow State Name"
+msgstr ""
+
+#: wp-document-revisions.php:148
+msgid "Workflow States"
+msgstr ""
+
+#: wp-document-revisions.php:174
+msgid "In Progress"
+msgstr ""
+
+#: wp-document-revisions.php:174
+msgid "Document is in the process of being written"
+msgstr ""
+
+#: wp-document-revisions.php:175
+msgid "Initial Draft"
+msgstr ""
+
+#: wp-document-revisions.php:175
+msgid "Document is being edited and refined"
+msgstr ""
+
+#: wp-document-revisions.php:176
+msgid "Under Review"
+msgstr ""
+
+#: wp-document-revisions.php:176
+msgid "Document is pending final review"
+msgstr ""
+
+#: wp-document-revisions.php:177
+msgid "Final"
+msgstr ""
+
+#: wp-document-revisions.php:177
+msgid "Document is in its final form"
+msgstr ""
+
+#: wp-document-revisions.php:274
+msgid "Somebody"
+msgstr ""
+
+#: wp-document-revisions.php:333
+msgid "revision"
+msgstr ""
+
+#: wp-document-revisions.php:380 wp-document-revisions.php:623
+msgid "-revision-"
+msgstr ""
+
+#: wp-document-revisions.php:598
+msgid "404 &#8212; File not found."
+msgstr ""
+
+#: wp-document-revisions.php:604
+msgid "You are not authorized to access that file."
+msgstr ""
+
+#: wp-document-revisions.php:921
+msgid "Sorry, this is a private feed."
+msgstr ""
+
+#: wp-document-revisions.php:966 includes/admin.php:478 includes/admin.php:482
+msgid "Not authorized"
+msgstr ""
+
+#: wp-document-revisions.php:1008
+msgid "%1$s: %2$s has overridden your lock on %3$s"
+msgstr ""
+
+#: wp-document-revisions.php:1012
+msgid "Dear %s:"
+msgstr ""
+
+#: wp-document-revisions.php:1013
+msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
+msgstr ""
+
+#: wp-document-revisions.php:1014
+msgid "Any changes you have made will be lost."
+msgstr ""
+
+#: wp-document-revisions.php:1015
+msgid "- The %s Team"
+msgstr ""
+
+#: wp-document-revisions.php:1172
+msgid "%s - Latest Revision"
+msgstr ""
+
+#: wp-document-revisions.php:1186
+msgid "%s - Revision %d"
+msgstr ""
+
+#: includes/front-end.php:93
+msgid ""
+"<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> "
+"<span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
+msgstr ""
+
+#: includes/front-end.php:168
+msgid "Recently Revised Documents"
+msgstr ""
+
+#: includes/front-end.php:215
+msgid "%1$s ago by %2$s"
+msgstr ""
+
+#: includes/front-end.php:222
+msgid "%1$s ago"
+msgstr ""
+
+#: includes/front-end.php:247
+msgid "Title:"
+msgstr ""
+
+#: includes/front-end.php:251
+msgid "Number of Posts:"
+msgstr ""
+
+#: includes/front-end.php:255
+msgid "Posts to Show:"
+msgstr ""
+
+#: includes/front-end.php:261
+msgid "Display Document Author:"
+msgstr ""
+
+#: includes/front-end.php:262
+msgid "Yes"
+msgstr ""
+
+#: includes/admin.php:115
+msgid "Document updated. <a href=\"%s\">Download document</a>"
+msgstr ""
+
+#: includes/admin.php:116
+msgid "Custom field updated."
+msgstr ""
+
+#: includes/admin.php:117
+msgid "Custom field deleted."
+msgstr ""
+
+#: includes/admin.php:118
+msgid "Document updated."
+msgstr ""
+
+#: includes/admin.php:119
+msgid "Document restored to revision from %s"
+msgstr ""
+
+#: includes/admin.php:120
+msgid "Document published. <a href=\"%s\">Download document</a>"
+msgstr ""
+
+#: includes/admin.php:121
+msgid "Document saved."
+msgstr ""
+
+#: includes/admin.php:122
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+
+#: includes/admin.php:123
+msgid ""
+"Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2"
+"$s\">Preview document</a>"
+msgstr ""
+
+#: includes/admin.php:123
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#: includes/admin.php:124
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
+msgstr ""
+
+#: includes/admin.php:173
+msgid "Basic Usage"
+msgstr ""
+
+#: includes/admin.php:174
+msgid ""
+"<p>This screen allows users to collaboratively edit documents and track "
+"their revision history. To begin, enter a title for the document, click "
+"<code>Upload New Version</code> and select the file from your computer.</p>\n"
+"\t\t\t\t\t\t\t\t\t\t<p>Once successfully uploaded, you can enter a revision "
+"log message, assign the document an author, and describe its current "
+"workflow state.</p>\n"
+"\t\t\t\t\t\t\t\t\t\t<p>When done, simply click <code>Update</code> to save "
+"your changes</p>"
+msgstr ""
+
+#: includes/admin.php:177
+msgid "Revision Log"
+msgstr ""
+
+#: includes/admin.php:178
+msgid ""
+"<p>The revision log provides a short summary of the changes reflected in a "
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance.</p>\n"
+"\t\t\t\t\t\t\t\t\t\t<p>You can download and view previous versions of the "
+"document by clicking the timestamp in the revision log. You can also restore "
+"revisions by clicking the <code>restore</code> button beside the revision.</"
+"p>"
+msgstr ""
+
+#: includes/admin.php:180 includes/admin.php:245 includes/admin.php:752
+msgid "Workflow State"
+msgstr ""
+
+#: includes/admin.php:181
+msgid ""
+"<p>The workflow state field can be used to help team members understand at "
+"what stage a document sits within a particular organization&quot;s workflow. "
+"The field is optional, and can be customized or queried by clicking "
+"<code>Workflow States</code> on the left-hand side.</p>"
+msgstr ""
+
+#: includes/admin.php:182
+msgid "Publishing Documents"
+msgstr ""
+
+#: includes/admin.php:183
+msgid ""
+"<p>By default, uploaded documents are only accessible to logged in users. "
+"Documents can be published, thus making them accessible to the world, by "
+"toggling their visibility in the \"Publish\" box in the top right corner. "
+"Any document marked as published will be accessible to anyone with the "
+"proper URL.</p>"
+msgstr ""
+
+#: includes/admin.php:187
+msgid ""
+"<p>Below is a all documents to which you have access. Click the document "
+"title to edit the document or download the latest version.</p> \n"
+"\t\t\t\t\t\t\t\t\t<p>To add a new document, click <strong>Add Document</"
+"strong> on the left-hand side.</p>\n"
+"\t\t\t\t\t\t\t\t\t<p>To view all documents at a particular workflow state, "
+"click <strong>Workflow States</strong> in the menu on the left.</p>"
+msgstr ""
+
+#: includes/admin.php:238 includes/admin.php:332
+msgid "Revision Summary"
+msgstr ""
+
+#: includes/admin.php:239
+msgid "Document"
+msgstr ""
+
+#: includes/admin.php:251 includes/admin.php:735 includes/admin.php:910
+msgid "Owner"
+msgstr ""
+
+#: includes/admin.php:308
+msgid "%s has prevented other users from making changes."
+msgstr ""
+
+#: includes/admin.php:310
+msgid ""
+"<br />If you believe this is in error you can <a href=\"#\" id="
+"\"override_link\">override the lock</a>, but their changes will be lost."
+msgstr ""
+
+#: includes/admin.php:314
+msgid "Upload New Version"
+msgstr ""
+
+#: includes/admin.php:319
+msgid "Latest Version of the Document"
+msgstr ""
+
+#: includes/admin.php:320
+msgid "Download"
+msgstr ""
+
+#: includes/admin.php:321
+msgid ""
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
+"ago by %4$s"
+msgstr ""
+
+#: includes/admin.php:334
+msgid ""
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
+"needing to open the actual file."
+msgstr ""
+
+#: includes/admin.php:350
+msgid "Modified"
+msgstr ""
+
+#: includes/admin.php:351
+msgid "User"
+msgstr ""
+
+#: includes/admin.php:352
+msgid "Summary"
+msgstr ""
+
+#: includes/admin.php:353
+msgid "Actions"
+msgstr ""
+
+#: includes/admin.php:368
+msgid "Restore"
+msgstr ""
+
+#: includes/admin.php:378
+msgid "RSS Feed"
+msgstr ""
+
+#: includes/admin.php:429
+msgid "Please enter a valid document upload directory."
+msgstr ""
+
+#: includes/admin.php:442
+msgid ""
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
+msgstr ""
+
+#: includes/admin.php:455
+msgid "Document Settings"
+msgstr ""
+
+#: includes/admin.php:458
+msgid "Document Upload Directory"
+msgstr ""
+
+#: includes/admin.php:531
+msgid ""
+"Directory in which to store uploaded documents. The default is in your "
+"<code>wp_content/uploads</code> folder, but it may be moved to a folder "
+"outside of the <code>htdocs</code> or <code>public_html</code> folder for "
+"added security."
+msgstr ""
+
+#: includes/admin.php:654
+msgid ""
+"You currently have this file checked out. No other user can edit this "
+"document so long as you remain on this page."
+msgstr ""
+
+#: includes/admin.php:665
+msgid "Feed Privacy"
+msgstr ""
+
+#: includes/admin.php:668
+msgid "Secret Feed Key"
+msgstr ""
+
+#: includes/admin.php:671
+msgid ""
+"To protect your privacy, you need to append a key to feeds for use in feed "
+"readers."
+msgstr ""
+
+#: includes/admin.php:673
+msgid "Generate New Key"
+msgstr ""
+
+#: includes/admin.php:801
+msgid "Currently Editing"
+msgstr ""
+
+#: includes/admin.php:847
+msgid "Current State"
+msgstr ""
+
+#: includes/admin.php:911
+msgid "Document Owner"
+msgstr ""
+
+#: includes/admin.php:929
+msgid ""
+"Are you sure you want to restore this revision?\n"
+"\n"
+"If you do, no history will be lost. This revision will be copied and become "
+"the most recent revision."
+msgstr ""
+
+#: includes/admin.php:930
+msgid "is currently editing this"
+msgstr ""
+
+#: includes/admin.php:931
+msgid ""
+"<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File "
+"uploaded successfully. Add a revision summary below (optional) or press "
+"<em>Update</em> to save your changes.</p></div>"
+msgstr ""
+
+#: includes/admin.php:932
+msgid ""
+"Your lock on the document %s has been overridden. Any changes will be lost."
+msgstr ""
+
+#: includes/admin.php:933
+msgid "An error has occurred, please try reloading the page."
+msgstr ""
+
+#: includes/admin.php:934
+msgid "Lost Document Lock"
+msgstr ""
+
+#: includes/admin.php:936 includes/admin.php:937
+msgid "%d mins"
+msgstr ""
+
+#: includes/admin.php:938
+msgid "%d hour"
+msgstr ""
+
+#: includes/admin.php:939
+msgid "%d hours"
+msgstr ""
+
+#: includes/admin.php:940
+msgid "%d day"
+msgstr ""
+
+#: includes/admin.php:941
+msgid "%d days"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP Document Revisions"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-"
+"version-control-wordpress/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"A document management and version control plugin for WordPress that allows "
+"teams of any size to collaboratively edit files and manage their workflow."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Benjamin J. Balter"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://ben.balter.com"
+msgstr ""
