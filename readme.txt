@@ -47,6 +47,7 @@ A document management and version control plugin that allows teams of any size t
 * Runs in-house or in the cloud
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
+* French language support
 * Easily translated to your local language
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
