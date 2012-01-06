@@ -234,7 +234,7 @@ class Document_Revisions_Admin {
 		
 		//add our meta boxes
 		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
-		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'core' );
+		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'high' );
 		
 		if ( $post->post_content != '' )
 			add_meta_box('revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
