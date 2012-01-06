@@ -64,7 +64,9 @@ class Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 		
 		//edit flow support
-		add_action( 'ef_loaded', array( &$this, 'edit_flow_admin_support' ) );
+		//note: ef_loaded hook is fired on plugins loaded, far too early
+		//we can still remove our hooks, just need to check if edit_flow is a class
+		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
 			
 	}
 	
@@ -232,7 +234,7 @@ class Document_Revisions_Admin {
 		
 		//add our meta boxes
 		add_meta_box( 'revision-summary', __('Revision Summary', 'wp-document-revisions'), array(&$this, 'revision_summary_cb'), 'document', 'normal', 'default' );
-		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'high' );
+		add_meta_box( 'document', __('Document', 'wp-document-revisions'), array(&$this, 'document_metabox'), 'document', 'normal', 'core' );
 		
 		if ( $post->post_content != '' )
 			add_meta_box('revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
