@@ -180,6 +180,9 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 == Changelog ==
 
+= 1.2.2 =
+* Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
+
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))
 * Enhanced support for running on WAMP systems (XAMPP, etc.)

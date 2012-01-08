@@ -58,7 +58,7 @@ class Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_js' ) );
 		
 		//media filters
-		add_action( 'posts_where', array( &$this, 'filter_from_media' ) );
+		add_action( 'admin_init', array( &$this, 'filter_from_media' ) );
 		
 		//cleanup
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
@@ -951,29 +951,50 @@ class Document_Revisions_Admin {
 	}
 
 	/**
-	 * Filters documents from media galleries
-	 * @param string $query the raw WHERE clause of the SQL query
-	 * @returns string the modified query
+	 * Joins wp_posts on itself so posts can be filter by post_parent's type
+	 * @param string $join the original join statement
+	 * @return string the modified join statement
 	 */
-	function filter_from_media( $query ) {
+	function filter_media_join( $join ) {
 		
+		$join .= ' LEFT OUTER JOIN wp_trunk_posts wpdr_post_parent ON wpdr_post_parent.ID = wp_trunk_posts.post_parent';
+		
+		return $join;
+	}
+	
+	/*
+	 * Exclude children of documents from query
+	 * @param string $where the original where statement
+	 * @return string the modified where statement
+	 */
+	function filter_media_where( $where ) {
 		global $wpdb;
+		
+		//fix for mysql column ambiguity, see http://core.trac.wordpress.org/ticket/19779
+		$where = str_replace( ' post_parent < 1', "{$wpdb->posts}.post_parent < 1", $where );
+			
+		$where .= " AND ( wpdr_post_parent.post_type IS NULL OR wpdr_post_parent.post_type != 'document' )";
+		
+		return $where;
+		
+	}
+
+	/**
+	 * Filters documents from media galleries
+	 * @uses filter_media_where()
+	 * @uses filter_media_join()
+	 */
+	function filter_from_media( ) {
+		
 		global $pagenow;
 		
 		//verify the page
 		if ( $pagenow != 'upload.php' && $pagenow != 'media-upload.php' )
-			return $query;
+			return;
 		
-		//get a list of document IDs and add to query as post_parent not in clause
-		$docs = $wpdb->get_col("SELECT ID from $wpdb->posts WHERE post_type = 'document'");
-		
-		//no docs found, prevent SQL error, see http://bit.ly/oGrvlb 
-		if ( empty( $docs ) )
-			return $query;
-			
-		$query .= ' AND post_parent NOT IN (' . implode(', ', $docs) . ')';
-		
-		return $query;
+		//note: hook late so that unnattached filter can hook in, if necessary
+		add_filter( 'posts_join_paged', array( &$this, 'filter_media_join' ) );
+		add_filter( 'posts_where_paged', array( &$this, 'filter_media_where' ), 20 );
 			
 	}
 	
