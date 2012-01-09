@@ -973,7 +973,7 @@ class Document_Revisions_Admin {
 		global $wpdb;
 		
 		//fix for mysql column ambiguity, see http://core.trac.wordpress.org/ticket/19779
-		$where = str_replace( ' post_parent < 1', "{$wpdb->posts}.post_parent < 1", $where );
+		$where = str_replace( ' post_parent < 1', " {$wpdb->posts}.post_parent < 1", $where );
 			
 		$where .= " AND ( wpdr_post_parent.post_type IS NULL OR wpdr_post_parent.post_type != 'document' )";
 		
