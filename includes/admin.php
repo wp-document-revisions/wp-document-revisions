@@ -956,10 +956,12 @@ class Document_Revisions_Admin {
 	 * @return string the modified join statement
 	 */
 	function filter_media_join( $join ) {
+		global $wpdb;
 		
-		$join .= ' LEFT OUTER JOIN wp_trunk_posts wpdr_post_parent ON wpdr_post_parent.ID = wp_trunk_posts.post_parent';
+		$join .= " LEFT OUTER JOIN {$wpdb->posts} wpdr_post_parent ON wpdr_post_parent.ID = {$wpdb->posts}.post_parent";
 		
 		return $join;
+	
 	}
 	
 	/*
