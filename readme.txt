@@ -182,6 +182,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 = 1.2.2 =
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
+* If installed and activated, Edit Flow's Editorial Comments metabox will now appear below Document metabox by default
 
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))

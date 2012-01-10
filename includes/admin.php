@@ -1053,7 +1053,7 @@ class Document_Revisions_Admin {
 	}
 	
 	/**
-	 * Sublimates the Editorial Metabox below the Document Metabox
+	 * Sublimates the Editorial Comments below the Document Metabox
 	 *
 	 * Because EditFlow's add_meta_box hook is before ours, and because both are in high, 
 	 * by default, their metabox appears above the document metabox. This changes the default
