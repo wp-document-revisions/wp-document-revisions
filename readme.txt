@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: benbalter
 Donate link: http://ben.balter.com/donate/
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
 Requires at least: 3.2
 Tested up to: 3.4
 Stable tag: 1.2.1
@@ -183,6 +183,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 = 1.2.2 =
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If installed and activated, Edit Flow's Editorial Comments metabox will now appear below Document metabox by default
+* Fix for fatal error when user without `read_document_revisions` capability called `wp_get_attachment_url()` on file attached to a revision
 
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))

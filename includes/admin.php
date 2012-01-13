@@ -219,7 +219,7 @@ class Document_Revisions_Admin {
 		
 		return apply_filters( 'document_help', $contextual_help );
 	}
-
+	
 	/**
 	 * Callback to manage metaboxes on edit page
 	 * @ since 0.5

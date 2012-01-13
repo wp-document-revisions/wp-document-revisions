@@ -1308,7 +1308,7 @@ class Document_Revisions {
 		
 		//user can't read revisions anyways, so just give them the URL of the latest revision
 		if ( !current_user_can( 'read_document_revisions' ) )
-			return get_latest_revision_url( $post->post_parent );
+			return $this->get_latest_revision_url( $post->post_parent );
 			
 		//we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it
 		global $wpdb;
