@@ -612,8 +612,8 @@ class Document_Revisions {
 		
 		//return 404 if the file is a dud or malformed
 		if ( !is_file( $file ) ) {
-			status_header( 404 );
-			wp_die( __( '404 &#8212; File not found.', 'wp-document-revisions' ) );
+			trigger_error( "Unable to read file '$file' while attempting to serve the document '$post->post_title'" );
+			return get_404_template();			
 		}
 
 		if ( $post->post_status != 'publish' && 

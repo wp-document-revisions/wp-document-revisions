@@ -182,7 +182,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 = 1.2.2 =
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
-* If installed and activated, Edit Flow's Editorial Comments metabox will now appear below Document metabox by default
+* If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 -- file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log
 * Fix for fatal error when user without `read_document_revisions` capability called `wp_get_attachment_url()` on file attached to a revision
 
 = 1.2.1 =

@@ -67,7 +67,6 @@ class Document_Revisions_Admin {
 		//note: ef_loaded hook is fired on plugins loaded, far too early
 		//we can still remove our hooks, just need to check if edit_flow is a class
 		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
-		add_action( 'document_edit', array( &$this, 'edit_flow_metabox_sublimation' ) );
 			
 	}
 	
@@ -1050,32 +1049,6 @@ class Document_Revisions_Admin {
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 	 	remove_action( 'admin_head', array( &$this, 'make_private' ) );
 	
-	}
-	
-	/**
-	 * Sublimates the Editorial Comments below the Document Metabox
-	 *
-	 * Because EditFlow's add_meta_box hook is before ours, and because both are in high, 
-	 * by default, their metabox appears above the document metabox. This changes the default
-	 * position, but allows user to override via drag-drop.
-	 * 
-	 * @since 1.2.2
-	 * @todo a better way to do this?
-	 */
-	function edit_flow_metabox_sublimation() {
-	
-		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
-			return false;
-	
-		global $wp_meta_boxes;
-		if ( !isset( $wp_meta_boxes['document']['normal']['high']['edit-flow-editorial-comments'] ) )
-			return;
-	
-		//force edit flow editorial comments to the bottom of the high stack
-		$ef = $wp_meta_boxes['document']['normal']['high']['edit-flow-editorial-comments'];
-		unset( $wp_meta_boxes['document']['normal']['high']['edit-flow-editorial-comments'] );
-		$wp_meta_boxes['document']['normal']['high']['edit-flow-editorial-comments'] = $ef;
-		
 	}
 		 
 }
