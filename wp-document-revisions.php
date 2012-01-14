@@ -393,7 +393,10 @@ class Document_Revisions {
 
 		//check if it's a revision
 		if ( $post->post_type == 'revision' ) {
-			$parent = get_post( $post->post_parent );
+			//note: get_post returns the post by reference, 
+			//meaning subsequent get_post calls would return the modified post_name
+			//clone to prevent breaking permalinks when called multiple times per page load
+			$parent = clone get_post( $post->post_parent );
 			$revision_num = $this->get_revision_number( $post->ID );
 			$parent->post_name = $parent->post_name . __('-revision-', 'wp-document-revisions') . $revision_num;
 			$post = $parent;
