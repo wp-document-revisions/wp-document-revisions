@@ -47,6 +47,7 @@ class Document_Revisions {
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
+		add_filter( 'image_downsize', array( &$this, 'image_downsize'), 10, 3 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
 		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
 		
@@ -390,12 +391,9 @@ class Document_Revisions {
 		//if this isn't our post type, kick
 		if( !$this->verify_post_type( $post ) )
 			return $link;
-
+			
 		//check if it's a revision
 		if ( $post->post_type == 'revision' ) {
-			//note: get_post returns the post by reference, 
-			//meaning subsequent get_post calls would return the modified post_name
-			//clone to prevent breaking permalinks when called multiple times per page load
 			$parent = clone get_post( $post->post_parent );
 			$revision_num = $this->get_revision_number( $post->ID );
 			$parent->post_name = $parent->post_name . __('-revision-', 'wp-document-revisions') . $revision_num;
@@ -745,7 +743,7 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function get_latest_revision_url( $id ) {
-	
+		
 		$latest = $this->get_latest_revision( $id );
 
 		if ( !$latest )
@@ -1308,7 +1306,7 @@ class Document_Revisions {
 			return $url;
 		
 		$post = get_post( $postID );
-		
+				
 		//user can't read revisions anyways, so just give them the URL of the latest revision
 		if ( !current_user_can( 'read_document_revisions' ) )
 			return get_permalink( $post->post_parent );
@@ -1385,6 +1383,39 @@ class Document_Revisions {
 			return $redirect;
 			
 		return untrailingslashit( $redirect );
+		
+	}
+	
+	/**
+	 * Provides a workaround for the attachment url filter breaking wp_get_attachment_image_src
+	 * Removes the wp_get_attachment_url filter and runs image_downsize normally
+	 * Will also check to make sure the returned image doesn't leak the file's true path
+	 * @since 1.2.2
+	 * @param bool $false will always be false
+	 * @param int $id the ID of the attachment
+	 * @param string size the size requested
+	 * @return array the image array returned from image_downsize()
+	 */
+	function image_downsize( $false, $id, $size ) {
+	
+		if ( !$this->verify_post_type( $id ) )
+			return false;
+		
+		remove_filter( 'image_downsize', array( &$this, 'image_downsize') );
+		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
+
+		$direct = wp_get_attachment_url( $id );
+		$image = image_downsize( $id, $size );
+		
+		add_filter( 'image_downsize', array( &$this, 'image_downsize'), 10, 3 );
+		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
+		
+		//if WordPress is going to return the direct url to the real file, 
+		//serve the document permalink (or revision permalink) instead
+		if ( $image[0] == $direct )
+			$image[0] = wp_get_attachment_url( $id );
+		
+		return $image;
 		
 	}
 	
