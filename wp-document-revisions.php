@@ -585,7 +585,9 @@ class Document_Revisions {
 	 */
 	function serve_file( $template ) {
 		global $post;
-		
+		global $wp_query;
+		global $wp;
+
 		if ( !$this->verify_post_type( $post ) )
 			return $template;
 		
@@ -613,8 +615,20 @@ class Document_Revisions {
 		
 		//return 404 if the file is a dud or malformed
 		if ( !is_file( $file ) ) {
+		
+			//note: this message will log to apache's php error log and/or to the screen/debug bar
 			trigger_error( "Unable to read file '$file' while attempting to serve the document '$post->post_title'" );
-			return get_404_template();			
+			
+			//this will send 404 and no cache headers
+			//and tell wp_query that this is a 404 so that is_404() works as expected 
+			//and theme formats appropriatly
+			$wp_query->posts = array();
+			$wp_query->queried_object = null;
+			$wp->handle_404();
+			
+			//tell WP to serve the theme's standard 404 template, this is a filter after all...
+			return get_404_template();
+			
 		}
 
 		if ( $post->post_status != 'publish' && 
