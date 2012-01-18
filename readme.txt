@@ -164,7 +164,7 @@ Take a look at the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-f
 Yes. Each document has an "owner" which can be changed from a dialog on the edit-document screen at the time you create it, or later in the process (by default, the document owner is the person that creates it). If the document is marked as private, only users with the read_private_documents capability can access it. Out of the box, this is set to Authors and below, but you can customize things via the  [Members plugin](http://wordpress.org/extend/plugins/members/) (head over to roles after installing).
 
 = How do I use the documents shortcode? =
-In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts [Standard WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numposts="5"]`.
+In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts [Standard WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`.
 
 = How do I use the document revisions shortcode? =
 In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. You can find the ID in the URL of the edit document page. To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
