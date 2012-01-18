@@ -24,6 +24,7 @@ class Document_Revisions_Front_End {
 			
 		add_shortcode( 'document_revisions', array( &$this, 'revisions_shortcode' ) );
 		add_shortcode( 'documents', array( &$this, 'documents_shortcode' ) );
+		add_filter( 'document_shortcode_atts', array( &$this, 'shortcode_atts_hyphen_filter' ) );
 			
 	}
 	
@@ -112,13 +113,31 @@ class Document_Revisions_Front_End {
 	 */
 	function documents_shortcode( $atts ) {
 	
-		//default arguments, can be overriden by shortcode attributes
-		$atts = shortcode_atts( array(
+		$defaults = array(
 			'orderby' => 'modified',
 			'order' => 'DESC',
 			'numberposts' => '5',
-		), $atts );
-	
+			'offset' => 0,
+			'include' => null,
+			'exclude' => null,
+			'meta_key' => null,
+			'meta_value' => null,
+			'post_parent' => null,
+			'post_status' => 'publish', 
+		);
+		
+		$taxs = get_taxonomies( array( 'object_type' => array( 'document' ) ), 'objects' );
+		
+		//allow querying by custom taxonomy
+		foreach ( $taxs as $tax )
+			$defaults[ $tax->query_var ] = null;
+
+		$atts = apply_filters( 'document_shortcode_atts', $atts );
+										
+		//default arguments, can be overriden by shortcode attributes
+		$atts = shortcode_atts( $defaults, $atts );
+		$atts = array_filter( $atts );
+
 		$documents = $this->get_documents( $atts );
 		
 		//buffer output to return rather than echo directly
@@ -142,7 +161,30 @@ class Document_Revisions_Front_End {
 		return $output;
 			
 	}
-
+	
+	/**
+	 * Provides workaround for taxonomies with hyphens in their name
+	 * User should replace hyphen with underscope and plugin will compensate
+	 */
+	function shortcode_atts_hyphen_filter( $atts ) {
+		
+		foreach ( $atts as $k => $v ) {
+				
+			if ( strpos( $k, '_' ) === false )
+				continue;
+				
+			$alt = str_replace( '_', '-', $k );
+			
+			if ( !taxonomy_exists( $alt ) )
+				continue;
+				
+			$atts[ $alt ] = $v;
+			unset( $atts[ $k] );
+			
+		}
+		
+		return $atts; 
+	}
 } 
 
 /**
