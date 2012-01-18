@@ -168,7 +168,7 @@ class Document_Revisions_Front_End {
 	 */
 	function shortcode_atts_hyphen_filter( $atts ) {
 		
-		foreach ( $atts as $k => $v ) {
+		foreach ( (array) $atts as $k => $v ) {
 				
 			if ( strpos( $k, '_' ) === false )
 				continue;
