@@ -115,17 +115,16 @@ class Document_Revisions_Front_End {
 	
 		$defaults = array(
 			'orderby' => 'modified',
-			'order' => 'DESC',
-			'numberposts' => '5',
-			'offset' => 0,
-			'include' => null,
-			'exclude' => null,
-			'meta_key' => null,
-			'meta_value' => null,
-			'post_parent' => null,
-			'post_status' => 'publish', 
+			'order' => 'DESC',			 
 		);
 		
+		//list of all string or int based query vars (because we are going through shortcode)
+		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters
+		$keys = array( 'author', 'author_name', 'cat', 'category_name', 'category__and', 'tag', 'tag_id', 'p', 'name', 'post_parent', 'post_status', 'numberposts', 'year', 'monthnum', 'w', 'day', 'hour', 'minute', 'second', 'meta_key', 'meta_value', 'meta_value_num', 'meta_compare');
+		
+		foreach ( $keys as $key )
+			$defaults[ $key ] = null;
+				
 		$taxs = get_taxonomies( array( 'object_type' => array( 'document' ) ), 'objects' );
 		
 		//allow querying by custom taxonomy
