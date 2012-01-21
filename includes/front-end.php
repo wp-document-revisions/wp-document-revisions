@@ -105,7 +105,7 @@ class Document_Revisions_Front_End {
 	
 	/**
 	 * Shortcode to query for documents
-	 * Takes standard WP_Query parameters
+	 * Takes most standard WP_Query parameters (must be int or string, no arrays)
 	 * See get_documents in wp-document-revisions.php for more information
 	 * @since 1.2
 	 * @param array $atts shortcode attributes
