@@ -388,6 +388,7 @@ class Document_Revisions {
 	function permalink( $link, $post, $leavename, $sample = '' ) {
 	
 		global $wp_rewrite;
+		$revision_num = false;
 
 		//if this isn't our post type, kick
 		if( !$this->verify_post_type( $post ) )
@@ -402,9 +403,12 @@ class Document_Revisions {
 		}
 		
 		//if no permastruct
-		if ( $wp_rewrite->permalink_structure == '' ) 
-			return site_url( '?post_type=document&p=' . $post->ID );
-
+		if ( $wp_rewrite->permalink_structure == '' ) {
+			$link = site_url( '?post_type=document&p=' . $post->ID );
+			if ( $revision_num ) $link = add_query_arg( 'revision', $revision_num, $link );
+			return apply_filters( 'document_permalink', $link, $post );
+		}
+		
 		// build documents/yyyy/mm/slug		 
 		$extension = $this->get_file_type( $post );
 
