@@ -188,10 +188,11 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 -- file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log
+* `/documents/` now supports pagination
+* Custom post type's `has_archive` property changed to `true` to help with theme compatibility
 * Fix for fatal error when user without `read_document_revisions` capability called `wp_get_attachment_url()` on file attached to a revision
 * Fix for broken permalink returned when get_permalink is called multiple times on the same document revision
 * Fix for wp_get_attachment_image_src returning broken URLs or the direct path to the document
-* Custom post type's `has_archive` property changed to `true` to help with theme compatability
 
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))

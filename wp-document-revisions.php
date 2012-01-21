@@ -359,6 +359,7 @@ class Document_Revisions {
 		
 		// site.com/documents/ should list all documents that user has access to (private, public)
 		$my_rules['documents/?$'] = 'index.php?post_type=document';
+		$my_rules['documents/page/?([0-9]{1,})/?$'] = 'index.php?post_type=document&paged=$matches[1]'; 
 		
 		$my_rules = apply_filters( 'document_rewrite_rules', $my_rules, $rules );
 			
