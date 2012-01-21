@@ -126,7 +126,7 @@ class Document_Revisions {
 		'rewrite' => true,
 		'capability_type' => array( 'document', 'documents'),
 		'map_meta_cap' => true,
-		'has_archive' => false, 
+		'has_archive' => true, 
 		'hierarchical' => false,
 		'menu_position' => null,
 		'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
