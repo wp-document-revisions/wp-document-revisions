@@ -194,6 +194,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Fix for fatal error when user without `read_document_revisions` capability called `wp_get_attachment_url()` on file attached to a revision
 * Fix for broken permalink returned when get_permalink is called multiple times on the same document revision
 * Fix for wp_get_attachment_image_src returning broken URLs or the direct path to the document
+* Fix for "`Call-time pass-by-reference has been deprecated`" error when running certain versions of PHP
 
 = 1.2.1 =
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))
