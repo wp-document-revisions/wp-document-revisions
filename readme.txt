@@ -291,4 +291,4 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Fix for authentication of RSS feeds in multisite installs
 
 = 1.0.1 =
-Minor fixes and improvements
+* Minor fixes and improvements
