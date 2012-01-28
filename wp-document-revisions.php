@@ -73,7 +73,7 @@ class Document_Revisions {
 
 		//load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/includes/front-end.php';
-		new Document_Revisions_Front_End( &$this );
+		new Document_Revisions_Front_End( $this );
 
 	}
 
