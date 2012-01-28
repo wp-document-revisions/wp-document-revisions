@@ -70,7 +70,9 @@ A document management and version control plugin that allows teams of any size t
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
 ## Screenshots ##
-1. A typical WP Document Revisions edit document screen.
+###1. A typical WP Document Revisions edit document screen.###
+![A typical WP Document Revisions edit document screen.](http://s.wordpress.org/extend/plugins/wp-document-revisions/screenshot-1.png)
+
 
 ## Installation ##
 
@@ -291,4 +293,4 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Fix for authentication of RSS feeds in multisite installs
 
 ### 1.0.1 ###
-Minor fixes and improvements
+* Minor fixes and improvements
