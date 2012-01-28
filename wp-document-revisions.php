@@ -145,7 +145,6 @@ class Document_Revisions {
 	/**
 	 * Registers custom status taxonomy
 	 * @since 0.5
-	 * @todo is this the best name? Document Status? Don't want to confuse w/ wp's status field; it's somewhat of a term of art used by SharePoint, Drupal, etc.
 	 */
 	function register_ct() {
 
@@ -177,7 +176,6 @@ class Document_Revisions {
 	/**
 	 * Propagates initial workflow states on plugin activation
 	 * @since 0.5
-	 * @todo are these the best initial states?
 	 */
 	function initialize_workflow_states() {
 
