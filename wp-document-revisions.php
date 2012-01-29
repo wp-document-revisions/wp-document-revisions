@@ -9,7 +9,7 @@ Author URI: http://ben.balter.com
 License: GPL3
 */
 
-/*	WP Document Revisions
+/*  WP Document Revisions
  *
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
