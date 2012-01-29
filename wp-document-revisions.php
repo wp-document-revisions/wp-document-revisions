@@ -39,7 +39,7 @@ License: GPL3
 class Document_Revisions {
 	static $instance;
 	static $key_length = 32;
-	static $meta_key = 'document_revisions_feed_key';
+	static $meta_key   = 'document_revisions_feed_key';
 
 	/**
 	 * Initiates an instance of the class and adds hooks
