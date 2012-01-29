@@ -235,8 +235,8 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$statuses = array_keys( $statuses );
 
 		$query = array(
-			'orderby' => 'modified',
-			'order' => 'DESC',
+			'orderby'     => 'modified',
+			'order'       => 'DESC',
 			'numberposts' => (int) $instance['numberposts'],
 			'post_status' => $statuses,
 		);
@@ -322,7 +322,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title']       = strip_tags( $new_instance['title'] );
 		$instance['numberposts'] = (int) $new_instance['numberposts'];
 		$instance['show_author'] = (bool) $new_instance['show_author'];
 

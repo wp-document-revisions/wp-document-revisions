@@ -250,9 +250,9 @@ class Document_Revisions {
 		$args = array(
 			'post_parent' => $post->ID,
 			'post_status' => 'inherit',
-			'post_type' => 'attachment',
-			'order' => 'DESC',
-			'orderby' => 'post_date',
+			'post_type'   => 'attachment',
+			'order'       => 'DESC',
+			'orderby'     => 'post_date',
 		);
 
 		$args = apply_filters( 'document_revision_query', $args );

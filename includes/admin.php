@@ -147,8 +147,8 @@ class Document_Revisions_Admin {
 		//loop through each tab in the help array and add
 		foreach ( $help as $title => $content ) {
 			$screen->add_help_tab( array(
-					'title' => $title,
-					'id' => str_replace( ' ', '_', $title ),
+					'title'   => $title,
+					'id'      => str_replace( ' ', '_', $title ),
 					'content' => $content,
 				) );
 		}
@@ -950,9 +950,9 @@ class Document_Revisions_Admin {
 		<?php _e( 'Document Owner', 'wp-document-revisions' ); ?>:
 		<?php
 		wp_dropdown_users( array(
-				'who' => apply_filters( 'document_revisions_owners', '' ),
-				'name' => 'post_author_override',
-				'selected' => empty($post->ID) ? $user_ID : $post->post_author,
+				'who'              => apply_filters( 'document_revisions_owners', '' ),
+				'name'             => 'post_author_override',
+				'selected'         => empty($post->ID) ? $user_ID : $post->post_author,
 				'include_selected' => true
 			) );
 	}
