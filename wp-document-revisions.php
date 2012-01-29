@@ -11,9 +11,9 @@ License: GPL3
 
 /*	WP Document Revisions
  *
- *	A document management and version control plugin for WordPress that allows 
- *	teams of any size to collaboratively edit files and manage their workflow.
- *	
+ *  A document management and version control plugin for WordPress that allows
+ *  teams of any size to collaboratively edit files and manage their workflow.
+ *
  *	Copyright (C) 2011-2012  Benjamin J. Balter  ( ben@balter.com -- http://ben.balter.com )
  *
  *	This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,11 @@ License: GPL3
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 	@copyright 2011-2012
- *	@license GPL v3
- * 	@version 1.2.2
- * 	@package WP_Document_Revisions
- * 	@author Benjamin J. Balter <ben@balter.com>
+ *  @copyright 2011-2012
+ *  @license GPL v3
+ *  @version 1.2.2
+ *  @package WP_Document_Revisions
+ *  @author Benjamin J. Balter <ben@balter.com>
  */
 
 class Document_Revisions {
@@ -203,6 +203,7 @@ class Document_Revisions {
 	/**
 	 * Propagates initial workflow states on plugin activation
 	 * @since 0.5
+	 * @return unknown
 	 */
 	function initialize_workflow_states() {
 
@@ -250,9 +251,9 @@ class Document_Revisions {
 
 	/**
 	 * Given a post object, returns all attached uploads
-	 * @param object $post post object
-	 * @return object all attached uploads
 	 * @since 0.5
+	 * @param object $post (optional) post object
+	 * @return object all attached uploads
 	 */
 	function get_attachments( $post = '' ) {
 
@@ -291,9 +292,9 @@ class Document_Revisions {
 
 	/**
 	 * Checks if document is locked, if so, returns the lock holder's name
+	 * @since 0.5
 	 * @param object|int $post the post object or postID
 	 * @return bool|string false if no lock, user's display name if locked
-	 * @since 0.5
 	 */
 	function get_document_lock( $post ) {
 
@@ -322,9 +323,9 @@ class Document_Revisions {
 
 	/**
 	 * Given a file, returns the file's extension
+	 * @since 0.5
 	 * @param string $file URL, path, or filename to file
 	 * @return string extension
-	 * @since 0.5
 	 */
 	function get_extension( $file ) {
 
@@ -341,9 +342,9 @@ class Document_Revisions {
 
 	/**
 	 * Gets a file extension from a post
+	 * @since 0.5
 	 * @param object|int $post document or attachment
 	 * @return string the extension to the latest revision
-	 * @since 0.5
 	 */
 	function get_file_type( $post = '' ) {
 
@@ -419,10 +420,12 @@ class Document_Revisions {
 
 	/**
 	 * Builds document post type permalink
+	 * @since 0.5
 	 * @param string $link original permalink
 	 * @param object $post post object
+	 * @param unknown $leavename
+	 * @param unknown $sample (optional)
 	 * @return string the real permalink
-	 * @since 0.5
 	 */
 	function permalink( $link, $post, $leavename, $sample = '' ) {
 
@@ -464,10 +467,11 @@ class Document_Revisions {
 
 	/**
 	 * Filters permalink displayed on edit screen in the event that there is no attachment yet uploaded
-	 * @param string $html original HTML
-	 * @param int $id Post ID
 	 * @rerurns string modified HTML
 	 * @since 0.5
+	 * @param string $html original HTML
+	 * @param int $id Post ID
+	 * @return unknown
 	 */
 	function sample_permalink_html_filter( $html, $id ) {
 
@@ -549,7 +553,7 @@ class Document_Revisions {
 	 * Corrects the authors bug
 	 * @since 1.0.4
 	 * @param int $postID the ID of the document
-	 * @param bool $feed whether this is a feed
+	 * @param bool $feed (optional) whether this is a feed
 	 * @return obj|bool the WP_Query object, false on failure
 	 */
 	function get_revision_query( $postID, $feed = false ) {
@@ -571,9 +575,9 @@ class Document_Revisions {
 
 	/**
 	 * For a given post, builds a 1-indexed array of revision post ID's
+	 * @since 0.5
 	 * @param int $post_id the parent post id
 	 * @return array array of revisions
-	 * @since 0.5
 	 */
 	function get_revision_indices( $post_id ) {
 
@@ -595,9 +599,9 @@ class Document_Revisions {
 
 	/**
 	 * Given a revision id (post->ID) returns the revisions spot in the sequence
-	 * @param int $revisiion_id the post ID of the revision
-	 * @return int revision #
 	 * @since 0.5
+	 * @param unknown $revision_id
+	 * @return int revision #
 	 */
 	function get_revision_number( $revision_id ) {
 
@@ -615,10 +619,10 @@ class Document_Revisions {
 
 	/**
 	 * Given a revision number (e.g., 4 from foo-revision-4) returns the revision ID
+	 * @since 0.5
 	 * @param int $revision_num the 1-indexed revision #
 	 * @param int $post_id the ID of the parent post
 	 * @return int the ID of the revision
-	 * @since 0.5
 	 */
 	function get_revision_id( $revision_num, $post_id ) {
 
@@ -631,8 +635,9 @@ class Document_Revisions {
 
 	/**
 	 * Serves document files
-	 * @param int $version ID of revision to serve
 	 * @since 0.5
+	 * @param unknown $template
+	 * @return unknown
 	 */
 	function serve_file( $template ) {
 		global $post;
@@ -758,6 +763,8 @@ class Document_Revisions {
 
 	/**
 	 * Depricated for consistency of terms
+	 * @param unknown $id
+	 * @return unknown
 	 */
 	function get_latest_version( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_version' );
@@ -798,6 +805,8 @@ class Document_Revisions {
 
 	/**
 	 * Deprecated for consistency sake
+	 * @param unknown $id
+	 * @return unknown
 	 */
 	function get_latest_version_url( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_revision_url' );
@@ -807,9 +816,9 @@ class Document_Revisions {
 
 	/**
 	 * Returns the URL to a post's latest revision
+	 * @since 0.5
 	 * @param int $id post ID
 	 * @return string|bool URL to revision or false if no attachment
-	 * @since 0.5
 	 */
 	function get_latest_revision_url( $id ) {
 
@@ -829,8 +838,8 @@ class Document_Revisions {
 
 	/**
 	 * Calculated path to upload documents
-	 * @return string path to document
 	 * @since 0.5
+	 * @return string path to document
 	 */
 	function document_upload_dir() {
 
@@ -850,9 +859,9 @@ class Document_Revisions {
 
 	/**
 	 * Modifies location of uploaded document revisions
+	 * @since 0.5
 	 * @param array $dir defaults passed from WP
 	 * @return array $dir modified directory
-	 * @since 0.5
 	 */
 	function document_upload_dir_filter( $dir ) {
 
@@ -871,10 +880,10 @@ class Document_Revisions {
 
 	/**
 	 * Hides file's true location from users in the Gallery
+	 * @since 0.5
 	 * @param string $link URL to file's tru location
 	 * @param int $id attachment ID
 	 * @return string empty string
-	 * @since 0.5
 	 */
 	function attachment_link_filter( $link, $id ) {
 
@@ -887,9 +896,9 @@ class Document_Revisions {
 
 	/**
 	 * Rewrites uploaded revisions filename with secure hash to mask true location
+	 * @since 0.5
 	 * @param array $file file data from WP
 	 * @return array $file file with new filename
-	 * @since 0.5
 	 */
 	function filename_rewrite( $file ) {
 
@@ -909,9 +918,9 @@ class Document_Revisions {
 
 	/**
 	 * Rewrites a file URL to it's public URL
+	 * @since 0.5
 	 * @param array $file file object from WP
 	 * @return array modified file array
-	 * @since 0.5
 	 */
 	function rewrite_file_url( $file ) {
 
@@ -930,8 +939,9 @@ class Document_Revisions {
 	 * Checks if a given post is a document
 	 * note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
 	 * @param object|int either a post object or a postID
-	 * @return bool true if document, false if not
 	 * @since 0.5
+	 * @param unknown $post (optional)
+	 * @return bool true if document, false if not
 	 */
 	function verify_post_type( $post = false ) {
 
@@ -992,9 +1002,9 @@ class Document_Revisions {
 
 	/**
 	 * Intercepts RSS feed redirect and forces our custom feed
+	 * @since 0.5
 	 * @param string $default the original feed
 	 * @return string the slug for our feed
-	 * @since 0.5
 	 */
 	function hijack_feed( $default ) {
 
@@ -1025,8 +1035,8 @@ class Document_Revisions {
 
 	/**
 	 * Checks feed key before serving revision RSS feed
-	 * @return bool
 	 * @since 0.5
+	 * @return bool
 	 */
 	function validate_feed_key() {
 
@@ -1055,8 +1065,8 @@ class Document_Revisions {
 	/**
 	 * Ajax Callback to change filelock on lock override
 	 *
-	 * @param bool $send_notice whether or not to send an e-mail to the former lock owner
 	 * @since 0.5
+	 * @param bool $send_notice (optional) whether or not to send an e-mail to the former lock owner
 	 */
 
 	function override_lock( $send_notice = true ) {
@@ -1089,11 +1099,11 @@ class Document_Revisions {
 	/**
 	 * E-mails current lock owner to notify them that they lost their file lock
 	 *
+	 * @since 0.5
 	 * @param int $post_id id of document lock being overridden
 	 * @param int $owner_id id of current document owner
 	 * @param int $current_user_id id of user overriding lock
 	 * @return bool true on sucess, false on fail
-	 * @since 0.5
 	 */
 	function send_override_notice( $post_id, $owner_id , $current_user_id ) {
 
@@ -1243,9 +1253,9 @@ class Document_Revisions {
 
 	/**
 	 * Removes Private or Protected from document titles in RSS feeds
+	 * @since 1.0
 	 * @param string $prepend the sprintf formatted string to prepend to the title
 	 * @return string just the string
-	 * @since 1.0
 	 */
 	function no_title_prepend( $prepend ) {
 
@@ -1259,9 +1269,9 @@ class Document_Revisions {
 
 	/**
 	 * Adds revision number to document tiles
+	 * @since 1.0
 	 * @param string $title the title
 	 * @return string the title possibly with the revision number
-	 * @since 1.0
 	 */
 	function add_revision_num_to_title( $title ) {
 		global $post;
@@ -1294,10 +1304,9 @@ class Document_Revisions {
 
 	/**
 	 * Prevents Attachment ID from being displayed on front end
-	 * @param string $content the post content
-	 * @param int $postID the post ID
-	 * @return string either the original content or none
 	 * @since 1.0.3
+	 * @param string $content the post content
+	 * @return string either the original content or none
 	 */
 	function content_filter( $content ) {
 
@@ -1315,6 +1324,7 @@ class Document_Revisions {
 
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy
+	 * @return unknown
 	 */
 	function edit_flow_support() {
 
@@ -1341,9 +1351,9 @@ class Document_Revisions {
 	/**
 	 * Returns array of document objects matching supplied criteria.
 	 *
-	 * @param array $args an array of WP_Query arguments
 	 * See http://codex.wordpress.org/Class_Reference/WP_Query#Parameters for more information on potential parameters
-	 * @param bool $return_attchments whether to return document or attachment objects, default is documents
+	 * @param array $args (optional) an array of WP_Query arguments
+	 * @param unknown $return_attachments (optional)
 	 * @return array an array of post objects
 	 */
 	function get_documents( $args = array(), $return_attachments = false ) {
@@ -1383,10 +1393,10 @@ class Document_Revisions {
 	 * Filter's calls for attachment URLs for files attached to documents
 	 * Returns the document or revision URL instead of the file's true location
 	 * Prevents direct access to files and ensures authentication
+	 * @since 1.2
 	 * @param string $url the original URL
 	 * @param int $postID the attachment ID
 	 * @return string the modified URL
-	 * @since 1.2
 	 */
 	function attachment_url_filter( $url, $postID ) {
 
@@ -1432,6 +1442,8 @@ class Document_Revisions {
 	 * Term Count Callback that applies custom filter
 	 * Allows Workflow State counts to include non-published posts
 	 * @since 1.2.1
+	 * @param unknown $terms
+	 * @param unknown $taxonomy
 	 */
 	function term_count_cb( $terms, $taxonomy ) {
 		add_filter( 'query', array( &$this, 'term_count_query_filter' ) );
@@ -1444,6 +1456,8 @@ class Document_Revisions {
 	 * Alters term count query to include all non-trashed posts.
 	 * See generally, #17548
 	 * @since 1.2.1
+	 * @param unknown $query
+	 * @return unknown
 	 */
 	function term_count_query_filter( $query ) {
 		return str_replace( "post_status = 'publish'", "post_status != 'trash'", $query );
@@ -1470,6 +1484,9 @@ class Document_Revisions {
 	 * WordPress SEO rules properly dictate that all post requests should be 301 redirected with a trailing slash
 	 * Because documents end with a phaux file extension, we don't want that
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working
+	 * @param unknown $redirect
+	 * @param unknown $request
+	 * @return unknown
 	 */
 	function redirect_canonical_filter( $redirect, $request ) {
 
@@ -1486,9 +1503,10 @@ class Document_Revisions {
 	 * Removes the wp_get_attachment_url filter and runs image_downsize normally
 	 * Will also check to make sure the returned image doesn't leak the file's true path
 	 * @since 1.2.2
+	 * @param string size the size requested
 	 * @param bool $false will always be false
 	 * @param int $id the ID of the attachment
-	 * @param string size the size requested
+	 * @param unknown $size
 	 * @return array the image array returned from image_downsize()
 	 */
 	function image_downsize( $false, $id, $size ) {
