@@ -6,8 +6,29 @@ Description: A document management and version control plugin for WordPress that
 Version: 1.2.2
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
-License: GPL2
+License: GPL3
 */
+
+/*	WP Document Revisions
+ *
+ *	A document management and version control plugin for WordPress that allows 
+ *	teams of any size to collaboratively edit files and manage their workflow.
+ *	
+ *	Copyright (C) 2011-2012  Benjamin J. Balter  ( ben@balter.com -- http://ben.balter.com )
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 class Document_Revisions {
 	static $instance;
