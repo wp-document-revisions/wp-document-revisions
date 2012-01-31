@@ -253,7 +253,10 @@ class Document_Revisions_Admin {
 
 		//move author div to make room for ours
 		remove_meta_box( 'authordiv', 'document', 'normal' );
-		add_meta_box( 'authordiv', __('Owner', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
+	
+		//only add author div if user can give someone else ownership
+		if ( current_user_can( 'edit_others_documents' ) )
+			add_meta_box( 'authordiv', __('Owner', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
 
 		//lock notice
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
