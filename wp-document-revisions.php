@@ -273,7 +273,7 @@ class Document_Revisions {
 			$post = get_post( $post->post_parent );
 
 		if ( !isset( $post->ID ) )
-			return false;
+			return array();
 
 		$args = array(
 			'post_parent' => $post->ID,
