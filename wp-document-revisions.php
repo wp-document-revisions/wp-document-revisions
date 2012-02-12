@@ -516,7 +516,7 @@ class Document_Revisions {
 			return $cache;
 
 		//correct the modified date
-		$post->post_date = date( 'Y-m-d H:i:s', get_post_modified_time( 'U', null, $postID ) );
+		$post->post_date = date( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $postID ) );
 
 		//grab the post author
 		$post_author = $post->post_author;
