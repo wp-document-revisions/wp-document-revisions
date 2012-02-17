@@ -185,6 +185,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 
 = 1.2.3 =
 * Owner metabox no longer displays if user does not have the ability to `edit_others_documents`
+* Fix for serving documents via SSL to Internet Explorer version 8 and earlier
 * GPL License now distributed with plugin
 * Code cleanup and additional inline documentation
 
