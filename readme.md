@@ -185,6 +185,12 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 
 ## Changelog ##
 
+### 1.2.3 ###
+* Owner metabox no longer displays if user does not have the ability to `edit_others_documents`
+* Fix for serving documents via SSL to Internet Explorer version 8 and earlier
+* GPL License now distributed with plugin
+* Code cleanup and additional inline documentation
+
 ### 1.2.2 ###
 * Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute 
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
