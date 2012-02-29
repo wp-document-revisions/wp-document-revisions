@@ -1552,7 +1552,7 @@ class Document_Revisions {
 		if ( !isset( $wp->query_vars['post_type'] ) || $wp->query_vars['post_type'] != 'document' )
 			return $wp;
 		
-		add_filter( 'nocache_headers', '__return_null' );
+		add_filter( 'nocache_headers', '__return_empty_array' );
 	
 		return $wp;
 	
