@@ -67,7 +67,7 @@ class Document_Revisions {
 		add_action( 'post_type_link', array(&$this, 'permalink'), 10, 4 );
 		add_action( 'post_link', array(&$this, 'permalink'), 10, 4 );
 		add_filter( 'single_template', array(&$this, 'serve_file'), 10, 1 );
-		add_action( 'serve_document', array( &$this, 'ie_cache_fix' ) );
+		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array(&$this, 'add_query_var'), 10, 4 );
 		register_activation_hook( __FILE__, 'flush_rewrite_rules' );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2);
@@ -1535,19 +1535,26 @@ class Document_Revisions {
 
 	/**
 	 * Remove nocache headers from document downloads on IE < 8
+	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
 	 * See http://support.microsoft.com/kb/323308
 	 */	
-	function ie_cache_fix()  {
-	
+	function ie_cache_fix( $wp )  {
+
 		//SSL check
-		if ( !isset( $_SERVER['HTTPS'] ) || $_SERVER['HTTPS'] != 'on' )
-			return;
-		
+		if ( !is_ssl() )
+			return $wp;
+	
 		//IE check
-		if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
-			return;
-			
+		if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
+			return $wp;
+		
+		//verify that they are requesting a document
+		if ( !isset( $wp->query_vars['post_type'] ) || $wp->query_vars['post_type'] != 'document' )
+			return $wp;
+		
 		add_filter( 'nocache_headers', '__return_null' );
+	
+		return $wp;
 	
 	}
 
