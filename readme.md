@@ -4,7 +4,7 @@
 **Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 **Requires at least:** 3.2  
 **Tested up to:** 3.4  
-**Stable tag:** 1.2.2  
+**Stable tag:** 1.2.3  
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -189,7 +189,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Owner metabox no longer displays if user does not have the ability to `edit_others_documents`
 * Fix for serving documents via SSL to Internet Explorer version 8 and earlier
 * GPL License now distributed with plugin
-* Code cleanup and additional inline documentation
+* Code cleanup, minor bug fixes, and additional inline documentation
 
 ### 1.2.2 ###
 * Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute 
