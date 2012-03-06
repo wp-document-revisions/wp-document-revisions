@@ -180,7 +180,7 @@ Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Qu
 ### How do I use the `get_document_revisions` function in my theme or plugin? ###
 Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
 
-### I'm a developer, can I contribue? ###
+### I'm a developer, can I contribute? ###
 Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
 
 ## Changelog ##
