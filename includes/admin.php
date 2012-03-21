@@ -34,7 +34,8 @@ class Document_Revisions_Admin {
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter'), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
 		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
-
+		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
+		
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
@@ -300,11 +301,32 @@ class Document_Revisions_Admin {
 			#revision-summary {display:none;}
 			#autosave-alert {display:none;}
 			<?php if ( $this->get_document_lock( $post ) ) { ?>
-			#publish, #add_media, #lock-notice {display: none;}
+			#publish, .add_media, #lock-notice {display: none;}
 			<?php } ?>
 			<?php do_action('document_admin_css'); ?>
 		</style>
 	<?php }
+	
+	/**
+	 * Hide header (gallery, URL, library, etc.) links from media-upload
+	 * No real use case for a revision being an already uploaded file,
+	 * and javascript not compatible for that usecase as written
+	 * @since 1.2.4 
+	 */
+	function hide_upload_header() {
+	
+		if ( get_current_screen()->id != 'media-upload' )
+			return;
+			
+		if ( !$this->verify_post_type( $_GET['post_id'] ) )
+			return;
+			
+		?>
+		<style>
+			#media-upload-header {display:none;}
+		</style>
+		<?php
+	}
 
 
 	/**
@@ -1015,8 +1037,10 @@ class Document_Revisions_Admin {
 	function filter_media_where( $where ) {
 		global $wpdb;
 
-		//fix for mysql column ambiguity, see http://core.trac.wordpress.org/ticket/19779
+		//fix for mysql column ambiguity
+		//see http://core.trac.wordpress.org/ticket/19779 and http://core.trac.wordpress.org/ticket/20193
 		$where = str_replace( ' post_parent < 1', " {$wpdb->posts}.post_parent < 1", $where );
+		$where = str_replace( '(post_mime_type LIKE', "({$wpdb->posts}.post_mime_type LIKE", $where );
 
 		$where .= " AND ( wpdr_post_parent.post_type IS NULL OR wpdr_post_parent.post_type != 'document' )";
 
