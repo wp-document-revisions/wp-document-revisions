@@ -845,7 +845,7 @@ class Document_Revisions {
 	function document_upload_dir() {
 
 		//If user has specified, that's it
-		if ( $dir = get_option( 'document_upload_directory' ) )
+		if ( $dir = get_site_option( 'document_upload_directory' ) )
 			return $dir;
 
 		//If user hasn't specified, see if they have specified a generic upload path

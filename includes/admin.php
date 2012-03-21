@@ -473,7 +473,7 @@ class Document_Revisions_Admin {
 		}
 
 		//dir didn't change
-		if ( $dir == get_option( 'document_upload_directory' ) )
+		if ( $dir == get_site_option( 'document_upload_directory' ) )
 			return $dir;
 
 		//dir changed, throw warning
@@ -497,7 +497,7 @@ class Document_Revisions_Admin {
 				<th scope="row"><?php _e('Document Upload Directory', 'wp-document-revisions'); ?></th>
 				<td>
 					<?php $this->upload_location_cb(); ?>
-					<?php wp_nonce_field( 'network_documnet_upload_location', 'document_upload_location_nonce' ); ?>
+					<?php wp_nonce_field( 'network_document_upload_location', 'document_upload_location_nonce' ); ?>
 				</td>
 			</tr>
 		</table>
@@ -514,7 +514,7 @@ class Document_Revisions_Admin {
 			return;
 
 		//verify nonce
-		if ( !wp_verify_nonce( $_POST['document_upload_location_nonce'], 'network_documnet_upload_location' ) )
+		if ( !wp_verify_nonce( $_POST['document_upload_location_nonce'], 'network_document_upload_location' ) )
 			wp_die( __('Not authorized' ) );
 
 		//auth
@@ -533,7 +533,7 @@ class Document_Revisions_Admin {
 			return;
 
 		//save the dir
-		update_option( 'document_upload_directory', $dir );
+		update_site_option( 'document_upload_directory', $dir );
 
 	}
 
