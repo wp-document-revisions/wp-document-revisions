@@ -187,6 +187,7 @@ Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github
 == Changelog ==
 
 = 1.2.4 =
+* Better support for custom document upload directories on multisite installs
 * Gallery, URL, and Media Library links now hidden from media upload popup when uploading revisions
 * Fix for plugin breaking media gallery when filtered by mimetype (MySQL ambiguity error)
 * Fix for upload new version button appearing for locked out users in WordPress 3.3
