@@ -181,6 +181,9 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 = I'm a developer, can I contribute? =
 Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
 
+= Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
+Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
+
 == Changelog ==
 
 = 1.2.4 =
