@@ -4,7 +4,7 @@ Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
 Requires at least: 3.2
 Tested up to: 3.4
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -47,7 +47,7 @@ A document management and version control plugin that allows teams of any size t
 * Runs in-house or in the cloud
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
-* French language supportt
+* French language support
 * Easily translated to your local language
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
@@ -225,7 +225,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 = 1.2 =
 * Added shortcode to display list of documents meeting specified criteria
 * Added shortcode to display a document's revisions (formerly in code cookbook)
-* Addded widget to display recently revised documents (formerly in code cookbook)
+* Added widget to display recently revised documents (formerly in code cookbook)
 * Created new global `get_documents()` and `get_document_revisions()` functions to help build and customize themes and plugins
 * Added filter to `wp_get_attachment_url` to force document/revision urls when attachments are queried directly
 * Better organization of plugin files within plugin folder
