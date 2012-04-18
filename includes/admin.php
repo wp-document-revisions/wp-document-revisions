@@ -1,9 +1,9 @@
 <?php
 /**
- *
+ * WP Document Revisions Admin Functionality
  *
  * @author Benjamin J. Balter <ben@balter.com>
- * @package
+ * @package WP Document Revisions
  */
 
 class Document_Revisions_Admin {
@@ -42,7 +42,7 @@ class Document_Revisions_Admin {
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
 		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
-		
+
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
@@ -319,27 +319,6 @@ class Document_Revisions_Admin {
 			<?php do_action('document_admin_css'); ?>
 		</style>
 	<?php }
-	
-	/**
-	 * Hide header (gallery, URL, library, etc.) links from media-upload
-	 * No real use case for a revision being an already uploaded file,
-	 * and javascript not compatible for that usecase as written
-	 * @since 1.2.4 
-	 */
-	function hide_upload_header() {
-	
-		if ( get_current_screen()->id != 'media-upload' )
-			return;
-			
-		if ( !$this->verify_post_type( $_GET['post_id'] ) )
-			return;
-			
-		?>
-		<style>
-			#media-upload-header {display:none;}
-		</style>
-		<?php
-	}
 
 
 	/**
@@ -356,7 +335,7 @@ class Document_Revisions_Admin {
 		if ( !$this->verify_post_type( $_GET['post_id'] ) )
 			return;
 
-?>
+		?>
 		<style>
 			#media-upload-header {display:none;}
 		</style>
@@ -565,6 +544,7 @@ class Document_Revisions_Admin {
 		</table>
 	<?php }
 
+
 	/**
 	 * Callback to validate and save the network upload directory
 	 * @since 1.0
@@ -597,12 +577,13 @@ class Document_Revisions_Admin {
 		update_site_option( 'document_upload_directory', $dir );
 
 	}
-	
+
+
 	/**
 	 * Callback to validate and save slug on network settings page
 	 */
 	function network_slug_save() {
-		
+
 		if ( !isset( $_POST['document_slug_nonce'] ) )
 			return;
 
@@ -627,7 +608,7 @@ class Document_Revisions_Admin {
 
 		//save the dir
 		update_site_option( 'document_slug', $slug );
-		
+
 	}
 
 

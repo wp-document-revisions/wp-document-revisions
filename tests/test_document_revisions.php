@@ -12,7 +12,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 	public $test_file2 = 'test-file-2.txt';
 
 	/**
-	 *
+	 * Setup Initial Testing Environment
 	 */
 	function setUp() {
 
@@ -34,7 +34,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * If called via rewrites tests
 	 */
 	function __construct() {
 		$this->setUp();
@@ -42,7 +42,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Make sure plugin is activated
 	 */
 	function test_activated() {
 
@@ -52,7 +52,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Post type is properly registered
 	 */
 	function test_post_type_exists() {
 
@@ -62,7 +62,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Workflow states exists and are initialized
 	 */
 	function test_workflow_states_exist() {
 
@@ -74,10 +74,10 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
-	 * @param unknown $postID
-	 * @param unknown $file
-	 * @return unknown
+	 * Pretend to upload a file
+	 * @param int $postID the parent post
+	 * @param string $file relative URL to file to "upload"
+	 * @return int the attachment ID
 	 */
 	function spoof_upload( $postID, $file ) {
 
@@ -115,8 +115,8 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
-	 * @return unknown
+	 * Verify we can add documents
+	 * @return int document id
 	 */
 	function test_add_document() {
 
@@ -162,8 +162,8 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
-	 * @return unknown
+	 * Try to revise an existing document (creates that document first)
+	 * @return int the revision ID
 	 */
 	function test_revise_document() {
 
@@ -184,10 +184,10 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
-	 * @param unknown $postID (optional)
-	 * @param unknown $file (optional)
-	 * @param unknown $msg (optional)
+	 * Make sure a file is properly uploaded and attached
+	 * @param int $postID the ID of the parent post
+	 * @param string $file relative url to file
+	 * @param string $msg message to display on failure
 	 */
 	function verify_attachment_matches_file( $postID = null, $file = null, $msg = null ) {
 
@@ -203,7 +203,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Validate teh get_attachments function are few different ways
 	 */
 	function test_get_attachments() {
 
@@ -235,7 +235,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Verify the get_file_Type function works
 	 */
 	function test_file_type() {
 
@@ -257,7 +257,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Make sure get_revisions() works
 	 */
 	function test_get_revisions() {
 		global $wpdr;
@@ -270,7 +270,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Tets get_revision_number()
 	 */
 	function test_get_revision_number() {
 
@@ -286,7 +286,7 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 
 	/**
-	 *
+	 * Tests varify_post_type() with the various ways used throughout
 	 */
 	function test_verify_post_type() {
 		global $wpdr;

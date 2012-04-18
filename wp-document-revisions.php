@@ -355,13 +355,13 @@ class Document_Revisions {
 
 		if ( !is_object( $post ) )
 			$post = get_post( $post );
-			
+
 		if ( get_post_type( $post ) == 'document' )
 			$post = get_post( $this->get_latest_revision( $post->ID )->post_content );
-		
+
 		if ( get_post_type( $post ) != 'attachment' )
 			return '';
-			
+
 		return $this->get_extension( get_attached_file( $post->ID ) );
 
 	}
@@ -665,7 +665,7 @@ class Document_Revisions {
 			$rev_id = $this->get_latest_revision( $post->ID );
 		else
 			$rev_id = $this->get_revision_id ( $version, $post->ID );
-		
+
 		$rev_post = get_post ( $rev_id );
 		$revision = get_post( $rev_post->post_content ); //@todo can this be simplified?
 
@@ -697,7 +697,7 @@ class Document_Revisions {
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array( 'response' => 403 ) );
 			return false; //for unit testing
 		}
-		
+
 		do_action( 'serve_document', $post->ID, $file );
 
 		// We may override this later.
@@ -765,30 +765,32 @@ class Document_Revisions {
 
 		return;
 	}
-	
+
+
 	/**
 	 * Filter to authenticate document delivery
 	 * @param bool $default true unless overridden by prior filter
 	 * @param obj $post the post object
 	 * @param bool|int $version version of the document being served, if any
+	 * @return unknown
 	 */
 	function serve_document_auth( $default, $post, $version ) {
-	
+
 		//public file, not a revision, no need to go any further
 		//note: non-authenticated users only have the "read" cap, so can't auth via read_document
 		if ( ! $version && $post->post_status == 'publish' )
 			return $default;
-			
+
 		//attempting to access a revision
 		if ( $version && ! current_user_can( 'read_document_revisions' ) )
 			return false;
-		
+
 		//general document cap check
 		if ( ! current_user_can( 'read_document', $post->ID ) )
 			return false;
-		
+
 		return $default;
-	
+
 	}
 
 
@@ -805,11 +807,11 @@ class Document_Revisions {
 
 	/**
 	 * Given a post ID, returns the latest revision attachment
-	 * @param int|obj $id Post ID or Post
+	 * @param unknown $post
 	 * @return object latest revision object
 	 */
 	function get_latest_revision( $post ) {
-	
+
 		if ( is_object( $post ) )
 			$post = $post->ID;
 
@@ -876,11 +878,11 @@ class Document_Revisions {
 	 * @return string path to document
 	 */
 	function document_upload_dir() {
-		
-		global $wpdb; 
-		
+
+		global $wpdb;
+
 		//grab unfiltered defaults
-		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);	
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
 		$defaults = wp_upload_dir();
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
 
@@ -890,20 +892,25 @@ class Document_Revisions {
 
 		if ( !is_multisite() )
 			return $dir;
-	
+
 		return str_replace( '%site_id%', $wpdb->blogid, $dir );
-			
+
 	}
-	
+
+
+	/**
+	 *
+	 * @return unknown
+	 */
 	function document_slug() {
-			
+
 		$slug = get_site_option( 'document_slug' );
-		
-		if ( ! $slug ) 
+
+		if ( ! $slug )
 			$slug = 'documents';
-	
+
 		return apply_filters( 'document_slug', $slug );
-			
+
 	}
 
 
@@ -1045,9 +1052,9 @@ class Document_Revisions {
 
 		//include feed and die
 		include dirname( __FILE__ ) . '/includes/revision-feed.php';
-		
+
 		global $wpdr;
-		
+
 		return;
 
 	}
@@ -1297,7 +1304,7 @@ class Document_Revisions {
 				//check to see if the user already has this capability, if so, don't re-add as that would override grant
 				if ( !isset( $wp_roles->roles[$role]['capabilities'][$cap] ) )
 					$wp_roles->add_cap( $role, $cap, $grant );
-					
+
 			}
 		}
 
@@ -1585,29 +1592,32 @@ class Document_Revisions {
 
 	}
 
+
 	/**
 	 * Remove nocache headers from document downloads on IE < 8
 	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
 	 * See http://support.microsoft.com/kb/323308
-	 */	
-	function ie_cache_fix( $wp )  {
+	 * @param unknown $wp
+	 * @return unknown
+	 */
+	function ie_cache_fix( $wp ) {
 
 		//SSL check
 		if ( !is_ssl() )
 			return $wp;
-	
+
 		//IE check
 		if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
 			return $wp;
-		
+
 		//verify that they are requesting a document
 		if ( !isset( $wp->query_vars['post_type'] ) || $wp->query_vars['post_type'] != 'document' )
 			return $wp;
-		
+
 		add_filter( 'nocache_headers', '__return_empty_array' );
-	
+
 		return $wp;
-	
+
 	}
 
 

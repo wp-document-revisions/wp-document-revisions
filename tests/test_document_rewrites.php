@@ -43,7 +43,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Break down for next test
 	 */
 	function tearDown() {
 		global $wp_rewrite;
@@ -55,10 +55,19 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		parent::tearDown();
 	}
 
+	/**
+	 * We want to make sure we're testing against the db, not just in-memory data
+	 * this will flush everything and reload it from the db
+	 */
+	function _flush_roles() {
+		unset($GLOBALS['wp_user_roles']);
+		global $wp_roles;
+		$wp_roles->_init();
+	}
 
 	/**
-	 *
-	 * @return unknown
+	 * Callback to return our die handler
+	 * @return array the handler
 	 */
 	function get_die_handler() {
 		return array( &$this, 'die_handler' );
@@ -66,8 +75,8 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
-	 * @param unknown $msg
+	 * Handles wp_die without actually dieing
+	 * @param sting msg the die msg
 	 */
 	function die_handler( $msg ) {
 
@@ -80,8 +89,8 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
-	 * @return unknown
+	 * Whether we wp_die'd this test
+	 * @return bool true/false
 	 */
 	function is_wp_die() {
 		global $is_wp_die;
@@ -90,10 +99,10 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
-	 * @param unknown $url (optional)
-	 * @param unknown $file (optional)
-	 * @param unknown $msg (optional)
+	 * Tests that a given URL actually returns the right file
+	 * @param string $url to check
+	 * @param string $file relative path of expected file
+	 * @param string $msg message describing failure
 	 */
 	function verify_download( $url = null, $file = null, $msg = null ) {
 
@@ -109,7 +118,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
-		
+
 		$this->assertFalse( is_404() || $this->is_wp_die(), "404 ($msg)" );
 		$this->assertTrue( is_single(), "Not single ($msg)" );
 		$this->assertStringEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "Contents don\'t match file ($msg)" );
@@ -118,10 +127,10 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
-	 * @param unknown $url (optional)
-	 * @param unknown $file (optional)
-	 * @param unknown $msg (optional)
+	 * Tests that a given url *DOES NOT& return a file
+	 * @param string $url to check
+	 * @param string $file relative path of expected file
+	 * @param string $msg message describing failure
 	 */
 	function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
@@ -138,7 +147,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
-		
+
 		global $current_user;
 		if ( $msg == 'Public revision request (pretty)' )
 			var_dump( $current_user );
@@ -150,7 +159,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can the public access a public file? (yes)
 	 */
 	function test_public_document() {
 		global $wpdr;
@@ -168,7 +177,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can the public access a private file? (no)
 	 */
 	function test_private_document_as_unauthenticated() {
 
@@ -184,7 +193,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can a contributor access a public file? (no)
 	 */
 	function test_private_document_as_contributor() {
 
@@ -204,7 +213,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can an admin access a private file? (yes)
 	 */
 	function test_private_document_as_admin() {
 
@@ -224,7 +233,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can the public access a document revision? (no)
 	 */
 	function test_document_revision_as_a_unauthenticated() {
 		global $wpdr;
@@ -235,7 +244,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		wp_publish_post( $docID );
 		$revisions = $wpdr->get_revisions( $docID );
 		$revision = array_pop( $revisions );
-		
+
 		global $current_user;
 		unset( $current_user );
 
@@ -247,7 +256,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can an admin access a document revision? (yes)
 	 */
 	function test_document_revision_as_admin() {
 
@@ -272,7 +281,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Do we serve the latest version of a document?
 	 */
 	function test_revised_document() {
 
@@ -290,20 +299,20 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Does the document archive work?
 	 */
 	function test_archive() {
-
+		global $wpdr;
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
-		$this->http('/documents/' );
+		$this->http( '/' . $wpdr->document_slug() . '/' );
 		$this->assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
 
 	}
 
 
 	/**
-	 *
+	 * Does get_permalink generate the right permalink?
 	 */
 	function test_permalink() {
 
@@ -311,14 +320,14 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
 		$post = get_post( $docID );
-		$permalink = get_bloginfo( 'url' ) . '/documents/' . date('Y') . '/' . date('m') . '/' . $post->post_name . $wpdr->get_file_type( $docID );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date('Y') . '/' . date('m') . '/' . $post->post_name . $wpdr->get_file_type( $docID );
 		$this->assertEquals( $permalink, get_permalink( $docID ), 'Bad permalink' );
 
 	}
 
 
 	/**
-	 *
+	 * Test get_permalink() on a revision
 	 */
 	function test_revision_permalink() {
 
@@ -327,15 +336,15 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$docID = $tdr->test_revise_document();
 		$revisions = $wpdr->get_revisions( $docID );
 		$revision = array_pop( $revisions );
-		$permalink = get_bloginfo( 'url' ) . '/documents/' . date('Y') . '/' . date('m') . '/' . get_post( $docID )->post_name . '-revision-1' . $wpdr->get_file_type( $docID );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date('Y') . '/' . date('m') . '/' . get_post( $docID )->post_name . '-revision-1' . $wpdr->get_file_type( $docID );
 		$this->assertEquals( $permalink, get_permalink( $revision->ID ), 'Bad revision permalink' );
 	}
 
 
 	/**
-	 *
-	 * @param unknown $url (optional)
-	 * @return unknown
+	 * Simulate accessing a revision log feed
+	 * @param string $url the URL to try 
+	 * @return string the content returned
 	 */
 	function simulate_feed( $url = null ) {
 
@@ -362,7 +371,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can the public access a revision log feed?
 	 */
 	function test_feed_as_unauthenticated() {
 
@@ -381,7 +390,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 *
+	 * Can a user with the proper feed key access a feed?
 	 */
 	function test_feed_as_authorized() {
 
@@ -402,17 +411,5 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$this->_destroy_user( $userID );
 
 	}
-
-
-	/**
-	 * we want to make sure we're testing against the db, not just in-memory data
-	 * this will flush everything and reload it from the db
-	 */
-	function _flush_roles() {
-		unset($GLOBALS['wp_user_roles']);
-		global $wp_roles;
-		$wp_roles->_init();
-	}
-
 
 }
