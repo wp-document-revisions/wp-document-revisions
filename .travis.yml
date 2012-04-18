@@ -1,16 +1,16 @@
 language: php
 
 php:
- # - 5.3
+  - 5.3
   - 5.4
   
 env:
  - WP_VERSION=master ARGS="" 
-# - WP_VERSION=3.3.1 ARGS="" 
-# - WP_VERSION=3.2.1 ARGS="" 
-# - WP_VERSION=master ARGS="-m" 
-# - WP_VERSION=3.3.1 ARGS="-m" 
-# - WP_VERSION=3.2.1 ARGS="-m"
+ - WP_VERSION=3.3.1 ARGS="" 
+ - WP_VERSION=3.2.1 ARGS="" 
+ - WP_VERSION=master ARGS="-m" 
+ - WP_VERSION=3.3.1 ARGS="-m" 
+ - WP_VERSION=3.2.1 ARGS="-m"
 
 before_script:
   - wget https://raw.github.com/benbalter/wordpress-plugin-tests/setup/setup.sh
