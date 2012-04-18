@@ -5,11 +5,8 @@
 **Requires at least:** 3.2  
 **Tested up to:** 3.4  
 **Stable tag:** 1.2.3  
-<<<<<<< HEAD
-=======
 
-[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=travis)](http://travis-ci.org/benbalter/WP-Document-Revisions)
->>>>>>> travis
+[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=develop)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
