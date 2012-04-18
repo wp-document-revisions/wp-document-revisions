@@ -3,7 +3,11 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.2.3
+<<<<<<< HEAD
+Version: 1.2.4
+=======
+Version: 1.3
+>>>>>>> travis
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -31,7 +35,11 @@ License: GPL3
  *
  *  @copyright 2011-2012
  *  @license GPL v3
- *  @version 1.2.3
+<<<<<<< HEAD
+ *  @version 1.2.4
+=======
+ *  @version 1.3
+>>>>>>> travis
  *  @package WP_Document_Revisions
  *  @author Benjamin J. Balter <ben@balter.com>
  */
@@ -67,6 +75,7 @@ class Document_Revisions {
 		add_action( 'post_type_link', array(&$this, 'permalink'), 10, 4 );
 		add_action( 'post_link', array(&$this, 'permalink'), 10, 4 );
 		add_filter( 'single_template', array(&$this, 'serve_file'), 10, 1 );
+		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth'), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array(&$this, 'add_query_var'), 10, 4 );
 		register_activation_hook( __FILE__, 'flush_rewrite_rules' );
@@ -354,13 +363,14 @@ class Document_Revisions {
 
 		if ( !is_object( $post ) )
 			$post = get_post( $post );
-
-		if ( get_post_type( $post ) == 'attachment' )
-			$file = get_attached_file( $post->ID );
-		else
-			$file = $this->get_latest_revision_url( $post->ID );
-
-		return $this->get_extension( $file );
+			
+		if ( get_post_type( $post ) == 'document' )
+			$post = get_post( $this->get_latest_revision( $post->ID )->post_content );
+		
+		if ( get_post_type( $post ) != 'attachment' )
+			return '';
+			
+		return $this->get_extension( get_attached_file( $post->ID ) );
 
 	}
 
@@ -385,20 +395,22 @@ class Document_Revisions {
 	 */
 	function revision_rewrite( $rules ) {
 
+		$slug = $this->document_slug();
+
 		$my_rules = array();
 
 		//revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##
-		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		//revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		//documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/
-		$my_rules['documents/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public)
-		$my_rules['documents/?$'] = 'index.php?post_type=document';
-		$my_rules['documents/page/?([0-9]{1,})/?$'] = 'index.php?post_type=document&paged=$matches[1]';
+		$my_rules[ $slug . '/?$'] = 'index.php?post_type=document';
+		$my_rules[ $slug . '/page/?([0-9]{1,})/?$'] = 'index.php?post_type=document&paged=$matches[1]';
 
 		$my_rules = apply_filters( 'document_rewrite_rules', $my_rules, $rules );
 
@@ -456,7 +468,7 @@ class Document_Revisions {
 		$extension = $this->get_file_type( $post );
 
 		$timestamp = strtotime($post->post_date);
-		$link = home_url() . '/documents/' . date('Y', $timestamp) . '/' . date('m', $timestamp) . '/';
+		$link = home_url() . '/' . $this->document_slug() .'/' . date('Y', $timestamp) . '/' . date('m', $timestamp) . '/';
 		$link .= ( $leavename ) ? '%document%' : $post->post_name;
 		$link .= $extension ;
 
@@ -661,9 +673,9 @@ class Document_Revisions {
 			$rev_id = $this->get_latest_revision( $post->ID );
 		else
 			$rev_id = $this->get_revision_id ( $version, $post->ID );
-
+		
 		$rev_post = get_post ( $rev_id );
-		$revision = get_post( $rev_post->post_content );
+		$revision = get_post( $rev_post->post_content ); //@todo can this be simplified?
 
 		$file = get_attached_file( $revision->ID );
 
@@ -688,11 +700,12 @@ class Document_Revisions {
 
 		}
 
-		if ( $post->post_status != 'publish' &&
-			( !current_user_can( 'read_document', $post->ID ) ||
-				( $version && !current_user_can( 'read_document_revisions' ) ) ) )
-			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) );
-
+		//note: authentication is happeneing via a hook here to allow shortcircuiting
+		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
+			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array( 'response' => 403 ) );
+			return false; //for unit testing
+		}
+		
 		do_action( 'serve_document', $post->ID, $file );
 
 		// We may override this later.
@@ -749,7 +762,7 @@ class Document_Revisions {
 			: ( ( $client_modified_timestamp >= $modified_timestamp) || ( $client_etag == $etag ) )
 		) {
 			status_header( 304 );
-			exit;
+			return;
 		}
 
 		//in case this is a large file, remove PHP time limits
@@ -758,7 +771,32 @@ class Document_Revisions {
 		// If we made it this far, just serve the file
 		readfile( $file );
 
-		exit();
+		return;
+	}
+	
+	/**
+	 * Filter to authenticate document delivery
+	 * @param bool $default true unless overridden by prior filter
+	 * @param obj $post the post object
+	 * @param bool|int $version version of the document being served, if any
+	 */
+	function serve_document_auth( $default, $post, $version ) {
+	
+		//public file, not a revision, no need to go any further
+		//note: non-authenticated users only have the "read" cap, so can't auth via read_document
+		if ( ! $version && $post->post_status == 'publish' )
+			return $default;
+			
+		//attempting to access a revision
+		if ( $version && ! current_user_can( 'read_document_revisions' ) )
+			return false;
+		
+		//general document cap check
+		if ( ! current_user_can( 'read_document', $post->ID ) )
+			return false;
+		
+		return $default;
+	
 	}
 
 
@@ -775,12 +813,15 @@ class Document_Revisions {
 
 	/**
 	 * Given a post ID, returns the latest revision attachment
-	 * @param int $id Post ID
+	 * @param int|obj $id Post ID or Post
 	 * @return object latest revision object
 	 */
-	function get_latest_revision( $id ) {
+	function get_latest_revision( $post ) {
+	
+		if ( is_object( $post ) )
+			$post = $post->ID;
 
-		$revisions = $this->get_revisions( $id );
+		$revisions = $this->get_revisions( $post );
 
 		if ( !$revisions )
 			return false;
@@ -789,7 +830,7 @@ class Document_Revisions {
 		//if there's no upload ID for some reason, default to latest attached upload
 		if ( !is_numeric( $revisions[0]->post_content ) ) {
 
-			$attachments = $this->get_attachments( $id );
+			$attachments = $this->get_attachments( $post );
 
 			if ( empty( $attachments ) )
 				return false;
@@ -843,18 +884,34 @@ class Document_Revisions {
 	 * @return string path to document
 	 */
 	function document_upload_dir() {
+		
+		global $wpdb; 
+		
+		//grab unfiltered defaults
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);	
+		$defaults = wp_upload_dir();
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
 
-		//If user has specified, that's it
-		if ( $dir = get_option( 'document_upload_directory' ) )
+		//If no options set, default to normal upload dir
+		if ( !( $dir = get_site_option( 'document_upload_directory' ) ) )
+			return $defaults['basedir'];
+
+		if ( !is_multisite() )
 			return $dir;
-
-		//If user hasn't specified, see if they have specified a generic upload path
-		if ( $dir = get_option( 'upload_path' ) )
-			return ABSPATH . $dir;
-
-		//If no options set, default to wp-content/uploads
-		return ABSPATH . 'wp-content/uploads';
-
+	
+		return str_replace( '%site_id%', $wpdb->blogid, $dir );
+			
+	}
+	
+	function document_slug() {
+			
+		$slug = get_site_option( 'document_slug' );
+		
+		if ( ! $slug ) 
+			$slug = 'documents';
+	
+		return apply_filters( 'document_slug', $slug );
+			
 	}
 
 
@@ -870,9 +927,9 @@ class Document_Revisions {
 			return $dir;
 
 		$dir['path'] = $this->document_upload_dir() . $dir['subdir'];
-		$dir['url'] = home_url( '/documents' ) . $dir['subdir'];
+		$dir['url'] = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
 		$dir['basedir'] = $this->document_upload_dir();
-		$dir['baseurl'] = home_url( '/documents' );
+		$dir['baseurl'] = home_url( '/' . $this->document_slug() );
 
 		return $dir;
 
@@ -996,7 +1053,10 @@ class Document_Revisions {
 
 		//include feed and die
 		include dirname( __FILE__ ) . '/includes/revision-feed.php';
-		exit();
+		
+		global $wpdr;
+		
+		return;
 
 	}
 
@@ -1042,7 +1102,6 @@ class Document_Revisions {
 	function validate_feed_key() {
 
 		global $wpdb;
-
 
 		//verify key exists
 		if ( empty( $_GET['key'] ) )
@@ -1222,7 +1281,7 @@ class Document_Revisions {
 				'edit_private_documents'     => false,
 				'edit_published_documents'   => false,
 				'read_documents'             => true,
-				'read_document_revisions'    => true,
+				'read_document_revisions'    => false,
 				'read_private_documents'     => false,
 				'delete_documents'           => false,
 				'delete_others_documents'    => false,
@@ -1246,6 +1305,7 @@ class Document_Revisions {
 				//check to see if the user already has this capability, if so, don't re-add as that would override grant
 				if ( !isset( $wp_roles->roles[$role]['capabilities'][$cap] ) )
 					$wp_roles->add_cap( $role, $cap, $grant );
+					
 			}
 		}
 

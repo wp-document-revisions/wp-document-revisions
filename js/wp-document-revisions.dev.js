@@ -17,7 +17,7 @@ jQuery(document).ready( function($) {
 				if ( data ) {
 					$('#lock_override').hide();
 					$('.error').not('#lock-notice').hide();
-					$('#publish, #add_media, #lock-notice').fadeIn();
+					$('#publish, .add_media, #lock-notice').fadeIn();
 					autosave();
 				} else {
 					alert( wp_document_revisions.lockError );
@@ -43,7 +43,7 @@ jQuery(document).ready( function($) {
 		}
 	}
 	
-	//disbale the update button until a doc has been uploaded
+	//disable the update button until a doc has been uploaded
 	if ( adminpage && ( adminpage == 'post-php' || adminpage == 'post-new-php' ) && typenow && typenow == 'document' ) {
 
 		//set a flag to let us know if there's been an upload yet

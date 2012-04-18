@@ -1,10 +1,15 @@
 # WP Document Revisions #
 **Contributors:** benbalter  
-**Donate link:** [http://ben.balter.com/donate/](http://ben.balter.com/donate/?utm_source=wp&utm_medium=gh_plugin_page&utm_campaign=document_revisions)  
+**Donate link:** http://ben.balter.com/donate/  
 **Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 **Requires at least:** 3.2  
 **Tested up to:** 3.4  
 **Stable tag:** 1.2.3  
+<<<<<<< HEAD
+=======
+
+[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=travis)](http://travis-ci.org/benbalter/WP-Document-Revisions)
+>>>>>>> travis
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -180,7 +185,7 @@ Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Qu
 ### How do I use the `get_document_revisions` function in my theme or plugin? ###
 Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
 
-### I'm a developer, can I contribute? ###
+### I'm a developer, can I contribue? ###
 Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
 
 ## Changelog ##
