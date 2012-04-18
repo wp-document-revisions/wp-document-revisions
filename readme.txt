@@ -186,16 +186,16 @@ Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github
 
 == Changelog ==
 
-<<<<<<< HEAD
-=======
 = 1.3 =
 * Plugin now includes unit tests to ensure security and stability, and undergoes extensive testing (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
-* Subscribers no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
+* Added Spanish Translation Support (es_ES)
+* Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
 * Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
+* Default document upload director now honors WordPress-wide defaults
+* Ability to separate documents on server by site subfolder on multisite installs
 
->>>>>>> travis
 = 1.2.4 =
 * Better support for custom document upload directories on multisite installs
 * Gallery, URL, and Media Library links now hidden from media upload popup when uploading revisions
