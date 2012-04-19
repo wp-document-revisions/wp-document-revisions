@@ -312,6 +312,16 @@ class WP_Test_Document_Revisions extends WPTestCase {
 
 		$this->assertTrue( $wpdr->verify_post_type( $docID ) );
 	}
+	
+	/**
+	 * We want to make sure we're testing against the db, not just in-memory data
+	 * this will flush everything and reload it from the db
+	 */
+	function _flush_roles() {
+		unset($GLOBALS['wp_user_roles']);
+		global $wp_roles;
+		$wp_roles->_init();
+	}
 
 
 }
