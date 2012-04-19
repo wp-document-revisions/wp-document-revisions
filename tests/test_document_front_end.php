@@ -39,6 +39,15 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		parent::tearDown();
 	}
 
+	/**
+	 * We want to make sure we're testing against the db, not just in-memory data
+	 * this will flush everything and reload it from the db
+	 */
+	function _flush_roles() {
+		unset($GLOBALS['wp_user_roles']);
+		global $wp_roles;
+		$wp_roles->_init();
+	}
 
 	/**
 	 * Verify joe public can't access a list of revisions
