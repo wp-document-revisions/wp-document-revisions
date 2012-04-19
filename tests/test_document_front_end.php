@@ -147,7 +147,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docID = $tdr->test_add_document(); //add another doc
 
 		//give postmeta to a doc
-		update_postmeta( $docID, 'test_meta_key', 'test_value' );
+		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents test_meta_key="test_value"]' );
@@ -206,7 +206,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docID = $tdr->test_add_document(); //add another doc
 
 		//give postmeta to a doc
-		update_postmeta( $docID, 'test_meta_key', 'test_value' );
+		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
 		$docs = get_documents( array( 'test_meta_key' => 'test_value' ) );
