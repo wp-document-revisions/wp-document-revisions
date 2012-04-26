@@ -423,7 +423,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		global $wp_rewrite;
 		
 		//set new slug
-		set_site_option( 'document_slug', 'docs' );
+		update_site_option( 'document_slug', 'docs' );
 
 		//add doc and flush
 		$tdr = new WP_Test_Document_Revisions();
