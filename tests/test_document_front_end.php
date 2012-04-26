@@ -58,6 +58,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docID = $tdr->test_revise_document();
 
 		$output = do_shortcode( '[document_revisions number="2" id="' . $docID . '"' );
+		var_dump( substr_count( $output, '<li'), $output );
 		$this->assertEquals( 0, substr_count( $output, '<li'), 'unauthed revision shortcode' );
 
 	}
