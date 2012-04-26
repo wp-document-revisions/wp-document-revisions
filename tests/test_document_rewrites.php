@@ -129,7 +129,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 
 	/**
-	 * Tests that a given url *DOES NOT& return a file
+	 * Tests that a given url *DOES NOT* return a file
 	 * @param string $url to check
 	 * @param string $file relative path of expected file
 	 * @param string $msg message describing failure
@@ -142,7 +142,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		global $wpdr;
 
 		$this->http( $url );
-		global $current_user;
 
 		//verify contents are actually served
 		ob_start();
@@ -150,8 +149,10 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$content = ob_get_contents();
 		ob_end_clean();
 		
-		if ( !( is_404() || $this->is_wp_die() ) )
+		if ( !( is_404() || $this->is_wp_die() ) ) {
 			var_dump( $content );
+			var_dump( $current_user );
+		}
 
 		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
@@ -248,9 +249,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 		global $current_user;
 		unset( $current_user );
-
-		//@todo fix this
-		$this->markTestIncomplete( 'Not yet working' );
 
 		//public should be denied access to revisions
 		$this->verify_cant_download( get_permalink( $revision->ID ), $tdr->test_file, 'Public revision request (pretty)' );
