@@ -57,9 +57,8 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_revise_document();
 
-		$output = do_shortcode( '[document_revisions number="2" id="' . $docID . '"]' );
-		var_dump( substr_count( $output, '<li'), $output );
-		$this->assertEquals( 0, substr_count( $output, '<li'), 'unauthed revision shortcode' );
+		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
+		$this->assertEquals( 0, (int) substr_count( $output, '<li'), 'unauthed revision shortcode' );
 
 	}
 
@@ -76,7 +75,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$id = $this->_make_user('administrator');
 		wp_set_current_user( $id );
 
-		$output = do_shortcode( '[document_revisions id="' . $docID . '"' );
+		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
 		$this->assertEquals( 2, substr_count( $output, '<li'), 'admin revision shortcode' );
 
 
@@ -95,7 +94,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$id = $this->_make_user('administrator');
 		wp_set_current_user( $id );
 
-		$output = do_shortcode( '[document_revisions number="1" id="' . $docID . '"' );
+		$output = do_shortcode( '[document_revisions number="1" id="' . $docID . '"]' );
 		$this->assertEquals( 1, substr_count( $output, '<li'), 'revision shortcode count' );
 
 	}
