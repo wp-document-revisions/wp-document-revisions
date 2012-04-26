@@ -29,8 +29,8 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		global $wpdr;
 		$wpdr->add_caps();
 		$this->_flush_roles();
-		global $current_user;
-		unset( $current_user );
+		$this->user_ids = array();
+		wp_set_current_user( 0 );
 
 		//flush cache for good measure
 		wp_cache_flush();
@@ -48,9 +48,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 	function tearDown() {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure('');
-
-		if ( is_array( $this->user_ids ) )
-			$this->_destroy_users();
 	
 		$this->_destroy_uploads();
 		$this->_delete_all_posts();
