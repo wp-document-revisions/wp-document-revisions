@@ -121,7 +121,8 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertFalse( is_404() || $this->is_wp_die(), "404 ($msg)" );
+		$this->assertFalse( is_404(), "404 ($msg)" );
+		$this->assertFalse( $this->is_wp_die(), "wp_died ($msg)" );
 		$this->assertTrue( is_single(), "Not single ($msg)" );
 		$this->assertStringEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "Contents don\'t match file ($msg)" );
 
@@ -148,10 +149,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
-		
-		global $post; global $current_user;
-		if ( !( is_404() || $this->is_wp_die() ) )
-			var_dump( $current_user, $content, current_user_can( 'read_document', $post->ID ) );
 
 		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
@@ -170,8 +167,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$docID = $tdr->test_add_document();
 		wp_publish_post( $docID );
 		
-		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
