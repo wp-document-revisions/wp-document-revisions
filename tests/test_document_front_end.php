@@ -158,7 +158,6 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
-		var_dump( $output );
 		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode filter count' );
 
 	}
