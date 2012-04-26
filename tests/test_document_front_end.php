@@ -176,6 +176,8 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
 		wp_publish_post( $docID );
+		
+		wp_cache_flush();
 
 		ob_start();
 		the_widget( 'Document_Revisions_Recently_Revised_Widget' );
