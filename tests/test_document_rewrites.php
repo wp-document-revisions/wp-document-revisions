@@ -148,11 +148,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
-		
-		if ( !( is_404() || $this->is_wp_die() ) ) {
-			var_dump( $content );
-			var_dump( $current_user );
-		}
 
 		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
@@ -247,8 +242,8 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$revisions = $wpdr->get_revisions( $docID );
 		$revision = array_pop( $revisions );
 
-		global $current_user;
-		unset( $current_user );
+		$id = $this->_make_user( 'subscriber' );
+		wp_set_current_user( $id );
 
 		//public should be denied access to revisions
 		$this->verify_cant_download( get_permalink( $revision->ID ), $tdr->test_file, 'Public revision request (pretty)' );
@@ -381,6 +376,9 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
+		
+		$id = $this->_make_user( 'subscriber' );
+		wp_set_current_user( $id );
 
 		//try to get an un auth'd feed
 		$content = $this->simulate_feed( get_permalink( $docID ) . '/feed/' );
