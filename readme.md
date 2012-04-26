@@ -189,7 +189,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 Yes! If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
 
 ### Can I set the upload directory on multisite installs if I don't want to network activate the plugin? ###
-Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 ## Changelog ##
 
