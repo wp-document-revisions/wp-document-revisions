@@ -22,7 +22,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$this->_flush_roles();
 		
 		global $current_user;
-		unset( $current_user )
+		unset( $current_user );
 
 		//flush cache for good measure
 		wp_cache_flush();
