@@ -55,7 +55,7 @@ class Document_Revisions {
 
 		//CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'init', array( &$this, 'register_ct' ) );
+		add_action( 'init', array( &$this, 'register_ct' ), 15 ); //note: priority must be > 11 to allow for edit flow support
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
@@ -98,7 +98,7 @@ class Document_Revisions {
 		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 
 		//edit flow
-		add_action( 'ef_loaded', array( &$this, 'edit_flow_support' ) );
+		add_action( 'init', array( &$this, 'edit_flow_support' ), 11 );
 
 		//load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/includes/front-end.php';
@@ -1387,23 +1387,36 @@ class Document_Revisions {
 	 * @return unknown
 	 */
 	function edit_flow_support() {
-
-		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+	
+		global $edit_flow;
+		
+		//verify edit flow is enabled
+		if ( !class_exists( 'EF_Custom_Status' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
 			return false;
 
-		//post caps
-		add_post_type_support( 'document',  array(
-				'ef_custom_statuses',
-				'ef_editorial_comments',
-				'ef_notifications',
-				'ef_editorial_metadata',
-				'ef_calendar',
-			)
-		);
+		//verify proper firing order
+		if ( !did_action( 'ef_init' ) ) {
+			_doing_it_wrong( 'edit_flow_support', 'Cannot call before ef_init has fired', null );
+			return false;
+		}
+		
+		//verify custom_status is enabled
+		if ( !$edit_flow->custom_status->module_enabled( 'custom_status' ) )
+			return false;
+		
+		//prevent errors if options aren't init'd yet
+		if ( !isset( $edit_flow->custom_status->module->options->post_types['document'] ) )
+			return false;
+		
+		//check if enabled
+		if ( $edit_flow->custom_status->module->options->post_types['document'] == 'off' )
+			return false;
 
 		//remove workflow state CT
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		remove_action( 'init', array( &$this, 'register_ct' ) );
+		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
+		
+		return true;
 
 	}
 

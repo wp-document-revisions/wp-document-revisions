@@ -201,6 +201,7 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
 * Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.  
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
+* Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
 * Default document upload director now honors WordPress-wide defaults
 * Ability to separate documents on server by site subfolder on multisite installs
 

@@ -73,8 +73,6 @@ class Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 
 		//edit flow support
-		//note: ef_loaded hook is fired on plugins loaded, far too early
-		//we can still remove our hooks, just need to check if edit_flow is a class
 		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
 
 	}
@@ -1209,7 +1207,7 @@ class Document_Revisions_Admin {
 	 */
 	function edit_flow_admin_support() {
 
-		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+		if ( !self::$parent->edit_flow_support() )
 			return false;
 
 		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
