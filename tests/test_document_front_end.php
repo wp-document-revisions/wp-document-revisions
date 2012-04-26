@@ -184,7 +184,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 		
-		var_dump( $output  );
+		var_dump( $output );
 		
 		$this->assertEquals( 2, substr_count( $output, '<li'), 'widget output' );
 		
