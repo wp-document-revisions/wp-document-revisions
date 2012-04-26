@@ -167,10 +167,23 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 	/**
 	 * Tests the recently revized widget
-	 * @todo bulid this
 	 */
 	function test_recently_revised_widget() {
-		$this->markTestIncomplete( 'Need to build' );
+			
+		$tdr = new WP_Test_Document_Revisions();
+		$docID = $tdr->test_add_document(); //add a doc
+		wp_publish_post( $docID );
+
+		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		wp_publish_post( $docID );
+
+		ob_start();
+		the_widget( 'Document_Revisions_Recently_Revised_Widget' );
+		$output = ob_get_contents();
+		ob_end_clean();
+		
+		$this->assertEquals( 2, substr_count( $output, '<li'), 'widget output' );
+		
 	}
 
 

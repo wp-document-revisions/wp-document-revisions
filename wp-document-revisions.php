@@ -775,10 +775,6 @@ class Document_Revisions {
 	 * @return unknown
 	 */
 	function serve_document_auth( $default, $post, $version ) {
-	
-		//general documents cap check
-		if ( ! current_user_can( 'read_documents' ) )
-			return false;
 
 		//public file, not a revision, no need to go any further
 		//note: non-authenticated users only have the "read" cap, so can't auth via read_document
