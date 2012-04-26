@@ -151,7 +151,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		
 		global $post;
 		if ( !( is_404() || $this->is_wp_die() ) )
-			var_dump( get_currentuserinfo(), is_404(), $this->is_wp_die(), $post );
+			var_dump( $post, $content, current_user_can( 'read_document', $post->ID ) );
 
 		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
