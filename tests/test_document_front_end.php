@@ -20,7 +20,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		global $wpdr;
 		$wpdr->add_caps();
 		$this->_flush_roles();
-		
+		$this->user_ids = array();
 		wp_set_current_user( 0 );
 
 		//flush cache for good measure
@@ -33,9 +33,6 @@ class WP_Test_Document_Front_End extends WPTestCase {
 	 * Break down for next test
 	 */
 	function tearDown() {
-	
-		if ( is_array( $this->user_ids ) )
-			$this->_destroy_users();
 	
 		$this->_destroy_uploads();
 		$this->_delete_all_posts();
