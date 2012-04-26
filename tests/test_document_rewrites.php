@@ -149,10 +149,9 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
-
-		global $current_user;
-		if ( $msg == 'Public revision request (pretty)' )
-			var_dump( $current_user );
+		
+		if ( !( is_404() || $this->is_wp_die() ) )
+			var_dump( $content );
 
 		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
