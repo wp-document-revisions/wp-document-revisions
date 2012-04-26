@@ -31,7 +31,10 @@ class WP_Test_Document_Front_End extends WPTestCase {
 	 * Break down for next test
 	 */
 	function tearDown() {
-		$this->_destroy_users();
+	
+		if ( is_array( $this->user_ids ) )
+			$this->_destroy_users();
+	
 		$this->_destroy_uploads();
 		$this->_delete_all_posts();
 		parent::tearDown();
@@ -155,6 +158,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents test_meta_key="test_value"]' );
+		var_dump( $output );
 		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode filter count' );
 
 	}

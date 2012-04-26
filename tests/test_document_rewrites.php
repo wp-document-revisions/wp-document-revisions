@@ -49,7 +49,9 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure('');
 
-		$this->_destroy_users();
+		if ( is_array( $this->user_ids ) )
+			$this->_destroy_users();
+	
 		$this->_destroy_uploads();
 		$this->_delete_all_posts();
 		parent::tearDown();
