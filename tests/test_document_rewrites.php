@@ -30,7 +30,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$wpdr->add_caps();
 		$this->_flush_roles();
 		$this->user_ids = array();
-		wp_set_current_user( 0 );
 
 		//flush cache for good measure
 		wp_cache_flush();
