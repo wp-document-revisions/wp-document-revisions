@@ -157,7 +157,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
-		$output = do_shortcode( '[documents test_meta_key="test_value"]' );
+		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
 		var_dump( $output );
 		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode filter count' );
 
@@ -203,7 +203,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docs = get_documents( null, true );
 		$doc = array_pop( $docs );
 
-		$this->assertEquals( $docs->post_type, 'attachment', 'get_documents not returning attachments' );
+		$this->assertEquals( $doc->post_type, 'attachment', 'get_documents not returning attachments' );
 
 	}
 
