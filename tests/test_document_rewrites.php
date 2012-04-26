@@ -169,6 +169,10 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
 		wp_publish_post( $docID );
+		
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
 		wp_cache_flush();
 
 		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
