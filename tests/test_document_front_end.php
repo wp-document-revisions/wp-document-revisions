@@ -20,8 +20,6 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		global $wpdr;
 		$wpdr->add_caps();
 		$this->_flush_roles();
-		global $current_user;
-		unset( $current_user );
 
 		//flush cache for good measure
 		wp_cache_flush();
@@ -107,7 +105,8 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		wp_publish_post( $docID );
 
 		$output = do_shortcode( '[documents]' );
 		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode count' );
@@ -122,8 +121,11 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		wp_publish_post( $docID );
+		
 		$docID = $tdr->test_add_document(); //add another doc
+		wp_publish_post( $docID );
 
 		//move a doc to another workflow state (default is index 0)
 		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
@@ -142,10 +144,12 @@ class WP_Test_Document_Front_End extends WPTestCase {
 	function test_document_shortcode_post_meta_filter() {
 
 		$tdr = new WP_Test_Document_Revisions();
+		$docID = $tdr->test_add_document(); //add a doc
+		wp_publish_post( $docID );
 
-		$tdr->test_add_document(); //add a doc
-		$docID = $tdr->test_add_document(); //add another doc
-
+		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		wp_publish_post( $docID );
+		
 		//give postmeta to a doc
 		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
@@ -172,8 +176,11 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_revise_document(); //add a doc
+		wp_publish_post( $docID );
+
 		$docID = $tdr->test_add_document(); //add another doc
+		wp_publish_post( $docID );
 
 		$this->assertCount( 2, get_documents(), 'get_document() count' );
 
@@ -186,7 +193,9 @@ class WP_Test_Document_Front_End extends WPTestCase {
 	function test_get_documents_returns_attachments() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_add_document(); //add a doc
+		wp_publish_post( $docID );
+
 		$docs = get_documents( null, true );
 		$doc = array_pop( $docs );
 
@@ -204,6 +213,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$tdr->test_add_document(); //add a doc
 		$docID = $tdr->test_add_document(); //add another doc
+		wp_publish_post( $docID );
 
 		//give postmeta to a doc
 		update_post_meta( $docID, 'test_meta_key', 'test_value' );
