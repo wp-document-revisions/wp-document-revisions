@@ -414,5 +414,27 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$this->_destroy_user( $userID );
 
 	}
+	
+	/**
+	 * Tests that changing the document slug is reflected in permalinks
+	 */
+	function test_document_slug() {
+	
+		global $wp_rewrite;
+		
+		//set new slug
+		set_site_option( 'document_slug', 'docs' );
+
+		//add doc and flush
+		$tdr = new WP_Test_Document_Revisions();
+		$docID = $tdr->test_add_document();	
+		wp_publish_post( $docID );
+		wp_cache_flush();
+		$wp_rewrite->flush_rules();
+	
+		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
+		$this->assertContains( '/docs/', get_permalink( $docID ), 'revised document slug not in permalink' );
+		
+	}
 
 }
