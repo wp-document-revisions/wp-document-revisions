@@ -21,8 +21,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$wpdr->add_caps();
 		$this->_flush_roles();
 		
-		global $current_user;
-		unset( $current_user );
+		wp_set_current_user( 0 );
 
 		//flush cache for good measure
 		wp_cache_flush();

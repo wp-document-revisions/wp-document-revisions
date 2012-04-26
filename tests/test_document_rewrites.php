@@ -29,8 +29,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		global $wpdr;
 		$wpdr->add_caps();
 		$this->_flush_roles();
-		global $current_user;
-		unset( $current_user );
+		wp_set_current_user( 0 );
 
 		//flush cache for good measure
 		wp_cache_flush();
@@ -185,10 +184,6 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		//make new private document
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
-
-		global $current_user;
-		unset( $current_user );
-		wp_cache_flush();
 		
 		//public should be denied
 		$this->verify_cant_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
@@ -248,12 +243,7 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 		$docID = $tdr->test_revise_document();
 		wp_publish_post( $docID );
 		$revisions = $wpdr->get_revisions( $docID );
-		$revision = array_pop( $revisions );
-		
-		global $current_user;
-		unset( $current_user );
-		wp_cache_flush();
-			
+		$revision = array_pop( $revisions );			
 
 		//public should be denied access to revisions
 		$this->verify_cant_download( get_permalink( $revision->ID ), $tdr->test_file, 'Public revision request (pretty)' );
