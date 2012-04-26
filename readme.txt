@@ -4,13 +4,13 @@ Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
 Requires at least: 3.2
 Tested up to: 3.4
-Stable tag: 1.2.4
+Stable tag: 1.3
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
 == Description ==
 
-[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=master)](http://travis-ci.org/benbalter/WP-Document-Revisions)
+[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=develop)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
 [WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
@@ -183,14 +183,18 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 = I'm a developer, can I contribute? =
 Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
 
+= I'm not a develop, can I still contribute? =
+Yes! If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
+
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
 Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 == Changelog ==
 
 = 1.3 =
-* Plugin now includes unit tests to ensure security and stability, and undergoes extensive testing (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
+* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
+* If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
 * Added Spanish Translation Support (es_ES)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
 * Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
