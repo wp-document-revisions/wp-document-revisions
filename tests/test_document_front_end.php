@@ -20,6 +20,9 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		global $wpdr;
 		$wpdr->add_caps();
 		$this->_flush_roles();
+		
+		global $current_user;
+		unset( $current_user )
 
 		//flush cache for good measure
 		wp_cache_flush();
@@ -57,7 +60,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_revise_document();
-
+	
 		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
 		$this->assertEquals( 0, (int) substr_count( $output, '<li'), 'unauthed revision shortcode' );
 
