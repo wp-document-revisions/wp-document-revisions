@@ -195,7 +195,7 @@ class Document_Revisions_Admin {
 			),
 			'edit-document' => array(
 				__( 'Documents', 'wp-document-revisions' ) =>
-				__( '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p>
+				__( '<p>Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version.</p>
 									<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
 									<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>', 'wp-document-revisions' ),
 			),
