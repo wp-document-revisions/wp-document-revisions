@@ -4,11 +4,7 @@ Donate link: http://ben.balter.com/donate/
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
 Requires at least: 3.2
 Tested up to: 3.4
-<<<<<<< HEAD
-Stable tag: 1.2.4
-=======
 Stable tag: 1.3
->>>>>>> develop
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -49,15 +45,10 @@ A document management and version control plugin that allows teams of any size t
 * Runs in-house or in the cloud
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
-<<<<<<< HEAD
-* French language support
-* Easily translated to your local language
-=======
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
 * French and Spanish language support (easily translated to your language)
 * Integration with [Edit Flow](http://editflow.org)
->>>>>>> develop
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
 
@@ -212,21 +203,14 @@ Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Qu
 = How do I use the `get_document_revisions` function in my theme or plugin? =
 Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
 
-<<<<<<< HEAD
-= I'm a developer, can I contribute? =
-Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
-=======
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
 Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
->>>>>>> develop
 
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
 Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 == Changelog ==
 
-<<<<<<< HEAD
-=======
 = 1.3 =
 * Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
@@ -240,7 +224,6 @@ Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github
 * Default document upload directory now honors WordPress-wide defaults and features enhanced multisite support
 * Ability to separate documents on server by site subfolder on multisite installs
 
->>>>>>> develop
 = 1.2.4 =
 * Better support for custom document upload directories on multisite installs
 * Gallery, URL, and Media Library links now hidden from media upload popup when uploading revisions
