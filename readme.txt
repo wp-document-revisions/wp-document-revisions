@@ -60,12 +60,21 @@ A document management and version control plugin that allows teams of any size t
 * **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
 * **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
 * **Bulk Import** - how to batch import a directory (or other list) of files as documents
-* **Recently Revised Widget** - example of how to list recently revised documents in a widget
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 * **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
-* **Revision Shortcode** - Code sample to demonstrate short code to list revisions
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+
+**Translations:**
+* French - [Hubert CAMPAN](http://omnimaki.com/)
+* Spanish - [TradiArt](http://www.tradiart.com/)
+
+**Links**
+* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) (early releases)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [User support forums](http://wordpress.org/tags/wp-document-revisions)
+* [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
@@ -90,6 +99,12 @@ A document management and version control plugin that allows teams of any size t
 4. Activate WP Document Revisions
 
 == Frequently Asked Questions ==
+
+= I'm a developer, can I contribute? =
+Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
+
+= I'm not a develop, can I still contribute? =
+Yes! If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). If you are fluent in a language other than english, consider [submitting a translation](http://translations.benbalter.com/projects/wp-document-revisions/) ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate)). Last, any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is always helpful.
 
 = Does it work on Mac? PC? Mobile? =
 
@@ -180,12 +195,6 @@ Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Qu
 = How do I use the `get_document_revisions` function in my theme or plugin? =
 Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
 
-= I'm a developer, can I contribute? =
-Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
-
-= I'm not a develop, can I still contribute? =
-Yes! If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
-
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
 Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
@@ -195,7 +204,7 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 * Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
 * If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
-* Added Spanish Translation Support (es_ES)
+* Added Spanish Translation Support (es_ES -- special thanks to [TradiArt](http://www.tradiart.com/))
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
 * Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
