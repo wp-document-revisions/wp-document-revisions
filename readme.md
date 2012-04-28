@@ -324,6 +324,9 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 ## Upgrade Notice ##
 
+### 1.3 ###
+* Spanish translation support, more granular permission control, more acurate HTTP headers, better Edit Flow support, better multisite support for custom upload directories
+
 ### 1.2 ###
 * Widgets, shortcodes, and templating functions, oh my!
 
