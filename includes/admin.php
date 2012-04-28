@@ -339,29 +339,6 @@ class Document_Revisions_Admin {
 		<?php
 	}
 
-
-	/**
-	 * Hide header (gallery, URL, library, etc.) links from media-upload
-	 * No real use case for a revision being an already uploaded file,
-	 * and javascript not compatible for that usecase as written
-	 * @since 1.2.4
-	 */
-	function hide_upload_header() {
-
-		if ( get_current_screen()->id != 'media-upload' )
-			return;
-
-		if ( !$this->verify_post_type( $_GET['post_id'] ) )
-			return;
-
-		?>
-		<style>
-			#media-upload-header {display:none;}
-		</style>
-		<?php
-	}
-
-
 	/**
 	 * Metabox to provide common document functions
 	 * @since 0.5
