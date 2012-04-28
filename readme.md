@@ -49,8 +49,10 @@ A document management and version control plugin that allows teams of any size t
 * Runs in-house or in the cloud
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
-* French language support
-* Easily translated to your local language
+* Documents and Revisions shortcodes, Recently Revised Documents widget
+* Multisite and Windows (XAMPP) support
+* French and Spanish language support (easily translated to your language)
+* Integration with [Edit Flow](http://editflow.org)
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
 
@@ -65,20 +67,26 @@ A document management and version control plugin that allows teams of any size t
 * **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
-**Translations:**
+** Translations: **
 * French - [Hubert CAMPAN](http://omnimaki.com/)
 * Spanish - [TradiArt](http://www.tradiart.com/)
-
-## Links ##
-* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
-* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) (early releases)
-* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [User support forums](http://wordpress.org/tags/wp-document-revisions)
-* [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
+
+## Links ##
+* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
+* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [User support forums](http://wordpress.org/tags/wp-document-revisions)
+* [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
+
+** Useful Tools/Plugins **
+* [Members](http://wordpress.org/extend/plugins/members/)
+* [Edit Flow](http://editflow.org)
+* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
 
 ## Screenshots ##
 ###1. A typical WP Document Revisions edit document screen.###
