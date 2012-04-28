@@ -83,7 +83,7 @@ A document management and version control plugin that allows teams of any size t
 * [User support forums](http://wordpress.org/tags/wp-document-revisions)
 * [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
 
-** Useful Tools/Plugins **
+**Useful Plugins**
 * [Members](http://wordpress.org/extend/plugins/members/)
 * [Edit Flow](http://editflow.org)
 * [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
