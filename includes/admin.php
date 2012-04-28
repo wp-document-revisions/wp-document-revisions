@@ -42,11 +42,7 @@ class Document_Revisions_Admin {
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
 		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
-<<<<<<< HEAD
-		
-=======
 
->>>>>>> develop
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
@@ -501,11 +497,7 @@ class Document_Revisions_Admin {
 			$dir = ABSPATH . $dir;
 
 		//dir didn't change
-<<<<<<< HEAD
-		if ( $dir == get_site_option( 'document_upload_directory' ) )
-=======
 		if ( $dir == $this->document_upload_dir() )
->>>>>>> develop
 			return $dir;
 
 		//dir changed, throw warning
@@ -558,8 +550,6 @@ class Document_Revisions_Admin {
 				<td>
 					<?php $this->upload_location_cb(); ?>
 					<?php wp_nonce_field( 'network_document_upload_location', 'document_upload_location_nonce' ); ?>
-<<<<<<< HEAD
-=======
 				</td>
 			</tr>
 			<tr>
@@ -567,7 +557,6 @@ class Document_Revisions_Admin {
 				<td>
 					<?php $this->document_slug_cb(); ?>
 					<?php wp_nonce_field( 'network_document_slug', 'document_slug_nonce' ); ?>
->>>>>>> develop
 				</td>
 			</tr>
 		</table>
@@ -585,11 +574,7 @@ class Document_Revisions_Admin {
 
 		//verify nonce
 		if ( !wp_verify_nonce( $_POST['document_upload_location_nonce'], 'network_document_upload_location' ) )
-<<<<<<< HEAD
-			wp_die( __('Not authorized' ) );
-=======
 			wp_die( __( 'Not authorized' ) );
->>>>>>> develop
 
 		//auth
 		if ( !current_user_can( 'manage_network_options' ) )
@@ -608,8 +593,6 @@ class Document_Revisions_Admin {
 
 		//save the dir
 		update_site_option( 'document_upload_directory', $dir );
-<<<<<<< HEAD
-=======
 
 	}
 
@@ -643,7 +626,6 @@ class Document_Revisions_Admin {
 
 		//save the dir
 		update_site_option( 'document_slug', $slug );
->>>>>>> develop
 
 	}
 
