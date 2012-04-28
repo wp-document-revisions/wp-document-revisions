@@ -1,4 +1,10 @@
 <?php
+/**
+ * WP Document Revisions Admin Functionality
+ *
+ * @author Benjamin J. Balter <ben@balter.com>
+ * @package WP Document Revisions
+ */
 
 class Document_Revisions_Admin {
 
@@ -9,6 +15,7 @@ class Document_Revisions_Admin {
 	 * Register's admin hooks
 	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 * @since 0.5
+	 * @param unknown $instance (optional, reference)
 	 */
 	function __construct( &$instance = null) {
 
@@ -35,7 +42,11 @@ class Document_Revisions_Admin {
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox'), 10, 2 );
 		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> develop
 		//document list
 		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
@@ -46,7 +57,8 @@ class Document_Revisions_Admin {
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
 		add_action( 'update_wpmu_options', array( &$this, 'network_upload_location_save' ) );
-		add_action( 'wpmu_options', array( &$this, 'network_upload_location_cb' ) );
+		add_action( 'update_wpmu_options', array( &$this, 'network_slug_save' ) );
+		add_action( 'wpmu_options', array( &$this, 'network_settings_cb' ) );
 		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 
@@ -65,8 +77,6 @@ class Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 
 		//edit flow support
-		//note: ef_loaded hook is fired on plugins loaded, far too early
-		//we can still remove our hooks, just need to check if edit_flow is a class
 		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
 
 	}
@@ -106,9 +116,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Registers update messages
+	 * @since 0.5
 	 * @param array $messages messages array
 	 * @returns array messages array with doc. messages
-	 * @since 0.5
 	 */
 	function update_messages( $messages ) {
 		global $post, $post_ID;
@@ -134,6 +144,7 @@ class Document_Revisions_Admin {
 	 * Adds help tabs to 3.3+ help tab API
 	 * @since 1.1
 	 * @uses get_help_text()
+	 * @return unknown
 	 */
 	function add_help_tab( ) {
 
@@ -159,10 +170,10 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Helper function to provide help text as either an array or as a string
-	 * @param object $screen the current screen
-	 * @param bool $return_array whether to return as an array or string
-	 * @returns array|string the help text
 	 * @since 1.1
+	 * @param object $screen (optional) the current screen
+	 * @param bool $return_array (optional) whether to return as an array or string
+	 * @returns array|string the help text
 	 */
 	function get_help_text( $screen = null, $return_array = true ) {
 
@@ -188,7 +199,7 @@ class Document_Revisions_Admin {
 			),
 			'edit-document' => array(
 				__( 'Documents', 'wp-document-revisions' ) =>
-				__( '<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p>
+				__( '<p>Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version.</p>
 									<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>
 									<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>', 'wp-document-revisions' ),
 			),
@@ -215,6 +226,10 @@ class Document_Revisions_Admin {
 	 * Registers help text with WP for pre-3.3 versions
 	 * @uses get_hel_text()
 	 * @since 0.5
+	 * @param unknown $contextual_help
+	 * @param unknown $screen_id
+	 * @param unknown $screen
+	 * @return unknown
 	 */
 	function add_help_text( $contextual_help, $screen_id, $screen ) {
 
@@ -254,7 +269,7 @@ class Document_Revisions_Admin {
 
 		//move author div to make room for ours
 		remove_meta_box( 'authordiv', 'document', 'normal' );
-	
+
 		//only add author div if user can give someone else ownership
 		if ( current_user_can( 'edit_others_documents' ) )
 			add_meta_box( 'authordiv', __('Owner', 'wp-document-revisions'), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
@@ -330,9 +345,31 @@ class Document_Revisions_Admin {
 
 
 	/**
+	 * Hide header (gallery, URL, library, etc.) links from media-upload
+	 * No real use case for a revision being an already uploaded file,
+	 * and javascript not compatible for that usecase as written
+	 * @since 1.2.4
+	 */
+	function hide_upload_header() {
+
+		if ( get_current_screen()->id != 'media-upload' )
+			return;
+
+		if ( !$this->verify_post_type( $_GET['post_id'] ) )
+			return;
+
+		?>
+		<style>
+			#media-upload-header {display:none;}
+		</style>
+		<?php
+	}
+
+
+	/**
 	 * Metabox to provide common document functions
-	 * @param object $post the post object
 	 * @since 0.5
+	 * @param object $post the post object
 	 */
 	function document_metabox($post) {?>
 		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content) ; ?>" />
@@ -371,8 +408,8 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Creates revision log metabox
-	 * @param object $post the post object
 	 * @since 0.5
+	 * @param object $post the post object
 	 */
 	function revision_metabox( $post ) {
 
@@ -439,7 +476,9 @@ class Document_Revisions_Admin {
 	 */
 	function settings_fields() {
 		register_setting( 'media', 'document_upload_directory', array( &$this, 'sanitize_upload_dir') );
+		register_setting( 'media', 'document_slug', array( &$this, 'sanitize_document_slug') );
 		add_settings_field( 'document_upload_directory', 'Document Upload Directory', array( &$this, 'upload_location_cb' ), 'media', 'uploads' );
+		add_settings_field( 'document_slug', __( 'Document Slug', 'wp-document-revisions' ), array( &$this, 'document_slug_cb' ), 'media', 'uploads' );
 
 	}
 
@@ -447,38 +486,34 @@ class Document_Revisions_Admin {
 	/**
 	 * Verifies that upload directory is a valid directory before updating the setting
 	 * Attempts to create the directory if it does not exist
+	 * @since 1.0
 	 * @param string $dir path to the new directory
 	 * @returns bool|string false on fail, path to new dir on sucess
-	 * @since 1.0
 	 */
 	function sanitize_upload_dir( $dir ) {
 
+		//empty string passed
+		if ( $dir == '' )
+			return $this->document_upload_dir();
+		
 		//if the path is not absolute, assume it's relative to ABSPATH
 		if ( substr( $dir, 0, 1) != '/' )
 			$dir = ABSPATH . $dir;
 
-		//directory does not exist
-		if ( !is_dir( $dir ) ) {
-
-			//attempt to make the directory
-			if ( !mkdir( $dir ) ) {
-
-				//could not make the directory
-				$msg = __( 'Please enter a valid document upload directory.', 'wp-document-revisions' );
-				add_settings_error( 'document_upload_directory', 'invalid-document-upload-dir', $msg, 'error' );
-				return false;
-
-			}
-
-		}
-
 		//dir didn't change
+<<<<<<< HEAD
 		if ( $dir == get_site_option( 'document_upload_directory' ) )
+=======
+		if ( $dir == $this->document_upload_dir() )
+>>>>>>> develop
 			return $dir;
 
 		//dir changed, throw warning
 		$msg = __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' );
-		add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
+
+		//don't fire more than once
+		if ( sizeof( get_settings_errors( 'document_upload_directory' ) ) == 0 )
+			add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
 
 		//trim and return
 		return rtrim($dir, "/");
@@ -487,10 +522,35 @@ class Document_Revisions_Admin {
 
 
 	/**
-	 * Adds upload directory option to network admin page
+	 * Sanitize slug prior to saving
+	 * @param string $slug new slug
+	 * @return string sanitized slug
+	 */
+	function sanitize_document_slug( $slug ) {
+
+		$slug = sanitize_title( $slug, 'documents' );
+
+		//unchanged
+		if ( $slug == $this->document_slug() )
+			return $slug;
+
+		//new slug isn't yet stored
+		// but queue up a rewrite rule flush to ensure slug takes effect on next request
+		add_action( 'shutdown', 'flush_rewrite_rules' );
+
+		$msg = __( 'Document slug changed, but some previously published URLs may now be broken.', 'wp-document-revisions' );
+		add_settings_error( 'document_slug', 'document-slug-change', $msg, 'updated' );
+
+		return $slug;
+
+	}
+
+
+	/**
+	 * Adds upload directory and document slug options to network admin page
 	 * @since 1.0
 	 */
-	function network_upload_location_cb() { ?>
+	function network_settings_cb() { ?>
 		<h3><?php _e( 'Document Settings', 'wp-document-revisions'); ?></h3>
 		<table id="document_settings" class="form-table">
 			<tr valign="top">
@@ -498,6 +558,16 @@ class Document_Revisions_Admin {
 				<td>
 					<?php $this->upload_location_cb(); ?>
 					<?php wp_nonce_field( 'network_document_upload_location', 'document_upload_location_nonce' ); ?>
+<<<<<<< HEAD
+=======
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Document Slug', 'wp-document-revisions'); ?></th>
+				<td>
+					<?php $this->document_slug_cb(); ?>
+					<?php wp_nonce_field( 'network_document_slug', 'document_slug_nonce' ); ?>
+>>>>>>> develop
 				</td>
 			</tr>
 		</table>
@@ -515,11 +585,15 @@ class Document_Revisions_Admin {
 
 		//verify nonce
 		if ( !wp_verify_nonce( $_POST['document_upload_location_nonce'], 'network_document_upload_location' ) )
+<<<<<<< HEAD
 			wp_die( __('Not authorized' ) );
+=======
+			wp_die( __( 'Not authorized' ) );
+>>>>>>> develop
 
 		//auth
 		if ( !current_user_can( 'manage_network_options' ) )
-			wp_die( __('Not authorized' ) );
+			wp_die( __( 'Not authorized' ) );
 
 		//verify upload dir
 		$dir = $this->sanitize_upload_dir( $_POST['document_upload_directory'] );
@@ -534,6 +608,42 @@ class Document_Revisions_Admin {
 
 		//save the dir
 		update_site_option( 'document_upload_directory', $dir );
+<<<<<<< HEAD
+=======
+
+	}
+
+
+	/**
+	 * Callback to validate and save slug on network settings page
+	 */
+	function network_slug_save() {
+
+		if ( !isset( $_POST['document_slug_nonce'] ) )
+			return;
+
+		//verify nonce
+		if ( !wp_verify_nonce( $_POST['document_slug_nonce'], 'network_document_slug' ) )
+			wp_die( __( 'Not authorized' ) );
+
+		//auth
+		if ( !current_user_can( 'manage_network_options' ) )
+			wp_die( __( 'Not authorized' ) );
+
+		//verify upload dir
+		$slug = $this->sanitize_document_slug( $_POST['document_slug'] );
+
+		//becuase there's a redirect, and there's no settings API, force settings errors into a transient
+		global $wp_settings_errors;
+		set_transient( 'settings_errors', $wp_settings_errors );
+
+		//if the dir didn't validate, kick
+		if ( !$slug )
+			return;
+
+		//save the dir
+		update_site_option( 'document_slug', $slug );
+>>>>>>> develop
 
 	}
 
@@ -544,14 +654,15 @@ class Document_Revisions_Admin {
 	 */
 	function network_settings_errors() {
 		settings_errors( 'document_upload_directory' );
+		settings_errors( 'document_slug' );
 	}
 
 
 	/**
 	 * Appends the settings-updated query arg to the network admin settings redirect so that the settings API can work
+	 * @since 1.0
 	 * @param string $location the URL being redirected to
 	 * @returns string the modified location
-	 * @since 1.0
 	 */
 	function network_settings_redirect( $location ) {
 
@@ -570,15 +681,28 @@ class Document_Revisions_Admin {
 	 * @since 0.5
 	 */
 	function upload_location_cb() { ?>
-	<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="regular-text code" />
-<span class="description"><?php _e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder, but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
+	<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="large-text code" /><br />
+<span class="description"><?php _e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
+<?php if ( is_multisite() ) { ?>
+<span class="description"><?php _e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' ); ?></span>
+<?php } ?>
+	<?php }
+
+
+	/**
+	 * Callback to create the document slug settings field
+	 */
+	function document_slug_cb() { ?>
+	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo date('Y'); ?>/<?php echo date('m'); ?>/<?php _e( 'example-document-title' ); ?>.txt</code>
+	<br /><span class="description"><?php _e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is "documents."', 'wp-document-revisions' ); ?></span>
 	<?php }
 
 
 	/**
 	 * Callback to inject JavaScript in page after upload is complete (pre 3.3)
-	 * @param int $id the ID of the attachment
 	 * @since 0.5
+	 * @param int $id the ID of the attachment
+	 * @return unknown
 	 */
 	function post_upload_js( $id ) {
 
@@ -625,9 +749,9 @@ class Document_Revisions_Admin {
 	/**
 	 * Ugly, Ugly hack to sneak post-upload JS into the iframe *pre 3.3*
 	 * If there was a hook there, I wouldn't have to do this
+	 * @since 0.5
 	 * @param string $meta dimensions / post meta
 	 * @returns string meta + js to process post
-	 * @since 0.5
 	 */
 	function media_meta_hack( $meta ) {
 
@@ -648,9 +772,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Hook to follow file uploads to automate attaching the document to the post
+	 * @since 0.5
 	 * @param string $filter whatever we really should be filtering
 	 * @returns string the same stuff they gave us, like we were never here
-	 * @since 0.5
 	 */
 	function post_upload_handler( $filter ) {
 
@@ -679,9 +803,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Retrieves the most recent file attached to a post
+	 * @since 0.5
 	 * @param int $post_id the parent post
 	 * @returns object the attachment object
-	 * @since 0.5
 	 */
 	function get_latest_attachment( $post_id ) {
 		$attachments = $this->get_attachments( $post_id );
@@ -736,7 +860,7 @@ class Document_Revisions_Admin {
 	/**
 	 * Retrieves feed key user meta; generates if necessary
 	 * @since 0.5
-	 * @param int $user UserID
+	 * @param int $user (optional) UserID
 	 * @returns string the feed key
 	 */
 	function get_feed_key( $user = null ) {
@@ -753,9 +877,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Generates, saves, and returns new feed key
-	 * @param int $user UserID
-	 * @returns string feed key
 	 * @since 0.5
+	 * @param int $user (optional) UserID
+	 * @returns string feed key
 	 */
 	function generate_new_feed_key( $user = null ) {
 
@@ -783,9 +907,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Renames author column on document list to "owner"
+	 * @since 1.0.4
 	 * @param array $defaults the default column labels
 	 * @returns array the modified column labels
-	 * @since 1.0.4
 	 */
 	function rename_author_column( $defaults ) {
 
@@ -820,9 +944,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Callback to output data for workflow state column
+	 * @since 0.5
 	 * @param string $column_name the name of the column being propegated
 	 * @param int $post_id the ID of the post being displayed
-	 * @since 0.5
 	 */
 	function workflow_state_column_cb( $column_name, $post_id ) {
 
@@ -849,9 +973,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Splices in Currently Editing column to document list
+	 * @since 1.1
 	 * @param array $defaults the original columns
 	 * @returns array our spliced columns
-	 * @since 1.1
 	 */
 	function add_currently_editing_column( $defaults ) {
 
@@ -871,9 +995,9 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Callback to output data for currently editing column
+	 * @since 1.1
 	 * @param string $column_name the name of the column being propegated
 	 * @param int $post_id the ID of the post being displayed
-	 * @since 1.1
 	 */
 	function currently_editing_column_cb( $column_name, $post_id ) {
 
@@ -896,8 +1020,8 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Callback to generate metabox for workflow state
-	 * @param object $post the post object
 	 * @since 0.5
+	 * @param object $post the post object
 	 */
 	function workflow_state_metabox_cb( $post ) {
 
@@ -920,8 +1044,8 @@ class Document_Revisions_Admin {
 
 	/**
 	 * Callback to save workflow_state metbox
-	 * @param int $post_id the ID of the post being edited
 	 * @since 0.5
+	 * @param int $post_id the ID of the post being edited
 	 */
 	function workflow_state_save( $post_id ) {
 
@@ -983,6 +1107,9 @@ class Document_Revisions_Admin {
 	}
 
 
+	/**
+	 *
+	 */
 	function enqueue_js() {
 
 		//only include JS on document pages
@@ -993,7 +1120,7 @@ class Document_Revisions_Admin {
 		$data = array(
 			'restoreConfirmation' => __( "Are you sure you want to restore this revision?\n\nIf you do, no history will be lost. This revision will be copied and become the most recent revision.", 'wp-document-revisions'),
 			'lockNeedle'          => __( 'is currently editing this'), //purposely left out text domain
-			'postUploadNotice'    => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>'),
+			'postUploadNotice'    => __( '<div id="message" class="updated" style="display:none"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>', 'wp-document-revisions' ),
 			'lostLockNotice'      => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
@@ -1034,6 +1161,11 @@ class Document_Revisions_Admin {
 	 * @param string $where the original where statement
 	 * @return string the modified where statement
 	 */
+	/**
+	 *
+	 * @param unknown $where
+	 * @return unknown
+	 */
 	function filter_media_where( $where ) {
 		global $wpdb;
 
@@ -1072,8 +1204,8 @@ class Document_Revisions_Admin {
 	/**
 	 * Requires all document revisions to have attachments
 	 * Prevents initial autosave drafts from appearing as a revision after document upload
-	 * @param int $id the post id
 	 * @since 1.0
+	 * @param int $id the post id
 	 */
 	function revision_filter( $id ) {
 
@@ -1109,10 +1241,11 @@ class Document_Revisions_Admin {
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy
 	 * @since 1.1
+	 * @return unknown
 	 */
 	function edit_flow_admin_support() {
 
-		if ( !class_exists( 'edit_flow' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+		if ( !self::$parent->edit_flow_support() )
 			return false;
 
 		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );

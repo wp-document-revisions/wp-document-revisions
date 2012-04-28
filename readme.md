@@ -4,15 +4,15 @@
 **Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 **Requires at least:** 3.2  
 **Tested up to:** 3.4  
-**Stable tag:** 1.2.3  
+**Stable tag:** 1.3 
+
+[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=develop)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
 ## Description ##
 
 [WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](http://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
-
-*Additional information, including a screencast of a typical use case, is available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).*
 
 **WP Document Revisions is three things:**
 
@@ -45,10 +45,12 @@ A document management and version control plugin that allows teams of any size t
 * Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
-*** Secure:** filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
+* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
-* French language supportt
-* Easily translated to your local language
+* Documents and Revisions shortcodes, Recently Revised Documents widget
+* Multisite and Windows (XAMPP) support
+* French and Spanish language support (easily translated to your language)
+* Integration with [Edit Flow](http://editflow.org)
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
 
@@ -58,21 +60,39 @@ A document management and version control plugin that allows teams of any size t
 * **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
 * **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
 * **Bulk Import** - how to batch import a directory (or other list) of files as documents
-* **Recently Revised Widget** - example of how to list recently revised documents in a widget
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 * **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
-* **Revision Shortcode** - Code sample to demonstrate short code to list revisions
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+
+**Translations:**
+* French - [Hubert CAMPAN](http://omnimaki.com/)
+* Spanish - [TradiArt](http://www.tradiart.com/)
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
+## Links ##
+* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
+* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [User support forums](http://wordpress.org/tags/wp-document-revisions)
+* [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
+* [Donate](http://ben.balter.com/donate/?utm_source=readme&utm_medium=links&utm_campaign=wp-document-revisions)
+
+**Useful Plugins**
+* [Members](http://wordpress.org/extend/plugins/members/)
+* [Edit Flow](http://editflow.org)
+* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
+
+## Donate ##
+Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=readme&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
+
 ## Screenshots ##
 ###1. A typical WP Document Revisions edit document screen.###
 ![A typical WP Document Revisions edit document screen.](http://s.wordpress.org/extend/plugins/wp-document-revisions/screenshot-1.png)
-
 
 ## Installation ##
 
@@ -90,6 +110,12 @@ A document management and version control plugin that allows teams of any size t
 4. Activate WP Document Revisions
 
 ## Frequently Asked Questions ##
+
+### I'm a developer, can I contribute? ###
+Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
+
+### I'm not a develop, can I still contribute? ###
+Yes! If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). If you are fluent in a language other than english, consider [submitting a translation](http://translations.benbalter.com/projects/wp-document-revisions/) ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate)). Last, any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is always helpful.
 
 ### Does it work on Mac? PC? Mobile? ###
 
@@ -145,7 +171,7 @@ In short, "no", because each site's use would be radically different. Although, 
 A chronological list of all documents a user has access to can be seen at yourdomain.com/documents/. Moreover, because documents are really posts, many built in WordPress features should work and public documents should act similar to posts on the front end (searching, archives, etc.). The plugin comes with a customizable recently revised documents widget, as well as two shortcodes to display documents and document revisions (details below).
 
 ### Can WP Document Revisions work in my language? ###
-Yes! So far WP Document Revisions has been translated to frencn, and is designed to by fully internationalized.  If you enjoy the plugin and are interested in contributing a translation (it's super easy), please take a look at the [Translating WordPress](http://codex.wordpress.org/Translating_WordPress) page. If you do translate the plugin, please be sure to [contact the plugin author](http://ben.balter.com/contact/) so that it can be included in future releases for other to use.
+Yes! So far WP Document Revisions has been translated to French and Spanish, and is designed to by fully internationalized.  If you enjoy the plugin and are interested in contributing a translation (it's super easy), please take a look at the [Translating WordPress](http://codex.wordpress.org/Translating_WordPress) page and the plugin's [translations repository](http://translations.benbalter.com/projects/wp-document-revisions/). If you do translate the plugin, please be sure to [contact the plugin author](http://ben.balter.com/contact/) so that it can be included in future releases for other to use.
 
 ### Will in work with WordPress MultiSite ###
 Yes! Each site can have its own document repository (with the ability to give users different permissions on each repository), or you can create one shared document repository across all sites.
@@ -180,10 +206,30 @@ Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Qu
 ### How do I use the `get_document_revisions` function in my theme or plugin? ###
 Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
 
-### I'm a developer, can I contribue? ###
-Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
+### Can I set the upload directory on multisite installs if I don't want to network activate the plugin? ###
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 ## Changelog ##
+
+### 1.3 ###
+* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
+* Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
+* If you would like to help out by testing early releases, please try the continously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
+* Added Spanish Translation Support (es_ES -- special thanks to [TradiArt](http://www.tradiart.com/))
+* Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., http://domain.com/documentos/2012/04/test.txt rather than /documents/)
+* Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
+* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.  
+* Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
+* Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
+* Default document upload directory now honors WordPress-wide defaults and features enhanced multisite support
+* Ability to separate documents on server by site subfolder on multisite installs
+
+### 1.2.4 ###
+* Better support for custom document upload directories on multisite installs
+* Gallery, URL, and Media Library links now hidden from media upload popup when uploading revisions
+* Fix for plugin breaking media gallery when filtered by mimetype (MySQL ambiguity error)
+* Fix for upload new version button appearing for locked out users in WordPress 3.3
+* Fix for upload new version button not appearing after document lock override on WordPress 3.3
 
 ### 1.2.3 ###
 * Owner metabox no longer displays if user does not have the ability to `edit_others_documents`
@@ -203,6 +249,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Fix for broken permalink returned when get_permalink is called multiple times on the same document revision
 * Fix for wp_get_attachment_image_src returning broken URLs or the direct path to the document
 * Fix for "`Call-time pass-by-reference has been deprecated`" error when running certain versions of PHP
+* General code cleanup
 
 ### 1.2.1 ###
 * French translation (Special thanks to [Hubert CAMPAN](http://omnimaki.com/))
@@ -220,7 +267,7 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 ### 1.2 ###
 * Added shortcode to display list of documents meeting specified criteria
 * Added shortcode to display a document's revisions (formerly in code cookbook)
-* Addded widget to display recently revised documents (formerly in code cookbook)
+* Added widget to display recently revised documents (formerly in code cookbook)
 * Created new global `get_documents()` and `get_document_revisions()` functions to help build and customize themes and plugins
 * Added filter to `wp_get_attachment_url` to force document/revision urls when attachments are queried directly
 * Better organization of plugin files within plugin folder
@@ -279,6 +326,9 @@ Of course. Feel free to [fork the project on GitHub](https://github.com/benbalte
 * Proof of concept prototype
 
 ## Upgrade Notice ##
+
+### 1.3 ###
+* Spanish translation support, more granular permission control, more accurate HTTP headers, better Edit Flow support, better multisite support for custom upload directories, document slug now customizeable
 
 ### 1.2 ###
 * Widgets, shortcodes, and templating functions, oh my!

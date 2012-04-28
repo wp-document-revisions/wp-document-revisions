@@ -17,8 +17,12 @@ before_script:
   - sh setup.sh
   - cd ..
     
+<<<<<<< HEAD
 script: php wp-test.php $ARGS
 
 branches:
   except:
     - master #blacklist for now
+=======
+script: php wp-test.php $ARGS
+>>>>>>> develop
