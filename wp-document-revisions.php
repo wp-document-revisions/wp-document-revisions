@@ -893,7 +893,11 @@ class Document_Revisions {
 		if ( !is_multisite() )
 			return $dir;
 
-		return str_replace( '%site_id%', $wpdb->blogid, $dir );
+		//make site specific on multisite
+		if ( is_multisite() && !is_network_admin() )
+			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
+
+		return $dir;
 
 	}
 

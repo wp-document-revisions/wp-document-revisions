@@ -53,8 +53,8 @@ class Document_Revisions_Admin {
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
 		add_action( 'update_wpmu_options', array( &$this, 'network_upload_location_save' ) );
-		add_action( 'update_wpmu_options', array( &$this, 'network_document_slug_save' ) );
-		add_action( 'wpmu_options', array( &$this, 'network_upload_location_cb' ) );
+		add_action( 'update_wpmu_options', array( &$this, 'network_slug_save' ) );
+		add_action( 'wpmu_options', array( &$this, 'network_settings_cb' ) );
 		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 
@@ -453,7 +453,7 @@ class Document_Revisions_Admin {
 		register_setting( 'media', 'document_upload_directory', array( &$this, 'sanitize_upload_dir') );
 		register_setting( 'media', 'document_slug', array( &$this, 'sanitize_document_slug') );
 		add_settings_field( 'document_upload_directory', 'Document Upload Directory', array( &$this, 'upload_location_cb' ), 'media', 'uploads' );
-		add_settings_field( 'document_slug', 'Document Slug', array( &$this, 'document_slug_cb' ), 'media', 'uploads' );
+		add_settings_field( 'document_slug', __( 'Document Slug', 'wp-document-revisions' ), array( &$this, 'document_slug_cb' ), 'media', 'uploads' );
 
 	}
 
@@ -467,24 +467,13 @@ class Document_Revisions_Admin {
 	 */
 	function sanitize_upload_dir( $dir ) {
 
+		//empty string passed
+		if ( $dir == '' )
+			return $this->document_upload_dir();
+		
 		//if the path is not absolute, assume it's relative to ABSPATH
 		if ( substr( $dir, 0, 1) != '/' )
 			$dir = ABSPATH . $dir;
-
-		//directory does not exist
-		if ( !is_dir( $dir ) ) {
-
-			//attempt to make the directory
-			if ( !mkdir( $dir ) ) {
-
-				//could not make the directory
-				$msg = __( 'Please enter a valid document upload directory.', 'wp-document-revisions' );
-				add_settings_error( 'document_upload_directory', 'invalid-document-upload-dir', $msg, 'error' );
-				return false;
-
-			}
-
-		}
 
 		//dir didn't change
 		if ( $dir == $this->document_upload_dir() )
@@ -492,7 +481,10 @@ class Document_Revisions_Admin {
 
 		//dir changed, throw warning
 		$msg = __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' );
-		add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
+
+		//don't fire more than once
+		if ( sizeof( get_settings_errors( 'document_upload_directory' ) ) == 0 )
+			add_settings_error( 'document_upload_directory', 'document-upload-dir-change', $msg, 'updated' );
 
 		//trim and return
 		return rtrim($dir, "/");
@@ -513,7 +505,9 @@ class Document_Revisions_Admin {
 		if ( $slug == $this->document_slug() )
 			return $slug;
 
-		flush_rewrite_rules();
+		//new slug isn't yet stored
+		// but queue up a rewrite rule flush to ensure slug takes effect on next request
+		add_action( 'shutdown', 'flush_rewrite_rules' );
 
 		$msg = __( 'Document slug changed, but some previously published URLs may now be broken.', 'wp-document-revisions' );
 		add_settings_error( 'document_slug', 'document-slug-change', $msg, 'updated' );
@@ -527,7 +521,7 @@ class Document_Revisions_Admin {
 	 * Adds upload directory and document slug options to network admin page
 	 * @since 1.0
 	 */
-	function network_upload_location_cb() { ?>
+	function network_settings_cb() { ?>
 		<h3><?php _e( 'Document Settings', 'wp-document-revisions'); ?></h3>
 		<table id="document_settings" class="form-table">
 			<tr valign="top">
@@ -535,6 +529,11 @@ class Document_Revisions_Admin {
 				<td>
 					<?php $this->upload_location_cb(); ?>
 					<?php wp_nonce_field( 'network_document_upload_location', 'document_upload_location_nonce' ); ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Document Slug', 'wp-document-revisions'); ?></th>
+				<td>
 					<?php $this->document_slug_cb(); ?>
 					<?php wp_nonce_field( 'network_document_slug', 'document_slug_nonce' ); ?>
 				</td>
@@ -646,7 +645,7 @@ class Document_Revisions_Admin {
 	<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="large-text code" /><br />
 <span class="description"><?php _e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
 <?php if ( is_multisite() ) { ?>
-<span class="description"><?php _e( 'Hint: You may optionally include the string <code>%site_id%</code> within the path to separate files by site', 'wp-document-revisions' ); ?></span>
+<span class="description"><?php _e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' ); ?></span>
 <?php } ?>
 	<?php }
 
