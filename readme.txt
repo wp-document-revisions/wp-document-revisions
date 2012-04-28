@@ -78,6 +78,7 @@ A document management and version control plugin that allows teams of any size t
 * [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
 * [User support forums](http://wordpress.org/tags/wp-document-revisions)
 * [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
+* [Donate](http://ben.balter.com/donate/?utm_source=readme&utm_medium=links&utm_campaign=wp-document-revisions)
 
 **Useful Plugins**
 * [Members](http://wordpress.org/extend/plugins/members/)
@@ -85,7 +86,7 @@ A document management and version control plugin that allows teams of any size t
 * [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
 
 == Donate ==
-Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/) to support the project's continued development.
+Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=readme&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
 
 == Screenshots ==
 1. A typical WP Document Revisions edit document screen.
