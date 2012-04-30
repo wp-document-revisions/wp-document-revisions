@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow. 
-Version: 1.3
+Version: 1.3.1
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -722,7 +722,11 @@ class Document_Revisions {
 		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		//Set content-disposition header. Two options here:
+		// "attachment" -- force save-as dialog to pop up when file is downloaded (pre 1.3.1 default)
+		// "inline" -- attempt to open in browser (e.g., PDFs), if not possible, prompt with save as (1.3.1+ default)
+		$disposition = ( apply_filters( 'document_content_disposition_inline', true ) ) ? 'inline' : 'attachment';
+		header( 'Content-Disposition: ' . $disposition . '; filename="' . $filename . '"' );
 
 		//filetype and length
 		header( 'Content-Type: ' . $mimetype ); // always send this

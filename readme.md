@@ -66,6 +66,7 @@ A document management and version control plugin that allows teams of any size t
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 **Translations:**
+
 * French - [Hubert CAMPAN](http://omnimaki.com/)
 * Spanish - [TradiArt](http://www.tradiart.com/)
 
@@ -74,6 +75,7 @@ A document management and version control plugin that allows teams of any size t
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
 ## Links ##
+
 * [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
 * [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
 * [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
@@ -82,13 +84,15 @@ A document management and version control plugin that allows teams of any size t
 * [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
 * [Donate](http://ben.balter.com/donate/?utm_source=readme&utm_medium=links&utm_campaign=wp-document-revisions)
 
-**Useful Plugins**
+## Donate ##
+
+Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=readme&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
+
+##Useful Plugins##
+
 * [Members](http://wordpress.org/extend/plugins/members/)
 * [Edit Flow](http://editflow.org)
 * [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
-
-## Donate ##
-Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=readme&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
 
 ## Screenshots ##
 ###1. A typical WP Document Revisions edit document screen.###
@@ -210,6 +214,9 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 ## Changelog ##
+
+### 1.3.1 ###
+* Whenever possible browser will attempt to display documents in browser, rather than prompting with save as dialog (e.g., PDFs)
 
 ### 1.3 ###
 * Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
