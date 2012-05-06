@@ -6,10 +6,10 @@ php:
   
 env:
  - WP_VERSION=master ARGS="" 
- - WP_VERSION=3.3.1 ARGS="" 
+ - WP_VERSION=3.3.2 ARGS="" 
  - WP_VERSION=3.2.1 ARGS="" 
  - WP_VERSION=master ARGS="-m" 
- - WP_VERSION=3.3.1 ARGS="-m" 
+ - WP_VERSION=3.3.2 ARGS="-m" 
  - WP_VERSION=3.2.1 ARGS="-m"
 
 before_script:
