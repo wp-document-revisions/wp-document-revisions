@@ -211,6 +211,9 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 ## Changelog ##
 
+### 1.3.1 ##
+* Better permalink support for draft and pending documents
+
 ### 1.3 ###
 * Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative edditing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
