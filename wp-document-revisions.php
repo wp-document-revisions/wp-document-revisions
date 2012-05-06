@@ -31,7 +31,7 @@ License: GPL3
  *
  *  @copyright 2011-2012
  *  @license GPL v3
- *  @version 1.3
+ *  @version 1.3.1
  *  @package WP_Document_Revisions
  *  @author Benjamin J. Balter <ben@balter.com>
  */
