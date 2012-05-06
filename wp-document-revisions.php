@@ -450,7 +450,7 @@ class Document_Revisions {
 		}
 
 		//if no permastruct
-		if ( $wp_rewrite->permalink_structure == '' ) {
+		if ( $wp_rewrite->permalink_structure == '' || in_array( $post->post_status, array( 'pending', 'draft' ) ) ) {
 			$link = site_url( '?post_type=document&p=' . $post->ID );
 			if ( $revision_num ) $link = add_query_arg( 'revision', $revision_num, $link );
 			return apply_filters( 'document_permalink', $link, $post );
