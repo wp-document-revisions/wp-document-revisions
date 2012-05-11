@@ -356,13 +356,20 @@ class Document_Revisions {
 		if ( !is_object( $post ) )
 			$post = get_post( $post );
 
-		if ( get_post_type( $post ) == 'document' )
-			$post = get_post( $this->get_latest_revision( $post->ID )->post_content );
-
-		if ( get_post_type( $post ) != 'attachment' )
+		//note, changing $post here would break $post in the global scope
+		// rename $post to attachment, or grab the attachment from $post
+		// either way, $attachment is now the object we're looking to query
+		if ( get_post_type( $post ) == 'attachment' ) 
+			$attachment = $post;
+		else if ( get_post_type( $post ) == 'document' )
+			$attachment = get_post( $this->get_latest_revision( $post->ID )->post_content );
+		
+		//sanity check in case post_content somehow doesn't represent an attachment,
+		// or in case some sort of non-document, non-attachment object/ID was passed
+		if ( get_post_type( $attachment ) != 'attachment' )
 			return '';
 
-		return $this->get_extension( get_attached_file( $post->ID ) );
+		return $this->get_extension( get_attached_file( $attachment->ID ) );
 
 	}
 
