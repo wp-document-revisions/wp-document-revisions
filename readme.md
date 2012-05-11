@@ -218,6 +218,7 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 ### 1.3.1 ##
 * Better permalink support for draft and pending documents
 * Whenever possible browser will attempt to display documents in browser, rather than prompting with save as dialog (e.g., PDFs)
+* Fix for function `get_file_type()` breaking the global `$post` variable when no document argument is supplied
 
 ### 1.3 ###
 * Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
