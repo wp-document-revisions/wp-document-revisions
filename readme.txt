@@ -218,7 +218,7 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
-Yes. There's a plugin in the WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 == Changelog ==
 
