@@ -4,7 +4,7 @@
 **Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 **Requires at least:** 3.2  
 **Tested up to:** 3.4  
-**Stable tag:** 1.3 
+**Stable tag:** 1.3.1
 
 [![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=master)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
