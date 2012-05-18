@@ -223,6 +223,10 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 ## Changelog ##
 
+### 1.3.2 ###
+* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/benbalter/WP-Document-Revisions/wiki). Feel free to contribute!
+* Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
+
 ### 1.3.1 ##
 * Better permalink support for draft and pending documents
 * Whenever possible browser will attempt to display documents in browser, rather than prompting with save as dialog (e.g., PDFs)
