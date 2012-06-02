@@ -4,8 +4,7 @@
  * Inspired by WP's feed-rss2.php
  */
 
-global $post;
-global $wpdr;
+global $post, $wpdr;
 if ( !$wpdr )
     $wpdr = &Document_Revisions::$instance;
     

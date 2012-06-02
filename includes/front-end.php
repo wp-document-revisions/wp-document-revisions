@@ -17,7 +17,7 @@ class Document_Revisions_Front_End {
 		self::$instance = &$this;
 
 		//create or store parent instance
-		if ( $instance === null )
+		if ( is_null( $instance ) )
 			self::$parent = new Document_Revisions;
 		else
 			self::$parent = &$instance;
@@ -25,7 +25,6 @@ class Document_Revisions_Front_End {
 		add_shortcode( 'document_revisions', array( &$this, 'revisions_shortcode' ) );
 		add_shortcode( 'documents', array( &$this, 'documents_shortcode' ) );
 		add_filter( 'document_shortcode_atts', array( &$this, 'shortcode_atts_hyphen_filter' ) );
-
 	}
 
 
@@ -46,7 +45,6 @@ class Document_Revisions_Front_End {
 			trigger_error( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][line] . ' of ' . $backtrace[1][file], E_USER_ERROR );
 			die();
 		}
-
 	}
 
 
@@ -71,9 +69,9 @@ class Document_Revisions_Front_End {
 
 		//extract args
 		extract( shortcode_atts( array(
-					'id' => null,
-					'number' => null,
-				), $atts ) );
+			'id' => null,
+			'number' => null,
+		), $atts ) );
 
 		//do not show output to users that do not have the read_document_revisions capability
 		if ( !current_user_can( 'read_document_revisions' ) )
@@ -88,7 +86,7 @@ class Document_Revisions_Front_End {
 
 		//buffer output to return rather than echo directly
 		ob_start();
-?>
+		?>
 		<ul class="revisions document-<?php echo $id; ?>">
 		<?php
 		//loop through each revision
@@ -103,7 +101,6 @@ class Document_Revisions_Front_End {
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
-
 	}
 
 
@@ -184,13 +181,10 @@ class Document_Revisions_Front_End {
 
 			$atts[ $alt ] = $v;
 			unset( $atts[ $k] );
-
 		}
 
 		return $atts;
 	}
-
-
 }
 
 
@@ -210,12 +204,10 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * Init widget and register
 	 */
 	function __construct() {
-		parent::WP_Widget( 'Document_Revisions_Recently_Revised_Widget', $name = 'Recently Revised Documents' );
-		add_action( 'widgets_init', create_function( '', 'return register_widget("Document_Revisions_Recently_Revised_Widget");' ) );
-
+		parent::__construct( 'Document_Revisions_Recently_Revised_Widget', __( 'Recently Revised Documents', 'wp-document-revisions' ) );
+		
 		//can't i18n outside of a function
 		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
-
 	}
 
 
@@ -247,40 +239,20 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		if ( !$documents )
 			return;
 
-		echo $before_widget;
+		echo $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title . '<ul>';
 
-		echo $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title;
-
-		echo "<ul>\n";
-
-		foreach ( $documents as $document ) {
-
-			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? admin_url( 'post.php?post=' . $document->ID . '&action=edit' ) : get_permalink( $document->ID );
-
-?>
-			<li><a href="<?php echo $link ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
-
-			<?php if ( $instance['show_author'] ) {
-
-				printf( __( '%1$s ago by %2$s', 'wp-document-revisions'),
-					human_time_diff( strtotime( $document->post_modified_gmt ) ),
-					get_the_author_meta( 'display_name', $document->post_author )
-				);
-
-			} else {
-
-				printf( __( '%1$s ago', 'wp-document-revisions'), human_time_diff( strtotime( $document->post_modified_gmt ) ) );
-
-			} ?>
-
+		foreach ( $documents as $document ) :
+			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
+			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
+			?>
+			<li>
+				<a href="<?php echo $link ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
+				<?php printf( $format_string, human_time_diff( strtotime( $document->post_modified_gmt ) ), get_the_author_meta( 'display_name', $document->post_author ) ); ?>
 			</li>
-
-		<?php }
-
-		echo "</ul>\n";
-
-		echo $after_widget;
-
+		<?php
+		endforeach;
+		
+		echo '</ul>' . $after_widget;
 	}
 
 
@@ -292,25 +264,25 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		foreach ( $this->defaults as $key => $value )
 			if ( !isset( $instance[ $key ] ) )
 				$instance[ $key ] = $value;
-
-?>
+		?>
 		<p>
-		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
-		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $instance['title']; ?>" />
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-document-revisions' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e('Number of Posts:', 'wp-document-revisions' ); ?></label><br />
-		<input class="small-text" id="<?php echo $this->get_field_id('numberposts'); ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" type="text" value="<?php echo $instance['numberposts']; ?>" />
+			<label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e( 'Number of Posts:', 'wp-document-revisions' ); ?></label><br />
+			<input class="small-text" id="<?php echo $this->get_field_id('numberposts'); ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" type="text" value="<?php echo esc_attr( $instance['numberposts'] ); ?>" />
 		</p>
 		<p>
-		<?php _e('Posts to Show:', 'wp-document-revisions' ); ?><br />
-		<?php foreach ( $instance['post_status'] as $status => $value ) { ?>
-		<input type="checkbox" id="<?php echo $this->get_field_id('post_status_' . $status ); ?>" name="<?php echo $this->get_field_name('post_status_' . $status ); ?>" type="text" <?php checked( $value ); ?> />
-		<label for="<?php echo $this->get_field_name('post_status_' . $status ); ?>"><?php echo ucwords( __( $status ) ); ?></label><br /><?php } ?>
+			<?php _e('Posts to Show:', 'wp-document-revisions' ); ?><br />
+			<?php foreach ( $instance['post_status'] as $status => $value ) : ?>
+			<input type="checkbox" id="<?php echo $this->get_field_id('post_status_' . $status ); ?>" name="<?php echo $this->get_field_name('post_status_' . $status ); ?>" type="text" <?php checked( $value ); ?> />
+			<label for="<?php echo $this->get_field_name('post_status_' . $status ); ?>"><?php echo ucwords( $status ); ?></label><br />
+			<?php endforeach; ?>
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_id('show_author'); ?>"><?php _e('Display Document Author:', 'wp-document-revisions' ); ?></label><br />
-		<input type="checkbox" id="<?php echo $this->get_field_id('show_author'); ?>" name="<?php echo $this->get_field_name('show_author'); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _e( 'Yes', 'wp-document-revisions' );?>
+			<label for="<?php echo $this->get_field_id('show_author'); ?>"><?php _e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
+			<input type="checkbox" id="<?php echo $this->get_field_id('show_author'); ?>" name="<?php echo $this->get_field_name('show_author'); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _e( 'Yes', 'wp-document-revisions' );?>
 		</p>
 		<?php
 	}
@@ -328,14 +300,13 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		//merge post statuses into an array
 		foreach ( $this->defaults['post_status'] as $status => $value )
-			$instance[ 'post_status'][ $status ] = (bool) isset( $new_instance[ 'post_status_' . $status ] );
+			$instance[ 'post_status' ][ $status ] = (bool) isset( $new_instance[ 'post_status_' . $status ] );
 
 		return $instance;
-
 	}
-
-
 }
 
-
-new Document_Revisions_Recently_Revised_Widget;
+function drrrw_widgets_init() {
+	register_widget( 'Document_Revisions_Recently_Revised_Widget' );
+}
+add_action( 'widgets_init', 'drrrw_widgets_init' );
