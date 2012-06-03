@@ -126,7 +126,7 @@ WP Document Revisions is an open source project and is supported by the efforts 
 ### I'm a developer, can I contribute? ###
 Of course. Feel free to [fork the project on GitHub](https://github.com/benbalter/WP-Document-Revisions) and submit your contributions via pull request.
 
-### I'm not a develop, can I still contribute? ###
+### I'm not a developer, can I still contribute? ###
 Yes! If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). If you are fluent in a language other than english, consider [submitting a translation](http://translations.benbalter.com/projects/wp-document-revisions/) ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate)). Last, any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is always helpful.
 
 ### Does it work on Mac? PC? Mobile? ###
