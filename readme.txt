@@ -32,7 +32,7 @@ A document management and version control plugin that allows teams of any size t
 
 **Future Proof** - Switching costs a concern? WP Document Revisions is built with tomorrow's uncertainty in mind. Equally at home in an in-house server room as it is in the cloud, moving individual files or entire document repositories in and out of WP Document Revisions is a breeze (history and all). And since the software is open-source, you can easily add tools to automate the process of moving to or integrating with future third-party systems.
 
-*For additional documenation, please see the [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)*
+*For additional documenation, please see the [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).*
 
 **The Vitals:**
 
@@ -103,11 +103,8 @@ WP Document Revisions is an open source project and is supported by the efforts 
 *There are various resources available, depending on the type of help you're looking for:*
 
 * For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
- 
 * For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
-
 * For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
-
 * For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 == Screenshots ==
@@ -130,7 +127,7 @@ WP Document Revisions is an open source project and is supported by the efforts 
 
 == Frequently Asked Questions ==
 
-Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions)
+Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions).
 
 == Changelog ==
 
