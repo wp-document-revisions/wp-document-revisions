@@ -78,8 +78,9 @@ A document management and version control plugin that allows teams of any size t
 * [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
 * [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
 * [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [User support forums](http://wordpress.org/tags/wp-document-revisions)
-* [Submit a bug/feature request](https://github.com/benbalter/WP-Document-Revisions/issues)
+* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
+* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
 
 == Donate ==
 
@@ -89,15 +90,22 @@ Enjoy using WP Document Revisions? Please consider [making a small donation](htt
 
 WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated.
 
+* **Everyone** - help expand the projects [documentation wiki](https://github.com/benbalter/WP-Document-Revisions/wiki) to make it easier for other users to get started
 * **Users** - download the latest [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) of the plugin, and [submit bug/feature requests](https://github.com/benbalter/WP-Document-Revisions/issues).
 * **Non-English Speaking Users** - [Contribute a translation](http://translations.benbalter.com/projects/wp-document-revisions/) using the GlotPress web interface - no technical knowledge required ([how to](http://translations.benbalter.com/projects/how-to-translate)).
-* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) and submit a pull request
+* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) and submit a pull request, especially for any [known issues](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open)
 
-== Useful Plugins ==
+== Where to Get Support or Report an Issue ==
 
-* [Members](http://wordpress.org/extend/plugins/members/)
-* [Edit Flow](http://editflow.org)
-* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
+*There are various resources available, depending on the type of help you're looking for:*
+
+* For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
+ 
+* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
+
+* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
+
+* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 == Screenshots ==
 1. A typical WP Document Revisions edit document screen.
@@ -119,7 +127,7 @@ WP Document Revisions is an open source project and is supported by the efforts 
 
 == Frequently Asked Questions ==
 
-Please see the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions)
+Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions)
 
 == Changelog ==
 
