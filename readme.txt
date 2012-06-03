@@ -32,6 +32,8 @@ A document management and version control plugin that allows teams of any size t
 
 **Future Proof** - Switching costs a concern? WP Document Revisions is built with tomorrow's uncertainty in mind. Equally at home in an in-house server room as it is in the cloud, moving individual files or entire document repositories in and out of WP Document Revisions is a breeze (history and all). And since the software is open-source, you can easily add tools to automate the process of moving to or integrating with future third-party systems.
 
+*For additional documenation, please see the [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)*
+
 **The Vitals:**
 
 * Support for any file type (docs, spreadsheets, images, PDFs -- anything!)
@@ -49,11 +51,12 @@ A document management and version control plugin that allows teams of any size t
 * Multisite and Windows (XAMPP) support
 * French and Spanish language support (easily translated to your language)
 * Integration with [Edit Flow](http://editflow.org)
+* Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
 
 * **Audit Trail** - creates check in / check out audit trail for all documents
-* **State Permissions** - allows setting user-level permissions based on a custom taxonomy such as workflow state or other document status
+* **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
 * **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
 * **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
 * **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
