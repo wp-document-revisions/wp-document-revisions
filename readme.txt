@@ -70,6 +70,7 @@ A document management and version control plugin that allows teams of any size t
 
 * French - [Hubert CAMPAN](http://omnimaki.com/)
 * Spanish - [TradiArt](http://www.tradiart.com/) and [elarequi](http://www.labitacoradeltigre.com)
+* Norwegian - Daniel Haugen
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
@@ -130,6 +131,11 @@ WP Document Revisions is an open source project and is supported by the efforts 
 Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions).
 
 == Changelog ==
+
+= 1.3.2 =
+* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/benbalter/WP-Document-Revisions/wiki). Feel free to contribute!
+* Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
+* Added Norwegian translation, special thanks to Daniel Haugen
 
 = 1.3.1 =
 * Better permalink support for draft and pending documents
