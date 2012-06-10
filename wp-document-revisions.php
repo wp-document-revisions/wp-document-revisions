@@ -66,7 +66,7 @@ class Document_Revisions {
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array(&$this, 'permalink'), 10, 4 );
 		add_action( 'post_link', array(&$this, 'permalink'), 10, 4 );
-		add_filter( 'single_template', array(&$this, 'serve_file'), 10, 1 );
+		add_filter( 'template_include', array(&$this, 'serve_file'), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth'), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array(&$this, 'add_query_var'), 10, 4 );
@@ -655,6 +655,9 @@ class Document_Revisions {
 		global $post;
 		global $wp_query;
 		global $wp;
+		
+		if ( !is_single() )
+			return $template;
 
 		if ( !$this->verify_post_type( $post ) )
 			return $template;
