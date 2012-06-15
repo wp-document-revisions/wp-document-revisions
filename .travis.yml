@@ -5,10 +5,12 @@ php:
   - 5.4
   
 env:
- - WP_VERSION=master ARGS="" 
+ - WP_VERSION=master ARGS=""
+ - WP_VERSION=3.4 ARGS="" 
  - WP_VERSION=3.3.2 ARGS="" 
  - WP_VERSION=3.2.1 ARGS="" 
- - WP_VERSION=master ARGS="-m" 
+ - WP_VERSION=master ARGS="-m"
+ - WP_VERSION=3.4 ARGS="-m" 
  - WP_VERSION=3.3.2 ARGS="-m" 
  - WP_VERSION=3.2.1 ARGS="-m"
 
