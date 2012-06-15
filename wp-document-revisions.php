@@ -50,7 +50,7 @@ class Document_Revisions {
 		self::$instance = &$this;
 
 		//admin
-		add_action( 'auth_redirect', array( &$this, 'admin_init' ) );
+		add_action( 'init', array( &$this, 'admin_init' ) );
 		add_action( 'init', array( &$this, 'i18n' ), 5 );
 
 		//CPT/CT
@@ -121,6 +121,11 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function admin_init() {
+	
+		//only fire on admin + escape hatch to prevent fatal errors
+		if ( !is_admin() || class_exists( 'Document_Revisions_Admin' ) )
+			return;
+			
 		include dirname( __FILE__ ) . '/includes/admin.php';
 		$this->admin = new Document_Revisions_Admin( self::$instance );
 	}
