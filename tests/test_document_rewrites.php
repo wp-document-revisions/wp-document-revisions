@@ -399,7 +399,9 @@ class WP_Test_Document_Rewrites extends WPTestCase {
 	function test_feed_as_authorized() {
 
 		global $wpdr;
-
+		
+		define ( 'WP_ADMIN', true );
+		
 		$wpdr->admin_init();
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
