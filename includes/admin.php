@@ -1195,24 +1195,31 @@ class Document_Revisions_Admin {
 			wp_delete_attachment( $post->post_content, false );
 
 	}
-
-
+	
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy
 	 * @since 1.1
 	 * @return unknown
 	 */
 	function edit_flow_admin_support() {
-
-		if ( !self::$parent->edit_flow_support() )
+		_deprecated_function( 'edit_flow_admin_support', '1.3.2 of WP Document Revisions', 'disable_workflow_states' );
+	}
+	
+	/**
+	 * Remove all hooks that activate workflow state support
+	 * use filter `document_use_workflow_states` to disable
+	 */
+	function disable_workflow_states() {
+		
+		if ( self::$parent->use_workflow_states() )
 			return false;
-
+			
 		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
-
+	
+		
 	}
-
 
 }

@@ -99,6 +99,7 @@ class Document_Revisions {
 
 		//edit flow
 		add_action( 'init', array( &$this, 'edit_flow_support' ), 11 );
+		add_action( 'init', array( &$this, 'use_workflow_states' ), 50 );
 
 		//load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/includes/front-end.php';
@@ -1435,12 +1436,33 @@ class Document_Revisions {
 		if ( $edit_flow->custom_status->module->options->post_types['document'] == 'off' )
 			return false;
 
-		//remove workflow state CT
-		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
+		add_filters( 'document_use_workflow_states', '__return_false' );
 		
 		return true;
 
+	}
+	
+	/**
+	 * Toggles workflow states on and off
+	 * @return bool true if workflow states are on, otherwise false
+	 */
+	function use_workflow_states() {
+		
+		return apply_filters( 'document_use_workflow_states', true );
+		
+	}
+	
+	/**
+	 * Removes front-end hooks to add workflow state support
+	 */
+	function disable_workflow_states() {
+	
+		if ( $this->use_workflow_states() )
+			return;
+		
+		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
+		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
+		
 	}
 
 
