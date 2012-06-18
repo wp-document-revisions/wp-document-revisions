@@ -778,7 +778,7 @@ class Document_Revisions {
 		}
 
 		//in case this is a large file, remove PHP time limits
-		set_time_limit( 0 );
+		@set_time_limit( 0 );
 
 		// If we made it this far, just serve the file
 		readfile( $file );
