@@ -17,6 +17,5 @@ env:
 before_script:
   - wget https://raw.github.com/benbalter/wordpress-plugin-tests/setup/setup.sh
   - sh setup.sh
-  - cd ..
     
 script: phpunit all.php
