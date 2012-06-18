@@ -1494,6 +1494,9 @@ class Document_Revisions {
 
 		$post = get_post( $postID );
 
+		if ( !$post )
+			return $url;
+
 		//user can't read revisions anyways, so just give them the URL of the latest revision
 		if ( !current_user_can( 'read_document_revisions' ) )
 			return get_permalink( $post->post_parent );

@@ -6,7 +6,7 @@
  * @package WP_Document_Revisions
  */
 
-class WP_Test_Document_Front_End extends WPTestCase {
+class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 
 	/**
@@ -19,7 +19,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		//init user roles
 		global $wpdr;
 		$wpdr->add_caps();
-		$this->_flush_roles();
+		_flush_roles();
 		$this->user_ids = array();
 		wp_set_current_user( 0 );
 
@@ -34,19 +34,9 @@ class WP_Test_Document_Front_End extends WPTestCase {
 	 */
 	function tearDown() {
 	
-		$this->_destroy_uploads();
-		$this->_delete_all_posts();
+		_destroy_uploads();
 		parent::tearDown();
-	}
-
-	/**
-	 * We want to make sure we're testing against the db, not just in-memory data
-	 * this will flush everything and reload it from the db
-	 */
-	function _flush_roles() {
-		unset($GLOBALS['wp_user_roles']);
-		global $wp_roles;
-		$wp_roles->_init();
+	
 	}
 
 	/**
@@ -72,7 +62,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docID = $tdr->test_revise_document();
 
 		//admin should be able to access
-		$id = $this->_make_user('administrator');
+		$id = _make_user('administrator');
 		wp_set_current_user( $id );
 
 		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
@@ -91,7 +81,7 @@ class WP_Test_Document_Front_End extends WPTestCase {
 		$docID = $tdr->test_revise_document();
 
 		//admin should be able to access
-		$id = $this->_make_user('administrator');
+		$id = _make_user('administrator');
 		wp_set_current_user( $id );
 
 		$output = do_shortcode( '[document_revisions number="1" id="' . $docID . '"]' );
