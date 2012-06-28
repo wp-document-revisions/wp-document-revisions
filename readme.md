@@ -140,6 +140,7 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
 * Added Norwegian translation, special thanks to Daniel Haugen
 * `serve_file` now hooks into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
+* Crisper menu icon, special thanks to [Phil Russell](www.optionotter.com)
 
 ### 1.3.1 ##
 * Better permalink support for draft and pending documents
