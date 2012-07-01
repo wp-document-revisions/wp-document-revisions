@@ -19,4 +19,4 @@ before_script:
   - sh setup.sh
   - cd ../tests
     
-script: phpunit All
+script: phpunit all

@@ -1,8 +1,15 @@
 <?php
 /**
- * Loops through all workflow tests
- * Adapted from framework/all.php
- * @package wp-document-revisions
+ * Loops through all plugin tests
+ * Adapted from wordpress-tests/all.php
+ * @package wordpress-plugin-tests
+ *
+ * Usage: Place any tests you'd like to run in the same folder as this file 
+ *        (usually /tests/ within your plugin repo), and name each file in the
+ *        form of `test_{name_of_test}.php`. Within each file, include a single
+ *        class in the form of `WP_Test_{name_of_test}. The class should extend 
+ *        the base class `WP_UnitTestCase`. All tests will be automatically run.
+ *
  */
 require_once 'PHPUnit/Autoload.php';
 
