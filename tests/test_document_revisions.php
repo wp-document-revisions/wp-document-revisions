@@ -6,10 +6,10 @@
  * @package WP Document Revisions
  */
 
-class WP_Test_Document_Revisions extends WPTestCase {
+class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
-	public $test_file = 'test-file.txt';
-	public $test_file2 = 'test-file-2.txt';
+	public $test_file = 'documents/test-file.txt';
+	public $test_file2 = 'documents/test-file-2.txt';
 
 	/**
 	 * Setup Initial Testing Environment
@@ -39,7 +39,6 @@ class WP_Test_Document_Revisions extends WPTestCase {
 	function __construct() {
 		$this->setUp();
 	}
-
 
 	/**
 	 * Make sure plugin is activated
