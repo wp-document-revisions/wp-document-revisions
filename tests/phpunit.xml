@@ -1,0 +1,6 @@
+<phpunit
+	bootstrap="./bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+>
+</phpunit>

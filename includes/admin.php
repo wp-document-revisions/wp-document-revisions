@@ -1009,7 +1009,7 @@ class Document_Revisions_Admin {
 	function workflow_state_save( $post_id ) {
 
 		//verify form submit
-		if ( !$_POST )
+		if ( !$_POST || !isset( $_POST['workflow_state_nonce'] ) )
 			return;
 
 		//autosave check
