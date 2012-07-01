@@ -16,5 +16,5 @@ $GLOBALS['wp_tests_options'] = array(
     'active_plugins' => array( 'wp-document-revisions/wp-document-revisions.php' ),
 );
 
-require dirname( __FILE__ ). '/framework/init.php';
+require dirname( __FILE__ ). '/wordpress-tests/init.php';
 require dirname( __FILE__ ). '/functions.php';
