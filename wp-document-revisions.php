@@ -241,7 +241,7 @@ class Document_Revisions {
 		if ( !isset( $post) || !$this->verify_post_type() || strlen( $post->post_content ) > 0 )
 			return;
 
-		$post_pre = $post;
+		$post_pre = clone $post;
 
 		if ( $post->post_status == 'draft' || $post->post_status == 'auto-draft' )
 			$post->post_status = 'private';
