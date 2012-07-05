@@ -64,7 +64,7 @@ class Document_Revisions_Admin {
 		add_action( 'edit_user_profile_update', array( &$this, 'profile_update_cb' ) );
 
 		//Queue up JS
-		add_action( 'admin_init', array( &$this, 'enqueue_js' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue' ) );
 
 		//media filters
 		add_action( 'admin_init', array( &$this, 'filter_from_media' ) );
@@ -304,25 +304,6 @@ class Document_Revisions_Admin {
 	function admin_css() {
 		global $post; ?>
 		<style>
-			.icon32-posts-document{background-position: 0 0 !important;
-				background-image:url('<?php echo plugins_url("img/icon32.png",dirname(__FILE__));?>') !important;}
-			@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-	only screen and (-o-min-device-pixel-ratio: 3/2),
-	only screen and (min-moz-device-pixel-ratio: 1.5),
-	only screen and (min-device-pixel-ratio: 1.5) {
-			.icon32-posts-document{
-				background-image:url('<?php echo plugins_url("img/icon64.png",dirname(__FILE__));?>') !important;
-background-size:32px 32px !important;}
-			}
-			#postdiv {display:none;}
-			#lock-notice {background-color: #D4E8BA; border-color: #92D43B; }
-			#document-revisions {width: 100%; text-align: left;}
-			#document-revisions td {padding: 5px 0 0 0;}
-			#workflow-state select {margin-left: 25px; width: 150px;}
-			#authordiv select {width: 150px;}
-			#lock_override {float:right; text-align: right; margin-top: 10px; padding-bottom: 5px; }
-			#revision-summary {display:none;}
-			#autosave-alert {display:none;}
 			<?php if ( $this->get_document_lock( $post ) ) { ?>
 			#publish, .add_media, #lock-notice {display: none;}
 			<?php } ?>
@@ -1077,12 +1058,20 @@ background-size:32px 32px !important;}
 			) );
 	}
 
-
 	/**
-	 *
+	 * Back Compat
 	 */
 	function enqueue_js() {
+		_deprecated_function( __FUNCTION__, '1.3.2 of WP Document Revisions', 'enqueue' );
+		$this->enqueue();
+		
+	}
 
+	/**
+	 * Enqueue admin JS and CSS files
+	 */
+	function enqueue() {
+		
 		//only include JS on document pages
 		if ( !$this->verify_post_type() )
 			return;
@@ -1104,10 +1093,16 @@ background-size:32px 32px !important;}
 			'days'                => __('%d days', 'wp-document-revisions'),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
 		);
+		
+		$wpdr = self::$parent;
 
+		//Enqueue JS
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array('jquery') );
+		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array('jquery'), $wpdr->version );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
+		
+		//enqueue CSS
+		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', dirname( __FILE__ ) ), null, $wpdr->version );
 
 	}
 

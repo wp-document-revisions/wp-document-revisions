@@ -40,6 +40,7 @@ class Document_Revisions {
 	static $instance;
 	static $key_length = 32;
 	static $meta_key   = 'document_revisions_feed_key';
+	public $version = '1.3.1';
 
 	/**
 	 * Initiates an instance of the class and adds hooks
