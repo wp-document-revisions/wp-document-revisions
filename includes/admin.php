@@ -76,7 +76,7 @@ class Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
 
 		//admin css
-		add_action( 'admin_head', array( &$this, 'admin_css') );
+		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
 
 	}
 
@@ -295,21 +295,25 @@ class Document_Revisions_Admin {
 
 		return $hidden;
 	}
-
-
+	
 	/**
-	 * Inject CSS into admin head
-	 * @since 0.5
+	 * Filter the admin body class to add additional classes which we can use conditionally
+	 * to style the page (e.g., when the document is locked
 	 */
-	function admin_css() {
-		global $post; ?>
-		<style>
-			<?php if ( $this->get_document_lock( $post ) ) { ?>
-			#publish, .add_media, #lock-notice {display: none;}
-			<?php } ?>
-			<?php do_action('document_admin_css'); ?>
-		</style>
-	<?php }
+	function admin_body_class_filter( $body_class ) {
+		
+		global $post;
+		
+		if ( !$this->verify_post_type() )
+			return $body_class;
+			
+		$body_class .= ' document';
+		
+		if ( $this->get_document_lock( $post ) )
+			$body_class .= ' document-locked';
+		
+		return $body_class;
+	}
 	
 	/**
 	 * Hide header (gallery, URL, library, etc.) links from media-upload
