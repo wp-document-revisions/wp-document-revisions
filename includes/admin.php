@@ -305,13 +305,13 @@ class Document_Revisions_Admin {
 		global $post; ?>
 		<style>
 			.icon32-posts-document{background-position: 0 0 !important;
-				background-image:url('<?php echo plugins_url("icon32.png",dirname(__FILE__));?>') !important;}
+				background-image:url('<?php echo plugins_url("img/icon32.png",dirname(__FILE__));?>') !important;}
 			@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 	only screen and (-o-min-device-pixel-ratio: 3/2),
 	only screen and (min-moz-device-pixel-ratio: 1.5),
 	only screen and (min-device-pixel-ratio: 1.5) {
 			.icon32-posts-document{
-				background-image:url('<?php echo plugins_url("icon64.png",dirname(__FILE__));?>') !important;
+				background-image:url('<?php echo plugins_url("img/icon64.png",dirname(__FILE__));?>') !important;
 background-size:32px 32px !important;}
 			}
 			#postdiv {display:none;}
