@@ -75,6 +75,9 @@ class Document_Revisions_Admin {
 		//edit flow support
 		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
 
+		//admin css
+		add_action( 'admin_head', array( &$this, 'admin_css') );
+
 	}
 
 
@@ -261,7 +264,6 @@ class Document_Revisions_Admin {
 		if ( taxonomy_exists( 'workflow_state' ) )
 			add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
 
-		add_action( 'admin_head', array( &$this, 'admin_css') );
 
 		//move author div to make room for ours
 		remove_meta_box( 'authordiv', 'document', 'normal' );
@@ -302,6 +304,16 @@ class Document_Revisions_Admin {
 	function admin_css() {
 		global $post; ?>
 		<style>
+			.icon32-posts-document{background-position: 0 0 !important;
+				background-image:url('<?php echo plugins_url("icon32.png",dirname(__FILE__));?>') !important;}
+			@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+	only screen and (-o-min-device-pixel-ratio: 3/2),
+	only screen and (min-moz-device-pixel-ratio: 1.5),
+	only screen and (min-device-pixel-ratio: 1.5) {
+			.icon32-posts-document{
+				background-image:url('<?php echo plugins_url("icon64.png",dirname(__FILE__));?>') !important;
+background-size:32px 32px !important;}
+			}
 			#postdiv {display:none;}
 			#lock-notice {background-color: #D4E8BA; border-color: #92D43B; }
 			#document-revisions {width: 100%; text-align: left;}
