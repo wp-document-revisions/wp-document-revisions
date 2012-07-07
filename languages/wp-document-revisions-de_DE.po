@@ -1,8 +1,8 @@
-# Translation of WP Document Revisions in Norwegian (Bokmål)
+# Translation of WP Document Revisions in German
 # This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2012-07-07 18:55:08+0000\n"
+"PO-Revision-Date: 2012-07-07 18:54:44+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,19 +13,19 @@ msgstr ""
 #: includes/admin.php:134
 msgctxt "%1$s: date; %2$s: time"
 msgid "%1$s @ %2$s"
-msgstr "%1$s kl. %2$s"
+msgstr "%1$s @ %2$s"
 
 #: includes/admin.php:188
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
-msgstr ""
+msgstr "Diese Seite macht es Benutzern m&ouml;glich, gemeinsam Dokumente zu bearbeiten und ihre Ver&auml;nderungsgeschichte festzuhalten. Um zu beginnen, gib einen Titel f&uuml;r das Dokument ein, klicke auf <code>Neue Version hochladen</code> und w&auml;hle die Datei von deinem Computer."
 
 #: includes/admin.php:189
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
-msgstr ""
+msgstr "Sobald es erfolgreich hochgeldan wurde, kannst du einen Protokolleintrag verfassen, einen Autor zuweisen und seinen aktuellen Workflow Status festlegen."
 
 #: includes/admin.php:190
 msgid "When done, simply click <code>Update</code> to save your changes"
-msgstr ""
+msgstr "Gut gemacht, klicke einfach auf <code>Aktualisieren</code>, um die &Auml;nderungen zu speichern."
 
 #: includes/admin.php:192
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
@@ -45,35 +45,35 @@ msgstr ""
 
 #: includes/admin.php:201
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
-msgstr ""
+msgstr "Im Folgenden ist eine Liste aller Dokumente auf die du Zugriff hast. Klicke auf den Titel des Dokuments, um es zu bearbeiten oder die neueste Version herunterzuladen."
 
 #: includes/admin.php:202
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
-msgstr ""
+msgstr "Um ein neues Dokument hinzuzuf&uuml;gen, klicke <strong>Dokument hinzuf&uuml;gen</strong> auf der linken Seite."
 
 #: includes/admin.php:203
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
-msgstr ""
+msgstr "Um sich alle Dokumente anzusehen, die sich in einem bestimmten Workflow Status befinden, klicke <strong>Workflow Stati</strong> im Menu links."
 
 #: includes/admin.php:451 includes/admin.php:530
 msgid "Document Slug"
-msgstr ""
+msgstr "Dokumenten Slug"
 
 #: includes/admin.php:643
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr ""
+msgstr "Du kannst optional <code>%site_id%</code> in den Dateipfad einf&uuml;gen, um Dateien nach Seiten zu trennen."
 
 #: includes/admin.php:507
 msgid "Document slug changed, but some previously published URLs may now be broken."
-msgstr ""
+msgstr "Dokumenten Slug ge&auml;ndert, aber fr&uuml;her ver&ouml;ffentlichte URLs k&ouml;nnten nun nicht mehr funktionieren."
 
 #: includes/admin.php:641
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
-msgstr ""
+msgstr "Ordner, in dem hochgeladene Dokumente gespeichert werden sollen. Standard ist <code>wp_content/uploads</code> (oder ein anderer Standardordner, der woanders festgelegt wurde), er kann jedoch f&uuml;r zus&auml;tsliche Sicherhait auch in einen Ordner ausserhalb von <code>htdocs</code> oder <code>public_html</code> verschoben werden."
 
 #: includes/admin.php:652
 msgid "example-document-title"
-msgstr ""
+msgstr "beispiel-dokumenten-titel"
 
 #: includes/admin.php:653
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is \"documents.\""
@@ -82,7 +82,7 @@ msgstr ""
 #: wp-document-revisions.php:143
 msgctxt "post type general name"
 msgid "Documents"
-msgstr "Dokumenter"
+msgstr "Dokumente"
 
 #: wp-document-revisions.php:144
 msgctxt "post type singular name"
@@ -92,206 +92,206 @@ msgstr "Dokument"
 #: wp-document-revisions.php:145
 msgctxt "document"
 msgid "Add Document"
-msgstr "Legg til dokument"
+msgstr "Dokument hinzuf&uuml;gen"
 
 #: wp-document-revisions.php:146
 msgid "Add New Document"
-msgstr "Legg til nytt dokument"
+msgstr "Neues Dokument hinzuf&uuml;gen"
 
 #: wp-document-revisions.php:147
 msgid "Edit Document"
-msgstr "Rediger dokument"
+msgstr "Dokument bearbeiten"
 
 #: wp-document-revisions.php:148
 msgid "New Document"
-msgstr "Nytt dokument"
+msgstr "Neues Dokument"
 
 #: wp-document-revisions.php:149
 msgid "View Document"
-msgstr "Vis dokument"
+msgstr "Dokument ansehen"
 
 #: wp-document-revisions.php:150
 msgid "Search Documents"
-msgstr "Søk gjennom dokumenter"
+msgstr "Dokument suchen"
 
 #: wp-document-revisions.php:151
 msgid "No documents found"
-msgstr "Ingen dokumenter funnet"
+msgstr "Keine Dokumente gefunden"
 
 #: wp-document-revisions.php:152
 msgid "No documents found in Trash"
-msgstr "Ingen dokumenter funnet i papirkurven"
+msgstr "Keine Dokumente im Papierkorb gefunden."
 
 #: includes/admin.php:200 wp-document-revisions.php:154
 msgid "Documents"
-msgstr "Dokumenter"
+msgstr "Dokumente"
 
 #: wp-document-revisions.php:155
 msgid "All Documents"
-msgstr "Alle dokumenter"
+msgstr "Alle Dokumente"
 
 #: wp-document-revisions.php:188
 msgctxt "taxonomy general name"
 msgid "Workflow States"
-msgstr "Arbeidsstatuser"
+msgstr "Workflow Stati"
 
 #: wp-document-revisions.php:189
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
-msgstr "Arbeidsstatus"
+msgstr "Workflow Status"
 
 #: wp-document-revisions.php:190
 msgid "Search Workflow States"
-msgstr "Søk gjennom arbeidsstatuser"
+msgstr "Workflow Stati suchen"
 
 #: wp-document-revisions.php:191
 msgid "All Workflow States"
-msgstr "Alle arbeidsstatuser"
+msgstr "Alle Workflow Stati"
 
 #: wp-document-revisions.php:192
 msgid "Parent Workflow State"
-msgstr "Arbeidsstatus's foreldre"
+msgstr "&Uuml;bergeordneter Workflow Status"
 
 #: wp-document-revisions.php:193
 msgid "Parent Workflow State:"
-msgstr "Arbeidsstatus's foreldre:"
+msgstr "&Uuml;bergeordneter Workflow Status:"
 
 #: wp-document-revisions.php:194
 msgid "Edit Workflow State"
-msgstr "Rediger arbeidsstatus"
+msgstr "Workflow Status bearbeiten"
 
 #: wp-document-revisions.php:195
 msgid "Update Workflow State"
-msgstr "Oppdater arbeidsstatus"
+msgstr "Workflow Status aktualisieren"
 
 #: wp-document-revisions.php:196
 msgid "Add New Workflow State"
-msgstr "Legg til arbeidsstatus"
+msgstr "Neuen Workflow Status hinzuf&uuml;gen"
 
 #: wp-document-revisions.php:197
 msgid "New Workflow State Name"
-msgstr "Nytt arbeidsstatusnavn"
+msgstr "Neuer Workflow Status Name"
 
 #: wp-document-revisions.php:198
 msgid "Workflow States"
-msgstr "Arbeidsstatuser"
+msgstr "Workflow Stati"
 
 #: wp-document-revisions.php:225
 msgid "In Progress"
-msgstr "Pågår"
+msgstr "In Arbeit"
 
 #: wp-document-revisions.php:225
 msgid "Document is in the process of being written"
-msgstr "Dokumentet er under omskrivning"
+msgstr "Dokument ist gerade in der Erstellungsphase"
 
 #: wp-document-revisions.php:226
 msgid "Initial Draft"
-msgstr "Første kladd"
+msgstr "Erster Entwurf"
 
 #: wp-document-revisions.php:226
 msgid "Document is being edited and refined"
-msgstr "Dokumentet er under redigering og klargjøring"
+msgstr "Dokument wird &uuml;berarbeitet"
 
 #: wp-document-revisions.php:227
 msgid "Under Review"
-msgstr "Under vurdering"
+msgstr "In Pr&uuml;fung"
 
 #: wp-document-revisions.php:227
 msgid "Document is pending final review"
-msgstr "Dokumentet under sin påventende slutt-vurdering"
+msgstr "Doument wartet auf letzte Pr&uuml;fung"
 
 #: wp-document-revisions.php:228
 msgid "Final"
-msgstr "Avsluttende"
+msgstr "Fertig"
 
 #: wp-document-revisions.php:228
 msgid "Document is in its final form"
-msgstr "Dokumentet under sin avsluttende form"
+msgstr "Dokument ist in seiner finalen Form"
 
 #: wp-document-revisions.php:328
 msgid "Somebody"
-msgstr "Noen"
+msgstr "Irgendjemand"
 
 #: wp-document-revisions.php:409
 msgid "revision"
-msgstr "versjon"
+msgstr "revision"
 
 #: wp-document-revisions.php:462 wp-document-revisions.php:735
 msgid "-revision-"
-msgstr "-versjon-"
+msgstr "-revision-"
 
 #: wp-document-revisions.php:714
 msgid "You are not authorized to access that file."
-msgstr "Dette er privat."
+msgstr "Du kannst diese Datei nicht &ouml;ffnen."
 
 #: wp-document-revisions.php:1115
 msgid "Sorry, this is a private feed."
-msgstr "Obs, dette er privat."
+msgstr "Entschuldigung, aber dies ist ein privater Feed"
 
 #: includes/admin.php:551 includes/admin.php:555 includes/admin.php:584
 #: includes/admin.php:588 wp-document-revisions.php:1161
 msgid "Not authorized"
-msgstr "Du er ikke autorisert"
+msgstr "Nicht berechtigt"
 
 #: wp-document-revisions.php:1204
 msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr "%1$s: %2$s har overstyrt din lås på %3$s"
+msgstr "%1$s: %2$s hat deine Sperrung von %3$s aufgehoben"
 
 #: wp-document-revisions.php:1208
 msgid "Dear %s:"
-msgstr "Kjære %s:"
+msgstr "Lieber %s"
 
 #: wp-document-revisions.php:1209
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr "%1$s (%2$s), har overstyrt din lås på dokumentet %3$s (%4$s)."
+msgstr "%1$s (%2$s), hat deine Sperrung des Dokuments %3$s (%4$s) aufgehoben."
 
 #: wp-document-revisions.php:1210
 msgid "Any changes you have made will be lost."
-msgstr "Alle endringer du har gjort vil være tapt."
+msgstr "Alle &Auml;nderungen werden verloren gehen."
 
 #: wp-document-revisions.php:1211
 msgid "- The %s Team"
-msgstr "- %s laget"
+msgstr "- Das %s Team"
 
 #: wp-document-revisions.php:1372
 msgid "%s - Latest Revision"
-msgstr "%s - Siste versjon"
+msgstr "%s - Letzte &Uuml;berarbeitung"
 
 #: wp-document-revisions.php:1386
 msgid "%s - Revision %d"
-msgstr "%s - Versjon %d"
+msgstr "%s - Revision %d"
 
 #: includes/front-end.php:97
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">siden av</a> <span class=\"author\">%5$s</a>"
+msgstr "<span class=\"agoby\">vor</a> <a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">von</a> <span class=\"author\">%5$s</a>"
 
 #: includes/front-end.php:217
 msgid "Recently Revised Documents"
-msgstr "Nylige dokumenter"
+msgstr "K&uuml;rzlich &uuml;berarbeitete Dokumente"
 
 #: includes/front-end.php:265
 msgid "%1$s ago by %2$s"
-msgstr "%1$s siden av %2$s"
+msgstr "vor %1$s von %2$s"
 
 #: includes/front-end.php:272
 msgid "%1$s ago"
-msgstr "%1$s siden"
+msgstr "vor %1$s"
 
 #: includes/front-end.php:298
 msgid "Title:"
-msgstr "Tittel:"
+msgstr "Titel:"
 
 #: includes/front-end.php:302
 msgid "Number of Posts:"
-msgstr "Antall poster:"
+msgstr "Anzahl der Artikel:"
 
 #: includes/front-end.php:306
 msgid "Posts to Show:"
-msgstr "Innlegg å vise:"
+msgstr "Zu zeigende Artikel:"
 
 #: includes/front-end.php:312
 msgid "Display Document Author:"
-msgstr "Vis dokument forfatter:"
+msgstr "Autor des Dokuments anzeigen:"
 
 #: includes/front-end.php:313
 msgid "Yes"
@@ -299,63 +299,63 @@ msgstr "Ja"
 
 #: includes/admin.php:126
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Dokument oppdatert. <a href=\"%s\">Last ned dokument</a>"
+msgstr "Dokument aktualisiert. <a href=\"%s\">Dokument herunterladen</a>."
 
 #: includes/admin.php:127
 msgid "Custom field updated."
-msgstr "Tilpasset felt oppdatert."
+msgstr "Benutzerdefiniertes Feld aktualisiert."
 
 #: includes/admin.php:128
 msgid "Custom field deleted."
-msgstr "Tilpasset felt slettet."
+msgstr "Benutzerdefiniertes Feld gel&ouml;scht."
 
 #: includes/admin.php:129
 msgid "Document updated."
-msgstr "Dokument oppdatert."
+msgstr "Dokument aktualisiert."
 
 #: includes/admin.php:130
 msgid "Document restored to revision from %s"
-msgstr "Dokument gjenopprettet til versjon fra %s"
+msgstr "Dokument aus &Uuml;berarbeitung vom %s wiederhergestellt"
 
 #: includes/admin.php:131
 msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr "Dokument publisert.  <a href=\"%s\">last ned dokument</a>"
+msgstr "Dokument ver&ouml;ffentlicht. <a href=\"%s\">Dokument herunterladen</a>."
 
 #: includes/admin.php:132
 msgid "Document saved."
-msgstr "Dokument lagret."
+msgstr "Dokument gespeichert."
 
 #: includes/admin.php:133
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument levert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
+msgstr "Dokument eingegangen. <a target=\"_blank\" href=\"%s\">Dokument herunterladen</a>."
 
 #: includes/admin.php:134
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr "Dokument planlagt for <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Vis dokument</a>"
+msgstr "Dokument geplant f&uuml;r: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Dokument ansehen</a>."
 
 #: includes/admin.php:135
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument kladd oppdatert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
+msgstr "Documentenentwurf aktualisiert. <a target=\"_blank\" href=\"%s\">Dokument herunterladen</a>."
 
 #: includes/admin.php:187
 msgid "Basic Usage"
-msgstr "Grunnleggende bruk"
+msgstr "Anwendung"
 
 #: includes/admin.php:191
 msgid "Revision Log"
-msgstr "Versjon Logg"
+msgstr "Revisionen Verzeichnis"
 
 #: includes/admin.php:194 includes/admin.php:265 includes/admin.php:891
 msgid "Workflow State"
-msgstr "Arbeidsstatus"
+msgstr "Workflow Status"
 
 #: includes/admin.php:196
 msgid "Publishing Documents"
-msgstr "Publiserer dokumenter"
+msgstr "Dokumente ver&ouml;ffentlichen"
 
 #: includes/admin.php:258 includes/admin.php:373
 msgid "Revision Summary"
-msgstr "Versjon sammendrag"
+msgstr "Zusammenfassung der &Auml;nderungen"
 
 #: includes/admin.php:259
 msgid "Document"
@@ -363,55 +363,55 @@ msgstr "Dokument"
 
 #: includes/admin.php:273 includes/admin.php:873 includes/admin.php:1054
 msgid "Owner"
-msgstr "Eier"
+msgstr "Besitzer"
 
 #: includes/admin.php:348
 msgid "%s has prevented other users from making changes."
-msgstr "%s har forhindret andre brukere til å redigere."
+msgstr "%s hat andere Benutzer daran gehindert &Auml;nderungen vorzunehmen."
 
 #: includes/admin.php:350
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr "< br / > Hvis du tror dette er i feil kan du <a href=\"#\" id=\"override_link\"> overstyre låsen</a>, men endringer vil gå tapt."
+msgstr "<br />Falls du der Meinung bist dies ist ein Irrtum, kannst du <a href=\"#\" id=\"override_link\">die Sperrung &uuml;bergehen</a>, andere &Auml;nderungen werden jedoch verloren gehen."
 
 #: includes/admin.php:354
 msgid "Upload New Version"
-msgstr "Last opp ny versjon"
+msgstr "Neue Version hochladen"
 
 #: includes/admin.php:359
 msgid "Latest Version of the Document"
-msgstr "Siste versjon av dokumentet"
+msgstr "Aktuellste Version des Dokuments"
 
 #: includes/admin.php:360
 msgid "Download"
-msgstr "Last ned"
+msgstr "Herunterladen"
 
 #: includes/admin.php:361
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr "Sjekket inn <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ s</abbr> siden av %4$ s"
+msgstr ""
 
 #: includes/admin.php:375
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr "Revisjon sammendrag er valgfri notater til å lagre sammen med den versjonen som tillater andre brukere å raskt og enkelt se hvilke endringer du har gjort uten å måtte åpne den faktiske filen."
+msgstr ""
 
 #: includes/admin.php:392
 msgid "Modified"
-msgstr "Modifisert"
+msgstr "Ver&auml;ndert"
 
 #: includes/admin.php:393
 msgid "User"
-msgstr "Bruker"
+msgstr "Benutzer"
 
 #: includes/admin.php:394
 msgid "Summary"
-msgstr "Sammendrag"
+msgstr "Zusammenfassung"
 
 #: includes/admin.php:395
 msgid "Actions"
-msgstr "Handlinger"
+msgstr ""
 
 #: includes/admin.php:410
 msgid "Restore"
-msgstr "Gjenopprett"
+msgstr "Wiederherstellen"
 
 #: includes/admin.php:420
 msgid "RSS Feed"
@@ -419,47 +419,47 @@ msgstr "RSS Feed"
 
 #: includes/admin.php:478
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr "Dokument opplasting-mappen er endret, men eksisterende opplastinger må kanskje flyttes til den nye mappen for å sikre at de forblir tilgjengelig."
+msgstr ""
 
 #: includes/admin.php:520
 msgid "Document Settings"
-msgstr "Dokumentinnstillinger"
+msgstr "Dokument Einstellungen"
 
 #: includes/admin.php:523
 msgid "Document Upload Directory"
-msgstr "Dokument opplastnings mappe"
+msgstr ""
 
 #: includes/admin.php:787
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr "Du har for øyeblikket denne filen utsjekket. Ingen andre brukere kan redigere dette dokumentet så lenge du fortsatt på denne siden."
+msgstr ""
 
 #: includes/admin.php:799
 msgid "Feed Privacy"
-msgstr "Feed erklæring"
+msgstr "Feed Privatsph&auml;re"
 
 #: includes/admin.php:802
 msgid "Secret Feed Key"
-msgstr "Hemmelig feed nøkkel"
+msgstr "Geheimer Feed Schl&uuml;ssel"
 
 #: includes/admin.php:805
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr "For å beskytte personvernet ditt, må du føye en nøkkel til feeds for bruk i feed lesere."
+msgstr "Um deine Privatsph&auml;re zu sch&uuml;tzen mu&szlig;t du deinem Feed einen Schl&uuml;ssel anh&auml;ngen, damit er in Feed Readern verwendet werden kann."
 
 #: includes/admin.php:807
 msgid "Generate New Key"
-msgstr "Lag ny nøkkel"
+msgstr "Neuen Schl&uuml;ssel erstellen"
 
 #: includes/admin.php:942
 msgid "Currently Editing"
-msgstr "Redigeres for øyeblikket"
+msgstr "In Bearbeitung"
 
 #: includes/admin.php:989
 msgid "Current State"
-msgstr "Nåværende arbeidsstatus"
+msgstr "Aktueller Status"
 
 #: includes/admin.php:1055
 msgid "Document Owner"
-msgstr "Dokument eier"
+msgstr "Bezitzer des Dokuments"
 
 #: includes/admin.php:1085
 msgid ""
@@ -467,58 +467,55 @@ msgid ""
 "\n"
 "If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr ""
-"Er du sikker på at du vil gjenopprette denne versjonen? \n"
-"\n"
-"Ingen historie vil være tapt om du gjør det. Denne versjonen vil bli kopiert og bli den mest nylige versjonen."
 
 #: includes/admin.php:1086
 msgid "is currently editing this"
-msgstr "redigerer dette for øyeblikket"
+msgstr "bearbeitet es gerade"
 
 #: includes/admin.php:1087
 msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
-msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Fil laset opp vellykket. Legg til et versjon-sammendrag under (valgfritt) eller press <em>Oppdater</em> til dine endringer.</p></div>"
+msgstr ""
 
 #: includes/admin.php:1088
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr "Din lås på dokumentet %s har blitt overstyrt. Alle endringer vil være tapt."
+msgstr "Deine Sperrung des Dokuments %s wurde aufgehoben. Alle &Auml;nderungen werden verloren gehen."
 
 #: includes/admin.php:1089
 msgid "An error has occurred, please try reloading the page."
-msgstr "En feil har oppstått, last inn siden på nytt."
+msgstr "Ein Fehler ist aufgetreten, bitte lade diese Seite erneut."
 
 #: includes/admin.php:1090
 msgid "Lost Document Lock"
-msgstr "Tapt dokument lås"
+msgstr "Dokumentensperre verloren"
 
 #: includes/admin.php:1092 includes/admin.php:1093
 msgid "%d mins"
-msgstr "%d min"
+msgstr "%d Minuten"
 
 #: includes/admin.php:1094
 msgid "%d hour"
-msgstr "%d time"
+msgstr "%d Stunde"
 
 #: includes/admin.php:1095
 msgid "%d hours"
-msgstr "%d timer"
+msgstr "%d Stunden"
 
 #: includes/admin.php:1096
 msgid "%d day"
-msgstr "%d dag"
+msgstr "%d Tag"
 
 #: includes/admin.php:1097
 msgid "%d days"
-msgstr "%d dager"
+msgstr "%d Tage"
 
 msgid "WP Document Revisions"
-msgstr "WP Dokument Versjoner"
+msgstr "WP Document Revisions"
 
 msgid "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 msgstr "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 
 msgid "A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow."
-msgstr "En dokument forvaltning og versjon kontroll plugin for WordPress som tillater lag av hvilken som helst størrelse til å samarbeide med å redigere filer og håndtere deres arbeidsstatus."
+msgstr "Ein Dokumentenverwaltungs- und Versionskontrollplugin f&uuml;r WordPress, das es einem Team beliebiger Gr&ouml;&szlig;e erm&ouml;glicht gemeinsam Dateien zu bearbeiten und ihren Workflow zu verwalten."
 
 msgid "Benjamin J. Balter"
 msgstr "Benjamin J. Balter"

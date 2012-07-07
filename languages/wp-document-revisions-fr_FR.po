@@ -1,449 +1,467 @@
-# Translation of 1.2.x in French (France)
-# This file is distributed under the same license as the 1.2.x package.
+# Translation of WP Document Revisions in French (France)
+# This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2012-04-18 17:40:54+0000\n"
+"PO-Revision-Date: 2012-07-07 18:55:26+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: GlotPress/0.1\n"
-"Project-Id-Version: 1.2.x\n"
+"Project-Id-Version: WP Document Revisions\n"
 
-#: wp-document-revisions.php:93
+#: includes/admin.php:134
+msgctxt "%1$s: date; %2$s: time"
+msgid "%1$s @ %2$s"
+msgstr ""
+
+#: includes/admin.php:188
+msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
+msgstr ""
+
+#: includes/admin.php:189
+msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
+msgstr ""
+
+#: includes/admin.php:190
+msgid "When done, simply click <code>Update</code> to save your changes"
+msgstr ""
+
+#: includes/admin.php:192
+msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
+msgstr ""
+
+#: includes/admin.php:193
+msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
+msgstr ""
+
+#: includes/admin.php:195
+msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
+msgstr ""
+
+#: includes/admin.php:197
+msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
+msgstr ""
+
+#: includes/admin.php:201
+msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
+msgstr ""
+
+#: includes/admin.php:202
+msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
+msgstr ""
+
+#: includes/admin.php:203
+msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
+msgstr ""
+
+#: includes/admin.php:451 includes/admin.php:530
+msgid "Document Slug"
+msgstr ""
+
+#: includes/admin.php:643
+msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
+msgstr ""
+
+#: includes/admin.php:507
+msgid "Document slug changed, but some previously published URLs may now be broken."
+msgstr ""
+
+#: includes/admin.php:641
+msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
+msgstr ""
+
+#: includes/admin.php:652
+msgid "example-document-title"
+msgstr ""
+
+#: includes/admin.php:653
+msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is \"documents.\""
+msgstr ""
+
+#: wp-document-revisions.php:143
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Documents"
 
-#: wp-document-revisions.php:94
+#: wp-document-revisions.php:144
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Document"
 
-#: wp-document-revisions.php:95
+#: wp-document-revisions.php:145
 msgctxt "document"
 msgid "Add Document"
 msgstr "Ajouter Document"
 
-#: wp-document-revisions.php:96
+#: wp-document-revisions.php:146
 msgid "Add New Document"
 msgstr "Ajouter Nouveau Document"
 
-#: wp-document-revisions.php:97
+#: wp-document-revisions.php:147
 msgid "Edit Document"
 msgstr "Modifier Document"
 
-#: wp-document-revisions.php:98
+#: wp-document-revisions.php:148
 msgid "New Document"
 msgstr "Nouveau Document"
 
-#: wp-document-revisions.php:99
+#: wp-document-revisions.php:149
 msgid "View Document"
 msgstr "Visualiser Document"
 
-#: wp-document-revisions.php:100
+#: wp-document-revisions.php:150
 msgid "Search Documents"
 msgstr "Rechercher Documents"
 
-#: wp-document-revisions.php:101
+#: wp-document-revisions.php:151
 msgid "No documents found"
 msgstr "Aucun document trouvé"
 
-#: wp-document-revisions.php:102
+#: wp-document-revisions.php:152
 msgid "No documents found in Trash"
 msgstr "Aucun document trouvé dans la corbeille"
 
-#: wp-document-revisions.php:104 includes/admin.php:186
+#: includes/admin.php:200 wp-document-revisions.php:154
 msgid "Documents"
 msgstr "Documents"
 
-#: wp-document-revisions.php:105
+#: wp-document-revisions.php:155
 msgid "All Documents"
 msgstr "Tous les Documents"
 
-#: wp-document-revisions.php:138
+#: wp-document-revisions.php:188
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Etats d'Avancement"
 
-#: wp-document-revisions.php:139
+#: wp-document-revisions.php:189
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Etat d'Avancement"
 
-#: wp-document-revisions.php:140
+#: wp-document-revisions.php:190
 msgid "Search Workflow States"
 msgstr "Rechercher Etats d'Avancement"
 
-#: wp-document-revisions.php:141
+#: wp-document-revisions.php:191
 msgid "All Workflow States"
 msgstr "Tous Etats d'Avancement"
 
-#: wp-document-revisions.php:142
+#: wp-document-revisions.php:192
 msgid "Parent Workflow State"
 msgstr "Etat d'Avancement Parent"
 
-#: wp-document-revisions.php:143
+#: wp-document-revisions.php:193
 msgid "Parent Workflow State:"
 msgstr "Etat d'Avancement Parent:"
 
-#: wp-document-revisions.php:144
+#: wp-document-revisions.php:194
 msgid "Edit Workflow State"
 msgstr "Modifier Etat d'Avancement"
 
-#: wp-document-revisions.php:145
+#: wp-document-revisions.php:195
 msgid "Update Workflow State"
 msgstr "Mettre à jour Etat d'Avancement"
 
-#: wp-document-revisions.php:146
+#: wp-document-revisions.php:196
 msgid "Add New Workflow State"
 msgstr "Ajouter Nouveau Etat d'Avancement"
 
-#: wp-document-revisions.php:147
+#: wp-document-revisions.php:197
 msgid "New Workflow State Name"
 msgstr "Nouveau Nom d'Etat d'Avancement"
 
-#: wp-document-revisions.php:148
+#: wp-document-revisions.php:198
 msgid "Workflow States"
 msgstr "Etats d'Avancement"
 
-#: wp-document-revisions.php:174
+#: wp-document-revisions.php:225
 msgid "In Progress"
 msgstr "En Cours"
 
-#: wp-document-revisions.php:174
+#: wp-document-revisions.php:225
 msgid "Document is in the process of being written"
 msgstr "Le document est en cours d'écriture"
 
-#: wp-document-revisions.php:175
+#: wp-document-revisions.php:226
 msgid "Initial Draft"
 msgstr "Brouillon Initial"
 
-#: wp-document-revisions.php:175
+#: wp-document-revisions.php:226
 msgid "Document is being edited and refined"
 msgstr "Le document est en cours de modification et d'amélioration"
 
-#: wp-document-revisions.php:176
+#: wp-document-revisions.php:227
 msgid "Under Review"
 msgstr "En Cours de Révision"
 
-#: wp-document-revisions.php:176
+#: wp-document-revisions.php:227
 msgid "Document is pending final review"
 msgstr "Document en Attente de Relecture Finale"
 
-#: wp-document-revisions.php:177
+#: wp-document-revisions.php:228
 msgid "Final"
 msgstr "Final"
 
-#: wp-document-revisions.php:177
+#: wp-document-revisions.php:228
 msgid "Document is in its final form"
 msgstr "Document dans sa forme finale"
 
-#: wp-document-revisions.php:274
+#: wp-document-revisions.php:328
 msgid "Somebody"
 msgstr "Quelqu'un"
 
-#: wp-document-revisions.php:333
+#: wp-document-revisions.php:409
 msgid "revision"
 msgstr "version"
 
-#: wp-document-revisions.php:380 wp-document-revisions.php:623
+#: wp-document-revisions.php:462 wp-document-revisions.php:735
 msgid "-revision-"
 msgstr "-version-"
 
-#: wp-document-revisions.php:598
-msgid "404 &#8212; File not found."
-msgstr "404 &#8212; Fichier introuvable."
-
-#: wp-document-revisions.php:604
+#: wp-document-revisions.php:714
 msgid "You are not authorized to access that file."
 msgstr "Vous n'êtes pas l'accès à ce fichier."
 
-#: wp-document-revisions.php:921
+#: wp-document-revisions.php:1115
 msgid "Sorry, this is a private feed."
 msgstr "Désolé, c'est in fil privé."
 
-#: wp-document-revisions.php:966 includes/admin.php:478 includes/admin.php:482
+#: includes/admin.php:551 includes/admin.php:555 includes/admin.php:584
+#: includes/admin.php:588 wp-document-revisions.php:1161
 msgid "Not authorized"
 msgstr "Non autorisé"
 
-#: wp-document-revisions.php:1008
+#: wp-document-revisions.php:1204
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr "%1$s: %2$s a outrepassé votre verrou à %3$s"
 
-#: wp-document-revisions.php:1012
+#: wp-document-revisions.php:1208
 msgid "Dear %s:"
 msgstr "Cher %s:"
 
-#: wp-document-revisions.php:1013
+#: wp-document-revisions.php:1209
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr "%1$s (%2$s), a outrepassé votre verrou sur le document %3$s (%4$s)."
 
-#: wp-document-revisions.php:1014
+#: wp-document-revisions.php:1210
 msgid "Any changes you have made will be lost."
 msgstr "Toute modification effectuée sera perdue."
 
-#: wp-document-revisions.php:1015
+#: wp-document-revisions.php:1211
 msgid "- The %s Team"
 msgstr "- L'équipe %s"
 
-#: wp-document-revisions.php:1172
+#: wp-document-revisions.php:1372
 msgid "%s - Latest Revision"
 msgstr "%s - Dernière Version"
 
-#: wp-document-revisions.php:1186
+#: wp-document-revisions.php:1386
 msgid "%s - Revision %d"
 msgstr "%s - Version %d"
 
-#: includes/front-end.php:93
+#: includes/front-end.php:97
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
 msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
 
-#: includes/front-end.php:168
+#: includes/front-end.php:217
 msgid "Recently Revised Documents"
 msgstr "Documents récemment modifiés"
 
-#: includes/front-end.php:215
+#: includes/front-end.php:265
 msgid "%1$s ago by %2$s"
 msgstr "il y a %1$s par %2$s"
 
-#: includes/front-end.php:222
+#: includes/front-end.php:272
 msgid "%1$s ago"
 msgstr "il y a %1$s"
 
-#: includes/front-end.php:247
+#: includes/front-end.php:298
 msgid "Title:"
 msgstr "Titre:"
 
-#: includes/front-end.php:251
+#: includes/front-end.php:302
 msgid "Number of Posts:"
 msgstr "Nombre d'articles:"
 
-#: includes/front-end.php:255
+#: includes/front-end.php:306
 msgid "Posts to Show:"
 msgstr "Articles à montrer:"
 
-#: includes/front-end.php:261
+#: includes/front-end.php:312
 msgid "Display Document Author:"
 msgstr "Afficher l'auteur du document:"
 
-#: includes/front-end.php:262
+#: includes/front-end.php:313
 msgid "Yes"
 msgstr "Oui"
 
-#: includes/admin.php:115
+#: includes/admin.php:126
 msgid "Document updated. <a href=\"%s\">Download document</a>"
 msgstr "Document mis à jour. <a href=\"%s\">Télécharger le document</a>"
 
-#: includes/admin.php:116
+#: includes/admin.php:127
 msgid "Custom field updated."
 msgstr "Champ personnalisé mis à jour."
 
-#: includes/admin.php:117
+#: includes/admin.php:128
 msgid "Custom field deleted."
 msgstr "Champ personnalisé effacé."
 
-#: includes/admin.php:118
+#: includes/admin.php:129
 msgid "Document updated."
 msgstr "Document mis à jour."
 
-#: includes/admin.php:119
+#: includes/admin.php:130
 msgid "Document restored to revision from %s"
 msgstr "Document restauré à la version %s"
 
-#: includes/admin.php:120
+#: includes/admin.php:131
 msgid "Document published. <a href=\"%s\">Download document</a>"
 msgstr "Document publié.  <a href=\"%s\">Télécharger le document</a>"
 
-#: includes/admin.php:121
+#: includes/admin.php:132
 msgid "Document saved."
 msgstr "Document enregistré."
 
-#: includes/admin.php:122
+#: includes/admin.php:133
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Document soumis.  <a target=\"_blank\" href=\"%s\">Télécharger le document</a>"
 
-#: includes/admin.php:123
+#: includes/admin.php:134
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
 msgstr "Document prévu pour: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Prévisualiser le document</a>"
 
-#: includes/admin.php:123
-msgid "M j, Y @ G:i"
-msgstr "M j, Y @ G:i"
-
-#: includes/admin.php:124
+#: includes/admin.php:135
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Brouillon du document mis à jour. <a target=\"_blank\" href=\"%s\">Télécharger le document</a>"
 
-#: includes/admin.php:173
+#: includes/admin.php:187
 msgid "Basic Usage"
 msgstr "Utilisation Basique"
 
-#: includes/admin.php:174
-msgid ""
-"<p>This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.</p>\n"
-"\t\t\t\t\t\t\t\t\t\t<p>Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.</p>\n"
-"\t\t\t\t\t\t\t\t\t\t<p>When done, simply click <code>Update</code> to save your changes</p>"
-msgstr ""
-"<p>Cet écran permet aux utilisateurs de collaborer à l'édition de documents et de suivre l'historique de leurs modifications. Pour commencer, entrez un titre pour votre document, clickez <code>Téléverser la nouvelle version</code> et choisissez le fishier sur votre ordinateur .</p>\n"
-"\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t<p>Une vois téléversé avec succès, vous pouvez entrer un commentaire de version, assigner le document à un auteur, et décrire son statut. </p>\n"
-"\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t<p>Quand vous avez terminé, cliquez <code>Mise à jour</code> pour sauvegarder vos changements</p>"
-
-#: includes/admin.php:177
+#: includes/admin.php:191
 msgid "Revision Log"
 msgstr "Log des versions"
 
-#: includes/admin.php:178
-msgid ""
-"<p>The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.</p>\n"
-"\t\t\t\t\t\t\t\t\t\t<p>You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.</p>"
-msgstr ""
-"<p>Le résumé des versions peut monter les changements effectués dans one version en particulier. Très utilisé dans la communauté du logiciel libre, cela montre un historique complet du document.</p>\n"
-"\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t\\\t<p>Vous pouvez télécharger et visualiser les versions précédentes du document en cliquant sur les horodates. Vous pouvez aussi restaurer des version en cliquant sur le bouton <code>restaurer</code> à côté des versions.</p>"
-
-#: includes/admin.php:180 includes/admin.php:245 includes/admin.php:752
+#: includes/admin.php:194 includes/admin.php:265 includes/admin.php:891
 msgid "Workflow State"
 msgstr "Etat d'avancement"
 
-#: includes/admin.php:181
-msgid "<p>The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.</p>"
-msgstr "<p>Le champ Etat d'Avancement d'un document peut aider les utilisateurs à savoir ou en est un document. Le champ est optionnel, et peut être modifié ou utilisé en cliquant à gauche sur <code>Etat d'Avancement</code>.</p>"
-
-#: includes/admin.php:182
+#: includes/admin.php:196
 msgid "Publishing Documents"
 msgstr "Publier les Documents"
 
-#: includes/admin.php:183
-msgid "<p>By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.</p>"
-msgstr "<p>Par défaut, les documents téléversés ne sont accessibles que par les utilisateurs connectés. Les documents peuvent être publiés, ce qui les rend accessibles à tout le monde, en changeant leur visibilité dans la boite \"Publier\" en haut à droite. Tout document marqué comme publié est accessible à qui a leur url.</p>"
-
-#: includes/admin.php:187
-msgid ""
-"<p>Below is a all documents to which you have access. Click the document title to edit the document or download the latest version.</p> \n"
-"\t\t\t\t\t\t\t\t\t<p>To add a new document, click <strong>Add Document</strong> on the left-hand side.</p>\n"
-"\t\t\t\t\t\t\t\t\t<p>To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.</p>"
-msgstr ""
-"<p>Ci-dessous sont tous les documents auxquels vous avez accès. Cliquez sur le titre du document pour modifier le document ou obtenir sa derrière version.</p> \n"
-"\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t<p>Pour ajouter un nouveau document, cliquez <strong>Ajouter Document</strong> sur la gauche.</p>\n"
-"\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t\\\\\t<p>Pour voir tous les documents dans un statut particulier, cliquez <strong>Etat d'Avancement</strong> dans le menu à gauche.</p>"
-
-#: includes/admin.php:238 includes/admin.php:332
+#: includes/admin.php:258 includes/admin.php:373
 msgid "Revision Summary"
 msgstr "Historique des Versions"
 
-#: includes/admin.php:239
+#: includes/admin.php:259
 msgid "Document"
 msgstr "Document"
 
-#: includes/admin.php:251 includes/admin.php:735 includes/admin.php:910
+#: includes/admin.php:273 includes/admin.php:873 includes/admin.php:1054
 msgid "Owner"
 msgstr "Auteur"
 
-#: includes/admin.php:308
+#: includes/admin.php:348
 msgid "%s has prevented other users from making changes."
 msgstr "%s a bloqué la possibilité que d'autres utilisateurs puissent faire des modifications."
 
-#: includes/admin.php:310
+#: includes/admin.php:350
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr "<br />Si vous pensez que c'est une erreur vous pouvez <a href=\"#\" id=\"override_link\">passer outre le verrou</a>, mais les modifications seront perdues."
 
-#: includes/admin.php:314
+#: includes/admin.php:354
 msgid "Upload New Version"
 msgstr "Téléverser Nouvelle Version"
 
-#: includes/admin.php:319
+#: includes/admin.php:359
 msgid "Latest Version of the Document"
 msgstr "Dernière Version du Document"
 
-#: includes/admin.php:320
+#: includes/admin.php:360
 msgid "Download"
 msgstr "Télécharger"
 
-#: includes/admin.php:321
+#: includes/admin.php:361
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
 msgstr "En consultation <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> par %4$s"
 
-#: includes/admin.php:334
+#: includes/admin.php:375
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
 msgstr "Les commentaires de versions sont optionnels et liés à cette version pour aider d'autres utilisateurs à voir ce qui a été modifié sans avoir à consulter le fichier."
 
-#: includes/admin.php:350
+#: includes/admin.php:392
 msgid "Modified"
 msgstr "Modifié"
 
-#: includes/admin.php:351
+#: includes/admin.php:393
 msgid "User"
 msgstr "Utilisateur"
 
-#: includes/admin.php:352
+#: includes/admin.php:394
 msgid "Summary"
 msgstr "Résumé"
 
-#: includes/admin.php:353
+#: includes/admin.php:395
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/admin.php:368
+#: includes/admin.php:410
 msgid "Restore"
 msgstr "Restaurer"
 
-#: includes/admin.php:378
+#: includes/admin.php:420
 msgid "RSS Feed"
 msgstr "Fil RSS"
 
-#: includes/admin.php:429
-msgid "Please enter a valid document upload directory."
-msgstr "Veuillez entrer un répertoire de téléversement valide."
-
-#: includes/admin.php:442
+#: includes/admin.php:478
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
 msgstr "Répertoire de téléversement changé, mais les documents précédents auront besoin d'être déplacés pour rester accessibles."
 
-#: includes/admin.php:455
+#: includes/admin.php:520
 msgid "Document Settings"
 msgstr "Paramètres du Document"
 
-#: includes/admin.php:458
+#: includes/admin.php:523
 msgid "Document Upload Directory"
 msgstr "Répertoire de Téléversement des Documents"
 
-#: includes/admin.php:531
-msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder, but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
-msgstr "Répertoire dans lequel sont télévisés les documents. Le répertoire par défaut est <code>wp_content/uploads</code>, mais vous pouvez le déplacer en dehors de l'arborescence <code>htdocs</code> ou <code>public_html</code> pour plus de sécurité."
-
-#: includes/admin.php:654
+#: includes/admin.php:787
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
 msgstr "Vous êtes en train d'éditer ce fichier. Aucun autre utilisateur ne peut modifier ce document tant que vous restez sur cette page."
 
-#: includes/admin.php:665
+#: includes/admin.php:799
 msgid "Feed Privacy"
 msgstr "Niveau de Sécurité du Fil"
 
-#: includes/admin.php:668
+#: includes/admin.php:802
 msgid "Secret Feed Key"
 msgstr "Clé Secrète de Fil"
 
-#: includes/admin.php:671
+#: includes/admin.php:805
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
 msgstr "Pour protéger votre vie privée, vous devez ajouter une clé aux fils à utiliser dans les lecteurs de fils."
 
-#: includes/admin.php:673
+#: includes/admin.php:807
 msgid "Generate New Key"
 msgstr "Générer une nouvelle clé"
 
-#: includes/admin.php:801
+#: includes/admin.php:942
 msgid "Currently Editing"
 msgstr "En cours de modification"
 
-#: includes/admin.php:847
+#: includes/admin.php:989
 msgid "Current State"
 msgstr "Etat d'Avancement Courant"
 
-#: includes/admin.php:911
+#: includes/admin.php:1055
 msgid "Document Owner"
 msgstr "Propriétaire du Document"
 
-#: includes/admin.php:929
+#: includes/admin.php:1085
 msgid ""
 "Are you sure you want to restore this revision?\n"
 "\n"
@@ -453,43 +471,43 @@ msgstr ""
 "\n"
 "Si vous le faites, aucun historique ne sera perdu. Cette version sera copiée et deviendra la plus récente."
 
-#: includes/admin.php:930
+#: includes/admin.php:1086
 msgid "is currently editing this"
 msgstr "est en train de modifier ceci"
 
-#: includes/admin.php:931
+#: includes/admin.php:1087
 msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
 msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Fichier téléversé avec succès. Ajoutez un commentaire de version (optionel) ou cliquez sur <em>Update</em> pour enregistrer vos modifications.</p></div>"
 
-#: includes/admin.php:932
+#: includes/admin.php:1088
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr "Votre verrou sur le document %s a été outrepassé. Toutes les modifications seront perdues."
 
-#: includes/admin.php:933
+#: includes/admin.php:1089
 msgid "An error has occurred, please try reloading the page."
 msgstr "Un erreur est survenue. Essayez de recharger la page."
 
-#: includes/admin.php:934
+#: includes/admin.php:1090
 msgid "Lost Document Lock"
 msgstr "Verrou de Document Perdu"
 
-#: includes/admin.php:936 includes/admin.php:937
+#: includes/admin.php:1092 includes/admin.php:1093
 msgid "%d mins"
 msgstr "%d mins"
 
-#: includes/admin.php:938
+#: includes/admin.php:1094
 msgid "%d hour"
 msgstr "%d heure"
 
-#: includes/admin.php:939
+#: includes/admin.php:1095
 msgid "%d hours"
 msgstr "%d heures"
 
-#: includes/admin.php:940
+#: includes/admin.php:1096
 msgid "%d day"
 msgstr "%d jour"
 
-#: includes/admin.php:941
+#: includes/admin.php:1097
 msgid "%d days"
 msgstr "%d jours"
 

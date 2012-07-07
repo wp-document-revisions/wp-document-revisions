@@ -1,19 +1,19 @@
-# Translation of WP Document Revisions in Norwegian (Bokmål)
+# Translation of WP Document Revisions in Chinese
 # This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2012-07-07 18:55:08+0000\n"
+"PO-Revision-Date: 2012-07-07 18:55:40+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WP Document Revisions\n"
 
 #: includes/admin.php:134
 msgctxt "%1$s: date; %2$s: time"
 msgid "%1$s @ %2$s"
-msgstr "%1$s kl. %2$s"
+msgstr ""
 
 #: includes/admin.php:188
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
@@ -82,384 +82,384 @@ msgstr ""
 #: wp-document-revisions.php:143
 msgctxt "post type general name"
 msgid "Documents"
-msgstr "Dokumenter"
+msgstr "文档"
 
 #: wp-document-revisions.php:144
 msgctxt "post type singular name"
 msgid "Document"
-msgstr "Dokument"
+msgstr "文档"
 
 #: wp-document-revisions.php:145
 msgctxt "document"
 msgid "Add Document"
-msgstr "Legg til dokument"
+msgstr "添加文档"
 
 #: wp-document-revisions.php:146
 msgid "Add New Document"
-msgstr "Legg til nytt dokument"
+msgstr "添加新文档"
 
 #: wp-document-revisions.php:147
 msgid "Edit Document"
-msgstr "Rediger dokument"
+msgstr "编辑文档"
 
 #: wp-document-revisions.php:148
 msgid "New Document"
-msgstr "Nytt dokument"
+msgstr "新建文档"
 
 #: wp-document-revisions.php:149
 msgid "View Document"
-msgstr "Vis dokument"
+msgstr "查看文档"
 
 #: wp-document-revisions.php:150
 msgid "Search Documents"
-msgstr "Søk gjennom dokumenter"
+msgstr "查找文档"
 
 #: wp-document-revisions.php:151
 msgid "No documents found"
-msgstr "Ingen dokumenter funnet"
+msgstr "没有文档"
 
 #: wp-document-revisions.php:152
 msgid "No documents found in Trash"
-msgstr "Ingen dokumenter funnet i papirkurven"
+msgstr "垃圾箱中没有文档"
 
 #: includes/admin.php:200 wp-document-revisions.php:154
 msgid "Documents"
-msgstr "Dokumenter"
+msgstr "文档"
 
 #: wp-document-revisions.php:155
 msgid "All Documents"
-msgstr "Alle dokumenter"
+msgstr "所有文档"
 
 #: wp-document-revisions.php:188
 msgctxt "taxonomy general name"
 msgid "Workflow States"
-msgstr "Arbeidsstatuser"
+msgstr "工作流状态"
 
 #: wp-document-revisions.php:189
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
-msgstr "Arbeidsstatus"
+msgstr "工作流状态"
 
 #: wp-document-revisions.php:190
 msgid "Search Workflow States"
-msgstr "Søk gjennom arbeidsstatuser"
+msgstr "查找工作流状态"
 
 #: wp-document-revisions.php:191
 msgid "All Workflow States"
-msgstr "Alle arbeidsstatuser"
+msgstr "所有工作流状态"
 
 #: wp-document-revisions.php:192
 msgid "Parent Workflow State"
-msgstr "Arbeidsstatus's foreldre"
+msgstr "源工作流状态"
 
 #: wp-document-revisions.php:193
 msgid "Parent Workflow State:"
-msgstr "Arbeidsstatus's foreldre:"
+msgstr "上级工作流状态"
 
 #: wp-document-revisions.php:194
 msgid "Edit Workflow State"
-msgstr "Rediger arbeidsstatus"
+msgstr "编辑工作流状态"
 
 #: wp-document-revisions.php:195
 msgid "Update Workflow State"
-msgstr "Oppdater arbeidsstatus"
+msgstr "更新工作流状态"
 
 #: wp-document-revisions.php:196
 msgid "Add New Workflow State"
-msgstr "Legg til arbeidsstatus"
+msgstr "添加新工作流"
 
 #: wp-document-revisions.php:197
 msgid "New Workflow State Name"
-msgstr "Nytt arbeidsstatusnavn"
+msgstr "新工作流状态名称"
 
 #: wp-document-revisions.php:198
 msgid "Workflow States"
-msgstr "Arbeidsstatuser"
+msgstr "工作流状态"
 
 #: wp-document-revisions.php:225
 msgid "In Progress"
-msgstr "Pågår"
+msgstr "流程中"
 
 #: wp-document-revisions.php:225
 msgid "Document is in the process of being written"
-msgstr "Dokumentet er under omskrivning"
+msgstr "文档正被写入"
 
 #: wp-document-revisions.php:226
 msgid "Initial Draft"
-msgstr "Første kladd"
+msgstr "初稿"
 
 #: wp-document-revisions.php:226
 msgid "Document is being edited and refined"
-msgstr "Dokumentet er under redigering og klargjøring"
+msgstr "文档正在被编辑和精简"
 
 #: wp-document-revisions.php:227
 msgid "Under Review"
-msgstr "Under vurdering"
+msgstr "在审核中"
 
 #: wp-document-revisions.php:227
 msgid "Document is pending final review"
-msgstr "Dokumentet under sin påventende slutt-vurdering"
+msgstr "文档正在等待最后审查"
 
 #: wp-document-revisions.php:228
 msgid "Final"
-msgstr "Avsluttende"
+msgstr "最终版"
 
 #: wp-document-revisions.php:228
 msgid "Document is in its final form"
-msgstr "Dokumentet under sin avsluttende form"
+msgstr "文档的最终形式"
 
 #: wp-document-revisions.php:328
 msgid "Somebody"
-msgstr "Noen"
+msgstr "某些人"
 
 #: wp-document-revisions.php:409
 msgid "revision"
-msgstr "versjon"
+msgstr "修订"
 
 #: wp-document-revisions.php:462 wp-document-revisions.php:735
 msgid "-revision-"
-msgstr "-versjon-"
+msgstr "-修订-"
 
 #: wp-document-revisions.php:714
 msgid "You are not authorized to access that file."
-msgstr "Dette er privat."
+msgstr "您无权访问该文档"
 
 #: wp-document-revisions.php:1115
 msgid "Sorry, this is a private feed."
-msgstr "Obs, dette er privat."
+msgstr "对不起，这是一个私有源"
 
 #: includes/admin.php:551 includes/admin.php:555 includes/admin.php:584
 #: includes/admin.php:588 wp-document-revisions.php:1161
 msgid "Not authorized"
-msgstr "Du er ikke autorisert"
+msgstr "未授权"
 
 #: wp-document-revisions.php:1204
 msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr "%1$s: %2$s har overstyrt din lås på %3$s"
+msgstr "%1$s: %2$s已经解除了您对%3$s的锁定"
 
 #: wp-document-revisions.php:1208
 msgid "Dear %s:"
-msgstr "Kjære %s:"
+msgstr "尊敬的%s:"
 
 #: wp-document-revisions.php:1209
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr "%1$s (%2$s), har overstyrt din lås på dokumentet %3$s (%4$s)."
+msgstr "%1$s (%2$s), 已经解除了您对%3$s (%4$s)文档的锁定"
 
 #: wp-document-revisions.php:1210
 msgid "Any changes you have made will be lost."
-msgstr "Alle endringer du har gjort vil være tapt."
+msgstr "您做的任何改动都将丢失"
 
 #: wp-document-revisions.php:1211
 msgid "- The %s Team"
-msgstr "- %s laget"
+msgstr ""
 
 #: wp-document-revisions.php:1372
 msgid "%s - Latest Revision"
-msgstr "%s - Siste versjon"
+msgstr "%s - 最新修订"
 
 #: wp-document-revisions.php:1386
 msgid "%s - Revision %d"
-msgstr "%s - Versjon %d"
+msgstr "%s - 修订 %d"
 
 #: includes/front-end.php:97
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">siden av</a> <span class=\"author\">%5$s</a>"
+msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">以前被</a> <span class=\"author\">%5$s</a>"
 
 #: includes/front-end.php:217
 msgid "Recently Revised Documents"
-msgstr "Nylige dokumenter"
+msgstr "最近修订的文档"
 
 #: includes/front-end.php:265
 msgid "%1$s ago by %2$s"
-msgstr "%1$s siden av %2$s"
+msgstr "%2$s于%1$s以前"
 
 #: includes/front-end.php:272
 msgid "%1$s ago"
-msgstr "%1$s siden"
+msgstr "%1$s以前"
 
 #: includes/front-end.php:298
 msgid "Title:"
-msgstr "Tittel:"
+msgstr "标题"
 
 #: includes/front-end.php:302
 msgid "Number of Posts:"
-msgstr "Antall poster:"
+msgstr "文章数量"
 
 #: includes/front-end.php:306
 msgid "Posts to Show:"
-msgstr "Innlegg å vise:"
+msgstr "文章显示"
 
 #: includes/front-end.php:312
 msgid "Display Document Author:"
-msgstr "Vis dokument forfatter:"
+msgstr "显示文档作者"
 
 #: includes/front-end.php:313
 msgid "Yes"
-msgstr "Ja"
+msgstr "对"
 
 #: includes/admin.php:126
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Dokument oppdatert. <a href=\"%s\">Last ned dokument</a>"
+msgstr "文档已更新。<a href=\"%s\">下载文档</a>"
 
 #: includes/admin.php:127
 msgid "Custom field updated."
-msgstr "Tilpasset felt oppdatert."
+msgstr "更新的自定义字段"
 
 #: includes/admin.php:128
 msgid "Custom field deleted."
-msgstr "Tilpasset felt slettet."
+msgstr "删除的自定义字段"
 
 #: includes/admin.php:129
 msgid "Document updated."
-msgstr "Dokument oppdatert."
+msgstr "更新的文档"
 
 #: includes/admin.php:130
 msgid "Document restored to revision from %s"
-msgstr "Dokument gjenopprettet til versjon fra %s"
+msgstr "文档已回滚至%s的版本"
 
 #: includes/admin.php:131
 msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr "Dokument publisert.  <a href=\"%s\">last ned dokument</a>"
+msgstr "文档已发布。<a href=\"%s\">下载文档</a>"
 
 #: includes/admin.php:132
 msgid "Document saved."
-msgstr "Dokument lagret."
+msgstr "保存的文档"
 
 #: includes/admin.php:133
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument levert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
+msgstr "文档已提交。<a target=\"_blank\" href=\"%s\">下载文档</a>"
 
 #: includes/admin.php:134
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr "Dokument planlagt for <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Vis dokument</a>"
+msgstr ""
 
 #: includes/admin.php:135
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument kladd oppdatert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
+msgstr "文档草稿已更新。<a target=\"_blank\" href=\"%s\">下载文档</a>"
 
 #: includes/admin.php:187
 msgid "Basic Usage"
-msgstr "Grunnleggende bruk"
+msgstr "基本使用"
 
 #: includes/admin.php:191
 msgid "Revision Log"
-msgstr "Versjon Logg"
+msgstr "修订日志"
 
 #: includes/admin.php:194 includes/admin.php:265 includes/admin.php:891
 msgid "Workflow State"
-msgstr "Arbeidsstatus"
+msgstr "工作流状态"
 
 #: includes/admin.php:196
 msgid "Publishing Documents"
-msgstr "Publiserer dokumenter"
+msgstr "发布文档"
 
 #: includes/admin.php:258 includes/admin.php:373
 msgid "Revision Summary"
-msgstr "Versjon sammendrag"
+msgstr "修订摘要"
 
 #: includes/admin.php:259
 msgid "Document"
-msgstr "Dokument"
+msgstr "文档"
 
 #: includes/admin.php:273 includes/admin.php:873 includes/admin.php:1054
 msgid "Owner"
-msgstr "Eier"
+msgstr "所有者"
 
 #: includes/admin.php:348
 msgid "%s has prevented other users from making changes."
-msgstr "%s har forhindret andre brukere til å redigere."
+msgstr "%s文档已禁止其他用户修改"
 
 #: includes/admin.php:350
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr "< br / > Hvis du tror dette er i feil kan du <a href=\"#\" id=\"override_link\"> overstyre låsen</a>, men endringer vil gå tapt."
+msgstr "<br />如果确信出现错误，您可以点击<a href=\"#\" id=\"override_link\">解锁</a>，但是所做的改动都将会丢失。"
 
 #: includes/admin.php:354
 msgid "Upload New Version"
-msgstr "Last opp ny versjon"
+msgstr "上传新版本"
 
 #: includes/admin.php:359
 msgid "Latest Version of the Document"
-msgstr "Siste versjon av dokumentet"
+msgstr "最新版本的文档"
 
 #: includes/admin.php:360
 msgid "Download"
-msgstr "Last ned"
+msgstr "下载"
 
 #: includes/admin.php:361
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr "Sjekket inn <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ s</abbr> siden av %4$ s"
+msgstr "%4$s于<abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr>前查阅了该文档。"
 
 #: includes/admin.php:375
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr "Revisjon sammendrag er valgfri notater til å lagre sammen med den versjonen som tillater andre brukere å raskt og enkelt se hvilke endringer du har gjort uten å måtte åpne den faktiske filen."
+msgstr "修订摘要是可选注释，可随着修订存储，它允许其他用户迅速、容易地看到所做的更改而无需打开文件"
 
 #: includes/admin.php:392
 msgid "Modified"
-msgstr "Modifisert"
+msgstr "修改"
 
 #: includes/admin.php:393
 msgid "User"
-msgstr "Bruker"
+msgstr "用户"
 
 #: includes/admin.php:394
 msgid "Summary"
-msgstr "Sammendrag"
+msgstr "摘要"
 
 #: includes/admin.php:395
 msgid "Actions"
-msgstr "Handlinger"
+msgstr "动作"
 
 #: includes/admin.php:410
 msgid "Restore"
-msgstr "Gjenopprett"
+msgstr "回滚"
 
 #: includes/admin.php:420
 msgid "RSS Feed"
-msgstr "RSS Feed"
+msgstr "RSS订阅源"
 
 #: includes/admin.php:478
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr "Dokument opplasting-mappen er endret, men eksisterende opplastinger må kanskje flyttes til den nye mappen for å sikre at de forblir tilgjengelig."
+msgstr "文档上传目录已改变，请将现有文档转移到新目录。"
 
 #: includes/admin.php:520
 msgid "Document Settings"
-msgstr "Dokumentinnstillinger"
+msgstr "文档设置"
 
 #: includes/admin.php:523
 msgid "Document Upload Directory"
-msgstr "Dokument opplastnings mappe"
+msgstr "文档上传目录"
 
 #: includes/admin.php:787
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr "Du har for øyeblikket denne filen utsjekket. Ingen andre brukere kan redigere dette dokumentet så lenge du fortsatt på denne siden."
+msgstr "您正在审阅该文档，在您离开该页面前，其他用户将无法编辑这份文档。"
 
 #: includes/admin.php:799
 msgid "Feed Privacy"
-msgstr "Feed erklæring"
+msgstr "源隐私"
 
 #: includes/admin.php:802
 msgid "Secret Feed Key"
-msgstr "Hemmelig feed nøkkel"
+msgstr "私密源密钥"
 
 #: includes/admin.php:805
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr "For å beskytte personvernet ditt, må du føye en nøkkel til feeds for bruk i feed lesere."
+msgstr "为了保护您的隐私，您需要为源添加一个密码。"
 
 #: includes/admin.php:807
 msgid "Generate New Key"
-msgstr "Lag ny nøkkel"
+msgstr "生成新密钥。"
 
 #: includes/admin.php:942
 msgid "Currently Editing"
-msgstr "Redigeres for øyeblikket"
+msgstr "正在编辑"
 
 #: includes/admin.php:989
 msgid "Current State"
-msgstr "Nåværende arbeidsstatus"
+msgstr "当前状态"
 
 #: includes/admin.php:1055
 msgid "Document Owner"
-msgstr "Dokument eier"
+msgstr "文档所有者"
 
 #: includes/admin.php:1085
 msgid ""
@@ -467,58 +467,58 @@ msgid ""
 "\n"
 "If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr ""
-"Er du sikker på at du vil gjenopprette denne versjonen? \n"
+"确认要回滚到这个版本吗？\n"
 "\n"
-"Ingen historie vil være tapt om du gjør det. Denne versjonen vil bli kopiert og bli den mest nylige versjonen."
+"如果执行此操作，所有历史版本都会保留。同时，当前版本将会被复制并成为最新版本。"
 
 #: includes/admin.php:1086
 msgid "is currently editing this"
-msgstr "redigerer dette for øyeblikket"
+msgstr "正在编辑这份文档"
 
 #: includes/admin.php:1087
 msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
-msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Fil laset opp vellykket. Legg til et versjon-sammendrag under (valgfritt) eller press <em>Oppdater</em> til dine endringer.</p></div>"
+msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>文件已上传成功。请在下方添加修订摘要（可选）或点击 <em>更新</em> 保存您所作的更改。</p></div>"
 
 #: includes/admin.php:1088
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr "Din lås på dokumentet %s har blitt overstyrt. Alle endringer vil være tapt."
+msgstr "您对文档%s的锁定已经被取消。所有的更改都将丢失。"
 
 #: includes/admin.php:1089
 msgid "An error has occurred, please try reloading the page."
-msgstr "En feil har oppstått, last inn siden på nytt."
+msgstr "出现错误，请尝试重新刷新页面。"
 
 #: includes/admin.php:1090
 msgid "Lost Document Lock"
-msgstr "Tapt dokument lås"
+msgstr "文件锁丢失。"
 
 #: includes/admin.php:1092 includes/admin.php:1093
 msgid "%d mins"
-msgstr "%d min"
+msgstr "%d 分钟"
 
 #: includes/admin.php:1094
 msgid "%d hour"
-msgstr "%d time"
+msgstr "%d 小时"
 
 #: includes/admin.php:1095
 msgid "%d hours"
-msgstr "%d timer"
+msgstr "%d 小时"
 
 #: includes/admin.php:1096
 msgid "%d day"
-msgstr "%d dag"
+msgstr "%d 天"
 
 #: includes/admin.php:1097
 msgid "%d days"
-msgstr "%d dager"
+msgstr "%d 天"
 
 msgid "WP Document Revisions"
-msgstr "WP Dokument Versjoner"
+msgstr "WP Document Revisions"
 
 msgid "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 msgstr "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 
 msgid "A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow."
-msgstr "En dokument forvaltning og versjon kontroll plugin for WordPress som tillater lag av hvilken som helst størrelse til å samarbeide med å redigere filer og håndtere deres arbeidsstatus."
+msgstr "用于WordPress的文档管理及版本控制插件。方便团队成员协同编辑文件并管理工作流。"
 
 msgid "Benjamin J. Balter"
 msgstr "Benjamin J. Balter"
