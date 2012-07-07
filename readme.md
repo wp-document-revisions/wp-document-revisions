@@ -139,9 +139,15 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/benbalter/WP-Document-Revisions/wiki). Feel free to contribute!
 * Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
 * Added Norwegian translation, special thanks to Daniel Haugen
-* Tests now utilizes newer wordpress-tests framework, as recently adopted by core
-* `serve_file` now hooks into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
-* Crisper menu icon, special thanks to [Phil Russell](www.optionotter.com)
+* [Crisper menu icon](https://github.com/benbalter/WP-Document-Revisions/commit/00ffe42daabacf90091cc3638dd2658c2376f01a), special thanks to [Phil Russell](www.optionotter.com)
+* Pushpin icon [replaced with Retina document icon](https://github.com/benbalter/WP-Document-Revisions/commit/c36ee849512f77432db8e6783a0bc4389f33f0ab) on document list and document edit screen, special thanks to [Marvin Rühe](https://github.com/Marv51)
+* Unit tests now utilizes newer [wordpress-tests](https://github.com/nb/wordpress-tests) framework, as recently adopted by core
+* `serve_file` [now hooks](https://github.com/benbalter/WP-Document-Revisions/commit/57cac162e40255efb29c354754e9a0b8df05a2ef) into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
+* Fix for `document_to_private` filter [not properly passing](https://github.com/benbalter/WP-Document-Revisions/commit/04922d73eb63172e79f2f9e86e4002cee032e4ef) the pre-filtered document object, props [Marvin Rühe](https://github.com/Marv51).
+* [Better loading](https://github.com/benbalter/WP-Document-Revisions/commit/0349f8ebcf931f6b2731b42ae795b3191ce9ed45) of administrative functions
+* [Better toggling](https://github.com/benbalter/WP-Document-Revisions/commit/6947310c06a8267573835c6b4bc04e3ad1b29405) of Workflow state support for integration with Edit Flow and other plugins
+* Administrative CSS [now stored in a separate file](https://github.com/benbalter/WP-Document-Revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/benbalter/WP-Document-Revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
+* Administrative CSS and Javascript files now versioned based on plugin version to allow for better caching
 
 ### 1.3.1 ##
 * Better permalink support for draft and pending documents
