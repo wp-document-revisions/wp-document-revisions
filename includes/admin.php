@@ -73,7 +73,7 @@ class Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
 
 		//edit flow support
-		add_action( 'admin_init', array( &$this, 'edit_flow_admin_support' ), 20 );
+		add_action( 'admin_init', array( &$this, 'disable_workflow_states' ), 20 );
 
 		//admin css
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
