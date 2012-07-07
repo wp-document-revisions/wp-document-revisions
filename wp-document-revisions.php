@@ -170,7 +170,7 @@ class Document_Revisions {
 			'menu_position'        => null,
 			'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
 			'supports'             => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' ),
-			'menu_icon'            => plugins_url( '/menu-icon.png', __FILE__ ),
+			'menu_icon'            => plugins_url( '/img/menu-icon.png', __FILE__ ),
 		);
 
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
