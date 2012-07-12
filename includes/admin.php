@@ -155,10 +155,10 @@ class Document_Revisions_Admin {
 		//loop through each tab in the help array and add
 		foreach ( $this->get_help_text() as $title => $content ) {
 			$screen->add_help_tab( array(
-				'title'   => $title,
-				'id'      => str_replace( ' ', '_', $title ),
-				'content' => $content,
-			) );
+					'title'   => $title,
+					'id'      => str_replace( ' ', '_', $title ),
+					'content' => $content,
+				) );
 		}
 	}
 
@@ -181,22 +181,22 @@ class Document_Revisions_Admin {
 		$help = array(
 			'document' => array(
 				__( 'Basic Usage', 'wp-document-revisions' ) =>
-			    	'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p>' .
-			    	'<p>' . __( 'Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.', 'wp-document-revisions' ) . '</p>' .
-					'<p>' . __( 'When done, simply click <code>Update</code> to save your changes', 'wp-document-revisions' ) . '</p>',
+				'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p>' .
+				'<p>' . __( 'Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.', 'wp-document-revisions' ) . '</p>' .
+				'<p>' . __( 'When done, simply click <code>Update</code> to save your changes', 'wp-document-revisions' ) . '</p>',
 				__( 'Revision Log', 'wp-document-revisions' ) =>
-			    	'<p>' . __( 'The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.', 'wp-document-revisions' ) . '</p>' .
-					'<p>' . __( 'You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.', 'wp-document-revisions' ) . '</p>',
+				'<p>' . __( 'The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.', 'wp-document-revisions' ) . '</p>' .
+				'<p>' . __( 'You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.', 'wp-document-revisions' ) . '</p>',
 				__( 'Workflow State', 'wp-document-revisions' ) =>
-			    	'<p>' . __( 'The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.', 'wp-document-revisions' ) . '</p>',
+				'<p>' . __( 'The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side.', 'wp-document-revisions' ) . '</p>',
 				__( 'Publishing Documents', 'wp-document-revisions' ) =>
-			    	'<p>' . __( 'By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.', 'wp-document-revisions' ) . '</p>',
+				'<p>' . __( 'By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the "Publish" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL.', 'wp-document-revisions' ) . '</p>',
 			),
 			'edit-document' => array(
 				__( 'Documents', 'wp-document-revisions' ) =>
-				    '<p>' . __( 'Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version.', 'wp-document-revisions' ) . '</p>' .
-					'<p>' . __( 'To add a new document, click <strong>Add Document</strong> on the left-hand side.', 'wp-document-revisions' ) . '</p>' .
-					'<p>' . __( 'To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.', 'wp-document-revisions' ) . '</p>',
+				'<p>' . __( 'Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version.', 'wp-document-revisions' ) . '</p>' .
+				'<p>' . __( 'To add a new document, click <strong>Add Document</strong> on the left-hand side.', 'wp-document-revisions' ) . '</p>' .
+				'<p>' . __( 'To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.', 'wp-document-revisions' ) . '</p>',
 			),
 		);
 
@@ -288,34 +288,36 @@ class Document_Revisions_Admin {
 
 		return $hidden;
 	}
-	
+
+
 	/**
 	 * Filter the admin body class to add additional classes which we can use conditionally
 	 * to style the page (e.g., when the document is locked
 	 */
 	function admin_body_class_filter( $body_class ) {
-		
+
 		global $post;
-		
+
 		if ( !$this->verify_post_type() )
 			return $body_class;
-			
+
 		$body_class .= ' document';
-		
+
 		if ( $this->get_document_lock( $post ) )
 			$body_class .= ' document-locked';
-		
+
 		return $body_class;
 	}
+
 
 	/**
 	 * Hide header (gallery, URL, library, etc.) links from media-upload
 	 * No real use case for a revision being an already uploaded file,
 	 * and javascript not compatible for that usecase as written
-	 * @since 1.2.4 
+	 * @since 1.2.4
 	 */
 	function hide_upload_header() {
-	
+
 		if ( 'media-upload' == get_current_screen()->id && $this->verify_post_type( $_GET['post_id'] ) ) { ?>
 			<style>
 				#media-upload-header {display:none;}
@@ -323,6 +325,7 @@ class Document_Revisions_Admin {
 		<?php
 		}
 	}
+
 
 	/**
 	 * Metabox to provide common document functions
@@ -353,7 +356,7 @@ class Document_Revisions_Admin {
 		</p>
 		<?php } //end if latest version ?>
 		<div class="clear"></div>
-		<?php 
+		<?php
 	}
 
 
@@ -378,7 +381,7 @@ class Document_Revisions_Admin {
 		$can_edit_post = current_user_can( 'edit_post', $post->ID );
 		$revisions = $this->get_revisions( $post->ID );
 		$key = $this->get_feed_key();
-		?>
+?>
 		<table id="document-revisions">
 			<tr class="header">
 				<th><?php _e( 'Modified', 'wp-document-revisions'); ?></th>
@@ -392,7 +395,7 @@ class Document_Revisions_Admin {
 
 			if ( !current_user_can( 'read_post', $revision->ID ) || wp_is_post_autosave( $revision ) )
 				continue;
-			?>
+?>
 			<tr>
 				<td><a href="<?php echo get_permalink( $revision->ID ); ?>" title="<?php echo $revision->post_date; ?>" class="timestamp" id="<?php echo strtotime( $revision->post_date ); ?>"><?php echo human_time_diff( strtotime( $revision->post_date ), current_time('timestamp') ); ?></a></td>
 				<td><?php echo get_the_author_meta( 'display_name', $revision->post_author ); ?></td>
@@ -403,7 +406,7 @@ class Document_Revisions_Admin {
 			</tr>
 			<?php
 		}
-		?>
+?>
 		</table>
 		<p style="padding-top: 10px;"><a href="<?php echo add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ); ?>"><?php _e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
 		<?php
@@ -450,7 +453,7 @@ class Document_Revisions_Admin {
 		//empty string passed
 		if ( $dir == '' )
 			return $this->document_upload_dir();
-		
+
 		//if the path is not absolute, assume it's relative to ABSPATH
 		if ( substr( $dir, 0, 1 ) != '/' )
 			$dir = ABSPATH . $dir;
@@ -460,7 +463,7 @@ class Document_Revisions_Admin {
 			return $dir;
 
 		//don't fire more than once
-		if ( ! get_settings_errors( 'document_upload_directory' ) ) 
+		if ( ! get_settings_errors( 'document_upload_directory' ) )
 			//dir changed, throw warning
 			add_settings_error( 'document_upload_directory', 'document-upload-dir-change', __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' ), 'updated' );
 
@@ -590,7 +593,7 @@ class Document_Revisions_Admin {
 		if ( $location == add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) ) )
 			//append the settings-updated query arg and return
 			$location = add_query_arg( 'settings-updated', 'true', $location );
-		
+
 		return $location;
 	}
 
@@ -655,7 +658,7 @@ class Document_Revisions_Admin {
 	 */
 	function bind_upload_cb() {
 		global $pagenow;
-		
+
 		if ( 'media-upload.php' == $pagenow ) : ?>
 		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 		<?php endif;
@@ -867,11 +870,11 @@ class Document_Revisions_Admin {
 
 			//get terms
 			$state = wp_get_post_terms( $post_id, 'workflow_state' );
-	
+
 			//verify state exists
 			if ( sizeof( $state ) == 0)
 				return;
-	
+
 			//output (no return)
 			echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug) ) . '">' . $state[0]->name . '</a>';
 		}
@@ -910,7 +913,7 @@ class Document_Revisions_Admin {
 
 		//verify column
 		if ( 'currently_editing' == $column_name && $this->verify_post_type( $post_id ) ) {
-			
+
 			//output will be display name, if any
 			if ( $lock = $this->get_document_lock( $post_id ) )
 				echo $lock;
@@ -929,7 +932,7 @@ class Document_Revisions_Admin {
 
 		$current_state = wp_get_post_terms( $post->ID, 'workflow_state' );
 		$states = get_terms( 'workflow_state', array( 'hide_empty'=> false ) );
-		?>
+?>
 		<label for="workflow_state"><?php _e( 'Current State', 'wp-document-revisions' ); ?>:</label>
 		<select name="workflow_state" id="workflow_state">
 			<option></option>
@@ -993,17 +996,18 @@ class Document_Revisions_Admin {
 	 */
 	function post_author_meta_box( $post ) {
 		global $user_ID;
-		?>
+?>
 		<label class="screen-reader-text" for="post_author_override"><?php _e( 'Owner', 'wp-document-revisions' ); ?></label>
 		<?php _e( 'Document Owner', 'wp-document-revisions' ); ?>:
 		<?php
 		wp_dropdown_users( array(
-			'who'              => apply_filters( 'document_revisions_owners', '' ),
-			'name'             => 'post_author_override',
-			'selected'         => empty( $post->ID ) ? $user_ID : $post->post_author,
-			'include_selected' => true
-		) );
+				'who'              => apply_filters( 'document_revisions_owners', '' ),
+				'name'             => 'post_author_override',
+				'selected'         => empty( $post->ID ) ? $user_ID : $post->post_author,
+				'include_selected' => true
+			) );
 	}
+
 
 	/**
 	 * Back Compat
@@ -1011,14 +1015,15 @@ class Document_Revisions_Admin {
 	function enqueue_js() {
 		_deprecated_function( __FUNCTION__, '1.3.2 of WP Document Revisions', 'enqueue' );
 		$this->enqueue();
-		
+
 	}
+
 
 	/**
 	 * Enqueue admin JS and CSS files
 	 */
 	function enqueue() {
-		
+
 		//only include JS on document pages
 		if ( !$this->verify_post_type() )
 			return;
@@ -1040,14 +1045,14 @@ class Document_Revisions_Admin {
 			'days'                => __( '%d days', 'wp-document-revisions' ),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
 		);
-		
+
 		$wpdr = self::$parent;
 
 		//Enqueue JS
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array('jquery'), $wpdr->version );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
-		
+
 		//enqueue CSS
 		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', dirname( __FILE__ ) ), null, $wpdr->version );
 
@@ -1144,7 +1149,8 @@ class Document_Revisions_Admin {
 		if ( is_numeric( $post->post_content ) && get_post( $post->post_content ) )
 			wp_delete_attachment( $post->post_content, false );
 	}
-	
+
+
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy
 	 * @since 1.1
@@ -1153,21 +1159,23 @@ class Document_Revisions_Admin {
 	function edit_flow_admin_support() {
 		_deprecated_function( 'edit_flow_admin_support', '1.3.2 of WP Document Revisions', 'disable_workflow_states' );
 	}
-	
+
+
 	/**
 	 * Remove all hooks that activate workflow state support
 	 * use filter `document_use_workflow_states` to disable
 	 */
 	function disable_workflow_states() {
-		
+
 		if ( self::$parent->use_workflow_states() )
 			return false;
-			
+
 		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
-		
+
 	}
+
 
 }

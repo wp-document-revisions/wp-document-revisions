@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
-Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow. 
+Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
 Version: 1.3.3
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
@@ -123,11 +123,11 @@ class Document_Revisions {
 	 * @since 0.5
 	 */
 	function admin_init() {
-	
+
 		//only fire on admin + escape hatch to prevent fatal errors
 		if ( !is_admin() || class_exists( 'Document_Revisions_Admin' ) )
 			return;
-			
+
 		include dirname( __FILE__ ) . '/includes/admin.php';
 		$this->admin = new Document_Revisions_Admin( self::$instance );
 	}
@@ -366,17 +366,17 @@ class Document_Revisions {
 		//note, changing $post here would break $post in the global scope
 		// rename $post to attachment, or grab the attachment from $post
 		// either way, $attachment is now the object we're looking to query
-		if ( get_post_type( $post ) == 'attachment' ) 
+		if ( get_post_type( $post ) == 'attachment' )
 			$attachment = $post;
 		else if ( get_post_type( $post ) == 'document' )
-			$attachment = get_post( $this->get_latest_revision( $post->ID )->post_content );
-		
-		//sanity check in case post_content somehow doesn't represent an attachment,
-		// or in case some sort of non-document, non-attachment object/ID was passed
-		if ( get_post_type( $attachment ) != 'attachment' )
-			return '';
+				$attachment = get_post( $this->get_latest_revision( $post->ID )->post_content );
 
-		return $this->get_extension( get_attached_file( $attachment->ID ) );
+			//sanity check in case post_content somehow doesn't represent an attachment,
+			// or in case some sort of non-document, non-attachment object/ID was passed
+			if ( get_post_type( $attachment ) != 'attachment' )
+				return '';
+
+			return $this->get_extension( get_attached_file( $attachment->ID ) );
 
 	}
 
@@ -662,7 +662,7 @@ class Document_Revisions {
 		global $post;
 		global $wp_query;
 		global $wp;
-		
+
 		if ( !is_single() )
 			return $template;
 
@@ -1412,9 +1412,9 @@ class Document_Revisions {
 	 * @return unknown
 	 */
 	function edit_flow_support() {
-	
+
 		global $edit_flow;
-		
+
 		//verify edit flow is enabled
 		if ( !class_exists( 'EF_Custom_Status' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
 			return false;
@@ -1424,46 +1424,48 @@ class Document_Revisions {
 			_doing_it_wrong( 'edit_flow_support', 'Cannot call before ef_init has fired', null );
 			return false;
 		}
-		
+
 		//verify custom_status is enabled
 		if ( !$edit_flow->custom_status->module_enabled( 'custom_status' ) )
 			return false;
-		
+
 		//prevent errors if options aren't init'd yet
 		if ( !isset( $edit_flow->custom_status->module->options->post_types['document'] ) )
 			return false;
-		
+
 		//check if enabled
 		if ( $edit_flow->custom_status->module->options->post_types['document'] == 'off' )
 			return false;
 
 		add_filter( 'document_use_workflow_states', '__return_false' );
-		
+
 		return true;
 
 	}
-	
+
+
 	/**
 	 * Toggles workflow states on and off
 	 * @return bool true if workflow states are on, otherwise false
 	 */
 	function use_workflow_states() {
-		
+
 		return apply_filters( 'document_use_workflow_states', true );
-		
+
 	}
-	
+
+
 	/**
 	 * Removes front-end hooks to add workflow state support
 	 */
 	function disable_workflow_states() {
-	
+
 		if ( $this->use_workflow_states() )
 			return;
-		
+
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
-		
+
 	}
 
 

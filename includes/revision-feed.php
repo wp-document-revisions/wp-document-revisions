@@ -6,8 +6,8 @@
 
 global $post, $wpdr;
 if ( !$wpdr )
-    $wpdr = &Document_Revisions::$instance;
-    
+	$wpdr = &Document_Revisions::$instance;
+
 $rev_query = $wpdr->get_revision_query( $post->ID );
 
 header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
@@ -31,9 +31,9 @@ echo '<?xml version="1.0" encoding="'.get_option( 'blog_charset' ).'"?'.'>'; ?>
 	<language><?php echo get_option( 'rss_language' ); ?></language>
 	<sy:updatePeriod><?php echo apply_filters( 'rss_update_period', 'hourly' ); ?></sy:updatePeriod>
 	<sy:updateFrequency><?php echo apply_filters( 'rss_update_frequency', '1' ); ?></sy:updateFrequency>
-	<?php do_action( 'rss2_head' ); 	
-	while( $rev_query->have_posts()) : $rev_query->the_post(); 
-	?>	<item>
+	<?php do_action( 'rss2_head' );
+while ( $rev_query->have_posts()) : $rev_query->the_post();
+?>	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>
 		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>

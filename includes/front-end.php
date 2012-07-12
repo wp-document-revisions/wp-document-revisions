@@ -69,9 +69,9 @@ class Document_Revisions_Front_End {
 
 		//extract args
 		extract( shortcode_atts( array(
-			'id' => null,
-			'number' => null,
-		), $atts ) );
+					'id' => null,
+					'number' => null,
+				), $atts ) );
 
 		//do not show output to users that do not have the read_document_revisions capability
 		if ( !current_user_can( 'read_document_revisions' ) )
@@ -86,7 +86,7 @@ class Document_Revisions_Front_End {
 
 		//buffer output to return rather than echo directly
 		ob_start();
-		?>
+?>
 		<ul class="revisions document-<?php echo $id; ?>">
 		<?php
 		//loop through each revision
@@ -185,6 +185,8 @@ class Document_Revisions_Front_End {
 
 		return $atts;
 	}
+
+
 }
 
 
@@ -205,7 +207,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		parent::__construct( 'Document_Revisions_Recently_Revised_Widget', __( 'Recently Revised Documents', 'wp-document-revisions' ) );
-		
+
 		//can't i18n outside of a function
 		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
 	}
@@ -243,15 +245,15 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		foreach ( $documents as $document ) :
 			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
-			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
-			?>
+		$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
+?>
 			<li>
 				<a href="<?php echo $link ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
 				<?php printf( $format_string, human_time_diff( strtotime( $document->post_modified_gmt ) ), get_the_author_meta( 'display_name', $document->post_author ) ); ?>
 			</li>
 		<?php
 		endforeach;
-		
+
 		echo '</ul>' . $after_widget;
 	}
 
@@ -264,7 +266,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		foreach ( $this->defaults as $key => $value )
 			if ( !isset( $instance[ $key ] ) )
 				$instance[ $key ] = $value;
-		?>
+?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'wp-document-revisions' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
@@ -304,9 +306,14 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		return $instance;
 	}
+
+
 }
+
 
 function drrrw_widgets_init() {
 	register_widget( 'Document_Revisions_Recently_Revised_Widget' );
 }
+
+
 add_action( 'widgets_init', 'drrrw_widgets_init' );

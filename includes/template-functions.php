@@ -43,4 +43,6 @@ if ( !function_exists( 'get_document_revisions' ) ) {
 
 		return $wpdr->get_revisions( $documentID );
 	}
+
+
 }
