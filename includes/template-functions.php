@@ -22,7 +22,6 @@ if ( !function_exists( 'get_documents' ) ) {
 			$wpdr = Document_Revisions::$instance;
 
 		return $wpdr->get_documents( $args, $return_attachments );
-
 	}
 
 
@@ -43,8 +42,5 @@ if ( !function_exists( 'get_document_revisions' ) ) {
 			$wpdr = Document_Revisions::$instance;
 
 		return $wpdr->get_revisions( $documentID );
-
 	}
-
-
 }
