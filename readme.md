@@ -4,7 +4,7 @@
 **Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 **Requires at least:** 3.2  
 **Tested up to:** 3.5   
-**Stable tag:** 1.3.2
+**Stable tag:** 1.3.3
 
 [![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=master)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
@@ -138,8 +138,10 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 ## Changelog ##
 
 ### 1.3.3 ###
+* Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/benbalter/WP-Document-Revisions/issues/24)
+* Fix for [testing framework](https://github.com/nb/wordpress-tests) not being properly included in plugin repository due to bad [deploy script](https://github.com/benbalter/Github-to-WordPress-Plugin-Directory-Deployment-Script)
 * Added German translation (de_DE), special thanks to [Konstantin Obenland](http://en.wp.obenland.it/)
-* Added Chinese translation (zh_CN), special thakns to Tim Ren
+* Added Chinese translation (zh_CN), special thanks to Tim Ren
 * Updated Spanish, French, and Norwegian translations
 
 ### 1.3.2 ###
