@@ -12,7 +12,7 @@
  */
 
 $GLOBALS['wp_tests_options'] = array(
-	'active_plugins' => array( 'your-plugin/your-plugin.php' ),
+	'active_plugins' => array( 'wp-document-revisions/wp-document-revisions.php' ),
 );
 
 require getenv( 'WP_TESTS_DIR' ) . '/includes/bootstrap.php';
