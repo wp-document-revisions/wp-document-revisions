@@ -11,10 +11,8 @@
  *
  */
 
-//activate our plugin and boot up WP that's really it.
 $GLOBALS['wp_tests_options'] = array(
-    'active_plugins' => array( 'wp-document-revisions/wp-document-revisions.php' ),
+	'active_plugins' => array( 'your-plugin/your-plugin.php' ),
 );
 
-require dirname( __FILE__ ). '/wordpress-tests/init.php';
-require dirname( __FILE__ ). '/functions.php';
+require getenv( 'WP_TESTS_DIR' ) . '/includes/bootstrap.php';
