@@ -1,10 +1,14 @@
 === WP Document Revisions ===
-Contributors: benbalter
-Donate link: http://ben.balter.com/donate/
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
-Requires at least: 3.2
-Tested up to: 3.5
-Stable tag: 1.3.3
+
+=== WP Document Revisions ===
+**Contributors:** benbalter  
+**Donate link:** http://ben.balter.com/donate/  
+**Tags:** documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
+**Requires at least:** 3.2  
+**Tested up to:** 3.5   
+**Stable tag:** 1.3.3
+
+[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=master)](http://travis-ci.org/benbalter/WP-Document-Revisions)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -73,45 +77,11 @@ A document management and version control plugin that allows teams of any size t
 * Norwegian - Daniel Haugen
 * German -[Konstantin Obenland](http://en.wp.obenland.it/)
 * Chinese - Tim Ren
+* Swedish - Daniel Kroon, [Examinare AB](http://www.examinare.biz/), Sweden.
 
 *WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
 
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
-
-== Links ==
-
-* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
-* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
-* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
-* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
-* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
-* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
-
-== Donate ==
-
-Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=readme&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
-
-== How to Contribute ==
-
-WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated.
-
-* **Everyone** - help expand the projects [documentation wiki](https://github.com/benbalter/WP-Document-Revisions/wiki) to make it easier for other users to get started
-* **Users** - download the latest [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) of the plugin, and [submit bug/feature requests](https://github.com/benbalter/WP-Document-Revisions/issues).
-* **Non-English Speaking Users** - [Contribute a translation](http://translations.benbalter.com/projects/wp-document-revisions/) using the GlotPress web interface - no technical knowledge required ([how to](http://translations.benbalter.com/projects/how-to-translate)).
-* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) and submit a pull request, especially for any [known issues](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open)
-
-== Where to Get Support or Report an Issue ==
-
-*There are various resources available, depending on the type of help you're looking for:*
-
-* For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
-* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
-* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
-* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
-
-== Screenshots ==
-1. A typical WP Document Revisions edit document screen.
 
 == Installation ==
 
@@ -132,7 +102,18 @@ WP Document Revisions is an open source project and is supported by the efforts 
 
 Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions).
 
+== Screenshots ==
+
+=1. A typical WP Document Revisions edit document screen.=
+![A typical WP Document Revisions edit document screen.](http://s.wordpress.org/extend/plugins/wp-document-revisions/screenshot-1.png)
+
+
 == Changelog ==
+
+= 1.3.4 =
+* Testing framework no longer distributed with the plugin.
+* Added Swedish translation, special thanks to Daniel Kroon, [Examinare AB](http://www.examinare.biz/), Sweden.
+* Added Czech translation set, special thanks to Hynek Šťavík.
 
 = 1.3.3 =
 * Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/benbalter/WP-Document-Revisions/issues/24)
@@ -155,7 +136,6 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Administrative CSS [now stored in a separate file](https://github.com/benbalter/WP-Document-Revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/benbalter/WP-Document-Revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
 * Administrative CSS and Javascript files now versioned based on plugin version to allow for better caching
 
-
 = 1.3.1 =
 * Better permalink support for draft and pending documents
 * Whenever possible browser will attempt to display documents in browser, rather than prompting with save as dialog (e.g., PDFs)
@@ -169,7 +149,7 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Added Spanish Translation Support (es_ES -- special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., http://domain.com/documentos/2012/04/test.txt rather than /documents/)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
-* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
+* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.  
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
 * Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
 * Default document upload directory now honors WordPress-wide defaults and features enhanced multisite support
@@ -278,7 +258,7 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 
 == Upgrade Notice ==
 
-= 1.3 = 
+= 1.3 =
 * Spanish translation support, more granular permission control, more accurate HTTP headers, better Edit Flow support, better multisite support for custom upload directories, document slug now customizeable
 
 = 1.2 =
@@ -301,3 +281,74 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 
 = 1.0.1 =
 * Minor fixes and improvements
+
+
+== Donate ==
+
+Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=wiki&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
+
+
+== Frequently Asked Questions ==
+
+Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions).
+
+== How To Contribute ==
+
+WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated.
+
+* **Everyone** - help expand the projects [documentation wiki](https://github.com/benbalter/WP-Document-Revisions/wiki) to make it easier for other users to get started
+* **Users** - download the latest [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) of the plugin, and [submit bug/feature requests](https://github.com/benbalter/WP-Document-Revisions/issues).
+* **Non-English Speaking Users** - [Contribute a translation](http://translations.benbalter.com/projects/wp-document-revisions/) using the GlotPress web interface - no technical knowledge required ([how to](http://translations.benbalter.com/projects/how-to-translate)).
+* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) and submit a pull request, especially for any [known issues](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open)
+
+== Links ==
+
+* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
+* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
+* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
+
+== Upgrade Notice ==
+
+= 1.3 =
+* Spanish translation support, more granular permission control, more accurate HTTP headers, better Edit Flow support, better multisite support for custom upload directories, document slug now customizeable
+
+= 1.2 =
+* Widgets, shortcodes, and templating functions, oh my!
+
+= 1.1 =
+* Edit Flow support, bug fixes, ui improvements
+
+= 1.0.5 =
+* Fixed bug where password-protected documents would not prompt for password under certain circumstances
+
+= 1.0.4 =
+* Significant performance improvements, interface improvements, better feed handling, and bug fixes
+
+= 1.0.3 =
+* Minor improvements to revision handling, permalinks, permissions, the edit document screen, and front-end compatibility
+
+= 1.0.2 =
+* Fix for authentication of RSS feeds in multisite installs
+
+= 1.0.1 =
+* Minor fixes and improvements
+
+
+== Useful Plugins And Tools ==
+
+* [Members](http://wordpress.org/extend/plugins/members/)
+* [Edit Flow](http://editflow.org)
+* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
+
+== Where To Get Support Or Report An Issue ==
+
+*There are various resources available, depending on the type of help you're looking for:*
+
+* For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
+* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
+* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
+* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
