@@ -44,22 +44,6 @@ function _destroy_uploads() {
     	_rmdir( $uploads['basedir'] . '/' . $file ); 
 }
 
-function _rmdir( $path ) {
-    if ( in_array(basename( $path ), array( '.', '..' ) ) ) {
-    	return;
-    } elseif ( is_file( $path ) ) {
-    	unlink( $path );
-    } elseif ( is_dir( $path ) ) {
-    	foreach ( scandir( $path ) as $file )
-    		_rmdir( $path . '/' . $file );
-    	rmdir( $path );
-    }
-}
-
-function rand_str($len=32) {
-    return substr(md5(uniqid(rand())), 0, $len);
-}
-    
 /**
  * We want to make sure we're testing against the db, not just in-memory data
  * this will flush everything and reload it from the db
