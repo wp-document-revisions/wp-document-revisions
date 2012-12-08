@@ -11,44 +11,38 @@ class WPDocumentRevisions
     jQuery(document).bind 'documentUpload', @legacyPostDocumentUpload
     @bindPostDocumentUploadCB()
     
-    #automatically refresh all timestamps every minute with actual human time diff
-    setInterval @updateTimestamps, 60000  #60k = 1 minute
+    setInterval @updateTimestamps, 60000 #automatically refresh all timestamps every minute with actual human time diff
   
-    #disable the button (from autosave.js)
-    jQuery(':button, :submit', '#submitpost').prop 'disabled', true
+    jQuery(':button, :submit', '#submitpost').prop 'disabled', true  #disable the button (from autosave.js)
 
-    #rename the function the autosave.js uses to enable the button to check our flag
-    @autosaveEnableButtonsOriginal = autosave_enable_buttons
+    @autosaveEnableButtonsOriginal = autosave_enable_buttons #rename the function the autosave.js uses to enable the button to check our flag
+
+    window.autosave_enable_buttons = WPDocumentRevisions.autosave_enable_buttons #because the default autosave disabled and enabled the button on every ping, we must overwrite it
     
-    #because the default autosave disabled and enabled the button on every ping, we must overwrite it
-    window.autosave_enable_buttons = WPDocumentRevisions.autosave_enable_buttons
-      
-    #if post status is changed, enable the submit button so the change can be saved
-    jQuery('#misc-publishing-actions a').click @enableSubmit
+    jQuery('#misc-publishing-actions a').click @enableSubmit #if post status is changed, enable the submit button so the change can be saved
         
-    #if any metabox is changed, allow submission
-    jQuery('input, select').live 'change', @enableSubmit
-        
-    #if any metabox is changed, allow submission
-    jQuery('input[type=text], textarea').live 'keyup', @enableSubmit    
+    jQuery('input, select').live 'change', @enableSubmit #if any metabox is changed, allow submission
+
+    jQuery('input[type=text], textarea').live 'keyup', @enableSubmit #if any metabox is changed, allow submission
+
 
   #hijack autosave to serve as a lock
   #ensure buttons remain disabled unless user has uploaded something
   autosaveEnableButtons: ->
-      
-    #trigger a post-autosave event to check the lock
-    jQuery(document).trigger 'autosaveComplete'
-        
+    jQuery(document).trigger 'autosaveComplete' #trigger a post-autosave event to check the lock
     @autosaveEnableButtonsOriginal() if ( @hasUpload )
+
 
   #enable submit buttons    
   enableSubmit: ->
     jQuery(':button, :submit', '#submitpost').removeAttr 'disabled'
   
+  
   #restore revision confirmation
   restoreRevision: (e) ->
     e.preventDefault()
     window.location.href = jQuery(this).attr 'href' if confirm wp_document_revisions.restoreConfirmation
+
     
   #lock override toggle
   overrideLock: ->
@@ -64,9 +58,11 @@ class WPDocumentRevisions
       else
         alert wp_document_revisions.lockError
 
+
   #HTML5 Lock Override Notifications permission check on document download
   requestPermission: ->
     window.webkitNotifications.requestPermission() if window.webkitNotifications?
+
       
   #HTML5 Lock Override Notifications
   lockOverrideNotice: (notice) ->
@@ -74,6 +70,7 @@ class WPDocumentRevisions
       window.webkitNotifications.RequestPermission lock_override_notice
     else
       window.webkitNotifications.createNotification( wp_document_revisions.lostLockNoticeLogo, wp_document_revisions.lostLockNoticeTitle, notice ).show()
+
       
   #Callback to handle post autosave action
   postAutosaveCallback: ->
@@ -84,19 +81,18 @@ class WPDocumentRevisions
       wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace '%s', jQuery('#title').val()
             
       if ( window.webkitNotifications ) 
-        #browser supports html5 Notifications
-        lock_override_notice wp_document_revisions.lostLockNotice 
+        lock_override_notice wp_document_revisions.lostLockNotice #browser supports html5 Notifications
       else
-        #browser does not support lock override notice, send old school alert
-        alert wp_document_revisions.lostLockNotice
-    
+        alert wp_document_revisions.lostLockNotice #browser does not support lock override notice, send old school alert
+
       location.reload true  #reload the page to lock them out and prevent duplicate alerts
+
 
   #backwards compatibility for pre, 3.3 versions
   #variables are passed as globals and jQuery event is triggered inline
   legacyPostDocumentUpload: (attachmentID, extension) ->
-    
     @postDocumentUpload attachmentID, extension #call 3.3+ post upload callback
+
     
   #Javascript version of the WP human time diff PHP function, allows time stamps to by dynamically updated
   human_time_diff: ( from, to  ) ->
@@ -143,6 +139,7 @@ class WPDocumentRevisions
     n = 1 if n < 1
     n
 
+
   #registers our callback with plupload on media-upload.php
   bindPostDocumentUploadCB: ->
     
@@ -155,12 +152,13 @@ class WPDocumentRevisions
         return; #if error, kick
       
       @postDocumentUpload file.name, response.response 
+
             
   #loop through all timestamps and update
   updateTimestamps: ->
-  
     jQuery( '.timestamp').each -> #loop through all timestamps and update the timestamp
       jQuery(this).text human_time_diff( jQuery(this).attr('id') )
+
 
   postDocumentUpload: (file, attachmentID) -> #callback to handle post document upload event
     
@@ -173,7 +171,6 @@ class WPDocumentRevisions
     if file instanceof Object
       file = file.name.split('.').pop()
       
-
     return if @hasUpload  #prevent from firing more than once
   
     @window.jQuery('#content').val attachmentID  #stuff most recent version URL into hidden content field
@@ -198,6 +195,7 @@ class WPDocumentRevisions
     #If they already have a permalink, update it with the current extension in case it changed
     if @window.jQuery('#sample-permalink').length != 0 
       @window.jQuery('#sample-permalink').html @window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?jQuery/i, wp_document_revisions.extension )
+
 
 jQuery(document).ready ($) ->
   
