@@ -157,7 +157,7 @@ class WPDocumentRevisions
   #loop through all timestamps and update
   updateTimestamps: ->
     jQuery( '.timestamp').each -> #loop through all timestamps and update the timestamp
-      jQuery(this).text human_time_diff( jQuery(this).attr('id') )
+      jQuery(this).text @human_time_diff( jQuery(this).attr('id') )
 
 
   postDocumentUpload: (file, attachmentID) -> #callback to handle post document upload event
