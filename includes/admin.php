@@ -634,11 +634,7 @@ class Document_Revisions_Admin {
 		//begin output buffer so the javascript can be returned as a string, rather than output directly to the browser
 		ob_start();
 
-		?><script>
-		var attachmentID = <?php echo (int) $id; ?>;
-		var extension = '<?php echo esc_js( $this->get_file_type( $post ) ); ?>';
-		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
-		</script><?php
+		?><script>parent.WPDocumentRevisions.postDocumentUpload( '<?php echo esc_js( $this->get_file_type( $post ) ); ?>', <?php echo (int) $id; ?> );</script><?php
 
 		//get contents of output buffer
 		$js = ob_get_contents();
@@ -660,7 +656,7 @@ class Document_Revisions_Admin {
 		global $pagenow;
 
 		if ( 'media-upload.php' == $pagenow ) : ?>
-		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+		<script>parent.WPDocumentRevisions.bindPostDocumentUploadCB()</script>
 		<?php endif;
 	}
 
@@ -1049,8 +1045,7 @@ class Document_Revisions_Admin {
 		$wpdr = self::$parent;
 
 		//Enqueue JS
-		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array('jquery'), $wpdr->version );
+		wp_enqueue_script( 'wp_document_revisions', plugins_url('/js/wp-document-revisions.js', dirname( __FILE__ ) ), array('jquery'), $wpdr->version );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 
 		//enqueue CSS
