@@ -369,7 +369,13 @@ class Document_Revisions {
 		if ( get_post_type( $post ) == 'attachment' )
 			$attachment = $post;
 		else if ( get_post_type( $post ) == 'document' )
-				$attachment = get_post( $this->get_latest_revision( $post->ID )->post_content );
+				$latest_revision = $this->get_latest_revision( $post->ID );
+
+				// verify a previous revision exists
+				if ( $latest_revision == false )
+					return false;
+					
+				$attachment = get_post( $latest_revision->post_content );
 
 			//sanity check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed
