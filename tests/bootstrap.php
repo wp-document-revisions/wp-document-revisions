@@ -17,4 +17,4 @@ $GLOBALS['wp_tests_options'] = array(
 	'active_plugins' => array( 'wp-document-revisions/wp-document-revisions.php' ),
 );
 
-require getenv( 'WP_TESTS_DIR' ) . '/includes/bootstrap.php';
+require dirname( __FILE__ ) . '/lib/bootstrap.php';

@@ -1,2 +1,2 @@
 .DS_Store
-tests/wordpress-tests
+tests/wp-tests-config.php
