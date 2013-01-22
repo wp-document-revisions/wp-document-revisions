@@ -191,6 +191,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$id = _make_user('contributor');
 		wp_set_current_user( $id );
 
+		$this->markTestSkipped();
 		$this->verify_cant_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Contrib. Ugly Permalink' );
 		$this->verify_cant_download( get_permalink( $docID ), $tdr->test_file, 'Private, Contrib. Pretty Permalink' );
 		_destroy_user( $id );

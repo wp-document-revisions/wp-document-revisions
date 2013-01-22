@@ -743,18 +743,18 @@ class Document_Revisions {
 		// "attachment" -- force save-as dialog to pop up when file is downloaded (pre 1.3.1 default)
 		// "inline" -- attempt to open in browser (e.g., PDFs), if not possible, prompt with save as (1.3.1+ default)
 		$disposition = ( apply_filters( 'document_content_disposition_inline', true ) ) ? 'inline' : 'attachment';
-		header( 'Content-Disposition: ' . $disposition . '; filename="' . $filename . '"' );
+		@header( 'Content-Disposition: ' . $disposition . '; filename="' . $filename . '"' );
 
 		//filetype and length
-		header( 'Content-Type: ' . $mimetype ); // always send this
-		header( 'Content-Length: ' . filesize( $file ) );
+		@header( 'Content-Type: ' . $mimetype ); // always send this
+		@header( 'Content-Length: ' . filesize( $file ) );
 
 		//modified
 		$last_modified = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
 		$etag = '"' . md5( $last_modified ) . '"';
-		header( "Last-Modified: $last_modified GMT" );
-		header( 'ETag: ' . $etag );
-		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT' );
+		@header( "Last-Modified: $last_modified GMT" );
+		@header( 'ETag: ' . $etag );
+		@header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT' );
 
 		// Support for Conditional GET
 		$client_etag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( $_SERVER['HTTP_IF_NONE_MATCH'] ) : false;
