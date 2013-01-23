@@ -372,8 +372,8 @@ class Document_Revisions {
 				$latest_revision = $this->get_latest_revision( $post->ID );
 
 				// verify a previous revision exists
-				if ( $latest_revision == false )
-					return false;
+				if ( !$latest_revision )
+					return '';
 					
 				$attachment = get_post( $latest_revision->post_content );
 
