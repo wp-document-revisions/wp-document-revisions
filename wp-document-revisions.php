@@ -1096,12 +1096,12 @@ class Document_Revisions {
 		if ( !$this->verify_post_type() )
 			return $default;
 
-		// Look for setting to allow default post type rss feed for documents.  Need to define a settings panel?
-		if ( true )
-			return $default;
-		else
+		// filter to over ride use of the custom doucment feed
+		if ( apply_filters( 'document_custom_feed', true ) )
 			return 'revision_log';
-
+		else
+			return $default;
+			
 	}
 
 
@@ -1115,14 +1115,11 @@ class Document_Revisions {
 		if ( !$this->verify_post_type() )
 			return;
 
-		// Look for setting to allow default post type rss feed for documents. Need to define a settings panel?
-		if ( true )
-			return;
-		else{
+		// filter to over ride use of a validation key
+		if ( apply_filters( 'document_verify_feed_key', true ) ){
 			if ( is_feed() && !$this->validate_feed_key() )
 				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) );
 		}
-
 
 	}
 
