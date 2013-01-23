@@ -1087,39 +1087,37 @@ class Document_Revisions {
 
 	/**
 	 * Intercepts RSS feed redirect and forces our custom feed
+	 *
+	 * Note: Use `add_filter( 'document_custom_feed', '__return_false' )` to shortcircuit
+	 *
 	 * @since 0.5
 	 * @param string $default the original feed
 	 * @return string the slug for our feed
 	 */
 	function hijack_feed( $default ) {
 
-		if ( !$this->verify_post_type() )
+		if ( !$this->verify_post_type() || !apply_filters( 'document_custom_feed', true ) )
 			return $default;
 
-		// filter to over ride use of the custom doucment feed
-		if ( apply_filters( 'document_custom_feed', true ) )
-			return 'revision_log';
-		else
-			return $default;
+		return 'revision_log';
 			
 	}
 
 
 	/**
 	 * Verifies that users are auth'd to view a revision feed
+	 *
+	 * Note: Use `add_filter( 'document_verify_feed_key', '__return_false' )` to shortcircuit
+	 *
 	 * @since 0.5
 	 */
 	function revision_feed_auth() {
-		global $wpdb;
 
-		if ( !$this->verify_post_type() )
+		if ( !$this->verify_post_type() || !apply_filters( 'document_verify_feed_key', true ) )
 			return;
 
-		// filter to over ride use of a validation key
-		if ( apply_filters( 'document_verify_feed_key', true ) ){
-			if ( is_feed() && !$this->validate_feed_key() )
-				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) );
-		}
+		if ( is_feed() && !$this->validate_feed_key() )
+				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) )
 
 	}
 
