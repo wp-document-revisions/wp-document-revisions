@@ -1123,7 +1123,7 @@ class Document_Revisions {
 			return;
 
 		if ( is_feed() && !$this->validate_feed_key() )
-				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) )
+				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) );
 
 	}
 
