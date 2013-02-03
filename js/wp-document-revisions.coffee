@@ -14,8 +14,8 @@ class WPDocumentRevisions
     @$(document).bind 'documentUpload', @legacyPostDocumentUpload
     @$(':button, :submit', '#submitpost').prop 'disabled', true  #disable the button (from autosave.js)
     @$('#misc-publishing-actions a').click @enableSubmit #if post status is changed, enable the submit button so the change can be saved
-    @$('input, select').live 'change', @enableSubmit #if any metabox is changed, allow submission
-    @$('input[type=text], textarea').live 'keyup', @enableSubmit #if any metabox is changed, allow submission
+    @$('input, select').on 'change', @enableSubmit #if any metabox is changed, allow submission
+    @$('input[type=text], textarea').on 'keyup', @enableSubmit #if any metabox is changed, allow submission
 
     @bindPostDocumentUploadCB()
     @hijackAutosave()
@@ -39,12 +39,12 @@ class WPDocumentRevisions
     @$(':button, :submit', '#submitpost').removeAttr 'disabled'
   
   #restore revision confirmation
-  restoreRevision: (e) ->
+  restoreRevision: (e) =>
     e.preventDefault()
     window.location.href = @$(this).attr 'href' if confirm wp_document_revisions.restoreConfirmation
 
   #lock override toggle
-  overrideLock: ->
+  overrideLock: =>
     @$.post ajaxurl, 
       action: 'override_lock'
       post_id: @$("#post_ID").val() || 0
@@ -151,7 +151,7 @@ class WPDocumentRevisions
             
   #loop through all timestamps and update
   updateTimestamps: =>
-    @$( '.timestamp').each -> #loop through all timestamps and update the timestamp
+    @$( '.timestamp').each => #loop through all timestamps and update the timestamp
       @$(this).text @human_time_diff( @$(this).attr('id') )
 
   postDocumentUpload: (file, attachmentID) -> #callback to handle post document upload event

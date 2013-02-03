@@ -14,6 +14,10 @@
 
       this.postAutosaveCallback = __bind(this.postAutosaveCallback, this);
 
+      this.overrideLock = __bind(this.overrideLock, this);
+
+      this.restoreRevision = __bind(this.restoreRevision, this);
+
       this.enableSubmit = __bind(this.enableSubmit, this);
 
       this.autosaveEnableButtons = __bind(this.autosaveEnableButtons, this);
@@ -27,8 +31,8 @@
       this.$(document).bind('documentUpload', this.legacyPostDocumentUpload);
       this.$(':button, :submit', '#submitpost').prop('disabled', true);
       this.$('#misc-publishing-actions a').click(this.enableSubmit);
-      this.$('input, select').live('change', this.enableSubmit);
-      this.$('input[type=text], textarea').live('keyup', this.enableSubmit);
+      this.$('input, select').on('change', this.enableSubmit);
+      this.$('input[type=text], textarea').on('keyup', this.enableSubmit);
       this.bindPostDocumentUploadCB();
       this.hijackAutosave();
       setInterval(this.updateTimestamps, 60000);
@@ -156,8 +160,9 @@
     };
 
     WPDocumentRevisions.prototype.updateTimestamps = function() {
+      var _this = this;
       return this.$('.timestamp').each(function() {
-        return this.$(this).text(this.human_time_diff(this.$(this).attr('id')));
+        return _this.$(_this).text(_this.human_time_diff(_this.$(_this).attr('id')));
       });
     };
 
