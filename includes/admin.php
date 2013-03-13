@@ -979,7 +979,7 @@ class Document_Revisions_Admin {
 		$old = wp_get_post_terms( $post_id,  'workflow_state', true );
 
 		//no change, keep moving
-		if ( isset( $old[0] ) && $old[0]->term_id == $_POST['workflow_state'] )
+		if ( isset( $old[0] ) && $old[0]->slug == $_POST['workflow_state'] )
 			return;
 
 		//all's good, let's save
