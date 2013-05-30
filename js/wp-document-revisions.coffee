@@ -41,7 +41,7 @@ class WPDocumentRevisions
   #restore revision confirmation
   restoreRevision: (e) =>
     e.preventDefault()
-    window.location.href = @$(this).attr 'href' if confirm wp_document_revisions.restoreConfirmation
+    window.location.href = @$(e.target).attr 'href' if confirm wp_document_revisions.restoreConfirmation
 
   #lock override toggle
   overrideLock: =>
