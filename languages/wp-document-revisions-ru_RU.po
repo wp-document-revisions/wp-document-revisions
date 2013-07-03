@@ -1,68 +1,19 @@
-# Copyright (C) 2012 WP Document Revisions
+# Translation of WP Document Revisions in Russian
 # This file is distributed under the same license as the WP Document Revisions package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 1.3.2\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-document-revisions\n"
-"POT-Creation-Date: 2012-07-07 18:58:29+00:00\n"
+"PO-Revision-Date: 2013-07-03 13:29:32+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-03-19 23:01+0400\n"
-"Last-Translator: evgeny <work@verha.net>\n"
-"Language-Team: Evgeny Vlasov <work@verha.net>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
-"X-Poedit-Language: Russian\n"
-"X-Poedit-Country: RUSSIAN FEDERATION\n"
-
-#: includes/admin.php:126
-msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Документ обновлен. <a href=\"%s\">Скачать документ</a>"
-
-#: includes/admin.php:127
-msgid "Custom field updated."
-msgstr "Произвольное поле обновлено."
-
-#: includes/admin.php:128
-msgid "Custom field deleted."
-msgstr "Произвольное поле удалено."
-
-#: includes/admin.php:129
-msgid "Document updated."
-msgstr "Документ обновлен."
-
-#: includes/admin.php:130
-msgid "Document restored to revision from %s"
-msgstr "Документ восстановлен из ревизии %s"
-
-#: includes/admin.php:131
-msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr "Документ опубликован. <a href=\"%s\">Скачать документ</a>"
-
-#: includes/admin.php:132
-msgid "Document saved."
-msgstr "Документ сохранен."
-
-#: includes/admin.php:133
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Документ отправлен. <a target=\"_blank\" href=\"%s\">Скачать документ</a>"
-
-#: includes/admin.php:134
-msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr "Публикация документа запланирована на: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Предпросмотр</a>"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: WP Document Revisions\n"
 
 #: includes/admin.php:134
 msgctxt "%1$s: date; %2$s: time"
 msgid "%1$s @ %2$s"
 msgstr "%1$s @ %2$s"
-
-#: includes/admin.php:135
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Черновик документа обновлен. <a target=\"_blank\" href=\"%s\">Скачать документ</a>"
-
-#: includes/admin.php:187
-msgid "Basic Usage"
-msgstr "Основы использования"
 
 #: includes/admin.php:188
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
@@ -76,10 +27,6 @@ msgstr "После успешной загрузки, вы можете доба
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr "Когда закончите, просто нажмите <code>Обновить</code> для сохранения изменений"
 
-#: includes/admin.php:191
-msgid "Revision Log"
-msgstr "Журнал ревизий"
-
 #: includes/admin.php:192
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
 msgstr "Журнал ревизий предоставляет собой краткий обзор изменений внесенных в определенной ревизии. Широко используется сообществами в работе с открытым исходным кодом документов, позволяет обеспечивать полную историю изменений документа."
@@ -88,28 +35,13 @@ msgstr "Журнал ревизий предоставляет собой кра
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
 msgstr "Вы можете скачать и просмотреть предыдущие версии документа нажав на метку в журнале ревизий. Вы также можете восстановить изменения, для этого нажмите <code>восстановить</code>."
 
-#: includes/admin.php:194
-#: includes/admin.php:265
-#: includes/admin.php:891
-msgid "Workflow State"
-msgstr "Этап рабочего процесса"
-
 #: includes/admin.php:195
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
 msgstr "Этапы рабочего процесса могут использоваться в целях информирования членов команды о том, в какой стадии рабочего процесса находится документ. Поле не является обязательным и может быть отредактированно, для этого нажмите <code>Этапы рабочего процесса</code> слева."
 
-#: includes/admin.php:196
-msgid "Publishing Documents"
-msgstr "Публикация документов"
-
 #: includes/admin.php:197
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr "По умолчанию загруженные документы доступны только зарегистрированным пользователям. Документы могут быть опубликованы, тем самым став доступными для всего мира, для этого нажмите \"Опубликовать\" справа. Любой документ помеченный как опубликованный будет доступен для всех  кто имеет корректный URL."
-
-#: includes/admin.php:200
-#: wp-document-revisions.php:154
-msgid "Documents"
-msgstr "Документы"
 
 #: includes/admin.php:201
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
@@ -123,109 +55,21 @@ msgstr "Для добавления нового документа, нажми�
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
 msgstr "Чтобы просмотреть все документы находящиеся на оределенном этапе рабочего процесса, нажмите <strong>Этапы рабочего процесса</strong> в меню слева."
 
-#: includes/admin.php:258
-#: includes/admin.php:373
-msgid "Revision Summary"
-msgstr "Резюме ревизии"
-
-#: includes/admin.php:259
-msgid "Document"
-msgstr "Документ"
-
-#: includes/admin.php:273
-#: includes/admin.php:873
-#: includes/admin.php:1054
-msgid "Owner"
-msgstr "Владелец"
-
-#: includes/admin.php:348
-msgid "%s has prevented other users from making changes."
-msgstr "%s помешал другим пользователям вносить изменения."
-
-#: includes/admin.php:350
-msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr "<br /> Если вы считаете, что произошла ошибка, можно <a href=\"#\" id=\"override_link\">отменить блокировку</ a>, но изменения будут потеряны."
-
-#: includes/admin.php:354
-msgid "Upload New Version"
-msgstr "Загрузить новую версию"
-
-#: includes/admin.php:359
-msgid "Latest Version of the Document"
-msgstr "Последняя версия Документа"
-
-#: includes/admin.php:360
-msgid "Download"
-msgstr "Скачать"
-
-#: includes/admin.php:361
-msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr "Загружен <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> назад пользователем %4$s"
-
-#: includes/admin.php:375
-msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr "Резюме ревизии - дополнительная информация позволяющая другим пользователям быстро и легко увидеть, какие изменения вы сделали, не открывая сам файл."
-
-#: includes/admin.php:392
-msgid "Modified"
-msgstr "Изменен"
-
-#: includes/admin.php:393
-msgid "User"
-msgstr "Пользователь"
-
-#: includes/admin.php:394
-msgid "Summary"
-msgstr "Резюме"
-
-#: includes/admin.php:395
-msgid "Actions"
-msgstr "Действия"
-
-#: includes/admin.php:410
-msgid "Restore"
-msgstr "Восстановить"
-
-#: includes/admin.php:420
-msgid "RSS Feed"
-msgstr "RSS канал"
-
-#: includes/admin.php:451
-#: includes/admin.php:530
+#: includes/admin.php:451 includes/admin.php:530
 msgid "Document Slug"
 msgstr "Slug Документа"
 
-#: includes/admin.php:478
-msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr "Директория для загрузки документов изменена, существующие загрузки необходимо переместить в новую директорию для гарантиии их доступности."
+#: includes/admin.php:643
+msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
+msgstr "Вы можете опционально включать строку <code>%site_id%</code> в пути к отдельным файлам на сайте."
 
 #: includes/admin.php:507
 msgid "Document slug changed, but some previously published URLs may now be broken."
 msgstr "Slug Документа изменен, некоторые ранее опубликованные URL-адреса могут быть недоступны."
 
-#: includes/admin.php:520
-msgid "Document Settings"
-msgstr "Настройки"
-
-#: includes/admin.php:523
-msgid "Document Upload Directory"
-msgstr "Директория загрузки документов"
-
-#: includes/admin.php:551
-#: includes/admin.php:555
-#: includes/admin.php:584
-#: includes/admin.php:588
-#: wp-document-revisions.php:1161
-msgid "Not authorized"
-msgstr "Вы не авторизованы"
-
 #: includes/admin.php:641
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr "Директория в которой хранятся загруженные документы. По умолчанию, обычно, это <code>wp_content/uploads</code> но директория может быть перемещена из соображений безопасности."
-
-#: includes/admin.php:643
-msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr "Вы можете опционально включать строку <code>%site_id%</code> в пути к отдельным файлам на сайте."
 
 #: includes/admin.php:652
 msgid "example-document-title"
@@ -234,125 +78,6 @@ msgstr "example-document-title"
 #: includes/admin.php:653
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is \"documents.\""
 msgstr "\"Slug\"  это префикс всех URL-адресов для документов (и архив документов). По умолчанию - \"documents.\""
-
-#: includes/admin.php:787
-msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr "В настоящий момент доступ для редактирования предоставлен только вам. Пока вы находитесь на данной странице  никто другой не может редактировать этот докумен."
-
-#: includes/admin.php:799
-msgid "Feed Privacy"
-msgstr "Частный канал"
-
-#: includes/admin.php:802
-msgid "Secret Feed Key"
-msgstr "Секретный ключ канала"
-
-#: includes/admin.php:805
-msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr "Для защиты персональных данных, вам необходимо добавить ключ к каналу для использованиия в RSS ридерах."
-
-#: includes/admin.php:807
-msgid "Generate New Key"
-msgstr "Сформировать новый ключ"
-
-#: includes/admin.php:942
-msgid "Currently Editing"
-msgstr "В настоящее время редактируется"
-
-#: includes/admin.php:989
-msgid "Current State"
-msgstr "Текущее состояние"
-
-#: includes/admin.php:1055
-msgid "Document Owner"
-msgstr "Владелец документа"
-
-#: includes/admin.php:1085
-msgid ""
-"Are you sure you want to restore this revision?\n"
-"\n"
-"If you do, no history will be lost. This revision will be copied and become the most recent revision."
-msgstr ""
-"Вы действительно хотите восстановить эту ревизию?\n"
-"\n"
-"Если вы это сделаете, история изменений будет утрачена. Эта ревизия станет самой последней редакции."
-
-#: includes/admin.php:1086
-msgid "is currently editing this"
-msgstr "в настоящее время редактируется"
-
-#: includes/admin.php:1087
-msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
-msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Файл успешно загружен. Добавьте резюме ревизии (не обязательно) и нажмите <em>Обновить</em> для сохранения изменений.</p></div>"
-
-#: includes/admin.php:1088
-msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr "Блокировка документа %s была переопределена. Изменения могут быть потеряны."
-
-#: includes/admin.php:1089
-msgid "An error has occurred, please try reloading the page."
-msgstr "Произошла ошибка, попробуйте перезагрузить страницу."
-
-#: includes/admin.php:1090
-msgid "Lost Document Lock"
-msgstr "Снять блокировку Документа"
-
-#: includes/admin.php:1092
-#: includes/admin.php:1093
-msgid "%d mins"
-msgstr "%d минут"
-
-#: includes/admin.php:1094
-msgid "%d hour"
-msgstr "%d час"
-
-#: includes/admin.php:1095
-msgid "%d hours"
-msgstr "%d часов"
-
-#: includes/admin.php:1096
-msgid "%d day"
-msgstr "%d день"
-
-#: includes/admin.php:1097
-msgid "%d days"
-msgstr "%d дней"
-
-#: includes/front-end.php:97
-msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">назад пользователем</a> <span class=\"author\">%5$s</a>"
-
-#: includes/front-end.php:217
-msgid "Recently Revised Documents"
-msgstr "Обновленные Документы"
-
-#: includes/front-end.php:265
-msgid "%1$s ago by %2$s"
-msgstr "%1$s назад пользователем %2$s"
-
-#: includes/front-end.php:272
-msgid "%1$s ago"
-msgstr "%1$s назад"
-
-#: includes/front-end.php:298
-msgid "Title:"
-msgstr "Заголовок:"
-
-#: includes/front-end.php:302
-msgid "Number of Posts:"
-msgstr "Количество записей:"
-
-#: includes/front-end.php:306
-msgid "Posts to Show:"
-msgstr "Показать записей:"
-
-#: includes/front-end.php:312
-msgid "Display Document Author:"
-msgstr "Документы автора:"
-
-#: includes/front-end.php:313
-msgid "Yes"
-msgstr "Да"
 
 #: wp-document-revisions.php:143
 msgctxt "post type general name"
@@ -396,6 +121,10 @@ msgstr "Документов не найдено"
 #: wp-document-revisions.php:152
 msgid "No documents found in Trash"
 msgstr "В корзине документов не найдено"
+
+#: includes/admin.php:200 wp-document-revisions.php:154
+msgid "Documents"
+msgstr "Документы"
 
 #: wp-document-revisions.php:155
 msgid "All Documents"
@@ -487,8 +216,7 @@ msgstr "Кто-то"
 msgid "revision"
 msgstr "ревизия"
 
-#: wp-document-revisions.php:462
-#: wp-document-revisions.php:735
+#: wp-document-revisions.php:462 wp-document-revisions.php:735
 msgid "-revision-"
 msgstr "-ревизия-"
 
@@ -499,6 +227,11 @@ msgstr "У вас нет доступа к этому файлу."
 #: wp-document-revisions.php:1115
 msgid "Sorry, this is a private feed."
 msgstr "Сожалеем, это частный канал."
+
+#: includes/admin.php:551 includes/admin.php:555 includes/admin.php:584
+#: includes/admin.php:588 wp-document-revisions.php:1161
+msgid "Not authorized"
+msgstr "Вы не авторизованы"
 
 #: wp-document-revisions.php:1204
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -528,23 +261,267 @@ msgstr "%s - Последняя Ревизия"
 msgid "%s - Revision %d"
 msgstr "%s - Ревизия %d"
 
-#. Plugin Name of the plugin/theme
+#: includes/front-end.php:97
+msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
+msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">назад пользователем</a> <span class=\"author\">%5$s</a>"
+
+#: includes/front-end.php:217
+msgid "Recently Revised Documents"
+msgstr "Обновленные Документы"
+
+#: includes/front-end.php:265
+msgid "%1$s ago by %2$s"
+msgstr "%1$s назад пользователем %2$s"
+
+#: includes/front-end.php:272
+msgid "%1$s ago"
+msgstr "%1$s назад"
+
+#: includes/front-end.php:298
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: includes/front-end.php:302
+msgid "Number of Posts:"
+msgstr "Количество записей:"
+
+#: includes/front-end.php:306
+msgid "Posts to Show:"
+msgstr "Показать записей:"
+
+#: includes/front-end.php:312
+msgid "Display Document Author:"
+msgstr "Документы автора:"
+
+#: includes/front-end.php:313
+msgid "Yes"
+msgstr "Да"
+
+#: includes/admin.php:126
+msgid "Document updated. <a href=\"%s\">Download document</a>"
+msgstr "Документ обновлен. <a href=\"%s\">Скачать документ</a>"
+
+#: includes/admin.php:127
+msgid "Custom field updated."
+msgstr "Произвольное поле обновлено."
+
+#: includes/admin.php:128
+msgid "Custom field deleted."
+msgstr "Произвольное поле удалено."
+
+#: includes/admin.php:129
+msgid "Document updated."
+msgstr "Документ обновлен."
+
+#: includes/admin.php:130
+msgid "Document restored to revision from %s"
+msgstr "Документ восстановлен из ревизии %s"
+
+#: includes/admin.php:131
+msgid "Document published. <a href=\"%s\">Download document</a>"
+msgstr "Документ опубликован. <a href=\"%s\">Скачать документ</a>"
+
+#: includes/admin.php:132
+msgid "Document saved."
+msgstr "Документ сохранен."
+
+#: includes/admin.php:133
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Документ отправлен. <a target=\"_blank\" href=\"%s\">Скачать документ</a>"
+
+#: includes/admin.php:134
+msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
+msgstr "Публикация документа запланирована на: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Предпросмотр</a>"
+
+#: includes/admin.php:135
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Черновик документа обновлен. <a target=\"_blank\" href=\"%s\">Скачать документ</a>"
+
+#: includes/admin.php:187
+msgid "Basic Usage"
+msgstr "Основы использования"
+
+#: includes/admin.php:191
+msgid "Revision Log"
+msgstr "Журнал ревизий"
+
+#: includes/admin.php:194 includes/admin.php:265 includes/admin.php:891
+msgid "Workflow State"
+msgstr "Этап рабочего процесса"
+
+#: includes/admin.php:196
+msgid "Publishing Documents"
+msgstr "Публикация документов"
+
+#: includes/admin.php:258 includes/admin.php:373
+msgid "Revision Summary"
+msgstr "Резюме ревизии"
+
+#: includes/admin.php:259
+msgid "Document"
+msgstr "Документ"
+
+#: includes/admin.php:273 includes/admin.php:873 includes/admin.php:1054
+msgid "Owner"
+msgstr "Владелец"
+
+#: includes/admin.php:348
+msgid "%s has prevented other users from making changes."
+msgstr "%s помешал другим пользователям вносить изменения."
+
+#: includes/admin.php:350
+msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
+msgstr "<br /> Если вы считаете, что произошла ошибка, можно <a href=\"#\" id=\"override_link\">отменить блокировку</ a>, но изменения будут потеряны."
+
+#: includes/admin.php:354
+msgid "Upload New Version"
+msgstr "Загрузить новую версию"
+
+#: includes/admin.php:359
+msgid "Latest Version of the Document"
+msgstr "Последняя версия Документа"
+
+#: includes/admin.php:360
+msgid "Download"
+msgstr "Скачать"
+
+#: includes/admin.php:361
+msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
+msgstr "Загружен <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> назад пользователем %4$s"
+
+#: includes/admin.php:375
+msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
+msgstr "Резюме ревизии - дополнительная информация позволяющая другим пользователям быстро и легко увидеть, какие изменения вы сделали, не открывая сам файл."
+
+#: includes/admin.php:392
+msgid "Modified"
+msgstr "Изменен"
+
+#: includes/admin.php:393
+msgid "User"
+msgstr "Пользователь"
+
+#: includes/admin.php:394
+msgid "Summary"
+msgstr "Резюме"
+
+#: includes/admin.php:395
+msgid "Actions"
+msgstr "Действия"
+
+#: includes/admin.php:410
+msgid "Restore"
+msgstr "Восстановить"
+
+#: includes/admin.php:420
+msgid "RSS Feed"
+msgstr "RSS канал"
+
+#: includes/admin.php:478
+msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
+msgstr "Директория для загрузки документов изменена, существующие загрузки необходимо переместить в новую директорию для гарантиии их доступности."
+
+#: includes/admin.php:520
+msgid "Document Settings"
+msgstr "Настройки"
+
+#: includes/admin.php:523
+msgid "Document Upload Directory"
+msgstr "Директория загрузки документов"
+
+#: includes/admin.php:787
+msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
+msgstr "В настоящий момент доступ для редактирования предоставлен только вам. Пока вы находитесь на данной странице  никто другой не может редактировать этот докумен."
+
+#: includes/admin.php:799
+msgid "Feed Privacy"
+msgstr "Частный канал"
+
+#: includes/admin.php:802
+msgid "Secret Feed Key"
+msgstr "Секретный ключ канала"
+
+#: includes/admin.php:805
+msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
+msgstr "Для защиты персональных данных, вам необходимо добавить ключ к каналу для использованиия в RSS ридерах."
+
+#: includes/admin.php:807
+msgid "Generate New Key"
+msgstr "Сформировать новый ключ"
+
+#: includes/admin.php:942
+msgid "Currently Editing"
+msgstr "В настоящее время редактируется"
+
+#: includes/admin.php:989
+msgid "Current State"
+msgstr "Текущее состояние"
+
+#: includes/admin.php:1055
+msgid "Document Owner"
+msgstr "Владелец документа"
+
+#: includes/admin.php:1085
+msgid ""
+"Are you sure you want to restore this revision?\n"
+"\n"
+"If you do, no history will be lost. This revision will be copied and become the most recent revision."
+msgstr ""
+"Вы действительно хотите восстановить эту ревизию?\n"
+"\n"
+"Если вы это сделаете, история изменений будет утрачена. Эта ревизия станет самой последней редакции."
+
+#: includes/admin.php:1086
+msgid "is currently editing this"
+msgstr "в настоящее время редактируется"
+
+#: includes/admin.php:1087
+msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
+msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Файл успешно загружен. Добавьте резюме ревизии (не обязательно) и нажмите <em>Обновить</em> для сохранения изменений.</p></div>"
+
+#: includes/admin.php:1088
+msgid "Your lock on the document %s has been overridden. Any changes will be lost."
+msgstr "Блокировка документа %s была переопределена. Изменения могут быть потеряны."
+
+#: includes/admin.php:1089
+msgid "An error has occurred, please try reloading the page."
+msgstr "Произошла ошибка, попробуйте перезагрузить страницу."
+
+#: includes/admin.php:1090
+msgid "Lost Document Lock"
+msgstr "Снять блокировку Документа"
+
+#: includes/admin.php:1092 includes/admin.php:1093
+msgid "%d mins"
+msgstr "%d минут"
+
+#: includes/admin.php:1094
+msgid "%d hour"
+msgstr "%d час"
+
+#: includes/admin.php:1095
+msgid "%d hours"
+msgstr "%d часов"
+
+#: includes/admin.php:1096
+msgid "%d day"
+msgstr "%d день"
+
+#: includes/admin.php:1097
+msgid "%d days"
+msgstr "%d дней"
+
 msgid "WP Document Revisions"
 msgstr "WP Document Revisions"
 
-#. Plugin URI of the plugin/theme
 msgid "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 msgstr "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
 
-#. Description of the plugin/theme
 msgid "A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow."
 msgstr "WordPress плагин системы контроля и управления версиями документов. Позволяет предоставить доступ для совместной работы над документами командам любой численности и осуществлять управление их работой."
 
-#. Author of the plugin/theme
 msgid "Benjamin J. Balter"
 msgstr "Benjamin J. Balter"
 
-#. Author URI of the plugin/theme
 msgid "http://ben.balter.com"
 msgstr "http://ben.balter.com"
-
