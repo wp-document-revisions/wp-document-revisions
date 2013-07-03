@@ -103,6 +103,14 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 
 ## Changelog ##
 
+### 1.3.6 ###
+* Added Italian translation, props @guterboit
+* Added Russian translation, props Evgeny Vlasov
+* Updated all translations
+* Workflow state saving improvements, props @cojennin ([#48](https://github.com/benbalter/WP-Document-Revisions/pull/48))
+* Fix restore revision link bug, props @cojennin ([#55](https://github.com/benbalter/WP-Document-Revisions/issues/55))
+* Welcome @cojennin to the core team. [Want to join?](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
+
 ### 1.3.5 ###
 * Added Dutch translation, props @tijscruysen.
 * To prevent potential errors, verify `workflow_state` is set before checking for change, props @rachelbaker.

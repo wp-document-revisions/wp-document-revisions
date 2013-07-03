@@ -3,8 +3,8 @@ Contributors: benbalter
 Donate link: http://ben.balter.com/donate/  
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
 Requires at least: 3.2  
-Tested up to: 3.5   
-Stable tag: 1.3.5
+Tested up to: 3.6   
+Stable tag: 1.3.6
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -106,6 +106,14 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 
 
 == Changelog ==
+
+= 1.3.6 =
+* Added Italian translation, props @guterboit
+* Added Russian translation, props Evgeny Vlasov
+* Updated all translations
+* Workflow state saving improvements, props @cojennin ([#48](https://github.com/benbalter/WP-Document-Revisions/pull/48))
+* Fix restore revision link bug, props @cojennin ([#55](https://github.com/benbalter/WP-Document-Revisions/issues/55))
+* Welcome @cojennin to the core team. [Want to join?](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
 
 = 1.3.5 =
 * Added Dutch translation, props @tijscruysen.
