@@ -349,6 +349,12 @@ class Document_Revisions_Admin {
 		</div>
 		<?php
 		if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
+		<div>
+			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
+			<a id="edit-desktop-button" href="<?php echo get_permalink( $post->ID ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
+				<?php _e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
+			</a>
+		</div>
 		<p>
 			<strong><?php _e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 			<strong><a href="<?php echo get_permalink( $post->ID ); ?>" target="_BLANK"><?php _e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />

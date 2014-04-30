@@ -6,7 +6,20 @@ class WPDocumentRevisions
   constructor: ($) ->
     @$ = $
 
+    # Setup our webdav editing
+    @fNewDoc = false
+    @EditDocumentButton = null
+    @L_EditDocumentError_Text = "Editing not supported."
+    @L_EditDocumentRuntimeError_Text = "Couldn't open document."
+    try
+      @EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3')
+      if @EditDocumentButton != null
+        @fNewDoc = true
+    catch buttonError
+      #console.log(buttonError)
+
     #events
+    @$('#edit-desktop-button').click @editDocument
     @$('.revision').click @restoreRevision
     @$('#override_link').click @overrideLock
     @$('#document a').click @requestPermission
@@ -37,6 +50,20 @@ class WPDocumentRevisions
   #enable submit buttons
   enableSubmit: =>
     @$(':button, :submit', '#submitpost').removeAttr 'disabled'
+
+  #callback to edit document via webdav
+  editDocument: (e) =>
+    e.preventDefault()
+    file = @$(e.target).attr 'href'
+    if @fNewDoc
+      if !@EditDocumentButton.EditDocument(file)
+        alert(@L_EditDocumentRuntimeError)
+    else
+      try
+        ffPlugin = document.getElementById("winFirefoxPlugin")
+        ffPlugin.EditDocument(file, null)
+      catch error
+        alert(@L_EditDocumentError_Text)
 
   #restore revision confirmation
   restoreRevision: (e) =>
