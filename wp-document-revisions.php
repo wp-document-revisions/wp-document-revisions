@@ -111,7 +111,6 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		include dirname( __FILE__ ) . '/includes/front-end.php';
 		new Document_Revisions_Front_End( $this );
 
-		//parent::ServeRequest();
 	}
 
 
@@ -124,13 +123,15 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	function auth_webdav_requests($post) {
 		$request_method = $_SERVER['REQUEST_METHOD'];
 
+		// OPTIONS must always be unauthenticated
 		if ($request_method == 'OPTIONS') {
 			nocache_headers();
 			parent::http_OPTIONS();
 			status_header( 200 );
 			die();
 		}
-		$webdav_methods = array( "PROPFIND", "LOCK", "UNLOCK", "PUT", "DELETE" );
+
+		$webdav_methods = array( "PROPFIND", "PROPPATCH", "LOCK", "UNLOCK", "PUT", "DELETE", "COPY", "MOVE", "MKCOL" );
 		$private_checked_methods = array( "GET", "HEAD" );
 
 		if ( in_array( $request_method, $webdav_methods ) || ( in_array( $request_method, $private_checked_methods ) && $this->is_webdav_client() ) ) {
@@ -157,118 +158,222 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function check_webdav_requests() {
 		global $post;
-		error_log("POST: " . $post->ID);
+		if ( $post ) {
+			$request_method = $_SERVER['REQUEST_METHOD'];
+			switch ( $request_method ) {
+				case "LOCK":
+					if ( current_user_can( 'edit_post', $post->ID ) ) {
+						$this->do_LOCK();
+					} else {
+						nocache_headers();
+						status_header( 403 );
+						die();
+					}
+					break;
 
-		$request_method = $_SERVER['REQUEST_METHOD'];
-		switch ( $request_method ) {
-			case "LOCK":
-				if ( current_user_can( 'edit_post', $post->ID ) ) {
-					$this->do_LOCK();
-				} else {
-					nocache_headers();
-					status_header ( 403 );
-					die();
-				}
-				break;
-			case "PUT":
-				if ( current_user_can( 'edit_post', $post->ID ) ) {
-					$this->do_PUT();
+				case "PUT":
+					if ( current_user_can( 'edit_post', $post->ID ) ) {
+						$this->do_PUT();
+					} else {
+						nocache_headers();
+						status_header( 403 );
+						die();
+					}
+					break;
 
-				} else {
-					nocache_headers();
-					status_header ( 403 );
-					die();
-				}
-				break;
+				case "PROPFIND":
+					if ( current_user_can( 'edit_post', $post->ID ) ) {
+						$this->do_PROPFIND();
+					} else {
+						nocache_headers();
+						status_header( 403 );
+						die();
+					}
+					break;
+
+				default:
+					break;
+			}
+		} else {
+			nocache_headers();
+			status_header( 404 );
+			die();
 		}
 	}
 
 	/**
 	 * Do basic authentication
 	 */
-    function basic_auth() {
-        nocache_headers();
-        if ( is_user_logged_in() ) {
-			error_log("Already logged in..");
-            return;
+	function basic_auth() {
+		nocache_headers();
+		if ( is_user_logged_in() ) {
+			return;
 		}
 
-        $usr = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-        $pwd = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : '';
-        if (empty($usr) && empty($pwd) && isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION']) {
-            list($type, $auth) = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
-            if (strtolower($type) === 'basic') {
-                list($usr, $pwd) = explode(':', base64_decode($auth));
-            }
-        }
+		$usr = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+		$pwd = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : '';
+		if (empty($usr) && empty($pwd) && isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION']) {
+			list($type, $auth) = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
+			if (strtolower($type) === 'basic') {
+				list($usr, $pwd) = explode(':', base64_decode($auth));
+			}
+		}
 		$creds = array();
 		$creds['user_login'] = $usr;
 		$creds['user_password'] = $pwd;
 		$creds['remember'] = false;
 		$login = wp_signon($creds, false);
-        if ( !is_wp_error( $login ) ) {
-			error_log("YAY! Logged in!");
+		if ( !is_wp_error( $login ) ) {
 			$current_user = wp_set_current_user($login);
-            return;
+			return;
 		}
 
-        header('WWW-Authenticate: Basic realm="Please Enter Your Password"');
-        status_header ( 401 );
-        echo 'Authorization Required';
-        die();
-    }
+		header('WWW-Authenticate: Basic realm="Please Enter Your Password"');
+		status_header ( 401 );
+		echo 'Authorization Required';
+		die();
+	}
 
 
 	/**
 	 * Check for lock on document
 	 */
+	function LOCK( &$options ) {
+		$options["timeout"] = time()+300; // 5min. hardcoded
+		$options["owner"] = "";
+		$options["scope"] = "exclusive";
+		$options["type"] = "write";
+		return true;
+	}
+	function checklock() {
+		$this->do_LOCK();
+	}
 	function do_LOCK() {
 		global $post;
-		if ($post) {
+		if ( $post ) {
 			$current_user = wp_get_current_user();
-			error_log('Current User: ' . $current_user->ID);
 
 			include_once "wp-admin/includes/post.php";
 			$current_owner = wp_check_post_lock( $post->ID );
-			error_log('Current Owner: ' . $current_owner);
 			if ( $current_owner && $current_owner != $current_user->ID ) {
 				nocache_headers();
 				status_header ( 423 );
 				die();
 			}
 			nocache_headers();
-			//header("Lock-Token: " . md5($current_owner));
 			parent::http_LOCK();
+			die();
 		} else {
-			error_log("NO POST!");
 			nocache_headers();
 			status_header ( 404 );
 			die();
 		}
 	}
-
+	
+	function PUT(&$options) {}
 	function do_PUT() {
 		global $post;
 
+		if ( $post ) {
+			$file = $this->_parsePutFile();
+			$dir = $this->document_upload_dir();
+			$wp_filetype = wp_check_filetype( basename( $file, null ) );
+
+			$file_array = apply_filters( 'wp_handle_upload_prefilter', array(
+					'name' => basename( $file ),
+					'tmp_name' => $file,
+					'type' => $wp_filetype['type'],
+					'size' => 1,
+				)
+			);
+
+			$attachment = array(
+				'post_mime_type' => $wp_filetype['type'],
+				'post_title' => preg_replace( '/\.[^.]+$/', '', basename( $file ) ),
+				'post_content' => '',
+				'post_status' => 'inherit',
+			);
+
+			$newfilepath = $dir . '/' . $file_array['name'];
+			copy( $file, $newfilepath );
+			unlink( $file );
+
+			$attach_id = wp_insert_attachment( $attachment, $newfilepath, $post->ID );
+			if ( !is_wp_error( $attach_id ) ) {
+				$post_array = array(
+					'ID' => $post->ID,
+					'post_content' => $attach_id,
+					'post_excerpt' => __('Revised by Desktop Edit', 'wp-document-revisions')
+				);
+				$result = wp_update_post( $post_array );
+				wp_cache_flush();
+				if ( !is_wp_error ( $result ) ) {
+					nocache_headers();
+					status_header( 204 );
+					die();
+				} else {
+					nocache_headers();
+					status_header( 500 );
+					die();
+				}
+			}
+		} else {
+			nocache_headers();
+			status_header ( 404 );
+			die();
+		}
+
+	}
+
+	private function _parsePutFile() {
 		/* PUT data comes in on the stdin stream */
 		$putdata = fopen("php://input", "r");
 
-		/* Open a file for writing */
-		$fp = fopen("/tmp/myputfile.ext", "w");
+		$raw_data = '';
 
 		/* Read the data 1 KB at a time
-		   and write to the file */
-		while ($data = fread($putdata, 1024))
-		  fwrite($fp, $data);
+			and write to the file */
+		while ($chunk = fread($putdata, 1024))
+			$raw_data .= $chunk;
 
 		/* Close the streams */
-		fclose($fp);
 		fclose($putdata);
 
-		nocache_headers();
-		status_header( 500 );
+		//get tmp name
+		$path_only = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$filename_parts = pathinfo( $path_only );
+		$file = tempnam( ini_get( 'upload_tmp_dir' ), $filename_parts['filename'] ) . '.' . $filename_parts['extension'];
+		file_put_contents($file, $raw_data);
+
+		return $file;
+	}
+
+	function PROPFIND(&$options, &$files) {
+		global $post;
+		if ( $post ) {
+			return true;
+		}
+		return false;
+	}
+	function do_PROPFIND() {
+		parent::http_PROPFIND();
 		die();
 	}
+
+	// Dummy methods to satisfy being WebDav Class 2 server
+	function GET(&$options) {}
+	function UNLOCK(&$options) {}
+	function PROPPATCH(&$options) {}
+	function COPY(&$options) {}
+	function MOVE(&$options) {}
+	function MKCOL(&$options) {}
+	function DELETE(&$options) {}
+
+	###################################################
+	#
+	# END basic WebDav requests
+	#
+	###################################################
 
 	/**
 	 * Init i18n files

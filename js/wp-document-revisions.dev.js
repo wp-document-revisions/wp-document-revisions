@@ -20,8 +20,6 @@
       this.$ = $;
       this.fNewDoc = false;
       this.EditDocumentButton = null;
-      this.L_EditDocumentError_Text = "Editing not supported.";
-      this.L_EditDocumentRuntimeError_Text = "Couldn't open document.";
       try {
         this.EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3');
         if (this.EditDocumentButton !== null) {
@@ -67,17 +65,29 @@
       file = this.$(e.target).attr('href');
       if (this.fNewDoc) {
         if (!this.EditDocumentButton.EditDocument(file)) {
-          return alert(this.L_EditDocumentRuntimeError);
+          if (typeof convertEntities === 'function') {
+            wp_document_revisions.desktopEditRuntimeError = convertEntities(wp_document_revisions.desktopEditRuntimeError);
+          }
+          this.window.jQuery('#lock_override').before(wp_document_revisions.desktopEditRuntimeError).prev().fadeIn();
+          return this.window.jQuery("#edit-desktop-button").remove();
         }
       } else {
         try {
           ffPlugin = document.getElementById("winFirefoxPlugin");
-          return ffPlugin.EditDocument(file, null);
+          ffPlugin.EditDocument(file, null);
         } catch (_error) {
           error = _error;
-          return alert(this.L_EditDocumentError_Text);
+          if (typeof convertEntities === 'function') {
+            wp_document_revisions.desktopEditNotSupportedError = convertEntities(wp_document_revisions.desktopEditNotSupportedError);
+          }
+          this.window.jQuery('#lock_override').before(wp_document_revisions.desktopEditNotSupportedError).prev().fadeIn();
+          return this.window.jQuery("#edit-desktop-button").remove();
         }
       }
+      if (typeof convertEntities === 'function') {
+        wp_document_revisions.postDesktopNotice = convertEntities(wp_document_revisions.postDesktopNotice);
+      }
+      return this.window.jQuery('#lock_override').before(wp_document_revisions.postDesktopNotice).prev().fadeIn();
     };
 
     WPDocumentRevisions.prototype.restoreRevision = function(e) {

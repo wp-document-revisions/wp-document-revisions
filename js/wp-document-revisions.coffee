@@ -9,8 +9,6 @@ class WPDocumentRevisions
     # Setup our webdav editing
     @fNewDoc = false
     @EditDocumentButton = null
-    @L_EditDocumentError_Text = "Editing not supported."
-    @L_EditDocumentRuntimeError_Text = "Couldn't open document."
     try
       @EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3')
       if @EditDocumentButton != null
@@ -57,13 +55,30 @@ class WPDocumentRevisions
     file = @$(e.target).attr 'href'
     if @fNewDoc
       if !@EditDocumentButton.EditDocument(file)
-        alert(@L_EditDocumentRuntimeError)
+        if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
+          wp_document_revisions.desktopEditRuntimeError = convertEntities wp_document_revisions.desktopEditRuntimeError
+
+        @window.jQuery('#lock_override').before( wp_document_revisions.desktopEditRuntimeError ).prev().fadeIn()
+        return @window.jQuery("#edit-desktop-button").remove()
+        
     else
       try
         ffPlugin = document.getElementById("winFirefoxPlugin")
         ffPlugin.EditDocument(file, null)
       catch error
-        alert(@L_EditDocumentError_Text)
+        if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
+          wp_document_revisions.desktopEditNotSupportedError = convertEntities wp_document_revisions.desktopEditNotSupportedError
+
+        @window.jQuery('#lock_override').before( wp_document_revisions.desktopEditNotSupportedError ).prev().fadeIn()
+        return @window.jQuery("#edit-desktop-button").remove()
+
+    if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
+       wp_document_revisions.postDesktopNotice = convertEntities wp_document_revisions.postDesktopNotice
+
+    #notify user of success by adding the post upload notice before the #post div
+    #to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
+    @window.jQuery('#lock_override').before( wp_document_revisions.postDesktopNotice ).prev().fadeIn()
+
 
   #restore revision confirmation
   restoreRevision: (e) =>
