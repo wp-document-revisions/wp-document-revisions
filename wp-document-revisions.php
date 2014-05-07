@@ -127,11 +127,13 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		if ($request_method == 'OPTIONS') {
 			nocache_headers();
 			parent::http_OPTIONS();
+			header("Allow: OPTIONS GET POST PUT HEAD LOCK");
+			header("DAV: 1,2");
 			status_header( 200 );
 			die();
 		}
 
-		$webdav_methods = array( "PROPFIND", "PROPPATCH", "LOCK", "UNLOCK", "PUT", "DELETE", "COPY", "MOVE", "MKCOL" );
+		$webdav_methods = array( "LOCK", "PUT" );
 		$private_checked_methods = array( "GET", "HEAD" );
 
 		if ( in_array( $request_method, $webdav_methods ) || ( in_array( $request_method, $private_checked_methods ) && $this->is_webdav_client() ) ) {
@@ -179,19 +181,6 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 						status_header( 403 );
 						die();
 					}
-					break;
-
-				case "PROPFIND":
-					if ( current_user_can( 'edit_post', $post->ID ) ) {
-						$this->do_PROPFIND();
-					} else {
-						nocache_headers();
-						status_header( 403 );
-						die();
-					}
-					break;
-
-				default:
 					break;
 			}
 		} else {
@@ -245,9 +234,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		$options["type"] = "write";
 		return true;
 	}
-	function checklock() {
-		$this->do_LOCK();
-	}
+
 	function do_LOCK() {
 		global $post;
 		if ( $post ) {
@@ -269,8 +256,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			die();
 		}
 	}
-	
-	function PUT(&$options) {}
+
 	function do_PUT() {
 		global $post;
 
@@ -347,27 +333,6 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		return $file;
 	}
-
-	function PROPFIND(&$options, &$files) {
-		global $post;
-		if ( $post ) {
-			return true;
-		}
-		return false;
-	}
-	function do_PROPFIND() {
-		parent::http_PROPFIND();
-		die();
-	}
-
-	// Dummy methods to satisfy being WebDav Class 2 server
-	function GET(&$options) {}
-	function UNLOCK(&$options) {}
-	function PROPPATCH(&$options) {}
-	function COPY(&$options) {}
-	function MOVE(&$options) {}
-	function MKCOL(&$options) {}
-	function DELETE(&$options) {}
 
 	###################################################
 	#
