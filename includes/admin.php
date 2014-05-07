@@ -343,10 +343,12 @@ class Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
+			<?php if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
 			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
 			<a id="edit-desktop-button" href="<?php echo get_permalink( $post->ID ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
 				<?php _e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
 			</a>
+			<?php } //end if latest version ?>
 			<a href="media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ) ?>" onclick="return false;" >
 				<?php _e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
