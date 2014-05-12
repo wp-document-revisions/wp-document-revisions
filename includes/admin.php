@@ -49,6 +49,7 @@ class Document_Revisions_Admin {
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
+		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
 
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
@@ -257,7 +258,7 @@ class Document_Revisions_Admin {
 		if ( $post->post_content != '' )
 			add_meta_box( 'revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
 
-		if ( taxonomy_exists( 'workflow_state' ) )
+		if ( taxonomy_exists( 'workflow_state' )  && ! $this->disable_workflow_states() )
 			add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
 
 
@@ -825,6 +826,39 @@ class Document_Revisions_Admin {
 			$this->generate_new_feed_key();
 	}
 
+	/**
+	 * Allow some filtering of the All Documents list
+	 */
+	function filter_documents_list() {
+		// Only applies to document post type
+		if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' ) {
+
+			// workflow status filtering
+			$args = array(
+				'name' => 'workflow_state',
+				'show_option_all' => __( 'All workflow states', 'wp-document-revisions' ),
+				'hide_empty' => false,
+				'taxonomy' => 'workflow_state',
+			);
+			if ( $this->disable_workflow_states() ) {
+				$args['taxonomy'] = EF_Custom_Status::taxonomy_key;
+			}
+			if ( isset( $_GET['workflow_state'] ) ) {
+				$args['selected'] = $_GET['workflow_state'];
+			}
+			wp_dropdown_categories( $args );
+
+			// author filtering
+			$args = array(
+				'name' => 'author',
+				'show_option_all' => __( 'All owners', 'wp-document-revisions' )
+			);
+			if ( isset( $_GET['author'] ) ) {
+				$args['selected'] = $_GET['author'];
+			}
+			wp_dropdown_users( $args );
+		}
+	}
 
 	/**
 	 * Renames author column on document list to "owner"
@@ -1183,7 +1217,7 @@ class Document_Revisions_Admin {
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
-
+		return true;
 	}
 
 
