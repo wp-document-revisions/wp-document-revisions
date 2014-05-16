@@ -50,6 +50,7 @@ class Document_Revisions_Admin {
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
+		add_filter( 'parse_query', array( &$this, 'convert_id_to_term' ) );
 
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
@@ -830,25 +831,30 @@ class Document_Revisions_Admin {
 	 * Allow some filtering of the All Documents list
 	 */
 	function filter_documents_list() {
+		global $typenow, $wp_query;
 		// Only applies to document post type
-		if ( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' ) {
+		if ( $typenow == 'document' ) {
 
-			// workflow status filtering
+			// Filter by workflow state/edit flow state
+			$tax_slug = 'workflow_state';
+			if ( $this->disable_workflow_states() ) {
+				$tax_slug = EF_Custom_Status::taxonomy_key;
+			}
 			$args = array(
 				'name' => 'workflow_state',
 				'show_option_all' => __( 'All workflow states', 'wp-document-revisions' ),
 				'hide_empty' => false,
-				'taxonomy' => 'workflow_state',
+				'taxonomy' => $tax_slug,
 			);
-			if ( $this->disable_workflow_states() ) {
-				$args['taxonomy'] = EF_Custom_Status::taxonomy_key;
+			$termID = $wp_query->query[$tax_slug];
+			if ( ! is_numeric ( $termID ) ) {
+				$term = get_term_by( 'slug', $wp_query->query[$tax_slug], $tax_slug );
+				$termID = $term->term_id;
 			}
-			if ( isset( $_GET['workflow_state'] ) ) {
-				$args['selected'] = $_GET['workflow_state'];
-			}
+			$args['selected'] = $termID;
 			wp_dropdown_categories( $args );
 
-			// author filtering
+			// author/owner filtering
 			$args = array(
 				'name' => 'author',
 				'show_option_all' => __( 'All owners', 'wp-document-revisions' )
@@ -857,6 +863,24 @@ class Document_Revisions_Admin {
 				$args['selected'] = $_GET['author'];
 			}
 			wp_dropdown_users( $args );
+		}
+	}
+
+	/**
+	 * Converts id to term used in filter dropdown
+	 */
+	function convert_id_to_term( $query ) {
+		global $pagenow, $typenow;
+		if ( 'edit.php' == $pagenow && $typenow == 'document' ) {
+			$tax_slug = 'workflow_state';
+			if ( $this->disable_workflow_states() ) {
+				$tax_slug = EF_Custom_Status::taxonomy_key;
+			}
+			$var = &$query->query_vars[$tax_slug];
+			if ( isset( $var ) && is_numeric( $var ) ) {
+				$term = get_term_by( 'id', $var, $tax_slug );
+				$var = $term->slug;
+			}
 		}
 	}
 

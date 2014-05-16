@@ -183,10 +183,6 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 					}
 					break;
 			}
-		} else {
-			nocache_headers();
-			status_header( 404 );
-			die();
 		}
 	}
 
