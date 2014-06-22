@@ -1,0 +1,795 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Document Revisions v1.3.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-09 01:54-0300\n"
+"PO-Revision-Date: 2013-10-09 01:59-0300\n"
+"Last-Translator: Rafael Funchal <rafaelfunchal@gmail.com>\n"
+"Language-Team: Rafael Funchal <contato@rafaelfunchal.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: pt_BR\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:143
+msgctxt "post type general name"
+msgid "Documents"
+msgstr "Documentos"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:144
+msgctxt "post type singular name"
+msgid "Document"
+msgstr "Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:145
+msgctxt "document"
+msgid "Add Document"
+msgstr "Adicionar Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:146
+msgid "Add New Document"
+msgstr "Adicionar Novo Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:147
+msgid "Edit Document"
+msgstr "Editar Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:148
+msgid "New Document"
+msgstr "Novo Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:149
+msgid "View Document"
+msgstr "Ver Documento"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:150
+msgid "Search Documents"
+msgstr "Pesquisar Documentos"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:151
+msgid "No documents found"
+msgstr "Nenhum documento encontrado"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:152
+msgid "No documents found in Trash"
+msgstr "Nenhum documento encontrado na Lixeira"
+
+# @ wp-document-revisions
+#: includes/admin.php:196 wp-document-revisions.php:154
+msgid "Documents"
+msgstr "Documentos"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:155
+msgid "All Documents"
+msgstr "Todos os Documentos"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:188
+msgctxt "taxonomy general name"
+msgid "Workflow States"
+msgstr "Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:189
+msgctxt "taxonomy singular name"
+msgid "Workflow State"
+msgstr "Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:190
+msgid "Search Workflow States"
+msgstr "Pesquisar Status de Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:191
+msgid "All Workflow States"
+msgstr "Todos os Status de Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:192
+msgid "Parent Workflow State"
+msgstr "Status de Fluxo de Trabalho Pai"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:193
+msgid "Parent Workflow State:"
+msgstr "Status de Fluxo de Trabalho Pai:"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:194
+msgid "Edit Workflow State"
+msgstr "Editar Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:195
+msgid "Update Workflow State"
+msgstr "Atualizar Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:196
+msgid "Add New Workflow State"
+msgstr "Adicionar Novo Status de Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:197
+msgid "New Workflow State Name"
+msgstr "Nome do Novo Status de Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:198
+msgid "Workflow States"
+msgstr "Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:225
+msgid "In Progress"
+msgstr "Em Progresso"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:225
+msgid "Document is in the process of being written"
+msgstr "Documento no processo de escrita."
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:226
+msgid "Initial Draft"
+msgstr "Rascunho Inicial"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:226
+msgid "Document is being edited and refined"
+msgstr "Documento está sendo editado e refinado"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:227
+msgid "Under Review"
+msgstr "Sob Revisão"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:227
+msgid "Document is pending final review"
+msgstr "Documento está com pendência de revisão final"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:228
+msgid "Final"
+msgstr "Final"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:228
+msgid "Document is in its final form"
+msgstr "Documento finalizado."
+
+# @ default
+#: wp-document-revisions.php:328
+msgid "Somebody"
+msgstr "Alguém"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:415
+msgid "revision"
+msgstr "revisão"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:468 wp-document-revisions.php:741
+msgid "-revision-"
+msgstr "-revisão-"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:720
+msgid "You are not authorized to access that file."
+msgstr "Você não está autorizado a acessar esse arquivo."
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1126
+msgid "Sorry, this is a private feed."
+msgstr "Desculpe, mas esse é um feed privado."
+
+# @ wp-document-revisions
+#: includes/admin.php:534 includes/admin.php:559
+#: wp-document-revisions.php:1171
+msgid "Not authorized"
+msgstr "Não autorizado"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1214
+#, php-format
+msgid "%1$s: %2$s has overridden your lock on %3$s"
+msgstr "%1$s: %2$s sobrescreveu seu bloqueio em %3$s"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1218
+#, php-format
+msgid "Dear %s:"
+msgstr "Caro(a) %s:"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1219
+#, php-format
+msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
+msgstr "%1$s (%2$s), sobrescreveu seu bloqueio no documento %3$s (%4$s)."
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1220
+msgid "Any changes you have made will be lost."
+msgstr "Qualquer alteração feita será perdida."
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1221
+#, php-format
+msgid "- The %s Team"
+msgstr "- A Equipe %s"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1382
+#, php-format
+msgid "%s - Latest Revision"
+msgstr "%s - Última Revisão"
+
+# @ wp-document-revisions
+#: wp-document-revisions.php:1396
+#, php-format
+msgid "%s - Revision %d"
+msgstr "%s - Revisão %d"
+
+# @ wp-document-revisions
+#: includes/admin.php:125
+#, php-format
+msgid "Document updated. <a href=\"%s\">Download document</a>"
+msgstr "Documento atualizado. <a href=\"%s\">Download do documento</a>"
+
+# @ wp-document-revisions
+#: includes/admin.php:126
+msgid "Custom field updated."
+msgstr "Campo personalizado atualizado."
+
+# @ wp-document-revisions
+#: includes/admin.php:127
+msgid "Custom field deleted."
+msgstr "Campo personalizado apagado."
+
+# @ wp-document-revisions
+#: includes/admin.php:128
+msgid "Document updated."
+msgstr "Documento atualizado."
+
+# @ wp-document-revisions
+#: includes/admin.php:129
+#, php-format
+msgid "Document restored to revision from %s"
+msgstr "Documento restaurado para revisão de %s"
+
+# @ wp-document-revisions
+#: includes/admin.php:130
+#, php-format
+msgid "Document published. <a href=\"%s\">Download document</a>"
+msgstr "Documento publicado. <a href=\"%s\">Download do documento</a>"
+
+# @ wp-document-revisions
+#: includes/admin.php:131
+msgid "Document saved."
+msgstr "Documento salvo."
+
+# @ wp-document-revisions
+#: includes/admin.php:132
+#, php-format
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Documento enviado. <a target=\"_blank\" href=\"%s\">Download do documento</a>"
+
+# @ wp-document-revisions
+#: includes/admin.php:133
+#, php-format
+msgid ""
+"Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview document</a>"
+msgstr ""
+"Documento agendado para: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Pré visualizar documento</a>"
+
+# @ wp-document-revision
+#: includes/admin.php:133
+#, php-format
+msgctxt "%1$s: date; %2$s: time"
+msgid "%1$s @ %2$s"
+msgstr "%1$s @ %2$s"
+
+# @ wp-document-revisions
+#: includes/admin.php:134
+#, php-format
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
+msgstr ""
+"Rascunho do documento atualizado. <a target=\"_blank\" href=\"%s\">Download "
+"do documento</a>"
+
+# @ wp-document-revisions
+#: includes/admin.php:183
+msgid "Basic Usage"
+msgstr "Utilização Básica"
+
+# @ wp-document-revisions
+#: includes/admin.php:184
+msgid ""
+"This screen allows users to collaboratively edit documents and track their "
+"revision history. To begin, enter a title for the document, click "
+"<code>Upload New Version</code> and select the file from your computer."
+msgstr ""
+"Essa tela permite que usuários editem documentos colaborativamente e "
+"acompanhem o histórico de revisões. Para começar, informe um título para o "
+"documento. clique em <code>Enviar Nova Versão</code> e selecione o arquivo "
+"em seu computador."
+
+# @ wp-document-revisions
+#: includes/admin.php:185
+msgid ""
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
+msgstr ""
+"Assim que enviado com sucesso, você poderá informar uma mensagem de log para "
+"a revisão, atribuir um autor ao documento e descrever o seu status de fluxo "
+"de trabalho atual."
+
+# @ wp-document-revisions
+#: includes/admin.php:186
+msgid "When done, simply click <code>Update</code> to save your changes"
+msgstr ""
+"Quando terminar, simplesmente clique em <code>Atualizar</code> para salvar "
+"suas alterações."
+
+# @ wp-document-revisions
+#: includes/admin.php:187
+msgid "Revision Log"
+msgstr "Log da Revisão"
+
+# @ wp-document-revisions
+#: includes/admin.php:188
+msgid ""
+"The revision log provides a short summary of the changes reflected in a "
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
+msgstr ""
+"O log de revisão fornece um breve resumo das alterações refletidas em uma "
+"revisão específica. Amplamente utilizado na comunidade open-source, oferece "
+"um histórico abrangente do documento em um piscar de olhos."
+
+# @ wp-document-revisions
+#: includes/admin.php:189
+msgid ""
+"You can download and view previous versions of the document by clicking the "
+"timestamp in the revision log. You can also restore revisions by clicking "
+"the <code>restore</code> button beside the revision."
+msgstr ""
+"Você pode baixar e visualizar versões anteriores do documento clicando no "
+"horário no registro de revisões. Você também pode restaurar versões clicando "
+"no botão <code>restaurar</code> ao lado da revisão."
+
+# @ wp-document-revisions
+#: includes/admin.php:190 includes/admin.php:261 includes/admin.php:850
+msgid "Workflow State"
+msgstr "Status do Fluxo de Trabalho"
+
+# @ wp-document-revisions
+#: includes/admin.php:191
+msgid ""
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
+"<code>Workflow States</code> on the left-hand side."
+msgstr ""
+"O campo de status do fluxo de trabalho pode ser usado para ajudar os membros "
+"da equipe a entender em qual ponto o documento está em relação aos "
+"parâmetros da organização. O campo é opcional e pode ser personalizado ou "
+"pesquisado clicando em <code>Status do Fluxo de Trabalho</code> no lado "
+"esquerdo."
+
+# @ wp-document-revisions
+#: includes/admin.php:192
+msgid "Publishing Documents"
+msgstr "Publicação de Documentos"
+
+# @ wp-document-revisions
+#: includes/admin.php:193
+msgid ""
+"By default, uploaded documents are only accessible to logged in users. "
+"Documents can be published, thus making them accessible to the world, by "
+"toggling their visibility in the \"Publish\" box in the top right corner. "
+"Any document marked as published will be accessible to anyone with the "
+"proper URL."
+msgstr ""
+"Por padrão, documentos enviados só são acessíveis para usuários logados. "
+"Documentos podem ser publicados, fazendo-os acessíveis ao mundo, alterando "
+"sua visibilidade na caixa \"Publicar\" no topo direito. Qualquer documento "
+"marcado como publicado estará acessível a qualquer um com a URL correta."
+
+# @ wp-document-revisions
+#: includes/admin.php:197
+msgid ""
+"Below is a list of all documents to which you have access. Click the "
+"document title to edit the document or download the latest version."
+msgstr ""
+"Abaixo há uma lista com todos os documentos aos quais você tem acesso. "
+"Clique no título do documento para editá-lo ou baixar a versão mais recente."
+
+# @ wp-document-revisions
+#: includes/admin.php:198
+msgid ""
+"To add a new document, click <strong>Add Document</strong> on the left-hand "
+"side."
+msgstr ""
+"Para adicionar um novo documento, clique em <strong>Adicionar Documento</"
+"strong> no lado esquerdo."
+
+# @ wp-document-revisions
+#: includes/admin.php:199
+msgid ""
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
+msgstr ""
+"Para ver todos os documentos em determinado fluxo de trabalho, clique em "
+"<strong>Status do Fluxo de Trabalho</strong> no menu do lado esquerdo."
+
+# @ wp-document-revisions
+# @ default
+#: includes/admin.php:254 includes/admin.php:368
+msgid "Revision Summary"
+msgstr "Sumário de Revisões"
+
+# @ wp-document-revisions
+#: includes/admin.php:255
+msgid "Document"
+msgstr "Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:269 includes/admin.php:832 includes/admin.php:1000
+msgid "Owner"
+msgstr "Proprietário"
+
+# @ wp-document-revisions
+#: includes/admin.php:339
+#, php-format
+msgid "%s has prevented other users from making changes."
+msgstr "%s impediu que outros usuários façam alterações."
+
+# @ wp-document-revisions
+#: includes/admin.php:341
+msgid ""
+"<br />If you believe this is in error you can <a href=\"#\" id="
+"\"override_link\">override the lock</a>, but their changes will be lost."
+msgstr ""
+"<br />se você acha que isso seja um erro, você pode <a href=\"#\" id="
+"\"override_link\">sobrescrever o bloqueio</a>, mas as alterações serão "
+"perdidas."
+
+# @ wp-document-revisions
+#: includes/admin.php:347
+msgid "Upload New Version"
+msgstr "Enviar Nova Versão"
+
+# @ wp-document-revisions
+#: includes/admin.php:353
+msgid "Latest Version of the Document"
+msgstr "Última Versão do Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:354
+msgid "Download"
+msgstr "Download"
+
+# @ wp-document-revisions
+#: includes/admin.php:355
+#, php-format
+msgid ""
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
+"ago by %4$s"
+msgstr ""
+"Verificado a <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</"
+"abbr> atrás por %4$s"
+
+# @ wp-document-revisions
+#: includes/admin.php:370
+msgid ""
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
+"needing to open the actual file."
+msgstr ""
+"Resumos de Revisão são notas opcionais salvas com a revisão para permitir "
+"que outros usuários possam ver fácil e rapidamente quais as alterações "
+"feitas sem precisar abrir o documento."
+
+# @ wp-document-revisions
+#: includes/admin.php:387
+msgid "Modified"
+msgstr "Modificado"
+
+# @ wp-document-revisions
+#: includes/admin.php:388
+msgid "User"
+msgstr "Usuário"
+
+# @ wp-document-revisions
+#: includes/admin.php:389
+msgid "Summary"
+msgstr "Sumário"
+
+# @ wp-document-revisions
+#: includes/admin.php:390
+msgid "Actions"
+msgstr "Ações"
+
+# @ wp-document-revisions
+#: includes/admin.php:404
+msgid "Restore"
+msgstr "Restaurar"
+
+# @ wp-document-revisions
+#: includes/admin.php:411
+msgid "RSS Feed"
+msgstr "Feed RSS"
+
+# @ wp-document-revisions
+#: includes/admin.php:439 includes/admin.php:506
+msgid "Document Upload Directory"
+msgstr "Diretório de Upload de Documentos"
+
+# @ wp-document-revisions
+#: includes/admin.php:440 includes/admin.php:513
+msgid "Document Slug"
+msgstr "Slug do Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:468
+msgid ""
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
+msgstr ""
+"Diretório de Upload de Documentos alterado, mas existem uploads que precisam "
+"ser movidos para a nova pasta para assegurar que continuem acessíveis."
+
+# @ wp-document-revisions
+#: includes/admin.php:492
+msgid ""
+"Document slug changed, but some previously published URLs may now be broken."
+msgstr ""
+"Slug do Documento alterado, mas algumas URLs publicadas anteriormente podem "
+"ter sido quebradas."
+
+# @ wp-document-revisions
+#: includes/admin.php:503
+msgid "Document Settings"
+msgstr "Configurações do Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:607
+msgid ""
+"Directory in which to store uploaded documents. The default is in your "
+"<code>wp_content/uploads</code> folder (or another default uploads folder "
+"defined elsewhere), but it may be moved to a folder outside of the "
+"<code>htdocs</code> or <code>public_html</code> folder for added security."
+msgstr ""
+"Diretório no qual os documentos enviados serão salvos. O padrão é e seu "
+"diretório <code>wp_content/uploads</code> (ou algum outro local "
+"personalizado anteriormente), mas deverá ser movido para um diretório fora "
+"de <code>htdocs</code> ou <code>public_html</code> para adicionar segurança."
+
+# @ wp-document-revisions
+#: includes/admin.php:609
+#, php-format
+msgid ""
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
+msgstr ""
+"Você opcionalmente pode incluir o termo <code>%site_id%</code> no caminho "
+"para separar arquivos por site."
+
+# @ wp-document-revisions
+#: includes/admin.php:618
+msgid "example-document-title"
+msgstr "título-de-exemplo-do-documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:619
+msgid ""
+"\"Slug\" with which to prefix all URLs for documents (and the document "
+"archive). Default is <code>documents</code>."
+msgstr ""
+"\"Slug\" para inserir um prefixo em todas as URLs dos documentos (e arquivo "
+"de documentos). Padrão é <code>documentos</code>."
+
+# @ wp-document-revisions
+#: includes/admin.php:747
+msgid ""
+"You currently have this file checked out. No other user can edit this "
+"document so long as you remain on this page."
+msgstr ""
+"Você está atualmente com este arquivo marcado. Nenhum outro usuário pode "
+"editar esse documento até que você saia dessa página."
+
+# @ wp-document-revisions
+#: includes/admin.php:760
+msgid "Feed Privacy"
+msgstr "Privacidade do Feed"
+
+# @ wp-document-revisions
+#: includes/admin.php:763
+msgid "Secret Feed Key"
+msgstr "Chave Secreta do Feed"
+
+# @ wp-document-revisions
+#: includes/admin.php:766
+msgid ""
+"To protect your privacy, you need to append a key to feeds for use in feed "
+"readers."
+msgstr ""
+"Para proteger sua privacidade, você precisa anexar uma chave de feeds para "
+"utilização em leitores de feeds."
+
+# @ wp-document-revisions
+#: includes/admin.php:768
+msgid "Generate New Key"
+msgstr "Gerar Nova Chave"
+
+# @ wp-document-revisions
+#: includes/admin.php:896
+msgid "Currently Editing"
+msgstr "Editando Atualmente"
+
+# @ wp-document-revisions
+#: includes/admin.php:936
+msgid "Current State"
+msgstr "Status Atual"
+
+# @ wp-document-revisions
+#: includes/admin.php:1001
+msgid "Document Owner"
+msgstr "Proprietário do Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:1033
+msgid ""
+"Are you sure you want to restore this revision? If you do, no history will "
+"be lost. This revision will be copied and become the most recent revision."
+msgstr ""
+"Você tem certeza que deseja restaurar essa revisão? Se sim, nenhum histório "
+"será perdido. Essa revisão será copiada e será a revisão mais recente."
+
+# @ default
+#: includes/admin.php:1034
+msgid "is currently editing this"
+msgstr "está editando isso atualmente"
+
+# @ wp-document-revisions
+#: includes/admin.php:1035
+msgid ""
+"File uploaded successfully. Add a revision summary below (optional) or press "
+"<strong>Update</strong> to save your changes."
+msgstr ""
+"Arquivo enviado com sucesso. Adicione um resumo abaixo (opcional) ou clique "
+"em <strong>Atualizar</strong> para salvar suas alterações."
+
+# @ wp-document-revisions
+#: includes/admin.php:1036
+#, php-format
+msgid ""
+"Your lock on the document %s has been overridden. Any changes will be lost."
+msgstr ""
+"Seu bloqueio no documento %s foi sobrescrito. Qualquer alteração será "
+"perdida."
+
+# @ wp-document-revisions
+#: includes/admin.php:1037
+msgid "An error has occurred, please try reloading the page."
+msgstr "Ocorreu um erro, por favor, tente atualizar a página."
+
+# @ wp-document-revisions
+#: includes/admin.php:1038
+msgid "Lost Document Lock"
+msgstr "Perda de Bloqueio do Documento"
+
+# @ wp-document-revisions
+#: includes/admin.php:1040 includes/admin.php:1041
+#, php-format
+msgid "%d mins"
+msgstr "%d minutos"
+
+# @ wp-document-revisions
+#: includes/admin.php:1042
+#, php-format
+msgid "%d hour"
+msgstr "%d hora"
+
+# @ wp-document-revisions
+#: includes/admin.php:1043
+#, php-format
+msgid "%d hours"
+msgstr "%d horas"
+
+# @ wp-document-revisions
+#: includes/admin.php:1044
+#, php-format
+msgid "%d day"
+msgstr "%d dia"
+
+# @ wp-document-revisions
+#: includes/admin.php:1045
+#, php-format
+msgid "%d days"
+msgstr "%d dias"
+
+# @ wp-document-revisions
+#: includes/front-end.php:95
+#, php-format
+msgid ""
+"<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> "
+"<span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
+msgstr ""
+"<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> "
+"<span class=\"agoby\">atrás por</a> <span class=\"author\">%5$s</a>"
+
+# @ wp-document-revisions
+#: includes/front-end.php:209 includes/front-end.php:212
+msgid "Recently Revised Documents"
+msgstr "Documentos Revisados Recentemente"
+
+# @ wp-document-revisions
+#: includes/front-end.php:248
+#, php-format
+msgid "%1$s ago by %2$s"
+msgstr "%1$s atrás por %2$s"
+
+# @ wp-document-revisions
+#: includes/front-end.php:248
+#, php-format
+msgid "%1$s ago"
+msgstr "%1$s atrás"
+
+# @ wp-document-revisions
+#: includes/front-end.php:271
+msgid "Title:"
+msgstr "Título:"
+
+# @ wp-document-revisions
+#: includes/front-end.php:275
+msgid "Number of Posts:"
+msgstr "Número de Posts:"
+
+# @ wp-document-revisions
+#: includes/front-end.php:279
+msgid "Posts to Show:"
+msgstr "Posts a exibir:"
+
+# @ wp-document-revisions
+#: includes/front-end.php:286
+msgid "Display Document Author:"
+msgstr "Exibir Autor do Documento:"
+
+# @ wp-document-revisions
+#: includes/front-end.php:287
+msgid "Yes"
+msgstr "Sim"
+
+# @ wp-document-revisions
+#: includes/admin.php:346
+msgid "Upload Document"
+msgstr "Enviar Documento"
