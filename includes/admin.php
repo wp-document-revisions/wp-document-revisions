@@ -409,7 +409,7 @@ class Document_Revisions_Admin {
 				<td><?php echo get_the_author_meta( 'display_name', $revision->post_author ); ?></td>
 				<td><?php echo $revision->post_excerpt; ?></td>
 				<?php if ( $can_edit_post && $post->ID != $revision->ID ) { ?>
-				<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$post->ID|$revision->ID" ); ?>" class="revision"><?php _e( 'Restore', 'wp-document-revisions'); ?></a></td>
+				<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$revision->ID" ); ?>" class="revision"><?php _e( 'Restore', 'wp-document-revisions'); ?></a></td>
 				<?php } ?>
 			</tr>
 			<?php
