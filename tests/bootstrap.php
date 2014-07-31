@@ -51,10 +51,24 @@ function _destroy_users() {
 		array_map( array( $this, '_destroy_user' ), $users );
 }
 
+function _rrmdir($dir) {
+   if (is_dir($dir)) {
+     $objects = scandir($dir);
+     foreach ($objects as $object) {
+       if ($object != "." && $object != "..") {
+         if (filetype($dir."/".$object) == "dir") _rrmdir($dir."/".$object); else unlink($dir."/".$object);
+       }
+     }
+     reset($objects);
+     rmdir($dir);
+   }
+ }
+
 function _destroy_uploads() {
 		$uploads = wp_upload_dir();
-		foreach ( scandir( $uploads['basedir'] ) as $file )
-			rmdir( $uploads['basedir'] . '/' . $file );
+		$files = array_diff(scandir($uploads['basedir']), array('..', '.'));
+		foreach ( $files as $file )
+			_rrmdir( $uploads['basedir'] . '/' . $file );
 }
 
 /**
