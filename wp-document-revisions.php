@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.3.7
+Version: 2.0.0
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -29,11 +29,11 @@ License: GPL3
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @copyright 2011-2012
+ *  @copyright 2011-2014
  *  @license GPL v3
- *  @version 1.3.6
+ *  @version 2.0.0
  *  @package WP_Document_Revisions
- *  @author Benjamin J. Balter <ben@balter.com>
+ *  @author Ben Balter <ben@balter.com>
  */
 
 set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/includes');
@@ -43,7 +43,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	static $instance;
 	static $key_length = 32;
 	static $meta_key   = 'document_revisions_feed_key';
-	public $version = '1.3.6';
+	public $version = '2.0.0';
 
 	/**
 	 * Initiates an instance of the class and adds hooks
