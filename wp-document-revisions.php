@@ -593,9 +593,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		//note, changing $post here would break $post in the global scope
 		// rename $post to attachment, or grab the attachment from $post
 		// either way, $attachment is now the object we're looking to query
-		if ( get_post_type( $post ) == 'attachment' )
+		if ( get_post_type( $post ) == 'attachment' ) {
 			$attachment = $post;
-		else if ( get_post_type( $post ) == 'document' )
+		} else if ( get_post_type( $post ) == 'document' ) {
 				$latest_revision = $this->get_latest_revision( $post->ID );
 
 				// verify a previous revision exists
@@ -608,8 +608,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			// or in case some sort of non-document, non-attachment object/ID was passed
 			if ( get_post_type( $attachment ) != 'attachment' )
 				return '';
+		}
 
-			return $this->get_extension( get_attached_file( $attachment->ID ) );
+		return $this->get_extension( get_attached_file( $attachment->ID ) );
 
 	}
 
