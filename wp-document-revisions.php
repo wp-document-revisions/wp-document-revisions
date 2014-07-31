@@ -1921,7 +1921,6 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	}
 
-
 }
 
 // $wpdr is a global reference to the class
