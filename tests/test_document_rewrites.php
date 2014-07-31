@@ -21,7 +21,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$wp_rewrite->flush_rules();
 
 		//custom wp_die_handler to verify that we died
-		add_filter( 'wp_die_handler', array( $this, 'get_die_handler' ) );
+		add_filter( 'wp_die_handler', array( &$this, 'get_die_handler' ), 9999 );
 		global $is_wp_die;
 		$is_wp_die = false;
 
@@ -32,7 +32,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		//flush cache for good measure
 		wp_cache_flush();
-		
+
 	}
 
 	/**
@@ -41,10 +41,10 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function tearDown() {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure('');
-	
+
 		_destroy_uploads();
 		parent::tearDown();
-		
+
 	}
 
 
@@ -62,6 +62,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	 * @param sting msg the die msg
 	 */
 	function die_handler( $msg ) {
+		echo "HERE";
 
 		global $is_wp_die;
 		$is_wp_die = true;
@@ -147,7 +148,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
 		wp_publish_post( $docID );
-		
+
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
@@ -170,7 +171,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
-		
+
 		//public should be denied
 		$this->verify_cant_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
 		$this->verify_cant_download( get_permalink( $docID ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
@@ -211,7 +212,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		//admin should be able to access
 		$id = _make_user('administrator');
 		wp_set_current_user( $id );
-		
+
 		$this->markTestSkipped();
 		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
 		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'Private, Admin Pretty Permalink' );
@@ -232,12 +233,12 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		wp_publish_post( $docID );
 		$revisions = $wpdr->get_revisions( $docID );
 		$revision = array_pop( $revisions );
-		
+
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
-			
+
 
 		//public should be denied access to revisions
 		$this->verify_cant_download( get_permalink( $revision->ID ), $tdr->test_file, 'Public revision request (pretty)' );
@@ -335,7 +336,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 	/**
 	 * Simulate accessing a revision log feed
-	 * @param string $url the URL to try 
+	 * @param string $url the URL to try
 	 * @return string the content returned
 	 */
 	function simulate_feed( $url = null ) {
@@ -371,7 +372,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
-		
+
 		//try to get an un auth'd feed
 		$content = $this->simulate_feed( get_permalink( $docID ) . '/feed/' );
 		$this->assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
@@ -387,9 +388,9 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_feed_as_authorized() {
 
 		global $wpdr;
-		
+
 		define ( 'WP_ADMIN', true );
-		
+
 		$wpdr->admin_init();
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
@@ -405,12 +406,12 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		_destroy_user( $userID );
 
 	}
-	
+
 	/**
 	 * Tests that changing the document slug is reflected in permalinks
 	 */
 	function test_document_slug() {
-	
+
 		global $wp_rewrite;
 		$tdr = new WP_Test_Document_Revisions();
 
@@ -418,14 +419,14 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		update_site_option( 'document_slug', 'docs' );
 
 		//add doc and flush
-		$docID = $tdr->test_add_document();	
+		$docID = $tdr->test_add_document();
 		wp_publish_post( $docID );
 		wp_cache_flush();
 		$wp_rewrite->flush_rules();
-		
+
 		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
 		$this->assertContains( '/docs/', get_permalink( $docID ), 'revised document slug not in permalink' );
-		
+
 	}
 
 }
