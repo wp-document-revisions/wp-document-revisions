@@ -49,6 +49,8 @@ class Document_Revisions_Admin {
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
+		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
+		add_filter( 'parse_query', array( &$this, 'convert_id_to_term' ) );
 
 		//settings
 		add_action( 'admin_init', array( &$this, 'settings_fields') );
@@ -257,7 +259,7 @@ class Document_Revisions_Admin {
 		if ( $post->post_content != '' )
 			add_meta_box( 'revision-log', 'Revision Log', array( &$this, 'revision_metabox'), 'document', 'normal', 'low' );
 
-		if ( taxonomy_exists( 'workflow_state' ) )
+		if ( taxonomy_exists( 'workflow_state' )  && ! $this->disable_workflow_states() )
 			add_meta_box( 'workflow-state', __('Workflow State', 'wp-document-revisions'), array( &$this, 'workflow_state_metabox_cb'), 'document', 'side', 'default' );
 
 
@@ -343,6 +345,12 @@ class Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
+			<?php if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
+			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
+			<a id="edit-desktop-button" href="<?php echo get_permalink( $post->ID ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
+				<?php _e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
+			</a>
+			<?php } //end if latest version ?>
 			<a href="media-upload.php?post_id=<?php echo $post->ID; ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ) ?>" onclick="return false;" >
 				<?php _e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
@@ -401,7 +409,7 @@ class Document_Revisions_Admin {
 				<td><?php echo get_the_author_meta( 'display_name', $revision->post_author ); ?></td>
 				<td><?php echo $revision->post_excerpt; ?></td>
 				<?php if ( $can_edit_post && $post->ID != $revision->ID ) { ?>
-				<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$post->ID|$revision->ID" ); ?>" class="revision"><?php _e( 'Restore', 'wp-document-revisions'); ?></a></td>
+				<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$revision->ID" ); ?>" class="revision"><?php _e( 'Restore', 'wp-document-revisions'); ?></a></td>
 				<?php } ?>
 			</tr>
 			<?php
@@ -819,6 +827,62 @@ class Document_Revisions_Admin {
 			$this->generate_new_feed_key();
 	}
 
+	/**
+	 * Allow some filtering of the All Documents list
+	 */
+	function filter_documents_list() {
+		global $typenow, $wp_query;
+		// Only applies to document post type
+		if ( $typenow == 'document' ) {
+
+			// Filter by workflow state/edit flow state
+			$tax_slug = 'workflow_state';
+			if ( $this->disable_workflow_states() ) {
+				$tax_slug = EF_Custom_Status::taxonomy_key;
+			}
+			$args = array(
+				'name' => 'workflow_state',
+				'show_option_all' => __( 'All workflow states', 'wp-document-revisions' ),
+				'hide_empty' => false,
+				'taxonomy' => $tax_slug,
+			);
+			$termID = $wp_query->query[$tax_slug];
+			if ( ! is_numeric ( $termID ) ) {
+				$term = get_term_by( 'slug', $wp_query->query[$tax_slug], $tax_slug );
+				$termID = $term->term_id;
+			}
+			$args['selected'] = $termID;
+			wp_dropdown_categories( $args );
+
+			// author/owner filtering
+			$args = array(
+				'name' => 'author',
+				'show_option_all' => __( 'All owners', 'wp-document-revisions' )
+			);
+			if ( isset( $_GET['author'] ) ) {
+				$args['selected'] = $_GET['author'];
+			}
+			wp_dropdown_users( $args );
+		}
+	}
+
+	/**
+	 * Converts id to term used in filter dropdown
+	 */
+	function convert_id_to_term( $query ) {
+		global $pagenow, $typenow;
+		if ( 'edit.php' == $pagenow && $typenow == 'document' ) {
+			$tax_slug = 'workflow_state';
+			if ( $this->disable_workflow_states() ) {
+				$tax_slug = EF_Custom_Status::taxonomy_key;
+			}
+			$var = &$query->query_vars[$tax_slug];
+			if ( isset( $var ) && is_numeric( $var ) ) {
+				$term = get_term_by( 'id', $var, $tax_slug );
+				$var = $term->slug;
+			}
+		}
+	}
 
 	/**
 	 * Renames author column on document list to "owner"
@@ -1033,6 +1097,9 @@ class Document_Revisions_Admin {
 			'restoreConfirmation' => __( 'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp-document-revisions'),
 			'lockNeedle'          => __( 'is currently editing this'), //purposely left out text domain
 			'postUploadNotice'    => '<div id="message" class="updated" style="display:none"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
+			'postDesktopNotice'    => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
+			'desktopEditRuntimeError' => '<div id="message" class="error" style="display:none"><p>' . __('There was an error launching your Office software. You can try to <a href="#" onClick="location.reload();">reload this page</a> to see if this fixes the issue, or use the <strong>Upload</strong> option.', 'wp-document-revisions') . '</p></div>',
+			'desktopEditNotSupportedError' => '<div id="message" class="error" style="display:none"><p>' . __('Sorry, desktop editing not supported by this browser or your current Office software. Please use the <strong>Upload</strong> option.', 'wp-document-revisions') . '</p></div>',
 			'lostLockNotice'      => __('Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
@@ -1174,7 +1241,7 @@ class Document_Revisions_Admin {
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
-
+		return true;
 	}
 
 
