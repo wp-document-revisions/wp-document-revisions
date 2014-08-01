@@ -1,10 +1,10 @@
 === WP Document Revisions ===
-Contributors: benbalter  
-Donate link: http://ben.balter.com/donate/  
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
-Requires at least: 3.2  
-Tested up to: 3.6   
-Stable tag: 1.3.6
+Contributors: benbalter
+Donate link: http://ben.balter.com/donate/
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
+Requires at least: 3.9
+Tested up to: 3.9
+Stable tag: 2.0.0
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
@@ -45,7 +45,7 @@ A document management and version control plugin that allows teams of any size t
 * Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
-* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
+* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
@@ -165,7 +165,7 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Added Spanish Translation Support (es_ES -- special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., http://domain.com/documentos/2012/04/test.txt rather than /documents/)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
-* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.  
+* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
 * Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
 * Default document upload directory now honors WordPress-wide defaults and features enhanced multisite support
@@ -185,7 +185,7 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Code cleanup, minor bug fixes, and additional inline documentation
 
 = 1.2.2 =
-* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute 
+* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 -- file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log
@@ -218,10 +218,10 @@ Please see (and feel free to contribute to) the [Frequently Asked Questions Wiki
 * Created new global `get_documents()` and `get_document_revisions()` functions to help build and customize themes and plugins
 * Added filter to `wp_get_attachment_url` to force document/revision urls when attachments are queried directly
 * Better organization of plugin files within plugin folder
-* Fixed bug where revision summary would not display under certain circumstances 
+* Fixed bug where revision summary would not display under certain circumstances
 
 = 1.1 =
-* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed 
+* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed
 * Added "Currently Editing" column to documents list to display document's lock holder, if any
 * Added support for new help tabs in WordPress versions 3.3 and greater
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
