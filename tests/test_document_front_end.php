@@ -65,10 +65,8 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 		$id = _make_user('administrator');
 		wp_set_current_user( $id );
 
-		$this->markTestSkipped();
 		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
 		$this->assertEquals( 2, substr_count( $output, '<li'), 'admin revision shortcode' );
-
 
 	}
 

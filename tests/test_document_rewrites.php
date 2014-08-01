@@ -211,9 +211,8 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		//admin should be able to access
 		$id = _make_user('administrator');
-		wp_set_current_user( $id );
+		$user = wp_set_current_user( $id );
 
-		$this->markTestSkipped();
 		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
 		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'Private, Admin Pretty Permalink' );
 		_destroy_user( $id );

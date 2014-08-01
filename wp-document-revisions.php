@@ -1558,17 +1558,12 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 			//if the role is a standard role, map the default caps, otherwise, map as a subscriber
 			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[$role] : $defaults['subscriber'];
-
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
 			//loop and assign
-			foreach ( $caps as $cap=>$grant ) {
+			foreach ( $caps as $cap => $grant )
+				$wp_roles->add_cap( $role, $cap, $grant );
 
-				//check to see if the user already has this capability, if so, don't re-add as that would override grant
-				if ( !isset( $wp_roles->roles[$role]['capabilities'][$cap] ) )
-					$wp_roles->add_cap( $role, $cap, $grant );
-
-			}
 		}
 
 	}
