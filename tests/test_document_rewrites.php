@@ -62,7 +62,6 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	 * @param sting msg the die msg
 	 */
 	function die_handler( $msg ) {
-		echo "HERE";
 
 		global $is_wp_die;
 		$is_wp_die = true;
@@ -94,6 +93,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 			return;
 
 		global $wpdr;
+		flush_rewrite_rules();
 
 		$this->go_to( $url );
 
@@ -123,6 +123,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 			return;
 
 		global $wpdr;
+		flush_rewrite_rules();
 
 		$this->go_to( $url );
 
@@ -298,9 +299,9 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_add_document();
-		$this->go_to( '/' . $wpdr->document_slug() . '/' );
+		flush_rewrite_rules();
+		$this->go_to( get_home_url(null, $wpdr->document_slug() ) );
 		$this->assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
-
 	}
 
 
@@ -422,7 +423,6 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$docID = $tdr->test_add_document();
 		wp_publish_post( $docID );
 		wp_cache_flush();
-		$wp_rewrite->flush_rules();
 
 		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
 		$this->assertContains( '/docs/', get_permalink( $docID ), 'revised document slug not in permalink' );
