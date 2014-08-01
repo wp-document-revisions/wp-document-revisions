@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 1.3.7
+Version: 2.0.0
 Author: Benjamin J. Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -14,7 +14,7 @@ License: GPL3
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
  *
- *  Copyright (C) 2011-2012  Benjamin J. Balter  ( ben@balter.com -- http://ben.balter.com )
+ *  Copyright (C) 2011-2014 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ License: GPL3
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @copyright 2011-2012
+ *  @copyright 2011-2014
  *  @license GPL v3
- *  @version 1.3.6
+ *  @version 2.0.0
  *  @package WP_Document_Revisions
- *  @author Benjamin J. Balter <ben@balter.com>
+ *  @author Ben Balter <ben@balter.com>
  */
 
 set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/includes');
@@ -43,7 +43,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	static $instance;
 	static $key_length = 32;
 	static $meta_key   = 'document_revisions_feed_key';
-	public $version = '1.3.6';
+	public $version = '2.0.0';
 
 	/**
 	 * Initiates an instance of the class and adds hooks
@@ -593,9 +593,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		//note, changing $post here would break $post in the global scope
 		// rename $post to attachment, or grab the attachment from $post
 		// either way, $attachment is now the object we're looking to query
-		if ( get_post_type( $post ) == 'attachment' )
+		if ( get_post_type( $post ) == 'attachment' ) {
 			$attachment = $post;
-		else if ( get_post_type( $post ) == 'document' )
+		} else if ( get_post_type( $post ) == 'document' ) {
 				$latest_revision = $this->get_latest_revision( $post->ID );
 
 				// verify a previous revision exists
@@ -608,8 +608,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			// or in case some sort of non-document, non-attachment object/ID was passed
 			if ( get_post_type( $attachment ) != 'attachment' )
 				return '';
+		}
 
-			return $this->get_extension( get_attached_file( $attachment->ID ) );
+		return $this->get_extension( get_attached_file( $attachment->ID ) );
 
 	}
 
@@ -1557,17 +1558,12 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 			//if the role is a standard role, map the default caps, otherwise, map as a subscriber
 			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[$role] : $defaults['subscriber'];
-
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
 			//loop and assign
-			foreach ( $caps as $cap=>$grant ) {
+			foreach ( $caps as $cap => $grant )
+				$wp_roles->add_cap( $role, $cap, $grant );
 
-				//check to see if the user already has this capability, if so, don't re-add as that would override grant
-				if ( !isset( $wp_roles->roles[$role]['capabilities'][$cap] ) )
-					$wp_roles->add_cap( $role, $cap, $grant );
-
-			}
 		}
 
 	}
@@ -1921,11 +1917,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	}
 
-
 }
 
-
 // $wpdr is a global reference to the class
+global $wpdr;
 $wpdr = new Document_Revisions;
 
 //declare global functions
