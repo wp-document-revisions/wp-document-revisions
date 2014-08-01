@@ -346,6 +346,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 			return;
 
 		global $wpdr;
+		flush_rewrite_rules();
 
 		$this->go_to( $url );
 
