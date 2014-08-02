@@ -1,3 +1,5 @@
+# How to contribute
+
 WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated.
 
 * **Everyone** - help expand the projects [documentation wiki](https://github.com/benbalter/WP-Document-Revisions/wiki) to make it easier for other users to get started

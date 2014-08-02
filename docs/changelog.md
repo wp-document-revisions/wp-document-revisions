@@ -1,3 +1,5 @@
+# Changelog
+
 ### 1.3.dev ###
 * Fix for workflow state not properly saving under certain circumstances
 * Added Italian translation, props @guterboit
@@ -70,7 +72,7 @@
 * Code cleanup, minor bug fixes, and additional inline documentation
 
 ### 1.2.2 ###
-* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute 
+* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 -- file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log
@@ -103,10 +105,10 @@
 * Created new global `get_documents()` and `get_document_revisions()` functions to help build and customize themes and plugins
 * Added filter to `wp_get_attachment_url` to force document/revision urls when attachments are queried directly
 * Better organization of plugin files within plugin folder
-* Fixed bug where revision summary would not display under certain circumstances 
+* Fixed bug where revision summary would not display under certain circumstances
 
 ### 1.1 ###
-* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed 
+* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed
 * Added "Currently Editing" column to documents list to display document's lock holder, if any
 * Added support for new help tabs in WordPress versions 3.3 and greater
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded

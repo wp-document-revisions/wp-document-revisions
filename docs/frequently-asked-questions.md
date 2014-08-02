@@ -1,3 +1,5 @@
+# Frequently Asked Questions
+
 ### I'm a user/developer/administrator... can I contribute? ###
 Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute) for more information.
 
@@ -105,7 +107,7 @@ Yes. Download (and optionally customize) the [taxonomy permissions](https://gith
 
 ### Is it possible to do a bulk import of existing documents / files already on the server? ###
 
-Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook. 
+Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
 
 ### I have some strange upload problems, but the files are still there somehow. ###
 If you assign custom roles to your users, make sure you add the `edit_posts` capability to any user that can upload files. See bugs [#8234](http://core.trac.wordpress.org/ticket/8234) and [#21091](http://core.trac.wordpress.org/ticket/21091)

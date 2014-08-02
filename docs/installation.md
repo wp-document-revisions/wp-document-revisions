@@ -1,3 +1,5 @@
+# Installation
+
 ### Automatic Install ###
 1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](http://codex.wordpress.org/Installing_WordPress)
 2. Navigate to Plugins->Add New from the menu on the left
