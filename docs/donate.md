@@ -1,4 +1,4 @@
-# Donate #
+## Donate ##
 
 Enjoy using WP Document Revisions? The most valuable way you can support the project is by [contributing your time](https://github.com/benbalter/WP-Document-Revisions/blob/master/docs/how-to-contribute.md).
 

@@ -1,4 +1,4 @@
-# Frequently Asked Questions #
+## Frequently Asked Questions ##
 
 ### I'm a user/developer/administrator... can I contribute? ###
 Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute) for more information.

@@ -1,4 +1,4 @@
-# Screenshots #
+## Screenshots ##
 
 ###1. A typical WP Document Revisions edit document screen.###
 
