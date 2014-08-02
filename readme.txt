@@ -2,9 +2,9 @@
 Contributors: benbalter  
 Donate link: http://ben.balter.com/donate/  
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
-Requires at least: 3.2  
-Tested up to: 3.5
-Stable tag: 1.3.5
+Requires at least: 3.9
+Tested up to: 3.9.1
+Stable tag: 2.0.0
 === WP Document Revisions ===
 
 [![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions)
