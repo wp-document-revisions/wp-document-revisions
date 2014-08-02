@@ -48,6 +48,7 @@ A document management and version control plugin that allows teams of any size t
 * French and Spanish language support (easily translated to your language)
 * Integration with [Edit Flow](http://editflow.org)
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
+* Beta: WebDAV support. Edit via supported Microsoft Office versions (2010+)
 
 **Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook):**
 

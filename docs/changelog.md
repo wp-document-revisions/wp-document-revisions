@@ -1,6 +1,14 @@
 # Changelog
 
-### 1.3.dev ###
+### 2.0.0 ###
+* Note: The project is looking for additional contributors. Please consider contributing your time: https://github.com/benbalter/wp-document-revisions/blob/master/docs/how-to-contribute.md
+* Added (beta) WebDAV support thanks to @linuxBozo and @poorgeek (https://github.com/benbalter/wp-document-revisions/pull/69)
+* Added Brazilian Portuguese translation thanks to @rafaelfunchal
+* Significantly improved automated testing via WP-CLI
+* Better guarding against binary files being corrupted by other plugins
+* Improved documentation (https://github.com/benbalter/wp-document-revisions/tree/master/docs)
+
+### 1.3.6 ###
 * Fix for workflow state not properly saving under certain circumstances
 * Added Italian translation, props @guterboit
 * Added Russian translation, props Evgeny Vlasov
