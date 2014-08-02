@@ -47,7 +47,7 @@
 * Administrative CSS [now stored in a separate file](https://github.com/benbalter/WP-Document-Revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/benbalter/WP-Document-Revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
 * Administrative CSS and Javascript files now versioned based on plugin version to allow for better caching
 
-### 1.3.1 ##
+### 1.3.1 ###
 * Better permalink support for draft and pending documents
 * Whenever possible browser will attempt to display documents in browser, rather than prompting with save as dialog (e.g., PDFs)
 * Fix for function `get_file_type()` breaking the global `$post` variable when no document argument is supplied

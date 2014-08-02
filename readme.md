@@ -80,6 +80,6 @@ A document management and version control plugin that allows teams of any size t
 
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
-## Documentation
+## Documentation ##
 
 For more information, please see [the plugin documentation](/docs).
