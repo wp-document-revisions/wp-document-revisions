@@ -846,13 +846,17 @@ class Document_Revisions_Admin {
 				'hide_empty' => false,
 				'taxonomy' => $tax_slug,
 			);
-			$termID = $wp_query->query[$tax_slug];
-			if ( ! is_numeric ( $termID ) ) {
-				$term = get_term_by( 'slug', $wp_query->query[$tax_slug], $tax_slug );
-				$termID = $term->term_id;
+
+			// set selected workflow state
+			if (isset($wp_query->query[$tax_slug])) {
+				$termID = $wp_query->query[$tax_slug];
+				if ( ! is_numeric ( $termID ) ) {
+					$term = get_term_by( 'slug', $wp_query->query[$tax_slug], $tax_slug );
+					$termID = $term->term_id;
+				}
+				$args['selected'] = $termID;
+				wp_dropdown_categories( $args );
 			}
-			$args['selected'] = $termID;
-			wp_dropdown_categories( $args );
 
 			// author/owner filtering
 			$args = array(
