@@ -1,4 +1,4 @@
-# Installation
+# Installation #
 
 ### Automatic Install ###
 1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](http://codex.wordpress.org/Installing_WordPress)

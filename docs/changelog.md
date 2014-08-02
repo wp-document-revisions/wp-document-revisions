@@ -1,4 +1,4 @@
-# Changelog
+# Changelog #
 
 ### 2.0.0 ###
 * Note: The project is looking for additional contributors. Please consider contributing your time: https://github.com/benbalter/wp-document-revisions/blob/master/docs/how-to-contribute.md
