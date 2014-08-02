@@ -1,6 +1,6 @@
 # WP Document Revisions #
 
-[![Build Status](https://secure.travis-ci.org/benbalter/WP-Document-Revisions.png?branch=master)](http://travis-ci.org/benbalter/WP-Document-Revisions)
+[![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
