@@ -1,18 +1,17 @@
-## About the Wiki ##
-
-_Welcome to the WP Document Revisions Wiki. This collaboratively edited documentation space provides users and developers with additional information about the plugin, how to get started, and how to extend its use. Feel free to contributing by editing any content or creating additional pages._
+## WP Document Revisions Documentation ##
 
 ## Learn ##
-* [Features and Overview](https://github.com/benbalter/WP-Document-Revisions/wiki/Description)
-* [Screenshots](https://github.com/benbalter/WP-Document-Revisions/wiki/Screenshots)
-* [Installation](https://github.com/benbalter/WP-Document-Revisions/wiki/Installation)
-* [Frequently Asked Questions](https://github.com/benbalter/WP-Document-Revisions/wiki/Frequently-Asked-Questions)
-* [Useful Plugins and Tools](https://github.com/benbalter/WP-Document-Revisions/wiki/Useful-Plugins-and-Tools)
-* [Links](https://github.com/benbalter/WP-Document-Revisions/wiki/Links)
-* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+
+* [Features and Overview](https://github.com/benbalter/WP-Document-Revisions#description)
+* [Screenshots](screenshots.md)
+* [Installation](installation.md)
+* [Frequently Asked Questions](frequently-asked-questions.md)
+* [Useful Plugins and Tools](plugins-and-tools.md)
+* [Links](links.md)
+* [Where to get Support or Report an Issue](where-to-get-help-or-report-an-issue.md)
 
 ## Get Involved ##
-* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
-* [Donate](https://github.com/benbalter/WP-Document-Revisions/wiki/Donate)
+
+* [How to Contribute](how-to-contribute.md)
+* [Donate](donate.md)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
-* Contribute to this Wiki
