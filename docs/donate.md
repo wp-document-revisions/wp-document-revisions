@@ -1,0 +1,1 @@
+Enjoy using WP Document Revisions? Please consider [making a small donation](http://ben.balter.com/donate/?utm_source=wiki&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
