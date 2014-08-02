@@ -106,6 +106,10 @@ For more information, please see [the plugin documentation](/docs).
 * Fix for workflow state not properly saving under certain circumstances
 * Added Italian translation, props @guterboit
 * Added Russian translation, props Evgeny Vlasov
+* Updated all translations
+* Workflow state saving improvements, props @cojennin ([#48](https://github.com/benbalter/WP-Document-Revisions/pull/48))
+* Fix restore revision link bug, props @cojennin ([#55](https://github.com/benbalter/WP-Document-Revisions/issues/55))
+* Welcome @cojennin to the core team. [Want to join?](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
 
 = 1.3.5 =
 * Added Dutch translation, props @tijscruysen.
