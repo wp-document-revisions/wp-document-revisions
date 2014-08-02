@@ -1015,6 +1015,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		//in case this is a large file, remove PHP time limits
 		@set_time_limit( 0 );
 
+		// clear output buffer to prevent other plugins from corrupting the file
+		ob_end_clean();
+		flush();
+
 		// If we made it this far, just serve the file
 		readfile( $file );
 
