@@ -12,6 +12,7 @@
 * Are you using the latest version of WordPress?
 * Are you using the latest version of the plugin?
 * Does the problem occur even when you deactivate all plugins and use the default theme?
+* Have you tried deactivating and reactivating the plugin?
 * Has your issue [already been reported](https://github.com/benbalter/WP-Document-Revisions/issues)?
 
 ## What to include in an issue
