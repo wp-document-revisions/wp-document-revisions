@@ -76,8 +76,6 @@ A document management and version control plugin that allows teams of any size t
 * Russian - Evgeny Vlasov
 * Dutch - @tijscruysen
 
-*WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
-
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
 ## Documentation ##
