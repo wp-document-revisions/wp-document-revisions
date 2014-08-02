@@ -22,3 +22,7 @@
 * What is the actual outcome of that action?
 * Are there any screenshots or screencasts that may be helpful to include?
 * Only include one bug per issue. If you have discovered two bugs, please file two issues.
+
+## Looking for more ways to get involved?
+
+There are [many ways to contribute](https://github.com/benbalter/WP-Document-Revisions/blob/master/docs/how-to-contribute.md).
