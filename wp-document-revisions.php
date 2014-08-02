@@ -1017,10 +1017,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		// clear output buffer to prevent other plugins from corrupting the file
 		if (ob_get_level()) {
-			ob_end_clean();
+			ob_clean();
 			flush();
 		}
-		
+
 		// If we made it this far, just serve the file
 		readfile( $file );
 
