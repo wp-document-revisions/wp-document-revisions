@@ -345,7 +345,7 @@ class Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<?php if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
+			<?php if ( $latest_version = $this->get_latest_revision( $post->ID ) && apply_filters( 'document_revisions_enable_webdav', true ) ) { ?>
 			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
 			<a id="edit-desktop-button" href="<?php echo get_permalink( $post->ID ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
 				<?php _e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
