@@ -1481,6 +1481,7 @@ class Document_Revisions {
 
 		$args = (array) $args;
 		$args['post_type'] = 'document';
+		$args['suppress_filters'] = false;
 		$documents = get_posts( $args );
 		$output = array();
 
