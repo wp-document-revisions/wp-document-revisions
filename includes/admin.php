@@ -70,6 +70,7 @@ class Document_Revisions_Admin {
 
 		//media filters
 		add_action( 'admin_init', array( &$this, 'filter_from_media' ) );
+		add_filter( 'ajax_query_attachments_args', array( $this, 'filter_from_media_grid' ) );
 
 		//cleanup
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document'), 10, 1 );
@@ -1186,6 +1187,21 @@ class Document_Revisions_Admin {
 		add_filter( 'posts_where_paged', array( &$this, 'filter_media_where' ), 20 );
 	}
 
+	/**
+	 * Filters documents from the media grid view when queried via Ajax. This uses
+	 * the same filters from the list view applied in `filter_from_media()`.
+	 *
+	 * @param $query
+	 *
+	 * @return mixed
+	 */
+	public function filter_from_media_grid( $query ) {
+		//note: hook late so that unnattached filter can hook in, if necessary
+		add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
+		add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
+
+		return $query;
+	}
 
 	/**
 	 * Requires all document revisions to have attachments
