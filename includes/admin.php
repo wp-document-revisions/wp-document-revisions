@@ -404,9 +404,17 @@ class Document_Revisions_Admin {
 
 			if ( !current_user_can( 'read_post', $revision->ID ) || wp_is_post_autosave( $revision ) )
 				continue;
+			//preserve original file extension on revision links.
+			//this will prevent mime/ext security conflicts in IE when downloading.
+			if(is_numeric($revision->post_content)){
+				$fn = get_post_meta( $revision->post_content, '_wp_attached_file', true );
+				$fno = pathinfo($fn);
+				$info = pathinfo(get_permalink( $revision->ID ));
+				$fn = $info['dirname'].'/'.$info['filename'].'.'.$fno['extension'];
+				}else{ $fn = get_permalink( $revision->ID ); }
 ?>
 			<tr>
-				<td><a href="<?php echo get_permalink( $revision->ID ); ?>" title="<?php echo $revision->post_date; ?>" class="timestamp" id="<?php echo strtotime( $revision->post_date ); ?>"><?php echo human_time_diff( strtotime( $revision->post_date ), current_time('timestamp') ); ?></a></td>
+				<td><a href="<?php echo $fn; ?>" title="<?php echo $revision->post_date; ?>" class="timestamp" id="<?php echo strtotime( $revision->post_date ); ?>"><?php echo human_time_diff( strtotime( $revision->post_date ), current_time('timestamp') ); ?></a></td>
 				<td><?php echo get_the_author_meta( 'display_name', $revision->post_author ); ?></td>
 				<td><?php echo $revision->post_excerpt; ?></td>
 				<?php if ( $can_edit_post && $post->ID != $revision->ID ) { ?>
