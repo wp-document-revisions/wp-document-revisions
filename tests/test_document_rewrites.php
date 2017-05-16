@@ -403,12 +403,15 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		//try to get an auth'd feed
 		$userID = _make_user('administrator');
+		$wpdr->admin->generate_new_feed_key( $userID );
 		$key = $wpdr->admin->get_feed_key( $userID );
 
+		wp_set_current_user( $userID );
 		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $docID ) . '/feed/' ) );
 		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertFalse( $this->is_wp_die(), 'Not properly allowing access to feeds' );
 		$this->assertEquals( count( $wpdr->get_revisions( $docID ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
+		wp_set_current_user( 0 );
 		_destroy_user( $userID );
 
 	}
