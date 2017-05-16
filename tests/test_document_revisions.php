@@ -101,6 +101,11 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 			'post_status' => 'inherit'
 		);
 
+		// If the directory is not available, the upload does not succeed.
+		if ( ! wp_mkdir_p( $upload_dir['path'] ) ) {
+			return false;
+		}
+
 		//copy temp test file into wp-uploads
 		copy( $file, $upload_dir['path'] . '/' . $file_array['name'] );
 
