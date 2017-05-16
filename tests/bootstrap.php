@@ -79,7 +79,7 @@ function _destroy_user( $user_id ) {
 }
 
 function _destroy_users() {
-	global $wpdr;
+	global $wpdb;
 	$users = $wpdb->get_col( "SELECT ID from $wpdb->users" );
 		array_map( array( $this, '_destroy_user' ), $users );
 }
