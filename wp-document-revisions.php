@@ -1272,10 +1272,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * @return bool true if document, false if not
 	 */
 	function verify_post_type( $post = false ) {
+		global $wp_query;
 
 		//check for post_type query arg (post new)
 		if ( $post == false && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
 			return true;
+
+		// Assume that a document feed is a document feed, even without a post object.
+		if ( $post === false && is_feed() && 'document' === $wp_query->query_vars['post_type'] ) {
+			return true;
+		}
 
 		//if post isn't set, try get vars (edit post)
 		if ( $post == false )
