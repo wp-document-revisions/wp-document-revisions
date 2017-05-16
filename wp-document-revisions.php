@@ -1328,12 +1328,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
 		//include feed and die
-		include dirname( __FILE__ ) . '/includes/revision-feed.php';
-
-		global $wpdr;
+		load_template( dirname( __FILE__ ) . '/includes/revision-feed.php' );
 
 		return;
-
 	}
 
 
