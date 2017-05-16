@@ -335,33 +335,39 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 	/**
 	 * Simulate accessing a revision log feed
+	 *
 	 * @param string $url the URL to try
+	 *
 	 * @return string the content returned
+	 * @throws Exception
 	 */
 	function simulate_feed( $url = null ) {
-
-		if ( !$url )
-			return;
+		if ( ! $url ) {
+			return '';
+		}
 
 		global $wpdr;
 		flush_rewrite_rules();
 
 		$this->go_to( $url );
-
-		ob_start();
-
 		$wpdr->revision_feed_auth();
 
-		if ( !$this->is_wp_die() )
-			do_feed();
+		if ( $this->is_wp_die() ) {
+			return '';
+		}
 
-		$content = ob_get_contents();
-		ob_end_clean();
+		ob_start();
+		global $post;
+		try {
+			@require( dirname( __DIR__ ) . '/includes/revision-feed.php' );
+			$content = ob_get_clean();
+		} catch( Exception $e ) {
+			$content = ob_get_clean();
+			throw ( $e );
+		}
 
 		return $content;
-
 	}
-
 
 	/**
 	 * Can the public access a revision log feed?
