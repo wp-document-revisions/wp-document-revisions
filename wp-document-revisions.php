@@ -142,6 +142,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	}
 
 	function is_webdav_client() {
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return false;
+		}
+
 		$client = $_SERVER['HTTP_USER_AGENT'];
 		if ( strpos( $client, 'Office' ) !== false ) {
 			return true;
@@ -1912,7 +1916,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			return $wp;
 
 		//IE check
-		if ( stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
 			return $wp;
 
 		//verify that they are requesting a document
