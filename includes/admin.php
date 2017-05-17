@@ -774,7 +774,7 @@ class Document_Revisions_Admin {
 		$key = $this->get_feed_key();
 ?>
 		<div class="tool-box">
-		<h3> <?php _e( 'Feed Privacy', 'wp-document-revisions' ); ?></h3>
+		<h2><?php _e( 'Feed Privacy', 'wp-document-revisions' ); ?></h2>
 		<table class="form-table">
 			<tr id="document_revisions_feed_key">
 				<th><label for="feed_key"><?php _e( 'Secret Feed Key', 'wp-document-revisions' ); ?></label></th>
