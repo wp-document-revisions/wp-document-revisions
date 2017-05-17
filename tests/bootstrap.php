@@ -1,7 +1,8 @@
 <?php
 
-$_tests_dir = getenv('WP_TESTS_DIR');
-if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
+$_tests_dir = getenv( 'WP_TESTS_DIR' );
+if ( ! $_tests_dir ) { $_tests_dir = '/tmp/wordpress-tests-lib';
+}
 
 require_once $_tests_dir . '/includes/functions.php';
 
@@ -46,11 +47,11 @@ tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 100 );
 require $_tests_dir . '/includes/bootstrap.php';
 
 /**
-* Utility functions used for testing document revisions
-* Most adapted from the core testing framework: http://svn.automattic.com/wordpress-tests/
-*/
+ * Utility functions used for testing document revisions
+ * Most adapted from the core testing framework: http://svn.automattic.com/wordpress-tests/
+ */
 
-function _make_user( $role = 'administrator', $user_login = '', $pass='', $email='' ) {
+function _make_user( $role = 'administrator', $user_login = '', $pass = '', $email = '' ) {
 
 		$user = array(
 			'role' => $role,
@@ -67,14 +68,15 @@ function _make_user( $role = 'administrator', $user_login = '', $pass='', $email
 
 function _destroy_user( $user_id ) {
 
-	//non-admin
-	if ( !function_exists( 'wp_delete_user' ) )
+	// non-admin
+	if ( ! function_exists( 'wp_delete_user' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
+	}
 
-		if ( is_multisite() )
-			wpmu_delete_user( $user_id );
-		else
-			wp_delete_user( $user_id );
+	if ( is_multisite() ) {
+		wpmu_delete_user( $user_id );
+	} else { wp_delete_user( $user_id );
+	}
 
 }
 
@@ -84,32 +86,35 @@ function _destroy_users() {
 		array_map( array( $this, '_destroy_user' ), $users );
 }
 
-function _rrmdir($dir) {
-   if (is_dir($dir)) {
-     $objects = scandir($dir);
-     foreach ($objects as $object) {
-       if ($object != "." && $object != "..") {
-         if (filetype($dir."/".$object) == "dir") _rrmdir($dir."/".$object); else unlink($dir."/".$object);
-       }
-     }
-     reset($objects);
-     rmdir($dir);
-   }
- }
+function _rrmdir( $dir ) {
+	if ( is_dir( $dir ) ) {
+		$objects = scandir( $dir );
+		foreach ( $objects as $object ) {
+			if ( $object != '.' && $object != '..' ) {
+				if ( filetype( $dir . '/' . $object ) == 'dir' ) { _rrmdir( $dir . '/' . $object );
+				} else { unlink( $dir . '/' . $object );
+				}
+			}
+		}
+		reset( $objects );
+		rmdir( $dir );
+	}
+}
 
 function _destroy_uploads() {
 		$uploads = wp_upload_dir();
-		$files = array_diff(scandir($uploads['basedir']), array('..', '.'));
-		foreach ( $files as $file )
-			_rrmdir( $uploads['basedir'] . '/' . $file );
+		$files = array_diff( scandir( $uploads['basedir'] ), array( '..', '.' ) );
+	foreach ( $files as $file ) {
+		_rrmdir( $uploads['basedir'] . '/' . $file );
+	}
 }
 
 /**
-* We want to make sure we're testing against the db, not just in-memory data
-* this will flush everything and reload it from the db
-*/
+ * We want to make sure we're testing against the db, not just in-memory data
+ * this will flush everything and reload it from the db
+ */
 function _flush_roles() {
-		unset($GLOBALS['wp_user_roles']);
+		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
 		$wp_roles->_init();
 }

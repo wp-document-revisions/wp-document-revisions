@@ -9,7 +9,8 @@ Author URI: http://ben.balter.com
 License: GPL3
 */
 
-/*  WP Document Revisions
+/*
+  WP Document Revisions
  *
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
@@ -36,8 +37,8 @@ License: GPL3
  *  @author Ben Balter <ben@balter.com>
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/includes');
-require_once "HTTP/WebDAV/Server.php";
+set_include_path( get_include_path() . PATH_SEPARATOR . dirname( __FILE__ ) . '/includes' );
+require_once 'HTTP/WebDAV/Server.php';
 
 class Document_Revisions extends HTTP_WebDAV_Server {
 	static $instance;
@@ -47,94 +48,94 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Initiates an instance of the class and adds hooks
+	 *
 	 * @since 0.5
 	 */
 	function __construct() {
 
 		self::$instance = &$this;
 
-		//admin
+		// admin
 		add_action( 'init', array( &$this, 'admin_init' ) );
 		add_action( 'init', array( &$this, 'i18n' ), 5 );
 
-		//CPT/CT
+		// CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'init', array( &$this, 'register_ct' ), 15 ); //note: priority must be > 11 to allow for edit flow support
+		add_action( 'init', array( &$this, 'register_ct' ), 15 ); // note: priority must be > 11 to allow for edit flow support
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
 
-		//rewrites and permalinks
+		// rewrites and permalinks
 		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
-		add_action( 'post_type_link', array(&$this, 'permalink'), 10, 4 );
-		add_action( 'post_link', array(&$this, 'permalink'), 10, 4 );
-		add_filter( 'template_include', array(&$this, 'serve_file'), 10, 1 );
-		add_action( 'after_setup_theme', array(&$this, 'auth_webdav_requests'));
-		add_action( 'template_redirect', array(&$this, 'check_webdav_requests'));
-		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth'), 10, 3 );
+		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
+		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
+		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
+		add_action( 'after_setup_theme', array( &$this, 'auth_webdav_requests' ) );
+		add_action( 'template_redirect', array( &$this, 'check_webdav_requests' ) );
+		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
-		add_filter( 'query_vars', array(&$this, 'add_query_var'), 10, 4 );
+		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
 		register_activation_hook( __FILE__, 'flush_rewrite_rules' );
-		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2);
+		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2 );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
-		add_filter( 'get_sample_permalink_html', array(&$this, 'sample_permalink_html_filter'), 10, 4);
+		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 4 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
-		add_filter( 'image_downsize', array( &$this, 'image_downsize'), 10, 3 );
+		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
 		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
 
-		//RSS
+		// RSS
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
 		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
 		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 1 );
 
-		//uploads
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
-		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter'), 10, 2);
-		add_filter( 'wp_handle_upload_prefilter', array(&$this, 'filename_rewrite' ) );
-		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2);
+		// uploads
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
+		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter' ), 10, 2 );
+		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
+		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
 
-		//locking
+		// locking
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
 
-		//cache
+		// cache
 		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 
-		//edit flow
+		// edit flow
 		add_action( 'init', array( &$this, 'edit_flow_support' ), 11 );
 		add_action( 'init', array( &$this, 'use_workflow_states' ), 50 );
 
-		//load front-end features (shortcode, widgets, etc.)
+		// load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/includes/front-end.php';
 		new Document_Revisions_Front_End( $this );
 
 	}
 
 
-	###################################################
-	#
-	# Support some basic WebDav requests
-	#
-	###################################################
-
-	function auth_webdav_requests($post) {
+	//
+	//
+	// Support some basic WebDav requests
+	//
+	//
+	function auth_webdav_requests( $post ) {
 		$request_method = $_SERVER['REQUEST_METHOD'];
 
 		// OPTIONS must always be unauthenticated
-		if ($request_method == 'OPTIONS') {
+		if ( $request_method == 'OPTIONS' ) {
 			nocache_headers();
 			parent::http_OPTIONS();
-			header("Allow: OPTIONS GET POST PUT HEAD LOCK");
-			header("DAV: 1,2");
+			header( 'Allow: OPTIONS GET POST PUT HEAD LOCK' );
+			header( 'DAV: 1,2' );
 			status_header( 200 );
 			die();
 		}
 
-		$webdav_methods = array( "LOCK", "PUT" );
-		$private_checked_methods = array( "GET", "HEAD" );
+		$webdav_methods = array( 'LOCK', 'PUT' );
+		$private_checked_methods = array( 'GET', 'HEAD' );
 
 		if ( in_array( $request_method, $webdav_methods ) || ( in_array( $request_method, $private_checked_methods ) && $this->is_webdav_client() ) ) {
 			$this->basic_auth();
@@ -167,7 +168,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		if ( $post ) {
 			$request_method = $_SERVER['REQUEST_METHOD'];
 			switch ( $request_method ) {
-				case "LOCK":
+				case 'LOCK':
 					if ( current_user_can( 'edit_post', $post->ID ) ) {
 						$this->do_LOCK();
 					} else {
@@ -177,7 +178,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 					}
 					break;
 
-				case "PUT":
+				case 'PUT':
 					if ( current_user_can( 'edit_post', $post->ID ) ) {
 						$this->do_PUT();
 					} else {
@@ -199,26 +200,26 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			return;
 		}
 
-		$usr = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-		$pwd = isset($_SERVER['PHP_AUTH_PW'])   ? $_SERVER['PHP_AUTH_PW']   : '';
-		if (empty($usr) && empty($pwd) && isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION']) {
-			list($type, $auth) = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
-			if (strtolower($type) === 'basic') {
-				list($usr, $pwd) = explode(':', base64_decode($auth));
+		$usr = isset( $_SERVER['PHP_AUTH_USER'] ) ? $_SERVER['PHP_AUTH_USER'] : '';
+		$pwd = isset( $_SERVER['PHP_AUTH_PW'] )   ? $_SERVER['PHP_AUTH_PW']   : '';
+		if ( empty( $usr ) && empty( $pwd ) && isset( $_SERVER['HTTP_AUTHORIZATION'] ) && $_SERVER['HTTP_AUTHORIZATION'] ) {
+			list($type, $auth) = explode( ' ', $_SERVER['HTTP_AUTHORIZATION'] );
+			if ( strtolower( $type ) === 'basic' ) {
+				list($usr, $pwd) = explode( ':', base64_decode( $auth ) );
 			}
 		}
 		$creds = array();
 		$creds['user_login'] = $usr;
 		$creds['user_password'] = $pwd;
 		$creds['remember'] = false;
-		$login = wp_signon($creds, false);
-		if ( !is_wp_error( $login ) ) {
-			$current_user = wp_set_current_user($login);
+		$login = wp_signon( $creds, false );
+		if ( ! is_wp_error( $login ) ) {
+			$current_user = wp_set_current_user( $login );
 			return;
 		}
 
-		header('WWW-Authenticate: Basic realm="Please Enter Your Password"');
-		status_header ( 401 );
+		header( 'WWW-Authenticate: Basic realm="Please Enter Your Password"' );
+		status_header( 401 );
 		echo 'Authorization Required';
 		die();
 	}
@@ -228,10 +229,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Check for lock on document
 	 */
 	function LOCK( &$options ) {
-		$options["timeout"] = time()+300; // 5min. hardcoded
-		$options["owner"] = "";
-		$options["scope"] = "exclusive";
-		$options["type"] = "write";
+		$options['timeout'] = time() + 300; // 5min. hardcoded
+		$options['owner'] = '';
+		$options['scope'] = 'exclusive';
+		$options['type'] = 'write';
 		return true;
 	}
 
@@ -240,11 +241,11 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		if ( $post ) {
 			$current_user = wp_get_current_user();
 
-			include_once "wp-admin/includes/post.php";
+			include_once 'wp-admin/includes/post.php';
 			$current_owner = wp_check_post_lock( $post->ID );
 			if ( $current_owner && $current_owner != $current_user->ID ) {
 				nocache_headers();
-				status_header ( 423 );
+				status_header( 423 );
 				die();
 			}
 			nocache_headers();
@@ -252,7 +253,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			die();
 		} else {
 			nocache_headers();
-			status_header ( 404 );
+			status_header( 404 );
 			die();
 		}
 	}
@@ -285,15 +286,15 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			unlink( $file );
 
 			$attach_id = wp_insert_attachment( $attachment, $newfilepath, $post->ID );
-			if ( !is_wp_error( $attach_id ) ) {
+			if ( ! is_wp_error( $attach_id ) ) {
 				$post_array = array(
 					'ID' => $post->ID,
 					'post_content' => $attach_id,
-					'post_excerpt' => __('Revised by Desktop Edit', 'wp-document-revisions')
+					'post_excerpt' => __( 'Revised by Desktop Edit', 'wp-document-revisions' ),
 				);
 				$result = wp_update_post( $post_array );
 				wp_cache_flush();
-				if ( !is_wp_error ( $result ) ) {
+				if ( ! is_wp_error( $result ) ) {
 					nocache_headers();
 					status_header( 204 );
 					die();
@@ -305,7 +306,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			}
 		} else {
 			nocache_headers();
-			status_header ( 404 );
+			status_header( 404 );
 			die();
 		}
 
@@ -313,33 +314,33 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	private function _parsePutFile() {
 		/* PUT data comes in on the stdin stream */
-		$putdata = fopen("php://input", "r");
+		$putdata = fopen( 'php://input', 'r' );
 
 		$raw_data = '';
 
-		/* Read the data 1 KB at a time
+		/*
+		 Read the data 1 KB at a time
 			and write to the file */
-		while ($chunk = fread($putdata, 1024))
-			$raw_data .= $chunk;
+		while ( $chunk = fread( $putdata, 1024 ) ) {			$raw_data .= $chunk;
+		}
 
 		/* Close the streams */
-		fclose($putdata);
+		fclose( $putdata );
 
-		//get tmp name
-		$path_only = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		// get tmp name
+		$path_only = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 		$filename_parts = pathinfo( $path_only );
 		$file = tempnam( ini_get( 'upload_tmp_dir' ), $filename_parts['filename'] ) . '.' . $filename_parts['extension'];
-		file_put_contents($file, $raw_data);
+		file_put_contents( $file, $raw_data );
 
 		return $file;
 	}
 
-	###################################################
-	#
-	# END basic WebDav requests
-	#
-	###################################################
-
+	//
+	//
+	// END basic WebDav requests
+	//
+	//
 	/**
 	 * Init i18n files
 	 * Must be done early on init because they need to be in place when register_cpt is called
@@ -351,13 +352,15 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Extends class with admin functions when in admin backend
+	 *
 	 * @since 0.5
 	 */
 	function admin_init() {
 
-		//only fire on admin + escape hatch to prevent fatal errors
-		if ( !is_admin() || class_exists( 'Document_Revisions_Admin' ) )
+		// only fire on admin + escape hatch to prevent fatal errors
+		if ( ! is_admin() || class_exists( 'Document_Revisions_Admin' ) ) {
 			return;
+		}
 
 		include dirname( __FILE__ ) . '/includes/admin.php';
 		$this->admin = new Document_Revisions_Admin( self::$instance );
@@ -366,6 +369,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Registers the document custom post type
+	 *
 	 * @since 0.5
 	 */
 	function register_cpt() {
@@ -394,7 +398,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			'show_in_menu'         => true,
 			'query_var'            => true,
 			'rewrite'              => true,
-			'capability_type'      => array( 'document', 'documents'),
+			'capability_type'      => array( 'document', 'documents' ),
 			'map_meta_cap'         => true,
 			'has_archive'          => true,
 			'hierarchical'         => false,
@@ -411,13 +415,14 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Registers custom status taxonomy
+	 *
 	 * @since 0.5
 	 */
 	function register_ct() {
 
 		$labels = array(
 			'name'              => _x( 'Workflow States', 'taxonomy general name', 'wp-document-revisions' ),
-			'singular_name'     => _x( 'Workflow State', 'taxonomy singular name', 'wp-document-revisions'),
+			'singular_name'     => _x( 'Workflow State', 'taxonomy singular name', 'wp-document-revisions' ),
 			'search_items'      => __( 'Search Workflow States', 'wp-document-revisions' ),
 			'all_items'         => __( 'All Workflow States', 'wp-document-revisions' ),
 			'parent_item'       => __( 'Parent Workflow State', 'wp-document-revisions' ),
@@ -429,19 +434,20 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
-		register_taxonomy( 'workflow_state', array('document'), apply_filters( 'document_revisions_ct', array(
+		register_taxonomy( 'workflow_state', array( 'document' ), apply_filters( 'document_revisions_ct', array(
 					'hierarchical'          => false,
 					'labels'                => $labels,
 					'show_ui'               => true,
 					'rewrite'               => false,
 					'update_count_callback' => array( &$this, 'term_count_cb' ),
-				) ) );
+		) ) );
 
 	}
 
 
 	/**
 	 * Propagates initial workflow states on plugin activation
+	 *
 	 * @since 0.5
 	 * @return unknown
 	 */
@@ -449,14 +455,15 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
 
-		if ( !empty( $terms ) )
+		if ( ! empty( $terms ) ) {
 			return false;
+		}
 
 		$states = array(
-			__('In Progress', 'wp-document-revisions')   => __('Document is in the process of being written', 'wp-document-revisions'),
-			__('Initial Draft', 'wp-document-revisions') => __('Document is being edited and refined', 'wp-document-revisions'),
-			__('Under Review', 'wp-document-revisions')  => __('Document is pending final review', 'wp-document-revisions'),
-			__('Final', 'wp-document-revisions')         => __('Document is in its final form', 'wp-document-revisions'),
+			__( 'In Progress', 'wp-document-revisions' )   => __( 'Document is in the process of being written', 'wp-document-revisions' ),
+			__( 'Initial Draft', 'wp-document-revisions' ) => __( 'Document is being edited and refined', 'wp-document-revisions' ),
+			__( 'Under Review', 'wp-document-revisions' )  => __( 'Document is pending final review', 'wp-document-revisions' ),
+			__( 'Final', 'wp-document-revisions' )         => __( 'Document is in its final form', 'wp-document-revisions' ),
 		);
 
 		$states = apply_filters( 'default_workflow_states', $states );
@@ -470,19 +477,22 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Defaults document visibility to private
+	 *
 	 * @since 0.5
 	 */
 	function make_private() {
 		global $post;
 
-		//verify that this is a new document
-		if ( !isset( $post) || !$this->verify_post_type() || strlen( $post->post_content ) > 0 )
+		// verify that this is a new document
+		if ( ! isset( $post ) || ! $this->verify_post_type() || strlen( $post->post_content ) > 0 ) {
 			return;
+		}
 
 		$post_pre = clone $post;
 
-		if ( $post->post_status == 'draft' || $post->post_status == 'auto-draft' )
+		if ( $post->post_status == 'draft' || $post->post_status == 'auto-draft' ) {
 			$post->post_status = 'private';
+		}
 
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
 
@@ -491,29 +501,35 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Given a post object, returns all attached uploads
+	 *
 	 * @since 0.5
 	 * @param object $post (optional) post object
 	 * @return object all attached uploads
 	 */
 	function get_attachments( $post = '' ) {
 
-		if ($post == '')
+		if ( $post == '' ) {
 			global $post;
+		}
 
-		//verify that it's an object
-		if ( !is_object( $post ) )
+		// verify that it's an object
+		if ( ! is_object( $post ) ) {
 			$post = get_post( $post );
+		}
 
-		//check for revisions
-		if ( $parent = wp_is_post_revision( $post ) )
+		// check for revisions
+		if ( $parent = wp_is_post_revision( $post ) ) {
 			$post = get_post( $parent );
+		}
 
-		//check for attachments
-		if ( $post->post_type == 'attachment' )
+		// check for attachments
+		if ( $post->post_type == 'attachment' ) {
 			$post = get_post( $post->post_parent );
+		}
 
-		if ( !isset( $post->ID ) )
+		if ( ! isset( $post->ID ) ) {
 			return array();
+		}
 
 		$args = array(
 			'post_parent' => $post->ID,
@@ -532,29 +548,34 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Checks if document is locked, if so, returns the lock holder's name
+	 *
 	 * @since 0.5
 	 * @param object|int $post the post object or postID
 	 * @return bool|string false if no lock, user's display name if locked
 	 */
 	function get_document_lock( $post ) {
 
-		if ( !is_object( $post ) )
+		if ( ! is_object( $post ) ) {
 			$post = get_post( $post );
+		}
 
-		if ( !$post )
+		if ( ! $post ) {
 			return false;
+		}
 
-		//get the post lock
-		if ( !( $user = wp_check_post_lock( $post->ID ) ) )
+		// get the post lock
+		if ( ! ( $user = wp_check_post_lock( $post->ID ) ) ) {
 			$user = false;
+		}
 
-		//allow others to shortcircuit
+		// allow others to shortcircuit
 		$user = apply_filters( 'document_lock_check', $user, $post );
 
-		if ( !$user )
+		if ( ! $user ) {
 			return false;
+		}
 
-		//get displayname from userID
+		// get displayname from userID
 		$last_user = get_userdata( $user );
 		return ( $last_user ) ? $last_user->display_name : __( 'Somebody' );
 
@@ -563,6 +584,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Given a file, returns the file's extension
+	 *
 	 * @since 0.5
 	 * @param string $file URL, path, or filename to file
 	 * @return string extension
@@ -571,9 +593,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$extension = '.' . pathinfo( $file, PATHINFO_EXTENSION );
 
-		//don't return a . extension
-		if ( $extension == '.' )
+		// don't return a . extension
+		if ( $extension == '.' ) {
 			return '';
+		}
 
 		return apply_filters( 'document_extension', $extension, $file );
 
@@ -582,36 +605,41 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Gets a file extension from a post
+	 *
 	 * @since 0.5
 	 * @param object|int $post document or attachment
 	 * @return string the extension to the latest revision
 	 */
 	function get_file_type( $post = '' ) {
 
-		if ( $post == '' )
+		if ( $post == '' ) {
 			global $post;
+		}
 
-		if ( !is_object( $post ) )
+		if ( ! is_object( $post ) ) {
 			$post = get_post( $post );
+		}
 
-		//note, changing $post here would break $post in the global scope
+		// note, changing $post here would break $post in the global scope
 		// rename $post to attachment, or grab the attachment from $post
 		// either way, $attachment is now the object we're looking to query
 		if ( get_post_type( $post ) == 'attachment' ) {
 			$attachment = $post;
-		} else if ( get_post_type( $post ) == 'document' ) {
+		} elseif ( get_post_type( $post ) == 'document' ) {
 				$latest_revision = $this->get_latest_revision( $post->ID );
 
 				// verify a previous revision exists
-				if ( !$latest_revision )
-					return '';
+			if ( ! $latest_revision ) {
+				return '';
+			}
 
 				$attachment = get_post( $latest_revision->post_content );
 
-			//sanity check in case post_content somehow doesn't represent an attachment,
+			// sanity check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed
-			if ( get_post_type( $attachment ) != 'attachment' )
+			if ( get_post_type( $attachment ) != 'attachment' ) {
 				return '';
+			}
 		}
 
 		return $this->get_extension( get_attached_file( $attachment->ID ) );
@@ -621,18 +649,20 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Adds document CPT rewrite rules
+	 *
 	 * @since 0.5
 	 */
 	function inject_rules() {
 
 		global $wp_rewrite;
-		$wp_rewrite->add_rewrite_tag( "%document%", '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
+		$wp_rewrite->add_rewrite_tag( '%document%', '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
 
 	}
 
 
 	/**
 	 * Adds document rewrite rules to the rewrite array
+	 *
 	 * @since 0.5
 	 * @param $rules array rewrite rules
 	 * @return array rewrite rules
@@ -643,18 +673,18 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$my_rules = array();
 
-		//revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		// revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
-		//revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		// revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
-		//documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$'] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		// documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public)
-		$my_rules[ $slug . '/?$'] = 'index.php?post_type=document';
-		$my_rules[ $slug . '/page/?([0-9]{1,})/?$'] = 'index.php?post_type=document&paged=$matches[1]';
+		$my_rules[ $slug . '/?$' ] = 'index.php?post_type=document';
+		$my_rules[ $slug . '/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
 
 		$my_rules = apply_filters( 'document_rewrite_rules', $my_rules, $rules );
 
@@ -664,22 +694,24 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Tell's WP to recognize document query vars
+	 *
 	 * @since 0.5
 	 * @param array $vars the query vars
 	 * @return array the modified query vars
 	 */
 	function add_query_var( $vars ) {
-		$vars[] = "revision";
-		$vars[] = "document";
+		$vars[] = 'revision';
+		$vars[] = 'document';
 		return $vars;
 	}
 
 
 	/**
 	 * Builds document post type permalink
+	 *
 	 * @since 0.5
-	 * @param string $link original permalink
-	 * @param object $post post object
+	 * @param string  $link original permalink
+	 * @param object  $post post object
 	 * @param unknown $leavename
 	 * @param unknown $sample (optional)
 	 * @return string the real permalink
@@ -689,30 +721,32 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		global $wp_rewrite;
 		$revision_num = false;
 
-		//if this isn't our post type, kick
-		if ( !$this->verify_post_type( $post ) )
+		// if this isn't our post type, kick
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $link;
+		}
 
-		//check if it's a revision
+		// check if it's a revision
 		if ( $post->post_type == 'revision' ) {
 			$parent = clone get_post( $post->post_parent );
 			$revision_num = $this->get_revision_number( $post->ID );
-			$parent->post_name = $parent->post_name . __('-revision-', 'wp-document-revisions') . $revision_num;
+			$parent->post_name = $parent->post_name . __( '-revision-', 'wp-document-revisions' ) . $revision_num;
 			$post = $parent;
 		}
 
-		//if no permastruct
+		// if no permastruct
 		if ( $wp_rewrite->permalink_structure == '' || in_array( $post->post_status, array( 'pending', 'draft' ) ) ) {
 			$link = site_url( '?post_type=document&p=' . $post->ID );
-			if ( $revision_num ) $link = add_query_arg( 'revision', $revision_num, $link );
+			if ( $revision_num ) { $link = add_query_arg( 'revision', $revision_num, $link );
+			}
 			return apply_filters( 'document_permalink', $link, $post );
 		}
 
 		// build documents/yyyy/mm/slug
 		$extension = $this->get_file_type( $post );
 
-		$timestamp = strtotime($post->post_date);
-		$link = home_url() . '/' . $this->document_slug() .'/' . date('Y', $timestamp) . '/' . date('m', $timestamp) . '/';
+		$timestamp = strtotime( $post->post_date );
+		$link = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
 		$link .= ( $leavename ) ? '%document%' : $post->post_name;
 		$link .= $extension ;
 
@@ -724,28 +758,31 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Filters permalink displayed on edit screen in the event that there is no attachment yet uploaded
+	 *
 	 * @rerurns string modified HTML
 	 * @since 0.5
 	 * @param string $html original HTML
-	 * @param int $id Post ID
+	 * @param int    $id Post ID
 	 * @return unknown
 	 */
 	function sample_permalink_html_filter( $html, $id ) {
 
 		$post = get_post( $id );
 
-		//verify post type
-		if ( !$this->verify_post_type( $post ) )
+		// verify post type
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $html;
+		}
 
-		//grab attachments
+		// grab attachments
 		$attachments = $this->get_attachments( $post );
 
-		//if no attachments, return nothing
-		if ( empty( $attachments ) )
+		// if no attachments, return nothing
+		if ( empty( $attachments ) ) {
 			return '';
+		}
 
-		//otherwise return html unfiltered
+		// otherwise return html unfiltered
 		return $html;
 	}
 
@@ -754,6 +791,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Retrieves all revisions for a given post (including the current post)
 	 * Workaround for #16215 to ensure revision author is accurate
 	 * http://core.trac.wordpress.org/ticket/16215
+	 *
 	 * @since 1.0
 	 * @param int $postID the post ID
 	 * @return array array of post objects
@@ -762,40 +800,39 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		// Revision authors are actually shifted by one
 		// This moves each revision author up one, and then uses the post_author as the initial revision
-
-		//get the actual post
+		// get the actual post
 		$post = get_post( $postID );
 
-		if ( !$post )
+		if ( ! $post ) {
 			return false;
+		}
 
-		if ( $cache = wp_cache_get( $postID, 'document_revisions' ) )
+		if ( $cache = wp_cache_get( $postID, 'document_revisions' ) ) {
 			return $cache;
+		}
 
-		//correct the modified date
+		// correct the modified date
 		$post->post_date = date( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $postID ) );
 
-		//grab the post author
+		// grab the post author
 		$post_author = $post->post_author;
 
-		//fix for Quotes in the most recent post because it comes from get_post
+		// fix for Quotes in the most recent post because it comes from get_post
 		$post->post_excerpt = html_entity_decode( $post->post_excerpt );
 
-		//get revisions, and prepend the post
+		// get revisions, and prepend the post
 		$revs = wp_get_post_revisions( $postID, array( 'order' => 'DESC' ) );
 		array_unshift( $revs, $post );
 
-		//loop through revisions
+		// loop through revisions
 		foreach ( $revs as $ID => &$rev ) {
 
-			//if this is anything other than the first revision, shift author 1
-			if ( $ID < sizeof( $revs ) - 1)
-				$rev->post_author = $revs[$ID+1]->post_author;
-
-			//if last revision, get the post author
-			else
-				$rev->post_author = $post_author;
-
+			// if this is anything other than the first revision, shift author 1
+			if ( $ID < sizeof( $revs ) - 1 ) {
+				$rev->post_author = $revs[ $ID + 1 ]->post_author;
+			} // if last revision, get the post author
+			else { 				$rev->post_author = $post_author;
+			}
 		}
 
 		wp_cache_set( $postID, $revs, 'document_revisions' );
@@ -808,8 +845,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	/**
 	 * Returns a modified WP Query object of a document and its revisions
 	 * Corrects the authors bug
+	 *
 	 * @since 1.0.4
-	 * @param int $postID the ID of the document
+	 * @param int  $postID the ID of the document
 	 * @param bool $feed (optional) whether this is a feed
 	 * @return obj|bool the WP_Query object, false on failure
 	 */
@@ -817,8 +855,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$posts = $this->get_revisions( $postID );
 
-		if ( !$posts )
+		if ( ! $posts ) {
 			return false;
+		}
 
 		$rev_query = new WP_Query();
 		$rev_query->posts = $posts;
@@ -832,20 +871,23 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * For a given post, builds a 1-indexed array of revision post ID's
+	 *
 	 * @since 0.5
 	 * @param int $post_id the parent post id
 	 * @return array array of revisions
 	 */
 	function get_revision_indices( $post_id ) {
 
-		if ( $cache = wp_cache_get( $post_id, 'document_revision_indices' ) )
+		if ( $cache = wp_cache_get( $post_id, 'document_revision_indices' ) ) {
 			return $cache;
+		}
 
 		$revs = wp_get_post_revisions( $post_id, array( 'order' => 'ASC' ) );
 
 		$i = 1;
-		foreach ( $revs as $rev )
+		foreach ( $revs as $rev ) {
 			$output[ $i++ ] = $rev->ID;
+		}
 
 		wp_cache_set( $post_id, $output, 'document_revision_indices' );
 
@@ -856,6 +898,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Given a revision id (post->ID) returns the revisions spot in the sequence
+	 *
 	 * @since 0.5
 	 * @param unknown $revision_id
 	 * @return int revision #
@@ -864,8 +907,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$revision = get_post( $revision_id );
 
-		if ( !isset( $revision->post_parent ) )
+		if ( ! isset( $revision->post_parent ) ) {
 			return false;
+		}
 
 		$index = $this->get_revision_indices( $revision->post_parent );
 
@@ -876,6 +920,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Given a revision number (e.g., 4 from foo-revision-4) returns the revision ID
+	 *
 	 * @since 0.5
 	 * @param int $revision_num the 1-indexed revision #
 	 * @param int $post_id the ID of the parent post
@@ -892,6 +937,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Serves document files
+	 *
 	 * @since 0.5
 	 * @param unknown $template
 	 * @return unknown
@@ -901,56 +947,59 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		global $wp_query;
 		global $wp;
 
-		if ( !is_single() )
+		if ( ! is_single() ) {
 			return $template;
+		}
 
-		if ( !$this->verify_post_type( $post ) )
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $template;
+		}
 
-		//if this is a passworded document and no password is sent
-		//use the normal template which should prompt for password
-		if ( post_password_required( $post ) )
+		// if this is a passworded document and no password is sent
+		// use the normal template which should prompt for password
+		if ( post_password_required( $post ) ) {
 			return $template;
+		}
 
-		//grab the post revision if any
+		// grab the post revision if any
 		$version = get_query_var( 'revision' );
 
-		//if there's not a post revision given, default to the latest
-		if ( !$version )
+		// if there's not a post revision given, default to the latest
+		if ( ! $version ) {
 			$rev_id = $this->get_latest_revision( $post->ID );
-		else
-			$rev_id = $this->get_revision_id ( $version, $post->ID );
+		} else { $rev_id = $this->get_revision_id( $version, $post->ID );
+		}
 
-		$rev_post = get_post ( $rev_id );
-		$revision = get_post( $rev_post->post_content ); //@todo can this be simplified?
+		$rev_post = get_post( $rev_id );
+		$revision = get_post( $rev_post->post_content ); // @todo can this be simplified?
 
 		$file = get_attached_file( $revision->ID );
 
-		//flip slashes for WAMP settups to prevent 404ing on the next line
+		// flip slashes for WAMP settups to prevent 404ing on the next line
 		$file = apply_filters( 'document_path', $file );
 
-		//return 404 if the file is a dud or malformed
-		if ( !is_file( $file ) ) {
+		// return 404 if the file is a dud or malformed
+		if ( ! is_file( $file ) ) {
 
-			//note: this message will log to apache's php error log and/or to the screen/debug bar
+			// note: this message will log to apache's php error log and/or to the screen/debug bar
 			trigger_error( "Unable to read file '$file' while attempting to serve the document '$post->post_title'" );
 
-			//this will send 404 and no cache headers
-			//and tell wp_query that this is a 404 so that is_404() works as expected
-			//and theme formats appropriatly
+			// this will send 404 and no cache headers
+			// and tell wp_query that this is a 404 so that is_404() works as expected
+			// and theme formats appropriatly
 			$wp_query->posts = array();
 			$wp_query->queried_object = null;
 			$wp->handle_404();
 
-			//tell WP to serve the theme's standard 404 template, this is a filter after all...
+			// tell WP to serve the theme's standard 404 template, this is a filter after all...
 			return get_404_template();
 
 		}
 
-		//note: authentication is happeneing via a hook here to allow shortcircuiting
+		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die( __( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array( 'response' => 403 ) );
-			return false; //for unit testing
+			return false; // for unit testing
 		}
 
 		do_action( 'serve_document', $post->ID, $file );
@@ -958,36 +1007,37 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		// We may override this later.
 		status_header( 200 );
 
-		//rest inspired by wp-includes/ms-files.php.
+		// rest inspired by wp-includes/ms-files.php.
 		$mime = wp_check_filetype( $file );
-		if ( false === $mime[ 'type' ] && function_exists( 'mime_content_type' ) )
-			$mime[ 'type' ] = mime_content_type( $file );
+		if ( false === $mime['type'] && function_exists( 'mime_content_type' ) ) {
+			$mime['type'] = mime_content_type( $file );
+		}
 
-		if ( $mime[ 'type' ] )
-			$mimetype = $mime[ 'type' ];
-		else
-			$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
+		if ( $mime['type'] ) {
+			$mimetype = $mime['type'];
+		} else { $mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
+		}
 
-		//fake the filename
+		// fake the filename
 		$filename = $post->post_name;
 		$filename .= ( $version == '' ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version;
 
-		//we want the true attachment URL, not the permalink, so temporarily remove our filter
+		// we want the true attachment URL, not the permalink, so temporarily remove our filter
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
 		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
-		//Set content-disposition header. Two options here:
+		// Set content-disposition header. Two options here:
 		// "attachment" -- force save-as dialog to pop up when file is downloaded (pre 1.3.1 default)
 		// "inline" -- attempt to open in browser (e.g., PDFs), if not possible, prompt with save as (1.3.1+ default)
 		$disposition = ( apply_filters( 'document_content_disposition_inline', true ) ) ? 'inline' : 'attachment';
 		@header( 'Content-Disposition: ' . $disposition . '; filename="' . $filename . '"' );
 
-		//filetype and length
+		// filetype and length
 		@header( 'Content-Type: ' . $mimetype ); // always send this
 		@header( 'Content-Length: ' . filesize( $file ) );
 
-		//modified
+		// modified
 		$last_modified = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
 		$etag = '"' . md5( $last_modified ) . '"';
 		@header( "Last-Modified: $last_modified GMT" );
@@ -997,8 +1047,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		// Support for Conditional GET
 		$client_etag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( $_SERVER['HTTP_IF_NONE_MATCH'] ) : false;
 
-		if ( ! isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) )
+		if ( ! isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
 			$_SERVER['HTTP_IF_MODIFIED_SINCE'] = false;
+		}
 
 		$client_last_modified = trim( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
 
@@ -1006,7 +1057,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		$client_modified_timestamp = $client_last_modified ? strtotime( $client_last_modified ) : 0;
 
 		// Make a timestamp for our most recent modification...
-		$modified_timestamp = strtotime($last_modified);
+		$modified_timestamp = strtotime( $last_modified );
 
 		if ( ( $client_last_modified && $client_etag )
 			? ( ( $client_modified_timestamp >= $modified_timestamp) && ( $client_etag == $etag ) )
@@ -1016,11 +1067,11 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			return;
 		}
 
-		//in case this is a large file, remove PHP time limits
+		// in case this is a large file, remove PHP time limits
 		@set_time_limit( 0 );
 
 		// clear output buffer to prevent other plugins from corrupting the file
-		if (ob_get_level()) {
+		if ( ob_get_level() ) {
 			ob_clean();
 			flush();
 		}
@@ -1034,25 +1085,29 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Filter to authenticate document delivery
-	 * @param bool $default true unless overridden by prior filter
-	 * @param obj $post the post object
+	 *
+	 * @param bool     $default true unless overridden by prior filter
+	 * @param obj      $post the post object
 	 * @param bool|int $version version of the document being served, if any
 	 * @return unknown
 	 */
 	function serve_document_auth( $default, $post, $version ) {
 
-		//public file, not a revision, no need to go any further
-		//note: non-authenticated users only have the "read" cap, so can't auth via read_document
-		if ( ! $version && $post->post_status == 'publish' )
+		// public file, not a revision, no need to go any further
+		// note: non-authenticated users only have the "read" cap, so can't auth via read_document
+		if ( ! $version && $post->post_status == 'publish' ) {
 			return $default;
+		}
 
-		//attempting to access a revision
-		if ( $version && ! current_user_can( 'read_document_revisions' ) )
+		// attempting to access a revision
+		if ( $version && ! current_user_can( 'read_document_revisions' ) ) {
 			return false;
+		}
 
-		//specific document cap check
-		if ( ! current_user_can( 'read_document', $post->ID ) )
+		// specific document cap check
+		if ( ! current_user_can( 'read_document', $post->ID ) ) {
 			return false;
+		}
 
 		return $default;
 
@@ -1061,6 +1116,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Depricated for consistency of terms
+	 *
 	 * @param unknown $id
 	 * @return unknown
 	 */
@@ -1072,27 +1128,31 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Given a post ID, returns the latest revision attachment
+	 *
 	 * @param unknown $post
 	 * @return object latest revision object
 	 */
 	function get_latest_revision( $post ) {
 
-		if ( is_object( $post ) )
+		if ( is_object( $post ) ) {
 			$post = $post->ID;
+		}
 
 		$revisions = $this->get_revisions( $post );
 
-		if ( !$revisions )
+		if ( ! $revisions ) {
 			return false;
+		}
 
-		//verify that there's an upload ID in the content field
-		//if there's no upload ID for some reason, default to latest attached upload
-		if ( !is_numeric( $revisions[0]->post_content ) ) {
+		// verify that there's an upload ID in the content field
+		// if there's no upload ID for some reason, default to latest attached upload
+		if ( ! is_numeric( $revisions[0]->post_content ) ) {
 
 			$attachments = $this->get_attachments( $post );
 
-			if ( empty( $attachments ) )
+			if ( empty( $attachments ) ) {
 				return false;
+			}
 
 			$latest_attachment = reset( $attachments );
 			$revisions[0]->post_content = $latest_attachment->ID;
@@ -1106,6 +1166,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Deprecated for consistency sake
+	 *
 	 * @param unknown $id
 	 * @return unknown
 	 */
@@ -1117,6 +1178,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Returns the URL to a post's latest revision
+	 *
 	 * @since 0.5
 	 * @param int $id post ID
 	 * @return string|bool URL to revision or false if no attachment
@@ -1125,10 +1187,11 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$latest = $this->get_latest_revision( $id );
 
-		if ( !$latest )
+		if ( ! $latest ) {
 			return false;
+		}
 
-		//temporarily remove our filter to get the true URL, not the permalink
+		// temporarily remove our filter to get the true URL, not the permalink
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
 		$url = wp_get_attachment_url( $latest->post_content );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
@@ -1139,6 +1202,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Calculated path to upload documents
+	 *
 	 * @since 0.5
 	 * @return string path to document
 	 */
@@ -1146,21 +1210,24 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		global $wpdb;
 
-		//grab unfiltered defaults
-		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
+		// grab unfiltered defaults
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
 		$defaults = wp_upload_dir();
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2);
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
 
-		//If no options set, default to normal upload dir
-		if ( !( $dir = get_site_option( 'document_upload_directory' ) ) )
+		// If no options set, default to normal upload dir
+		if ( ! ( $dir = get_site_option( 'document_upload_directory' ) ) ) {
 			return $defaults['basedir'];
+		}
 
-		if ( !is_multisite() )
+		if ( ! is_multisite() ) {
 			return $dir;
+		}
 
-		//make site specific on multisite
-		if ( is_multisite() && !is_network_admin() )
+		// make site specific on multisite
+		if ( is_multisite() && ! is_network_admin() ) {
 			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
+		}
 
 		return $dir;
 
@@ -1175,8 +1242,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		$slug = get_site_option( 'document_slug' );
 
-		if ( ! $slug )
+		if ( ! $slug ) {
 			$slug = 'documents';
+		}
 
 		return apply_filters( 'document_slug', $slug );
 
@@ -1185,14 +1253,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Modifies location of uploaded document revisions
+	 *
 	 * @since 0.5
 	 * @param array $dir defaults passed from WP
 	 * @return array $dir modified directory
 	 */
 	function document_upload_dir_filter( $dir ) {
 
-		if ( !$this->verify_post_type ( ) )
+		if ( ! $this->verify_post_type( ) ) {
 			return $dir;
+		}
 
 		$dir['path'] = $this->document_upload_dir() . $dir['subdir'];
 		$dir['url'] = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
@@ -1206,15 +1276,17 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Hides file's true location from users in the Gallery
+	 *
 	 * @since 0.5
 	 * @param string $link URL to file's tru location
-	 * @param int $id attachment ID
+	 * @param int    $id attachment ID
 	 * @return string empty string
 	 */
 	function attachment_link_filter( $link, $id ) {
 
-		if ( !$this->verify_post_type( $id ) )
+		if ( ! $this->verify_post_type( $id ) ) {
 			return $link;
+		}
 
 		return '';
 	}
@@ -1222,19 +1294,20 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Rewrites uploaded revisions filename with secure hash to mask true location
+	 *
 	 * @since 0.5
 	 * @param array $file file data from WP
 	 * @return array $file file with new filename
 	 */
 	function filename_rewrite( $file ) {
 
-		//verify this is a document
+		// verify this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			return $file;
 		}
 
-		//hash and replace filename, appending extension
-		$file['name'] = md5( $file['name'] .time() ) . $this->get_extension( $file['name'] );
+		// hash and replace filename, appending extension
+		$file['name'] = md5( $file['name'] . time() ) . $this->get_extension( $file['name'] );
 
 		$file = apply_filters( 'document_internal_filename', $file );
 
@@ -1245,13 +1318,14 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Rewrites a file URL to it's public URL
+	 *
 	 * @since 0.5
 	 * @param array $file file object from WP
 	 * @return array modified file array
 	 */
 	function rewrite_file_url( $file ) {
 
-		//verify that this is a document
+		// verify that this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			return $file;
 		}
@@ -1266,37 +1340,41 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	/**
 	 * Checks if a given post is a document
 	 * note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
+	 *
 	 * @param object|int either a post object or a postID
 	 * @since 0.5
-	 * @param unknown $post (optional)
+	 * @param unknown                                     $post (optional)
 	 * @return bool true if document, false if not
 	 */
 	function verify_post_type( $post = false ) {
 		global $wp_query;
 
-		//check for post_type query arg (post new)
-		if ( $post == false && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' )
+		// check for post_type query arg (post new)
+		if ( $post == false && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'document' ) {
 			return true;
+		}
 
 		// Assume that a document feed is a document feed, even without a post object.
 		if ( $post === false && is_feed() && 'document' === $wp_query->query_vars['post_type'] ) {
 			return true;
 		}
 
-		//if post isn't set, try get vars (edit post)
-		if ( $post == false )
+		// if post isn't set, try get vars (edit post)
+		if ( $post == false ) {
 			$post = ( isset( $_GET['post'] ) ) ? $_GET['post'] : false;
+		}
 
-		//look for post_id via post or get (media upload)
-		if ( $post == false )
+		// look for post_id via post or get (media upload)
+		if ( $post == false ) {
 			$post = ( isset( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : false;
-
+		}
 
 		$post_type = get_post_type( $post );
 
-		//if post is really an attachment or revision, look to the post's parent
-		if ( $post_type == 'attachment' || $post_type == 'revision' )
+		// if post is really an attachment or revision, look to the post's parent
+		if ( $post_type == 'attachment' || $post_type == 'revision' ) {
 			$post_type = get_post_type( get_post( $post )->post_parent );
+		}
 
 		return $post_type == 'document';
 
@@ -1305,6 +1383,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Clears cache on post_save
+	 *
 	 * @param int $postID the post ID
 	 */
 	function clear_cache( $postID ) {
@@ -1316,18 +1395,19 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Callback to handle revision RSS feed
+	 *
 	 * @since 0.5
 	 */
 	function do_feed_revision_log() {
 
-		//because we're in function scope, pass $post as a global
+		// because we're in function scope, pass $post as a global
 		global $post;
 
-		//remove this filter to A) prevent trimming and B) to prevent WP from using the attachID if there's no revision log
-		remove_filter( 'get_the_excerpt', 'wp_trim_excerpt'  );
+		// remove this filter to A) prevent trimming and B) to prevent WP from using the attachID if there's no revision log
+		remove_filter( 'get_the_excerpt', 'wp_trim_excerpt' );
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
-		//include feed and die
+		// include feed and die
 		load_template( dirname( __FILE__ ) . '/includes/revision-feed.php' );
 
 		return;
@@ -1345,8 +1425,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function hijack_feed( $default ) {
 
-		if ( !$this->verify_post_type() || !apply_filters( 'document_custom_feed', true ) )
+		if ( ! $this->verify_post_type() || ! apply_filters( 'document_custom_feed', true ) ) {
 			return $default;
+		}
 
 		return 'revision_log';
 
@@ -1362,17 +1443,20 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function revision_feed_auth() {
 
-		if ( !$this->verify_post_type() || !apply_filters( 'document_verify_feed_key', true ) )
+		if ( ! $this->verify_post_type() || ! apply_filters( 'document_verify_feed_key', true ) ) {
 			return;
+		}
 
-		if ( is_feed() && !$this->validate_feed_key() )
+		if ( is_feed() && ! $this->validate_feed_key() ) {
 				wp_die( __( 'Sorry, this is a private feed.', 'wp-document-revisions' ) );
+		}
 
 	}
 
 
 	/**
 	 * Checks feed key before serving revision RSS feed
+	 *
 	 * @since 0.5
 	 * @return bool
 	 */
@@ -1380,20 +1464,23 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		global $wpdb;
 
-		//verify key exists
-		if ( empty( $_GET['key'] ) )
+		// verify key exists
+		if ( empty( $_GET['key'] ) ) {
 			return false;
+		}
 
-		//make alphanumeric
+		// make alphanumeric
 		$key = preg_replace( '/[^a-z0-9]/i', '', $_GET['key'] );
 
-		//verify length
-		if ( self::$key_length != strlen( $key ) )
+		// verify length
+		if ( self::$key_length != strlen( $key ) ) {
 			return false;
+		}
 
-		//lookup key
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) ) )
+		// lookup key
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) ) ) {
 			return true;
+		}
 
 		return false;
 	}
@@ -1408,23 +1495,26 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	function override_lock( $send_notice = true ) {
 
-		//verify current user can edit
-		//consider a specific permission check here
-		if ( !$_POST['post_id'] || !current_user_can( 'edit_post' , $_POST['post_id'] ) || !current_user_can( 'override_document_lock' ) )
-			wp_die( __( 'Not authorized', 'wp-document-revisions') );
+		// verify current user can edit
+		// consider a specific permission check here
+		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post' , $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
+			wp_die( __( 'Not authorized', 'wp-document-revisions' ) );
+		}
 
-		//verify that there is a lock
-		if ( !( $current_owner = wp_check_post_lock($_POST['post_id'] ) ) )
+		// verify that there is a lock
+		if ( ! ( $current_owner = wp_check_post_lock( $_POST['post_id'] ) ) ) {
 			die( '-1' );
+		}
 
-		//update the lock
+		// update the lock
 		wp_set_post_lock( $_POST['post_id'] );
 
-		//get the current user ID
+		// get the current user ID
 		$current_user = wp_get_current_user();
 
-		if ( apply_filters( 'send_document_override_notice', $send_notice ) )
+		if ( apply_filters( 'send_document_override_notice', $send_notice ) ) {
 			$this->send_override_notice( $_POST['post_id'], $current_owner, $current_user->ID );
+		}
 
 		do_action( 'document_lock_override', $_POST['post_id'], $current_user->ID, $current_owner );
 
@@ -1442,31 +1532,31 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * @param int $current_user_id id of user overriding lock
 	 * @return bool true on sucess, false on fail
 	 */
-	function send_override_notice( $post_id, $owner_id , $current_user_id ) {
+	function send_override_notice( $post_id, $owner_id, $current_user_id ) {
 
-		//get lock owner's details
+		// get lock owner's details
 		$lock_owner = get_userdata( $owner_id );
 
-		//get the current user's detaisl
+		// get the current user's detaisl
 		$current_user = wp_get_current_user( $current_user_id );
 
-		//get the post
+		// get the post
 		$post = get_post( $post_id );
 
-		//build the subject
+		// build the subject
 		$subject = sprintf( __( '%1$s: %2$s has overridden your lock on %3$s', 'wp-document-revisions' ), get_bloginfo( 'name' ), $current_user->display_name, $post->post_title );
 		$subject = apply_filters( 'lock_override_notice_subject', $subject );
 
-		//build the message
-		$message = sprintf( __('Dear %s:', 'wp-document-revisions' ), $lock_owner->display_name) . "\n\n";
-		$message .= sprintf( __('%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name,  $current_user->user_email, $post->post_title, get_permalink( $post->ID ) ) . "\n\n";
-		$message .= __('Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
-		$message .= sprintf( __('- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
+		// build the message
+		$message = sprintf( __( 'Dear %s:', 'wp-document-revisions' ), $lock_owner->display_name ) . "\n\n";
+		$message .= sprintf( __( '%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name,  $current_user->user_email, $post->post_title, get_permalink( $post->ID ) ) . "\n\n";
+		$message .= __( 'Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
+		$message .= sprintf( __( '- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
 		$message = apply_filters( 'lock_override_notice_message', $message );
 
 		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
 
-		//send mail
+		// send mail
 		return wp_mail( $lock_owner->user_email, $subject , $message );
 
 	}
@@ -1481,11 +1571,12 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	function add_caps() {
 
 		global $wp_roles;
-		if ( ! isset( $wp_roles ) )
+		if ( ! isset( $wp_roles ) ) {
 			$wp_roles = new WP_Roles;
+		}
 
-		//default role => capability mapping; based off of _post options
-		//can be overridden by 3d party plugins
+		// default role => capability mapping; based off of _post options
+		// can be overridden by 3d party plugins
 		$defaults = array(
 			'administrator' =>
 			array(
@@ -1569,16 +1660,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			),
 		);
 
-		foreach (  $wp_roles->role_names as $role=>$label ) {
+		foreach (  $wp_roles->role_names as $role => $label ) {
 
-			//if the role is a standard role, map the default caps, otherwise, map as a subscriber
-			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[$role] : $defaults['subscriber'];
+			// if the role is a standard role, map the default caps, otherwise, map as a subscriber
+			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[ $role ] : $defaults['subscriber'];
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
-			//loop and assign
-			foreach ( $caps as $cap => $grant )
+			// loop and assign
+			foreach ( $caps as $cap => $grant ) {
 				$wp_roles->add_cap( $role, $cap, $grant );
-
+			}
 		}
 
 	}
@@ -1586,14 +1677,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Removes Private or Protected from document titles in RSS feeds
+	 *
 	 * @since 1.0
 	 * @param string $prepend the sprintf formatted string to prepend to the title
 	 * @return string just the string
 	 */
 	function no_title_prepend( $prepend ) {
 
-		if ( !$this->verify_post_type() )
+		if ( ! $this->verify_post_type() ) {
 			return $prepend;
+		}
 
 		return '%s';
 
@@ -1602,6 +1695,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Adds revision number to document tiles
+	 *
 	 * @since 1.0
 	 * @param string $title the title
 	 * @return string the title possibly with the revision number
@@ -1609,46 +1703,52 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	function add_revision_num_to_title( $title ) {
 		global $post;
 
-		//verify post type
-		if ( !$this->verify_post_type() )
+		// verify post type
+		if ( ! $this->verify_post_type() ) {
 			return $title;
+		}
 
-		//if this is a document, and not a revision, just filter and return the title
+		// if this is a document, and not a revision, just filter and return the title
 		if ( $post->post_type != 'revision' ) {
 
-			if ( is_feed() )
-				$title = sprintf( __( '%s - Latest Revision', 'wp-document-revisions'), $title );
+			if ( is_feed() ) {
+				$title = sprintf( __( '%s - Latest Revision', 'wp-document-revisions' ), $title );
+			}
 
 			return apply_filters( 'document_title',  $title );
 
 		}
 
-		//get revision num
+		// get revision num
 		$revision_num = $this->get_revision_number( $post->ID );
 
-		//if for some reason there's no revision num
-		if ( !$revision_num )
+		// if for some reason there's no revision num
+		if ( ! $revision_num ) {
 			return apply_filters( 'document_title', $title );
+		}
 
-		//add title, apply filters, and return
-		return apply_filters( 'document_title', sprintf( __('%s - Revision %d', 'wp-document-revisions' ), $title, $revision_num ) );
+		// add title, apply filters, and return
+		return apply_filters( 'document_title', sprintf( __( '%1$s - Revision %2$d', 'wp-document-revisions' ), $title, $revision_num ) );
 	}
 
 
 	/**
 	 * Prevents Attachment ID from being displayed on front end
+	 *
 	 * @since 1.0.3
 	 * @param string $content the post content
 	 * @return string either the original content or none
 	 */
 	function content_filter( $content ) {
 
-		if ( !$this->verify_post_type( ) )
+		if ( ! $this->verify_post_type( ) ) {
 			return $content;
+		}
 
-		//allow password prompt to display
-		if ( post_password_required() )
+		// allow password prompt to display
+		if ( post_password_required() ) {
 			return $content;
+		}
 
 		return '';
 
@@ -1657,33 +1757,38 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy
+	 *
 	 * @return unknown
 	 */
 	function edit_flow_support() {
 
 		global $edit_flow;
 
-		//verify edit flow is enabled
-		if ( !class_exists( 'EF_Custom_Status' ) || !apply_filters( 'document_revisions_use_edit_flow', true ) )
+		// verify edit flow is enabled
+		if ( ! class_exists( 'EF_Custom_Status' ) || ! apply_filters( 'document_revisions_use_edit_flow', true ) ) {
 			return false;
+		}
 
-		//verify proper firing order
-		if ( !did_action( 'ef_init' ) ) {
+		// verify proper firing order
+		if ( ! did_action( 'ef_init' ) ) {
 			_doing_it_wrong( 'edit_flow_support', 'Cannot call before ef_init has fired', null );
 			return false;
 		}
 
-		//verify custom_status is enabled
-		if ( !$edit_flow->custom_status->module_enabled( 'custom_status' ) )
+		// verify custom_status is enabled
+		if ( ! $edit_flow->custom_status->module_enabled( 'custom_status' ) ) {
 			return false;
+		}
 
-		//prevent errors if options aren't init'd yet
-		if ( !isset( $edit_flow->custom_status->module->options->post_types['document'] ) )
+		// prevent errors if options aren't init'd yet
+		if ( ! isset( $edit_flow->custom_status->module->options->post_types['document'] ) ) {
 			return false;
+		}
 
-		//check if enabled
-		if ( $edit_flow->custom_status->module->options->post_types['document'] == 'off' )
+		// check if enabled
+		if ( $edit_flow->custom_status->module->options->post_types['document'] == 'off' ) {
 			return false;
+		}
 
 		add_filter( 'document_use_workflow_states', '__return_false' );
 
@@ -1694,6 +1799,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 	/**
 	 * Toggles workflow states on and off
+	 *
 	 * @return bool true if workflow states are on, otherwise false
 	 */
 	function use_workflow_states() {
@@ -1708,8 +1814,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function disable_workflow_states() {
 
-		if ( $this->use_workflow_states() )
+		if ( $this->use_workflow_states() ) {
 			return;
+		}
 
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
@@ -1721,7 +1828,8 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Returns array of document objects matching supplied criteria.
 	 *
 	 * See http://codex.wordpress.org/Class_Reference/WP_Query#Parameters for more information on potential parameters
-	 * @param array $args (optional) an array of WP_Query arguments
+	 *
+	 * @param array   $args (optional) an array of WP_Query arguments
 	 * @param unknown $return_attachments (optional)
 	 * @return array an array of post objects
 	 */
@@ -1734,23 +1842,22 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		if ( $return_attachments ) {
 
-			//loop through each document and build an array of attachment objects
-			//this would be the same output as a query for post_type = attachment
-			//but allows querying of document metadata and returns only latest revision
+			// loop through each document and build an array of attachment objects
+			// this would be the same output as a query for post_type = attachment
+			// but allows querying of document metadata and returns only latest revision
 			foreach ( $documents as $document ) {
 				$docObj = $this->get_latest_revision( $document->ID );
 				$output[] = get_post( $docObj->post_content );
 			}
-
 		} else {
 
-			//used internal get_revision function so that filter work and revision bug is offset
-			foreach ( $documents as $document )
+			// used internal get_revision function so that filter work and revision bug is offset
+			foreach ( $documents as $document ) {
 				$output[] = $this->get_latest_revision( $document->ID );
-
+			}
 		}
 
-		//remove empty rows, e.g., created by autodraft, etc.
+		// remove empty rows, e.g., created by autodraft, etc.
 		$output = array_filter( $output );
 
 		return $output;
@@ -1762,35 +1869,40 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Filter's calls for attachment URLs for files attached to documents
 	 * Returns the document or revision URL instead of the file's true location
 	 * Prevents direct access to files and ensures authentication
+	 *
 	 * @since 1.2
 	 * @param string $url the original URL
-	 * @param int $postID the attachment ID
+	 * @param int    $postID the attachment ID
 	 * @return string the modified URL
 	 */
 	function attachment_url_filter( $url, $postID ) {
 
-		//not an attached attachment
-		if ( !$this->verify_post_type( $postID ) )
+		// not an attached attachment
+		if ( ! $this->verify_post_type( $postID ) ) {
 			return $url;
+		}
 
 		$post = get_post( $postID );
 
-		if ( !$post )
+		if ( ! $post ) {
 			return $url;
+		}
 
-		//user can't read revisions anyways, so just give them the URL of the latest revision
-		if ( !current_user_can( 'read_document_revisions' ) )
+		// user can't read revisions anyways, so just give them the URL of the latest revision
+		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			return get_permalink( $post->post_parent );
+		}
 
-		//we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it
+		// we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it
 		global $wpdb;
 		$revisionID = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_parent = %d AND post_content = %d LIMIT 1", $post->post_parent, $postID ) );
 
-		//couldn't find it, just return the true URL
-		if ( !$revisionID )
+		// couldn't find it, just return the true URL
+		if ( ! $revisionID ) {
 			return $url;
+		}
 
-		//run through standard permalink filters and return
+		// run through standard permalink filters and return
 		return get_permalink( $revisionID );
 
 	}
@@ -1800,19 +1912,21 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Prevents internal calls to files from breaking when apache is running on windows systems (Xampp, etc.)
 	 * Code inspired by includes/class.wp.filesystem.php
 	 * See generally http://wordpress.org/support/topic/plugin-wp-document-revisions-404-error-and-permalinks-are-set-correctly
+	 *
 	 * @since 1.2.1
 	 * @param string $url the permalink
 	 * @return string the modified permalink
 	 */
 	function wamp_document_path_filter( $url ) {
-		$url = preg_replace('|^([a-z]{1}):|i', '', $url); //Strip out windows drive letter if it's there.
-		return str_replace('\\', '/', $url); //Windows path sanitization
+		$url = preg_replace( '|^([a-z]{1}):|i', '', $url ); // Strip out windows drive letter if it's there.
+		return str_replace( '\\', '/', $url ); // Windows path sanitization
 	}
 
 
 	/**
 	 * Term Count Callback that applies custom filter
 	 * Allows Workflow State counts to include non-published posts
+	 *
 	 * @since 1.2.1
 	 * @param unknown $terms
 	 * @param unknown $taxonomy
@@ -1827,6 +1941,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	/**
 	 * Alters term count query to include all non-trashed posts.
 	 * See generally, #17548
+	 *
 	 * @since 1.2.1
 	 * @param unknown $query
 	 * @return unknown
@@ -1839,14 +1954,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	/**
 	 * Extends the modified term_count_cb to all custom taxonomies associated with documents
 	 * Unless taxonomy already has a custom callback
+	 *
 	 * @since 1.2.1
 	 */
 	function register_term_count_cb() {
 
 		$taxs = get_taxonomies( array( 'object_type' => 'document', 'update_count_callback' => '' ), 'objects' );
 
-		foreach ( $taxs as $tax )
+		foreach ( $taxs as $tax ) {
 			$tax->update_count_callback = array( &$this, 'term_count_cb' );
+		}
 
 	}
 
@@ -1856,14 +1973,16 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * WordPress SEO rules properly dictate that all post requests should be 301 redirected with a trailing slash
 	 * Because documents end with a phaux file extension, we don't want that
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working
+	 *
 	 * @param unknown $redirect
 	 * @param unknown $request
 	 * @return unknown
 	 */
 	function redirect_canonical_filter( $redirect, $request ) {
 
-		if ( !$this->verify_post_type() )
+		if ( ! $this->verify_post_type() ) {
 			return $redirect;
+		}
 
 		return untrailingslashit( $redirect );
 
@@ -1874,31 +1993,34 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Provides a workaround for the attachment url filter breaking wp_get_attachment_image_src
 	 * Removes the wp_get_attachment_url filter and runs image_downsize normally
 	 * Will also check to make sure the returned image doesn't leak the file's true path
+	 *
 	 * @since 1.2.2
 	 * @param string size the size requested
-	 * @param bool $false will always be false
-	 * @param int $id the ID of the attachment
-	 * @param unknown $size
+	 * @param bool                           $false will always be false
+	 * @param int                            $id the ID of the attachment
+	 * @param unknown                        $size
 	 * @return array the image array returned from image_downsize()
 	 */
 	function image_downsize( $false, $id, $size ) {
 
-		if ( !$this->verify_post_type( $id ) )
+		if ( ! $this->verify_post_type( $id ) ) {
 			return false;
+		}
 
-		remove_filter( 'image_downsize', array( &$this, 'image_downsize') );
+		remove_filter( 'image_downsize', array( &$this, 'image_downsize' ) );
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
 
 		$direct = wp_get_attachment_url( $id );
 		$image = image_downsize( $id, $size );
 
-		add_filter( 'image_downsize', array( &$this, 'image_downsize'), 10, 3 );
+		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
-		//if WordPress is going to return the direct url to the real file,
-		//serve the document permalink (or revision permalink) instead
-		if ( $image[0] == $direct )
+		// if WordPress is going to return the direct url to the real file,
+		// serve the document permalink (or revision permalink) instead
+		if ( $image[0] == $direct ) {
 			$image[0] = wp_get_attachment_url( $id );
+		}
 
 		return $image;
 
@@ -1909,22 +2031,26 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 * Remove nocache headers from document downloads on IE < 8
 	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
 	 * See http://support.microsoft.com/kb/323308
+	 *
 	 * @param unknown $wp
 	 * @return unknown
 	 */
 	function ie_cache_fix( $wp ) {
 
-		//SSL check
-		if ( !is_ssl() )
+		// SSL check
+		if ( ! is_ssl() ) {
 			return $wp;
+		}
 
-		//IE check
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false )
+		// IE check
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || stripos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' ) === false ) {
 			return $wp;
+		}
 
-		//verify that they are requesting a document
-		if ( !isset( $wp->query_vars['post_type'] ) || $wp->query_vars['post_type'] != 'document' )
+		// verify that they are requesting a document
+		if ( ! isset( $wp->query_vars['post_type'] ) || $wp->query_vars['post_type'] != 'document' ) {
 			return $wp;
+		}
 
 		add_filter( 'nocache_headers', '__return_empty_array' );
 
@@ -1938,5 +2064,5 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 global $wpdr;
 $wpdr = new Document_Revisions;
 
-//declare global functions
+// declare global functions
 include_once dirname( __FILE__ ) . '/includes/template-functions.php';

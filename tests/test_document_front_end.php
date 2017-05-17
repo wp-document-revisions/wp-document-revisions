@@ -16,14 +16,14 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		//init user roles
+		// init user roles
 		global $wpdr;
 		$wpdr->add_caps();
 		_flush_roles();
 		$this->user_ids = array();
 		wp_set_current_user( 0 );
 
-		//flush cache for good measure
+		// flush cache for good measure
 		wp_cache_flush();
 
 	}
@@ -48,7 +48,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 		$docID = $tdr->test_revise_document();
 
 		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
-		$this->assertEquals( 0, (int) substr_count( $output, '<li'), 'unauthed revision shortcode' );
+		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision shortcode' );
 
 	}
 
@@ -61,12 +61,12 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_revise_document();
 
-		//admin should be able to access
-		$id = _make_user('administrator');
+		// admin should be able to access
+		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
 		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
-		$this->assertEquals( 2, substr_count( $output, '<li'), 'admin revision shortcode' );
+		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
 
 	}
 
@@ -79,12 +79,12 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 		$docID = $tdr->test_revise_document();
 
-		//admin should be able to access
-		$id = _make_user('administrator');
+		// admin should be able to access
+		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
 		$output = do_shortcode( '[document_revisions number="1" id="' . $docID . '"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li'), 'revision shortcode count' );
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
 
 	}
 
@@ -96,11 +96,11 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
 		wp_publish_post( $docID );
 
 		$output = do_shortcode( '[documents]' );
-		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode count' );
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode count' );
 
 	}
 
@@ -112,19 +112,19 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
 		wp_publish_post( $docID );
 
-		$docID = $tdr->test_add_document(); //add another doc
+		$docID = $tdr->test_add_document(); // add another doc
 		wp_publish_post( $docID );
 
-		//move a doc to another workflow state (default is index 0)
+		// move a doc to another workflow state (default is index 0)
 		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
 		wp_set_post_terms( $docID, array( $terms[1]->slug ), 'workflow_state' );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents workflow_state="' . $terms[1]->slug . '"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode filter count' );
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
 
 	}
 
@@ -135,18 +135,18 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_document_shortcode_post_meta_filter() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $docID );
 
-		$docID = $tdr->test_revise_document(); //add a doc w/ revisions
+		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
 		wp_publish_post( $docID );
 
-		//give postmeta to a doc
+		// give postmeta to a doc
 		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li'), 'document shortcode filter count' );
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
 
 	}
 
@@ -157,10 +157,10 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); //add a doc
+		$docID = $tdr->test_revise_document(); // add a doc
 		wp_publish_post( $docID );
 
-		$docID = $tdr->test_add_document(); //add another doc
+		$docID = $tdr->test_add_document(); // add another doc
 		wp_publish_post( $docID );
 
 		$this->assertCount( 2, get_documents(), 'get_document() count' );
@@ -174,7 +174,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_get_documents_returns_attachments() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document(); //add a doc
+		$docID = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $docID );
 
 		$docs = get_documents( null, true );
@@ -192,11 +192,11 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$tdr->test_add_document(); //add a doc
-		$docID = $tdr->test_add_document(); //add another doc
+		$tdr->test_add_document(); // add a doc
+		$docID = $tdr->test_add_document(); // add another doc
 		wp_publish_post( $docID );
 
-		//give postmeta to a doc
+		// give postmeta to a doc
 		update_post_meta( $docID, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
@@ -211,7 +211,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_get_document_revisions() {
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document(); //add a doc
+		$docID = $tdr->test_revise_document(); // add a doc
 		$this->assertCount( 2, get_document_revisions( $docID ) );
 	}
 
