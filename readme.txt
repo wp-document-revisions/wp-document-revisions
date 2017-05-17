@@ -1,10 +1,10 @@
 === WP Document Revisions ===
-Contributors: benbalter  
-Donate link: http://ben.balter.com/donate/  
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam  
+Contributors: benbalter
+Donate link: http://ben.balter.com/donate/
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
 Requires at least: 3.9
-Tested up to: 3.9.1
-Stable tag: 2.0.0
+Tested up to: 4.7.5
+Stable tag: 2.2.0
 === WP Document Revisions ===
 
 [![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions)
@@ -48,7 +48,7 @@ A document management and version control plugin that allows teams of any size t
 * Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
-* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
+* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
@@ -158,7 +158,7 @@ For more information, please see [the plugin documentation](/docs).
 * Added Spanish Translation Support (es_ES -- special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., http://domain.com/documentos/2012/04/test.txt rather than /documents/)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
-* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.  
+* Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
 * Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
 * Default document upload directory now honors WordPress-wide defaults and features enhanced multisite support
