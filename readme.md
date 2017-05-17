@@ -1,5 +1,12 @@
 # WP Document Revisions #
 
+Contributors: benbalter
+Donate link: http://ben.balter.com/donate/
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management, dam
+Requires at least: 3.9
+Tested up to: 4.7.5
+Stable tag: 2.2.0
+
 [![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
@@ -41,7 +48,7 @@ A document management and version control plugin that allows teams of any size t
 * Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
-* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
+* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
