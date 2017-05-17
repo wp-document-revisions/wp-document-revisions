@@ -1,5 +1,5 @@
 <?php
-ob_start();
+
 $_tests_dir = getenv('WP_TESTS_DIR');
 if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
 
@@ -9,6 +9,39 @@ function _manually_load_plugin() {
 	require dirname( __FILE__ ) . '/../wp-document-revisions.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+/**
+ * Whether we wp_die'd this test.
+ *
+ * @return bool True if wp_die() has been used. False if not.
+ */
+function _wpdr_is_wp_die() {
+	if ( isset( $GLOBALS['is_wp_die'] ) ) {
+		return $GLOBALS['is_wp_die'];
+	}
+
+	return false;
+}
+
+/**
+ * Acts as a custom wp_die() handler.
+ *
+ * This allows tests to continue, but sets a global state that
+ * we can check and manipulate.
+ */
+function _wpdr_die_handler() {
+	$GLOBALS['is_wp_die'] = true;
+}
+
+/**
+ * Registers the handler to use for a wp_die() call.
+ *
+ * @return string
+ */
+function _wpdr_die_handler_filter() {
+	return '_wpdr_die_handler';
+}
+tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 100 );
 
 require $_tests_dir . '/includes/bootstrap.php';
 
@@ -46,7 +79,7 @@ function _destroy_user( $user_id ) {
 }
 
 function _destroy_users() {
-	global $wpdr;
+	global $wpdb;
 	$users = $wpdb->get_col( "SELECT ID from $wpdb->users" );
 		array_map( array( $this, '_destroy_user' ), $users );
 }

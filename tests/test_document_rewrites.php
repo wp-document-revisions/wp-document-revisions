@@ -20,10 +20,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$wp_rewrite->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
 		$wp_rewrite->flush_rules();
 
-		//custom wp_die_handler to verify that we died
-		add_filter( 'wp_die_handler', array( &$this, 'get_die_handler' ), 9999 );
-		global $is_wp_die;
-		$is_wp_die = false;
+		$GLOBALS['is_wp_die'] = false;
 
 		//init user roles
 		global $wpdr;
@@ -46,40 +43,6 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		parent::tearDown();
 
 	}
-
-
-	/**
-	 * Callback to return our die handler
-	 * @return array the handler
-	 */
-	function get_die_handler() {
-		return array( &$this, 'die_handler' );
-	}
-
-
-	/**
-	 * Handles wp_die without actually dieing
-	 * @param sting msg the die msg
-	 */
-	function die_handler( $msg ) {
-
-		global $is_wp_die;
-		$is_wp_die = true;
-
-		echo $msg;
-
-	}
-
-
-	/**
-	 * Whether we wp_die'd this test
-	 * @return bool true/false
-	 */
-	function is_wp_die() {
-		global $is_wp_die;
-		return $is_wp_die;
-	}
-
 
 	/**
 	 * Tests that a given URL actually returns the right file
@@ -104,7 +67,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		ob_end_clean();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
-		$this->assertFalse( $this->is_wp_die(), "wp_died ($msg)" );
+		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
 		$this->assertTrue( is_single(), "Not single ($msg)" );
 		$this->assertStringEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "Contents don\'t match file ($msg)" );
 
@@ -133,7 +96,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertTrue( ( is_404() || $this->is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
+		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
 
 	}
@@ -335,33 +298,39 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 	/**
 	 * Simulate accessing a revision log feed
+	 *
 	 * @param string $url the URL to try
+	 *
 	 * @return string the content returned
+	 * @throws Exception
 	 */
 	function simulate_feed( $url = null ) {
-
-		if ( !$url )
-			return;
+		if ( ! $url ) {
+			return '';
+		}
 
 		global $wpdr;
 		flush_rewrite_rules();
 
 		$this->go_to( $url );
-
-		ob_start();
-
 		$wpdr->revision_feed_auth();
 
-		if ( !$this->is_wp_die() )
-			do_feed();
+		if ( _wpdr_is_wp_die() ) {
+			return '';
+		}
 
-		$content = ob_get_contents();
-		ob_end_clean();
+		ob_start();
+		global $post;
+		try {
+			@require( dirname( __DIR__ ) . '/includes/revision-feed.php' );
+			$content = ob_get_clean();
+		} catch( Exception $e ) {
+			$content = ob_get_clean();
+			throw ( $e );
+		}
 
 		return $content;
-
 	}
-
 
 	/**
 	 * Can the public access a revision log feed?
@@ -376,7 +345,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		//try to get an un auth'd feed
 		$content = $this->simulate_feed( get_permalink( $docID ) . '/feed/' );
 		$this->assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-		$this->assertTrue( $this->is_wp_die(), 'not properly denying access to feeds' );
+		$this->assertTrue( _wpdr_is_wp_die(), 'not properly denying access to feeds' );
 		$this->assertEquals( 0, substr_count( $content, '<item>' ), 'denied feed leaking items' );
 
 	}
@@ -397,12 +366,15 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		//try to get an auth'd feed
 		$userID = _make_user('administrator');
+		$wpdr->admin->generate_new_feed_key( $userID );
 		$key = $wpdr->admin->get_feed_key( $userID );
 
+		wp_set_current_user( $userID );
 		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $docID ) . '/feed/' ) );
 		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-		$this->assertFalse( $this->is_wp_die(), 'Not properly allowing access to feeds' );
+		$this->assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds' );
 		$this->assertEquals( count( $wpdr->get_revisions( $docID ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
+		wp_set_current_user( 0 );
 		_destroy_user( $userID );
 
 	}
