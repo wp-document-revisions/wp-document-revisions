@@ -48,7 +48,7 @@ A document management and version control plugin that allows teams of any size t
 * Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
-* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
+* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system  
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
@@ -83,8 +83,6 @@ A document management and version control plugin that allows teams of any size t
 * Russian - Evgeny Vlasov
 * Dutch - @tijscruysen
 
-*WP Document Revisions was developed by a [law student and a business student](http://ben.balter.com) with a [grant from Google](http://code.google.com/soc/), and in close coordination with and under the watchful eye of WordPress.org's lead developers (Although neither relationship should imply an endorsement). Special thanks to Jon Cave, Aaron Jorbin, Mitcho Erlewine, and Andrew Nacin for their guidance.*
-
 [Photo via [antphotos](http://www.flickr.com/photos/antphotos/3903433061/)]
 
 == Documentation ==
@@ -93,6 +91,14 @@ For more information, please see [the plugin documentation](/docs).
 
 
 == Changelog ==
+
+= 2.2.0 =
+
+* [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/benbalter/wp-document-revisions/pull/74)
+* [Filter documents from the grid view in Media, queried via Ajax](https://github.com/benbalter/wp-document-revisions/pull/78)
+* [Added code to preserve file exts on revision links](https://github.com/benbalter/wp-document-revisions/pull/81), and
+* [Verify a post ID has been passed before verifying post type](https://github.com/benbalter/wp-document-revisions/pull/86)
+* [Use H2 for "Feed Privacy" heading](https://github.com/benbalter/wp-document-revisions/pull/91)
 
 = 2.0.0 =
 * Note: The project is looking for additional contributors. Please consider contributing your time: https://github.com/benbalter/wp-document-revisions/blob/master/docs/how-to-contribute.md
@@ -264,13 +270,6 @@ For more information, please see [the plugin documentation](/docs).
 
 = 0.1 =
 * Proof of concept prototype
-
-
-== Donate ==
-
-Enjoy using WP Document Revisions? The most valuable way you can support the project is by [contributing your time](https://github.com/benbalter/WP-Document-Revisions/blob/master/docs/how-to-contribute.md).
-
-No time to contribute? Consider [making a small donation](http://ben.balter.com/donate/?utm_source=wiki&utm_medium=donate&utm_campaign=wp-document-revisions) to support the project's continued development.
 
 
 == Frequently Asked Questions ==
