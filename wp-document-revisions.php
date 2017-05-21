@@ -20,7 +20,7 @@ require_once 'HTTP/WebDAV/Server.php';
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
  *
- *  Copyright (C) 2011-2014 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
+ *  Copyright (C) 2011-2017 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,9 +35,9 @@ require_once 'HTTP/WebDAV/Server.php';
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @copyright 2011-2014
+ *  @copyright 2011-2017
  *  @license GPL v3
- *  @version 2.0.0
+ *  @version 2.2.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
