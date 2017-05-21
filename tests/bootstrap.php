@@ -1,4 +1,9 @@
 <?php
+/**
+ * Bootstrap the local test environment
+ *
+ * @package WP_Document_Revisions
+ */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) { $_tests_dir = '/tmp/wordpress-tests-lib';
@@ -6,6 +11,9 @@ if ( ! $_tests_dir ) { $_tests_dir = '/tmp/wordpress-tests-lib';
 
 require_once $_tests_dir . '/includes/functions.php';
 
+/**
+ * Require the WP Document Revisions Plugin on load
+ */
 function _manually_load_plugin() {
 	require dirname( __FILE__ ) . '/../wp-document-revisions.php';
 }
@@ -49,8 +57,12 @@ require $_tests_dir . '/includes/bootstrap.php';
 /**
  * Utility functions used for testing document revisions
  * Most adapted from the core testing framework: http://svn.automattic.com/wordpress-tests/
+ *
+ * @param String $role the user's role
+ * @param String $user_login the user's login
+ * @param String $pass the user's password
+ * @param string $email the user's email
  */
-
 function _make_user( $role = 'administrator', $user_login = '', $pass = '', $email = '' ) {
 
 		$user = array(
@@ -60,12 +72,17 @@ function _make_user( $role = 'administrator', $user_login = '', $pass = '', $ema
 			'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
 		);
 
-	$userID = wp_insert_user( $user );
+	$user_id = wp_insert_user( $user );
 
-		return $userID;
+		return $user_id;
 
 }
 
+/**
+ * Remove a user from the DB
+ *
+ * @param Int $user_id the user to remove
+ */
 function _destroy_user( $user_id ) {
 
 	// non-admin
@@ -80,18 +97,26 @@ function _destroy_user( $user_id ) {
 
 }
 
+/**
+ * Remove all users from DB
+ */
 function _destroy_users() {
 	global $wpdb;
 	$users = $wpdb->get_col( "SELECT ID from $wpdb->users" );
 		array_map( array( $this, '_destroy_user' ), $users );
 }
 
+/**
+ * Recursively delete a directory
+ *
+ * @param String $dir the directory to delete
+ */
 function _rrmdir( $dir ) {
 	if ( is_dir( $dir ) ) {
 		$objects = scandir( $dir );
 		foreach ( $objects as $object ) {
-			if ( $object != '.' && $object != '..' ) {
-				if ( filetype( $dir . '/' . $object ) == 'dir' ) { _rrmdir( $dir . '/' . $object );
+			if ( '.' !== $object && '..' !== $object ) {
+				if ( 'dir' === filetype( $dir . '/' . $object ) ) { _rrmdir( $dir . '/' . $object );
 				} else { unlink( $dir . '/' . $object );
 				}
 			}
@@ -101,6 +126,9 @@ function _rrmdir( $dir ) {
 	}
 }
 
+/**
+ * Remove any uploaded files
+ */
 function _destroy_uploads() {
 		$uploads = wp_upload_dir();
 		$files = array_diff( scandir( $uploads['basedir'] ), array( '..', '.' ) );

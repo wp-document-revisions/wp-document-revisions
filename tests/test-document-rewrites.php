@@ -6,6 +6,9 @@
  * @package WP_Document_revisions
  */
 
+/**
+ * Test class for WP Document Revisions Rewrites
+ */
 class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 	/**
@@ -101,7 +104,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		ob_end_clean();
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
-		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) == $content, "File being erroneously served ($msg)" );
+		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) === $content, "File being erroneously served ($msg)" );
 
 	}
 
@@ -114,14 +117,14 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new public document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
 
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
-		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'Public Pretty Permalink' );
+		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
 
 	}
 
@@ -133,7 +136,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new private document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 
 		global $current_user;
 		unset( $current_user );
@@ -141,8 +144,8 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		wp_cache_flush();
 
 		// public should be denied
-		$this->verify_cant_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
-		$this->verify_cant_download( get_permalink( $docID ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
+		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
+		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
 
 	}
 
@@ -154,14 +157,14 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new private document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 
 		// contibutor should be denied
 		$id = _make_user( 'contributor' );
 		wp_set_current_user( $id );
 
-		$this->verify_cant_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Contrib. Ugly Permalink' );
-		$this->verify_cant_download( get_permalink( $docID ), $tdr->test_file, 'Private, Contrib. Pretty Permalink' );
+		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Contrib. Ugly Permalink' );
+		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Contrib. Pretty Permalink' );
 		_destroy_user( $id );
 
 	}
@@ -174,14 +177,14 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new private document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 
 		// admin should be able to access
 		$id = _make_user( 'administrator' );
 		$user = wp_set_current_user( $id );
 
-		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
-		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'Private, Admin Pretty Permalink' );
+		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Admin Pretty Permalink' );
 		_destroy_user( $id );
 
 	}
@@ -195,9 +198,9 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new public, revised document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
-		wp_publish_post( $docID );
-		$revisions = $wpdr->get_revisions( $docID );
+		$doc_id = $tdr->test_revise_document();
+		wp_publish_post( $doc_id );
+		$revisions = $wpdr->get_revisions( $doc_id );
 		$revision = array_pop( $revisions );
 
 		global $current_user;
@@ -207,7 +210,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// public should be denied access to revisions
 		$this->verify_cant_download( get_permalink( $revision->ID ), $tdr->test_file, 'Public revision request (pretty)' );
-		$this->verify_cant_download( "?p=$docID&post_type=document&revision=1", $tdr->test_file, 'Public revision request (ugly)' );
+		$this->verify_cant_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file, 'Public revision request (ugly)' );
 
 	}
 
@@ -221,9 +224,9 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new public, revised document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
-		wp_publish_post( $docID );
-		$revisions = $wpdr->get_revisions( $docID );
+		$doc_id = $tdr->test_revise_document();
+		wp_publish_post( $doc_id );
+		$revisions = $wpdr->get_revisions( $doc_id );
 		$revision = array_pop( $revisions );
 
 		// admin should be able to access
@@ -232,7 +235,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		$this->markTestSkipped();
 		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file, 'Admin revision clean' );
-		$this->verify_download( "?p=$docID&post_type=document&revision=1", $tdr->test_file, 'Admin revision ugly' );
+		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file, 'Admin revision ugly' );
 		_destroy_user( $id );
 
 	}
@@ -247,11 +250,11 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		// make new public, revised document
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_revise_document();
+		wp_publish_post( $doc_id );
 
-		$this->verify_download( "?p=$docID&post_type=document", $tdr->test_file2, 'Revised, Ugly Permalink' );
-		$this->verify_download( get_permalink( $docID ), $tdr->test_file2, 'Revised, Pretty Permalink' );
+		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file2, 'Revised, Ugly Permalink' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file2, 'Revised, Pretty Permalink' );
 
 	}
 
@@ -262,7 +265,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_archive() {
 		global $wpdr;
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 		flush_rewrite_rules();
 		$this->go_to( get_home_url( null, $wpdr->document_slug() ) );
 		$this->assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
@@ -276,10 +279,10 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
-		$post = get_post( $docID );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . $post->post_name . $wpdr->get_file_type( $docID );
-		$this->assertEquals( $permalink, get_permalink( $docID ), 'Bad permalink' );
+		$doc_id = $tdr->test_add_document();
+		$doc = get_post( $doc_id );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id );
+		$this->assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 
 	}
 
@@ -291,10 +294,10 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
-		$revisions = $wpdr->get_revisions( $docID );
+		$doc_id = $tdr->test_revise_document();
+		$revisions = $wpdr->get_revisions( $doc_id );
 		$revision = array_pop( $revisions );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . get_post( $docID )->post_name . '-revision-1' . $wpdr->get_file_type( $docID );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . get_post( $doc_id )->post_name . '-revision-1' . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $revision->ID ), 'Bad revision permalink' );
 	}
 
@@ -305,7 +308,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	 * @param string $url the URL to try
 	 *
 	 * @return string the content returned
-	 * @throws Exception
+	 * @throws Exception If there's an error.
 	 */
 	function simulate_feed( $url = null ) {
 		if ( ! $url ) {
@@ -343,10 +346,10 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 
 		// try to get an un auth'd feed
-		$content = $this->simulate_feed( get_permalink( $docID ) . '/feed/' );
+		$content = $this->simulate_feed( get_permalink( $doc_id ) . '/feed/' );
 		$this->assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertTrue( _wpdr_is_wp_die(), 'not properly denying access to feeds' );
 		$this->assertEquals( 0, substr_count( $content, '<item>' ), 'denied feed leaking items' );
@@ -365,20 +368,20 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		$wpdr->admin_init();
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document();
+		$doc_id = $tdr->test_add_document();
 
 		// try to get an auth'd feed
-		$userID = _make_user( 'administrator' );
-		$wpdr->admin->generate_new_feed_key( $userID );
-		$key = $wpdr->admin->get_feed_key( $userID );
+		$user_id = _make_user( 'administrator' );
+		$wpdr->admin->generate_new_feed_key( $user_id );
+		$key = $wpdr->admin->get_feed_key( $user_id );
 
-		wp_set_current_user( $userID );
-		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $docID ) . '/feed/' ) );
+		wp_set_current_user( $user_id );
+		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $doc_id ) . '/feed/' ) );
 		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds' );
-		$this->assertEquals( count( $wpdr->get_revisions( $docID ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
+		$this->assertEquals( count( $wpdr->get_revisions( $doc_id ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
 		wp_set_current_user( 0 );
-		_destroy_user( $userID );
+		_destroy_user( $user_id );
 
 	}
 
@@ -394,12 +397,12 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		update_site_option( 'document_slug', 'docs' );
 
 		// add doc and flush
-		$docID = $tdr->test_add_document();
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
 		wp_cache_flush();
 
-		$this->verify_download( get_permalink( $docID ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
-		$this->assertContains( '/docs/', get_permalink( $docID ), 'revised document slug not in permalink' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
+		$this->assertContains( '/docs/', get_permalink( $doc_id ), 'revised document slug not in permalink' );
 
 	}
 

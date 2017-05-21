@@ -6,6 +6,9 @@
  * @package WP_Document_Revisions
  */
 
+/**
+ * Front end tests
+ */
 class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 
@@ -45,9 +48,9 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_revisions_shortcode_unauthed() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
+		$doc_id = $tdr->test_revise_document();
 
-		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
+		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
 		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision shortcode' );
 
 	}
@@ -59,13 +62,13 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_revisions_shortcode() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
+		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
 		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
-		$output = do_shortcode( '[document_revisions id="' . $docID . '"]' );
+		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
 		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
 
 	}
@@ -77,27 +80,27 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_revision_shortcode_limit() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document();
+		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
 		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
-		$output = do_shortcode( '[document_revisions number="1" id="' . $docID . '"]' );
+		$output = do_shortcode( '[document_revisions number="1" id="' . $doc_id . '"]' );
 		$this->assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
 
 	}
 
 
 	/**
-	 * tests the documents shortcode
+	 * Tests the documents shortcode
 	 */
 	function test_document_shortcode() {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions
+		wp_publish_post( $doc_id );
 
 		$output = do_shortcode( '[documents]' );
 		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode count' );
@@ -112,15 +115,15 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions
+		wp_publish_post( $doc_id );
 
-		$docID = $tdr->test_add_document(); // add another doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document(); // add another doc
+		wp_publish_post( $doc_id );
 
 		// move a doc to another workflow state (default is index 0)
 		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
-		wp_set_post_terms( $docID, array( $terms[1]->slug ), 'workflow_state' );
+		wp_set_post_terms( $doc_id, array( $terms[1]->slug ), 'workflow_state' );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents workflow_state="' . $terms[1]->slug . '"]' );
@@ -135,14 +138,14 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_document_shortcode_post_meta_filter() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document(); // add a doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document(); // add a doc
+		wp_publish_post( $doc_id );
 
-		$docID = $tdr->test_revise_document(); // add a doc w/ revisions
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions
+		wp_publish_post( $doc_id );
 
 		// give postmeta to a doc
-		update_post_meta( $docID, 'test_meta_key', 'test_value' );
+		update_post_meta( $doc_id, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
@@ -157,11 +160,11 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 
 		$tdr = new WP_Test_Document_Revisions();
 
-		$docID = $tdr->test_revise_document(); // add a doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_revise_document(); // add a doc
+		wp_publish_post( $doc_id );
 
-		$docID = $tdr->test_add_document(); // add another doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document(); // add another doc
+		wp_publish_post( $doc_id );
 
 		$this->assertCount( 2, get_documents(), 'get_document() count' );
 
@@ -174,8 +177,8 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	function test_get_documents_returns_attachments() {
 
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_add_document(); // add a doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document(); // add a doc
+		wp_publish_post( $doc_id );
 
 		$docs = get_documents( null, true );
 		$doc = array_pop( $docs );
@@ -193,11 +196,11 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 		$tdr = new WP_Test_Document_Revisions();
 
 		$tdr->test_add_document(); // add a doc
-		$docID = $tdr->test_add_document(); // add another doc
-		wp_publish_post( $docID );
+		$doc_id = $tdr->test_add_document(); // add another doc
+		wp_publish_post( $doc_id );
 
 		// give postmeta to a doc
-		update_post_meta( $docID, 'test_meta_key', 'test_value' );
+		update_post_meta( $doc_id, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
 		$docs = get_documents( array( 'test_meta_key' => 'test_value' ) );
@@ -211,8 +214,8 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_get_document_revisions() {
 		$tdr = new WP_Test_Document_Revisions();
-		$docID = $tdr->test_revise_document(); // add a doc
-		$this->assertCount( 2, get_document_revisions( $docID ) );
+		$doc_id = $tdr->test_revise_document(); // add a doc
+		$this->assertCount( 2, get_document_revisions( $doc_id ) );
 	}
 
 
