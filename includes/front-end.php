@@ -115,7 +115,7 @@ class Document_Revisions_Front_End {
 		// loop through each revision
 		foreach ( $revisions as $revision ) { ?>
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
-				<?php printf( esc_html__( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_attr( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
+				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
 			</li>
 		<?php } ?>
 		</ul>
@@ -174,7 +174,7 @@ class Document_Revisions_Front_End {
 		// loop through found documents
 		foreach ( $documents as $document ) { ?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
-				<a href="<?php echo esc_attr( get_permalink( $document->ID ) ); ?>">
+				<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
 					<?php echo esc_html( get_the_title( $document->ID ) ); ?>
 				</a>
 			</li>
@@ -278,7 +278,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		echo esc_html( $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title ) . '<ul>';
+		echo $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title . '<ul>';
 
 		foreach ( $documents as $document ) :
 			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
