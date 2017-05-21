@@ -3,15 +3,32 @@
  * Helper class for WP_Document_Revisions that registers shortcodes, widgets, etc. for use on the front-end
  *
  * @since 1.2
+ * @package WP_Document_Revisions
  */
 
+/**
+ * WP Document Revisions Front End
+ */
 class Document_Revisions_Front_End {
 
+	/**
+	 * The Parent WP_Document_Revisions instance
+	 *
+	 * @var $parent
+	 */
 	static $parent;
+
+	/**
+	 * The Singleton instance
+	 *
+	 * @var $instance
+	 */
 	static $instance;
 
 	/**
 	 *  Registers front end hooks
+	 *
+	 * @param Object $instance The WP Document Revisions instance
 	 */
 	function __construct( &$instance = null ) {
 
@@ -44,7 +61,7 @@ class Document_Revisions_Front_End {
 		} else {
 			// function does not exist, provide error info
 			$backtrace = debug_backtrace();
-			trigger_error( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][ line ] . ' of ' . $backtrace[1][ file ], E_USER_ERROR );
+			trigger_error( esc_html( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][ line ] . ' of ' . $backtrace[1][ file ] ), E_USER_ERROR );
 			die();
 		}
 	}
@@ -65,7 +82,7 @@ class Document_Revisions_Front_End {
 	/**
 	 * Callback to display revisions
 	 *
-	 * @param $atts array attributes passed via short code
+	 * @param array $atts attributes passed via short code
 	 * @returns string a UL with the revisions
 	 * @since 1.2
 	 */
@@ -86,19 +103,19 @@ class Document_Revisions_Front_End {
 		$revisions = $this->get_revisions( $id );
 
 		// show a limited number of revisions
-		if ( $number != null ) {
+		if ( null !== $number ) {
 			$revisions = array_slice( $revisions, 0, (int) $number );
 		}
 
 		// buffer output to return rather than echo directly
 		ob_start();
 ?>
-		<ul class="revisions document-<?php echo $id; ?>">
+		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
 		// loop through each revision
 		foreach ( $revisions as $revision ) { ?>
-			<li class="revision revision-<?php echo $revision->ID; ?>" >
-				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), get_permalink( $revision->ID ), $revision->post_date, strtotime( $revision->post_date ), human_time_diff( strtotime( $revision->post_date ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $revision->post_author ) ); ?>
+			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
+				<?php printf( esc_html__( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_attr( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
 			</li>
 		<?php } ?>
 		</ul>
@@ -156,9 +173,9 @@ class Document_Revisions_Front_End {
 		<?php
 		// loop through found documents
 		foreach ( $documents as $document ) { ?>
-			<li class="document document-<?php echo $document->ID; ?>">
-				<a href="<?php echo get_permalink( $document->ID ); ?>">
-					<?php echo get_the_title( $document->ID ); ?>
+			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
+				<a href="<?php echo esc_attr( get_permalink( $document->ID ) ); ?>">
+					<?php echo esc_html( get_the_title( $document->ID ) ); ?>
 				</a>
 			</li>
 		<?php } ?>
@@ -171,10 +188,12 @@ class Document_Revisions_Front_End {
 
 	}
 
-
 	/**
 	 * Provides workaround for taxonomies with hyphens in their name
 	 * User should replace hyphen with underscope and plugin will compensate
+	 *
+	 * @param Array $atts shortcode attributes
+	 * @return Array modified shortcode attributes
 	 */
 	function shortcode_atts_hyphen_filter( $atts ) {
 
@@ -197,16 +216,18 @@ class Document_Revisions_Front_End {
 		return $atts;
 	}
 
-
 }
-
 
 /**
  * Recently revised documents widget
  */
 class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
-	// default settings
+	/**
+	 * Default widget settings
+	 *
+	 * @var $defaults
+	 */
 	private $defaults = array(
 		'numberposts' => 5,
 		'post_status' => array( 'publish' => true, 'private' => false, 'draft' => false ),
@@ -226,6 +247,9 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 	/**
 	 * Callback to display widget contents
+	 *
+	 * @param Array  $args the widget arguments
+	 * @param Object $instance the WP Document Revisions instance
 	 */
 	function widget( $args, $instance ) {
 
@@ -254,25 +278,27 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		echo $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title . '<ul>';
+		echo esc_html( $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title ) . '<ul>';
 
 		foreach ( $documents as $document ) :
 			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
 			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 ?>
 			<li>
-				<a href="<?php echo $link ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
-				<?php printf( $format_string, human_time_diff( strtotime( $document->post_modified_gmt ) ), get_the_author_meta( 'display_name', $document->post_author ) ); ?>
+				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
+				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
 			</li>
 		<?php
 		endforeach;
 
-		echo '</ul>' . $after_widget;
+		echo esc_html( '</ul>' . $after_widget );
 	}
 
 
 	/**
 	 * Callback to display widget options form
+	 *
+	 * @param Object $instance the WP Document Revisions instance
 	 */
 	function form( $instance ) {
 
@@ -283,30 +309,33 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		}
 ?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'wp-document-revisions' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _esc_html_e( 'Title:', 'wp-document-revisions' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'numberposts' ); ?>"><?php _e( 'Number of Posts:', 'wp-document-revisions' ); ?></label><br />
-			<input class="small-text" id="<?php echo $this->get_field_id( 'numberposts' ); ?>" name="<?php echo $this->get_field_name( 'numberposts' ); ?>" type="text" value="<?php echo esc_attr( $instance['numberposts'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'numberposts' ) ); ?>"><?php _esc_html_e( 'Number of Posts:', 'wp-document-revisions' ); ?></label><br />
+			<input class="small-text" id="<?php echo esc_attr( $this->get_field_id( 'numberposts' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'numberposts' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['numberposts'] ); ?>" />
 		</p>
 		<p>
-			<?php _e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
+			<?php _escape_html_e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
 			<?php foreach ( $instance['post_status'] as $status => $value ) : ?>
-			<input type="checkbox" id="<?php echo $this->get_field_id( 'post_status_' . $status ); ?>" name="<?php echo $this->get_field_name( 'post_status_' . $status ); ?>" type="text" <?php checked( $value ); ?> />
-			<label for="<?php echo $this->get_field_name( 'post_status_' . $status ); ?>"><?php echo ucwords( $status ); ?></label><br />
+				<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>" type="text" <?php checked( $value ); ?> />
+				<label for="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>"><?php echo esc_html( ucwords( $status ) ); ?></label><br />
 			<?php endforeach; ?>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'show_author' ); ?>"><?php _e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
-			<input type="checkbox" id="<?php echo $this->get_field_id( 'show_author' ); ?>" name="<?php echo $this->get_field_name( 'show_author' ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _e( 'Yes', 'wp-document-revisions' );?>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php _escape_html_e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
+			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _escape_html_e( 'Yes', 'wp-document-revisions' );?>
 		</p>
 		<?php
 	}
 
 
 	/**
-	 * Sanitizes options ans saves
+	 * Sanitizes options and saves
+	 *
+	 * @param Object $new_instance the new instance
+	 * @param Object $old_instance the old instance
 	 */
 	function update( $new_instance, $old_instance ) {
 
@@ -326,7 +355,9 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 }
 
-
+/**
+ * Callback to register the recently revised widget
+ */
 function drrrw_widgets_init() {
 	register_widget( 'Document_Revisions_Recently_Revised_Widget' );
 }
