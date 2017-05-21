@@ -11,8 +11,11 @@ License: GPL3
 @package wp-document-revisions
  */
 
-/*
-  WP Document Revisions
+set_include_path( get_include_path() . PATH_SEPARATOR . dirname( __FILE__ ) . '/includes' );
+require_once 'HTTP/WebDAV/Server.php';
+
+/**
+ * WP Document Revisions
  *
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
@@ -37,13 +40,6 @@ License: GPL3
  *  @version 2.0.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
- */
-
-set_include_path( get_include_path() . PATH_SEPARATOR . dirname( __FILE__ ) . '/includes' );
-require_once 'HTTP/WebDAV/Server.php';
-
-/**
- * The primary WP Document Revisions Object
  */
 class Document_Revisions extends HTTP_WebDAV_Server {
 
