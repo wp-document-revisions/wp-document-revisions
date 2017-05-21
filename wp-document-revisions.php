@@ -539,7 +539,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			$post->post_status = 'private';
 		}
 
+		// @codingStandardsIgnoreStart
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
+		// @codingStandardsIgnoreEnd
 
 	}
 
@@ -1623,7 +1625,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		global $wp_roles;
 		if ( ! isset( $wp_roles ) ) {
+			// @codingStandardsIgnoreStart
 			$wp_roles = new WP_Roles;
+			// @codingStandardsIgnoreEnd
 		}
 
 		// default role => capability mapping; based off of _post options

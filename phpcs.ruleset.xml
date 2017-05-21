@@ -11,4 +11,5 @@
 	<rule ref="WordPress-Extra" />
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>/includes/HTTP/WebDAV/*</exclude-pattern>
 </ruleset>

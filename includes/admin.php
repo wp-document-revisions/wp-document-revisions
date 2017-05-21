@@ -1120,9 +1120,9 @@ class Document_Revisions_Admin {
 	 * Callback to save workflow_state metbox
 	 *
 	 * @since 0.5
-	 * @param int $post_id the ID of the post being edited
+	 * @param int $doc_id the ID of the post being edited
 	 */
-	function workflow_state_save( $post_id ) {
+	function workflow_state_save( $doc_id ) {
 
 		// verify form submit
 		if ( ! $_POST || ! isset( $_POST['workflow_state_nonce'] ) ) {
@@ -1135,7 +1135,7 @@ class Document_Revisions_Admin {
 		}
 
 		// verify CPT
-		if ( ! $this->verify_post_type( $post_id ) ) {
+		if ( ! $this->verify_post_type( $doc_id ) ) {
 			return;
 		}
 
@@ -1145,16 +1145,16 @@ class Document_Revisions_Admin {
 		}
 
 		// check permissions
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		if ( ! current_user_can( 'edit_post', $doc_id ) ) {
 			return;
 		}
 
 		// associate taxonomy with parent, not revision
-		if ( wp_is_post_revision( $post_id ) ) {
-			$post_id = wp_is_post_revision( $post_id );
+		if ( wp_is_post_revision( $doc_id ) ) {
+			$doc_id = wp_is_post_revision( $doc_id );
 		}
 
-		$old = wp_get_post_terms( $post_id,  'workflow_state', true );
+		$old = wp_get_post_terms( $doc_id,  'workflow_state', true );
 
 		// no change, keep moving
 		if ( isset( $old[0] ) && $old[0]->slug === $_POST['workflow_state'] ) {
@@ -1162,9 +1162,9 @@ class Document_Revisions_Admin {
 		}
 
 		// all's good, let's save
-		wp_set_post_terms( $post_id, array( $_POST['workflow_state'] ), 'workflow_state' );
+		wp_set_post_terms( $doc_id, array( $_POST['workflow_state'] ), 'workflow_state' );
 
-		do_action( 'change_document_workflow_state', $post_id, $_POST['workflow_state'] );
+		do_action( 'change_document_workflow_state', $doc_id, $_POST['workflow_state'] );
 	}
 
 
