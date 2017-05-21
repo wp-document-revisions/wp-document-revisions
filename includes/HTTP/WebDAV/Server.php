@@ -1439,13 +1439,13 @@ class HTTP_WebDAV_Server {
 			'ns'   => $args[0],
 						 'name' => $args[1],
 						 'val'  => $args[2],
-			);,
+			);
 		} else {
 			return array(
 			'ns'   => 'DAV:',
 						 'name' => $args[0],
 						 'val'  => $args[1],
-			);,
+			);
 		}
 	}
 
@@ -1904,4 +1904,3 @@ class HTTP_WebDAV_Server {
    * c-basic-offset: 4
    * End:
    */
-
