@@ -9,4 +9,4 @@ phpunit
 
 echo "Running Style checks..."
 phpcs --config-set installed_paths ../../wp-coding-standards/wpcs
-phpcs --standard=phpcs.ruleset.xml --colors */**.php
+phpcs --standard=phpcs.ruleset.xml --colors *.php */**.php

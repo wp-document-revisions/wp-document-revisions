@@ -328,10 +328,11 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via request (post_id)' );
 		unset( $_REQUEST['post_id'] );
 
-		// @codingStandardsIgnoreStart
+		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
 		global $post;
 		$post = get_post( $doc_id );
-		// @codingStandardsIgnoreEnd
+		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
+
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via global $post' );
 		unset( $post );
 

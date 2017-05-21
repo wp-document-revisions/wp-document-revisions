@@ -1,3 +1,3 @@
 #!/bin/sh
 
-phpcbf --standard=phpcs.ruleset.xml */**.php
+phpcbf --standard=phpcs.ruleset.xml *.php */**.php

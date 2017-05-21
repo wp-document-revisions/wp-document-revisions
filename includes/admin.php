@@ -378,9 +378,13 @@ class Document_Revisions_Admin {
 		<?php
 		if ( $lock_holder = $this->get_document_lock( $post ) ) { ?>
 			<div id="lock_override" class="hide-if-no-js"><?php printf( esc_html__( '%s has prevented other users from making changes.', 'wp-document-revisions' ), esc_html( $lock_holder ) ); ?>
-			<?php if ( current_user_can( 'override_document_lock' ) ) {
+			<?php
+      // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+      if ( current_user_can( 'override_document_lock' ) ) {
 				_e( '<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions' );
-} ?>
+      }
+      // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+		?>
 			</div>
 		<?php } ?>
 		<div id="lock_override">
@@ -395,13 +399,17 @@ class Document_Revisions_Admin {
 			</a>
 		</div>
 		<?php
+    // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
 		if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
 		<p>
 			<strong><?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
 			<strong><a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_BLANK"><?php esc_html_e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
 			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', null, $post->ID ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
 		</p>
-		<?php } //end if latest version ?>
+		<?php
+      } //end if latest version
+      // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+	?>
 		<div class="clear"></div>
 		<?php
 	}
@@ -800,7 +808,9 @@ class Document_Revisions_Admin {
 
 		do_action( 'document_upload', $latest, $_POST['post_id'] );
 
+    // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
 		echo $this->post_upload_js( $latest->ID );
+    // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 
 		// prevent hook from fireing a 2nd time
 		remove_filter( 'media_meta', array( &$this, 'media_meta_hack' ), 10, 1 );

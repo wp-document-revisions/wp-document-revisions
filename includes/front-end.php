@@ -113,11 +113,15 @@ class Document_Revisions_Front_End {
 		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
 		// loop through each revision
+		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
 		foreach ( $revisions as $revision ) { ?>
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
 				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
 			</li>
-		<?php } ?>
+		<?php
+		}
+		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+		?>
 		</ul>
 		<?php
 		// grab buffer contents and clear
@@ -278,7 +282,9 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		echo $before_widget . $before_title . apply_filters( 'widget_title', $instance['title'] ) . $after_title . '<ul>';
+		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo $before_widget . $before_title . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $after_title . '<ul>';
+		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 
 		foreach ( $documents as $document ) :
 			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );

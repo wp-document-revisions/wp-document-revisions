@@ -539,9 +539,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			$post->post_status = 'private';
 		}
 
-		// @codingStandardsIgnoreStart
+		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
-		// @codingStandardsIgnoreEnd
+		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
 
 	}
 
