@@ -1548,6 +1548,8 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function override_lock( $send_notice = true ) {
 
+		check_ajax_referer( 'wp-document-revisions', 'nonce' );
+
 		// verify current user can edit
 		// consider a specific permission check here
 		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post' , $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {

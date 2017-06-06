@@ -1109,7 +1109,7 @@ class Document_Revisions_Admin {
 	 */
 	function workflow_state_metabox_cb( $post ) {
 
-		wp_nonce_field( plugin_basename( __FILE__ ), 'workflow_state_nonce' );
+		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
 		$current_state = wp_get_post_terms( $post->ID, 'workflow_state' );
 		$states = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
@@ -1134,11 +1134,6 @@ class Document_Revisions_Admin {
 	 */
 	function workflow_state_save( $doc_id ) {
 
-		// verify form submit
-		if ( ! $_POST || ! isset( $_POST['workflow_state_nonce'] ) ) {
-			return;
-		}
-
 		// autosave check
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
@@ -1149,10 +1144,8 @@ class Document_Revisions_Admin {
 			return;
 		}
 
-		// nonce is a funny word
-		if ( ! wp_verify_nonce( $_POST['workflow_state_nonce'], plugin_basename( __FILE__ ) ) ) {
-			return;
-		}
+		// verify nonce
+		check_admin_referer( 'wp-document-revisions', 'workflow_state_nonce' );
 
 		// check permissions
 		if ( ! current_user_can( 'edit_post', $doc_id ) ) {
@@ -1238,6 +1231,7 @@ class Document_Revisions_Admin {
 			'day'                 => __( '%d day', 'wp-document-revisions' ),
 			'days'                => __( '%d days', 'wp-document-revisions' ),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
+		'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
 		);
 
 		$wpdr = self::$parent;
