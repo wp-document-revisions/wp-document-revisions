@@ -347,7 +347,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			nocache_headers();
 			status_header( 404 );
 			die();
-		}
+		}// End if().
 
 	}
 
@@ -498,7 +498,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function initialize_workflow_states() {
 
-		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
+		$terms = get_terms( 'workflow_state', array(
+			'hide_empty' => false,
+		) );
 
 		if ( ! empty( $terms ) ) {
 			return false;
@@ -514,7 +516,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		$states = apply_filters( 'default_workflow_states', $states );
 
 		foreach ( $states as $state => $desc ) {
-			wp_insert_term( $state, 'workflow_state', array( 'description' => $desc ) );
+			wp_insert_term( $state, 'workflow_state', array(
+				'description' => $desc,
+			) );
 		}
 
 	}
@@ -870,7 +874,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 		$document->post_excerpt = html_entity_decode( $document->post_excerpt );
 
 		// get revisions, and prepend the post
-		$revs = wp_get_post_revisions( $post_id, array( 'order' => 'DESC' ) );
+		$revs = wp_get_post_revisions( $post_id, array(
+			'order' => 'DESC',
+		) );
 		array_unshift( $revs, $document );
 
 		// loop through revisions
@@ -932,7 +938,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			return $cache;
 		}
 
-		$revs = wp_get_post_revisions( $post_id, array( 'order' => 'ASC' ) );
+		$revs = wp_get_post_revisions( $post_id, array(
+			'order' => 'ASC',
+		) );
 
 		$i = 1;
 		foreach ( $revs as $rev ) {
@@ -1048,7 +1056,9 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
-			wp_die( esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array(
+				'response' => 403,
+			) );
 			return false; // for unit testing
 		}
 
@@ -1717,7 +1727,7 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 			),
 		);
 
-		foreach (  $wp_roles->role_names as $role => $label ) {
+		foreach ( $wp_roles->role_names as $role => $label ) {
 
 			// if the role is a standard role, map the default caps, otherwise, map as a subscriber
 			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[ $role ] : $defaults['subscriber'];
@@ -2016,7 +2026,10 @@ class Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	function register_term_count_cb() {
 
-		$taxs = get_taxonomies( array( 'object_type' => 'document', 'update_count_callback' => '' ), 'objects' );
+		$taxs = get_taxonomies( array(
+			'object_type' => 'document',
+			'update_count_callback' => '',
+		), 'objects' );
 
 		foreach ( $taxs as $tax ) {
 			$tax->update_count_callback = array( &$this, 'term_count_cb' );

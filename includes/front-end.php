@@ -30,7 +30,10 @@ class Document_Revisions_Front_End {
 	 *
 	 * @var $shortcode_defaults
 	 */
-	public $shortcode_defaults = array( 'id' => null, 'number' => null );
+	public $shortcode_defaults = array(
+		'id' => null,
+		'number' => null,
+	);
 
 	/**
 	 *  Registers front end hooks
@@ -162,7 +165,9 @@ class Document_Revisions_Front_End {
 			$defaults[ $key ] = null;
 		}
 
-		$taxs = get_taxonomies( array( 'object_type' => array( 'document' ) ), 'objects' );
+		$taxs = get_taxonomies( array(
+			'object_type' => array( 'document' ),
+		), 'objects' );
 
 		// allow querying by custom taxonomy
 		foreach ( $taxs as $tax ) {
@@ -241,7 +246,11 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 */
 	private $defaults = array(
 		'numberposts' => 5,
-		'post_status' => array( 'publish' => true, 'private' => false, 'draft' => false ),
+		'post_status' => array(
+			'publish' => true,
+			'private' => false,
+			'draft' => false,
+		),
 		'show_author' => true,
 	);
 
@@ -292,7 +301,10 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 
 		foreach ( $documents as $document ) :
-			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array( 'post' => $document->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
+			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array(
+				'post' => $document->ID,
+				'action' => 'edit',
+			), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
 			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 ?>
 			<li>

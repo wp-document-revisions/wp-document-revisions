@@ -393,7 +393,8 @@ class Document_Revisions_Admin {
 			<a id="edit-desktop-button" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
 				<?php esc_html_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
 			</a>
-			<?php } //end if latest version ?>
+			<?php } // End if().
+?>
 			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ) ?>" onclick="return false;" >
 				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
@@ -468,7 +469,10 @@ class Document_Revisions_Admin {
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_post && $post->ID !== $revision->ID ) { ?>
-				<td><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'revision' => $revision->ID, 'action' => 'restore' ), 'revision.php' ), "restore-post_$revision->ID" ) ); ?>" class="revision"><?php esc_html_e( 'Restore', 'wp-document-revisions' ); ?></a></td>
+				<td><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array(
+					'revision' => $revision->ID,
+					'action' => 'restore',
+				), 'revision.php' ), "restore-post_$revision->ID" ) ); ?>" class="revision"><?php esc_html_e( 'Restore', 'wp-document-revisions' ); ?></a></td>
 				<?php } ?>
 			</tr>
 			<?php
@@ -1112,7 +1116,9 @@ class Document_Revisions_Admin {
 		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
 		$current_state = wp_get_post_terms( $post->ID, 'workflow_state' );
-		$states = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
+		$states = get_terms( 'workflow_state', array(
+			'hide_empty' => false,
+		) );
 ?>
 		<label for="workflow_state"><?php _esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
 		<select name="workflow_state" id="workflow_state">
