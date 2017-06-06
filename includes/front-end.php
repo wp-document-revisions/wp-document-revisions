@@ -26,6 +26,13 @@ class Document_Revisions_Front_End {
 	static $instance;
 
 	/**
+	 * Array of accepted shortcode keys and default values
+	 *
+	 * @var $shortcode_defaults
+	 */
+	public $shortcode_defaults = array( 'id' => null, 'number' => null );
+
+	/**
 	 *  Registers front end hooks
 	 *
 	 * @param Object $instance The WP Document Revisions instance
@@ -88,11 +95,11 @@ class Document_Revisions_Front_End {
 	 */
 	function revisions_shortcode( $atts ) {
 
-		// extract args
-		extract( shortcode_atts( array(
-					'id' => null,
-					'number' => null,
-		), $atts ) );
+		// normalize args
+		$atts = shortcode_atts( $this->shortcode_defaults, $atts );
+		foreach ( array_keys( $this->shortcode_defaults ) as $key ) {
+			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
+		}
 
 		// do not show output to users that do not have the read_document_revisions capability
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
@@ -262,8 +269,6 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$wpdr = Document_Revisions::$instance;
 		}
 
-		extract( $args );
-
 		// enabled statuses are stored as status => bool, but we want an array of only activated statuses
 		$statuses = array_filter( (array) $instance['post_status'] );
 		$statuses = array_keys( $statuses );
@@ -283,7 +288,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		}
 
 		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
-		echo $before_widget . $before_title . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $after_title . '<ul>';
+		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 
 		foreach ( $documents as $document ) :
@@ -297,7 +302,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		<?php
 		endforeach;
 
-		echo esc_html( '</ul>' . $after_widget );
+		echo esc_html( '</ul>' . $args['after_widget'] );
 	}
 
 
