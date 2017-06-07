@@ -5,7 +5,7 @@ set -e
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
 echo "Running unit tests..."
-script/cibuild-phunit
+script/cibuild-phpunit
 
 echo "Running Style checks..."
 script/cibuild-phpcs
