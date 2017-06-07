@@ -816,9 +816,8 @@ class WP_Document_Revisions_Admin {
 
 		do_action( 'document_upload', $latest, $_POST['post_id'] );
 
-    // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+    // @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 		echo $this->post_upload_js( $latest->ID );
-    // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 
 		// prevent hook from fireing a 2nd time
 		remove_filter( 'media_meta', array( &$this, 'media_meta_hack' ), 10, 1 );

@@ -204,9 +204,8 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		if ( empty( $usr ) && empty( $pwd ) && isset( $_SERVER['HTTP_AUTHORIZATION'] ) && $_SERVER['HTTP_AUTHORIZATION'] ) {
 			list($type, $auth) = explode( ' ', $_SERVER['HTTP_AUTHORIZATION'] );
 			if ( strtolower( $type ) === 'basic' ) {
-				// @codingStandardsIgnoreStart WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+				// @codingStandardsIgnoreLine WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 				list($usr, $pwd) = explode( ':', base64_decode( $auth ) );
-				// @codingStandardsIgnoreEnd WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 			}
 		}
 		$creds = array();
@@ -328,6 +327,8 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 	 */
 	private function _parsePutFile() {
 		/* PUT data comes in on the stdin stream */
+
+		//@codingStandardsIgnoreLine WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		$putdata = fopen( 'php://input', 'r' );
 
 		$raw_data = '';
@@ -336,18 +337,25 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		 Read the data 1 KB at a time
 			and write to the file
 		*/
+		//@codingStandardsIgnoreLine WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fread
 		while ( $chunk = fread( $putdata, 1024 ) ) {			$raw_data .= $chunk;
 		}
 
-		/* Close the streams */
+		/*
+		 Close the streams */
+		//@codingStandardsIgnoreLine WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fclose
 		fclose( $putdata );
 
 		// get tmp name
 		$path_only = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 		$filename_parts = pathinfo( $path_only );
 		$file = tempnam( ini_get( 'upload_tmp_dir' ), $filename_parts['filename'] ) . '.' . $filename_parts['extension'];
+		//@codingStandardsIgnoreLine WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 		file_put_contents( $file, $raw_data );
 
+		// @codingStandardsIgnoreEnd WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fopen
+		// @codingStandardsIgnoreEnd WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fread
+		// @codingStandardsIgnoreEnd WordPress.WP.WordPress.WP.AlternativeFunctions.file_system_read_fclose
 		return $file;
 	}
 
@@ -513,9 +521,8 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 			$post->post_status = 'private';
 		}
 
-		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
+		// @codingStandardsIgnoreLine WordPress.Variables.GlobalVariables.OverrideProhibited
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
-		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
 
 	}
 
@@ -1111,9 +1118,9 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		}
 
 		// If we made it this far, just serve the file
-		//@codingStandardsIgnoreStart WordPress.WP.AlternativeFunctions.file_system_read_readfile
+		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons
+		//@codingStandardsIgnoreLine WordPress.WP.AlternativeFunctions.file_system_read_readfile
 		readfile( $file );
-		//@codingStandardsIgnoreEnd WordPress.WP.AlternativeFunctions.file_system_read_readfile
 
 	}
 
@@ -1617,9 +1624,8 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 
 		global $wp_roles;
 		if ( ! isset( $wp_roles ) ) {
-			// @codingStandardsIgnoreStart
+			// @codingStandardsIgnoreLine
 			$wp_roles = new WP_Roles;
-			// @codingStandardsIgnoreEnd
 		}
 
 		// default role => capability mapping; based off of _post options
