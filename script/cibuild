@@ -5,8 +5,7 @@ set -e
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
 echo "Running unit tests..."
-phpunit
+script/cibuild-phunit
 
 echo "Running Style checks..."
-phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
-phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php
+script/cibuild-phpcs

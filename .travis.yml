@@ -31,28 +31,22 @@ matrix:
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  -  script/setup
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
-      script/setup
       if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
         composer global require "phpunit/phpunit=4.8.*"
       else
         composer global require "phpunit/phpunit=5.7.*"
       fi
     fi
-  - |
-    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
-    fi
 
 script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
-      phpunit
-      WP_MULTISITE=1 phpunit
+      script/cibuild-phpunit
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs --standard=phpcs.ruleset.xml --colors *.php */**.php
+      script/cibuild-phpcs
     fi
