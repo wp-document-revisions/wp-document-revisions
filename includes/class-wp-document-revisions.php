@@ -206,7 +206,7 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 			if ( strtolower( $type ) === 'basic' ) {
 				// @codingStandardsIgnoreStart WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 				list($usr, $pwd) = explode( ':', base64_decode( $auth ) );
-				// @codingStandardsIgnoreStop WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+				// @codingStandardsIgnoreEnd WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 			}
 		}
 		$creds = array();
@@ -1111,7 +1111,9 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		}
 
 		// If we made it this far, just serve the file
+		//@codingStandardsIgnoreStart WordPress.WP.AlternativeFunctions.file_system_read_readfile
 		readfile( $file );
+		//@codingStandardsIgnoreEnd WordPress.WP.AlternativeFunctions.file_system_read_readfile
 
 	}
 

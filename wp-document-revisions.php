@@ -40,7 +40,7 @@ License: GPL3
  */
 // @codingStandardsIgnoreStart WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
 set_include_path( get_include_path() . PATH_SEPARATOR . dirname( __FILE__ ) . '/includes' );
-// @codingStandardsIgnoreStop WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
+// @codingStandardsIgnoreEnd WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
 require_once 'HTTP/WebDAV/Server.php';
 require_once dirname( __FILE__ ) . '/includes/class-wp-document-revisions.php';
 
