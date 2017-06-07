@@ -9,7 +9,7 @@
 /**
  * Test class for WP Document Revisions Rewrites
  */
-class WP_Test_Document_Rewrites extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 	/**
 	 * SetUp initial settings
@@ -93,6 +93,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		}
 
 		global $wpdr;
+
 		flush_rewrite_rules();
 
 		$this->go_to( $url );
@@ -104,7 +105,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		ob_end_clean();
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
-		$this->assertFalse( file_get_contents( dirname( __FILE__ ) . '/' . $file ) === $content, "File being erroneously served ($msg)" );
+		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
 
 	}
 
@@ -116,7 +117,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 
@@ -135,7 +136,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_private_document_as_unauthenticated() {
 
 		// make new private document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		global $current_user;
@@ -156,7 +157,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_private_document_as_contributor() {
 
 		// make new private document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// contibutor should be denied
@@ -176,7 +177,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_private_document_as_admin() {
 
 		// make new private document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// admin should be able to access
@@ -197,7 +198,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 		$revisions = $wpdr->get_revisions( $doc_id );
@@ -223,7 +224,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 		$revisions = $wpdr->get_revisions( $doc_id );
@@ -249,7 +250,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 
@@ -264,7 +265,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	 */
 	function test_archive() {
 		global $wpdr;
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 		flush_rewrite_rules();
 		$this->go_to( get_home_url( null, $wpdr->document_slug() ) );
@@ -278,7 +279,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_permalink() {
 
 		global $wpdr;
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 		$doc = get_post( $doc_id );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id );
@@ -293,7 +294,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_revision_permalink() {
 
 		global $wpdr;
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		$revisions = $wpdr->get_revisions( $doc_id );
 		$revision = array_pop( $revisions );
@@ -345,7 +346,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// try to get an un auth'd feed
@@ -367,7 +368,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 		define( 'WP_ADMIN', true );
 
 		$wpdr->admin_init();
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// try to get an auth'd feed
@@ -391,7 +392,7 @@ class WP_Test_Document_Rewrites extends WP_UnitTestCase {
 	function test_document_slug() {
 
 		global $wp_rewrite;
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 
 		// set new slug
 		update_site_option( 'document_slug', 'docs' );

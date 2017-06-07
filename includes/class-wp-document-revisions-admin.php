@@ -9,7 +9,7 @@
  /**
   * The WP Admin backend object
   */
-class Document_Revisions_Admin {
+class WP_Document_Revisions_Admin {
 
 	/**
 	 * The parent WP Document Revisions instance
@@ -38,8 +38,9 @@ class Document_Revisions_Admin {
 
 		// create or store parent instance
 		if ( null === $instance ) {
-			self::$parent = new Document_Revisions;
-		} else { self::$parent = &$instance;
+			self::$parent = new WP_Document_Revisions;
+		} else {
+			self::$parent = &$instance;
 		}
 
 		// help and messages
@@ -108,15 +109,7 @@ class Document_Revisions_Admin {
 	 * @returns mixed the result of the function
 	 */
 	function __call( $function, $args ) {
-
-		if ( method_exists( self::$parent, $function ) ) {
-			return call_user_func_array( array( &self::$parent, $function ), $args );
-		} else {
-			// function does not exist, provide error info
-			$backtrace = debug_backtrace();
-			trigger_error( esc_html( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][ line ] . ' of ' . $backtrace[1][ file ] ), E_USER_ERROR );
-			die();
-		}
+		return call_user_func_array( array( &self::$parent, $function ), $args );
 	}
 
 
@@ -128,7 +121,7 @@ class Document_Revisions_Admin {
 	 * @returns mixed the property's value
 	 */
 	function __get( $name ) {
-		return Document_Revisions::$$name;
+		return WP_Document_Revisions::$$name;
 	}
 
 
@@ -143,15 +136,21 @@ class Document_Revisions_Admin {
 		global $post, $post_id;
 
 		$messages['document'] = array(
+		// translators: %s is the download link
 			1 => sprintf( __( 'Document updated. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink( $post_id ) ) ),
 			2 => __( 'Custom field updated.', 'wp-document-revisions' ),
 			3 => __( 'Custom field deleted.', 'wp-document-revisions' ),
 			4 => __( 'Document updated.', 'wp-document-revisions' ),
+		// translators: %s is the revision ID
 			5 => isset( $_GET['revision'] ) ? sprintf( __( 'Document restored to revision from %s', 'wp-document-revisions' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+		// translators: %s is the download link
 			6 => sprintf( __( 'Document published. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink( $post_id ) ) ),
 			7 => __( 'Document saved.', 'wp-document-revisions' ),
+		// translators: %s is the download link
 			8 => sprintf( __( 'Document submitted. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
+		// translators: %1$s is the date, %2$s is the preview link
 			9 => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), date_i18n( sprintf( _x( '%1$s @ %2$s', '%1$s: date; %2$s: time', 'wp-document-revision' ), get_option( 'date_format' ), get_option( 'time_format' ) ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_id ) ) ),
+		// translators: %s is the link to download the document
 			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
 		);
 
@@ -376,7 +375,9 @@ class Document_Revisions_Admin {
 	?>
 		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content ); ?>" />
 		<?php
-		if ( $lock_holder = $this->get_document_lock( $post ) ) { ?>
+		$lock_holder = $this->get_document_lock( $post );
+		if ( $lock_holder ) { ?>
+		<?php // translators: %s is the name of the locking user ?>
 			<div id="lock_override" class="hide-if-no-js"><?php printf( esc_html__( '%s has prevented other users from making changes.', 'wp-document-revisions' ), esc_html( $lock_holder ) ); ?>
 			<?php
       // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -388,7 +389,8 @@ class Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<?php if ( $latest_version = $this->get_latest_revision( $post->ID ) && apply_filters( 'document_revisions_enable_webdav', true ) ) { ?>
+		<?php $latest_version = $this->get_latest_revision( $post->ID ) ?>
+			<?php if ( $latest_version && apply_filters( 'document_revisions_enable_webdav', true ) ) { ?>
 			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
 			<a id="edit-desktop-button" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
 				<?php esc_html_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
@@ -462,7 +464,9 @@ class Document_Revisions_Admin {
 				$fno = pathinfo( $fn );
 				$info = pathinfo( get_permalink( $revision->ID ) );
 				$fn = $info['dirname'] . '/' . $info['filename'] . '.' . $fno['extension'];
-			} else { $fn = get_permalink( $revision->ID ); }
+			} else {
+				$fn = get_permalink( $revision->ID );
+			}
 ?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_date ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_date ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_date ), current_time( 'timestamp' ) ) ); ?></a></td>
@@ -1031,7 +1035,6 @@ class Document_Revisions_Admin {
 		// get the rest of the columns
 		$output = array_merge( $output, array_slice( $defaults, 2 ) );
 
-		// return
 		return $output;
 	}
 
@@ -1080,7 +1083,6 @@ class Document_Revisions_Admin {
 		// get the rest of the columns
 		$output = array_merge( $output, array_slice( $defaults, 2 ) );
 
-		// return
 		return $output;
 	}
 
@@ -1098,7 +1100,8 @@ class Document_Revisions_Admin {
 		if ( 'currently_editing' === $column_name && $this->verify_post_type( $post_id ) ) {
 
 			// output will be display name, if any
-			if ( $lock = $this->get_document_lock( $post_id ) ) {
+			$lock = $this->get_document_lock( $post_id );
+			if ( $lock ) {
 				echo esc_html( $lock );
 			}
 		}
@@ -1151,7 +1154,9 @@ class Document_Revisions_Admin {
 		}
 
 		// verify nonce
-		check_admin_referer( 'wp-document-revisions', 'workflow_state_nonce' );
+		if ( ! isset( $_POST['workflow_state_nonce'] ) || ! wp_verify_nonce( $_POST['workflow_state_nonce'], 'wp-document-revisions' ) ) {
+			return;
+		}
 
 		// check permissions
 		if ( ! current_user_can( 'edit_post', $doc_id ) ) {
@@ -1226,15 +1231,22 @@ class Document_Revisions_Admin {
 			'postDesktopNotice'    => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
 			'desktopEditRuntimeError' => '<div id="message" class="error" style="display:none"><p>' . __( 'There was an error launching your Office software. You can try to <a href="#" onClick="location.reload();">reload this page</a> to see if this fixes the issue, or use the <strong>Upload</strong> option.', 'wp-document-revisions' ) . '</p></div>',
 			'desktopEditNotSupportedError' => '<div id="message" class="error" style="display:none"><p>' . __( 'Sorry, desktop editing not supported by this browser or your current Office software. Please use the <strong>Upload</strong> option.', 'wp-document-revisions' ) . '</p></div>',
+		// translators: %s is the title of the document
 			'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
 			'lostLockNoticeLogo'  => admin_url( 'images/logo.gif' ),
+		// translators: %d is the numeric minutes, when singular
 			'minute'              => __( '%d mins', 'wp-document-revisions' ),
+		// translators: %d is the numeric minutes, when plural
 			'minutes'             => __( '%d mins', 'wp-document-revisions' ),
+		// translators: %d is the numeric hour, when singular
 			'hour'                => __( '%d hour', 'wp-document-revisions' ),
+		// translators: %d is the numeric hour, when plural
 			'hours'               => __( '%d hours', 'wp-document-revisions' ),
+		// translators: %d is the numeric day, when singular
 			'day'                 => __( '%d day', 'wp-document-revisions' ),
+		// translators: %d is the numeric days, when plural
 			'days'                => __( '%d days', 'wp-document-revisions' ),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
 		'nonce'               => wp_create_nonce( 'wp-document-revisions' ),

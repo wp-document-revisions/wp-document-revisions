@@ -36,7 +36,7 @@ echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_cha
 	<sy:updatePeriod><?php echo ent2ncr( esc_html( apply_filters( 'rss_update_period', 'hourly' ) ) ); ?></sy:updatePeriod>
 	<sy:updateFrequency><?php echo ent2ncr( esc_html( apply_filters( 'rss_update_frequency', '1' ) ) ); ?></sy:updateFrequency>
 	<?php do_action( 'rss2_head' );
-	while ( $rev_query->have_posts() ) : $rev_query->the_post();
+	while ( $rev_query && $rev_query->have_posts() ) : $rev_query->the_post();
 		?>	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>

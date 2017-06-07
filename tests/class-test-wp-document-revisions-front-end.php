@@ -9,7 +9,7 @@
 /**
  * Front end tests
  */
-class WP_Test_Document_Front_End extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 
 	/**
@@ -47,7 +47,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_revisions_shortcode_unauthed() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
@@ -61,7 +61,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_revisions_shortcode() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
@@ -79,7 +79,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_revision_shortcode_limit() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
@@ -97,7 +97,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_document_shortcode() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 
 		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions
 		wp_publish_post( $doc_id );
@@ -113,7 +113,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_document_shortcode_wfs_filter() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 
 		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions
 		wp_publish_post( $doc_id );
@@ -139,7 +139,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_document_shortcode_post_meta_filter() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $doc_id );
 
@@ -160,7 +160,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_get_documents() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 
 		$doc_id = $tdr->test_revise_document(); // add a doc
 		wp_publish_post( $doc_id );
@@ -178,7 +178,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_get_documents_returns_attachments() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $doc_id );
 
@@ -195,7 +195,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 */
 	function test_get_documents_filter() {
 
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 
 		$tdr->test_add_document(); // add a doc
 		$doc_id = $tdr->test_add_document(); // add another doc
@@ -217,7 +217,7 @@ class WP_Test_Document_Front_End extends WP_UnitTestCase {
 	 * Tests the get_revisions function
 	 */
 	function test_get_document_revisions() {
-		$tdr = new WP_Test_Document_Revisions();
+		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document(); // add a doc
 		$this->assertCount( 2, get_document_revisions( $doc_id ) );
 	}

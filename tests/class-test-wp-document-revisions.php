@@ -9,7 +9,7 @@
 /**
  * Main WP Document Revisions tests
  */
-class WP_Test_Document_Revisions extends WP_UnitTestCase {
+class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 	/**
 	 * Path to test file
@@ -62,7 +62,7 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_activated() {
 
-		$this->assertTrue( class_exists( 'Document_Revisions' ), 'Document_Revisions class not defined' );
+		$this->assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 
 	}
 
@@ -144,7 +144,6 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	 * @return int document id
 	 */
 	function test_add_document() {
-
 		global $wpdr;
 		global $wpdb;
 
@@ -166,7 +165,7 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 		) );
 
 		if ( empty( $terms ) ) {
-			WP_Test_Document_Revisions::setUp();
+			Test_WP_Document_Revisions::setUp();
 		}
 
 		$terms = wp_set_post_terms( $post_id, $terms[0]->slug, 'workflow_state' );
@@ -200,7 +199,7 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_revise_document() {
 
-		$doc_id = WP_Test_Document_Revisions::test_add_document();
+		$doc_id = Test_WP_Document_Revisions::test_add_document();
 
 		$attach_id = $this->spoof_upload( $doc_id, $this->test_file2 );
 

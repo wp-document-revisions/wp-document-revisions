@@ -9,7 +9,7 @@
 /**
  * WP Document Revisions Front End
  */
-class Document_Revisions_Front_End {
+class WP_Document_Revisions_Front_End {
 
 	/**
 	 * The Parent WP_Document_Revisions instance
@@ -46,8 +46,9 @@ class Document_Revisions_Front_End {
 
 		// create or store parent instance
 		if ( is_null( $instance ) ) {
-			self::$parent = new Document_Revisions;
-		} else { self::$parent = &$instance;
+			self::$parent = new WP_Document_Revisions;
+		} else {
+			self::$parent = &$instance;
 		}
 
 		add_shortcode( 'document_revisions', array( &$this, 'revisions_shortcode' ) );
@@ -65,15 +66,7 @@ class Document_Revisions_Front_End {
 	 * @returns mixed the result of the function
 	 */
 	function __call( $function, $args ) {
-
-		if ( method_exists( self::$parent, $function ) ) {
-			return call_user_func_array( array( &self::$parent, $function ), $args );
-		} else {
-			// function does not exist, provide error info
-			$backtrace = debug_backtrace();
-			trigger_error( esc_html( 'Call to undefined method ' . $function . ' on line ' . $backtrace[1][ line ] . ' of ' . $backtrace[1][ file ] ), E_USER_ERROR );
-			die();
-		}
+		return call_user_func_array( array( &self::$parent, $function ), $args );
 	}
 
 
@@ -305,6 +298,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				'post' => $document->ID,
 				'action' => 'edit',
 			), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
+			// translators: %1$s is the time ago in words, %2$s is the author
 			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 ?>
 			<li>
