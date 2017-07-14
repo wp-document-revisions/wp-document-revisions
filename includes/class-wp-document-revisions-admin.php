@@ -49,7 +49,6 @@ class WP_Document_Revisions_Admin {
 
 		// edit document screen
 		add_action( 'admin_head', array( &$this, 'make_private' ) );
-		add_filter( 'media_upload_form_url', array( &$this, 'post_upload_handler' ) );
 		add_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
@@ -729,37 +728,6 @@ class WP_Document_Revisions_Admin {
 		if ( 'media-upload.php' === $pagenow ) : ?>
 		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 		<?php endif;
-	}
-
-	/**
-	 * Hook to follow file uploads to automate attaching the document to the post
-	 *
-	 * @since 0.5
-	 * @param string $filter whatever we really should be filtering
-	 * @returns string the same stuff they gave us, like we were never here
-	 */
-	function post_upload_handler( $filter ) {
-
-		// if we're not posting this is the initial form load, kick
-		if ( ! $_POST ) {
-			return $filter;
-		}
-
-		if ( ! $this->verify_post_type( $_POST['post_id'] ) ) {
-			return $filter;
-		}
-
-		// get the object that is our new attachment
-		$latest = $this->get_latest_attachment( $_POST['post_id'] );
-
-		do_action( 'document_upload', $latest, $_POST['post_id'] );
-
-    // @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-		echo $this->post_upload_js( $latest->ID );
-
-		// should probably give this back...
-		return $filter;
-
 	}
 
 
