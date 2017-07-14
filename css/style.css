@@ -1,25 +1,57 @@
 /* Document icon */
-.icon32-posts-document{background-position: 0 0 !important;
-background-image:url('../img/icon32.png') !important;}
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min-moz-device-pixel-ratio: 1.5),
-only screen and (min-device-pixel-ratio: 1.5) {
-	.icon32-posts-document{
-	background-image:url( '../img/icon64.png' ) !important;
-background-size:32px 32px !important;}
+.icon32-posts-document {
+	background-position: 0 0 !important;
+	background-image: url('../img/icon32.png') !important;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+	.icon32-posts-document {
+		background-image: url("../img/icon64.png") !important;
+		background-size: 32px 32px !important;
+	}
 }
 
 /* General document edit styling */
-#postdiv {display:none;}
-#lock-notice {background-color: #D4E8BA; border-color: #92D43B; }
-#document-revisions {width: 100%; text-align: left;}
-#document-revisions td {padding: 5px 0 0 0;}
-#workflow-state select {margin-left: 25px; width: 150px;}
-#authordiv select {width: 150px;}
-#lock_override {float:right; text-align: right; margin-top: 10px; padding-bottom: 5px; }
-#revision-summary {display:none;}
-#autosave-alert {display:none;}
+#postdiv {
+	display: none;
+}
 
+#lock-notice {
+	background-color: #D4E8BA;
+	border-color: #92D43B;
+}
+
+#document-revisions {
+	width: 100%;
+	text-align: left;
+}
+
+#document-revisions td {
+	padding: 5px 0 0;
+}
+
+#workflow-state select, #authordiv select {
+	float: right;
+	margin-top: -2px;
+}
+
+#lock_override {
+	float: right;
+	text-align: right;
+	margin-top: 10px;
+	padding-bottom: 5px;
+}
+
+#revision-summary {
+	display: none;
+}
+
+#autosave-alert {
+	display: none;
+}
 /* When documents are locked, hide notices and publish button, etc. */
-.document-locked #publish,.document-locked .add_media,.document-locked #lock-notice {display: none;}
+.document-locked #lock-notice,
+.document-locked #publish,
+.document-locked .add_media {
+	display: none;
+}
