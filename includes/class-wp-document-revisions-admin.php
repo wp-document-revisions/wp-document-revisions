@@ -757,9 +757,6 @@ class WP_Document_Revisions_Admin {
     // @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 		echo $this->post_upload_js( $latest->ID );
 
-		// prevent hook from fireing a 2nd time
-		remove_filter( 'media_meta', array( &$this, 'media_meta_hack' ), 10, 1 );
-
 		// should probably give this back...
 		return $filter;
 
