@@ -168,11 +168,6 @@ class WP_Document_Revisions_Admin {
 
 		$screen = get_current_screen();
 
-		// the class WP_Screen won't exist pre-3.3
-		if ( ! class_exists( 'WP_Screen' ) || ! $screen || 'document' !== $screen->post_type ) {
-			return $screen;
-		}
-
 		// loop through each tab in the help array and add
 		foreach ( $this->get_help_text() as $title => $content ) {
 			$screen->add_help_tab( array(
@@ -230,12 +225,6 @@ class WP_Document_Revisions_Admin {
 
 		if ( $return_array ) {
 			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
-		}
-
-		// convert array into string for pre-3.3 compatability
-		$output = '';
-		foreach ( $help[ $screen->id ] as $label => $text ) {
-			$output .= "<h4>{$label}</h4>{$text}";
 		}
 
 		return apply_filters( 'document_help', $output, $screen );
