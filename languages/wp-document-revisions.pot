@@ -97,7 +97,7 @@ msgstr ""
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:220
+#: includes/class-wp-document-revisions-admin.php:220, includes/class-wp-document-revisions.php:421
 msgid "Documents"
 msgstr ""
 
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Document Settings"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:623, includes/class-wp-document-revisions-admin.php:651
+#: includes/class-wp-document-revisions-admin.php:623, includes/class-wp-document-revisions-admin.php:651, includes/class-wp-document-revisions.php:1531
 msgid "Not authorized"
 msgstr ""
 
@@ -315,4 +315,204 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1250
 msgid "%d days"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:122
+msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:254, includes/class-wp-document-revisions-front-end.php:257
+msgid "Recently Revised Documents"
+msgstr ""
+
+#. translators: %1$s is the time ago in words, %2$s is the author
+#: includes/class-wp-document-revisions-front-end.php:301
+msgid "%1$s ago by %2$s"
+msgstr ""
+
+#. translators: %1$s is the time ago in words, %2$s is the author
+#: includes/class-wp-document-revisions-front-end.php:301
+msgid "%1$s ago"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:328
+msgid "Title:"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:332
+msgid "Number of Posts:"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:310
+msgid "Revised by Desktop Edit"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:410
+msgctxt "post type general name"
+msgid "Documents"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:411
+msgctxt "post type singular name"
+msgid "Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:412
+msgctxt "document"
+msgid "Add Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:413
+msgid "Add New Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:414
+msgid "Edit Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:415
+msgid "New Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:416
+msgid "View Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:417
+msgid "Search Documents"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:418
+msgid "No documents found"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:419
+msgid "No documents found in Trash"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:422
+msgid "All Documents"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:456
+msgctxt "taxonomy general name"
+msgid "Workflow States"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:457
+msgctxt "taxonomy singular name"
+msgid "Workflow State"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:458
+msgid "Search Workflow States"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:459
+msgid "All Workflow States"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:460
+msgid "Parent Workflow State"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:461
+msgid "Parent Workflow State:"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:462
+msgid "Edit Workflow State"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:463
+msgid "Update Workflow State"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:464
+msgid "Add New Workflow State"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:465
+msgid "New Workflow State Name"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:466
+msgid "Workflow States"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:497
+msgid "In Progress"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:497
+msgid "Document is in the process of being written"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:498
+msgid "Initial Draft"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:498
+msgid "Document is being edited and refined"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:499
+msgid "Under Review"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:499
+msgid "Document is pending final review"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:500
+msgid "Final"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:500
+msgid "Document is in its final form"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:748, includes/class-wp-document-revisions.php:1047
+msgid "-revision-"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1022
+msgid "You are not authorized to access that file."
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1480
+msgid "Sorry, this is a private feed."
+msgstr ""
+
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title
+#: includes/class-wp-document-revisions.php:1579
+msgid "%1$s: %2$s has overridden your lock on %3$s"
+msgstr ""
+
+#. translators: %s is the user's name
+#: includes/class-wp-document-revisions.php:1584
+msgid "Dear %s:"
+msgstr ""
+
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
+#: includes/class-wp-document-revisions.php:1586
+msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1587
+msgid "Any changes you have made will be lost."
+msgstr ""
+
+#. translators: %s is the blog name
+#: includes/class-wp-document-revisions.php:1589
+msgid "- The %s Team"
+msgstr ""
+
+#. translators: %s is the document title
+#: includes/class-wp-document-revisions.php:1751
+msgid "%s - Latest Revision"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1768
+msgid "%1$s - Revision %2$d"
 msgstr ""
