@@ -1,4 +1,4 @@
 #!/bin/sh
 
-coffee --compile js/wp-document-revisions.coffee
+coffee --compile --print js/wp-document-revisions.coffee > js/wp-document-revisions.dev.js
 uglifyjs js/wp-document-revisions.dev.js --output js/wp-document-revisions.js
