@@ -510,32 +510,6 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 
 	}
 
-
-	/**
-	 * Defaults document visibility to private
-	 *
-	 * @since 0.5
-	 */
-	function make_private() {
-		global $post;
-
-		// verify that this is a new document
-		if ( ! isset( $post ) || ! $this->verify_post_type() || strlen( $post->post_content ) > 0 ) {
-			return;
-		}
-
-		$post_pre = clone $post;
-
-		if ( 'draft' === $post->post_status || 'auto-draft' === $post->post_status ) {
-			$post->post_status = 'private';
-		}
-
-		// @codingStandardsIgnoreLine WordPress.Variables.GlobalVariables.OverrideProhibited
-		$post = apply_filters( 'document_to_private', $post, $post_pre );
-
-	}
-
-
 	/**
 	 * Given a post object, returns all attached uploads
 	 *
