@@ -45,7 +45,6 @@ class WP_Document_Revisions_Admin {
 
 		// help and messages
 		add_filter( 'post_updated_messages', array( &$this, 'update_messages' ) );
-		add_action( 'contextual_help', array( &$this, 'add_help_text' ), 10, 3 ); // pre-3.3
 		add_action( 'admin_head', array( &$this, 'add_help_tab' ) ); // 3.3+
 
 		// edit document screen
@@ -242,29 +241,6 @@ class WP_Document_Revisions_Admin {
 		return apply_filters( 'document_help', $output, $screen );
 
 	}
-
-
-	/**
-	 * Registers help text with WP for pre-3.3 versions
-	 *
-	 * @uses get_hel_text()
-	 * @since 0.5
-	 * @param String $contextual_help the help text
-	 * @param String $screen_id The ID of the current screen
-	 * @param Object $screen The current screen object
-	 * @return String the modified help text
-	 */
-	function add_help_text( $contextual_help, $screen_id, $screen ) {
-
-		if ( isset( $screen->post_type ) && 'document' !== $screen->post_type ) {
-			return $contextual_help;
-		}
-
-		$contextual_help = $this->get_help_text( $screen, false );
-
-		return apply_filters( 'document_help', $contextual_help );
-	}
-
 
 	/**
 	 * Callback to manage metaboxes on edit page
