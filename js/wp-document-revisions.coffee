@@ -60,7 +60,7 @@ class WPDocumentRevisions
 
         @window.jQuery('#lock_override').before( wp_document_revisions.desktopEditRuntimeError ).prev().fadeIn()
         return @window.jQuery("#edit-desktop-button").remove()
-        
+
     else
       try
         ffPlugin = document.getElementById("winFirefoxPlugin")
@@ -90,6 +90,7 @@ class WPDocumentRevisions
     @$.post ajaxurl,
       action: 'override_lock'
       post_id: @$("#post_ID").val() || 0
+      nonce: wp_document_revisions.nonce
     , (data) ->
       if (data)
         @$('#lock_override').hide();

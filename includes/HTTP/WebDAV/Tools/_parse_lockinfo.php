@@ -19,16 +19,15 @@
 //
 // $Id: _parse_lockinfo.php,v 1.2 2004/01/05 12:32:40 hholzgra Exp $
 //
-
 /**
  * helper class for parsing LOCK request bodies
- * 
+ *
  * @package HTTP_WebDAV_Server
  * @author Hartmut Holzgraefe <hholzgra@php.net>
  * @version 0.99.1dev
  */
-class _parse_lockinfo 
-{
+class _parse_lockinfo {
+
 	/**
 	 * success state flag
 	 *
@@ -43,7 +42,7 @@ class _parse_lockinfo
 	 * @var string
 	 * @access public
 	 */
-	var $locktype = "";
+	var $locktype = '';
 
 	/**
 	 * lock scope, "shared" or "exclusive"
@@ -51,7 +50,7 @@ class _parse_lockinfo
 	 * @var string
 	 * @access public
 	 */
-	var $lockscope = "";
+	var $lockscope = '';
 
 	/**
 	 * lock owner information
@@ -59,7 +58,7 @@ class _parse_lockinfo
 	 * @var string
 	 * @access public
 	 */
-	var $owner = "";
+	var $owner = '';
 
 	/**
 	 * flag that is set during lock owner read
@@ -68,67 +67,66 @@ class _parse_lockinfo
 	 * @access private
 	 */
 	var $collect_owner = false;
-	
+
 	/**
 	 * constructor
 	 *
 	 * @param  string  path of stream to read
 	 * @access public
 	 */
-    function __construct($path)
-	{
+	function __construct( $path ) {
 		// we assume success unless problems occur
 		$this->success = true;
 
 		// remember if any input was parsed
 		$had_input = false;
-		
+
 		// open stream
-		$f_in = fopen($path, "r");
-		if (!$f_in) {
+		$f_in = fopen( $path, 'r' );
+		if ( ! $f_in ) {
 			$this->success = false;
 			return;
 		}
 
 		// create namespace aware parser
-		$xml_parser = xml_parser_create_ns("UTF-8", " ");
+		$xml_parser = xml_parser_create_ns( 'UTF-8', ' ' );
 
 		// set tag and data handlers
 		xml_set_element_handler($xml_parser,
-								array(&$this, "_startElement"),
-								array(&$this, "_endElement"));
+			array( &$this, '_startElement' ),
+		array( &$this, '_endElement' ));
 		xml_set_character_data_handler($xml_parser,
-									   array(&$this, "_data"));
+		array( &$this, '_data' ));
 
 		// we want a case sensitive parser
 		xml_parser_set_option($xml_parser,
-							  XML_OPTION_CASE_FOLDING, false);
+		XML_OPTION_CASE_FOLDING, false);
 
 		// parse input
-		while($this->success && !feof($f_in)) {
-			$line = fgets($f_in);
-			if (is_string($line)) {
+		while ( $this->success && ! feof( $f_in ) ) {
+			$line = fgets( $f_in );
+			if ( is_string( $line ) ) {
 				$had_input = true;
-				$this->success &= xml_parse($xml_parser, $line, false);
+				$this->success &= xml_parse( $xml_parser, $line, false );
 			}
-		} 
+		}
 
 		// finish parsing
-		if($had_input) {
-			$this->success &= xml_parse($xml_parser, "", true);
+		if ( $had_input ) {
+			$this->success &= xml_parse( $xml_parser, '', true );
 		}
 
 		// check if required tags where found
-		$this->success &= !empty($this->locktype);
-		$this->success &= !empty($this->lockscope);
+		$this->success &= ! empty( $this->locktype );
+		$this->success &= ! empty( $this->lockscope );
 
 		// free parser resource
-		xml_parser_free($xml_parser);
+		xml_parser_free( $xml_parser );
 
 		// close input stream
-		fclose($f_in);		
+		fclose( $f_in );
 	}
-    
+
 
 	/**
 	 * tag start handler
@@ -139,46 +137,44 @@ class _parse_lockinfo
 	 * @return void
 	 * @access private
 	 */
-    function _startElement($parser, $name, $attrs) 
-    {
+	function _startElement( $parser, $name, $attrs ) {
 		// namespace handling
-        if (strstr($name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-        } else {
-            $ns = "";
-            $tag = $name;
-        }
-		
-  
-        if ($this->collect_owner) {
+		if ( strstr( $name, ' ' ) ) {
+			list($ns, $tag) = explode( ' ', $name );
+		} else {
+			$ns = '';
+			$tag = $name;
+		}
+
+		if ( $this->collect_owner ) {
 			// everything within the <owner> tag needs to be collected
-            $ns_short = "";
-            $ns_attr = "";
-            if ($ns) {
-                if ($ns == "DAV:") {
-                    $ns_short = "D:";
-                } else {
-                    $ns_attr = " xmlns='$ns'";
-                }
-            }
-            $this->owner .= "<$ns_short$tag$ns_attr>";
-        } else if ($ns == "DAV:") {
+			$ns_short = '';
+			$ns_attr = '';
+			if ( $ns ) {
+				if ( $ns == 'DAV:' ) {
+					$ns_short = 'D:';
+				} else {
+					$ns_attr = " xmlns='$ns'";
+				}
+			}
+			$this->owner .= "<$ns_short$tag$ns_attr>";
+		} elseif ( $ns == 'DAV:' ) {
 			// parse only the essential tags
-            switch ($tag) {
-			case "write":
-				$this->locktype = $tag;
+			switch ( $tag ) {
+				case 'write':
+					$this->locktype = $tag;
 				break;
-			case "exclusive":
-			case "shared":
-				$this->lockscope = $tag;
+				case 'exclusive':
+				case 'shared':
+					$this->lockscope = $tag;
 				break;
-			case "owner":
-				$this->collect_owner = true;
+				case 'owner':
+					$this->collect_owner = true;
 				break;
-            }
-        }
-    }
-	
+			}
+		}
+	}
+
 	/**
 	 * data handler
 	 *
@@ -187,13 +183,12 @@ class _parse_lockinfo
 	 * @return void
 	 * @access private
 	 */
-    function _data($parser, $data) 
-    {
+	function _data( $parser, $data ) {
 		// only the <owner> tag has data content
-        if ($this->collect_owner) {
-            $this->owner .= $data;
-        }
-    }
+		if ( $this->collect_owner ) {
+			$this->owner .= $data;
+		}
+	}
 
 	/**
 	 * tag end handler
@@ -203,35 +198,34 @@ class _parse_lockinfo
 	 * @return void
 	 * @access private
 	 */
-    function _endElement($parser, $name) 
-    {
+	function _endElement( $parser, $name ) {
 		// namespace handling
-		if (strstr($name, " ")) {
-			list($ns, $tag) = explode(" ", $name);
+		if ( strstr( $name, ' ' ) ) {
+			list($ns, $tag) = explode( ' ', $name );
 		} else {
-			$ns = "";
+			$ns = '';
 			$tag = $name;
 		}
 
 		// <owner> finished?
-		if (($ns == "DAV:") && ($tag == "owner")) {
+		if ( ($ns == 'DAV:') && ($tag == 'owner') ) {
 			$this->collect_owner = false;
 		}
 
 		// within <owner> we have to collect everything
-		if ($this->collect_owner) {
-			$ns_short = "";
-			$ns_attr = "";
-			if ($ns) {
-				if ($ns == "DAV:") {
-                    $ns_short = "D:";
+		if ( $this->collect_owner ) {
+			$ns_short = '';
+			$ns_attr = '';
+			if ( $ns ) {
+				if ( $ns == 'DAV:' ) {
+					$ns_short = 'D:';
 				} else {
 					$ns_attr = " xmlns='$ns'";
 				}
 			}
 			$this->owner .= "</$ns_short$tag$ns_attr>";
 		}
-    }
+	}
 }
 
-?>
+

@@ -19,196 +19,192 @@
 //
 // $Id: _parse_proppatch.php,v 1.3 2004/01/05 12:41:34 hholzgra Exp $
 //
-
 /**
  * helper class for parsing PROPPATCH request bodies
- * 
+ *
  * @package HTTP_WebDAV_Server
  * @author Hartmut Holzgraefe <hholzgra@php.net>
  * @version 0.99.1dev
  */
-class _parse_proppatch 
-{
-    /**
-     *
-     * 
-     * @var
-     * @access
-     */
-    var $success;
+class _parse_proppatch {
 
-    /**
-     *
-     * 
-     * @var
-     * @access
-     */
-    var $props;
+	/**
+	 *
+	 *
+	 * @var
+	 * @access
+	 */
+	var $success;
 
-    /**
-     *
-     * 
-     * @var
-     * @access
-     */
-    var $depth;
+	/**
+	 *
+	 *
+	 * @var
+	 * @access
+	 */
+	var $props;
 
-    /**
-     *
-     * 
-     * @var
-     * @access
-     */
-    var $mode;
+	/**
+	 *
+	 *
+	 * @var
+	 * @access
+	 */
+	var $depth;
 
-    /**
-     *
-     * 
-     * @var
-     * @access
-     */
-    var $current;
+	/**
+	 *
+	 *
+	 * @var
+	 * @access
+	 */
+	var $mode;
 
-    /**
-     * constructor
-     * 
-     * @param  string  path of input stream 
-     * @access public
-     */
-    function __construct($path)
-    {
-        $this->success = true;
+	/**
+	 *
+	 *
+	 * @var
+	 * @access
+	 */
+	var $current;
 
-        $this->depth = 0;
-        $this->props = array();
-        $had_input = false;
+	/**
+	 * constructor
+	 *
+	 * @param  string  path of input stream
+	 * @access public
+	 */
+	function __construct( $path ) {
+		$this->success = true;
 
-        $f_in = fopen($path, "r");
-        if (!$f_in) {
-            $this->success = false;
-            return;
-        }
+		$this->depth = 0;
+		$this->props = array();
+		$had_input = false;
 
-        $xml_parser = xml_parser_create_ns("UTF-8", " ");
+		$f_in = fopen( $path, 'r' );
+		if ( ! $f_in ) {
+			$this->success = false;
+			return;
+		}
 
-        xml_set_element_handler($xml_parser,
-                                array(&$this, "_startElement"),
-                                array(&$this, "_endElement"));
+		$xml_parser = xml_parser_create_ns( 'UTF-8', ' ' );
 
-        xml_set_character_data_handler($xml_parser,
-                                       array(&$this, "_data"));
+		xml_set_element_handler($xml_parser,
+			array( &$this, '_startElement' ),
+		array( &$this, '_endElement' ));
 
-        xml_parser_set_option($xml_parser,
-                              XML_OPTION_CASE_FOLDING, false);
+		xml_set_character_data_handler($xml_parser,
+		array( &$this, '_data' ));
 
-        while($this->success && !feof($f_in)) {
-            $line = fgets($f_in);
-            if (is_string($line)) {
-                $had_input = true;
-                $this->success &= xml_parse($xml_parser, $line, false);
-            }
-        } 
-        
-        if($had_input) {
-            $this->success &= xml_parse($xml_parser, "", true);
-        }
+		xml_parser_set_option($xml_parser,
+		XML_OPTION_CASE_FOLDING, false);
 
-        xml_parser_free($xml_parser);
+		while ( $this->success && ! feof( $f_in ) ) {
+			$line = fgets( $f_in );
+			if ( is_string( $line ) ) {
+				$had_input = true;
+				$this->success &= xml_parse( $xml_parser, $line, false );
+			}
+		}
 
-        fclose($f_in);
-    }
+		if ( $had_input ) {
+			$this->success &= xml_parse( $xml_parser, '', true );
+		}
 
-    /**
-     * tag start handler
-     *
-     * @param  resource  parser
-     * @param  string    tag name
-     * @param  array     tag attributes
-     * @return void
-     * @access private
-     */
-    function _startElement($parser, $name, $attrs) 
-    {
-        if (strstr($name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-            if ($ns == "")
-                $this->success = false;
-        } else {
-            $ns = "";
-            $tag = $name;
-        }
+		xml_parser_free( $xml_parser );
 
-        if ($this->depth == 1) {
-            $this->mode = $tag;
-        } 
+		fclose( $f_in );
+	}
 
-        if ($this->depth == 3) {
-            $prop = array("name" => $tag);
-            $this->current = array("name" => $tag, "ns" => $ns, "status"=> 200);
-            if ($this->mode == "set") {
-                $this->current["val"] = "";     // default set val
-            }
-        }
+	/**
+	 * tag start handler
+	 *
+	 * @param  resource  parser
+	 * @param  string    tag name
+	 * @param  array     tag attributes
+	 * @return void
+	 * @access private
+	 */
+	function _startElement( $parser, $name, $attrs ) {
+		if ( strstr( $name, ' ' ) ) {
+			list($ns, $tag) = explode( ' ', $name );
+			if ( $ns == '' ) {
+				$this->success = false;
+			}
+		} else {
+			$ns = '';
+			$tag = $name;
+		}
 
-        if ($this->depth >= 4) {
-            $this->current["val"] .= "<$tag";
-            foreach ($attr as $key => $val) {
-                $this->current["val"] .= ' '.$key.'="'.str_replace('"','&quot;', $val).'"';
-            }
-            $this->current["val"] .= ">";
-        }
+		if ( $this->depth == 1 ) {
+			$this->mode = $tag;
+		}
 
-        
+		if ( $this->depth == 3 ) {
+			$prop = array( 'name' => $tag );
+			$this->current = array( 'name' => $tag, 'ns' => $ns, 'status' => 200 );
+			if ( $this->mode == 'set' ) {
+				$this->current['val'] = '';     // default set val
+			}
+		}
 
-        $this->depth++;
-    }
+		if ( $this->depth >= 4 ) {
+			$this->current['val'] .= "<$tag";
+			foreach ( $attr as $key => $val ) {
+				$this->current['val'] .= ' ' . $key . '="' . str_replace( '"','&quot;', $val ) . '"';
+			}
+			$this->current['val'] .= '>';
+		}
 
-    /**
-     * tag end handler
-     *
-     * @param  resource  parser
-     * @param  string    tag name
-     * @return void
-     * @access private
-     */
-    function _endElement($parser, $name) 
-    {
-        if (strstr($name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-            if ($ns == "")
-                $this->success = false;
-        } else {
-            $ns = "";
-            $tag = $name;
-        }
+		$this->depth++;
+	}
 
-        $this->depth--;
+	/**
+	 * tag end handler
+	 *
+	 * @param  resource  parser
+	 * @param  string    tag name
+	 * @return void
+	 * @access private
+	 */
+	function _endElement( $parser, $name ) {
+		if ( strstr( $name, ' ' ) ) {
+			list($ns, $tag) = explode( ' ', $name );
+			if ( $ns == '' ) {
+				$this->success = false;
+			}
+		} else {
+			$ns = '';
+			$tag = $name;
+		}
 
-        if ($this->depth >= 4) {
-            $this->current["val"] .= "</$tag>";
-        }
+		$this->depth--;
 
-        if ($this->depth == 3) {
-            if (isset($this->current)) {
-                $this->props[] = $this->current;
-                unset($this->current);
-            }
-        }
-    }
+		if ( $this->depth >= 4 ) {
+			$this->current['val'] .= "</$tag>";
+		}
 
-    /**
-     * input data handler
-     *
-     * @param  resource  parser
-     * @param  string    data
-     * @return void
-     * @access private
-     */
-    function _data($parser, $data) {
-        if (isset($this->current)) {
-            $this->current["val"] .= $data;
-        }
-    }
+		if ( $this->depth == 3 ) {
+			if ( isset( $this->current ) ) {
+				$this->props[] = $this->current;
+				unset( $this->current );
+			}
+		}
+	}
+
+	/**
+	 * input data handler
+	 *
+	 * @param  resource  parser
+	 * @param  string    data
+	 * @return void
+	 * @access private
+	 */
+	function _data( $parser, $data ) {
+		if ( isset( $this->current ) ) {
+			$this->current['val'] .= $data;
+		}
+	}
 }
 
-?>
+

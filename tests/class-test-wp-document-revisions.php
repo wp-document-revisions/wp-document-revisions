@@ -6,9 +6,23 @@
  * @package WP Document Revisions
  */
 
-class WP_Test_Document_Revisions extends WP_UnitTestCase {
+/**
+ * Main WP Document Revisions tests
+ */
+class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
+	/**
+	 * Path to test file
+	 *
+	 * @var $test_file
+	 */
 	public $test_file = 'documents/test-file.txt';
+
+	/**
+	 * Path to another test file
+	 *
+	 * @var $test-file2
+	 */
 	public $test_file2 = 'documents/test-file-2.txt';
 
 	/**
@@ -20,9 +34,12 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 		parent::setUp();
 
-		//init workflow states
-		foreach ( get_terms( 'workflow_state', array( 'hide_empty' => false ) ) as $term )
+		// init workflow states
+		foreach ( get_terms( 'workflow_state', array(
+			'hide_empty' => false,
+		) ) as $term ) {
 			wp_delete_term( $term->term_id, 'workflow_state' );
+		}
 
 		wp_cache_flush();
 
@@ -45,7 +62,7 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_activated() {
 
-		$this->assertTrue( class_exists( 'Document_Revisions' ), 'Document_Revisions class not defined' );
+		$this->assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 
 	}
 
@@ -65,7 +82,9 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_workflow_states_exist() {
 
-		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
+		$terms = get_terms( 'workflow_state', array(
+			'hide_empty' => false,
+		) );
 		$this->assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
 		$this->assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
 
@@ -74,15 +93,16 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 	/**
 	 * Pretend to upload a file
-	 * @param int $postID the parent post
+	 *
+	 * @param int    $post_id the parent post
 	 * @param string $file relative URL to file to "upload"
 	 * @return int the attachment ID
 	 */
-	function spoof_upload( $postID, $file ) {
+	function spoof_upload( $post_id, $file ) {
 
 		global $wpdr;
 		$file = dirname( __FILE__ ) . '/' . $file;
-		$_POST['post_id'] = $postID;
+		$_POST['post_id'] = $post_id;
 		$upload_dir = wp_upload_dir();
 
 		$wp_filetype = wp_check_filetype( basename( $file ), null );
@@ -98,7 +118,7 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 			'post_mime_type' => $wp_filetype['type'],
 			'post_title' => preg_replace( '/\.[^.]+$/', '', basename( $file ) ),
 			'post_content' => '',
-			'post_status' => 'inherit'
+			'post_status' => 'inherit',
 		);
 
 		// If the directory is not available, the upload does not succeed.
@@ -106,10 +126,10 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 			return false;
 		}
 
-		//copy temp test file into wp-uploads
+		// copy temp test file into wp-uploads
 		copy( $file, $upload_dir['path'] . '/' . $file_array['name'] );
 
-		$attach_id = wp_insert_attachment( $attachment, $upload_dir['path'] . '/' . $file_array['name'], $postID );
+		$attach_id = wp_insert_attachment( $attachment, $upload_dir['path'] . '/' . $file_array['name'], $post_id );
 
 		$this->assertGreaterThan( 0, $attach_id, 'Cannot attach file to document' );
 
@@ -120,14 +140,14 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 	/**
 	 * Verify we can add documents
+	 *
 	 * @return int document id
 	 */
 	function test_add_document() {
-
 		global $wpdr;
 		global $wpdb;
 
-		$post = array(
+		$doc = array(
 			'post_title' => 'Test Document - ' . time(),
 			'post_status' => 'private',
 			'post_content' => '',
@@ -135,48 +155,60 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 			'post_type' => 'document',
 		);
 
-		//insert post
-		$postID = wp_insert_post( $post, true );
-		$this->assertFalse( is_wp_error( $postID ), 'Failed inserting new document' );
+		// insert post
+		$post_id = wp_insert_post( $doc, true );
+		$this->assertFalse( is_wp_error( $post_id ), 'Failed inserting new document' );
 
-		//assign workflow state
-		$terms = get_terms( 'workflow_state', array( 'hide_empty' => false ) );
+		// assign workflow state
+		$terms = get_terms( 'workflow_state', array(
+			'hide_empty' => false,
+		) );
 
-		if ( empty( $terms ) )
-			WP_Test_Document_Revisions::setUp();
+		if ( empty( $terms ) ) {
+			Test_WP_Document_Revisions::setUp();
+		}
 
-		$terms = wp_set_post_terms( $postID, $terms[0]->slug, 'workflow_state' );
+		$terms = wp_set_post_terms( $post_id, $terms[0]->slug, 'workflow_state' );
 		$this->assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
-		$attach_id = $this->spoof_upload( $postID, $this->test_file );
+		$attach_id = $this->spoof_upload( $post_id, $this->test_file );
 
-		//store attachment ID as post content without creating a revision
-		$result = $wpdb->update( $wpdb->posts, array( 'post_content' => $attach_id ), array( 'ID' => $postID ) );
+		// store attachment ID as post content without creating a revision
+		$result = $wpdb->update( $wpdb->posts, array(
+			'post_content' => $attach_id,
+			), array(
+			'ID' => $post_id,
+		) );
 		wp_cache_flush();
 
 		$this->assertGreaterThan( 0, $result, 'Cannot update document post_content with attachment ID' );
 
-		$this->assertEquals( $attach_id, $wpdr->get_latest_revision( $postID )->post_content );
+		$this->assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
 
-		$this->verify_attachment_matches_file( $postID, $this->test_file, 'Initial Upload' );
+		$this->verify_attachment_matches_file( $post_id, $this->test_file, 'Initial Upload' );
 
-		return $postID;
+		return $post_id;
 
 	}
 
 
 	/**
 	 * Try to revise an existing document (creates that document first)
+	 *
 	 * @return int the revision ID
 	 */
 	function test_revise_document() {
 
-		$docID = WP_Test_Document_Revisions::test_add_document();
+		$doc_id = Test_WP_Document_Revisions::test_add_document();
 
-		$attach_id = $this->spoof_upload( $docID, $this->test_file2 );
+		$attach_id = $this->spoof_upload( $doc_id, $this->test_file2 );
 
-		$post = array( 'ID' => $docID, 'post_content' => $attach_id, 'post_excerpt' => 'revised' );
-		$result = wp_update_post( $post );
+		$doc = array(
+			'ID' => $doc_id,
+			'post_content' => $attach_id,
+			'post_excerpt' => 'revised',
+		);
+		$result = wp_update_post( $doc );
 		wp_cache_flush();
 
 		$this->assertGreaterThan( 0, $result, 'Cannot update document post_content with revised attachment ID' );
@@ -189,19 +221,21 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 	/**
 	 * Make sure a file is properly uploaded and attached
-	 * @param int $postID the ID of the parent post
+	 *
+	 * @param int    $post_id the ID of the parent post
 	 * @param string $file relative url to file
 	 * @param string $msg message to display on failure
 	 */
-	function verify_attachment_matches_file( $postID = null, $file = null, $msg = null ) {
+	function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
-		if ( !$postID )
+		if ( ! $post_id ) {
 			return;
+		}
 
-		$post = get_post( $postID );
-		$attachment = get_attached_file( $post->post_content );
+		$doc = get_post( $post_id );
+		$attachment = get_attached_file( $doc->post_content );
 
-		$this->assertFileEquals( dirname( __FILE__ ) . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)");
+		$this->assertFileEquals( dirname( __FILE__ ) . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 
 	}
 
@@ -213,26 +247,26 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$docID = $this->test_revise_document();
+		$doc_id = $this->test_revise_document();
 
-		//grab an attachment
-		$attachments = $wpdr->get_attachments( $docID );
-		$attachment = end(  $attachments );
+		// grab an attachment
+		$attachments = $wpdr->get_attachments( $doc_id );
+		$attachment = end( $attachments );
 
-		//grab a revision
-		$revisions = $wpdr->get_revisions( $docID );
-		$revision = end(  $revisions );
+		// grab a revision
+		$revisions = $wpdr->get_revisions( $doc_id );
+		$revision = end( $revisions );
 
-		//get as postID
+		// get as postID
 		$this->assertCount( 2, $attachments, 'Bad attachment count via get_attachments as postID' );
 
-		//get as Object
-		$this->assertCount( 2, $wpdr->get_attachments( get_post( $docID ) ), 'Bad attachment count via get_attachments as Object' );
+		// get as Object
+		$this->assertCount( 2, $wpdr->get_attachments( get_post( $doc_id ) ), 'Bad attachment count via get_attachments as Object' );
 
-		//get as a revision
+		// get as a revision
 		$this->assertCount( 2, $wpdr->get_attachments( $revision->ID ), 'Bad attachment count via get_attachments as revisionID' );
 
-		//get as attachment
+		// get as attachment
 		$this->assertCount( 2, $wpdr->get_attachments( $attachment->ID ), 'Bad attachment count via get_attachments as attachmentID' );
 
 	}
@@ -245,16 +279,14 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$docID = $this->test_add_document();
+		$doc_id = $this->test_add_document();
 
-		//grab an attachment
-		$attachments = $wpdr->get_attachments( $docID );
-		$attachment = end(  $attachments );
-
-		$post = get_post( $docID );
+		// grab an attachment
+		$attachments = $wpdr->get_attachments( $doc_id );
+		$attachment = end( $attachments );
 
 		global $wpdr;
-		$this->assertEquals( '.txt', $wpdr->get_file_type( $docID ), 'Didn\'t detect filetype via document ID' );
+		$this->assertEquals( '.txt', $wpdr->get_file_type( $doc_id ), 'Didn\'t detect filetype via document ID' );
 		$this->assertEquals( '.txt', $wpdr->get_file_type( $attachment->ID ), 'Didn\'t detect filetype via attachment ID' );
 
 	}
@@ -266,9 +298,9 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	function test_get_revisions() {
 		global $wpdr;
 
-		$docID = $this->test_revise_document();
+		$doc_id = $this->test_revise_document();
 
-		$this->assertEquals( 2, count( $wpdr->get_revisions( $docID ) ) );
+		$this->assertEquals( 2, count( $wpdr->get_revisions( $doc_id ) ) );
 
 	}
 
@@ -280,11 +312,11 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$docID = $this->test_revise_document();
-		$revisions = $wpdr->get_revisions( $docID );
-		$last = end(  $revisions );
+		$doc_id = $this->test_revise_document();
+		$revisions = $wpdr->get_revisions( $doc_id );
+		$last = end( $revisions );
 		$this->assertEquals( 1, $wpdr->get_revision_number( $last->ID ) );
-		$this->assertEquals( $last->ID, $wpdr->get_revision_id( 1, $docID ) );
+		$this->assertEquals( $last->ID, $wpdr->get_revision_id( 1, $doc_id ) );
 
 	}
 
@@ -295,26 +327,29 @@ class WP_Test_Document_Revisions extends WP_UnitTestCase {
 	function test_verify_post_type() {
 		global $wpdr;
 
-		$docID = $this->test_add_document();
+		$doc_id = $this->test_add_document();
 
 		$_GET['post_type'] = 'document';
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via explicit' );
 		unset( $_GET['post_type'] );
 
-		$_GET['post'] = $docID;
+		$_GET['post'] = $doc_id;
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via get' );
 		unset( $_GET['post'] );
 
-		$_REQUEST['post_id'] = $docID;
+		$_REQUEST['post_id'] = $doc_id;
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via request (post_id)' );
 		unset( $_REQUEST['post_id'] );
 
+		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
 		global $post;
-		$post = get_post( $docID );
+		$post = get_post( $doc_id );
+		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
+
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via global $post' );
 		unset( $post );
 
-		$this->assertTrue( $wpdr->verify_post_type( $docID ) );
+		$this->assertTrue( $wpdr->verify_post_type( $doc_id ) );
 	}
 
 }
