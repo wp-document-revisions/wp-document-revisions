@@ -160,7 +160,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.1
 	 * @uses get_help_text()
-	 * @return unknown
+	 * @return void
 	 */
 	function add_help_tab() {
 
