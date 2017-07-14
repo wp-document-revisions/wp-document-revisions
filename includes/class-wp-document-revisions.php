@@ -56,7 +56,6 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		add_action( 'init', array( &$this, 'register_cpt' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 15 ); // note: priority must be > 11 to allow for edit flow support
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		register_activation_hook( __FILE__, array( &$this, 'add_caps' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
 
@@ -71,7 +70,6 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
-		register_activation_hook( __FILE__, 'flush_rewrite_rules' );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2 );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
@@ -108,6 +106,17 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 
 	}
 
+	/**
+	 * Callback called when the plugin is initially activated
+	 *
+	 * Registers custom capabilities and flushes rewrite rules
+	 *
+	 * @return void
+	 */
+	function activation_hook() {
+		$this->add_caps();
+		flush_rewrite_rules();
+	}
 
 	/**
 	 *
@@ -428,7 +437,7 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 			'menu_position'        => null,
 			'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
 			'supports'             => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' ),
-			'menu_icon'            => plugins_url( '/img/menu-icon.png', __FILE__ ),
+			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
 
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
@@ -1621,7 +1630,6 @@ class WP_Document_Revisions extends HTTP_WebDAV_Server {
 	 * @since 1.0
 	 */
 	function add_caps() {
-
 		global $wp_roles;
 		if ( ! isset( $wp_roles ) ) {
 			// @codingStandardsIgnoreLine

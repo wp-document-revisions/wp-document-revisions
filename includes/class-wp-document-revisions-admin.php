@@ -590,7 +590,7 @@ class WP_Document_Revisions_Admin {
 		<h3><?php esc_html_e( 'Document Settings', 'wp-document-revisions' ); ?></h3>
 		<table id="document_settings" class="form-table">
 			<tr valign="top">
-				<th scope="row"><?php _esc_html_e( 'Document Upload Directory', 'wp-document-revisions' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Document Upload Directory', 'wp-document-revisions' ); ?></th>
 				<td>
 					<?php $this->upload_location_cb(); ?>
 					<?php wp_nonce_field( 'network_document_upload_location', 'document_upload_location_nonce' ); ?>
@@ -703,9 +703,9 @@ class WP_Document_Revisions_Admin {
 	function upload_location_cb() {
 	?>
 		<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="large-text code" /><br />
-		<span class="description"><?php _esc_html_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
+		<span class="description"><?php esc_html_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
 		<?php if ( is_multisite() ) : ?>
-		<span class="description"><?php _esc_html_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' ); ?></span>
+		<span class="description"><?php esc_html_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' ); ?></span>
 		<?php endif;
 	}
 
@@ -715,8 +715,8 @@ class WP_Document_Revisions_Admin {
 	 */
 	function document_slug_cb() {
 	?>
-	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( date( 'Y' ) ); ?>/<?php echo esc_html( date( 'm' ) ); ?>/<?php _esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
-	<span class="description"><?php _esc_html_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' ); ?></span>
+	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( date( 'Y' ) ); ?>/<?php echo esc_html( date( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
+	<span class="description"><?php esc_html_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' ); ?></span>
 	<?php }
 
 
@@ -854,7 +854,7 @@ class WP_Document_Revisions_Admin {
 
 		// if there is no page var, this is a new document, no need to warn
 		if ( isset( $_GET['post'] ) ) : ?>
-		 <div class="error" id="lock-notice"><p><?php _sc_html_e( 'You currently have this file checked out. No other user can edit this document so long as you remain on this page.', 'wp-document-revisions' ); ?></p></div>
+		 <div class="error" id="lock-notice"><p><?php esc_html_e( 'You currently have this file checked out. No other user can edit this document so long as you remain on this page.', 'wp-document-revisions' ); ?></p></div>
 			<?php endif;
 	}
 
@@ -868,13 +868,13 @@ class WP_Document_Revisions_Admin {
 		$key = $this->get_feed_key();
 ?>
 		<div class="tool-box">
-		<h2><?php _esc_html_e( 'Feed Privacy', 'wp-document-revisions' ); ?></h2>
+		<h2><?php esc_html_e( 'Feed Privacy', 'wp-document-revisions' ); ?></h2>
 		<table class="form-table">
 			<tr id="document_revisions_feed_key">
-				<th><label for="feed_key"><?php _esc_html_e( 'Secret Feed Key', 'wp-document-revisions' ); ?></label></th>
+				<th><label for="feed_key"><?php esc_html_e( 'Secret Feed Key', 'wp-document-revisions' ); ?></label></th>
 				<td>
 					<input type="text" value="<?php echo esc_attr( $key ); ?>" class="regular-text" readonly="readonly" /><br />
-					<span class="description"><?php _esc_html_e( 'To protect your privacy, you need to append a key to feeds for use in feed readers.', 'wp-document-revisions' ); ?></span><br />
+					<span class="description"><?php esc_html_e( 'To protect your privacy, you need to append a key to feeds for use in feed readers.', 'wp-document-revisions' ); ?></span><br />
 					<?php wp_nonce_field( 'generate-new-feed-key', '_document_revisions_nonce' ); ?>
 					<?php submit_button( __( 'Generate New Key', 'wp-document-revisions' ), 'secondary', 'generate-new-feed-key', false ); ?>
 
@@ -1122,7 +1122,7 @@ class WP_Document_Revisions_Admin {
 			'hide_empty' => false,
 		) );
 ?>
-		<label for="workflow_state"><?php _esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
+		<label for="workflow_state"><?php esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
 		<select name="workflow_state" id="workflow_state">
 			<option></option>
 			<?php foreach ( $states as $state ) { ?>
@@ -1190,8 +1190,8 @@ class WP_Document_Revisions_Admin {
 	function post_author_meta_box( $post ) {
 		global $user_id;
 ?>
-		<label class="screen-reader-text" for="post_author_override"><?php _scape_html_e( 'Owner', 'wp-document-revisions' ); ?></label>
-		<?php escape_html_e( 'Document Owner', 'wp-document-revisions' ); ?>:
+		<label class="screen-reader-text" for="post_author_override"><?php esc_html_e( 'Owner', 'wp-document-revisions' ); ?></label>
+		<?php esc_html_e( 'Document Owner', 'wp-document-revisions' ); ?>:
 		<?php
 		wp_dropdown_users( array(
 				'who'              => apply_filters( 'document_revisions_owners', '' ),
