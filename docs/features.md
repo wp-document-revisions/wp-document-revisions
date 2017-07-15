@@ -1,6 +1,6 @@
 ## Features
 
-[![WP Document Revisions](https://img.youtube.com/vi/VpsTNSiJKis/0.jpg)](https://www.youtube.com/watch?v=VpsTNSiJKis)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VpsTNSiJKis" frameborder="0" allowfullscreen></iframe>
 
 ### Overview
 

@@ -18,6 +18,8 @@ See [**the full list of features**](features.md) for more information.
 
 ## Documentation
 
+See [the full documentation](https://ben.balter.com/wp-document-revisions)
+
 ### Learn
 
 * [Features and Overview](features.md)
