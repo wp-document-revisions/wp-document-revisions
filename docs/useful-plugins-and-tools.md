@@ -1,4 +1,4 @@
-## Useful plugins and tools ##
+## Useful plugins and tools
 
 * [Members](http://wordpress.org/extend/plugins/members/)
 * [Edit Flow](http://editflow.org)
