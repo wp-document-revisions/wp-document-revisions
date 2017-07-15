@@ -1,3 +1,5 @@
+## Where to get help or report an issue
+
 There are various resources available, depending on the type of help you're looking for:*
 
 * For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
