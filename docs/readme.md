@@ -13,5 +13,4 @@
 ## Get Involved ##
 
 * [How to Contribute](how-to-contribute.md)
-* [Donate](donate.md)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
