@@ -1,3 +1,7 @@
 permalink: pretty
 title: WP Document Revisions
-description: A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow. 
+description: A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
+include:
+  - CONTRIBUTING.md
+  - README.md
+  - SUPPORT.md
