@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '2.2.0';
+	public $version = '3.0.0';
 
 	/**
 	 * Initiates an instance of the class and adds hooks
