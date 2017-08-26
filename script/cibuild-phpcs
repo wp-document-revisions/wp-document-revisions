@@ -5,4 +5,4 @@ set -e
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
 phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
-phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php
+phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php -v

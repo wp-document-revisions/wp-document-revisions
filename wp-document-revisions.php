@@ -45,7 +45,7 @@ require_once dirname( __FILE__ ) . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
 global $wpdr;
-$wpdr = new WP_Document_Revisions;
+$wpdr = new WP_Document_Revisions();
 include_once dirname( __FILE__ ) . '/includes/template-functions.php';
 
 // Activation hooks must be relative to the main plugin file

@@ -209,13 +209,17 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
-		register_taxonomy( 'workflow_state', array( 'document' ), apply_filters( 'document_revisions_ct', array(
+		register_taxonomy(
+			'workflow_state', array( 'document' ), apply_filters(
+				'document_revisions_ct', array(
 					'hierarchical'          => false,
 					'labels'                => $labels,
 					'show_ui'               => true,
 					'rewrite'               => false,
 					'update_count_callback' => array( &$this, 'term_count_cb' ),
-		) ) );
+				)
+			)
+		);
 
 	}
 
@@ -228,9 +232,11 @@ class WP_Document_Revisions {
 	 */
 	function initialize_workflow_states() {
 
-		$terms = get_terms( 'workflow_state', array(
-			'hide_empty' => false,
-		) );
+		$terms = get_terms(
+			'workflow_state', array(
+				'hide_empty' => false,
+			)
+		);
 
 		if ( ! empty( $terms ) ) {
 			return false;
@@ -246,9 +252,11 @@ class WP_Document_Revisions {
 		$states = apply_filters( 'default_workflow_states', $states );
 
 		foreach ( $states as $state => $desc ) {
-			wp_insert_term( $state, 'workflow_state', array(
-				'description' => $desc,
-			) );
+			wp_insert_term(
+				$state, 'workflow_state', array(
+					'description' => $desc,
+				)
+			);
 		}
 
 	}
@@ -581,9 +589,11 @@ class WP_Document_Revisions {
 		$document->post_excerpt = html_entity_decode( $document->post_excerpt );
 
 		// get revisions, and prepend the post
-		$revs = wp_get_post_revisions( $post_id, array(
-			'order' => 'DESC',
-		) );
+		$revs = wp_get_post_revisions(
+			$post_id, array(
+				'order' => 'DESC',
+			)
+		);
 		array_unshift( $revs, $document );
 
 		// loop through revisions
@@ -646,9 +656,11 @@ class WP_Document_Revisions {
 			return $cache;
 		}
 
-		$revs = wp_get_post_revisions( $post_id, array(
-			'order' => 'ASC',
-		) );
+		$revs = wp_get_post_revisions(
+			$post_id, array(
+				'order' => 'ASC',
+			)
+		);
 
 		$i = 1;
 		foreach ( $revs as $rev ) {
@@ -762,9 +774,11 @@ class WP_Document_Revisions {
 
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
-			wp_die( esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array(
-				'response' => 403,
-			) );
+			wp_die(
+				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array(
+					'response' => 403,
+				)
+			);
 			return false; // for unit testing
 		}
 
@@ -1031,7 +1045,7 @@ class WP_Document_Revisions {
 	 */
 	function document_upload_dir_filter( $dir ) {
 
-		if ( ! $this->verify_post_type( ) ) {
+		if ( ! $this->verify_post_type() ) {
 			return $dir;
 		}
 
@@ -1521,7 +1535,7 @@ class WP_Document_Revisions {
 	 */
 	function content_filter( $content ) {
 
-		if ( ! $this->verify_post_type( ) ) {
+		if ( ! $this->verify_post_type() ) {
 			return $content;
 		}
 
@@ -1739,10 +1753,12 @@ class WP_Document_Revisions {
 	 */
 	function register_term_count_cb() {
 
-		$taxs = get_taxonomies( array(
-			'object_type' => 'document',
-			'update_count_callback' => '',
-		), 'objects' );
+		$taxs = get_taxonomies(
+			array(
+				'object_type' => 'document',
+				'update_count_callback' => '',
+			), 'objects'
+		);
 
 		foreach ( $taxs as $tax ) {
 			$tax->update_count_callback = array( &$this, 'term_count_cb' );

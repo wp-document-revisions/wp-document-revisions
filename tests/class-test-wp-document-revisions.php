@@ -35,9 +35,11 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		parent::setUp();
 
 		// init workflow states
-		foreach ( get_terms( 'workflow_state', array(
-			'hide_empty' => false,
-		) ) as $term ) {
+		foreach ( get_terms(
+			'workflow_state', array(
+				'hide_empty' => false,
+			)
+		) as $term ) {
 			wp_delete_term( $term->term_id, 'workflow_state' );
 		}
 
@@ -82,9 +84,11 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_workflow_states_exist() {
 
-		$terms = get_terms( 'workflow_state', array(
-			'hide_empty' => false,
-		) );
+		$terms = get_terms(
+			'workflow_state', array(
+				'hide_empty' => false,
+			)
+		);
 		$this->assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
 		$this->assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
 
@@ -106,7 +110,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		$upload_dir = wp_upload_dir();
 
 		$wp_filetype = wp_check_filetype( basename( $file ), null );
-		$file_array = apply_filters( 'wp_handle_upload_prefilter', array(
+		$file_array = apply_filters(
+			'wp_handle_upload_prefilter', array(
 				'name' => basename( $file ),
 				'tmp_name' => $file,
 				'type' => $wp_filetype['type'],
@@ -160,12 +165,14 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		$this->assertFalse( is_wp_error( $post_id ), 'Failed inserting new document' );
 
 		// assign workflow state
-		$terms = get_terms( 'workflow_state', array(
-			'hide_empty' => false,
-		) );
+		$terms = get_terms(
+			'workflow_state', array(
+				'hide_empty' => false,
+			)
+		);
 
 		if ( empty( $terms ) ) {
-			Test_WP_Document_Revisions::setUp();
+			self::setUp();
 		}
 
 		$terms = wp_set_post_terms( $post_id, $terms[0]->slug, 'workflow_state' );
@@ -174,11 +181,13 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		$attach_id = $this->spoof_upload( $post_id, $this->test_file );
 
 		// store attachment ID as post content without creating a revision
-		$result = $wpdb->update( $wpdb->posts, array(
-			'post_content' => $attach_id,
+		$result = $wpdb->update(
+			$wpdb->posts, array(
+				'post_content' => $attach_id,
 			), array(
-			'ID' => $post_id,
-		) );
+				'ID' => $post_id,
+			)
+		);
 		wp_cache_flush();
 
 		$this->assertGreaterThan( 0, $result, 'Cannot update document post_content with attachment ID' );
@@ -199,7 +208,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 */
 	function test_revise_document() {
 
-		$doc_id = Test_WP_Document_Revisions::test_add_document();
+		$doc_id = self::test_add_document();
 
 		$attach_id = $this->spoof_upload( $doc_id, $this->test_file2 );
 

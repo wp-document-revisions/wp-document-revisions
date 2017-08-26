@@ -122,9 +122,11 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 		wp_publish_post( $doc_id );
 
 		// move a doc to another workflow state (default is index 0)
-		$terms = get_terms( 'workflow_state', array(
-			'hide_empty' => false,
-		) );
+		$terms = get_terms(
+			'workflow_state', array(
+				'hide_empty' => false,
+			)
+		);
 		wp_set_post_terms( $doc_id, array( $terms[1]->slug ), 'workflow_state' );
 		wp_cache_flush();
 
@@ -205,9 +207,11 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 		update_post_meta( $doc_id, 'test_meta_key', 'test_value' );
 		wp_cache_flush();
 
-		$docs = get_documents( array(
-			'test_meta_key' => 'test_value',
-		) );
+		$docs = get_documents(
+			array(
+				'test_meta_key' => 'test_value',
+			)
+		);
 		$this->assertCount( 1, $docs, 'get_documents filter count' );
 
 	}

@@ -46,7 +46,7 @@ class WP_Document_Revisions_Front_End {
 
 		// create or store parent instance
 		if ( is_null( $instance ) ) {
-			self::$parent = new WP_Document_Revisions;
+			self::$parent = new WP_Document_Revisions();
 		} else {
 			self::$parent = &$instance;
 		}
@@ -158,9 +158,11 @@ class WP_Document_Revisions_Front_End {
 			$defaults[ $key ] = null;
 		}
 
-		$taxs = get_taxonomies( array(
-			'object_type' => array( 'document' ),
-		), 'objects' );
+		$taxs = get_taxonomies(
+			array(
+				'object_type' => array( 'document' ),
+			), 'objects'
+		);
 
 		// allow querying by custom taxonomy
 		foreach ( $taxs as $tax ) {
@@ -181,7 +183,8 @@ class WP_Document_Revisions_Front_End {
 		<ul class="documents">
 		<?php
 		// loop through found documents
-		foreach ( $documents as $document ) { ?>
+		foreach ( $documents as $document ) {
+		?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
 				<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
 					<?php echo esc_html( get_the_title( $document->ID ) ); ?>
@@ -293,12 +296,14 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
 		foreach ( $documents as $document ) :
-			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg( array(
-				'post' => $document->ID,
-				'action' => 'edit',
-			), admin_url( 'post.php' ) ) : get_permalink( $document->ID );
+			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg(
+				array(
+					'post' => $document->ID,
+					'action' => 'edit',
+				), admin_url( 'post.php' )
+			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author
-			$format_string = ( $instance['show_author'] ) ?  __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
+			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 ?>
 			<li>
 				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
@@ -341,7 +346,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		</p>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php _escape_html_e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
-			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _escape_html_e( 'Yes', 'wp-document-revisions' );?>
+			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _escape_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
 		<?php
 	}

@@ -69,7 +69,7 @@ function _make_user( $role = 'administrator', $user_login = '', $pass = '', $ema
 		$user = array(
 			'role' => $role,
 			'user_login' => ( $user_login ) ? $user_login : rand_str(),
-			'user_pass' => ( $pass ) ? $pass: rand_str(),
+			'user_pass' => ( $pass ) ? $pass : rand_str(),
 			'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
 		);
 
@@ -93,7 +93,8 @@ function _destroy_user( $user_id ) {
 
 	if ( is_multisite() ) {
 		wpmu_delete_user( $user_id );
-	} else { wp_delete_user( $user_id );
+	} else {
+		wp_delete_user( $user_id );
 	}
 
 }
@@ -117,8 +118,10 @@ function _rrmdir( $dir ) {
 		$objects = scandir( $dir );
 		foreach ( $objects as $object ) {
 			if ( '.' !== $object && '..' !== $object ) {
-				if ( 'dir' === filetype( $dir . '/' . $object ) ) { _rrmdir( $dir . '/' . $object );
-				} else { unlink( $dir . '/' . $object );
+				if ( 'dir' === filetype( $dir . '/' . $object ) ) {
+					_rrmdir( $dir . '/' . $object );
+				} else {
+					unlink( $dir . '/' . $object );
 				}
 			}
 		}
