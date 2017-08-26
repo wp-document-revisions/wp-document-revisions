@@ -45,13 +45,10 @@ class WP_Document_Revisions_Admin {
 
 		// help and messages
 		add_filter( 'post_updated_messages', array( &$this, 'update_messages' ) );
-		add_action( 'contextual_help', array( &$this, 'add_help_text' ), 10, 3 ); // pre-3.3
 		add_action( 'admin_head', array( &$this, 'add_help_tab' ) ); // 3.3+
 
 		// edit document screen
 		add_action( 'admin_head', array( &$this, 'make_private' ) );
-		add_filter( 'media_meta', array( &$this, 'media_meta_hack' ), 10, 1 );
-		add_filter( 'media_upload_form_url', array( &$this, 'post_upload_handler' ) );
 		add_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
@@ -163,16 +160,11 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.1
 	 * @uses get_help_text()
-	 * @return unknown
+	 * @return void
 	 */
 	function add_help_tab() {
 
 		$screen = get_current_screen();
-
-		// the class WP_Screen won't exist pre-3.3
-		if ( ! class_exists( 'WP_Screen' ) || ! $screen || 'document' !== $screen->post_type ) {
-			return $screen;
-		}
 
 		// loop through each tab in the help array and add
 		foreach ( $this->get_help_text() as $title => $content ) {
@@ -233,38 +225,9 @@ class WP_Document_Revisions_Admin {
 			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
 		}
 
-		// convert array into string for pre-3.3 compatability
-		$output = '';
-		foreach ( $help[ $screen->id ] as $label => $text ) {
-			$output .= "<h4>{$label}</h4>{$text}";
-		}
-
 		return apply_filters( 'document_help', $output, $screen );
 
 	}
-
-
-	/**
-	 * Registers help text with WP for pre-3.3 versions
-	 *
-	 * @uses get_hel_text()
-	 * @since 0.5
-	 * @param String $contextual_help the help text
-	 * @param String $screen_id The ID of the current screen
-	 * @param Object $screen The current screen object
-	 * @return String the modified help text
-	 */
-	function add_help_text( $contextual_help, $screen_id, $screen ) {
-
-		if ( isset( $screen->post_type ) && 'document' !== $screen->post_type ) {
-			return $contextual_help;
-		}
-
-		$contextual_help = $this->get_help_text( $screen, false );
-
-		return apply_filters( 'document_help', $contextual_help );
-	}
-
 
 	/**
 	 * Callback to manage metaboxes on edit page
@@ -758,67 +721,6 @@ class WP_Document_Revisions_Admin {
 		if ( 'media-upload.php' === $pagenow ) : ?>
 		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 		<?php endif;
-	}
-
-
-	/**
-	 * Ugly, Ugly hack to sneak post-upload JS into the iframe *pre 3.3*
-	 * If there was a hook there, I wouldn't have to do this
-	 *
-	 * @since 0.5
-	 * @param string $meta dimensions / post meta
-	 * @returns string meta + js to process post
-	 */
-	function media_meta_hack( $meta ) {
-
-		if ( ! $this->verify_post_type( ) ) {
-			return $meta;
-		}
-
-		global $post;
-		$latest = $this->get_latest_attachment( $post->ID );
-
-		do_action( 'document_upload', $latest, $post->ID );
-
-		$meta .= $this->post_upload_js( $latest->ID );
-
-		return $meta;
-
-	}
-
-
-	/**
-	 * Hook to follow file uploads to automate attaching the document to the post
-	 *
-	 * @since 0.5
-	 * @param string $filter whatever we really should be filtering
-	 * @returns string the same stuff they gave us, like we were never here
-	 */
-	function post_upload_handler( $filter ) {
-
-		// if we're not posting this is the initial form load, kick
-		if ( ! $_POST ) {
-			return $filter;
-		}
-
-		if ( ! $this->verify_post_type( $_POST['post_id'] ) ) {
-			return $filter;
-		}
-
-		// get the object that is our new attachment
-		$latest = $this->get_latest_attachment( $_POST['post_id'] );
-
-		do_action( 'document_upload', $latest, $_POST['post_id'] );
-
-    // @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-		echo $this->post_upload_js( $latest->ID );
-
-		// prevent hook from fireing a 2nd time
-		remove_filter( 'media_meta', array( &$this, 'media_meta_hack' ), 10, 1 );
-
-		// should probably give this back...
-		return $filter;
-
 	}
 
 
