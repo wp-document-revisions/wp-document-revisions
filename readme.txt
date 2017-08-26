@@ -44,6 +44,15 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 == Changelog ==
 
+= 3.0.0 =
+
+* [Dropped support for WordPress prior to version 3.3](https://github.com/benbalter/wp-document-revisions/pull/94)
+* [Dropped WebDav support](https://github.com/benbalter/wp-document-revisions/pull/95)
+* Implemented [WordPress coding standards](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards)
+* Added additional nonces
+* Added additional translation strings and comments
+* Updated documentation
+
 = 2.2.0 =
 
 * [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/benbalter/wp-document-revisions/pull/74)
