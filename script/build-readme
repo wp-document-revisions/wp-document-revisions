@@ -2,7 +2,7 @@
 
 exclude = %w[readme header]
 output = File.open("./docs/header.md").read
-output << File.open("readme.md").read
+output << File.open("./docs/README.md").read
 
 Dir["./docs/*"].each do |file|
   next if exclude.include?(File.basename(file,".md"))
@@ -10,9 +10,9 @@ Dir["./docs/*"].each do |file|
   output << File.open(file).read
 end
 
-output.gsub! /^###(.*?)##\#$/im, "=\\1="
-output.gsub! /^##(.*?)#\#$/im, "==\\1=="
-output.gsub! /^#(.*?)\#$/im, "===\\1==="
+output.gsub! /^###(.*?)$/im, "=\\1="
+output.gsub! /^##(.*?)$/im, "==\\1=="
+output.gsub! /^#(.*?)$/im, "===\\1==="
 
 File.open("readme.txt", "wb") do |file|
   file << output
