@@ -1,0 +1,6 @@
+permalink: pretty
+title: WP Document Revisions
+include:
+  - CONTRIBUTING.md
+  - README.md
+  - SUPPORT.md

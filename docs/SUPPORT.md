@@ -1,8 +1,6 @@
-# Contributing Guidelines
-
 ## Where to get help or report an issue
 
-* For getting started and general documentation, please browse, and feel free to contribute to [the project wiki](https://github.com/benbalter/WP-Document-Revisions/wiki).
+* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](http://ben.balter.com/wp-document-revisions/).
 * For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
 * For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
 * For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
@@ -22,7 +20,3 @@
 * What is the actual outcome of that action?
 * Are there any screenshots or screencasts that may be helpful to include?
 * Only include one bug per issue. If you have discovered two bugs, please file two issues.
-
-## Looking for more ways to get involved?
-
-There are [many ways to contribute](https://github.com/benbalter/WP-Document-Revisions/blob/master/docs/how-to-contribute.md).

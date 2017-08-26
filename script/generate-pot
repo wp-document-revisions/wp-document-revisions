@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+wp-pot \
+  --domain wp-document-revisions \
+  --dest-file languages/wp-document-revisions.pot \
+  --src "includes/**.php" \
+  --package "WP Document Revisions 2.0.0" --relative-to "." \
+  --comment-keyword "translators:"

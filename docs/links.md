@@ -1,4 +1,4 @@
-## Links ##
+## Links
 
 * [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
 * [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
