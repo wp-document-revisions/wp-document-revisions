@@ -390,13 +390,6 @@ class WP_Document_Revisions_Admin {
 		<?php } ?>
 		<div id="lock_override">
 		<?php $latest_version = $this->get_latest_revision( $post->ID ) ?>
-			<?php if ( $latest_version && apply_filters( 'document_revisions_enable_webdav', true ) ) { ?>
-			<object id="winFirefoxPlugin" type="application/x-sharepoint" width="0" height="0" style="visibility: hidden;"></object>
-			<a id="edit-desktop-button" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="button" title="<?php esc_attr_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>">
-				<?php esc_html_e( 'Edit on Desktop', 'wp-document-revisions' ); ?>
-			</a>
-			<?php } // End if().
-?>
 			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ) ?>" onclick="return false;" >
 				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
@@ -1229,8 +1222,6 @@ class WP_Document_Revisions_Admin {
 			'lockNeedle'          => __( 'is currently editing this' ), // purposely left out text domain
 			'postUploadNotice'    => '<div id="message" class="updated" style="display:none"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
 			'postDesktopNotice'    => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
-			'desktopEditRuntimeError' => '<div id="message" class="error" style="display:none"><p>' . __( 'There was an error launching your Office software. You can try to <a href="#" onClick="location.reload();">reload this page</a> to see if this fixes the issue, or use the <strong>Upload</strong> option.', 'wp-document-revisions' ) . '</p></div>',
-			'desktopEditNotSupportedError' => '<div id="message" class="error" style="display:none"><p>' . __( 'Sorry, desktop editing not supported by this browser or your current Office software. Please use the <strong>Upload</strong> option.', 'wp-document-revisions' ) . '</p></div>',
 		// translators: %s is the title of the document
 			'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),

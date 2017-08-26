@@ -41,7 +41,6 @@ License: GPL3
 // @codingStandardsIgnoreStart WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
 set_include_path( get_include_path() . PATH_SEPARATOR . dirname( __FILE__ ) . '/includes' );
 // @codingStandardsIgnoreEnd WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
-require_once 'HTTP/WebDAV/Server.php';
 require_once dirname( __FILE__ ) . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.

@@ -6,18 +6,7 @@ class WPDocumentRevisions
   constructor: ($) ->
     @$ = $
 
-    # Setup our webdav editing
-    @fNewDoc = false
-    @EditDocumentButton = null
-    try
-      @EditDocumentButton = new ActiveXObject('SharePoint.OpenDocuments.3')
-      if @EditDocumentButton != null
-        @fNewDoc = true
-    catch buttonError
-      #console.log(buttonError)
-
     #events
-    @$('#edit-desktop-button').click @editDocument
     @$('.revision').click @restoreRevision
     @$('#override_link').click @overrideLock
     @$('#document a').click @requestPermission
@@ -49,36 +38,9 @@ class WPDocumentRevisions
   enableSubmit: =>
     @$(':button, :submit', '#submitpost').removeAttr 'disabled'
 
-  #callback to edit document via webdav
-  editDocument: (e) =>
-    e.preventDefault()
-    file = @$(e.target).attr 'href'
-    if @fNewDoc
-      if !@EditDocumentButton.EditDocument(file)
-        if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
-          wp_document_revisions.desktopEditRuntimeError = convertEntities wp_document_revisions.desktopEditRuntimeError
-
-        @window.jQuery('#lock_override').before( wp_document_revisions.desktopEditRuntimeError ).prev().fadeIn()
-        return @window.jQuery("#edit-desktop-button").remove()
-
-    else
-      try
-        ffPlugin = document.getElementById("winFirefoxPlugin")
-        ffPlugin.EditDocument(file, null)
-      catch error
-        if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
-          wp_document_revisions.desktopEditNotSupportedError = convertEntities wp_document_revisions.desktopEditNotSupportedError
-
-        @window.jQuery('#lock_override').before( wp_document_revisions.desktopEditNotSupportedError ).prev().fadeIn()
-        return @window.jQuery("#edit-desktop-button").remove()
-
-    if typeof convertEntities == 'function' #3.2 requires convertEntities, 3.3 doesn't
-       wp_document_revisions.postDesktopNotice = convertEntities wp_document_revisions.postDesktopNotice
-
     #notify user of success by adding the post upload notice before the #post div
     #to ensure we get the user's attention, blink once (via fade in, fade out, fade in again).
-    @window.jQuery('#lock_override').before( wp_document_revisions.postDesktopNotice ).prev().fadeIn()
-
+    @window.jQuery('#lock_override').prev().fadeIn()
 
   #restore revision confirmation
   restoreRevision: (e) =>
