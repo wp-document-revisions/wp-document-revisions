@@ -338,15 +338,15 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			<input class="small-text" id="<?php echo esc_attr( $this->get_field_id( 'numberposts' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'numberposts' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['numberposts'] ); ?>" />
 		</p>
 		<p>
-			<?php _escape_html_e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
+			<?php esc_html_e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
 			<?php foreach ( $instance['post_status'] as $status => $value ) : ?>
 				<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>" type="text" <?php checked( $value ); ?> />
 				<label for="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>"><?php echo esc_html( ucwords( $status ) ); ?></label><br />
 			<?php endforeach; ?>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php _escape_html_e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
-			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php _escape_html_e( 'Yes', 'wp-document-revisions' ); ?>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php esc_html_e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
+			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
 		<?php
 	}
