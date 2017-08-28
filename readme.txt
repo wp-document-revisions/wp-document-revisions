@@ -43,6 +43,10 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 == Changelog ==
 
+= 3.0.1 =
+
+* Fix for calling the wrong escaping function in the widget code.
+
 = 3.0.0 =
 
 * [Dropped support for WordPress prior to version 3.3](https://github.com/benbalter/wp-document-revisions/pull/94)
