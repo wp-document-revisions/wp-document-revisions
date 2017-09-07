@@ -1,0 +1,5 @@
+files:
+  - source: '*.php'
+    ignore:
+      - /tests/*.php
+    translation: /languages/wp-document-revisions-%locale_with_underscore%.po
