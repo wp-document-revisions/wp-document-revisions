@@ -1,527 +1,511 @@
-# Translation of WP Document Revisions in Dutch
-# This file is distributed under the same license as the WP Document Revisions package.
+# Copyright (C) 2017 WP Document Revisions 2.0.0
+# This file is distributed under the same license as the WP Document Revisions 2.0.0 package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2013-07-03 13:29:25+0000\n"
+"Project-Id-Version: wordpress-document-revisions\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/0.1\n"
-"Project-Id-Version: WP Document Revisions\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: wordpress-document-revisions\n"
+"X-Crowdin-Language: nl\n"
+"X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
+"Last-Translator: benbalter <ben.balter@github.com>\n"
+"Language-Team: Dutch\n"
+"Language: nl_NL\n"
+"PO-Revision-Date: 2017-09-07 10:55-0400\n"
 
-#: includes/admin.php:134
-msgctxt "%1$s: date; %2$s: time"
-msgid "%1$s @ %2$s"
-msgstr "%1$s @ %2$s"
+#: includes/class-wp-document-revisions-admin.php:137
+msgid "Document updated. <a href=\"%s\">Download document</a>"
+msgstr "Document geüpdated. <a href=\"%s\">Download document</a>"
 
-#: includes/admin.php:188
+#: includes/class-wp-document-revisions-admin.php:138
+msgid "Custom field updated."
+msgstr "Aangepast veld bijgewerkt."
+
+#: includes/class-wp-document-revisions-admin.php:139
+msgid "Custom field deleted."
+msgstr "Aangepast veld verwijderd."
+
+#: includes/class-wp-document-revisions-admin.php:140
+msgid "Document updated."
+msgstr "Document geüpdated."
+
+#: includes/class-wp-document-revisions-admin.php:142
+msgid "Document restored to revision from %s"
+msgstr "Document teruggezet naar de revisie van %s"
+
+#: includes/class-wp-document-revisions-admin.php:144
+msgid "Document published. <a href=\"%s\">Download document</a>"
+msgstr "Document gepubliceerd. <a href=\"%s\">Download document</a>"
+
+#: includes/class-wp-document-revisions-admin.php:145
+msgid "Document saved."
+msgstr "Document opgeslagen."
+
+#: includes/class-wp-document-revisions-admin.php:147
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Document toegevoegd. <a target=\"_blank\" href=\"%s\">Download document</a>"
+
+#: includes/class-wp-document-revisions-admin.php:149
+msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
+msgstr "Document ingediend voor: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Voorvertoning Document</a>"
+
+#: includes/class-wp-document-revisions-admin.php:151
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Kladversie document opgeslagen. <a target=\"_blank\" href=\"%s\">Download document</a>"
+
+#: includes/class-wp-document-revisions-admin.php:201
+msgid "Basic Usage"
+msgstr "Instructie Gebruik"
+
+#: includes/class-wp-document-revisions-admin.php:202
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
 msgstr "Dit scherm stelt gebruikers in staat samen aan documenten te werken en hun revisisies in te zien en te volgen. Om te beginnen, geef een titel op voor het document, klik op <code>Nieuwe Versie</code> en selecteer het bestand van je computer."
 
-#: includes/admin.php:189
+#: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
 msgstr "Eenmaal succesvol geüpload, kun je een revisie omschrijving toe voegen, de auteur van het document toewijzen en de huidige status van het document aangeven."
 
-#: includes/admin.php:190
+#: includes/class-wp-document-revisions-admin.php:204
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr "Als je klaar bent, klik op <code>Update</code> om je wijzigingen op te slaan"
 
-#: includes/admin.php:192
+#: includes/class-wp-document-revisions-admin.php:205
+msgid "Revision Log"
+msgstr "Revisie Logboek"
+
+#: includes/class-wp-document-revisions-admin.php:206
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
 msgstr "Het revisie logboek toont een samenvatting van veranderingen per revisie. Wijd gebruikt in de open-source community, voorziet het van een uitgebreide geschiedenis van het document in een oogopslag."
 
-#: includes/admin.php:193
+#: includes/class-wp-document-revisions-admin.php:207
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
 msgstr "Je kunt eerdere versies van het document downloaden en inzien door op het tijdstip te klikken in het revisie logboek. Je kunt ook voorgaande versies herstellen door op de <code>herstel</code> knopte klikken in de revisie."
 
-#: includes/admin.php:195
+#: includes/class-wp-document-revisions-admin.php:208, includes/class-wp-document-revisions-admin.php:256, includes/class-wp-document-revisions-admin.php:961
+msgid "Workflow State"
+msgstr "Workflow Status"
+
+#: includes/class-wp-document-revisions-admin.php:209
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
 msgstr "Het workflow statusveld can worden gebruikt om teamleden te laten begrijpen hoever een document is in een workflow van een bepaalde organisatie. Het veld is optioneel, en kan worden aangepast of doorzocht door te klikken op <code>Workflow statussen</code> aan de linkerkant."
 
-#: includes/admin.php:197
+#: includes/class-wp-document-revisions-admin.php:210
+msgid "Publishing Documents"
+msgstr "Documenten Publiceren"
+
+#: includes/class-wp-document-revisions-admin.php:211
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr "Standaard zijn geüploade documenten alleen beschikbaar voor ingelogde gebruikers. Documenten kunnen worden gepubliceerd, en openbaar worden gemaakt, door de zichtbaarheid in te stellen in het \"Publicatie\" veld in de rechter bovenhoek. Een document gemarkeerd als gepubliceerd zal zichtbaar zijn voor iedereen met de juiste URL."
 
-#: includes/admin.php:201
+#: includes/class-wp-document-revisions-admin.php:214, includes/class-wp-document-revisions.php:164
+msgid "Documents"
+msgstr "Documenten"
+
+#: includes/class-wp-document-revisions-admin.php:215
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
 msgstr "Hieronder is een lijst met alle documenten waar je toegang tot hebt. Klik op de titel van het document om het document te bewerken of de laatste versie te downloaden."
 
-#: includes/admin.php:202
+#: includes/class-wp-document-revisions-admin.php:216
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
 msgstr "Om een nieuw document toe te voeren, klik op<strong>Nieuw Document</strong> aan de linkerkant."
 
-#: includes/admin.php:203
+#: includes/class-wp-document-revisions-admin.php:217
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
 msgstr "Om alle documenten van een bepaalde workflow status te bekijken, klik op <strong>Workflow statussen</strong> in het linkermenu."
 
-#: includes/admin.php:451 includes/admin.php:530
+#: includes/class-wp-document-revisions-admin.php:248
+msgid "Revision Summary"
+msgstr "Samenvatting Revisie"
+
+#: includes/class-wp-document-revisions-admin.php:249
+msgid "Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:264, includes/class-wp-document-revisions-admin.php:941, includes/class-wp-document-revisions-admin.php:1129
+msgid "Owner"
+msgstr "Eigenaar"
+
+#: includes/class-wp-document-revisions-admin.php:349
+msgid "%s has prevented other users from making changes."
+msgstr "%s heeft voorkomen dat andere gebruikers veranderingen kunnen doorvoeren."
+
+#: includes/class-wp-document-revisions-admin.php:354
+msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
+msgstr "<br />Als je denkt dat het een fout betreft kun je het slot<a href=\"#\" id=\"override_link\">overreden</a>, maar veranderingen zullen verloren gaan."
+
+#: includes/class-wp-document-revisions-admin.php:362
+msgid "Upload Document"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:363
+msgid "Upload New Version"
+msgstr "Upload Nieuwe Versie"
+
+#: includes/class-wp-document-revisions-admin.php:370
+msgid "Latest Version of the Document"
+msgstr "Laatste versie van het Document"
+
+#: includes/class-wp-document-revisions-admin.php:371
+msgid "Download"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:372
+msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
+msgstr "Ingecheckt in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> geleden door %4$s"
+
+#: includes/class-wp-document-revisions-admin.php:392
+msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
+msgstr " "
+
+#: includes/class-wp-document-revisions-admin.php:411
+msgid "Modified"
+msgstr "Bewerkt"
+
+#: includes/class-wp-document-revisions-admin.php:412
+msgid "User"
+msgstr "Gebruiker"
+
+#: includes/class-wp-document-revisions-admin.php:413
+msgid "Summary"
+msgstr "Samenvatting"
+
+#: includes/class-wp-document-revisions-admin.php:417
+msgid "Actions"
+msgstr "Acties"
+
+#: includes/class-wp-document-revisions-admin.php:455
+msgid "Restore"
+msgstr "Herstellen"
+
+#: includes/class-wp-document-revisions-admin.php:462
+msgid "RSS Feed"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:493, includes/class-wp-document-revisions-admin.php:569
+msgid "Document Upload Directory"
+msgstr "Document Upload Map"
+
+#: includes/class-wp-document-revisions-admin.php:494, includes/class-wp-document-revisions-admin.php:576
 msgid "Document Slug"
-msgstr "Document Slug"
+msgstr ""
 
-#: includes/admin.php:643
-msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr "Optioneel mag je de tekst <code>%site_id%</code> invoegen in de URL om verschillende versies van het bestand op te slaan."
+#: includes/class-wp-document-revisions-admin.php:526
+msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
+msgstr "Uploadmap documenten veranderd, maar bestaande uploads dienen mogelijk handmatig verplaatst te worden om ze toegankelijk te houden."
 
-#: includes/admin.php:507
+#: includes/class-wp-document-revisions-admin.php:553
 msgid "Document slug changed, but some previously published URLs may now be broken."
 msgstr "Document slug veranderd, maar eerdere gepubliceerde URL's kunnen nu niet meer werken."
 
-#: includes/admin.php:641
+#: includes/class-wp-document-revisions-admin.php:566
+msgid "Document Settings"
+msgstr "Documentinstellingen"
+
+#: includes/class-wp-document-revisions-admin.php:600, includes/class-wp-document-revisions-admin.php:628, includes/class-wp-document-revisions.php:1288
+msgid "Not authorized"
+msgstr "Geen toestemming"
+
+#: includes/class-wp-document-revisions-admin.php:683
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr "Map waar geuploade documenten worden opgeslagen.. De standaardmap is de <code>wp_content/uploads</code> map (of enige andere standaardmap indien dat is ingesteld), maar het mag worden ingesteld naar een map buiten de <code>htdocs</code> map of de <code>public_html</code> map voor extra beveiliging."
 
-#: includes/admin.php:652
+#: includes/class-wp-document-revisions-admin.php:688
+msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
+msgstr "Optioneel mag je de tekst <code>%site_id%</code> invoegen in de URL om verschillende versies van het bestand op te slaan."
+
+#: includes/class-wp-document-revisions-admin.php:701
 msgid "example-document-title"
 msgstr "voorbeeld-document-titel"
 
-#: includes/admin.php:653
-msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is \"documents.\""
-msgstr "\"Slug\" wat voor ieder document komt te staan (en het documentarchief). Standaardinstelling is \"documents.\""
+#: includes/class-wp-document-revisions-admin.php:702
+msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
+msgstr ""
 
-#: wp-document-revisions.php:143
+#: includes/class-wp-document-revisions-admin.php:785
+msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
+msgstr "Je hebt het document nu uitgecheckt. Geen andere gebruiker kan dit document bewerken zo lang je op deze pagina blijft."
+
+#: includes/class-wp-document-revisions-admin.php:800
+msgid "Feed Privacy"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:803
+msgid "Secret Feed Key"
+msgstr "Geheime Feed Sleutel"
+
+#: includes/class-wp-document-revisions-admin.php:806
+msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
+msgstr "Om je privacy te beschermen heb je een sleutel nodig om feeds te gebruiken in feed readers."
+
+#: includes/class-wp-document-revisions-admin.php:808
+msgid "Generate New Key"
+msgstr "Nieuwe sleutel genereren"
+
+#: includes/class-wp-document-revisions-admin.php:883
+msgid "All workflow states"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:902
+msgid "All owners"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1009
+msgid "Currently Editing"
+msgstr "Nu aan het bewerken"
+
+#: includes/class-wp-document-revisions-admin.php:1056
+msgid "Current State"
+msgstr "Huidige Status"
+
+#: includes/class-wp-document-revisions-admin.php:1130
+msgid "Document Owner"
+msgstr "Document Eigenaar"
+
+#: includes/class-wp-document-revisions-admin.php:1165
+msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1167
+msgid "File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1168
+msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1170
+msgid "Your lock on the document %s has been overridden. Any changes will be lost."
+msgstr "Je slot op document %s is overreden. Enige veranderingen worden niet opgeslagen."
+
+#: includes/class-wp-document-revisions-admin.php:1171
+msgid "An error has occurred, please try reloading the page."
+msgstr "Er is een fout opgetreden, probeer de pagina opnieuw te laden."
+
+#: includes/class-wp-document-revisions-admin.php:1172
+msgid "Lost Document Lock"
+msgstr "Document niet meer op slot"
+
+#: includes/class-wp-document-revisions-admin.php:1175, includes/class-wp-document-revisions-admin.php:1177
+msgid "%d mins"
+msgstr "%d minuten"
+
+#: includes/class-wp-document-revisions-admin.php:1179
+msgid "%d hour"
+msgstr "%d uur"
+
+#: includes/class-wp-document-revisions-admin.php:1181
+msgid "%d hours"
+msgstr "%d uren"
+
+#: includes/class-wp-document-revisions-admin.php:1183
+msgid "%d day"
+msgstr "%d dag"
+
+#: includes/class-wp-document-revisions-admin.php:1185
+msgid "%d days"
+msgstr "%d dagen"
+
+#: includes/class-wp-document-revisions-front-end.php:122
+msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
+msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">geleden door</a> <span class=\"author\">%5$s</a>"
+
+#: includes/class-wp-document-revisions-front-end.php:257, includes/class-wp-document-revisions-front-end.php:260
+msgid "Recently Revised Documents"
+msgstr "Recent Nagekeken Documenten"
+
+#. translators: %1$s is the time ago in words, %2$s is the author
+#: includes/class-wp-document-revisions-front-end.php:306
+msgid "%1$s ago by %2$s"
+msgstr "%1$s geleden door %2$s"
+
+#. translators: %1$s is the time ago in words, %2$s is the author
+#: includes/class-wp-document-revisions-front-end.php:306
+msgid "%1$s ago"
+msgstr "%1$s geleden"
+
+#: includes/class-wp-document-revisions-front-end.php:333
+msgid "Title:"
+msgstr "Titel:"
+
+#: includes/class-wp-document-revisions-front-end.php:337
+msgid "Number of Posts:"
+msgstr "Aantal Berichten:"
+
+#: includes/class-wp-document-revisions.php:153
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Document"
 
-#: wp-document-revisions.php:144
+#: includes/class-wp-document-revisions.php:154
 msgctxt "post type singular name"
 msgid "Document"
-msgstr "Document"
+msgstr ""
 
-#: wp-document-revisions.php:145
+#: includes/class-wp-document-revisions.php:155
 msgctxt "document"
 msgid "Add Document"
 msgstr "Nieuw Document"
 
-#: wp-document-revisions.php:146
+#: includes/class-wp-document-revisions.php:156
 msgid "Add New Document"
 msgstr "Nieuw Document"
 
-#: wp-document-revisions.php:147
+#: includes/class-wp-document-revisions.php:157
 msgid "Edit Document"
 msgstr "Bewerk Document"
 
-#: wp-document-revisions.php:148
+#: includes/class-wp-document-revisions.php:158
 msgid "New Document"
 msgstr "Nieuw Document"
 
-#: wp-document-revisions.php:149
+#: includes/class-wp-document-revisions.php:159
 msgid "View Document"
 msgstr "Bekijk Document"
 
-#: wp-document-revisions.php:150
+#: includes/class-wp-document-revisions.php:160
 msgid "Search Documents"
 msgstr "Doorzoek Documenten"
 
-#: wp-document-revisions.php:151
+#: includes/class-wp-document-revisions.php:161
 msgid "No documents found"
 msgstr "Geen documenten gevonden"
 
-#: wp-document-revisions.php:152
+#: includes/class-wp-document-revisions.php:162
 msgid "No documents found in Trash"
 msgstr "Geen documenten in Prullenbak gevonden"
 
-#: includes/admin.php:200 wp-document-revisions.php:154
-msgid "Documents"
-msgstr "Documenten"
-
-#: wp-document-revisions.php:155
+#: includes/class-wp-document-revisions.php:165
 msgid "All Documents"
 msgstr "Alle Documenten"
 
-#: wp-document-revisions.php:188
+#: includes/class-wp-document-revisions.php:199
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Workflow statussen"
 
-#: wp-document-revisions.php:189
+#: includes/class-wp-document-revisions.php:200
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Workflow status"
 
-#: wp-document-revisions.php:190
+#: includes/class-wp-document-revisions.php:201
 msgid "Search Workflow States"
 msgstr "Zoek Workflow statussen"
 
-#: wp-document-revisions.php:191
+#: includes/class-wp-document-revisions.php:202
 msgid "All Workflow States"
 msgstr "Alle Workflow statussen"
 
-#: wp-document-revisions.php:192
+#: includes/class-wp-document-revisions.php:203
 msgid "Parent Workflow State"
 msgstr "Hoofd Workflow status"
 
-#: wp-document-revisions.php:193
+#: includes/class-wp-document-revisions.php:204
 msgid "Parent Workflow State:"
 msgstr "Hoofd Workflow status:"
 
-#: wp-document-revisions.php:194
+#: includes/class-wp-document-revisions.php:205
 msgid "Edit Workflow State"
 msgstr "Bewerk Workflow status"
 
-#: wp-document-revisions.php:195
+#: includes/class-wp-document-revisions.php:206
 msgid "Update Workflow State"
 msgstr "Update Workflow status"
 
-#: wp-document-revisions.php:196
+#: includes/class-wp-document-revisions.php:207
 msgid "Add New Workflow State"
 msgstr "Nieuwe workflow status toevoegen"
 
-#: wp-document-revisions.php:197
+#: includes/class-wp-document-revisions.php:208
 msgid "New Workflow State Name"
 msgstr "Nieuwe workflow statusnaam"
 
-#: wp-document-revisions.php:198
+#: includes/class-wp-document-revisions.php:209
 msgid "Workflow States"
 msgstr "Workflow statussen"
 
-#: wp-document-revisions.php:225
+#: includes/class-wp-document-revisions.php:246
 msgid "In Progress"
 msgstr "In bewerking"
 
-#: wp-document-revisions.php:225
+#: includes/class-wp-document-revisions.php:246
 msgid "Document is in the process of being written"
 msgstr "Document wordt geschreven"
 
-#: wp-document-revisions.php:226
+#: includes/class-wp-document-revisions.php:247
 msgid "Initial Draft"
 msgstr "Eerste versie"
 
-#: wp-document-revisions.php:226
+#: includes/class-wp-document-revisions.php:247
 msgid "Document is being edited and refined"
 msgstr "Document wordt bewerkt en verfijnd"
 
-#: wp-document-revisions.php:227
+#: includes/class-wp-document-revisions.php:248
 msgid "Under Review"
 msgstr "Wordt nagekeken"
 
-#: wp-document-revisions.php:227
+#: includes/class-wp-document-revisions.php:248
 msgid "Document is pending final review"
 msgstr "Document in afwachting om definitief te worden gemaakt"
 
-#: wp-document-revisions.php:228
+#: includes/class-wp-document-revisions.php:249
 msgid "Final"
 msgstr "Definitief"
 
-#: wp-document-revisions.php:228
+#: includes/class-wp-document-revisions.php:249
 msgid "Document is in its final form"
 msgstr "Document is in definitieve versie"
 
-#: wp-document-revisions.php:328
-msgid "Somebody"
-msgstr "Iemand"
-
-#: wp-document-revisions.php:409
-msgid "revision"
-msgstr "revisie"
-
-#: wp-document-revisions.php:462 wp-document-revisions.php:735
+#: includes/class-wp-document-revisions.php:499, includes/class-wp-document-revisions.php:804
 msgid "-revision-"
 msgstr "-revisie-"
 
-#: wp-document-revisions.php:714
+#: includes/class-wp-document-revisions.php:778
 msgid "You are not authorized to access that file."
 msgstr "U heeft geen toestemming dit bestand in te zien."
 
-#: wp-document-revisions.php:1115
+#: includes/class-wp-document-revisions.php:1237
 msgid "Sorry, this is a private feed."
 msgstr "Sorry, dit is een privé feed."
 
-#: includes/admin.php:551 includes/admin.php:555 includes/admin.php:584
-#: includes/admin.php:588 wp-document-revisions.php:1161
-msgid "Not authorized"
-msgstr "Geen toestemming"
-
-#: wp-document-revisions.php:1204
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title
+#: includes/class-wp-document-revisions.php:1336
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr "%1$s: %2$s heeft jouw slot overreden op %3$s"
 
-#: wp-document-revisions.php:1208
+#. translators: %s is the user's name
+#: includes/class-wp-document-revisions.php:1341
 msgid "Dear %s:"
 msgstr "Beste %s:"
 
-#: wp-document-revisions.php:1209
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
+#: includes/class-wp-document-revisions.php:1343
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr "%1$s (%2$s), heeft jouw geopende document overreden %3$s (%4$s)."
 
-#: wp-document-revisions.php:1210
+#: includes/class-wp-document-revisions.php:1344
 msgid "Any changes you have made will be lost."
 msgstr "Eventuele veranderingen zullen verloren gaan."
 
-#: wp-document-revisions.php:1211
+#. translators: %s is the blog name
+#: includes/class-wp-document-revisions.php:1346
 msgid "- The %s Team"
 msgstr "- Het %s Team"
 
-#: wp-document-revisions.php:1372
+#. translators: %s is the document title
+#: includes/class-wp-document-revisions.php:1508
 msgid "%s - Latest Revision"
 msgstr "%s - Laatste revisie"
 
-#: wp-document-revisions.php:1386
-msgid "%s - Revision %d"
-msgstr "%s - Revisie %d"
-
-#: includes/front-end.php:97
-msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">geleden door</a> <span class=\"author\">%5$s</a>"
-
-#: includes/front-end.php:217
-msgid "Recently Revised Documents"
-msgstr "Recent Nagekeken Documenten"
-
-#: includes/front-end.php:265
-msgid "%1$s ago by %2$s"
-msgstr "%1$s geleden door %2$s"
-
-#: includes/front-end.php:272
-msgid "%1$s ago"
-msgstr "%1$s geleden"
-
-#: includes/front-end.php:298
-msgid "Title:"
-msgstr "Titel:"
-
-#: includes/front-end.php:302
-msgid "Number of Posts:"
-msgstr "Aantal Berichten:"
-
-#: includes/front-end.php:306
-msgid "Posts to Show:"
-msgstr "Toon Berichten:"
-
-#: includes/front-end.php:312
-msgid "Display Document Author:"
-msgstr "Toon Auteur Document:"
-
-#: includes/front-end.php:313
-msgid "Yes"
-msgstr "Ja"
-
-#: includes/admin.php:126
-msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Document geüpdated. <a href=\"%s\">Download document</a>"
-
-#: includes/admin.php:127
-msgid "Custom field updated."
-msgstr "Aangepast veld bijgewerkt."
-
-#: includes/admin.php:128
-msgid "Custom field deleted."
-msgstr "Aangepast veld verwijderd."
-
-#: includes/admin.php:129
-msgid "Document updated."
-msgstr "Document geüpdated."
-
-#: includes/admin.php:130
-msgid "Document restored to revision from %s"
-msgstr "Document teruggezet naar de revisie van %s"
-
-#: includes/admin.php:131
-msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr "Document gepubliceerd. <a href=\"%s\">Download document</a>"
-
-#: includes/admin.php:132
-msgid "Document saved."
-msgstr "Document opgeslagen."
-
-#: includes/admin.php:133
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Document toegevoegd. <a target=\"_blank\" href=\"%s\">Download document</a>"
-
-#: includes/admin.php:134
-msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr "Document ingediend voor: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Voorvertoning Document</a>"
-
-#: includes/admin.php:135
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Kladversie document opgeslagen. <a target=\"_blank\" href=\"%s\">Download document</a>"
-
-#: includes/admin.php:187
-msgid "Basic Usage"
-msgstr "Instructie Gebruik"
-
-#: includes/admin.php:191
-msgid "Revision Log"
-msgstr "Revisie Logboek"
-
-#: includes/admin.php:194 includes/admin.php:265 includes/admin.php:891
-msgid "Workflow State"
-msgstr "Workflow Status"
-
-#: includes/admin.php:196
-msgid "Publishing Documents"
-msgstr "Documenten Publiceren"
-
-#: includes/admin.php:258 includes/admin.php:373
-msgid "Revision Summary"
-msgstr "Samenvatting Revisie"
-
-#: includes/admin.php:259
-msgid "Document"
-msgstr "Document"
-
-#: includes/admin.php:273 includes/admin.php:873 includes/admin.php:1054
-msgid "Owner"
-msgstr "Eigenaar"
-
-#: includes/admin.php:348
-msgid "%s has prevented other users from making changes."
-msgstr "%s heeft voorkomen dat andere gebruikers veranderingen kunnen doorvoeren."
-
-#: includes/admin.php:350
-msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr "<br />Als je denkt dat het een fout betreft kun je het slot<a href=\"#\" id=\"override_link\">overreden</a>, maar veranderingen zullen verloren gaan."
-
-#: includes/admin.php:354
-msgid "Upload New Version"
-msgstr "Upload Nieuwe Versie"
-
-#: includes/admin.php:359
-msgid "Latest Version of the Document"
-msgstr "Laatste versie van het Document"
-
-#: includes/admin.php:360
-msgid "Download"
-msgstr "Download"
-
-#: includes/admin.php:361
-msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr "Ingecheckt in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> geleden door %4$s"
-
-#: includes/admin.php:375
-msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr " "
-
-#: includes/admin.php:392
-msgid "Modified"
-msgstr "Bewerkt"
-
-#: includes/admin.php:393
-msgid "User"
-msgstr "Gebruiker"
-
-#: includes/admin.php:394
-msgid "Summary"
-msgstr "Samenvatting"
-
-#: includes/admin.php:395
-msgid "Actions"
-msgstr "Acties"
-
-#: includes/admin.php:410
-msgid "Restore"
-msgstr "Herstellen"
-
-#: includes/admin.php:420
-msgid "RSS Feed"
-msgstr "RSS Feed"
-
-#: includes/admin.php:478
-msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr "Uploadmap documenten veranderd, maar bestaande uploads dienen mogelijk handmatig verplaatst te worden om ze toegankelijk te houden."
-
-#: includes/admin.php:520
-msgid "Document Settings"
-msgstr "Documentinstellingen"
-
-#: includes/admin.php:523
-msgid "Document Upload Directory"
-msgstr "Document Upload Map"
-
-#: includes/admin.php:787
-msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr "Je hebt het document nu uitgecheckt. Geen andere gebruiker kan dit document bewerken zo lang je op deze pagina blijft."
-
-#: includes/admin.php:799
-msgid "Feed Privacy"
-msgstr "Feed Privacy"
-
-#: includes/admin.php:802
-msgid "Secret Feed Key"
-msgstr "Geheime Feed Sleutel"
-
-#: includes/admin.php:805
-msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr "Om je privacy te beschermen heb je een sleutel nodig om feeds te gebruiken in feed readers."
-
-#: includes/admin.php:807
-msgid "Generate New Key"
-msgstr "Nieuwe sleutel genereren"
-
-#: includes/admin.php:942
-msgid "Currently Editing"
-msgstr "Nu aan het bewerken"
-
-#: includes/admin.php:989
-msgid "Current State"
-msgstr "Huidige Status"
-
-#: includes/admin.php:1055
-msgid "Document Owner"
-msgstr "Document Eigenaar"
-
-#: includes/admin.php:1085
-msgid ""
-"Are you sure you want to restore this revision?\n"
-"\n"
-"If you do, no history will be lost. This revision will be copied and become the most recent revision."
+#: includes/class-wp-document-revisions.php:1525
+msgid "%1$s - Revision %2$d"
 msgstr ""
-"Weet je zeker dat je deze revisie terug wilt halen?\n"
-"v\n"
-"vAls je dit doet zal er geen geschiedenis verloren gaan. Deze revisie wordt dan gekopieerd en als meest recent aangemerkt."
 
-#: includes/admin.php:1086
-msgid "is currently editing this"
-msgstr "is nu dit document aan het bewerken"
-
-#: includes/admin.php:1087
-msgid "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>File uploaded successfully. Add a revision summary below (optional) or press <em>Update</em> to save your changes.</p></div>"
-msgstr "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Bestand succesvol geüpload. Voeg een revisiesamenvatting toe (optioneel) of klik op <em>Update</em> om je wijzigingen te bewaren.</p></div>"
-
-#: includes/admin.php:1088
-msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr "Je slot op document %s is overreden. Enige veranderingen worden niet opgeslagen."
-
-#: includes/admin.php:1089
-msgid "An error has occurred, please try reloading the page."
-msgstr "Er is een fout opgetreden, probeer de pagina opnieuw te laden."
-
-#: includes/admin.php:1090
-msgid "Lost Document Lock"
-msgstr "Document niet meer op slot"
-
-#: includes/admin.php:1092 includes/admin.php:1093
-msgid "%d mins"
-msgstr "%d minuten"
-
-#: includes/admin.php:1094
-msgid "%d hour"
-msgstr "%d uur"
-
-#: includes/admin.php:1095
-msgid "%d hours"
-msgstr "%d uren"
-
-#: includes/admin.php:1096
-msgid "%d day"
-msgstr "%d dag"
-
-#: includes/admin.php:1097
-msgid "%d days"
-msgstr "%d dagen"
-
-msgid "WP Document Revisions"
-msgstr "WP Document Revisies"
-
-msgid "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
-msgstr "http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/"
-
-msgid "A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow."
-msgstr "Een documentmanagement en versiecontrole plugin voor Wordpress dat teams van elke grootte in staat stelt samen bestanden te bewerken en de workflow te beheersen."
-
-msgid "Benjamin J. Balter"
-msgstr "Benjamin J. Balter"
-
-msgid "http://ben.balter.com"
-msgstr "http://ben.balter.com"

@@ -11,135 +11,135 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
-"X-Crowdin-Language: cs\n"
+"X-Crowdin-Language: vi\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "Last-Translator: benbalter <ben.balter@github.com>\n"
-"Language-Team: Czech\n"
-"Language: cs_CZ\n"
-"PO-Revision-Date: 2017-09-07 10:56-0400\n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"PO-Revision-Date: 2017-09-07 10:55-0400\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Dokument zaktualizován. <a href=\"%s\">Stáhnout dokument</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:138
 msgid "Custom field updated."
-msgstr "Volitelné pole zaktualizováno."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:139
 msgid "Custom field deleted."
-msgstr "Volitelné pole smazáno."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:140
 msgid "Document updated."
-msgstr "Dokument zaktualizován."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:142
 msgid "Document restored to revision from %s"
-msgstr "Dokument vrácen do verze z %s"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:144
 msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr "Dokument publikován. <a href=\"%s\">Stáhnout dokument</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:145
 msgid "Document saved."
-msgstr "Dokument uložen."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:147
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument odeslán. <a target=\"_blank\" href=\"%s\">Stáhnout dokument</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:149
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr "Dokument naplánován na: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Náhled dokumentu</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:151
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Koncept aktualizován. <a target=\"_blank\" href=\"%s\">Stáhnout dokument</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:201
 msgid "Basic Usage"
-msgstr "Základní použití"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:202
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
-msgstr "Tato obrazovka umožňuje uživatelům spolupracovat na úpravách dokumentů a sledovat historii verzí. Zadejte názeb dokumentu, klikněte na <code>Nahrát novou verzi</code> a vyberte soubor na vašem počítači."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
-msgstr "Po úspěšném nahrání můžete vložit informaci o verzi do záznamu, přiřadit dokumentu autora a vybrat aktuální stav dokumentu v rámci workflow."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:204
 msgid "When done, simply click <code>Update</code> to save your changes"
-msgstr "Po dokončení klikněte na <code>Aktualizovat</code> pro uložení změn"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:205
 msgid "Revision Log"
-msgstr "Záznam verzí"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:206
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
-msgstr "Záznam verzí je krátký přehled změn v rámci dané verze. Na první pohled poskytuje komplexní přehled historie dokumentu."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:207
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
-msgstr "Zde si můžete stáhnout a zobrazit předchozí verze dokumentu kliknutím na časové razítko v záznamu verzí. Můžete také obnovit verze kliknutím na tlačítko <code>obnovit</ code> vedle verze."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:208, includes/class-wp-document-revisions-admin.php:256, includes/class-wp-document-revisions-admin.php:961
 msgid "Workflow State"
-msgstr "Stav ve workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:209
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
-msgstr "Pole Stav ve workflow pomáhá členům týmu zorientovat se, v jakém stádiu se dokument nachází v rámci daného workflow. Pole je nepovinné a může být upraveno nebo rozkliknuto přes <code>Stavy workflow</ code> na levé straně."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:210
 msgid "Publishing Documents"
-msgstr "Zveřejňování dokumentů"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:211
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
-msgstr "Ve výchozím nastavení jsou dokumenty k dispozici jen přihlášeným uživatelům. Dokumenty mohou být zpřístupněny veřenosti, přepnutím jejich viditelnost v poli \"Viditelnost\" v pravém horním rohu. Jakýkoliv dokument označený jako veřejný bude přístupný komukoli s korekní adresou."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:214, includes/class-wp-document-revisions.php:164
 msgid "Documents"
-msgstr "Dokumenty"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:215
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
-msgstr "Níže je uveden seznam všech dokumentů, ke kterým máte přístup. Klikněte na název dokumentu pro úpravy nebo stažení nejnovější verze."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:216
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
-msgstr "Chcete-li přidat nový dokument, klepněte na tlačítko <strong>Přidat dokument</ strong> na levé straně."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:217
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
-msgstr "Chcete-li zobrazit všechny dokumenty v určitém stavu workflow, klepněte na tlačítko <strong>Stavy workflow</ strong> v menu na levé straně."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:248
 msgid "Revision Summary"
-msgstr "Poznámky k verzi"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:249
 msgid "Document"
-msgstr "Dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:264, includes/class-wp-document-revisions-admin.php:941, includes/class-wp-document-revisions-admin.php:1129
 msgid "Owner"
-msgstr "Vlastník"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:349
 msgid "%s has prevented other users from making changes."
-msgstr "%s zabránil ostatním uživatelům provádět úpravy."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:354
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr "<br />Pokud máte pocit, že je to omyl, můžete <a href=\"#\" id=\"override_link\">vynutit zápis</a>, ale změny v rámci zamčené verze budou ztraceny."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:362
 msgid "Upload Document"
@@ -147,83 +147,83 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:363
 msgid "Upload New Version"
-msgstr "Nahrát novou verzi"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:370
 msgid "Latest Version of the Document"
-msgstr "Poslední verze dokumentu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:371
 msgid "Download"
-msgstr "Stáhnout"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:372
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr "Zaznamenáno v <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> uživatelem %4$s"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:392
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr "Poznámky k verzím jsou nepovinné poznámky příslušící dané verzi, které umožňují ostatním uživatelům rychle a snadno zjistit, jaké změny jste udělali, aniž by otevírali daný soubor."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:411
 msgid "Modified"
-msgstr "Změněn"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:412
 msgid "User"
-msgstr "Uživatel"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:413
 msgid "Summary"
-msgstr "Souhrn"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:417
 msgid "Actions"
-msgstr "Akce"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:455
 msgid "Restore"
-msgstr "Obnovit"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:462
 msgid "RSS Feed"
-msgstr "RSS feed"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:493, includes/class-wp-document-revisions-admin.php:569
 msgid "Document Upload Directory"
-msgstr "Složka pro nahrávání dokumentů"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:494, includes/class-wp-document-revisions-admin.php:576
 msgid "Document Slug"
-msgstr "Identifikátor dokumentu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:526
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr "Změnila se složka pro nahrávání, ale stávající soubory může být nutné přesunout do nové složky, aby byly i dále dostupné."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:553
 msgid "Document slug changed, but some previously published URLs may now be broken."
-msgstr "Identifikátor dokumentu se změnil, ale dříve zveřejněné URL adresy nyní nemusí fungovat."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:566
 msgid "Document Settings"
-msgstr "Nastavení dokumentu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:600, includes/class-wp-document-revisions-admin.php:628, includes/class-wp-document-revisions.php:1288
 msgid "Not authorized"
-msgstr "Nemáte přístup"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:683
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
-msgstr "Složka pro ukládání nahraných dokumentů. Ve výchozím nastavení je v <code>wp_content/uploads</ code> (případně dle nastavení výchozí složky pro ukládání), ale může být přesunuta mimo <code>htdocs</ code> nebo <code>public_html</ code> složku pro zvýšení bezpečnosti."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:688
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr "Můžete nepovinně vložit kód <code>%site_id%</ code> do cesty pro odlišení souborů podle zdrojových stránek."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:701
 msgid "example-document-title"
-msgstr "ukázkový-název-dokumentu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:702
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
@@ -231,23 +231,23 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:785
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr "Momentálně máte tento soubor rezervován. Dokud budete na této stránce, nemůže žádný jiný uživatel tento dokument upravovat."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:800
 msgid "Feed Privacy"
-msgstr "Soukromí feedu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:803
 msgid "Secret Feed Key"
-msgstr "Heslo pro feed"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:806
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr "Pro zachování ochranz soukromí musíte připojit heslo pro feed pro použití v RSS čtečkách."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:808
 msgid "Generate New Key"
-msgstr "Vygenerovat nové heslo"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:883
 msgid "All workflow states"
@@ -259,15 +259,15 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1009
 msgid "Currently Editing"
-msgstr "Aktuálně upravováno"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1056
 msgid "Current State"
-msgstr "Aktuální stav"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1130
 msgid "Document Owner"
-msgstr "Vlastník dokumentu"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1165
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
@@ -283,227 +283,227 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1170
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr "Byl vynucen zápis na vzdory vašemu zámku na dokumentu %s. Jakékoli změny budou ztraceny."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1171
 msgid "An error has occurred, please try reloading the page."
-msgstr "Došlo k chybě, zkuste načíst stránku znovu."
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1172
 msgid "Lost Document Lock"
-msgstr "Zámek zápisu dokumentu odvolán"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1175, includes/class-wp-document-revisions-admin.php:1177
 msgid "%d mins"
-msgstr "%d minuty"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1179
 msgid "%d hour"
-msgstr "%d hodina"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1181
 msgid "%d hours"
-msgstr "%d hodiny"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1183
 msgid "%d day"
-msgstr "%d den"
+msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1185
 msgid "%d days"
-msgstr "%d dny"
+msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:122
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<span class=\"agoby\">před</span><a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">uživatelem</span></a> <span class=\"author\">%5$s</a>"
+msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:257, includes/class-wp-document-revisions-front-end.php:260
 msgid "Recently Revised Documents"
-msgstr "Poslení zobrazené dokumenty"
+msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author
 #: includes/class-wp-document-revisions-front-end.php:306
 msgid "%1$s ago by %2$s"
-msgstr "před %1$s uživatelem %2$s"
+msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author
 #: includes/class-wp-document-revisions-front-end.php:306
 msgid "%1$s ago"
-msgstr "před %1$s"
+msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:333
 msgid "Title:"
-msgstr "Název:"
+msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:337
 msgid "Number of Posts:"
-msgstr "Počet příspěvků:"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:153
 msgctxt "post type general name"
 msgid "Documents"
-msgstr "Dokumenty"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:154
 msgctxt "post type singular name"
 msgid "Document"
-msgstr "Dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:155
 msgctxt "document"
 msgid "Add Document"
-msgstr "Přidat dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:156
 msgid "Add New Document"
-msgstr "Přidat nový dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:157
 msgid "Edit Document"
-msgstr "Upravit dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:158
 msgid "New Document"
-msgstr "Nový dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:159
 msgid "View Document"
-msgstr "Zobrazit dokument"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:160
 msgid "Search Documents"
-msgstr "Hledat v dokumentech"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:161
 msgid "No documents found"
-msgstr "Žádné dokumenty nenalezeny"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:162
 msgid "No documents found in Trash"
-msgstr "Žádné dokumenty v koši nenalezeny"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:165
 msgid "All Documents"
-msgstr "Všechny dokumenty"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:199
 msgctxt "taxonomy general name"
 msgid "Workflow States"
-msgstr "Stavy ve workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:200
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
-msgstr "Stav ve workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:201
 msgid "Search Workflow States"
-msgstr "Hledat ve stavech workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:202
 msgid "All Workflow States"
-msgstr "Všechny stavy workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:203
 msgid "Parent Workflow State"
-msgstr "Nadřízený stav ve workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:204
 msgid "Parent Workflow State:"
-msgstr "Nadřízený stav ve workflow:"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:205
 msgid "Edit Workflow State"
-msgstr "Upravit stav workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:206
 msgid "Update Workflow State"
-msgstr "Aktualizovat stav workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:207
 msgid "Add New Workflow State"
-msgstr "Přidat nový stav workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:208
 msgid "New Workflow State Name"
-msgstr "Název nového stavu workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:209
 msgid "Workflow States"
-msgstr "Stavy workflow"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:246
 msgid "In Progress"
-msgstr "Zpracování"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:246
 msgid "Document is in the process of being written"
-msgstr "Dokument se tvoří"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:247
 msgid "Initial Draft"
-msgstr "Počáteční šablona"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:247
 msgid "Document is being edited and refined"
-msgstr "Dokument se upravuje a přepisuje"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:248
 msgid "Under Review"
-msgstr "Kontroluje se"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:248
 msgid "Document is pending final review"
-msgstr "Dokument čeká na konečnou kontrolu"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:249
 msgid "Final"
-msgstr "Konečná verze"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:249
 msgid "Document is in its final form"
-msgstr "Dokument je ve finální formě"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:499, includes/class-wp-document-revisions.php:804
 msgid "-revision-"
-msgstr "-verze-"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:778
 msgid "You are not authorized to access that file."
-msgstr "Nemáte přístup k tomuto souboru."
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:1237
 msgid "Sorry, this is a private feed."
-msgstr "Omlouváme se, toto je soukromý feed."
+msgstr ""
 
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title
 #: includes/class-wp-document-revisions.php:1336
 msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr "%1$s: %2$s si vynutil zápis a zrušil tím uzamčení na %3$s"
+msgstr ""
 
 #. translators: %s is the user's name
 #: includes/class-wp-document-revisions.php:1341
 msgid "Dear %s:"
-msgstr "Drahý %s:"
+msgstr ""
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
 #: includes/class-wp-document-revisions.php:1343
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr "%1$s (%2$s), si vynutil zápis na %3$s (%4$s)."
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:1344
 msgid "Any changes you have made will be lost."
-msgstr "Veškeré změny, které jste provedli, budou ztraceny."
+msgstr ""
 
 #. translators: %s is the blog name
 #: includes/class-wp-document-revisions.php:1346
 msgid "- The %s Team"
-msgstr "- Team %s"
+msgstr ""
 
 #. translators: %s is the document title
 #: includes/class-wp-document-revisions.php:1508
 msgid "%s - Latest Revision"
-msgstr "%s - Poslední verze"
+msgstr ""
 
 #: includes/class-wp-document-revisions.php:1525
 msgid "%1$s - Revision %2$d"
