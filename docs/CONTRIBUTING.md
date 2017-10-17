@@ -1,14 +1,15 @@
-## Contributing to WP Document Revisions
+# Contributing to WP Document Revisions
 
 WP Document Revisions is an open source project supported by the efforts of an entire community and built one contribution at a time by users like you. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests, helping other users by commenting on issues, or writing code which can be incorporated into WP Document Revisions itself.
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
-### Looking for support?
 
-See [Where to get Support or Report an Issue](SUPPORT.md).
+## Looking for support?
 
-### How to report a bug
+We'd love to help. Check out [the support guidelines](SUPPORT.md).
+
+## How to report a bug
 
 Think you found a bug? Please check [the list of open issues](https://github.com/benbalter/wp-document-revisions/issues) to see if your bug has already been reported. If it hasn't please [submit a new issue](https://github.com/benbalter/wp-document-revisions/issues/new).
 
@@ -24,7 +25,7 @@ Here are a few tips for writing *great* bug reports:
 
 **If you find a security vulnerability, do not open an issue. Please email ben@balter.com instead.**
 
-### How to suggest a feature or enhancement
+## How to suggest a feature or enhancement
 
 If you find yourself wishing for a feature that doesn't exist in WP Document Revisions, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that WP Document Revisions has today have been added because our users saw the need.
 
@@ -32,7 +33,9 @@ Feature requests are welcome. But take a moment to find out whether your idea fi
 
 [Open an issue](https://github.com/benbalter/wp-document-revisions/issues/new) which describes the feature you would like to see, why you want it, how it should work, etc.
 
-### Your first contribution
+
+
+## Your first contribution
 
 We'd love for you to contribute to the project. Unsure where to begin contributing to WP Document Revisions? You can start by looking through these "good first issue" and "help wanted" issues:
 
@@ -41,7 +44,7 @@ We'd love for you to contribute to the project. Unsure where to begin contributi
 
 *p.s. Feel free to ask for help; everyone is a beginner at first* :smiley_cat:
 
-### How to propose changes
+## How to propose changes
 
 Here's a few general guidelines for proposing changes:
 
@@ -51,7 +54,7 @@ Here's a few general guidelines for proposing changes:
 * Do not commit changes to files that are irrelevant to your feature or bug fix
 * Don't bump the version number in your pull request (it will be bumped prior to release)
 
-At a high level, the process for proposing changes is:
+At a high level, [the process for proposing changes](https://guides.github.com/introduction/flow/) is:
 
 1. Fork the project
 2. Create a descriptively named branch
@@ -60,14 +63,14 @@ At a high level, the process for proposing changes is:
 
 **Interesting in submitting your first Pull Request?** It's easy! You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
 
-### Bootstrapping your local development environment
+## Bootstrapping your local development environment
 
 `script/bootstrap`
 
-### Running tests
+## Running tests
 
 `script/cibuild`
 
-### Code of conduct
+## Code of conduct
 
-This project is governed by [the Contributor Covenant Code of Conduct](CONTRIBUTING.md). By participating, you are expected to uphold this code.
+This project is governed by [the Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
