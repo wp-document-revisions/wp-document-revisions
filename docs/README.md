@@ -1,6 +1,6 @@
 # WP Document Revisions
 
-[![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions)
+[![Build Status](https://secure.travis-ci.org/benbalter/wp-document-revisions.png?branch=master)](http://travis-ci.org/benbalter/wp-document-revisions) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
