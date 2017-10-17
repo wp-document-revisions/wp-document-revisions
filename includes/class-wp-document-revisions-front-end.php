@@ -312,7 +312,8 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		<?php
 		endforeach;
 
-		echo esc_html( '</ul>' . $args['after_widget'] );
+		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo '</ul>' . $args['after_widget'];
 	}
 
 
