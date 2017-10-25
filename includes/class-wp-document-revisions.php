@@ -663,11 +663,15 @@ class WP_Document_Revisions {
 		);
 
 		$i = 1;
+
+		$output = array();
 		foreach ( $revs as $rev ) {
 			$output[ $i++ ] = $rev->ID;
 		}
 
-		wp_cache_set( $post_id, $output, 'document_revision_indices' );
+		if ( ! empty( $output ) ) {
+			wp_cache_set( $post_id, $output, 'document_revision_indices' );
+		}
 
 		return $output;
 
