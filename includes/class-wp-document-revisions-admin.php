@@ -1166,22 +1166,22 @@ class WP_Document_Revisions_Admin {
 			'lockNeedle'          => __( 'is currently editing this' ), // purposely left out text domain
 			'postUploadNotice'    => '<div id="message" class="updated" style="display:none"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
 			'postDesktopNotice'   => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
-		// translators: %s is the title of the document
+			// translators: %s is the title of the document
 			'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 			'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
 			'lostLockNoticeLogo'  => admin_url( 'images/logo.gif' ),
-		// translators: %d is the numeric minutes, when singular
+			// translators: %d is the numeric minutes, when singular
 			'minute'              => __( '%d mins', 'wp-document-revisions' ),
-		// translators: %d is the numeric minutes, when plural
+			// translators: %d is the numeric minutes, when plural
 			'minutes'             => __( '%d mins', 'wp-document-revisions' ),
-		// translators: %d is the numeric hour, when singular
+			// translators: %d is the numeric hour, when singular
 			'hour'                => __( '%d hour', 'wp-document-revisions' ),
-		// translators: %d is the numeric hour, when plural
+			// translators: %d is the numeric hour, when plural
 			'hours'               => __( '%d hours', 'wp-document-revisions' ),
-		// translators: %d is the numeric day, when singular
+			// translators: %d is the numeric day, when singular
 			'day'                 => __( '%d day', 'wp-document-revisions' ),
-		// translators: %d is the numeric days, when plural
+			// translators: %d is the numeric days, when plural
 			'days'                => __( '%d days', 'wp-document-revisions' ),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
 			'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
