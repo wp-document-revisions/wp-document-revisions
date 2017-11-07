@@ -1281,7 +1281,7 @@ class WP_Document_Revisions_Admin {
 	function revision_filter( $id ) {
 
 		// verify post type
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $this->verify_post_type( $id ) ) {
 			return;
 		}
 
@@ -1348,7 +1348,7 @@ class WP_Document_Revisions_Admin {
 		global $post;
 
 		// verify that this is a new document
-		if ( ! isset( $post ) || ! $this->verify_post_type() || strlen( $post->post_content ) > 0 ) {
+		if ( ! isset( $post ) || ! $this->verify_post_type( $post ) || strlen( $post->post_content ) > 0 ) {
 			return;
 		}
 
