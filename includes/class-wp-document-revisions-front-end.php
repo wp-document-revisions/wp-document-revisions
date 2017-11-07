@@ -380,7 +380,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 /**
  * Callback to register the recently revised widget
  */
-public function drrrw_widgets_init() {
+function drrrw_widgets_init() {
 	register_widget( 'Document_Revisions_Recently_Revised_Widget' );
 }
 
