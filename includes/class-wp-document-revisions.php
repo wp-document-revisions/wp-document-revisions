@@ -1507,7 +1507,13 @@ class WP_Document_Revisions {
 	 * @param int    $post_id The ID of the post for which the title is being generated.
 	 * @return string the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( $title, $post_id ) {
+	public function add_revision_num_to_title( $title, $post_id = null ) {
+
+		// If a post ID is not provided, do not attempt to filter the title.
+		if ( is_null( $post_id ) ) {
+			return $title;
+		}
+
 		$post = get_post( $post_id );
 
 		// verify post type
