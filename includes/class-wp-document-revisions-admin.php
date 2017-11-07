@@ -1103,7 +1103,7 @@ class WP_Document_Revisions_Admin {
 			$doc_id = wp_is_post_revision( $doc_id );
 		}
 
-		$old = wp_get_post_terms( $doc_id,  'workflow_state', true );
+		$old = wp_get_post_terms( $doc_id, 'workflow_state', true );
 
 		// no change, keep moving
 		if ( isset( $old[0] ) && $old[0]->slug === $_POST['workflow_state'] ) {
@@ -1165,7 +1165,7 @@ class WP_Document_Revisions_Admin {
 			'restoreConfirmation' => __( 'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp-document-revisions' ),
 			'lockNeedle'          => __( 'is currently editing this' ), // purposely left out text domain
 			'postUploadNotice'    => '<div id="message" class="updated" style="display:none"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
-			'postDesktopNotice'    => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
+			'postDesktopNotice'   => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
 		// translators: %s is the title of the document
 			'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 			'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
@@ -1184,7 +1184,7 @@ class WP_Document_Revisions_Admin {
 		// translators: %d is the numeric days, when plural
 			'days'                => __( '%d days', 'wp-document-revisions' ),
 			'offset'              => get_option( 'gmt_offset' ) * 3600,
-		'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
+			'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
 		);
 
 		$wpdr = self::$parent;

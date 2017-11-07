@@ -60,7 +60,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
 
 		// rewrites and permalinks
-		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );
+		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
 		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
@@ -515,7 +515,7 @@ class WP_Document_Revisions {
 		$timestamp = strtotime( $document->post_date );
 		$link = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
 		$link .= ( $leavename ) ? '%document%' : $document->post_name;
-		$link .= $extension ;
+		$link .= $extension;
 
 		$link = apply_filters( 'document_permalink', $link, $document );
 
@@ -779,7 +779,7 @@ class WP_Document_Revisions {
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
-				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array(
+				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ), null, array(
 					'response' => 403,
 				)
 			);
@@ -845,8 +845,8 @@ class WP_Document_Revisions {
 		$modified_timestamp = strtotime( $last_modified );
 
 		if ( ( $client_last_modified && $client_etag )
-			? ( ( $client_modified_timestamp >= $modified_timestamp) && ( $client_etag === $etag ) )
-			: ( ( $client_modified_timestamp >= $modified_timestamp) || ( $client_etag === $etag ) )
+			? ( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag === $etag ) )
+			: ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) )
 		) {
 			status_header( 304 );
 			return;
@@ -1288,7 +1288,7 @@ class WP_Document_Revisions {
 
 		// verify current user can edit
 		// consider a specific permission check here
-		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post' , $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
+		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post', $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
 			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
 		}
 
@@ -1344,7 +1344,7 @@ class WP_Document_Revisions {
 		// translators: %s is the user's name
 		$message = sprintf( __( 'Dear %s:', 'wp-document-revisions' ), $lock_owner->display_name ) . "\n\n";
 		// translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
-		$message .= sprintf( __( '%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name,  $current_user->user_email, $document->post_title, get_permalink( $document->ID ) ) . "\n\n";
+		$message .= sprintf( __( '%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name, $current_user->user_email, $document->post_title, get_permalink( $document->ID ) ) . "\n\n";
 		$message .= __( 'Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
 		// translators: %s is the blog name
 		$message .= sprintf( __( '- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
@@ -1353,7 +1353,7 @@ class WP_Document_Revisions {
 		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
 
 		// send mail
-		return wp_mail( $lock_owner->user_email, $subject , $message );
+		return wp_mail( $lock_owner->user_email, $subject, $message );
 
 	}
 
@@ -1512,7 +1512,7 @@ class WP_Document_Revisions {
 				$title = sprintf( __( '%s - Latest Revision', 'wp-document-revisions' ), $title );
 			}
 
-			return apply_filters( 'document_title',  $title );
+			return apply_filters( 'document_title', $title );
 
 		}
 
