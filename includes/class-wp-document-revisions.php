@@ -1160,7 +1160,12 @@ class WP_Document_Revisions {
 			}
 		}
 
-		$post_type = get_post_type( $documentish );
+		if ( false === $documentish ) {
+			return false;
+		}
+
+		$post = get_post( $documentish );
+		$post_type = $post->post_type;
 
 		// if post is really an attachment or revision, look to the post's parent
 		if ( 'attachment' === $post_type || 'revision' === $post_type ) {
