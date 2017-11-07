@@ -28,7 +28,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Setup Initial Testing Environment
 	 */
-	function setUp() {
+	public function setUp() {
 
 		global $wpdr;
 
@@ -55,14 +55,14 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * If called via rewrites tests
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->setUp();
 	}
 
 	/**
 	 * Make sure plugin is activated
 	 */
-	function test_activated() {
+	public function test_activated() {
 
 		$this->assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 
@@ -72,7 +72,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Post type is properly registered
 	 */
-	function test_post_type_exists() {
+	public function test_post_type_exists() {
 
 		$this->assertTrue( post_type_exists( 'document' ), 'Document post type does not exist' );
 
@@ -82,7 +82,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Workflow states exists and are initialized
 	 */
-	function test_workflow_states_exist() {
+	public function test_workflow_states_exist() {
 
 		$terms = get_terms(
 			'workflow_state', array(
@@ -102,7 +102,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * @param string $file relative URL to file to "upload"
 	 * @return int the attachment ID
 	 */
-	function spoof_upload( $post_id, $file ) {
+	public function spoof_upload( $post_id, $file ) {
 
 		global $wpdr;
 		$file = dirname( __FILE__ ) . '/' . $file;
@@ -148,7 +148,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 *
 	 * @return int document id
 	 */
-	function test_add_document() {
+	public function test_add_document() {
 		global $wpdr;
 		global $wpdb;
 
@@ -206,7 +206,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 *
 	 * @return int the revision ID
 	 */
-	function test_revise_document() {
+	public function test_revise_document() {
 
 		$doc_id = self::test_add_document();
 
@@ -235,7 +235,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * @param string $file relative url to file
 	 * @param string $msg message to display on failure
 	 */
-	function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+	public function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
 		if ( ! $post_id ) {
 			return;
@@ -252,7 +252,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Validate teh get_attachments function are few different ways
 	 */
-	function test_get_attachments() {
+	public function test_get_attachments() {
 
 		global $wpdr;
 
@@ -284,7 +284,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Verify the get_file_Type function works
 	 */
-	function test_file_type() {
+	public function test_file_type() {
 
 		global $wpdr;
 
@@ -304,7 +304,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Make sure get_revisions() works
 	 */
-	function test_get_revisions() {
+	public function test_get_revisions() {
 		global $wpdr;
 
 		$doc_id = $this->test_revise_document();
@@ -317,7 +317,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Tets get_revision_number()
 	 */
-	function test_get_revision_number() {
+	public function test_get_revision_number() {
 
 		global $wpdr;
 
@@ -333,7 +333,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Tests varify_post_type() with the various ways used throughout
 	 */
-	function test_verify_post_type() {
+	public function test_verify_post_type() {
 		global $wpdr;
 
 		$doc_id = $this->test_add_document();
