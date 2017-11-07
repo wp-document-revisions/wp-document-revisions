@@ -30,7 +30,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $meta_key
 	 */
-	public static $meta_key   = 'document_revisions_feed_key';
+	public static $meta_key = 'document_revisions_feed_key';
 
 	/**
 	 * The plugin version
@@ -504,7 +504,7 @@ class WP_Document_Revisions {
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
 			$link = site_url( '?post_type=document&p=' . $document->ID );
 			if ( $revision_num ) {
-				 $link = add_query_arg( 'revision', $revision_num, $link );
+				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 			return apply_filters( 'document_permalink', $link, $document );
 		}

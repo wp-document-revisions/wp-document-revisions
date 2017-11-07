@@ -6,9 +6,9 @@
  * @package WP Document Revisions
  */
 
- /**
-  * The WP Admin backend object
-  */
+/**
+ * The WP Admin backend object
+ */
 class WP_Document_Revisions_Admin {
 
 	/**
@@ -214,7 +214,7 @@ class WP_Document_Revisions_Admin {
 				__( 'Documents', 'wp-document-revisions' ) =>
 				'<p>' . __( 'Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'To add a new document, click <strong>Add Document</strong> on the left-hand side.', 'wp-document-revisions' ) . '</p><p>' .
-			  __( 'To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.', 'wp-document-revisions' ) . '</p>',
+				__( 'To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left.', 'wp-document-revisions' ) . '</p>',
 			),
 		);
 
@@ -782,7 +782,7 @@ class WP_Document_Revisions_Admin {
 		// if there is no page var, this is a new document, no need to warn
 		if ( isset( $_GET['post'] ) ) :
 		?>
-		 <div class="error" id="lock-notice"><p><?php esc_html_e( 'You currently have this file checked out. No other user can edit this document so long as you remain on this page.', 'wp-document-revisions' ); ?></p></div>
+		<div class="error" id="lock-notice"><p><?php esc_html_e( 'You currently have this file checked out. No other user can edit this document so long as you remain on this page.', 'wp-document-revisions' ); ?></p></div>
 			<?php
 			endif;
 	}
