@@ -355,7 +355,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		$post = get_post( $doc_id );
 		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
 
-		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via global $post' );
+		$this->assertTrue( $wpdr->verify_post_type( $post ), 'verify post type via global $post' );
 		unset( $post );
 
 		$this->assertTrue( $wpdr->verify_post_type( $doc_id ) );

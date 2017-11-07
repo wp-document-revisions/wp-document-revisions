@@ -1128,7 +1128,11 @@ class WP_Document_Revisions {
 
 	/**
 	 * Checks if a given post is a document
-	 * note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
+	 *
+	 * When called with `false`, will look to other available global data to determine whether
+	 * this request is for a document post type. Will *not* look to the global `$post` object.
+	 *
+	 * Note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
 	 *
 	 * @param object|int|bool $documentish a post object, postID, or false
 	 * @since 0.5
