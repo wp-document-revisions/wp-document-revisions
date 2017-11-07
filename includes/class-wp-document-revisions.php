@@ -16,21 +16,21 @@ class WP_Document_Revisions {
 	 *
 	 * @var Object $instance
 	 */
-	static $instance;
+	public static $instance;
 
 	/**
 	 * Length of feed key
 	 *
 	 * @var Int $key_legth
 	 */
-	static $key_length = 32;
+	public static $key_length = 32;
 
 	/**
 	 * User meta key used auth feeds
 	 *
 	 * @var String $meta_key
 	 */
-	static $meta_key   = 'document_revisions_feed_key';
+	public static $meta_key = 'document_revisions_feed_key';
 
 	/**
 	 * The plugin version
@@ -44,7 +44,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function __construct() {
+	public function __construct() {
 
 		self::$instance = &$this;
 
@@ -60,7 +60,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
 
 		// rewrites and permalinks
-		add_filter( 'rewrite_rules_array' , array( &$this, 'revision_rewrite' ) );
+		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
 		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
@@ -111,7 +111,7 @@ class WP_Document_Revisions {
 	 *
 	 * @return void
 	 */
-	function activation_hook() {
+	public function activation_hook() {
 		$this->add_caps();
 		flush_rewrite_rules();
 	}
@@ -120,7 +120,7 @@ class WP_Document_Revisions {
 	 * Init i18n files
 	 * Must be done early on init because they need to be in place when register_cpt is called
 	 */
-	function i18n() {
+	public function i18n() {
 		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 
@@ -130,7 +130,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function admin_init() {
+	public function admin_init() {
 
 		// only fire on admin + escape hatch to prevent fatal errors
 		if ( ! is_admin() || class_exists( 'Document_Revisions_Admin' ) ) {
@@ -147,7 +147,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function register_cpt() {
+	public function register_cpt() {
 
 		$labels = array(
 			'name'               => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
@@ -193,7 +193,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function register_ct() {
+	public function register_ct() {
 
 		$labels = array(
 			'name'              => _x( 'Workflow States', 'taxonomy general name', 'wp-document-revisions' ),
@@ -230,7 +230,7 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 * @return unknown
 	 */
-	function initialize_workflow_states() {
+	public function initialize_workflow_states() {
 
 		$terms = get_terms(
 			'workflow_state', array(
@@ -268,7 +268,7 @@ class WP_Document_Revisions {
 	 * @param object $document (optional) post object
 	 * @return object all attached uploads
 	 */
-	function get_attachments( $document = '' ) {
+	public function get_attachments( $document = '' ) {
 
 		if ( '' === $document ) {
 			global $post;
@@ -317,7 +317,7 @@ class WP_Document_Revisions {
 	 * @param object|int $document the post object or postID
 	 * @return bool|string false if no lock, user's display name if locked
 	 */
-	function get_document_lock( $document ) {
+	public function get_document_lock( $document ) {
 
 		if ( ! is_object( $document ) ) {
 			$document = get_post( $document );
@@ -354,7 +354,7 @@ class WP_Document_Revisions {
 	 * @param string $file URL, path, or filename to file
 	 * @return string extension
 	 */
-	function get_extension( $file ) {
+	public function get_extension( $file ) {
 
 		$extension = '.' . pathinfo( $file, PATHINFO_EXTENSION );
 
@@ -375,7 +375,7 @@ class WP_Document_Revisions {
 	 * @param object|int $document_or_attachment document or attachment
 	 * @return string the extension to the latest revision
 	 */
-	function get_file_type( $document_or_attachment = '' ) {
+	public function get_file_type( $document_or_attachment = '' ) {
 
 		if ( '' === $document_or_attachment ) {
 			global $post;
@@ -418,7 +418,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function inject_rules() {
+	public function inject_rules() {
 
 		global $wp_rewrite;
 		$wp_rewrite->add_rewrite_tag( '%document%', '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
@@ -433,7 +433,7 @@ class WP_Document_Revisions {
 	 * @param Array $rules rewrite rules
 	 * @return Array rewrite rules
 	 */
-	function revision_rewrite( $rules ) {
+	public function revision_rewrite( $rules ) {
 
 		$slug = $this->document_slug();
 
@@ -465,7 +465,7 @@ class WP_Document_Revisions {
 	 * @param array $vars the query vars
 	 * @return array the modified query vars
 	 */
-	function add_query_var( $vars ) {
+	public function add_query_var( $vars ) {
 		$vars[] = 'revision';
 		$vars[] = 'document';
 		return $vars;
@@ -482,7 +482,7 @@ class WP_Document_Revisions {
 	 * @param String $sample (optional) not used
 	 * @return string the real permalink
 	 */
-	function permalink( $link, $document, $leavename, $sample = '' ) {
+	public function permalink( $link, $document, $leavename, $sample = '' ) {
 
 		global $wp_rewrite;
 		$revision_num = false;
@@ -504,7 +504,7 @@ class WP_Document_Revisions {
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
 			$link = site_url( '?post_type=document&p=' . $document->ID );
 			if ( $revision_num ) {
-				 $link = add_query_arg( 'revision', $revision_num, $link );
+				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 			return apply_filters( 'document_permalink', $link, $document );
 		}
@@ -515,7 +515,7 @@ class WP_Document_Revisions {
 		$timestamp = strtotime( $document->post_date );
 		$link = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
 		$link .= ( $leavename ) ? '%document%' : $document->post_name;
-		$link .= $extension ;
+		$link .= $extension;
 
 		$link = apply_filters( 'document_permalink', $link, $document );
 
@@ -532,7 +532,7 @@ class WP_Document_Revisions {
 	 * @param int    $id Post ID
 	 * @return unknown
 	 */
-	function sample_permalink_html_filter( $html, $id ) {
+	public function sample_permalink_html_filter( $html, $id ) {
 
 		$document = get_post( $id );
 
@@ -563,7 +563,7 @@ class WP_Document_Revisions {
 	 * @param int $post_id the post ID
 	 * @return array array of post objects
 	 */
-	function get_revisions( $post_id ) {
+	public function get_revisions( $post_id ) {
 
 		// Revision authors are actually shifted by one
 		// This moves each revision author up one, and then uses the post_author as the initial revision
@@ -624,7 +624,7 @@ class WP_Document_Revisions {
 	 * @param bool $feed (optional) whether this is a feed
 	 * @return obj|bool the WP_Query object, false on failure
 	 */
-	function get_revision_query( $post_id, $feed = false ) {
+	public function get_revision_query( $post_id, $feed = false ) {
 
 		$posts = $this->get_revisions( $post_id );
 
@@ -649,7 +649,7 @@ class WP_Document_Revisions {
 	 * @param int $post_id the parent post id
 	 * @return array array of revisions
 	 */
-	function get_revision_indices( $post_id ) {
+	public function get_revision_indices( $post_id ) {
 
 		$cache = wp_cache_get( $post_id, 'document_revision_indices' );
 		if ( $cache ) {
@@ -685,7 +685,7 @@ class WP_Document_Revisions {
 	 * @param int $revision_id the revision ID
 	 * @return int revision number
 	 */
-	function get_revision_number( $revision_id ) {
+	public function get_revision_number( $revision_id ) {
 
 		$revision = get_post( $revision_id );
 
@@ -708,7 +708,7 @@ class WP_Document_Revisions {
 	 * @param int $post_id the ID of the parent post
 	 * @return int the ID of the revision
 	 */
-	function get_revision_id( $revision_num, $post_id ) {
+	public function get_revision_id( $revision_num, $post_id ) {
 
 		$index = $this->get_revision_indices( $post_id );
 
@@ -724,7 +724,7 @@ class WP_Document_Revisions {
 	 * @param String $template the requested template
 	 * @return String the resolved template
 	 */
-	function serve_file( $template ) {
+	public function serve_file( $template ) {
 		global $post;
 		global $wp_query;
 		global $wp;
@@ -779,7 +779,7 @@ class WP_Document_Revisions {
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
-				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ) , null, array(
+				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ), null, array(
 					'response' => 403,
 				)
 			);
@@ -845,8 +845,8 @@ class WP_Document_Revisions {
 		$modified_timestamp = strtotime( $last_modified );
 
 		if ( ( $client_last_modified && $client_etag )
-			? ( ( $client_modified_timestamp >= $modified_timestamp) && ( $client_etag === $etag ) )
-			: ( ( $client_modified_timestamp >= $modified_timestamp) || ( $client_etag === $etag ) )
+			? ( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag === $etag ) )
+			: ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) )
 		) {
 			status_header( 304 );
 			return;
@@ -877,7 +877,7 @@ class WP_Document_Revisions {
 	 * @param bool|int $version version of the document being served, if any
 	 * @return unknown
 	 */
-	function serve_document_auth( $default, $post, $version ) {
+	public function serve_document_auth( $default, $post, $version ) {
 
 		// public file, not a revision, no need to go any further
 		// note: non-authenticated users only have the "read" cap, so can't auth via read_document
@@ -906,7 +906,7 @@ class WP_Document_Revisions {
 	 * @param Int $id the post ID
 	 * @return unknown
 	 */
-	function get_latest_version( $id ) {
+	public function get_latest_version( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_version' );
 		return $this->get_latest_revision( $id );
 	}
@@ -918,7 +918,7 @@ class WP_Document_Revisions {
 	 * @param Int $post_id the post id
 	 * @return object latest revision object
 	 */
-	function get_latest_revision( $post_id ) {
+	public function get_latest_revision( $post_id ) {
 
 		if ( is_object( $post_id ) ) {
 			$post_id = $post_id->ID;
@@ -956,7 +956,7 @@ class WP_Document_Revisions {
 	 * @param Int $id the post ID
 	 * @return String the revision URL
 	 */
-	function get_latest_version_url( $id ) {
+	public function get_latest_version_url( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_revision_url' );
 		return $this->get_latest_revision_url( $id );
 	}
@@ -969,7 +969,7 @@ class WP_Document_Revisions {
 	 * @param int $id post ID
 	 * @return string|bool URL to revision or false if no attachment
 	 */
-	function get_latest_revision_url( $id ) {
+	public function get_latest_revision_url( $id ) {
 
 		$latest = $this->get_latest_revision( $id );
 
@@ -992,7 +992,7 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 * @return string path to document
 	 */
-	function document_upload_dir() {
+	public function document_upload_dir() {
 
 		global $wpdb;
 
@@ -1027,7 +1027,7 @@ class WP_Document_Revisions {
 	 *
 	 * @return unknown
 	 */
-	function document_slug() {
+	public function document_slug() {
 
 		$slug = get_site_option( 'document_slug' );
 
@@ -1047,7 +1047,7 @@ class WP_Document_Revisions {
 	 * @param array $dir defaults passed from WP
 	 * @return array $dir modified directory
 	 */
-	function document_upload_dir_filter( $dir ) {
+	public function document_upload_dir_filter( $dir ) {
 
 		if ( ! $this->verify_post_type() ) {
 			return $dir;
@@ -1071,7 +1071,7 @@ class WP_Document_Revisions {
 	 * @param int    $id attachment ID
 	 * @return string empty string
 	 */
-	function attachment_link_filter( $link, $id ) {
+	public function attachment_link_filter( $link, $id ) {
 
 		if ( ! $this->verify_post_type( $id ) ) {
 			return $link;
@@ -1088,7 +1088,7 @@ class WP_Document_Revisions {
 	 * @param array $file file data from WP
 	 * @return array $file file with new filename
 	 */
-	function filename_rewrite( $file ) {
+	public function filename_rewrite( $file ) {
 
 		// verify this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
@@ -1112,7 +1112,7 @@ class WP_Document_Revisions {
 	 * @param array $file file object from WP
 	 * @return array modified file array
 	 */
-	function rewrite_file_url( $file ) {
+	public function rewrite_file_url( $file ) {
 
 		// verify that this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
@@ -1134,7 +1134,7 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 * @return bool true if document, false if not
 	 */
-	function verify_post_type( $documentish = false ) {
+	public function verify_post_type( $documentish = false ) {
 		global $wp_query;
 
 		if ( false === $documentish ) {
@@ -1177,7 +1177,7 @@ class WP_Document_Revisions {
 	 *
 	 * @param int $post_id the post ID
 	 */
-	function clear_cache( $post_id ) {
+	public function clear_cache( $post_id ) {
 		wp_cache_delete( $post_id, 'document_post_type' );
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
@@ -1189,7 +1189,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function do_feed_revision_log() {
+	public function do_feed_revision_log() {
 
 		// because we're in function scope, pass $post as a global
 		global $post;
@@ -1213,7 +1213,7 @@ class WP_Document_Revisions {
 	 * @param string $default the original feed
 	 * @return string the slug for our feed
 	 */
-	function hijack_feed( $default ) {
+	public function hijack_feed( $default ) {
 
 		if ( ! $this->verify_post_type() || ! apply_filters( 'document_custom_feed', true ) ) {
 			return $default;
@@ -1231,7 +1231,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 0.5
 	 */
-	function revision_feed_auth() {
+	public function revision_feed_auth() {
 
 		if ( ! $this->verify_post_type() || ! apply_filters( 'document_verify_feed_key', true ) ) {
 			return;
@@ -1250,7 +1250,7 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 * @return bool
 	 */
-	function validate_feed_key() {
+	public function validate_feed_key() {
 
 		global $wpdb;
 
@@ -1282,13 +1282,13 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 * @param bool $send_notice (optional) whether or not to send an e-mail to the former lock owner
 	 */
-	function override_lock( $send_notice = true ) {
+	public function override_lock( $send_notice = true ) {
 
 		check_ajax_referer( 'wp-document-revisions', 'nonce' );
 
 		// verify current user can edit
 		// consider a specific permission check here
-		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post' , $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
+		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post', $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
 			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
 		}
 
@@ -1324,7 +1324,7 @@ class WP_Document_Revisions {
 	 * @param int $current_user_id id of user overriding lock
 	 * @return bool true on sucess, false on fail
 	 */
-	function send_override_notice( $post_id, $owner_id, $current_user_id ) {
+	public function send_override_notice( $post_id, $owner_id, $current_user_id ) {
 
 		// get lock owner's details
 		$lock_owner = get_userdata( $owner_id );
@@ -1344,7 +1344,7 @@ class WP_Document_Revisions {
 		// translators: %s is the user's name
 		$message = sprintf( __( 'Dear %s:', 'wp-document-revisions' ), $lock_owner->display_name ) . "\n\n";
 		// translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
-		$message .= sprintf( __( '%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name,  $current_user->user_email, $document->post_title, get_permalink( $document->ID ) ) . "\n\n";
+		$message .= sprintf( __( '%1$s (%2$s), has overridden your lock on the document %3$s (%4$s).', 'wp-document-revisions' ), $current_user->display_name, $current_user->user_email, $document->post_title, get_permalink( $document->ID ) ) . "\n\n";
 		$message .= __( 'Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
 		// translators: %s is the blog name
 		$message .= sprintf( __( '- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
@@ -1353,7 +1353,7 @@ class WP_Document_Revisions {
 		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
 
 		// send mail
-		return wp_mail( $lock_owner->user_email, $subject , $message );
+		return wp_mail( $lock_owner->user_email, $subject, $message );
 
 	}
 
@@ -1364,7 +1364,7 @@ class WP_Document_Revisions {
 
 	 * @since 1.0
 	 */
-	function add_caps() {
+	public function add_caps() {
 		global $wp_roles;
 		if ( ! isset( $wp_roles ) ) {
 			// @codingStandardsIgnoreLine
@@ -1478,7 +1478,7 @@ class WP_Document_Revisions {
 	 * @param string $prepend the sprintf formatted string to prepend to the title
 	 * @return string just the string
 	 */
-	function no_title_prepend( $prepend ) {
+	public function no_title_prepend( $prepend ) {
 
 		if ( ! $this->verify_post_type() ) {
 			return $prepend;
@@ -1496,7 +1496,7 @@ class WP_Document_Revisions {
 	 * @param string $title the title
 	 * @return string the title possibly with the revision number
 	 */
-	function add_revision_num_to_title( $title ) {
+	public function add_revision_num_to_title( $title ) {
 		global $post;
 
 		// verify post type
@@ -1512,7 +1512,7 @@ class WP_Document_Revisions {
 				$title = sprintf( __( '%s - Latest Revision', 'wp-document-revisions' ), $title );
 			}
 
-			return apply_filters( 'document_title',  $title );
+			return apply_filters( 'document_title', $title );
 
 		}
 
@@ -1537,7 +1537,7 @@ class WP_Document_Revisions {
 	 * @param string $content the post content
 	 * @return string either the original content or none
 	 */
-	function content_filter( $content ) {
+	public function content_filter( $content ) {
 
 		if ( ! $this->verify_post_type() ) {
 			return $content;
@@ -1558,7 +1558,7 @@ class WP_Document_Revisions {
 	 *
 	 * @return unknown
 	 */
-	function edit_flow_support() {
+	public function edit_flow_support() {
 
 		global $edit_flow;
 
@@ -1600,7 +1600,7 @@ class WP_Document_Revisions {
 	 *
 	 * @return bool true if workflow states are on, otherwise false
 	 */
-	function use_workflow_states() {
+	public function use_workflow_states() {
 
 		return apply_filters( 'document_use_workflow_states', true );
 
@@ -1610,7 +1610,7 @@ class WP_Document_Revisions {
 	/**
 	 * Removes front-end hooks to add workflow state support
 	 */
-	function disable_workflow_states() {
+	public function disable_workflow_states() {
 
 		if ( $this->use_workflow_states() ) {
 			return;
@@ -1631,7 +1631,7 @@ class WP_Document_Revisions {
 	 * @param unknown $return_attachments (optional)
 	 * @return array an array of post objects
 	 */
-	function get_documents( $args = array(), $return_attachments = false ) {
+	public function get_documents( $args = array(), $return_attachments = false ) {
 
 		$args = (array) $args;
 		$args['post_type'] = 'document';
@@ -1673,7 +1673,7 @@ class WP_Document_Revisions {
 	 * @param int    $post_id the attachment ID
 	 * @return string the modified URL
 	 */
-	function attachment_url_filter( $url, $post_id ) {
+	public function attachment_url_filter( $url, $post_id ) {
 
 		// not an attached attachment
 		if ( ! $this->verify_post_type( $post_id ) ) {
@@ -1715,7 +1715,7 @@ class WP_Document_Revisions {
 	 * @param string $url the permalink
 	 * @return string the modified permalink
 	 */
-	function wamp_document_path_filter( $url ) {
+	public function wamp_document_path_filter( $url ) {
 		$url = preg_replace( '|^([a-z]{1}):|i', '', $url ); // Strip out windows drive letter if it's there.
 		return str_replace( '\\', '/', $url ); // Windows path sanitization
 	}
@@ -1729,7 +1729,7 @@ class WP_Document_Revisions {
 	 * @param Array  $terms the terms to filter
 	 * @param Object $taxonomy the taxonomy object
 	 */
-	function term_count_cb( $terms, $taxonomy ) {
+	public function term_count_cb( $terms, $taxonomy ) {
 		add_filter( 'query', array( &$this, 'term_count_query_filter' ) );
 		_update_post_term_count( $terms, $taxonomy );
 		remove_filter( 'query', array( &$this, 'term_count_query_filter' ) );
@@ -1744,7 +1744,7 @@ class WP_Document_Revisions {
 	 * @param Object $query the query object
 	 * @return String the modified query
 	 */
-	function term_count_query_filter( $query ) {
+	public function term_count_query_filter( $query ) {
 		return str_replace( "post_status = 'publish'", "post_status != 'trash'", $query );
 	}
 
@@ -1755,7 +1755,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 1.2.1
 	 */
-	function register_term_count_cb() {
+	public function register_term_count_cb() {
 
 		$taxs = get_taxonomies(
 			array(
@@ -1781,7 +1781,7 @@ class WP_Document_Revisions {
 	 * @param Object $request the request object
 	 * @return String the redirect URL without the trailing slash
 	 */
-	function redirect_canonical_filter( $redirect, $request ) {
+	public function redirect_canonical_filter( $redirect, $request ) {
 
 		if ( ! $this->verify_post_type() ) {
 			return $redirect;
@@ -1803,7 +1803,7 @@ class WP_Document_Revisions {
 	 * @param string $size the size requested
 	 * @return array the image array returned from image_downsize()
 	 */
-	function image_downsize( $false, $id, $size ) {
+	public function image_downsize( $false, $id, $size ) {
 
 		if ( ! $this->verify_post_type( $id ) ) {
 			return false;
@@ -1837,7 +1837,7 @@ class WP_Document_Revisions {
 	 * @param Object $wp The global WP object
 	 * @return the WP global object
 	 */
-	function ie_cache_fix( $wp ) {
+	public function ie_cache_fix( $wp ) {
 
 		// SSL check
 		if ( ! is_ssl() ) {

@@ -15,7 +15,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * SetUp initial settings
 	 */
-	function setUp() {
+	public function setUp() {
 
 		parent::setUp();
 
@@ -35,7 +35,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Break down for next test
 	 */
-	function tearDown() {
+	public function tearDown() {
 
 		_destroy_uploads();
 		parent::tearDown();
@@ -45,7 +45,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Verify joe public can't access a list of revisions
 	 */
-	function test_revisions_shortcode_unauthed() {
+	public function test_revisions_shortcode_unauthed() {
 
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -59,7 +59,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Verify auth'd user can view revision shortcode and can truncate proper count
 	 */
-	function test_revisions_shortcode() {
+	public function test_revisions_shortcode() {
 
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -77,7 +77,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests the document_revisions shortcode with a number=1 limit
 	 */
-	function test_revision_shortcode_limit() {
+	public function test_revision_shortcode_limit() {
 
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -95,7 +95,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests the documents shortcode
 	 */
-	function test_document_shortcode() {
+	public function test_document_shortcode() {
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -111,7 +111,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests the documents shortcode with a workflow state filter
 	 */
-	function test_document_shortcode_wfs_filter() {
+	public function test_document_shortcode_wfs_filter() {
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -139,7 +139,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Test documetn shortcode with a post_meta filter
 	 */
-	function test_document_shortcode_post_meta_filter() {
+	public function test_document_shortcode_post_meta_filter() {
 
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
@@ -160,7 +160,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests the public get_documents function
 	 */
-	function test_get_documents() {
+	public function test_get_documents() {
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -178,7 +178,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests that get_documents returns attachments when asked
 	 */
-	function test_get_documents_returns_attachments() {
+	public function test_get_documents_returns_attachments() {
 
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
@@ -195,7 +195,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests that get_documents properly filters when asked
 	 */
-	function test_get_documents_filter() {
+	public function test_get_documents_filter() {
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -220,7 +220,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	/**
 	 * Tests the get_revisions function
 	 */
-	function test_get_document_revisions() {
+	public function test_get_document_revisions() {
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document(); // add a doc
 		$this->assertCount( 2, get_document_revisions( $doc_id ) );

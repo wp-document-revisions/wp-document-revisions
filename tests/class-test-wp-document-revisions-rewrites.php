@@ -14,7 +14,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * SetUp initial settings
 	 */
-	function setUp() {
+	public function setUp() {
 
 		parent::setUp();
 
@@ -38,7 +38,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Break down for next test
 	 */
-	function tearDown() {
+	public function tearDown() {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure( '' );
 
@@ -54,7 +54,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file
 	 * @param string $msg message describing failure
 	 */
-	function verify_download( $url = null, $file = null, $msg = null ) {
+	public function verify_download( $url = null, $file = null, $msg = null ) {
 
 		if ( ! $url ) {
 			return;
@@ -86,7 +86,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file
 	 * @param string $msg message describing failure
 	 */
-	function verify_cant_download( $url = null, $file = null, $msg = null ) {
+	public function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
 		if ( ! $url ) {
 			return;
@@ -113,7 +113,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can the public access a public file? (yes)
 	 */
-	function test_public_document() {
+	public function test_public_document() {
 		global $wpdr;
 
 		// make new public document
@@ -133,7 +133,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can the public access a private file? (no)
 	 */
-	function test_private_document_as_unauthenticated() {
+	public function test_private_document_as_unauthenticated() {
 
 		// make new private document
 		$tdr = new Test_WP_Document_Revisions();
@@ -154,7 +154,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can a contributor access a public file? (no)
 	 */
-	function test_private_document_as_contributor() {
+	public function test_private_document_as_contributor() {
 
 		// make new private document
 		$tdr = new Test_WP_Document_Revisions();
@@ -174,7 +174,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can an admin access a private file? (yes)
 	 */
-	function test_private_document_as_admin() {
+	public function test_private_document_as_admin() {
 
 		// make new private document
 		$tdr = new Test_WP_Document_Revisions();
@@ -194,7 +194,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can the public access a document revision? (no)
 	 */
-	function test_document_revision_as_a_unauthenticated() {
+	public function test_document_revision_as_a_unauthenticated() {
 		global $wpdr;
 
 		// make new public, revised document
@@ -219,7 +219,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can an admin access a document revision? (yes)
 	 */
-	function test_document_revision_as_admin() {
+	public function test_document_revision_as_admin() {
 
 		global $wpdr;
 
@@ -245,7 +245,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Do we serve the latest version of a document?
 	 */
-	function test_revised_document() {
+	public function test_revised_document() {
 
 		global $wpdr;
 
@@ -263,7 +263,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Does the document archive work?
 	 */
-	function test_archive() {
+	public function test_archive() {
 		global $wpdr;
 		$tdr = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
@@ -276,7 +276,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Does get_permalink generate the right permalink?
 	 */
-	function test_permalink() {
+	public function test_permalink() {
 
 		global $wpdr;
 		$tdr = new Test_WP_Document_Revisions();
@@ -291,7 +291,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Test get_permalink() on a revision
 	 */
-	function test_revision_permalink() {
+	public function test_revision_permalink() {
 
 		global $wpdr;
 		$tdr = new Test_WP_Document_Revisions();
@@ -311,7 +311,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @return string the content returned
 	 * @throws Exception If there's an error.
 	 */
-	function simulate_feed( $url = null ) {
+	public function simulate_feed( $url = null ) {
 		if ( ! $url ) {
 			return '';
 		}
@@ -329,7 +329,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		ob_start();
 		global $post;
 		try {
-			@require( dirname( __DIR__ ) . '/includes/revision-feed.php' );
+			@require dirname( __DIR__ ) . '/includes/revision-feed.php';
 			$content = ob_get_clean();
 		} catch ( Exception $e ) {
 			$content = ob_get_clean();
@@ -342,7 +342,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can the public access a revision log feed?
 	 */
-	function test_feed_as_unauthenticated() {
+	public function test_feed_as_unauthenticated() {
 
 		global $wpdr;
 
@@ -361,7 +361,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Can a user with the proper feed key access a feed?
 	 */
-	function test_feed_as_authorized() {
+	public function test_feed_as_authorized() {
 
 		global $wpdr;
 
@@ -389,7 +389,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Tests that changing the document slug is reflected in permalinks
 	 */
-	function test_document_slug() {
+	public function test_document_slug() {
 
 		global $wp_rewrite;
 		$tdr = new Test_WP_Document_Revisions();
