@@ -78,9 +78,9 @@ class WP_Document_Revisions {
 		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
 
 		// RSS
-		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
-		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20, 1 );
-		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 1 );
+		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 2 );
+		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20, 2 );
+		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 2 );
 
 		// uploads
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
@@ -1128,7 +1128,11 @@ class WP_Document_Revisions {
 
 	/**
 	 * Checks if a given post is a document
-	 * note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
+	 *
+	 * When called with `false`, will look to other available global data to determine whether
+	 * this request is for a document post type. Will *not* look to the global `$post` object.
+	 *
+	 * Note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts)
 	 *
 	 * @param object|int|bool $documentish a post object, postID, or false
 	 * @since 0.5
@@ -1160,11 +1164,16 @@ class WP_Document_Revisions {
 			}
 		}
 
-		$post_type = get_post_type( $documentish );
+		if ( false === $documentish ) {
+			return false;
+		}
+
+		$post = get_post( $documentish );
+		$post_type = $post->post_type;
 
 		// if post is really an attachment or revision, look to the post's parent
-		if ( 'attachment' === $post_type || 'revision' === $post_type ) {
-			$post_type = get_post_type( get_post( $documentish )->post_parent );
+		if ( ( 'attachment' === $post_type || 'revision' === $post_type ) && 0 !== $post->post_parent ) {
+			$post_type = get_post_type( $post->post_parent );
 		}
 
 		return 'document' === $post_type;
@@ -1475,12 +1484,13 @@ class WP_Document_Revisions {
 	 * Removes Private or Protected from document titles in RSS feeds
 	 *
 	 * @since 1.0
-	 * @param string $prepend the sprintf formatted string to prepend to the title
+	 * @param string  $prepend the sprintf formatted string to prepend to the title
+	 * @param WP_Post $post    The post object for which the title is being generated.
 	 * @return string just the string
 	 */
-	public function no_title_prepend( $prepend ) {
+	public function no_title_prepend( $prepend, $post ) {
 
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $prepend;
 		}
 
@@ -1490,17 +1500,18 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Adds revision number to document tiles
+	 * Adds revision number to document titles
 	 *
 	 * @since 1.0
-	 * @param string $title the title
+	 * @param string $title   the title
+	 * @param int    $post_id The ID of the post for which the title is being generated.
 	 * @return string the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( $title ) {
-		global $post;
+	public function add_revision_num_to_title( $title, $post_id ) {
+		$post = get_post( $post_id );
 
 		// verify post type
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $title;
 		}
 
@@ -1539,7 +1550,7 @@ class WP_Document_Revisions {
 	 */
 	public function content_filter( $content ) {
 
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $this->verify_post_type( get_post() ) ) {
 			return $content;
 		}
 
