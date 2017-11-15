@@ -49,8 +49,8 @@ class WP_Document_Revisions {
 		self::$instance = &$this;
 
 		// admin
-		add_action( 'init', array( &$this, 'admin_init' ) );
-		add_action( 'init', array( &$this, 'i18n' ), 5 );
+		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
+		add_action( 'plugins_loaded', array( &$this, 'i18n' ) );
 
 		// CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -121,7 +121,7 @@ class WP_Document_Revisions {
 	 * Must be done early on init because they need to be in place when register_cpt is called
 	 */
 	public function i18n() {
-		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( dirname( __FILE__ ) ) ) . '/languages/' );
 	}
 
 
