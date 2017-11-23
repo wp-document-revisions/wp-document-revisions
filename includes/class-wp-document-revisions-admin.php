@@ -94,6 +94,9 @@ class WP_Document_Revisions_Admin {
 		// admin css
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
 
+		// admin dashboard
+		add_action('wp_dashboard_setup', array( &$this, 'setup_dashboard' ) );
+
 	}
 
 
@@ -402,7 +405,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function revision_metabox( $post ) {
 
-		$can_edit_post = current_user_can( 'edit_post', $post->ID );
+		$can_edit_post = current_user_can( 'edit_document', $post->ID );
 		$revisions = $this->get_revisions( $post->ID );
 		$key = $this->get_feed_key();
 ?>
@@ -1094,7 +1097,7 @@ class WP_Document_Revisions_Admin {
 		}
 
 		// check permissions
-		if ( ! current_user_can( 'edit_post', $doc_id ) ) {
+		if ( ! current_user_can( 'edit_document', $doc_id ) ) {
 			return;
 		}
 
@@ -1361,5 +1364,68 @@ class WP_Document_Revisions_Admin {
 		// @codingStandardsIgnoreLine WordPress.Variables.GlobalVariables.OverrideProhibited
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
 
+	}
+
+
+	/**
+	 * Set up revisions on admin dashboard
+	 * @ since 3.0.1
+	 */
+	function setup_dashboard() {
+		wp_add_dashboard_widget('wpdr_dashboard', 
+		                        'Recently Revised Documents', 
+		                        array( &$this, 'dashboard_display' ) );
+	}
+
+
+	/**
+	 * Callback to display documents on admin dashboard
+	 * @ since 3.0.1
+	 */
+	function dashboard_display () {
+
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = Document_Revisions::$instance;
+		}
+
+		$query = array(
+			'orderby'     => 'modified',
+			'order'       => 'DESC',
+			'numberposts' => 5,
+		);
+
+		$documents = $wpdr->get_documents( $query );
+
+		// no documents, don't bother
+		if ( ! $documents ) {
+			return;
+		}
+
+		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo '<ul>';
+
+		foreach ( $documents as $document ) :
+			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
+				array(
+					'post' => $document->ID,
+					'action' => 'edit',
+				), admin_url( 'post.php' )
+			) : get_permalink( $document->ID );
+			// translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status 
+			$format_string = __( '%1$s ago by %2$s [%3$s]', 'wp-document-revisions' );
+?>
+			<li>
+				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a>; ?><br />
+				<?php printf( esc_html( $format_string ), 
+				              esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), 
+				              esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
+				              esc_html( ucwords( $document->post_status ) ) ); ?>
+			</li>
+		<?php
+		endforeach;
+
+		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo '</ul>';
 	}
 }

@@ -296,7 +296,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
 		foreach ( $documents as $document ) :
-			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg(
+			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',

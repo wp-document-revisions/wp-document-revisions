@@ -1319,7 +1319,7 @@ class WP_Document_Revisions {
 
 		// verify current user can edit
 		// consider a specific permission check here
-		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_post', $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
+		if ( ! $_POST['post_id'] || ! current_user_can( 'edit_document', $_POST['post_id'] ) || ! current_user_can( 'override_document_lock' ) ) {
 			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
 		}
 
