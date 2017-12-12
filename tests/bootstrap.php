@@ -64,7 +64,7 @@ require $_tests_dir . '/includes/bootstrap.php';
  * @param String $pass the user's password
  * @param string $email the user's email
  */
-function _make_user( $role = 'administrator', $user_login = '', $pass = '', $email = '' ) {
+function _make_user( $role = 'Administrator', $user_login = '', $pass = '', $email = '' ) {
 
 		$user = array(
 			'role' => $role,
