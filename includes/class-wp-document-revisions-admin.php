@@ -95,7 +95,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
 
 		// admin dashboard
-		add_action('wp_dashboard_setup', array( &$this, 'setup_dashboard' ) );
+		add_action( 'wp_dashboard_setup', array( &$this, 'setup_dashboard' ) );
 
 	}
 
@@ -352,11 +352,11 @@ class WP_Document_Revisions_Admin {
 					printf( esc_html__( '%s has prevented other users from making changes.', 'wp-document-revisions' ), esc_html( $lock_holder ) );
 					?>
 			<?php
-      // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
-      if ( current_user_can( 'override_document_lock' ) ) {
+			// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+			if ( current_user_can( 'override_document_lock' ) ) {
 				_e( '<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions' );
-      }
-      // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+			}
+			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 		?>
 			</div>
 		<?php } ?>
@@ -367,7 +367,7 @@ class WP_Document_Revisions_Admin {
 			</a>
 		</div>
 		<?php
-    // @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
 		if ( $latest_version = $this->get_latest_revision( $post->ID ) ) { ?>
 		<p>
 			<strong><?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
@@ -375,8 +375,8 @@ class WP_Document_Revisions_Admin {
 			<em><?php printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', null, $post->ID ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) ) ?></a></em>
 		</p>
 		<?php
-      } //end if latest version
-      // @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+			} //end if latest version
+			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 	?>
 		<div class="clear"></div>
 		<?php
@@ -1371,10 +1371,11 @@ class WP_Document_Revisions_Admin {
 	 * Set up revisions on admin dashboard
 	 * @ since 3.0.1
 	 */
-	function setup_dashboard() {
-		wp_add_dashboard_widget('wpdr_dashboard', 
-		                        'Recently Revised Documents', 
-		                        array( &$this, 'dashboard_display' ) );
+	public function setup_dashboard( ) {
+		wp_add_dashboard_widget(
+			'wpdr_dashboard',
+			'Recently Revised Documents',
+			array( &$this, 'dashboard_display' ) );
 	}
 
 
@@ -1382,7 +1383,7 @@ class WP_Document_Revisions_Admin {
 	 * Callback to display documents on admin dashboard
 	 * @ since 3.0.1
 	 */
-	function dashboard_display () {
+	function dashboard_display( ) {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -1412,15 +1413,17 @@ class WP_Document_Revisions_Admin {
 					'action' => 'edit',
 				), admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
-			// translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status 
+			// translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status
 			$format_string = __( '%1$s ago by %2$s [%3$s]', 'wp-document-revisions' );
 ?>
 			<li>
 				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
-				<?php printf( esc_html( $format_string ), 
-				              esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), 
-				              esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
-				              esc_html( ucwords( $document->post_status ) ) ); ?>
+				<?php printf( 
+					esc_html( $format_string ),
+					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ),
+					esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
+					esc_html( ucwords( $document->post_status ) ) ); 
+				?>
 			</li>
 		<?php
 		endforeach;
