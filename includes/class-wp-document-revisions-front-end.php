@@ -152,7 +152,55 @@ class WP_Document_Revisions_Front_End {
 
 		// list of all string or int based query vars (because we are going through shortcode)
 		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters
-		$keys = array( 'author', 'author_name', 'cat', 'category_name', 'category__and', 'tag', 'tag_id', 'p', 'name', 'post_parent', 'post_status', 'numberposts', 'year', 'monthnum', 'w', 'day', 'hour', 'minute', 'second', 'meta_key', 'meta_value', 'meta_value_num', 'meta_compare' );
+		$keys = array(
+			'author',
+			'author_name',
+			'author__in',
+			'author__not_in',
+			'cat',
+			'category_name',
+			'category__and',
+			'category__in',
+			'category__not_in',
+			'tag',
+			'tag_id',
+			'tag__and',
+			'tag__in',
+			'tag__not_in',
+			'tag_slug__and',
+			'tag_slug__in',
+			'tax_query',
+			's',
+			'p',
+			'name',
+			'title',
+			'page_id',
+			'pagename',
+			'post_parent',
+			'post_parent__in',
+			'post_parent__not_in',
+			'post__in',
+			'post__not_in',
+			'post_name__in',
+			'has_password',
+			'post_password',
+			'post_status',
+			'numberposts',
+			'year',
+			'monthnum',
+			'w',
+			'day',
+			'hour',
+			'minute',
+			'second',
+			'm',
+			'date_query',
+			'meta_key',
+			'meta_value',
+			'meta_value_num',
+			'meta_compare',
+			'meta_query',
+		);
 
 		foreach ( $keys as $key ) {
 			$defaults[ $key ] = null;
@@ -296,7 +344,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
 		foreach ( $documents as $document ) :
-			$link = ( current_user_can( 'edit_post', $document->ID ) ) ? add_query_arg(
+			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',
