@@ -1371,11 +1371,13 @@ class WP_Document_Revisions_Admin {
 	 * Set up revisions on admin dashboard
 	 * @ since 3.0.1
 	 */
-	public function setup_dashboard( ) {
+	public function setup_dashboard() {
 		wp_add_dashboard_widget(
 			'wpdr_dashboard',
 			'Recently Revised Documents',
-			array( &$this, 'dashboard_display' ) );
+			array(
+				&$this, 'dashboard_display' )
+		);
 	}
 
 
@@ -1383,7 +1385,7 @@ class WP_Document_Revisions_Admin {
 	 * Callback to display documents on admin dashboard
 	 * @ since 3.0.1
 	 */
-	function dashboard_display( ) {
+	public function dashboard_display() {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -1418,12 +1420,14 @@ class WP_Document_Revisions_Admin {
 ?>
 			<li>
 				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
-				<?php printf( 
+				<?php
+				printf(
 					esc_html( $format_string ),
 					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ),
 					esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
-					esc_html( ucwords( $document->post_status ) ) ); 
-				?>
+					esc_html( ucwords( $document->post_status ) ) 
+				);
+?>
 			</li>
 		<?php
 		endforeach;
