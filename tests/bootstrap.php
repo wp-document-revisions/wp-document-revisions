@@ -73,11 +73,6 @@ function _make_user( $role = 'Administrator', $user_login = '', $pass = '', $ema
 			'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
 		);
 
-	// non-admin
-	if ( ! function_exists( 'wp_insert_user' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/user.php';
-	}
-
 	$user_id = wp_insert_user( $user );
 
 		return $user_id;
