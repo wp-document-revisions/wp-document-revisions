@@ -148,5 +148,5 @@ function _destroy_uploads() {
 function _flush_roles() {
 		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
-		$wp_roles->_init();
+		$wp_roles->for_site();
 }
