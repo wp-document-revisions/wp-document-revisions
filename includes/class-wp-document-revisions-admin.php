@@ -1376,7 +1376,7 @@ class WP_Document_Revisions_Admin {
 			'wpdr_dashboard',
 			'Recently Revised Documents',
 			array(
-				&$this, 
+				&$this,
 				'dashboard_display',
 			)
 		);
