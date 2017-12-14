@@ -1376,7 +1376,9 @@ class WP_Document_Revisions_Admin {
 			'wpdr_dashboard',
 			'Recently Revised Documents',
 			array(
-				&$this, 'dashboard_display' )
+				&$this, 
+				'dashboard_display',
+			)
 		);
 	}
 
@@ -1425,7 +1427,7 @@ class WP_Document_Revisions_Admin {
 					esc_html( $format_string ),
 					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ),
 					esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
-					esc_html( ucwords( $document->post_status ) ) 
+					esc_html( ucwords( $document->post_status ) )
 				);
 ?>
 			</li>
