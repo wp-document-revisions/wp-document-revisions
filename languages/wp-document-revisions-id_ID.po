@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 15:01-0500\n"
+"PO-Revision-Date: 2018-01-05 15:11-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -152,11 +152,11 @@ msgstr "Mengunggah Versi Baru"
 
 #: includes/class-wp-document-revisions-admin.php:370
 msgid "Latest Version of the Document"
-msgstr ""
+msgstr "Versi terbaru dari Dokumen"
 
 #: includes/class-wp-document-revisions-admin.php:371
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: includes/class-wp-document-revisions-admin.php:372
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
@@ -168,51 +168,51 @@ msgstr "Ringkasan revisi adalah catatan opsional untuk disimpan bersamaan dengan
 
 #: includes/class-wp-document-revisions-admin.php:411
 msgid "Modified"
-msgstr ""
+msgstr "Diubah"
 
 #: includes/class-wp-document-revisions-admin.php:412
 msgid "User"
-msgstr ""
+msgstr "Pengguna"
 
 #: includes/class-wp-document-revisions-admin.php:413
 msgid "Summary"
-msgstr ""
+msgstr "Ringkasan"
 
 #: includes/class-wp-document-revisions-admin.php:417
 msgid "Actions"
-msgstr ""
+msgstr "Tindakan"
 
 #: includes/class-wp-document-revisions-admin.php:455
 msgid "Restore"
-msgstr ""
+msgstr "Mengembalikan"
 
 #: includes/class-wp-document-revisions-admin.php:462
 msgid "RSS Feed"
-msgstr ""
+msgstr "RSS Makan"
 
 #: includes/class-wp-document-revisions-admin.php:493, includes/class-wp-document-revisions-admin.php:569
 msgid "Document Upload Directory"
-msgstr ""
+msgstr "Direktori Upload Dokumen"
 
 #: includes/class-wp-document-revisions-admin.php:494, includes/class-wp-document-revisions-admin.php:576
 msgid "Document Slug"
-msgstr ""
+msgstr "Dokumen Slug"
 
 #: includes/class-wp-document-revisions-admin.php:526
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr ""
+msgstr "Dokumen upload direktori berubah, tapi upload yang ada mungkin perlu dipindahkan ke folder baru untuk memastikan mereka tetap dapat diakses."
 
 #: includes/class-wp-document-revisions-admin.php:553
 msgid "Document slug changed, but some previously published URLs may now be broken."
-msgstr ""
+msgstr "Slug dokumen berubah, namun beberapa URL yang diterbitkan sebelumnya mungkin sudah rusak."
 
 #: includes/class-wp-document-revisions-admin.php:566
 msgid "Document Settings"
-msgstr ""
+msgstr "Pengaturan Dokumen"
 
 #: includes/class-wp-document-revisions-admin.php:600, includes/class-wp-document-revisions-admin.php:628, includes/class-wp-document-revisions.php:1288
 msgid "Not authorized"
-msgstr ""
+msgstr "Tidak diizinkan"
 
 #: includes/class-wp-document-revisions-admin.php:683
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
@@ -224,7 +224,7 @@ msgstr "Anda dapat secara opsional menyertakan string <code>%site_id%</code> di 
 
 #: includes/class-wp-document-revisions-admin.php:701
 msgid "example-document-title"
-msgstr ""
+msgstr "contoh-dokumen-judul"
 
 #: includes/class-wp-document-revisions-admin.php:702
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
@@ -232,47 +232,47 @@ msgstr "\"Slug\" yang digunakan untuk awalan semua URL untuk dokumen (dan arsip 
 
 #: includes/class-wp-document-revisions-admin.php:785
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr ""
+msgstr "Saat ini Anda telah memeriksa file ini. Tidak ada pengguna lain yang dapat mengedit dokumen ini selama Anda tetap berada di halaman ini."
 
 #: includes/class-wp-document-revisions-admin.php:800
 msgid "Feed Privacy"
-msgstr ""
+msgstr "Makan Privasi"
 
 #: includes/class-wp-document-revisions-admin.php:803
 msgid "Secret Feed Key"
-msgstr ""
+msgstr "Kunci umpan rahasia"
 
 #: includes/class-wp-document-revisions-admin.php:806
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr ""
+msgstr "Untuk melindungi privasi Anda, Anda perlu menambahkan kunci untuk memberi makan untuk digunakan pada pembaca feed."
 
 #: includes/class-wp-document-revisions-admin.php:808
 msgid "Generate New Key"
-msgstr ""
+msgstr "Buat Kunci Baru"
 
 #: includes/class-wp-document-revisions-admin.php:883
 msgid "All workflow states"
-msgstr ""
+msgstr "Semua alur kerja menyatakan"
 
 #: includes/class-wp-document-revisions-admin.php:902
 msgid "All owners"
-msgstr ""
+msgstr "Semua pemilik"
 
 #: includes/class-wp-document-revisions-admin.php:1009
 msgid "Currently Editing"
-msgstr ""
+msgstr "Saat ini sedang mengedit"
 
 #: includes/class-wp-document-revisions-admin.php:1056
 msgid "Current State"
-msgstr ""
+msgstr "Kondisi saat ini"
 
 #: includes/class-wp-document-revisions-admin.php:1130
 msgid "Document Owner"
-msgstr ""
+msgstr "Pemilik Dokumen"
 
 #: includes/class-wp-document-revisions-admin.php:1165
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
-msgstr ""
+msgstr "Yakin ingin mengembalikan revisi ini? Jika Anda melakukannya, tidak ada sejarah yang hilang. Revisi ini akan disalin dan menjadi revisi terbaru."
 
 #: includes/class-wp-document-revisions-admin.php:1167
 msgid "File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes."
@@ -284,15 +284,15 @@ msgstr "Setelah menyimpan dokumen Anda di perangkat lunak perkantoran Anda, <a h
 
 #: includes/class-wp-document-revisions-admin.php:1170
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr ""
+msgstr "Kunci Anda pada dokumen %s telah diganti. Setiap perubahan akan hilang."
 
 #: includes/class-wp-document-revisions-admin.php:1171
 msgid "An error has occurred, please try reloading the page."
-msgstr ""
+msgstr "Telah terjadi kesalahan, coba muat ulang laman."
 
 #: includes/class-wp-document-revisions-admin.php:1172
 msgid "Lost Document Lock"
-msgstr ""
+msgstr "Kunci Dokumen hilang"
 
 #: includes/class-wp-document-revisions-admin.php:1175, includes/class-wp-document-revisions-admin.php:1177
 msgid "%d mins"
@@ -300,19 +300,19 @@ msgstr "%d menit"
 
 #: includes/class-wp-document-revisions-admin.php:1179
 msgid "%d hour"
-msgstr ""
+msgstr "%d jam"
 
 #: includes/class-wp-document-revisions-admin.php:1181
 msgid "%d hours"
-msgstr ""
+msgstr "%d jam"
 
 #: includes/class-wp-document-revisions-admin.php:1183
 msgid "%d day"
-msgstr ""
+msgstr "%d hari"
 
 #: includes/class-wp-document-revisions-admin.php:1185
 msgid "%d days"
-msgstr ""
+msgstr "%d hari"
 
 #: includes/class-wp-document-revisions-front-end.php:122
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
@@ -320,7 +320,7 @@ msgstr "<a href=\"%1$s\"title=\"%2$s\" id=\"%3$s\"class=\"timestamp\">%4$s</a> <
 
 #: includes/class-wp-document-revisions-front-end.php:257, includes/class-wp-document-revisions-front-end.php:260
 msgid "Recently Revised Documents"
-msgstr ""
+msgstr "Dokumen yang baru saja direvisi"
 
 #. translators: %1$s is the time ago in words, %2$s is the author
 #: includes/class-wp-document-revisions-front-end.php:306
@@ -334,26 +334,26 @@ msgstr "%1$s yang lalu"
 
 #: includes/class-wp-document-revisions-front-end.php:333
 msgid "Title:"
-msgstr ""
+msgstr "Judul:"
 
 #: includes/class-wp-document-revisions-front-end.php:337
 msgid "Number of Posts:"
-msgstr ""
+msgstr "Jumlah post:"
 
 #: includes/class-wp-document-revisions.php:153
 msgctxt "post type general name"
 msgid "Documents"
-msgstr ""
+msgstr "Dokumen"
 
 #: includes/class-wp-document-revisions.php:154
 msgctxt "post type singular name"
 msgid "Document"
-msgstr ""
+msgstr "Dokumen"
 
 #: includes/class-wp-document-revisions.php:155
 msgctxt "document"
 msgid "Add Document"
-msgstr ""
+msgstr "Tambahkan Dokumen"
 
 #: includes/class-wp-document-revisions.php:156
 msgid "Add New Document"
