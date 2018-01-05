@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 12:31-0500\n"
+"PO-Revision-Date: 2018-01-05 12:51-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -430,19 +430,19 @@ msgstr ""
 
 #: includes/class-wp-document-revisions.php:209
 msgid "Workflow States"
-msgstr ""
+msgstr "Serikat Pekerja"
 
 #: includes/class-wp-document-revisions.php:246
 msgid "In Progress"
-msgstr ""
+msgstr "Sedang berlangsung"
 
 #: includes/class-wp-document-revisions.php:246
 msgid "Document is in the process of being written"
-msgstr ""
+msgstr "Dokumen sedang dalam proses penulisan"
 
 #: includes/class-wp-document-revisions.php:247
 msgid "Initial Draft"
-msgstr ""
+msgstr "Draft Awal"
 
 #: includes/class-wp-document-revisions.php:247
 msgid "Document is being edited and refined"
