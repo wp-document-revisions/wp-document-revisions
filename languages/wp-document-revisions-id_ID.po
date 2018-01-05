@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 15:11-0500\n"
+"PO-Revision-Date: 2018-01-05 15:21-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -407,19 +407,19 @@ msgstr "Semua Serikat Pekerja"
 
 #: includes/class-wp-document-revisions.php:203
 msgid "Parent Workflow State"
-msgstr ""
+msgstr "Induk Alur kerja Negara"
 
 #: includes/class-wp-document-revisions.php:204
 msgid "Parent Workflow State:"
-msgstr ""
+msgstr "Induk Alur kerja negara:"
 
 #: includes/class-wp-document-revisions.php:205
 msgid "Edit Workflow State"
-msgstr ""
+msgstr "Edit Alur kerja Negara"
 
 #: includes/class-wp-document-revisions.php:206
 msgid "Update Workflow State"
-msgstr ""
+msgstr "Memperbarui alur kerja negara"
 
 #: includes/class-wp-document-revisions.php:207
 msgid "Add New Workflow State"
