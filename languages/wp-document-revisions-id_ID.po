@@ -19,47 +19,47 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 13:01-0500\n"
+"PO-Revision-Date: 2018-01-05 14:43-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Document updated. <a href=\"%s\">Download dokumen</a>"
 
 #: includes/class-wp-document-revisions-admin.php:138
 msgid "Custom field updated."
-msgstr ""
+msgstr "Bidang kustom diperbarui."
 
 #: includes/class-wp-document-revisions-admin.php:139
 msgid "Custom field deleted."
-msgstr ""
+msgstr "Bidang kustom dihapus."
 
 #: includes/class-wp-document-revisions-admin.php:140
 msgid "Document updated."
-msgstr ""
+msgstr "Dokumen diperbarui."
 
 #: includes/class-wp-document-revisions-admin.php:142
 msgid "Document restored to revision from %s"
-msgstr ""
+msgstr "Dokumen dikembalikan ke revisi dari %s"
 
 #: includes/class-wp-document-revisions-admin.php:144
 msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokumen diterbitkan <a href=\"%s\">Mengunduh dokumen</a>"
 
 #: includes/class-wp-document-revisions-admin.php:145
 msgid "Document saved."
-msgstr ""
+msgstr "Dokumen disimpan."
 
 #: includes/class-wp-document-revisions-admin.php:147
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokumen diserahkan <a target=\"_blank\" href=\"%s\">Unduh dokumen</a>"
 
 #: includes/class-wp-document-revisions-admin.php:149
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr ""
+msgstr "Dokumen dijadwalkan untuk: <strong>%1$s</strong>. <a target=\"_blank\" href=\" %2$s\">Preview document</a>"
 
 #: includes/class-wp-document-revisions-admin.php:151
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a>"
 
 #: includes/class-wp-document-revisions-admin.php:201
 msgid "Basic Usage"
@@ -75,7 +75,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:204
 msgid "When done, simply click <code>Update</code> to save your changes"
-msgstr ""
+msgstr "Setelah selesai, cukup klik <code>Perbaharui</code> untuk menyimpan perubahan Anda"
 
 #: includes/class-wp-document-revisions-admin.php:205
 msgid "Revision Log"
@@ -275,11 +275,11 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1167
 msgid "File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes."
-msgstr ""
+msgstr "Berkas berhasil diunggah. Tambahkan ringkasan revisi di bawah ini (opsional) atau tekan <strong>Perbarui</strong> untuk menyimpan perubahan Anda."
 
 #: includes/class-wp-document-revisions-admin.php:1168
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
-msgstr ""
+msgstr "Setelah menyimpan dokumen Anda di perangkat lunak perkantoran Anda, <a href=\"#\" onClick=\"location.reload();\">muat ulang halaman ini</a> untuk melihat perubahan Anda."
 
 #: includes/class-wp-document-revisions-admin.php:1170
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
@@ -479,7 +479,7 @@ msgstr ""
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title
 #: includes/class-wp-document-revisions.php:1336
 msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr ""
+msgstr "%1$s: %2$s telah mengganti kunci Anda pada %3$s"
 
 #. translators: %s is the user's name
 #: includes/class-wp-document-revisions.php:1341
@@ -489,7 +489,7 @@ msgstr ""
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
 #: includes/class-wp-document-revisions.php:1343
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr ""
+msgstr "%1$s (%2$s), telah menggantikan kunci Anda pada dokumen %3$s (%4$s)."
 
 #: includes/class-wp-document-revisions.php:1344
 msgid "Any changes you have made will be lost."
