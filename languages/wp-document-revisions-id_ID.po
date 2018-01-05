@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 12:51-0500\n"
+"PO-Revision-Date: 2018-01-05 13:01-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -446,11 +446,11 @@ msgstr "Draft Awal"
 
 #: includes/class-wp-document-revisions.php:247
 msgid "Document is being edited and refined"
-msgstr ""
+msgstr "Dokumen sedang diedit dan disempurnakan"
 
 #: includes/class-wp-document-revisions.php:248
 msgid "Under Review"
-msgstr ""
+msgstr "Di bawah ulasan"
 
 #: includes/class-wp-document-revisions.php:248
 msgid "Document is pending final review"
