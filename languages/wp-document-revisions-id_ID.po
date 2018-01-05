@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 14:43-0500\n"
+"PO-Revision-Date: 2018-01-05 14:51-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -63,15 +63,15 @@ msgstr "Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a
 
 #: includes/class-wp-document-revisions-admin.php:201
 msgid "Basic Usage"
-msgstr ""
+msgstr "Penggunaan Dasar"
 
 #: includes/class-wp-document-revisions-admin.php:202
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
-msgstr ""
+msgstr "Layar ini memungkinkan pengguna untuk secara kolaboratif mengedit dokumen dan melacak riwayat revisi mereka. Untuk memulai, masukkan judul untuk dokumen, <code>Upload Versi Baru</code> dan pilih file dari komputer Anda."
 
 #: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
-msgstr ""
+msgstr "Setelah berhasil diunggah, Anda dapat memasukkan pesan log revisi, menetapkan dokumen sebagai pengarang, dan menjelaskan keadaan alur kerja saat ini."
 
 #: includes/class-wp-document-revisions-admin.php:204
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -79,7 +79,7 @@ msgstr "Setelah selesai, cukup klik <code>Perbaharui</code> untuk menyimpan peru
 
 #: includes/class-wp-document-revisions-admin.php:205
 msgid "Revision Log"
-msgstr ""
+msgstr "Log Revisi"
 
 #: includes/class-wp-document-revisions-admin.php:206
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
@@ -115,11 +115,11 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:216
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
-msgstr ""
+msgstr "Untuk menambahkan dokumen baru, klik <strong>Tambah Dokumen</strong> di sisi kiri."
 
 #: includes/class-wp-document-revisions-admin.php:217
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
-msgstr ""
+msgstr "Untuk melihat semua dokumen pada keadaan alur kerja tertentu, klik <strong>Serikat alur kerja</strong> di menu di sebelah kiri."
 
 #: includes/class-wp-document-revisions-admin.php:248
 msgid "Revision Summary"
@@ -139,7 +139,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:354
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
+msgstr "<br/>Jika Anda yakin ini salah, Anda dapat <a href=\"#\" id=\"override_link\">mengganti kunci </a>, namun perubahannya akan hilang."
 
 #: includes/class-wp-document-revisions-admin.php:362
 msgid "Upload Document"
@@ -159,7 +159,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:372
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr ""
+msgstr "Diperiksa dalam <abbr class =\"timestamp\" title =\"%1$s\"id=\"%2$s\">%3$s</abbr> yang lalu oleh %4$s"
 
 #: includes/class-wp-document-revisions-admin.php:392
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
@@ -227,7 +227,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:702
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
-msgstr ""
+msgstr "\"Slug\" yang digunakan untuk awalan semua URL untuk dokumen (dan arsip dokumen). Defaultnya adalah <code>dokumen</code>."
 
 #: includes/class-wp-document-revisions-admin.php:785
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
@@ -295,7 +295,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1175, includes/class-wp-document-revisions-admin.php:1177
 msgid "%d mins"
-msgstr ""
+msgstr "%d menit"
 
 #: includes/class-wp-document-revisions-admin.php:1179
 msgid "%d hour"
@@ -315,7 +315,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:122
 msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr ""
+msgstr "<a href=\"%1$s\"title=\"%2$s\" id=\"%3$s\"class=\"timestamp\">%4$s</a> <span class=\"agoby\">yang lalu oleh</a> <span class=\"author\">%5$s</a>"
 
 #: includes/class-wp-document-revisions-front-end.php:257, includes/class-wp-document-revisions-front-end.php:260
 msgid "Recently Revised Documents"
@@ -324,12 +324,12 @@ msgstr ""
 #. translators: %1$s is the time ago in words, %2$s is the author
 #: includes/class-wp-document-revisions-front-end.php:306
 msgid "%1$s ago by %2$s"
-msgstr ""
+msgstr "%1$s lalu oleh %2$s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author
 #: includes/class-wp-document-revisions-front-end.php:306
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s yang lalu"
 
 #: includes/class-wp-document-revisions-front-end.php:333
 msgid "Title:"
@@ -484,7 +484,7 @@ msgstr "%1$s: %2$s telah mengganti kunci Anda pada %3$s"
 #. translators: %s is the user's name
 #: includes/class-wp-document-revisions.php:1341
 msgid "Dear %s:"
-msgstr ""
+msgstr "Yang terhormat %s:"
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
 #: includes/class-wp-document-revisions.php:1343
