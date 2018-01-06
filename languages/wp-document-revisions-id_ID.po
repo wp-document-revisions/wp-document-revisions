@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 22:20-0500\n"
+"PO-Revision-Date: 2018-01-05 22:30-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -427,7 +427,7 @@ msgstr "Menambahkan Alur kerja baru Negara"
 
 #: includes/class-wp-document-revisions.php:208
 msgid "New Workflow State Name"
-msgstr ""
+msgstr "Nama Alur Kerja Baru Negara"
 
 #: includes/class-wp-document-revisions.php:209
 msgid "Workflow States"
@@ -499,14 +499,14 @@ msgstr "Setiap perubahan yang Anda buat akan hilang."
 #. translators: %s is the blog name
 #: includes/class-wp-document-revisions.php:1346
 msgid "- The %s Team"
-msgstr ""
+msgstr "- Itu %s Tim"
 
 #. translators: %s is the document title
 #: includes/class-wp-document-revisions.php:1508
 msgid "%s - Latest Revision"
-msgstr ""
+msgstr "%s - Revisi terbaru"
 
 #: includes/class-wp-document-revisions.php:1525
 msgid "%1$s - Revision %2$d"
-msgstr ""
+msgstr "%1$s - Revisi %2$d"
 
