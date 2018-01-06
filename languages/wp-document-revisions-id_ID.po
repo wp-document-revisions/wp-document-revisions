@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 15:21-0500\n"
+"PO-Revision-Date: 2018-01-05 22:20-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -423,7 +423,7 @@ msgstr "Memperbarui alur kerja negara"
 
 #: includes/class-wp-document-revisions.php:207
 msgid "Add New Workflow State"
-msgstr ""
+msgstr "Menambahkan Alur kerja baru Negara"
 
 #: includes/class-wp-document-revisions.php:208
 msgid "New Workflow State Name"
