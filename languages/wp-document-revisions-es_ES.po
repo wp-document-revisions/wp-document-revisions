@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2017-09-07 10:55-0400\n"
+"PO-Revision-Date: 2018-01-31 17:30-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -67,7 +67,7 @@ msgstr "Uso Básico"
 
 #: includes/class-wp-document-revisions-admin.php:202
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
-msgstr ""
+msgstr "Esta pantalla permite a los usuarios editar documentos en modo cooperativo y revisar ver revisiones previas, introduzca el título del documento, presione <code>cargar nueva versión</code> y seleccione el archivo desde su ordenador."
 
 #: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
