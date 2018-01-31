@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2018-01-31 17:40-0500\n"
+"PO-Revision-Date: 2018-01-31 17:52-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -115,11 +115,11 @@ msgstr "Abajo se encuentra una lista con los documentos a los que tiene acceso. 
 
 #: includes/class-wp-document-revisions-admin.php:216
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
-msgstr ""
+msgstr "Para agregar un nuevo documento, presione <strong>Agregar documento</strong>en el lado izquierdo."
 
 #: includes/class-wp-document-revisions-admin.php:217
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
-msgstr ""
+msgstr "Para ver todos los documentes que se encuentran en un estado de trabajo particular, presione <strong>Estados de trabajo</strong>en el menú de la izquierda."
 
 #: includes/class-wp-document-revisions-admin.php:248
 msgid "Revision Summary"
@@ -143,7 +143,7 @@ msgstr "<br />Si cree que esto es un error, puede <a href=\"#\" id=\"override_li
 
 #: includes/class-wp-document-revisions-admin.php:362
 msgid "Upload Document"
-msgstr ""
+msgstr "Cargar Documento"
 
 #: includes/class-wp-document-revisions-admin.php:363
 msgid "Upload New Version"
@@ -187,7 +187,7 @@ msgstr "Restaurar"
 
 #: includes/class-wp-document-revisions-admin.php:462
 msgid "RSS Feed"
-msgstr ""
+msgstr "Campo RSS"
 
 #: includes/class-wp-document-revisions-admin.php:493, includes/class-wp-document-revisions-admin.php:569
 msgid "Document Upload Directory"
@@ -227,7 +227,7 @@ msgstr "ejemplo-de-titulo-de-documento"
 
 #: includes/class-wp-document-revisions-admin.php:702
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
-msgstr ""
+msgstr "La palabra \"Slug\" debe estar como prefijo para los URL de todos documentos (y el nombre de archivo). El nombre predeterminado es <code>documentos</code>."
 
 #: includes/class-wp-document-revisions-admin.php:785
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
@@ -251,11 +251,11 @@ msgstr "Generar Nueva Clave"
 
 #: includes/class-wp-document-revisions-admin.php:883
 msgid "All workflow states"
-msgstr ""
+msgstr "Todos los estados de trabajo"
 
 #: includes/class-wp-document-revisions-admin.php:902
 msgid "All owners"
-msgstr ""
+msgstr "Todos los propietarios"
 
 #: includes/class-wp-document-revisions-admin.php:1009
 msgid "Currently Editing"
@@ -271,15 +271,15 @@ msgstr "Propietario del Documento"
 
 #: includes/class-wp-document-revisions-admin.php:1165
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
-msgstr ""
+msgstr "Seguro que quiere restaurar la revisión? Si lo hace toda la historia se perderá y esta será copiada y establecida como la versión mas reciente."
 
 #: includes/class-wp-document-revisions-admin.php:1167
 msgid "File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes."
-msgstr ""
+msgstr "Archivo cargado correctamente. Agregue una reseña de la revisión abjo (opcional) o presione <strong>Cargar</strong> para guardar sus cambios."
 
 #: includes/class-wp-document-revisions-admin.php:1168
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
-msgstr ""
+msgstr "Después de guardar el documento en sofware de office, <a href=\"#\" onClick=\"location.reload();\"> actualice esta pagina</a> para ver sus cambios."
 
 #: includes/class-wp-document-revisions-admin.php:1170
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
@@ -458,7 +458,7 @@ msgstr "Documento se encuentra pendiente de revisión final"
 
 #: includes/class-wp-document-revisions.php:249
 msgid "Final"
-msgstr ""
+msgstr "Final"
 
 #: includes/class-wp-document-revisions.php:249
 msgid "Document is in its final form"
@@ -507,5 +507,5 @@ msgstr "%s - Última Revisión"
 
 #: includes/class-wp-document-revisions.php:1525
 msgid "%1$s - Revision %2$d"
-msgstr ""
+msgstr "%1$s - Revisión %2$d"
 
