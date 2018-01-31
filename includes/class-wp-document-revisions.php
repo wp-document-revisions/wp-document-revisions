@@ -1030,6 +1030,10 @@ class WP_Document_Revisions {
 
 		// make site specific on multisite
 		if ( is_multisite() && ! is_network_admin() ) {
+			if(is_main_site()) {
+				$dir = str_replace( '/sites/%site_id%', '', $dir );
+			}
+
 			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
 		}
 
