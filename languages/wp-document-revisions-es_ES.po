@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2018-01-31 17:30-0500\n"
+"PO-Revision-Date: 2018-01-31 17:40-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -71,11 +71,11 @@ msgstr "Esta pantalla permite a los usuarios editar documentos en modo cooperati
 
 #: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
-msgstr ""
+msgstr "Luego de la carga exitosa, puede introducir un mensaje de revisión, asignar un autor y describir el estado actual del trabajo."
 
 #: includes/class-wp-document-revisions-admin.php:204
 msgid "When done, simply click <code>Update</code> to save your changes"
-msgstr ""
+msgstr "Al terminar, presione <code>cargar</code> para guardar cambios"
 
 #: includes/class-wp-document-revisions-admin.php:205
 msgid "Revision Log"
@@ -83,11 +83,11 @@ msgstr "Registro de Revisiones"
 
 #: includes/class-wp-document-revisions-admin.php:206
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
-msgstr ""
+msgstr "El logaritmo de recisión muestra una eseña acerca de los cambios hechos en una revisión. Usado correctamente en la comunidd de software libre, muestra una historia completa del documento."
 
 #: includes/class-wp-document-revisions-admin.php:207
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
-msgstr ""
+msgstr "Puede descargar y ver versiones anteriores el documento presionando la pestaña de tiempo en la sección de revisión. Tambien puede restaurar revisiones presionan <code>restaurar</code> debajo de revisión."
 
 #: includes/class-wp-document-revisions-admin.php:208, includes/class-wp-document-revisions-admin.php:256, includes/class-wp-document-revisions-admin.php:961
 msgid "Workflow State"
@@ -95,7 +95,7 @@ msgstr "Estado Flujo de Trabajo"
 
 #: includes/class-wp-document-revisions-admin.php:209
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
-msgstr ""
+msgstr "El campo de estado del trabajo puede ser usado para ayudar a los miembres del grupo a identificar en que parte del documento se esta trabajando&quot;. Éste es opcional y puede ser personalizado presionando <code>Estado del trabajo</code>en el lado izquierdo."
 
 #: includes/class-wp-document-revisions-admin.php:210
 msgid "Publishing Documents"
@@ -103,7 +103,7 @@ msgstr "Publicando Documentos"
 
 #: includes/class-wp-document-revisions-admin.php:211
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
-msgstr ""
+msgstr "De forma predeterminada los documentos solo son accesibles por usuarios registrados, sin embargo pueden ser publicados para que esten disponibles en la web, presionando \"Publicar\" en la parte superior izquierda. Todo documento publicado está disponible a todo el mundo usando su URL."
 
 #: includes/class-wp-document-revisions-admin.php:214, includes/class-wp-document-revisions.php:164
 msgid "Documents"
@@ -111,7 +111,7 @@ msgstr "Documentos"
 
 #: includes/class-wp-document-revisions-admin.php:215
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
-msgstr ""
+msgstr "Abajo se encuentra una lista con los documentos a los que tiene acceso. Presione el título para editarlo o descargar la versión mas reciente."
 
 #: includes/class-wp-document-revisions-admin.php:216
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
