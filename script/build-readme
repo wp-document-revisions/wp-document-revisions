@@ -8,7 +8,11 @@ readme = File.open("./docs/README.md").read
 readme = "\n#" + readme.split("#")[2..-1].join("#")
 output << readme
 
-Dir["./docs/*"].each do |file|
+docs = Dir["./docs/*"]
+features = docs.delete("./docs/features.md")
+docs.unshift(features)
+
+docs.each do |file|
   next if exclude.include?(File.basename(file,".md"))
   output << "\n\n"
   output << File.open(file).read
