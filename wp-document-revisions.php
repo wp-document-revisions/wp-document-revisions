@@ -7,6 +7,8 @@ Version: 3.1.0
 Author: Ben Balter
 Author URI: http://ben.balter.com
 License: GPL3
+Text Domain: wp-document-revisions
+Domain Path: /languages
  *
 @package wp-document-revisions
  */
