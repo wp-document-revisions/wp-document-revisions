@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.1.1
+
+Updated documentation.
+
 ### 3.1.0
 
 * NEW: Added dashboard widget (#109, props @NeilWJames)
