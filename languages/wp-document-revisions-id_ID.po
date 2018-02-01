@@ -19,11 +19,11 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2018-01-05 22:30-0500\n"
+"PO-Revision-Date: 2018-02-01 11:01-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Document updated. <a href=\"%s\">Download dokumen</a>"
+msgstr "Dokumen diperbarui <a href=\" %s \">Mengunduh dokumen</a>"
 
 #: includes/class-wp-document-revisions-admin.php:138
 msgid "Custom field updated."
