@@ -3,8 +3,8 @@
 Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 3.9
-Tested up to: 4.7.5
-Stable tag: 3.0.1
+Tested up to: 4.9.2
+Stable tag: 3.1.0
 
 == Description ==
 
@@ -41,7 +41,33 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 [Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
 
 
+== Useful plugins and tools ==
+
+* [Members](http://wordpress.org/extend/plugins/members/)
+* [Edit Flow](http://editflow.org)
+* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
+
+
 == Changelog ==
+
+= 3.1.0 =
+
+* NEW: Added dashboard widget (#109, props @NeilWJames)
+* NEW: Added Finish translation (Props @xcoded)
+* NEW: Added Spanish translation (Props @alejnavarro)
+* NEW: Added Indonesian translation (Props @barzah and @fajarsdq)
+* NEW: Provide a way to filter or skip mime type detection (#106, props @jeremyfelt)
+* FIX: Do not escape end list widget HTML in function widget (#99, props @NeilWJames)
+* FIX: Only cache revisions output if revisions exist (#101, props @jeremyfelt)
+* FIX: Update WPCS and adjust code to meet new standards (#104, props @jeremyfelt)
+* FIX: Fix possible data pollution in archive views (#103, props @jeremyfelt)
+* FIX: Account for `the_title` filter used with only one arg (#105, props @jeremyfelt)
+* FIX: Don't verify posts that don't exist (#107, props @jeremyfelt)
+* FIX: Fixed issue with translation files not properly loading (#108, props @NeilWJames)
+* FIX: Better multisite support (#113, props @JonasBrand)
+* DEV: You can now contribute to the project's translation's via Crowdin: https://crowdin.com/project/wordpress-document-revisions
+* DEV: Added Contributor Code of Conduct
+* DEV: Updated contributing documentation
 
 = 3.0.1 =
 
@@ -259,18 +285,143 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * Proof of concept prototype
 
 
-== Contributing guidelines ==
+== Where to get help or report an issue ==
 
-WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated.
+* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](http://ben.balter.com/wp-document-revisions/).
+* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
+* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
+* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
-* **Everyone** - Jump in and answer questions in [the support forums](http://wordpress.org/support/plugin/wp-document-revisions), or help expand the projects [documentation](https://github.com/benbalter/WP-Document-Revisions/tree/master/docs) to make it easier for other users to get started
-* **Users** - download the latest [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) of the plugin, and [submit bug/feature requests](https://github.com/benbalter/WP-Document-Revisions/issues).
-* **Non-English Speaking Users** - [Contribute a translation](http://translations.benbalter.com/projects/wp-document-revisions/) using the GlotPress web interface - no technical knowledge required ([how to](http://translations.benbalter.com/projects/how-to-translate)).
-* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) and submit a pull request, especially for any [known issues](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open)
+== Things to check before reporting an issue ==
+
+* Are you using the latest version of WordPress?
+* Are you using the latest version of the plugin?
+* Does the problem occur even when you deactivate all plugins and use the default theme?
+* Have you tried deactivating and reactivating the plugin?
+* Has your issue [already been reported](https://github.com/benbalter/WP-Document-Revisions/issues)?
+
+== What to include in an issue ==
+
+* What steps can another user take to recreate the issue?
+* What is the expected outcome of that action?
+* What is the actual outcome of that action?
+* Are there any screenshots or screencasts that may be helpful to include?
+* Only include one bug per issue. If you have discovered two bugs, please file two issues.
+
+
+== Screenshots ==
+
+\###1. A typical WP Document Revisions edit document screen.###
+
+![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/benbalter/wp-document-revisions/master/screenshot-1.png)
+
+
+=== Contributing to WP Document Revisions ===
+
+Hi there! We're thrilled that you'd like to contribute to WP Document Revisions. Your help is essential for keeping it great.
+
+WP Document Revisions is an open source project supported by the efforts of an entire community and built one contribution at a time by users like you. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests, helping other users by commenting on issues, or writing code which can be incorporated into WP Document Revisions itself.
+
+Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
+
 
 == Looking for support? ==
 
-See [Where to get Support or Report an Issue](SUPPORT.md).
+We'd love to help. Check out [the support guidelines](SUPPORT.md).
+
+== How to report a bug ==
+
+Think you found a bug? Please check [the list of open issues](https://github.com/benbalter/wp-document-revisions/issues) to see if your bug has already been reported. If it hasn't please [submit a new issue](https://github.com/benbalter/wp-document-revisions/issues/new).
+
+Here are a few tips for writing *great* bug reports:
+
+* Describe the specific problem (e.g., "widget doesn't turn clockwise" versus "getting an error")
+* Include the steps to reproduce the bug, what you expected to happen, and what happened instead
+* Check that you are using the latest version of the project and its dependencies
+* Include what version of the project your using, as well as any relevant dependencies
+* Only include one bug per issue. If you have discovered two bugs, please file two issues
+* Include screenshots or screencasts whenever possible
+* Even if you don't know how to fix the bug, including a failing test may help others track it down
+
+**If you find a security vulnerability, do not open an issue. Please email ben@balter.com instead.**
+
+== How to suggest a feature or enhancement ==
+
+If you find yourself wishing for a feature that doesn't exist in WP Document Revisions, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that WP Document Revisions has today have been added because our users saw the need.
+
+Feature requests are welcome. But take a moment to find out whether your idea fits with the scope and goals of the project. It's up to you to make a strong case to convince the project's developers of the merits of this feature. Please provide as much detail and context as possible, including describing the problem you're trying to solve.
+
+[Open an issue](https://github.com/benbalter/wp-document-revisions/issues/new) which describes the feature you would like to see, why you want it, how it should work, etc.
+
+
+== Ways to Contribute ==
+
+* **Everyone** - Jump in and answer questions in [the support forums](http://wordpress.org/support/plugin/wp-document-revisions), or help expand the projects [documentation](https://github.com/benbalter/WP-Document-Revisions/tree/master/docs) to make it easier for other users to get started
+* **Users** - download the latest [development version](https://github.com/benbalter/WP-Document-Revisions/) of the plugin, and [submit bug/feature requests](https://github.com/benbalter/WP-Document-Revisions/issues).
+* **Non-English Speaking Users** - [Contribute a translation](https://crowdin.com/project/wordpress-document-revisions) using the Crowdin web interface - no technical knowledge required.
+* **Developers** - [Fork the development version](https://github.com/benbalter/WP-Document-Revisions/) and submit a pull request, especially for any [known issues](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&amp;sort=created&amp;state=open)
+
+
+== Your first contribution ==
+
+We'd love for you to contribute to the project. Unsure where to begin contributing to WP Document Revisions? You can start by looking through these "good first issue" and "help wanted" issues:
+
+* [Good first issues](https://github.com/benbalter/wp-document-revisions/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) - issues which should only require a few lines of code and a test or two
+* [Help wanted issues](https://github.com/benbalter/wp-document-revisions/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) - issues which may be a bit more involved, but are specifically seeking community contributions
+
+*p.s. Feel free to ask for help; everyone is a beginner at first* :smiley_cat:
+
+== How to propose changes ==
+
+Here's a few general guidelines for proposing changes:
+
+* If you are changing any user-facing functionality, please be sure to update the documentation
+* If you are adding a new behavior or changing an existing behavior, please be sure to update the corresponding test(s)
+* Each pull request should implement **one** feature or bug fix. If you want to add or fix more than one thing, submit more than one pull request
+* Do not commit changes to files that are irrelevant to your feature or bug fix
+* Don't bump the version number in your pull request (it will be bumped prior to release)
+* Write [a good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+
+At a high level, [the process for proposing changes](https://guides.github.com/introduction/flow/) is:
+
+1. [Fork](https://github.com/benbalter/wp-document-revisions/fork) and clone the project
+2. Configure and install the dependencies: `script/bootstrap`
+3. Make sure the tests pass on your machine: `script/cibuild`
+4. Create a descriptively named branch: `git checkout -b my-branch-name`
+5. Make your change, add tests and documentation, and make sure the tests still pass
+6. Push to your fork and [submit a pull request](https://github.com/benbalter/wp-document-revisions/compare) describing your change
+7. Pat your self on the back and wait for your pull request to be reviewed and merged
+
+**Interesting in submitting your first Pull Request?** It's easy! You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
+== Bootstrapping your local development environment ==
+
+`script/bootstrap`
+
+== Running tests ==
+
+`script/cibuild`
+
+== Code of conduct ==
+
+This project is governed by [the Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+== Additional Resources ==
+
+* [Contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/)
+* [Using Pull Requests](https://help.github.com/articles/using-pull-requests/)
+* [GitHub Help](https://help.github.com)
+
+
+== Links ==
+
+* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
+* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
+* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
 
 
 == Features ==
@@ -323,6 +474,24 @@ See [Where to get Support or Report an Issue](SUPPORT.md).
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 * **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+
+
+== Installation ==
+
+= Automatic Install =
+
+1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](http://codex.wordpress.org/Installing_WordPress)
+2. Navigate to Plugins->Add New from the menu on the left
+3. Search for WP Document Revisions
+4. Click "Install"
+5. Click "Activate Now"
+
+= Manual Install =
+
+1. Download the plugin from the link in the top left corner
+2. Unzip the file, and upload the resulting "wp-document-revisions" folder to your "/wp-content/plugins directory" as "/wp-content/plugins/wp-document-revisions"
+3. Log into your WordPress install as an administrator, and navigate to the plugins screen from the left-hand menu
+4. Activate WP Document Revisions
 
 
 == Frequently Asked Questions ==
@@ -458,67 +627,9 @@ Yes. It will need to be slightly customized to meet your needs, but take a look 
 If you assign custom roles to your users, make sure you add the `edit_posts` capability to any user that can upload files. See bugs [#8234](http://core.trac.wordpress.org/ticket/8234) and [#21091](http://core.trac.wordpress.org/ticket/21091)
 
 
-== Installation ==
-
-= Automatic Install =
-
-1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](http://codex.wordpress.org/Installing_WordPress)
-2. Navigate to Plugins->Add New from the menu on the left
-3. Search for WP Document Revisions
-4. Click "Install"
-5. Click "Activate Now"
-
-= Manual Install =
-
-1. Download the plugin from the link in the top left corner
-2. Unzip the file, and upload the resulting "wp-document-revisions" folder to your "/wp-content/plugins directory" as "/wp-content/plugins/wp-document-revisions"
-3. Log into your WordPress install as an administrator, and navigate to the plugins screen from the left-hand menu
-4. Activate WP Document Revisions
-
-
-== Links ==
-
-* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
-* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
-* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
-* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
-* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
-* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
-
-
-== Screenshots ==
-
-\###1. A typical WP Document Revisions edit document screen.###
-
-![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/benbalter/wp-document-revisions/master/screenshot-1.png)
-
-
-== Where to get help or report an issue ==
-
-* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](http://ben.balter.com/wp-document-revisions/).
-* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](http://wordpress.org/support/plugin/wp-document-revisions).
-* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
-* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
-
-== Things to check before reporting an issue ==
-
-* Are you using the latest version of WordPress?
-* Are you using the latest version of the plugin?
-* Does the problem occur even when you deactivate all plugins and use the default theme?
-* Have you tried deactivating and reactivating the plugin?
-* Has your issue [already been reported](https://github.com/benbalter/WP-Document-Revisions/issues)?
-
-== What to include in an issue ==
-
-* What steps can another user take to recreate the issue?
-* What is the expected outcome of that action?
-* What is the actual outcome of that action?
-* Are there any screenshots or screencasts that may be helpful to include?
-* Only include one bug per issue. If you have discovered two bugs, please file two issues.
-
-
 == Translations ==
+
+Interested in translating WP Document Revisions? You can do so [via Crowdin](https://crowdin.com/project/wordpress-document-revisions), or by submitting a pull request.
 
 * French - [Hubert CAMPAN](http://omnimaki.com/)
 * Spanish - [TradiArt](http://www.tradiart.com/) and [elarequi](http://www.labitacoradeltigre.com)
@@ -530,10 +641,3 @@ If you assign custom roles to your users, make sure you add the `edit_posts` cap
 * Italian - @guterboit
 * Russian - Evgeny Vlasov
 * Dutch - @tijscruysen
-
-
-== Useful plugins and tools ==
-
-* [Members](http://wordpress.org/extend/plugins/members/)
-* [Edit Flow](http://editflow.org)
-* [Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/)
