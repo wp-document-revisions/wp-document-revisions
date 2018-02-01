@@ -4,7 +4,7 @@ Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 3.9
 Tested up to: 4.9.2
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 
 == Description ==
 
@@ -101,6 +101,10 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 
 == Changelog ==
+
+= 3.1.1 =
+
+Updated documentation.
 
 = 3.1.0 =
 
