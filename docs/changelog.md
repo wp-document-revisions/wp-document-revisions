@@ -1,5 +1,28 @@
 ## Changelog
 
+### 3.1.1
+
+Updated documentation.
+
+### 3.1.0
+
+* NEW: Added dashboard widget (#109, props @NeilWJames)
+* NEW: Added Finish translation (Props @xcoded)
+* NEW: Added Spanish translation (Props @alejnavarro)
+* NEW: Added Indonesian translation (Props @barzah and @fajarsdq)
+* NEW: Provide a way to filter or skip mime type detection (#106, props @jeremyfelt)
+* FIX: Do not escape end list widget HTML in function widget (#99, props @NeilWJames)
+* FIX: Only cache revisions output if revisions exist (#101, props @jeremyfelt)
+* FIX: Update WPCS and adjust code to meet new standards (#104, props @jeremyfelt)
+* FIX: Fix possible data pollution in archive views (#103, props @jeremyfelt)
+* FIX: Account for `the_title` filter used with only one arg (#105, props @jeremyfelt)
+* FIX: Don't verify posts that don't exist (#107, props @jeremyfelt)
+* FIX: Fixed issue with translation files not properly loading (#108, props @NeilWJames)
+* FIX: Better multisite support (#113, props @JonasBrand)
+* DEV: You can now contribute to the project's translation's via Crowdin: https://crowdin.com/project/wordpress-document-revisions
+* DEV: Added Contributor Code of Conduct
+* DEV: Updated contributing documentation
+
 ### 3.0.1
 
 * Fix for calling the wrong escaping function in the widget code.
