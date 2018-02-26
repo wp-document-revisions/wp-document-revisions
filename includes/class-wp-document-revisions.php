@@ -408,6 +408,8 @@ class WP_Document_Revisions {
 			}
 		}
 
+		// although get_attached_file uses the standard directory,
+		// not used, so doesn't matter so no correction needed
 		return $this->get_extension( get_attached_file( $attachment->ID ) );
 
 	}
@@ -757,6 +759,12 @@ class WP_Document_Revisions {
 		$revision = get_post( $rev_post->post_content ); // @todo can this be simplified?
 
 		$file = get_attached_file( $revision->ID );
+		// Used cached version of std directory, so cannot change within call, so replace it in the output
+		$std_dir = wp_get_upload_dir();
+		$doc_dir = $this->document_upload_dir();
+		if ( $std_dir['basedir'] !== $doc_dir ) {
+			$file = str_replace( $std_dir['basedir'], $doc_dir, $file );
+		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line
 		$file = apply_filters( 'document_path', $file );
