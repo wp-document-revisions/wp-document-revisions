@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
-"PO-Revision-Date: 2018-03-02 01:10-0500\n"
+"PO-Revision-Date: 2018-03-02 01:20-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -67,7 +67,7 @@ msgstr "Základní použití"
 
 #: includes/class-wp-document-revisions-admin.php:202
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
-msgstr "Tato obrazovka umožňuje uživatelům spolupracovat na úpravách dokumentů a sledovat historii verzí. Zadejte názeb dokumentu, klikněte na <code>Nahrát novou verzi</code> a vyberte soubor na vašem počítači."
+msgstr "Tato obrazovka umožňuje uživatelům spolupracovat na úpravách dokumentů a sledovat historii verzí. Zadejte názeb dokumentu, klikněte na <code>Nahrát novou verzi</code> a vyberte soubor na vašem počítači.</code>."
 
 #: includes/class-wp-document-revisions-admin.php:203
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
