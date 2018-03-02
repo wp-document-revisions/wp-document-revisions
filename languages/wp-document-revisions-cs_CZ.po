@@ -11,7 +11,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Language: cs\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: benbalter <ben.balter@github.com>\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
-"PO-Revision-Date: 2017-09-07 10:56-0400\n"
+"PO-Revision-Date: 2018-03-02 01:10-0500\n"
 
 #: includes/class-wp-document-revisions-admin.php:137
 msgid "Document updated. <a href=\"%s\">Download document</a>"
@@ -219,7 +219,7 @@ msgstr "Složka pro ukládání nahraných dokumentů. Ve výchozím nastavení 
 
 #: includes/class-wp-document-revisions-admin.php:688
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr "Můžete nepovinně vložit kód <code>%site_id%</ code> do cesty pro odlišení souborů podle zdrojových stránek."
+msgstr "Můžete nep%site_id%<code>zdrojových stránek."
 
 #: includes/class-wp-document-revisions-admin.php:701
 msgid "example-document-title"
