@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.1.2
+
+Fix for 404 error when serving documents from non-standard upload directory.
+
 ### 3.1.1
 
 Updated documentation.
