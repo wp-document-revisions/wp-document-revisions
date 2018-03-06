@@ -891,7 +891,7 @@ class WP_Document_Revisions_Admin {
 			// set selected workflow state
 			if ( isset( $wp_query->query[ $tax_slug ] ) ) {
 				$term_id = $wp_query->query[ $tax_slug ];
-				if ( ! is_numeric( $term_id ) && $term_id !== '0' ) {
+				if ( ! is_numeric( $term_id ) && '0' !== $term_id ) {
 					$term = get_term_by( 'slug', $wp_query->query[ $tax_slug ], $tax_slug );
 					$term_id = $term->term_id;
 				}
@@ -928,7 +928,7 @@ class WP_Document_Revisions_Admin {
 				$tax_slug = EF_Custom_Status::taxonomy_key;
 			}
 			$var = &$query->query_vars[ $tax_slug ];
-			if ( isset( $var ) && is_numeric( $var ) && $var !== '0' ) {
+			if ( isset( $var ) && is_numeric( $var ) && '0' !== $var ) {
 				$term = get_term_by( 'id', $var, $tax_slug );
 				$var = $term->slug;
 			}
