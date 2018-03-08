@@ -891,12 +891,16 @@ class WP_Document_Revisions_Admin {
 			// set selected workflow state
 			if ( isset( $wp_query->query[ $tax_slug ] ) ) {
 				$term_id = $wp_query->query[ $tax_slug ];
-				if ( ! is_numeric( $term_id ) ) {
+				if ( ! is_numeric( $term_id ) && '0' !== $term_id ) {
 					$term = get_term_by( 'slug', $wp_query->query[ $tax_slug ], $tax_slug );
 					$term_id = $term->term_id;
 				}
 				$args['selected'] = $term_id;
 				wp_dropdown_categories( $args );
+			} else {
+				if ( taxonomy_exists( 'workflow_state' ) && ! $this->disable_workflow_states() ) {
+					wp_dropdown_categories( $args );
+				}
 			}
 
 			// author/owner filtering
@@ -924,7 +928,7 @@ class WP_Document_Revisions_Admin {
 				$tax_slug = EF_Custom_Status::taxonomy_key;
 			}
 			$var = &$query->query_vars[ $tax_slug ];
-			if ( isset( $var ) && is_numeric( $var ) ) {
+			if ( isset( $var ) && is_numeric( $var ) && '0' !== $var ) {
 				$term = get_term_by( 'id', $var, $tax_slug );
 				$var = $term->slug;
 			}
@@ -1074,7 +1078,7 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Callback to save workflow_state metbox
+	 * Callback to save workflow_state metabox
 	 *
 	 * @since 0.5
 	 * @param int $doc_id the ID of the post being edited
