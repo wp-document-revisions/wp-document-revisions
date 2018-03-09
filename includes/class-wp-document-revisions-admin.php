@@ -252,7 +252,7 @@ class WP_Document_Revisions_Admin {
 		add_meta_box( 'document', __( 'Document', 'wp-document-revisions' ), array( &$this, 'document_metabox' ), 'document', 'normal', 'high' );
 
 		if ( '' !== $post->post_content ) {
-			add_meta_box( 'revision-log', 'Revision Log', array( &$this, 'revision_metabox' ), 'document', 'normal', 'low' );
+			add_meta_box( 'revision-log', __( 'Revision Log', 'wp-document-revisions' ), array( &$this, 'revision_metabox' ), 'document', 'normal', 'low' );
 		}
 
 		if ( taxonomy_exists( 'workflow_state' ) && ! $this->disable_workflow_states() ) {
@@ -1378,7 +1378,7 @@ class WP_Document_Revisions_Admin {
 	public function setup_dashboard() {
 		wp_add_dashboard_widget(
 			'wpdr_dashboard',
-			'Recently Revised Documents',
+			__( 'Recently Revised Documents', 'wp-document-revisions' ),
 			array(
 				&$this,
 				'dashboard_display',
