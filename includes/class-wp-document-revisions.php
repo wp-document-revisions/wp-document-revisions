@@ -808,11 +808,14 @@ class WP_Document_Revisions {
 		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
+		$headers = array();
+
 		// Set content-disposition header. Two options here:
 		// "attachment" -- force save-as dialog to pop up when file is downloaded (pre 1.3.1 default)
 		// "inline" -- attempt to open in browser (e.g., PDFs), if not possible, prompt with save as (1.3.1+ default)
 		$disposition = ( apply_filters( 'document_content_disposition_inline', true ) ) ? 'inline' : 'attachment';
-		@header( 'Content-Disposition: ' . $disposition . '; filename="' . $filename . '"' );
+
+		$headers['Content-Disposition'] = $disposition . '; filename="' . $filename . '"';
 
 		/**
 		 * Filters the MIME type for a file before it is processed by WP Document Revisions.
@@ -842,17 +845,29 @@ class WP_Document_Revisions {
 
 		// Set the Content-Type header if a mimetype has been detected or provided.
 		if ( is_string( $mimetype ) ) {
-			@header( 'Content-Type: ' . $mimetype );
+			$headers['Content-Type'] = $mimetype;
 		}
 
-		@header( 'Content-Length: ' . filesize( $file ) );
+		$headers['Content-Length'] = filesize( $file );
 
 		// modified
 		$last_modified = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
 		$etag = '"' . md5( $last_modified ) . '"';
-		@header( "Last-Modified: $last_modified GMT" );
-		@header( 'ETag: ' . $etag );
-		@header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT' );
+		$headers['Last-Modified'] = $last_modified . ' GMT';
+		$headers['ETag'] = $etag;
+		$headers['Expires'] = gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT';
+
+		/**
+		 * Filters the HTTP headers sent when a file is served through WP Document Revisions.
+		 *
+		 * @param array  $headers The HTTP headers to be sent.
+		 * @param string $file    The file being served.
+		 */
+		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
+
+		foreach ( $headers as $header => $value ) {
+			@header( $header . ': ' . $value );
+		}
 
 		// Support for Conditional GET
 		$client_etag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( $_SERVER['HTTP_IF_NONE_MATCH'] ) : false;
