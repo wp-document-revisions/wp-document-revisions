@@ -1178,7 +1178,7 @@ class WP_Document_Revisions {
 			}
 
 			// Assume that a document feed is a document feed, even without a post object.
-			if ( ( array_key_exists ( 'post_type',  $wp_query->query_vars ) ) &&
+			if ( ( array_key_exists( 'post_type', $wp_query->query_vars ) ) &&
 			'document' === $wp_query->query_vars['post_type'] && is_feed() ) {
 				return true;
 			}
