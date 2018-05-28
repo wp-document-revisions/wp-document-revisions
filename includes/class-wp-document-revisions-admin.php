@@ -57,10 +57,10 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 
 		// document list
-		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
-		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
-		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
 		add_filter( 'parse_query', array( &$this, 'convert_id_to_term' ) );
@@ -1339,7 +1339,7 @@ class WP_Document_Revisions_Admin {
 			return false;
 		}
 
-		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
+		remove_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
