@@ -683,12 +683,17 @@ class WP_Document_Revisions_Admin {
 	public function upload_location_cb() {
 	?>
 		<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="large-text code" /><br />
-		<span class="description"><?php esc_html_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
+		<span class="description">
+		<?php
+			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+			_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
 		<?php if ( is_multisite() ) : ?>
 		<span class="description">
 		<?php
-		// translators: %site_id% is not interpolated and should not be translated
-		esc_html_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' );
+			// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+			// translators: %site_id% is not interpolated and should not be translated
+			_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' );
+			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 		?>
 		</span>
 		<?php
