@@ -708,7 +708,7 @@ class WP_Document_Revisions_Admin {
 	?>
 	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( date( 'Y' ) ); ?>/<?php echo esc_html( date( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 	<span class="description">
-		<?php 
+		<?php
 		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 		_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' ); ?></span>
 	<?php
