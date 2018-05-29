@@ -57,10 +57,10 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 
 		// document list
-		add_filter( 'manage_edit-document_columns', array( &$this, 'rename_author_column' ) );
-		add_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
-		add_filter( 'manage_edit-document_columns', array( &$this, 'add_currently_editing_column' ), 20 );
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
 		add_filter( 'parse_query', array( &$this, 'convert_id_to_term' ) );
@@ -683,12 +683,17 @@ class WP_Document_Revisions_Admin {
 	public function upload_location_cb() {
 	?>
 		<input name="document_upload_directory" type="text" id="document_upload_directory" value="<?php echo esc_attr( $this->document_upload_dir() ); ?>" class="large-text code" /><br />
-		<span class="description"><?php esc_html_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
+		<span class="description">
+		<?php
+			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+			_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' ); ?></span>
 		<?php if ( is_multisite() ) : ?>
 		<span class="description">
 		<?php
-		// translators: %site_id% is not interpolated and should not be translated
-		esc_html_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' );
+			// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+			// translators: %site_id% is not interpolated and should not be translated
+			_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' );
+			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
 		?>
 		</span>
 		<?php
@@ -702,7 +707,10 @@ class WP_Document_Revisions_Admin {
 	public function document_slug_cb() {
 	?>
 	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( date( 'Y' ) ); ?>/<?php echo esc_html( date( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
-	<span class="description"><?php esc_html_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' ); ?></span>
+	<span class="description">
+		<?php
+		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' ); ?></span>
 	<?php
 	}
 
@@ -1339,7 +1347,7 @@ class WP_Document_Revisions_Admin {
 			return false;
 		}
 
-		remove_filter( 'manage_edit-document_columns', array( &$this, 'add_workflow_state_column' ) );
+		remove_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
 		remove_action( 'admin_head', array( &$this, 'make_private' ) );
