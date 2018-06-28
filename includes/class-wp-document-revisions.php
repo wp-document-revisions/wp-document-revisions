@@ -37,7 +37,45 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.0.0';
+	public $version = '3.2.0';
+
+	/**
+	 * The WP default directory cache
+	 *
+	 * @var Array $wp_default_dir
+	 *
+	 * @since 3.2
+	 */
+	public static $wp_default_dir;
+
+	/**
+	 * The document directory cache
+	 *
+	 * @var String $wpdr_document_dir
+	 *
+	 * @since 3.2
+	 */
+	public static $wpdr_document_dir = NULL;
+
+	/**
+	 * Whether processing document or image directory
+	 *
+	 * @var Boolean $doc_image
+	 *
+	 * @since 3.2
+	 */
+	public static $doc_image = false;
+
+	/**
+	 * identify if processing document or image directory
+	 *
+	 * @return Boolean $doc_image
+	 *
+	 * @since 3.2
+	 */
+	public function is_doc_image() {
+		return self::$doc_image;
+	}
 
 	/**
 	 * Initiates an instance of the class and adds hooks
@@ -51,6 +89,7 @@ class WP_Document_Revisions {
 		// admin
 		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
 		add_action( 'plugins_loaded', array( &$this, 'i18n' ) );
+		add_action( 'admin_init', array( &$this, 'set_cached_variables' ) );
 
 		// CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -126,6 +165,20 @@ class WP_Document_Revisions {
 
 
 	/**
+	 * Clear document directory name cache
+	 *
+	 * Used by Admin function when changing options
+	 *
+	 * @return void
+	 *
+	 * @since 3.2
+	 */
+	public function clear_document_dir_cache() {
+		self::$wpdr_document_dir = NULL;
+	}
+
+
+	/**
 	 * Extends class with admin functions when in admin backend
 	 *
 	 * @since 0.5
@@ -133,7 +186,7 @@ class WP_Document_Revisions {
 	public function admin_init() {
 
 		// only fire on admin + escape hatch to prevent fatal errors
-		if ( ! is_admin() || class_exists( 'Document_Revisions_Admin' ) ) {
+		if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			return;
 		}
 
@@ -150,19 +203,23 @@ class WP_Document_Revisions {
 	public function register_cpt() {
 
 		$labels = array(
-			'name'               => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
-			'singular_name'      => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
-			'add_new'            => _x( 'Add Document', 'document', 'wp-document-revisions' ),
-			'add_new_item'       => __( 'Add New Document', 'wp-document-revisions' ),
-			'edit_item'          => __( 'Edit Document', 'wp-document-revisions' ),
-			'new_item'           => __( 'New Document', 'wp-document-revisions' ),
-			'view_item'          => __( 'View Document', 'wp-document-revisions' ),
-			'search_items'       => __( 'Search Documents', 'wp-document-revisions' ),
-			'not_found'          => __( 'No documents found', 'wp-document-revisions' ),
-			'not_found_in_trash' => __( 'No documents found in Trash', 'wp-document-revisions' ),
-			'parent_item_colon'  => '',
-			'menu_name'          => __( 'Documents', 'wp-document-revisions' ),
-			'all_items'          => __( 'All Documents', 'wp-document-revisions' ),
+			'name'                  => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
+			'singular_name'         => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
+			'add_new'               => _x( 'Add Document', 'document', 'wp-document-revisions' ),
+			'add_new_item'          => __( 'Add New Document', 'wp-document-revisions' ),
+			'edit_item'             => __( 'Edit Document', 'wp-document-revisions' ),
+			'new_item'              => __( 'New Document', 'wp-document-revisions' ),
+			'view_item'             => __( 'View Document', 'wp-document-revisions' ),
+			'search_items'          => __( 'Search Documents', 'wp-document-revisions' ),
+			'not_found'             => __( 'No documents found', 'wp-document-revisions' ),
+			'not_found_in_trash'    => __( 'No documents found in Trash', 'wp-document-revisions' ),
+			'parent_item_colon'     => '',
+			'menu_name'             => __( 'Documents', 'wp-document-revisions' ),
+			'all_items'             => __( 'All Documents', 'wp-document-revisions' ),
+			'featured_image'        => __( 'Document Image', 'wp-document-revisions' ),
+			'set_featured_image'    => __( 'Set Document Image', 'wp-document-revisions' ),
+			'remove_featured_image' => __( 'Remove Document Image', 'wp-document-revisions' ),
+			'use_featured_image'    => __( 'Use as Document Image', 'wp-document-revisions' ),
 		);
 
 		$args = array(
@@ -179,11 +236,17 @@ class WP_Document_Revisions {
 			'hierarchical'         => false,
 			'menu_position'        => null,
 			'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
-			'supports'             => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields' ),
+			'supports'             => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields', 'thumbnail' ),
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
 
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
+
+		// Ensure that there is a post-thumbnail size set - could/should be set by theme - copy from thumbnail
+		global $_wp_additional_image_sizes;
+		if ( ! array_key_exists( 'post-thumbnail', $_wp_additional_image_sizes ) ) {
+			add_image_size( 'post-thumbnail', get_option( 'thumbnail_size_w' ), get_option( 'thumbnail_size_h' ), false );
+		}
 
 	}
 
@@ -258,6 +321,24 @@ class WP_Document_Revisions {
 				)
 			);
 		}
+
+	}
+
+	/**
+	 * Sets cached variables after everything set
+	 *
+	 * @since 3.2
+	 * @return unknown
+	 */
+	public function set_cached_variables() {
+
+		// Set the default upload directory and the document library caches
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
+		self::$wp_default_dir = wp_upload_dir();
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
+
+		// Set Global for Document Image from Cookie doc_image (may be updated later)
+		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? $_COOKIE['doc_image'] == 'true' : false );
 
 	}
 
@@ -759,11 +840,12 @@ class WP_Document_Revisions {
 		$revision = get_post( $rev_post->post_content ); // @todo can this be simplified?
 
 		$file = get_attached_file( $revision->ID );
-		// Used cached version of std directory, so cannot change within call, so replace it in the output
-		$std_dir = wp_get_upload_dir();
+		// Above used a cached version of std directory, so cannot change within call and may be wrong,
+		// so possibly replace it in the output
+		$std_dir = self::$wp_default_dir['basedir'];
 		$doc_dir = $this->document_upload_dir();
-		if ( $std_dir['basedir'] !== $doc_dir ) {
-			$file = str_replace( $std_dir['basedir'], $doc_dir, $file );
+		if ( $std_dir !== $doc_dir ) {
+			$file = str_replace( $std_dir, $doc_dir, $file );
 		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line
@@ -1036,17 +1118,18 @@ class WP_Document_Revisions {
 
 		global $wpdb;
 
-		// grab unfiltered defaults
-		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
-		$defaults = wp_upload_dir();
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
+		if ( ! is_null ( self::$wpdr_document_dir ) ) {
+			return self::$wpdr_document_dir;
+		}
 
 		// If no options set, default to normal upload dir
 		$dir = get_site_option( 'document_upload_directory' );
 		if ( ! ( $dir ) ) {
-			return $defaults['basedir'];
+			self::$wpdr_document_dir = self::$wp_default_dir['basedir'];
+			return self::$wpdr_document_dir;
 		}
 
+		self::$wpdr_document_dir = $dir;
 		if ( ! is_multisite() ) {
 			return $dir;
 		}
@@ -1058,6 +1141,7 @@ class WP_Document_Revisions {
 			}
 
 			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
+			self::$wpdr_document_dir = $dir;
 		}
 
 		return $dir;
@@ -1094,9 +1178,44 @@ class WP_Document_Revisions {
 	public function document_upload_dir_filter( $dir ) {
 
 		if ( ! $this->verify_post_type() ) {
+			// Ensure cookie variable is set correctly - if needed elsewhere
+			self::$doc_image = false;
 			return $dir;
 		}
 
+		// Ignore if dealing with thumbnail on document page
+		if ( self::$doc_image ) {
+			return $dir;
+		}
+
+		global $pagenow;
+
+		// got past cookie check (could be initial display), but may be in thumbnail code
+		// Set image directory if dealing with thumbnail on document page
+		$pages = array (
+			'admin-ajax.php',
+			'async-upload.php',
+			'edit.php',
+			'media-upload.php',
+			'post.php',
+			'post-new.php',
+			);
+		if ( in_array( $pagenow, $pages ) ) {
+			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			$functions = array (
+				'wp_ajax_get_post_thumbnail_html',
+				'_wp_post_thumbnail_html',
+				'post_thumbnail_meta_box'
+			);
+			foreach ( $trace as $traceline ) :
+				if ( in_array( $traceline['function'], $functions ) ) {
+					self::$doc_image = true;
+					return $dir;
+				}
+			endforeach;
+		}
+
+		self::$doc_image = false;
 		$dir['path'] = $this->document_upload_dir() . $dir['subdir'];
 		$dir['url'] = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
 		$dir['basedir'] = $this->document_upload_dir();
@@ -1136,9 +1255,34 @@ class WP_Document_Revisions {
 
 		// verify this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
+			self::$doc_image = false;
 			return $file;
 		}
 
+		// Ignore if dealing with thumbnail on document page
+		if ( self::$doc_image ) {
+			return $file;
+		}
+
+		global $pagenow;
+
+		if ( 'async-upload.php' === $pagenow ) {
+			// got past cookie, but may be in thumbnail code
+			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			$functions = array (
+				'wp_ajax_get_post_thumbnail_html',
+				'_wp_post_thumbnail_html',
+				'post_thumbnail_meta_box'
+			);
+			foreach ( $trace as $traceline ) :
+				if ( in_array( $traceline['function'], $functions ) ) {
+					self::$doc_image = true;
+					return $file;
+				}
+			endforeach;
+		}
+
+		self::$doc_image = false;
 		// hash and replace filename, appending extension
 		$file['name'] = md5( $file['name'] . time() ) . $this->get_extension( $file['name'] );
 
@@ -1160,9 +1304,34 @@ class WP_Document_Revisions {
 
 		// verify that this is a document
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
+			self::$doc_image = false;
 			return $file;
 		}
 
+		// Ignore if dealing with thumbnail on document page
+		if ( self::$doc_image ) {
+			return $file;
+		}
+
+		global $pagenow;
+
+		if ( 'async-upload.php' === $pagenow ) {
+			// got past cookie, but may be in thumbnail code
+			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			$functions = array (
+				'wp_ajax_get_post_thumbnail_html',
+				'_wp_post_thumbnail_html',
+				'post_thumbnail_meta_box'
+			);
+			foreach ( $trace as $traceline ) :
+				if ( in_array( $traceline['function'], $functions  ) ) {
+					self::$doc_image = true;
+					return $file;
+				}
+			endforeach;
+		}
+
+		self::$doc_image = false;
 		$file['url'] = get_permalink( $_POST['post_id'] );
 
 		return $file;
@@ -1192,10 +1361,14 @@ class WP_Document_Revisions {
 				return true;
 			}
 
-			// Assume that a document feed is a document feed, even without a post object.
-			if ( ( array_key_exists( 'post_type', $wp_query->query_vars ) ) &&
-			'document' === $wp_query->query_vars['post_type'] && is_feed() ) {
-				return true;
+			// Test to see if a document feed
+			if ( is_array ( $wp_query ) && ! is_null( $wp_query ) ) {
+				$query_vars = $wp_query->query_vars;
+				// Assume that a document feed is a document feed, even without a post object.
+				if ( ( array_key_exists( 'post_type', $query_vars ) ) &&
+				'document' === $query_vars['post_type'] && is_feed() ) {
+					return true;
+				}
 			}
 
 			// if post isn't set, try get vars (edit post)

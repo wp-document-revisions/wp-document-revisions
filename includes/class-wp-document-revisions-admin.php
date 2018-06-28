@@ -324,7 +324,9 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function hide_upload_header() {
 
-		if ( 'media-upload' === get_current_screen()->id && $this->verify_post_type( $_GET['post_id'] ) ) { ?>
+		global $pagenow;
+
+		if ( 'media-upload.php' === $pagenow && $this->verify_post_type( $_GET['post_id'] ) ) { ?>
 			<style>
 				#media-upload-header {display:none;}
 			</style>
@@ -346,18 +348,15 @@ class WP_Document_Revisions_Admin {
 		$lock_holder = $this->get_document_lock( $post );
 		if ( $lock_holder ) {
 		?>
-					<div id="lock_override" class="hide-if-no-js">
-					<?php
-					// translators: %s is the user that holds the document lock
-					printf( esc_html__( '%s has prevented other users from making changes.', 'wp-document-revisions' ), esc_html( $lock_holder ) );
-					?>
+			<div id="lock_override" class="hide-if-no-js">
 			<?php
-			// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
+			// translators: %s is the user that holds the document lock
+			printf( esc_html__( '%s has prevented other users from making changes.', 'wp-document-revisions' ), esc_html( $lock_holder ) );
 			if ( current_user_can( 'override_document_lock' ) ) {
+				// @codingStandardsIgnorLinee WordPress.XSS.EscapeOutput.OutputNotEscaped
 				_e( '<br />If you believe this is in error you can <a href="#" id="override_link">override the lock</a>, but their changes will be lost.', 'wp-document-revisions' );
 			}
-			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
-		?>
+			?>
 			</div>
 		<?php } ?>
 		<div id="lock_override">
@@ -430,9 +429,9 @@ class WP_Document_Revisions_Admin {
 			// this will prevent mime/ext security conflicts in IE when downloading.
 			if ( is_numeric( $revision->post_content ) ) {
 				$fn = get_post_meta( $revision->post_content, '_wp_attached_file', true );
-				$fno = pathinfo( $fn );
+				$fno = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
-				$fn = $info['dirname'] . '/' . $info['filename'] . '.' . $fno['extension'];
+				$fn = $info['dirname'] . '/' . $info['filename'] . '.' . $fno;
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
@@ -529,6 +528,9 @@ class WP_Document_Revisions_Admin {
 			add_settings_error( 'document_upload_directory', 'document-upload-dir-change', __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' ), 'updated' );
 		}
 
+		// clear cache so that it can be repopulated with new value
+		$this->clear_document_dir_cache();
+
 		// trim and return
 		return rtrim( $dir, '/' );
 	}
@@ -613,6 +615,7 @@ class WP_Document_Revisions_Admin {
 		// if the dir is valid, save it
 		if ( $dir ) {
 			update_site_option( 'document_upload_directory', $dir );
+			$this->clear_document_dir_cache();
 		}
 	}
 
@@ -1116,6 +1119,22 @@ class WP_Document_Revisions_Admin {
 		// associate taxonomy with parent, not revision
 		if ( wp_is_post_revision( $doc_id ) ) {
 			$doc_id = wp_is_post_revision( $doc_id );
+		}
+
+		// if document has featured image loaded with document, then make sure it has no parent
+		// done after we make sure that we have doc_id being parent
+		global $wpdb;
+		$thumb = get_post_meta( $doc_id, '_thumbnail_id', true );
+		if ( $thumb > 0 ) {
+			$sql = $wpdb->prepare(
+				"UPDATE %s " .
+				" SET post_parent = 0 WHERE id = %d " .
+				" AND post_parent = %d ",
+				trim( $wpdb->prefix, "'" ) . 'posts',
+				$thumb,
+				$doc_id
+			);
+			$res = $wpdb->query( str_replace( "'", "`", $sql ) );
 		}
 
 		$old = wp_get_post_terms( $doc_id, 'workflow_state', true );
