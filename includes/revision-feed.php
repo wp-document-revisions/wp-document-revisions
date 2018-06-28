@@ -49,10 +49,10 @@ echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_cha
 		<link><?php the_permalink_rss(); ?></link>
 		<pubDate><?php echo ent2ncr( esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ) ); ?></pubDate>
 		<dc:creator><?php the_author(); ?></dc:creator>
-	<?php the_category_rss( 'rss2' ); ?>
+		<?php the_category_rss( 'rss2' ); ?>
 		<guid isPermaLink="false"><?php the_guid(); ?></guid>
 		<description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
-	<?php do_action( 'rss2_item' ); ?>
+		<?php do_action( 'rss2_item' ); ?>
 	</item>
 	<?php endwhile; ?>
 </channel>

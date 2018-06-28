@@ -112,7 +112,7 @@ class WP_Document_Revisions_Front_End {
 
 		// buffer output to return rather than echo directly
 		ob_start();
-?>
+		?>
 		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
 		// loop through each revision
@@ -227,12 +227,12 @@ class WP_Document_Revisions_Front_End {
 
 		// buffer output to return rather than echo directly
 		ob_start();
-?>
+		?>
 		<ul class="documents">
 		<?php
 		// loop through found documents
 		foreach ( $documents as $document ) {
-		?>
+			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
 				<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
 					<?php echo esc_html( get_the_title( $document->ID ) ); ?>
@@ -352,12 +352,12 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
-?>
+			?>
 			<li>
 				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
 				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
 			</li>
-		<?php
+			<?php
 		endforeach;
 
 		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -377,7 +377,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				$instance[ $key ] = $value;
 			}
 		}
-?>
+		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'wp-document-revisions' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
