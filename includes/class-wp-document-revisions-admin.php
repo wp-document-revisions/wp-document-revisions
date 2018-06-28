@@ -453,7 +453,7 @@ class WP_Document_Revisions_Admin {
 							), "restore-post_$revision->ID"
 						)
 					);
-				?>
+					?>
 				" class="revision"><?php esc_html_e( 'Restore', 'wp-document-revisions' ); ?></a></td>
 				<?php } ?>
 			</tr>
@@ -697,7 +697,7 @@ class WP_Document_Revisions_Admin {
 			// translators: %site_id% is not interpolated and should not be translated
 			_e( 'You may optionally include the string <code>%site_id%</code> within the path to separate files by site.', 'wp-document-revisions' );
 			// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
-		?>
+			?>
 		</span>
 			<?php
 		endif;
@@ -1076,7 +1076,7 @@ class WP_Document_Revisions_Admin {
 			<option></option>
 			<?php foreach ( $states as $state ) { ?>
 			<option value="<?php echo esc_attr( $state->slug ); ?>"
-			<?php
+				<?php
 				if ( $current_state ) {
 					selected( $current_state[0]->slug, $state->slug );}
 				?>
@@ -1126,6 +1126,7 @@ class WP_Document_Revisions_Admin {
 		global $wpdb;
 		$thumb = get_post_meta( $doc_id, '_thumbnail_id', true );
 		if ( $thumb > 0 ) {
+			// @codingStandardsIgnoreStart WordPress.WP.PreparedSQL.NotPrepared
 			$sql = $wpdb->prepare(
 				'UPDATE %s ' .
 				' SET post_parent = 0 WHERE id = %d ' .
@@ -1134,6 +1135,7 @@ class WP_Document_Revisions_Admin {
 				$thumb,
 				$doc_id
 			);
+			// @codingStandardsIgnoreEnd WordPress.WP.PreparedSQL.NotPrepared
 			$res = $wpdb->query( str_replace( "'", '`', $sql ) );
 		}
 

@@ -67,7 +67,7 @@ class WP_Document_Revisions {
 	public static $doc_image = false;
 
 	/**
-	 * identify if processing document or image directory
+	 * Identify if processing document or image directory
 	 *
 	 * @return Boolean $doc_image
 	 *
@@ -1200,6 +1200,7 @@ class WP_Document_Revisions {
 			'post-new.php',
 		);
 		if ( in_array( $pagenow, $pages, true ) ) {
+			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
@@ -1267,6 +1268,7 @@ class WP_Document_Revisions {
 
 		if ( 'async-upload.php' === $pagenow ) {
 			// got past cookie, but may be in thumbnail code
+			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
@@ -1316,6 +1318,7 @@ class WP_Document_Revisions {
 
 		if ( 'async-upload.php' === $pagenow ) {
 			// got past cookie, but may be in thumbnail code
+			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
