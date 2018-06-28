@@ -1126,7 +1126,7 @@ class WP_Document_Revisions_Admin {
 		global $wpdb;
 		$thumb = get_post_meta( $doc_id, '_thumbnail_id', true );
 		if ( $thumb > 0 ) {
-			// @codingStandardsIgnoreStart WordPress.WP.PreparedSQL.NotPrepared
+			// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
 			$sql = $wpdb->prepare(
 				'UPDATE %s ' .
 				' SET post_parent = 0 WHERE id = %d ' .
@@ -1135,7 +1135,7 @@ class WP_Document_Revisions_Admin {
 				$thumb,
 				$doc_id
 			);
-			// @codingStandardsIgnoreEnd WordPress.WP.PreparedSQL.NotPrepared
+			// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 			$res = $wpdb->query( str_replace( "'", '`', $sql ) );
 		}
 
