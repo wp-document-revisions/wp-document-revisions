@@ -29,7 +29,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * [Links](links.md)
 * [Where to get Support or Report an Issue](SUPPORT.md)
 * [Translations](translations.md)
-* [Useful Plugins and Tools](plugins-and-tools.md)
+* [Useful Plugins and Tools](useful-plugins-and-tools.md)
 
 ### Get Involved
 
