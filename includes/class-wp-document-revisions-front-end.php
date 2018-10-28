@@ -209,7 +209,8 @@ class WP_Document_Revisions_Front_End {
 		$taxs = get_taxonomies(
 			array(
 				'object_type' => array( 'document' ),
-			), 'objects'
+			), 
+			'objects'
 		);
 
 		// allow querying by custom taxonomy
@@ -348,7 +349,8 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',
-				), admin_url( 'post.php' )
+				), 
+				admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
@@ -410,7 +412,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
-		$instance['title']       = strip_tags( $new_instance['title'] );
+		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
 		$instance['numberposts'] = (int) $new_instance['numberposts'];
 		$instance['show_author'] = (bool) $new_instance['show_author'];
 

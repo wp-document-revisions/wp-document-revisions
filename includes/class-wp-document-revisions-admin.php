@@ -449,8 +449,10 @@ class WP_Document_Revisions_Admin {
 								array(
 									'revision' => $revision->ID,
 									'action' => 'restore',
-								), 'revision.php'
-							), "restore-post_$revision->ID"
+								), 
+								'revision.php'
+							), 
+							"restore-post_$revision->ID"
 						)
 					);
 					?>
@@ -1064,7 +1066,10 @@ class WP_Document_Revisions_Admin {
 
 		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
-		$current_state = wp_get_post_terms( $post->ID, 'workflow_state' );
+		$current_state = wp_get_post_terms( 
+			$post->ID, 
+			'workflow_state'
+		);
 		$states = get_terms(
 			'workflow_state', array(
 				'hide_empty' => false,
@@ -1126,15 +1131,15 @@ class WP_Document_Revisions_Admin {
 		global $wpdb;
 		$thumb = get_post_meta( $doc_id, '_thumbnail_id', true );
 		if ( $thumb > 0 ) {
-			// phpcs:disable WordPress.WP.PreparedSQL.NotPrepared
+			// @codingStandardsIgnoreStart WordPress.DB.PreparedSQL.NotPrepared
+			$post_table = "{$wpdb->prefix}posts";
 			$sql = $wpdb->prepare(
-				'UPDATE %s SET post_parent = 0 WHERE id = %d AND post_parent = %d ',
-				trim( $wpdb->prefix, "'" ) . 'posts',
+				"UPDATE `$post_table` SET `post_parent` = 0 WHERE `id` = %d AND `post_parent` = %d ",
 				$thumb,
 				$doc_id
 			);
-			$res = $wpdb->query( str_replace( "'", '`', $sql ) );
-			// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
+			$res = $wpdb->query( $sql );
+			// @codingStandardsIgnoreEnd WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		$old = wp_get_post_terms( $doc_id, 'workflow_state', true );
@@ -1225,7 +1230,11 @@ class WP_Document_Revisions_Admin {
 
 		// Enqueue JS
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		wp_enqueue_script( 'wp_document_revisions', plugins_url( '/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ), array( 'jquery' ), $wpdr->version );
+		wp_enqueue_script( 'wp_document_revisions', 
+			plugins_url( '/js/wp-document-revisions' . $suffix . '.js', 
+			dirname( __FILE__ ) ), array( 'jquery' ), 
+			$wpdr->version,
+			false );
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 
 		// enqueue CSS
@@ -1446,7 +1455,8 @@ class WP_Document_Revisions_Admin {
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',
-				), admin_url( 'post.php' )
+				), 
+				admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status
 			$format_string = __( '%1$s ago by %2$s [%3$s]', 'wp-document-revisions' );

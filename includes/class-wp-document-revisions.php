@@ -217,10 +217,10 @@ class WP_Document_Revisions {
 			'parent_item_colon'  => '',
 			'menu_name'          => __( 'Documents', 'wp-document-revisions' ),
 			'all_items'          => __( 'All Documents', 'wp-document-revisions' ),
-			'featured_image'       => __( 'Document Image', 'wp-document-revisions' ),
-			'set_featured_image'   => __( 'Set Document Image', 'wp-document-revisions' ),
-			'remove_featured_image'=> __( 'Remove Document Image', 'wp-document-revisions' ),
-			'use_featured_image'   => __( 'Use as Document Image', 'wp-document-revisions' ),
+			'featured_image'        => __( 'Document Image', 'wp-document-revisions' ),
+			'set_featured_image'    => __( 'Set Document Image', 'wp-document-revisions' ),
+			'remove_featured_image' => __( 'Remove Document Image', 'wp-document-revisions' ),
+			'use_featured_image'    => __( 'Use as Document Image', 'wp-document-revisions' ),
 		);
 
 		$args = array(
@@ -248,7 +248,7 @@ class WP_Document_Revisions {
 			add_image_size( 'post-thumbnail', get_option( 'thumbnail_size_w' ), get_option( 'thumbnail_size_h' ), false );
 		}
 
-		if ( empty(self::$wp_default_dir) ) {
+		if ( empty( self::$wp_default_dir ) ) {
 			// Set the default upload directory cache
 			remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
 			self::$wp_default_dir = wp_upload_dir();
@@ -283,8 +283,11 @@ class WP_Document_Revisions {
 		);
 
 		register_taxonomy(
-			'workflow_state', array( 'document' ), apply_filters(
-				'document_revisions_ct', array(
+			'workflow_state', 
+			array( 'document' ), 
+			apply_filters(
+				'document_revisions_ct', 
+				array(
 					'hierarchical'          => false,
 					'labels'                => $labels,
 					'show_ui'               => true,
@@ -306,7 +309,8 @@ class WP_Document_Revisions {
 	public function initialize_workflow_states() {
 
 		$terms = get_terms(
-			'workflow_state', array(
+			'workflow_state', 
+			array(
 				'hide_empty' => false,
 			)
 		);
@@ -326,7 +330,9 @@ class WP_Document_Revisions {
 
 		foreach ( $states as $state => $desc ) {
 			wp_insert_term(
-				$state, 'workflow_state', array(
+				$state, 
+				'workflow_state', 
+				array(
 					'description' => $desc,
 				)
 			);
@@ -665,7 +671,8 @@ class WP_Document_Revisions {
 
 		// get revisions, and prepend the post
 		$revs = wp_get_post_revisions(
-			$post_id, array(
+			$post_id, 
+			array(
 				'order' => 'DESC',
 			)
 		);
@@ -732,7 +739,8 @@ class WP_Document_Revisions {
 		}
 
 		$revs = wp_get_post_revisions(
-			$post_id, array(
+			$post_id, 
+			array(
 				'order' => 'ASC',
 			)
 		);
@@ -861,9 +869,10 @@ class WP_Document_Revisions {
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
-				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ), null, array(
-					'response' => 403,
-				)
+				esc_html__( 'You are not authorized to access that file.', 
+					'wp-document-revisions' ), 
+				null, 
+				array( 'response' => 403, )
 			);
 			return false; // for unit testing
 		}
@@ -940,6 +949,7 @@ class WP_Document_Revisions {
 		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
 
 		foreach ( $headers as $header => $value ) {
+			//@codingStandardsIgnoreLine WordPress.PHP.NoSilencedErrors.Discouraged
 			@header( $header . ': ' . $value );
 		}
 
@@ -967,6 +977,7 @@ class WP_Document_Revisions {
 		}
 
 		// in case this is a large file, remove PHP time limits
+		//@codingStandardsIgnoreLine WordPress.PHP.NoSilencedErrors.Discouraged
 		@set_time_limit( 0 );
 
 		// clear output buffer to prevent other plugins from corrupting the file
@@ -1421,7 +1432,7 @@ class WP_Document_Revisions {
 		remove_filter( 'get_the_excerpt', 'wp_trim_excerpt' );
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
-		// include feed and die
+		// include the feed and then die
 		load_template( dirname( __FILE__ ) . '/revision-feed.php' );
 
 	}
@@ -1995,7 +2006,8 @@ class WP_Document_Revisions {
 			array(
 				'object_type' => 'document',
 				'update_count_callback' => '',
-			), 'objects'
+			), 
+			'objects'
 		);
 
 		foreach ( $taxs as $tax ) {
