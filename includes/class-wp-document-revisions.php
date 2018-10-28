@@ -1339,8 +1339,8 @@ class WP_Document_Revisions {
 
 		}
 
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		self::$doc_image = false;
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		$file['url'] = get_permalink( $_POST['post_id'] );
 
 		return $file;
@@ -1378,14 +1378,18 @@ class WP_Document_Revisions {
 			}
 
 			// if post isn't set, try get vars (edit post)
+			// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.NoNonceVerification
 			if ( isset( $_GET['post'] ) ) {
 				$documentish = intval( $_GET['post'] );
+			// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.NoNonceVerification
 			}
 
 			// look for post_id via post or get (media upload)
+			// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.NoNonceVerification
 			if ( isset( $_REQUEST['post_id'] ) ) {
 				$documentish = intval( $_REQUEST['post_id'] );
 			}
+			// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.NoNonceVerification
 		}
 
 		if ( false === $documentish ) {
@@ -1495,11 +1499,13 @@ class WP_Document_Revisions {
 		global $wpdb;
 
 		// verify key exists
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( empty( $_GET['key'] ) ) {
 			return false;
 		}
 
 		// make alphanumeric
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		$key = preg_replace( '/[^a-z0-9]/i', '', $_GET['key'] );
 
 		// verify length

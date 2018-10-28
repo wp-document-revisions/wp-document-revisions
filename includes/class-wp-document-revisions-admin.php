@@ -142,6 +142,7 @@ class WP_Document_Revisions_Admin {
 			3 => __( 'Custom field deleted.', 'wp-document-revisions' ),
 			4 => __( 'Document updated.', 'wp-document-revisions' ),
 			// translators: %s is the revision ID
+			// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 				5 => isset( $_GET['revision'] ) ? sprintf( __( 'Document restored to revision from %s', 'wp-document-revisions' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 			// translators: %s is the download link
 				6 => sprintf( __( 'Document published. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink( $post_id ) ) ),
@@ -326,6 +327,7 @@ class WP_Document_Revisions_Admin {
 
 		global $pagenow;
 
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( 'media-upload.php' === $pagenow && $this->verify_post_type( $_GET['post_id'] ) ) { ?>
 			<style>
 				#media-upload-header {display:none;}
@@ -796,6 +798,7 @@ class WP_Document_Revisions_Admin {
 		do_action( 'document_lock_notice', $post );
 
 		// if there is no page var, this is a new document, no need to warn
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( isset( $_GET['post'] ) ) :
 			?>
 		<div class="error" id="lock-notice"><p><?php esc_html_e( 'You currently have this file checked out. No other user can edit this document so long as you remain on this page.', 'wp-document-revisions' ); ?></p></div>
@@ -921,9 +924,11 @@ class WP_Document_Revisions_Admin {
 				'name' => 'author',
 				'show_option_all' => __( 'All owners', 'wp-document-revisions' ),
 			);
-			if ( isset( $_GET['author'] ) ) {
+		// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.NoNonceVerification
+		if ( isset( $_GET['author'] ) ) {
 				$args['selected'] = $_GET['author'];
 			}
+		// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.NoNonceVerification
 			wp_dropdown_users( $args );
 		}
 	}
@@ -1072,7 +1077,7 @@ class WP_Document_Revisions_Admin {
 		);
 		$states = get_terms(
 			'workflow_state',
-			array( 'hide_empty' => false, )
+			array( 'hide_empty' => false ),
 		);
 		?>
 		<label for="workflow_state"><?php esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
@@ -1231,8 +1236,7 @@ class WP_Document_Revisions_Admin {
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script(
 			'wp_document_revisions',
-			plugins_url( '/js/wp-document-revisions' . $suffix . '.js',
-			dirname( __FILE__ ) ),
+			plugins_url( '/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ),
 			array( 'jquery' ),
 			$wpdr->version,
 			false
