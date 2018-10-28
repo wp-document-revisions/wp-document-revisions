@@ -36,7 +36,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		// init workflow states
 		foreach ( get_terms(
-			'workflow_state', array(
+			'workflow_state',
+			array(
 				'hide_empty' => false,
 			)
 		) as $term ) {
@@ -85,7 +86,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	public function test_workflow_states_exist() {
 
 		$terms = get_terms(
-			'workflow_state', array(
+			'workflow_state',
+			array(
 				'hide_empty' => false,
 			)
 		);
@@ -111,7 +113,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		$wp_filetype = wp_check_filetype( basename( $file ), null );
 		$file_array = apply_filters(
-			'wp_handle_upload_prefilter', array(
+			'wp_handle_upload_prefilter',
+			array(
 				'name' => basename( $file ),
 				'tmp_name' => $file,
 				'type' => $wp_filetype['type'],
@@ -166,7 +169,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		// assign workflow state
 		$terms = get_terms(
-			'workflow_state', array(
+			'workflow_state',
+			array(
 				'hide_empty' => false,
 			)
 		);
@@ -182,9 +186,11 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		// store attachment ID as post content without creating a revision
 		$result = $wpdb->update(
-			$wpdb->posts, array(
+			$wpdb->posts,
+			array(
 				'post_content' => $attach_id,
-			), array(
+			),
+			array(
 				'ID' => $post_id,
 			)
 		);

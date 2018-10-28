@@ -283,10 +283,10 @@ class WP_Document_Revisions {
 		);
 
 		register_taxonomy(
-			'workflow_state', 
-			array( 'document' ), 
+			'workflow_state',
+			array( 'document' ),
 			apply_filters(
-				'document_revisions_ct', 
+				'document_revisions_ct',
 				array(
 					'hierarchical'          => false,
 					'labels'                => $labels,
@@ -309,7 +309,7 @@ class WP_Document_Revisions {
 	public function initialize_workflow_states() {
 
 		$terms = get_terms(
-			'workflow_state', 
+			'workflow_state',
 			array(
 				'hide_empty' => false,
 			)
@@ -330,8 +330,8 @@ class WP_Document_Revisions {
 
 		foreach ( $states as $state => $desc ) {
 			wp_insert_term(
-				$state, 
-				'workflow_state', 
+				$state,
+				'workflow_state',
 				array(
 					'description' => $desc,
 				)
@@ -671,7 +671,7 @@ class WP_Document_Revisions {
 
 		// get revisions, and prepend the post
 		$revs = wp_get_post_revisions(
-			$post_id, 
+			$post_id,
 			array(
 				'order' => 'DESC',
 			)
@@ -739,7 +739,7 @@ class WP_Document_Revisions {
 		}
 
 		$revs = wp_get_post_revisions(
-			$post_id, 
+			$post_id,
 			array(
 				'order' => 'ASC',
 			)
@@ -869,10 +869,9 @@ class WP_Document_Revisions {
 		// note: authentication is happeneing via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
-				esc_html__( 'You are not authorized to access that file.', 
-					'wp-document-revisions' ), 
-				null, 
-				array( 'response' => 403, )
+				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
+				null,
+				array( 'response' => 403 )
 			);
 			return false; // for unit testing
 		}
@@ -1258,6 +1257,7 @@ class WP_Document_Revisions {
 	public function filename_rewrite( $file ) {
 
 		// verify this is a document
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			self::$doc_image = false;
 			return $file;
@@ -1308,6 +1308,7 @@ class WP_Document_Revisions {
 	public function rewrite_file_url( $file ) {
 
 		// verify that this is a document
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			self::$doc_image = false;
 			return $file;
@@ -1335,8 +1336,10 @@ class WP_Document_Revisions {
 					return $file;
 				}
 			endforeach;
+
 		}
 
+		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		self::$doc_image = false;
 		$file['url'] = get_permalink( $_POST['post_id'] );
 
@@ -1363,6 +1366,7 @@ class WP_Document_Revisions {
 		if ( false === $documentish ) {
 
 			// check for post_type query arg (post new)
+			// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 			if ( isset( $_GET['post_type'] ) && 'document' === $_GET['post_type'] ) {
 				return true;
 			}
@@ -1711,7 +1715,7 @@ class WP_Document_Revisions {
 	 * Removes Private or Protected from document titles in RSS feeds
 	 *
 	 * @since 1.0
-	 * @param string  $prepend the sprintf formatted string to prepend to the title
+	 * @param string $prepend the sprintf formatted string to prepend to the title
 	 * @return string just the string
 	 */
 	public function no_title_prepend( $prepend ) {
@@ -2006,7 +2010,7 @@ class WP_Document_Revisions {
 			array(
 				'object_type' => 'document',
 				'update_count_callback' => '',
-			), 
+			),
 			'objects'
 		);
 

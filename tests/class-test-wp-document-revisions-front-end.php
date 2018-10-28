@@ -123,7 +123,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 		// move a doc to another workflow state (default is index 0)
 		$terms = get_terms(
-			'workflow_state', array(
+			'workflow_state',
+			array(
 				'hide_empty' => false,
 			)
 		);

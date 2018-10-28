@@ -449,9 +449,9 @@ class WP_Document_Revisions_Admin {
 								array(
 									'revision' => $revision->ID,
 									'action' => 'restore',
-								), 
+								),
 								'revision.php'
-							), 
+							),
 							"restore-post_$revision->ID"
 						)
 					);
@@ -1007,7 +1007,7 @@ class WP_Document_Revisions_Admin {
 				return;
 			}
 
-			// output (no return)
+			// give the workflow state output (but with no return)
 			echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug ) ) . '">' . esc_html( $state[0]->name ) . '</a>';
 		}
 	}
@@ -1066,14 +1066,13 @@ class WP_Document_Revisions_Admin {
 
 		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
-		$current_state = wp_get_post_terms( 
-			$post->ID, 
+		$current_state = wp_get_post_terms(
+			$post->ID,
 			'workflow_state'
 		);
 		$states = get_terms(
-			'workflow_state', array(
-				'hide_empty' => false,
-			)
+			'workflow_state',
+			array( 'hide_empty' => false, )
 		);
 		?>
 		<label for="workflow_state"><?php esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
@@ -1230,11 +1229,14 @@ class WP_Document_Revisions_Admin {
 
 		// Enqueue JS
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		wp_enqueue_script( 'wp_document_revisions', 
-			plugins_url( '/js/wp-document-revisions' . $suffix . '.js', 
-			dirname( __FILE__ ) ), array( 'jquery' ), 
+		wp_enqueue_script(
+			'wp_document_revisions',
+			plugins_url( '/js/wp-document-revisions' . $suffix . '.js',
+			dirname( __FILE__ ) ),
+			array( 'jquery' ),
 			$wpdr->version,
-			false );
+			false
+		);
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 
 		// enqueue CSS
@@ -1455,7 +1457,7 @@ class WP_Document_Revisions_Admin {
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',
-				), 
+				),
 				admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status

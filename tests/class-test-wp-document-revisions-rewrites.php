@@ -329,7 +329,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		ob_start();
 		global $post;
 		try {
-			@require dirname( __DIR__ ) . '/includes/revision-feed.php';
+			require dirname( __DIR__ ) . '/includes/revision-feed.php';
 			$content = ob_get_clean();
 		} catch ( Exception $e ) {
 			$content = ob_get_clean();

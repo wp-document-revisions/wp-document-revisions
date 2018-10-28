@@ -209,7 +209,7 @@ class WP_Document_Revisions_Front_End {
 		$taxs = get_taxonomies(
 			array(
 				'object_type' => array( 'document' ),
-			), 
+			),
 			'objects'
 		);
 
@@ -349,7 +349,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				array(
 					'post' => $document->ID,
 					'action' => 'edit',
-				), 
+				),
 				admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
 			// translators: %1$s is the time ago in words, %2$s is the author
