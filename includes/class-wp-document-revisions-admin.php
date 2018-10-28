@@ -1077,7 +1077,7 @@ class WP_Document_Revisions_Admin {
 		);
 		$states = get_terms(
 			'workflow_state',
-			array( 'hide_empty' => false ),
+			array( 'hide_empty' => false )
 		);
 		?>
 		<label for="workflow_state"><?php esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
