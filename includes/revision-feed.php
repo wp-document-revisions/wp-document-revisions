@@ -8,10 +8,10 @@
 
 global $post, $wpdr;
 if ( ! $wpdr ) {
-	$wpdr = &Document_Revisions::$instance;
+	$wpdr = new WP_Document_Revisions();
 }
 
-$rev_query = $wpdr->get_revision_query( $post->ID );
+$rev_query = $wpdr->get_revision_query( $post->ID, true );
 
 @header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 

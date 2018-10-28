@@ -78,7 +78,7 @@ class WP_Document_Revisions_Front_End {
 	 * @returns mixed the property's value
 	 */
 	public function __get( $name ) {
-		return Document_Revisions::$$name;
+		return WP_Document_Revisions::$$name;
 	}
 
 
@@ -319,7 +319,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
-			$wpdr = Document_Revisions::$instance;
+			$wpdr = new WP_Document_Revisions();
 		}
 
 		// enabled statuses are stored as status => bool, but we want an array of only activated statuses
