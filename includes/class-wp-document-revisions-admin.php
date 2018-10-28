@@ -1133,8 +1133,8 @@ class WP_Document_Revisions_Admin {
 				$thumb,
 				$doc_id
 			);
-			// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 			$res = $wpdb->query( str_replace( "'", '`', $sql ) );
+			// phpcs:enable WordPress.WP.PreparedSQL.NotPrepared
 		}
 
 		$old = wp_get_post_terms( $doc_id, 'workflow_state', true );
