@@ -46,7 +46,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.2
 	 */
-	public static $wp_default_dir;
+	public static $wp_default_dir = array();
 
 	/**
 	 * The document directory cache
@@ -88,8 +88,7 @@ class WP_Document_Revisions {
 
 		// admin
 		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
-		add_action( 'plugins_loaded', array( &$this, 'i18n' ) );
-		add_action( 'admin_init', array( &$this, 'set_cached_variables' ) );
+		add_action( 'plugins_loaded', array( &$this, 'i18n' ), 5 );
 
 		// CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -100,6 +99,7 @@ class WP_Document_Revisions {
 
 		// rewrites and permalinks
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
+		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
 		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
@@ -107,7 +107,7 @@ class WP_Document_Revisions {
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
-		add_filter( 'default_feed', array( &$this, 'hijack_feed' ), 10, 2 );
+		add_filter( 'default_feed', array( &$this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 4 );
@@ -117,8 +117,8 @@ class WP_Document_Revisions {
 		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
 
 		// RSS
-		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20, 2 );
-		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20, 2 );
+		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20 );
+		add_filter( 'protected_title_format', array( &$this, 'no_title_prepend' ), 20 );
 		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 2 );
 
 		// uploads
@@ -203,23 +203,24 @@ class WP_Document_Revisions {
 	public function register_cpt() {
 
 		$labels = array(
-			'name'                  => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
-			'singular_name'         => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
-			'add_new'               => _x( 'Add Document', 'document', 'wp-document-revisions' ),
-			'add_new_item'          => __( 'Add New Document', 'wp-document-revisions' ),
-			'edit_item'             => __( 'Edit Document', 'wp-document-revisions' ),
-			'new_item'              => __( 'New Document', 'wp-document-revisions' ),
-			'view_item'             => __( 'View Document', 'wp-document-revisions' ),
-			'search_items'          => __( 'Search Documents', 'wp-document-revisions' ),
-			'not_found'             => __( 'No documents found', 'wp-document-revisions' ),
-			'not_found_in_trash'    => __( 'No documents found in Trash', 'wp-document-revisions' ),
-			'parent_item_colon'     => '',
-			'menu_name'             => __( 'Documents', 'wp-document-revisions' ),
-			'all_items'             => __( 'All Documents', 'wp-document-revisions' ),
-			'featured_image'        => __( 'Document Image', 'wp-document-revisions' ),
-			'set_featured_image'    => __( 'Set Document Image', 'wp-document-revisions' ),
-			'remove_featured_image' => __( 'Remove Document Image', 'wp-document-revisions' ),
-			'use_featured_image'    => __( 'Use as Document Image', 'wp-document-revisions' ),
+			'name'               => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
+			'singular_name'      => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
+			'add_new'            => _x( 'Add Document', 'document', 'wp-document-revisions' ),
+			'add_new_item'       => __( 'Add New Document', 'wp-document-revisions' ),
+			'edit_item'          => __( 'Edit Document', 'wp-document-revisions' ),
+			'new_item'           => __( 'New Document', 'wp-document-revisions' ),
+			'view_item'          => __( 'View Document', 'wp-document-revisions' ),
+			'view_items'         => __( 'View Documents', 'wp-document-revisions' ),
+			'search_items'       => __( 'Search Documents', 'wp-document-revisions' ),
+			'not_found'          => __( 'No documents found', 'wp-document-revisions' ),
+			'not_found_in_trash' => __( 'No documents found in Trash', 'wp-document-revisions' ),
+			'parent_item_colon'  => '',
+			'menu_name'          => __( 'Documents', 'wp-document-revisions' ),
+			'all_items'          => __( 'All Documents', 'wp-document-revisions' ),
+			'featured_image'       => __( 'Document Image', 'wp-document-revisions' ),
+			'set_featured_image'   => __( 'Set Document Image', 'wp-document-revisions' ),
+			'remove_featured_image'=> __( 'Remove Document Image', 'wp-document-revisions' ),
+			'use_featured_image'   => __( 'Use as Document Image', 'wp-document-revisions' ),
 		);
 
 		$args = array(
@@ -246,6 +247,16 @@ class WP_Document_Revisions {
 		if ( ! array_key_exists( 'post-thumbnail', wp_get_additional_image_sizes() ) ) {
 			add_image_size( 'post-thumbnail', get_option( 'thumbnail_size_w' ), get_option( 'thumbnail_size_h' ), false );
 		}
+
+		if ( empty(self::$wp_default_dir) ) {
+			// Set the default upload directory cache
+			remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
+			self::$wp_default_dir = wp_upload_dir();
+			add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
+		}
+
+		// Set Global for Document Image from Cookie doc_image (may be updated later)
+		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : false );
 
 	}
 
@@ -320,24 +331,6 @@ class WP_Document_Revisions {
 				)
 			);
 		}
-
-	}
-
-	/**
-	 * Sets cached variables after everything set
-	 *
-	 * @since 3.2
-	 * @return void
-	 */
-	public function set_cached_variables() {
-
-		// Set the default upload directory and the document library caches
-		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
-		self::$wp_default_dir = wp_upload_dir();
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
-
-		// Set Global for Document Image from Cookie doc_image (may be updated later)
-		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : false );
 
 	}
 
@@ -1363,14 +1356,10 @@ class WP_Document_Revisions {
 				return true;
 			}
 
-			// Test to see if a document feed
-			if ( is_array( $wp_query ) && ! is_null( $wp_query ) ) {
-				$query_vars = $wp_query->query_vars;
-				// Assume that a document feed is a document feed, even without a post object.
-				if ( ( array_key_exists( 'post_type', $query_vars ) ) &&
-				'document' === $query_vars['post_type'] && is_feed() ) {
-					return true;
-				}
+			// Assume that a document feed is a document feed, even without a post object.
+			if ( ( array_key_exists( 'post_type', $wp_query->query_vars ) ) &&
+			'document' === $wp_query->query_vars['post_type'] && is_feed() ) {
+				return true;
 			}
 
 			// if post isn't set, try get vars (edit post)
@@ -1433,7 +1422,7 @@ class WP_Document_Revisions {
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
 		// include feed and die
-		load_template( dirname( __FILE__ ) . '/includes/revision-feed.php' );
+		load_template( dirname( __FILE__ ) . '/revision-feed.php' );
 
 	}
 
@@ -1449,7 +1438,9 @@ class WP_Document_Revisions {
 	 */
 	public function hijack_feed( $default ) {
 
-		if ( ! $this->verify_post_type() || ! apply_filters( 'document_custom_feed', true ) ) {
+		global $post;
+
+		if ( ! $this->verify_post_type( ( isset( $post->id ) ? $post->id : false ) ) || ! apply_filters( 'document_custom_feed', true ) ) {
 			return $default;
 		}
 
@@ -1710,12 +1701,13 @@ class WP_Document_Revisions {
 	 *
 	 * @since 1.0
 	 * @param string  $prepend the sprintf formatted string to prepend to the title
-	 * @param WP_Post $post    The post object for which the title is being generated.
 	 * @return string just the string
 	 */
-	public function no_title_prepend( $prepend, $post ) {
+	public function no_title_prepend( $prepend ) {
 
-		if ( ! $this->verify_post_type( $post ) ) {
+		global $post;
+
+		if ( ! $this->verify_post_type( $post->ID ) ) {
 			return $prepend;
 		}
 
