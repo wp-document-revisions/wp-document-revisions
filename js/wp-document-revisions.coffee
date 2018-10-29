@@ -16,10 +16,16 @@ class WPDocumentRevisions
     @$('#misc-publishing-actions a').click @enableSubmit #if post status is changed, enable the submit button so the change can be saved
     @$('input, select').on 'change', @enableSubmit #if any metabox is changed, allow submission
     @$('input[type=text], textarea').on 'keyup', @enableSubmit #if any metabox is changed, allow submission
+    @$('#content-add_media').click @cookieFalse #click outside featured image area
+    @$('#poststuff').click @cookieFalse #set cookie false so load from document library
+    @$('#document').click @cookieFalse #ditto
+    @$('#postimagediv .inside').click @cookieTrue #click from within Featured Image metabox, set librry to image library
 
+    @$('#revision-log').show() #present the user with the revision log box
+    @$('#revision-summary').hide() #initially hide the revision summary box
     @bindPostDocumentUploadCB()
     @hijackAutosave()
-
+    @cookieFalse() #start with cookie false, ie document not image
     setInterval @updateTimestamps, 60000 #automatically refresh all timestamps every minute with actual human time diff
 
   #monkey patch global autosave to our autosave
@@ -154,6 +160,19 @@ class WPDocumentRevisions
       @postDocumentUpload file.name, response.response
 
 
+  #sets cookie as being outside image area, so is a document
+  cookieFalse = =>
+      secure = 'https:' == window.location.protocol
+      wpCookies.set 'doc_image', 'false', 24 * 60 * 60, false, false, secure
+
+  #sets cookie as being inside image area, so use the image library
+  cookieTrue = =>
+      secure = 'https:' == window.location.protocol
+      wpCookies.set 'doc_image', 'true', 24 * 60 * 60, false, false, secure
+      @$(':button, :submit', '#submitpost').removeAttr 'disabled'
+      # Propagation will be stopped in postimagediv to stop document event setting cookie false.
+
+
   #loop through all timestamps and update
   updateTimestamps: =>
     @$( '.timestamp').each => #loop through all timestamps and update the timestamp
@@ -197,5 +216,5 @@ class WPDocumentRevisions
 
 jQuery(document).ready ($) ->
 
-  #note: selective enqueuing happens in includes/admin.php
+  #note: selective enqueuing happens in includes/class-wp-document-revisions-admin.php
   window.WPDocumentRevisions = new WPDocumentRevisions($)
