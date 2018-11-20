@@ -185,7 +185,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.2
 	 */
-	function set_default_dir_cache() {
+	private function set_default_dir_cache() {
 		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
 		self::$wp_default_dir = wp_upload_dir();
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
