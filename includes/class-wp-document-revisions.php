@@ -179,6 +179,20 @@ class WP_Document_Revisions {
 
 
 	/**
+	 * Set the default content directory name into cacle
+	 *
+	 * @return void
+	 *
+	 * @since 3.2
+	 */
+	private function set_default_dir_cache() {
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
+		self::$wp_default_dir = wp_upload_dir();
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
+	}
+
+
+	/**
 	 * Extends class with admin functions when in admin backend
 	 *
 	 * @since 0.5
@@ -250,9 +264,7 @@ class WP_Document_Revisions {
 
 		if ( empty( self::$wp_default_dir ) ) {
 			// Set the default upload directory cache
-			remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
-			self::$wp_default_dir = wp_upload_dir();
-			add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
+			$this->set_default_dir_cache();
 		}
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later)
@@ -842,6 +854,10 @@ class WP_Document_Revisions {
 		$file = get_attached_file( $revision->ID );
 		// Above used a cached version of std directory, so cannot change within call and may be wrong,
 		// so possibly replace it in the output
+		if ( empty( self::$wp_default_dir ) ) {
+			// Set the default upload directory cache
+			$this->set_default_dir_cache();
+		}
 		$std_dir = self::$wp_default_dir['basedir'];
 		$doc_dir = $this->document_upload_dir();
 		if ( $std_dir !== $doc_dir ) {
@@ -1127,6 +1143,10 @@ class WP_Document_Revisions {
 		// If no options set, default to normal upload dir
 		$dir = get_site_option( 'document_upload_directory' );
 		if ( ! ( $dir ) ) {
+			if ( empty( self::$wp_default_dir ) ) {
+				// Set the default upload directory cache
+				$this->set_default_dir_cache();
+			}
 			self::$wpdr_document_dir = self::$wp_default_dir['basedir'];
 			return self::$wpdr_document_dir;
 		}
