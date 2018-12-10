@@ -54,6 +54,10 @@ class WP_Document_Revisions_Front_End {
 		add_shortcode( 'document_revisions', array( &$this, 'revisions_shortcode' ) );
 		add_shortcode( 'documents', array( &$this, 'documents_shortcode' ) );
 		add_filter( 'document_shortcode_atts', array( &$this, 'shortcode_atts_hyphen_filter' ) );
+
+		// Queue up JS (low priority to be at end)
+		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_front' ), 50 );
+
 	}
 
 
@@ -122,8 +126,8 @@ class WP_Document_Revisions_Front_End {
 				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
 			</li>
 		<?php
-		}
 		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+		}
 		?>
 		</ul>
 		<?php
@@ -226,6 +230,29 @@ class WP_Document_Revisions_Front_End {
 
 		$documents = $this->get_documents( $atts );
 
+		// check whether to show update option. Default - only administrator role
+		$show_edit = false;
+		$user = wp_get_current_user();
+		if ( $user->ID > 0 ) {
+			// logged on user only
+			$roles = ( array ) $user->roles;
+			if ( in_array( 'administrator', $roles ) ) {
+				$show_edit = true;
+			}
+		}
+		/**
+		 * Filters the controlling option to display an edit option against each document.
+		 *
+		 * By default, only logged-in administrators be able to have an edit option.
+		 * The user will also need to be able to edit the individual document before it is displayed.
+		 *
+		 * @since 3.2.0
+		 *
+		 *
+		 * @param boolean $show_edit default value.
+		 */
+		$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
+
 		// buffer output to return rather than echo directly
 		ob_start();
 		?>
@@ -235,9 +262,22 @@ class WP_Document_Revisions_Front_End {
 		foreach ( $documents as $document ) {
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
-				<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
-					<?php echo esc_html( get_the_title( $document->ID ) ); ?>
-				</a>
+			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
+				<?php echo esc_html( get_the_title( $document->ID ) ); ?>
+			</a>
+			<?php
+			if ( $show_edit && current_user_can( 'edit_document', $document->ID ) ) {
+				$link = add_query_arg(
+					array(
+						'post' => $document->ID,
+						'action' => 'edit',
+					),
+					admin_url( 'post.php' )
+				);
+				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . __( 'Edit', 'wp-document-revisions' ) . ']</a>';
+			}
+			?>
 			</li>
 		<?php } ?>
 		</ul>
@@ -248,6 +288,21 @@ class WP_Document_Revisions_Front_End {
 		return $output;
 
 	}
+
+	/**
+	 * Shortcode can have CSS on any page
+	 *
+	 * @since 3.2.0
+	 */
+	public function enqueue_front() {
+
+		$wpdr = self::$parent;
+
+		// enqueue CSS for shortcode
+		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', dirname( __FILE__ ) ), null, $wpdr->version );
+
+	}
+
 
 	/**
 	 * Provides workaround for taxonomies with hyphens in their name
@@ -278,6 +333,7 @@ class WP_Document_Revisions_Front_End {
 	}
 
 }
+
 
 /**
  * Recently revised documents widget
