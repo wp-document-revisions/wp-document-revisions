@@ -235,8 +235,8 @@ class WP_Document_Revisions_Front_End {
 		$user = wp_get_current_user();
 		if ( $user->ID > 0 ) {
 			// logged on user only
-			$roles = ( array ) $user->roles;
-			if ( in_array( 'administrator', $roles ) ) {
+			$roles = (array) $user->roles;
+			if ( in_array( 'administrator', $roles, true ) ) {
 				$show_edit = true;
 			}
 		}
@@ -247,7 +247,6 @@ class WP_Document_Revisions_Front_End {
 		 * The user will also need to be able to edit the individual document before it is displayed.
 		 *
 		 * @since 3.2.0
-		 *
 		 *
 		 * @param boolean $show_edit default value.
 		 */
