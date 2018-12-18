@@ -411,7 +411,7 @@ class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 			?>
 			<li>
-				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
+				<a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( get_the_title( $document->ID ) ); ?></a><br />
 				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
 			</li>
 			<?php
