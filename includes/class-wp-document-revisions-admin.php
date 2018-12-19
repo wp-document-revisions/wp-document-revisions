@@ -1468,7 +1468,7 @@ class WP_Document_Revisions_Admin {
 			$format_string = __( '%1$s ago by %2$s [%3$s]', 'wp-document-revisions' );
 			?>
 			<li>
-				<a href="<?php echo esc_attr( $link ); ?>"><?php echo get_the_title( $document->ID ); ?></a><br />
+				<a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( get_the_title( $document->ID ) ); ?></a><br />
 				<?php
 				printf(
 					esc_html( $format_string ),
