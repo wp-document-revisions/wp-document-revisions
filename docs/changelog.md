@@ -1,5 +1,10 @@
 ## Changelog
 
+### 3.2
+
+* NEW: Add Edit option to Shortcode output (#133, props @NeilWJames)
+* NEW: Support Featured Image (#131, props @NeilWJames)
+
 ### 3.1.2
 
 Fix for 404 error when serving documents from non-standard upload directory.
