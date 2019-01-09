@@ -4,7 +4,7 @@ Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 3.9
 Tested up to: 4.9.8
-Stable tag: 3.2
+Stable tag: 3.2.0
 
 == Description ==
 
@@ -102,7 +102,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 == Changelog ==
 
-= 3.2 =
+= 3.2.0 =
 
 * Enable filter by workflow_state on Admin screen (#121) @NeilWJames
 * missing translate on metabox titles (#122) @geminorum

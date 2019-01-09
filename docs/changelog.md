@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.2
+### 3.2.0
 
 * Enable filter by workflow_state on Admin screen (#121) @NeilWJames
 * missing translate on metabox titles (#122) @geminorum
