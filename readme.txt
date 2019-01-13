@@ -102,6 +102,10 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 == Changelog ==
 
+= 3.2.1 =
+
+* Fix for Media Library URL changed @NeilWJames
+
 = 3.2.0 =
 
 * Enable filter by workflow_state on Admin screen (#121) @NeilWJames
