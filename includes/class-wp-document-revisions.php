@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.0';
+	public $version = '3.2.1';
 
 	/**
 	 * The WP default directory cache
@@ -64,7 +64,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.2
 	 */
-	public static $doc_image = false;
+	public static $doc_image = true;
 
 	/**
 	 * Identify if processing document or image directory
@@ -268,7 +268,7 @@ class WP_Document_Revisions {
 		}
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later)
-		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : false );
+		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : true );
 
 	}
 
@@ -1201,7 +1201,7 @@ class WP_Document_Revisions {
 
 		if ( ! $this->verify_post_type() ) {
 			// Ensure cookie variable is set correctly - if needed elsewhere
-			self::$doc_image = false;
+			self::$doc_image = true;
 			return $dir;
 		}
 
@@ -1279,7 +1279,7 @@ class WP_Document_Revisions {
 		// verify this is a document
 		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
-			self::$doc_image = false;
+			self::$doc_image = true;
 			return $file;
 		}
 
@@ -1330,7 +1330,7 @@ class WP_Document_Revisions {
 		// verify that this is a document
 		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
-			self::$doc_image = false;
+			self::$doc_image = true;
 			return $file;
 		}
 
