@@ -19,6 +19,7 @@
       @hijackAutosave = bind(@hijackAutosave, this)
       @cookieFalse = bind(@cookieFalse, this)
       @cookieTrue = bind(@cookieTrue, this)
+      @cookieDelete = bind(@cookieDelete, this)
       @$ = $
       @$('.revision').click @restoreRevision
       @$('#override_link').click @overrideLock
@@ -30,14 +31,15 @@
       @$('input, select').on 'change', @enableSubmit
       @$('input[type=text], textarea').on 'keyup', @enableSubmit
       @$('#content-add_media').click @cookieFalse
-      @$('#poststuff').click @cookieFalse
-      @$('#document').click @cookieFalse
       @$('#postimagediv .inside').click @cookieTrue
+      @$('#submitdiv .inside').click @cookieDelete
+      @$('#adminmenumain').click @cookieDelete
+      @$('#wpadminbar').click @cookieDelete
+      @$('#document').show()
       @$('#revision-log').show()
       @$('#revision-summary').hide()
       @bindPostDocumentUploadCB()
       @hijackAutosave()
-      @cookieFalse()
       setInterval @updateTimestamps, 60000
       return
 
@@ -55,6 +57,7 @@
       return
 
     WPDocumentRevisions::enableSubmit = ->
+      @$('#revision-summary').show()
       @$(':button, :submit', '#submitpost').removeAttr 'disabled'
       @window.jQuery('#lock_override').prev().fadeIn()
 
@@ -159,6 +162,11 @@
       wpCookies.set 'doc_image', 'true', 24 * 60 * 60, false, false, secure
       @$(':button, :submit', '#submitpost').removeAttr 'disabled'
       # Propagation will be stopped in postimagediv to stop document event setting cookie false.
+      return
+
+    WPDocumentRevisions::cookieDelete = ->
+      secure = 'https:' == window.location.protocol
+      wpCookies.set 'doc_image', 'true', -1, false, false, secure
       return
 
     WPDocumentRevisions::updateTimestamps = ->
