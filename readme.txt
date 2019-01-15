@@ -104,7 +104,10 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = 3.2.1 =
 
-* Fix for Media Library URL changed @NeilWJames
+* Fix for $wp_query->query_vars being null (#136) @benbalter
+* Media Library URL’s change after plugin update (#139) @NeilWJames
+* New Crowdin translations (#137) @benbalter
+* New Crowdin translations (#138) @benbalter
 
 = 3.2.0 =
 
