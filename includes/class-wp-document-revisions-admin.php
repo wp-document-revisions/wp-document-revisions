@@ -894,6 +894,9 @@ class WP_Document_Revisions_Admin {
 	 * Ensures that any system limit on revisions does not apply to documents
 	 *
 	 * @since 3.2.2
+	 *
+	 * @param int default value for the number of revisions for the post_type 
+	 * @param WP_Post current post
 	 */
 	public function manage_document_revisions( $num, $post ) {
 
@@ -927,7 +930,7 @@ class WP_Document_Revisions_Admin {
 
 		global $post;
 
-		if  ( ! is_object( $post ) || 'document' !== $post->post_type ) {
+		if ( ! is_object( $post ) || 'document' !== $post->post_type ) {
 			return;
 		}
 
@@ -935,10 +938,9 @@ class WP_Document_Revisions_Admin {
 
 		if ( 0 === $num ) {
 			// setting revisions to 0 makes no sense for this plugin
-
 			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 			echo '<div class="notice notice-error"><p>';
-			esc_html_e( 'Maximum number of revisions set to zero using a local filter. Check your configuration.',  'wp-document-revisions' );
+			esc_html_e( 'Maximum number of revisions set to zero using a local filter. Check your configuration.', 'wp-document-revisions' );
 			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 			echo '</p></div>';
 
@@ -949,14 +951,14 @@ class WP_Document_Revisions_Admin {
 			if ( $num < $revisions ) {
 				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 				echo '<div class="notice notice-error"><p>';
-				esc_html_e( 'Maximum number of revisions reached for this document. Making changes will delete data.',  'wp-document-revisions' );
+				esc_html_e( 'Maximum number of revisions reached for this document. Making changes will delete data.', 'wp-document-revisions' );
 				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 				echo '</p></div>';
 
 			} elseif ( $num === $revisions ) {
 				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 				echo '<div class="notice notice-error"><p>';
-				esc_html_e( 'More revisions exist for this document than is permitted. Making changes will delete data.',  'wp-document-revisions' );
+				esc_html_e( 'More revisions exist for this document than is permitted. Making changes will delete data.', 'wp-document-revisions' );
 				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
 				echo '</p></div>';
 
