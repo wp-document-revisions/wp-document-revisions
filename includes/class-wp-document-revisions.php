@@ -1158,7 +1158,7 @@ class WP_Document_Revisions {
 
 		// make site specific on multisite
 		if ( is_multisite() && ! is_network_admin() ) {
-			if ( is_main_site() ) {
+			if ( is_main_site() && get_current_network_id() === get_main_network_id() ) {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
