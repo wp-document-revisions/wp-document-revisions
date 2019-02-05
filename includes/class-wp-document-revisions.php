@@ -139,6 +139,7 @@ class WP_Document_Revisions {
 
 		// load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/class-wp-document-revisions-front-end.php';
+		include dirname( __FILE__ ) . '/class-wp-document-revisions-recently-revised-widget.php';
 		new WP_Document_Revisions_Front_End( $this );
 
 	}
