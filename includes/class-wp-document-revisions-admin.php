@@ -74,7 +74,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 
 		// revisions management
-		add_filter( 'wp_revisions_to_keep', array( &$this, 'manage_document_revisions' ), 10, 2 );
+		add_filter( 'wp_revisions_to_keep', array( &$this, 'manage_document_revisions_limit' ), 10, 2 );
 
 		// profile
 		add_action( 'show_user_profile', array( $this, 'rss_key_display' ) );
@@ -272,7 +272,7 @@ class WP_Document_Revisions_Admin {
 		}
 
 		// By default revisions are unlimited, but user filter may have limited number. Check if impact
-		add_action( 'admin_notices', array( &$this, 'check_document_revisions' ) );
+		add_action( 'admin_notices', array( &$this, 'check_document_revisions_limit' ) );
 
 		// lock notice
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
@@ -308,7 +308,7 @@ class WP_Document_Revisions_Admin {
 
 		global $post;
 
-		if ( ! $this->verify_post_type( $post->ID ) ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
 			return $body_class;
 		}
 
@@ -898,23 +898,26 @@ class WP_Document_Revisions_Admin {
 	 * @param int     $num  default value for the number of revisions for the post_type
 	 * @param WP_Post $post current post
 	 */
-	public function manage_document_revisions( $num, $post ) {
+	public function manage_document_revisions_limit( $num, $post ) {
 
-		if ( ! is_object( $post ) || 'document' !== $post->post_type ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
 			return $num;
 		}
 
 		// Set default number as unlimited
+		$num = -1;
 		/**
 		 * Filters the number of revisions to keep for documents.
 		 *
 		 * This should normally be unlimited and setting it can make attachments unaccessible.
 		 *
+		 * Note particularly that Autosaves are revisions, so count towards the total.
+		 *
 		 * @since 3.2.2
 		 *
 		 * @param int -1 (unlimited)
 		 */
-		$num = apply_filters( 'document_max_revisions', -1 );
+		$num = apply_filters( 'document_revisions_limit', $num );
 
 		return $num;
 
@@ -926,11 +929,11 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 3.2.2
 	 */
-	public function check_document_revisions() {
+	public function check_document_revisions_limit() {
 
 		global $post;
 
-		if ( ! is_object( $post ) || 'document' !== $post->post_type ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
 			return;
 		}
 
@@ -938,29 +941,35 @@ class WP_Document_Revisions_Admin {
 
 		if ( 0 === $num ) {
 			// setting revisions to 0 makes no sense for this plugin
-			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-			echo '<div class="notice notice-error"><p>';
-			esc_html_e( 'Maximum number of revisions set to zero using a local filter. Check your configuration.', 'wp-document-revisions' );
-			// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-			echo '</p></div>';
+			?>
+			<div class="notice notice-error"><p>
+			<?php
+			esc_html_e( 'Maximum number of document revisions set to zero using a filter. Check your configuration.', 'wp-document-revisions' );
+			?>
+			</p></div>
+			<?php
 
 		} elseif ( 0 < $num ) {
 			// need to check that we're not at the limit
 			$revisions = count( wp_get_post_revisions( $post->ID ) );
 
 			if ( $num < $revisions ) {
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '<div class="notice notice-error"><p>';
-				esc_html_e( 'Maximum number of revisions reached for this document. Making changes will delete data.', 'wp-document-revisions' );
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '</p></div>';
+				?>
+				<div class="notice notice-error"><p>
+				<?php
+				esc_html_e( 'More revisions exist for this document than is permitted. Making changes will delete data.', 'wp-document-revisions' );
+				?>
+				</p></div>
+				<?php
 
 			} elseif ( $num === $revisions ) {
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '<div class="notice notice-error"><p>';
-				esc_html_e( 'More revisions exist for this document than is permitted. Making changes will delete data.', 'wp-document-revisions' );
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '</p></div>';
+				?>
+				<div class="notice notice-error"><p>
+				<?php
+				esc_html_e( 'Maximum number of revisions reached for this document. Making changes will delete data.', 'wp-document-revisions' );
+				?>
+				</p></div>
+				<?php
 
 			}
 		}
@@ -1447,8 +1456,34 @@ class WP_Document_Revisions_Admin {
 
 		$document = get_post( $post_id );
 
-		if ( is_numeric( $document->post_content ) && get_post( $document->post_content ) ) {
-			wp_delete_attachment( $document->post_content, false );
+		// not for an attachment or an autosave revision
+		if ( 'attachment' === $document->post_type || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+
+		if ( is_numeric( $document->post_content ) ) {
+			// check that content points to an attachment post
+			$attach = get_post( $document->post_content );
+			if ( isset( $attach->ID ) && 'attachment' === $attach->post_type ) {
+
+				// make sure that the attachment is not refered to by another post
+				global $wpdb;
+				$doc_link = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name NOT LIKE '%d-autosave-v1' ",
+					$document->post_parent, $document->post_content, $document->post_parent ) );
+
+				if ( 1 == $doc_link ) {
+					$file = get_attached_file( $document->post_content );
+					wp_delete_attachment( $document->post_content, false );
+
+					// belt and braces in case above 'deleted' file from media and not document directory
+					$std_dir = WP_Document_Revisions::$wp_default_dir['basedir'];
+					$doc_dir = $this->document_upload_dir();
+					if ( $std_dir !== $doc_dir ) {
+						$file = str_replace( $std_dir, $doc_dir, $file );
+					}
+					wp_delete_file_from_directory( $file, $doc_dir );
+				}
+			}
 		}
 	}
 
@@ -1489,7 +1524,7 @@ class WP_Document_Revisions_Admin {
 		global $post;
 
 		// verify that this is a new document
-		if ( ! isset( $post ) || ! $this->verify_post_type( $post->ID ) || strlen( $post->post_content ) > 0 ) {
+		if ( ! isset( $post ) || ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) || strlen( $post->post_content ) > 0 ) {
 			return;
 		}
 

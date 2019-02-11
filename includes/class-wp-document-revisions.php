@@ -21,7 +21,7 @@ class WP_Document_Revisions {
 	/**
 	 * Length of feed key
 	 *
-	 * @var Int $key_legth
+	 * @var Int $key_length
 	 */
 	public static $key_length = 32;
 
@@ -889,7 +889,7 @@ class WP_Document_Revisions {
 
 		}
 
-		// note: authentication is happeneing via a hook here to allow shortcircuiting
+		// note: authentication is happening via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
 				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
