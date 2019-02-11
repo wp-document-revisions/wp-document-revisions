@@ -1466,18 +1466,18 @@ class WP_Document_Revisions_Admin {
 			$attach = get_post( $document->post_content );
 			if ( isset( $attach->ID ) && 'attachment' === $attach->post_type ) {
 
-				// make sure that the attachment is not refered to by another post
+				// make sure that the attachment is not refered to by another post (ignore autosave)
 				global $wpdb;
 				$doc_link = $wpdb->get_var(
 					$wpdb->prepare(
-						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name NOT LIKE '%d-autosave-v1' ",
+						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name != %s ",
 						$document->post_parent,
 						$document->post_content,
-						$document->post_parent
+						strval( $document->post_parent ) . '-autosave-v1'
 					)
 				);
 
-				if ( 1 == $doc_link ) {
+				if ( '1' === $doc_link ) {
 					$file = get_attached_file( $document->post_content );
 					wp_delete_attachment( $document->post_content, false );
 
