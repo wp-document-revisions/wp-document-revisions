@@ -21,7 +21,7 @@ class WP_Document_Revisions {
 	/**
 	 * Length of feed key
 	 *
-	 * @var Int $key_legth
+	 * @var Int $key_length
 	 */
 	public static $key_length = 32;
 
@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.1';
+	public $version = '3.2.2';
 
 	/**
 	 * The WP default directory cache
@@ -295,6 +295,13 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
+		/**
+		 * Filters the default structure and label values of the workflow_state taxonomy on declaration.
+		 *
+		 * @since 0.5
+		 *
+		 * @param array of default structure and label workflow_state values.
+		 */
 		register_taxonomy(
 			'workflow_state',
 			array( 'document' ),
@@ -883,7 +890,7 @@ class WP_Document_Revisions {
 
 		}
 
-		// note: authentication is happeneing via a hook here to allow shortcircuiting
+		// note: authentication is happening via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
 				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
@@ -1596,7 +1603,7 @@ class WP_Document_Revisions {
 		// get lock owner's details
 		$lock_owner = get_userdata( $owner_id );
 
-		// get the current user's detaisl
+		// get the current user's details
 		$current_user = wp_get_current_user( $current_user_id );
 
 		// get the post

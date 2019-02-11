@@ -73,6 +73,9 @@ class WP_Document_Revisions_Admin {
 		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 
+		// revisions management
+		add_filter( 'wp_revisions_to_keep', array( &$this, 'manage_document_revisions_limit' ), 10, 2 );
+
 		// profile
 		add_action( 'show_user_profile', array( $this, 'rss_key_display' ) );
 		add_action( 'personal_options_update', array( &$this, 'profile_update_cb' ) );
@@ -268,6 +271,9 @@ class WP_Document_Revisions_Admin {
 			add_meta_box( 'authordiv', __( 'Owner', 'wp-document-revisions' ), array( &$this, 'post_author_meta_box' ), 'document', 'side', 'low' );
 		}
 
+		// By default revisions are unlimited, but user filter may have limited number. Check if impact
+		add_action( 'admin_notices', array( &$this, 'check_document_revisions_limit' ) );
+
 		// lock notice
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
 
@@ -302,7 +308,7 @@ class WP_Document_Revisions_Admin {
 
 		global $post;
 
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
 			return $body_class;
 		}
 
@@ -885,6 +891,92 @@ class WP_Document_Revisions_Admin {
 	}
 
 	/**
+	 * Ensures that any system limit on revisions does not apply to documents
+	 *
+	 * @since 3.2.2
+	 *
+	 * @param int     $num  default value for the number of revisions for the post_type
+	 * @param WP_Post $post current post
+	 */
+	public function manage_document_revisions_limit( $num, $post ) {
+
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
+			return $num;
+		}
+
+		// Set default number as unlimited
+		$num = -1;
+		/**
+		 * Filters the number of revisions to keep for documents.
+		 *
+		 * This should normally be unlimited and setting it can make attachments unaccessible.
+		 *
+		 * Note particularly that Autosaves are revisions, so count towards the total.
+		 *
+		 * @since 3.2.2
+		 *
+		 * @param int -1 (unlimited)
+		 */
+		$num = apply_filters( 'document_revisions_limit', $num );
+
+		return $num;
+
+	}
+
+
+	/**
+	 * Ensures that an error box appears if the revisions for a post has reached a system limit
+	 *
+	 * @since 3.2.2
+	 */
+	public function check_document_revisions_limit() {
+
+		global $post;
+
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
+			return;
+		}
+
+		$num = wp_revisions_to_keep( $post );
+
+		if ( 0 === $num ) {
+			// setting revisions to 0 makes no sense for this plugin
+			?>
+			<div class="notice notice-error"><p>
+			<?php
+			esc_html_e( 'Maximum number of document revisions set to zero using a filter. Check your configuration.', 'wp-document-revisions' );
+			?>
+			</p></div>
+			<?php
+
+		} elseif ( 0 < $num ) {
+			// need to check that we're not at the limit
+			$revisions = count( wp_get_post_revisions( $post->ID ) );
+
+			if ( $num < $revisions ) {
+				?>
+				<div class="notice notice-error"><p>
+				<?php
+				esc_html_e( 'More revisions exist for this document than is permitted. Making changes will delete data.', 'wp-document-revisions' );
+				?>
+				</p></div>
+				<?php
+
+			} elseif ( $num === $revisions ) {
+				?>
+				<div class="notice notice-error"><p>
+				<?php
+				esc_html_e( 'Maximum number of revisions reached for this document. Making changes will delete data.', 'wp-document-revisions' );
+				?>
+				</p></div>
+				<?php
+
+			}
+		}
+	}
+
+
+	/**
 	 * Allow some filtering of the All Documents list
 	 */
 	public function filter_documents_list() {
@@ -1172,6 +1264,15 @@ class WP_Document_Revisions_Admin {
 		<label class="screen-reader-text" for="post_author_override"><?php esc_html_e( 'Owner', 'wp-document-revisions' ); ?></label>
 		<?php esc_html_e( 'Document Owner', 'wp-document-revisions' ); ?>:
 		<?php
+		/**
+		 * Filters the query for document owners.
+		 *
+		 * By default is all users, but may be set to 'authors'
+		 *
+		 * @since 0.5
+		 *
+		 * @param string null (all users)
+		 */
 		wp_dropdown_users(
 			array(
 				'who'              => apply_filters( 'document_revisions_owners', '' ),
@@ -1355,8 +1456,40 @@ class WP_Document_Revisions_Admin {
 
 		$document = get_post( $post_id );
 
-		if ( is_numeric( $document->post_content ) && get_post( $document->post_content ) ) {
-			wp_delete_attachment( $document->post_content, false );
+		// not for an attachment or an autosave revision
+		if ( 'attachment' === $document->post_type || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+
+		if ( is_numeric( $document->post_content ) ) {
+			// check that content points to an attachment post
+			$attach = get_post( $document->post_content );
+			if ( isset( $attach->ID ) && 'attachment' === $attach->post_type ) {
+
+				// make sure that the attachment is not refered to by another post (ignore autosave)
+				global $wpdb;
+				$doc_link = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name != %s ",
+						$document->post_parent,
+						$document->post_content,
+						strval( $document->post_parent ) . '-autosave-v1'
+					)
+				);
+
+				if ( '1' === $doc_link ) {
+					$file = get_attached_file( $document->post_content );
+					wp_delete_attachment( $document->post_content, false );
+
+					// belt and braces in case above 'deleted' file from media and not document directory
+					$std_dir = WP_Document_Revisions::$wp_default_dir['basedir'];
+					$doc_dir = $this->document_upload_dir();
+					if ( $std_dir !== $doc_dir ) {
+						$file = str_replace( $std_dir, $doc_dir, $file );
+					}
+					wp_delete_file_from_directory( $file, $doc_dir );
+				}
+			}
 		}
 	}
 
@@ -1397,7 +1530,7 @@ class WP_Document_Revisions_Admin {
 		global $post;
 
 		// verify that this is a new document
-		if ( ! isset( $post ) || ! $this->verify_post_type( $post ) || strlen( $post->post_content ) > 0 ) {
+		if ( ! isset( $post ) || ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) || strlen( $post->post_content ) > 0 ) {
 			return;
 		}
 
@@ -1407,6 +1540,14 @@ class WP_Document_Revisions_Admin {
 			$post->post_status = 'private';
 		}
 
+		/**
+		 * Filters setting the new document status to private.
+		 *
+		 * @since 0.5
+		 *
+		 * @param WP_Post link to (new) global post
+		 * @param WP_Post link to clone of global post
+		 */
 		// @codingStandardsIgnoreLine WordPress.Variables.GlobalVariables.OverrideProhibited
 		$post = apply_filters( 'document_to_private', $post, $post_pre );
 
