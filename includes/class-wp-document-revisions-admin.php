@@ -1468,8 +1468,14 @@ class WP_Document_Revisions_Admin {
 
 				// make sure that the attachment is not refered to by another post
 				global $wpdb;
-				$doc_link = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name NOT LIKE '%d-autosave-v1' ",
-					$document->post_parent, $document->post_content, $document->post_parent ) );
+				$doc_link = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name NOT LIKE '%d-autosave-v1' ",
+						$document->post_parent,
+						$document->post_content,
+						$document->post_parent
+					)
+				);
 
 				if ( 1 == $doc_link ) {
 					$file = get_attached_file( $document->post_content );
