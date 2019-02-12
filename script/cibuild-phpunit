@@ -4,5 +4,13 @@ set -e
 
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
+if [[ ! -z "$WP_VERSION" ]] ; then
+  if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
+    composer global require "phpunit/phpunit=4.8.*"
+  else
+    composer global require "phpunit/phpunit=5.7.*"
+  fi
+fi
+
 phpunit
 WP_MULTISITE=1 phpunit
