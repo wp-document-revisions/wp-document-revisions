@@ -45,4 +45,4 @@ script:
     fi
 
 after_success:
-  - travis_retry php vendor/bin/php-coveralls -v
+  - travis_retry php ./bin/php-coveralls -v
