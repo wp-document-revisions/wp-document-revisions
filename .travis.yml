@@ -22,8 +22,9 @@ matrix:
       env: WP_TRAVISCI=phpcs
 
 before_script:
+  - mkdir -p build/logs
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  -  script/setup
+  - script/setup
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
@@ -42,3 +43,6 @@ script:
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
       script/cibuild-phpcs
     fi
+
+after_success:
+  - travis_retry php vendor/bin/php-coveralls -v

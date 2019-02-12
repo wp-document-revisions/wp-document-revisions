@@ -15,7 +15,8 @@
       "phpunit/phpunit": "~7.4",
       "wp-cli/wp-cli": "~2.0",
       "wp-coding-standards/wpcs": "~2.0",
-      "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
+      "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+      "php-coveralls/php-coveralls": "^2.1"
     },
     "config": {
      "bin-dir": "bin",
