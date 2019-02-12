@@ -2,7 +2,7 @@
 
 set -e
 
-composer install
+composer install --dev --no-interaction
 
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
