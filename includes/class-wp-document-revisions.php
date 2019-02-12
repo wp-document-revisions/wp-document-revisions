@@ -1640,7 +1640,7 @@ class WP_Document_Revisions {
 	 */
 	public function add_caps() {
 		global $wp_roles;
-		if ( ! isset( $wp_roles ) ) {
+		if ( ! is_object( $wp_roles ) ) {
 			// @codingStandardsIgnoreLine
 			$wp_roles = new WP_Roles;
 		}
@@ -1734,11 +1734,22 @@ class WP_Document_Revisions {
 
 			// if the role is a standard role, map the default caps, otherwise, map as a subscriber
 			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[ $role ] : $defaults['subscriber'];
+
+			/**
+			 * Filter the default capabilities.
+			 *
+			 * @param array  $caps the default set of capabilities for the role
+			 * @param String $role the role being reviewed (all will be reviewed in turn)
+			 */
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
-			// loop and assign
+			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
+			// loop through capacities for role
 			foreach ( $caps as $cap => $grant ) {
-				$wp_roles->add_cap( $role, $cap, $grant );
+				// add only missing capabilities
+				if ( ! array_key_exists( $cap, $role_caps ) ) {
+					$wp_roles->add_cap( $role, $cap, $grant );
+				}
 			}
 		}
 
