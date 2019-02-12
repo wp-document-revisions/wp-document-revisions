@@ -1743,7 +1743,7 @@ class WP_Document_Revisions {
 			 */
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
-			$role_caps = $wp_roles->roles[$role]['capabilities'];
+			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
 			// loop through capacities for role
 			foreach ( $caps as $cap => $grant ) {
 				// add only missing capabilities
