@@ -5,4 +5,3 @@ set -e
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
 phpunit
-WP_MULTISITE=1 phpunit
