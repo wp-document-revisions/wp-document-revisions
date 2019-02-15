@@ -21,7 +21,7 @@ class WP_Document_Revisions {
 	/**
 	 * Length of feed key
 	 *
-	 * @var Int $key_legth
+	 * @var Int $key_length
 	 */
 	public static $key_length = 32;
 
@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.1';
+	public $version = '3.2.2';
 
 	/**
 	 * The WP default directory cache
@@ -139,6 +139,7 @@ class WP_Document_Revisions {
 
 		// load front-end features (shortcode, widgets, etc.)
 		include dirname( __FILE__ ) . '/class-wp-document-revisions-front-end.php';
+		include dirname( __FILE__ ) . '/class-wp-document-revisions-recently-revised-widget.php';
 		new WP_Document_Revisions_Front_End( $this );
 
 	}
@@ -294,6 +295,13 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
+		/**
+		 * Filters the default structure and label values of the workflow_state taxonomy on declaration.
+		 *
+		 * @since 0.5
+		 *
+		 * @param array of default structure and label workflow_state values.
+		 */
 		register_taxonomy(
 			'workflow_state',
 			array( 'document' ),
@@ -882,7 +890,7 @@ class WP_Document_Revisions {
 
 		}
 
-		// note: authentication is happeneing via a hook here to allow shortcircuiting
+		// note: authentication is happening via a hook here to allow shortcircuiting
 		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
 			wp_die(
 				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
@@ -1158,7 +1166,7 @@ class WP_Document_Revisions {
 
 		// make site specific on multisite
 		if ( is_multisite() && ! is_network_admin() ) {
-			if ( is_main_site() ) {
+			if ( is_main_site() && get_current_network_id() === get_main_network_id() ) {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
@@ -1595,7 +1603,7 @@ class WP_Document_Revisions {
 		// get lock owner's details
 		$lock_owner = get_userdata( $owner_id );
 
-		// get the current user's detaisl
+		// get the current user's details
 		$current_user = wp_get_current_user( $current_user_id );
 
 		// get the post
@@ -1632,7 +1640,7 @@ class WP_Document_Revisions {
 	 */
 	public function add_caps() {
 		global $wp_roles;
-		if ( ! isset( $wp_roles ) ) {
+		if ( ! is_object( $wp_roles ) ) {
 			// @codingStandardsIgnoreLine
 			$wp_roles = new WP_Roles;
 		}
@@ -1726,11 +1734,22 @@ class WP_Document_Revisions {
 
 			// if the role is a standard role, map the default caps, otherwise, map as a subscriber
 			$caps = ( array_key_exists( $role, $defaults ) ) ? $defaults[ $role ] : $defaults['subscriber'];
+
+			/**
+			 * Filter the default capabilities.
+			 *
+			 * @param array  $caps the default set of capabilities for the role
+			 * @param String $role the role being reviewed (all will be reviewed in turn)
+			 */
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
-			// loop and assign
+			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
+			// loop through capacities for role
 			foreach ( $caps as $cap => $grant ) {
-				$wp_roles->add_cap( $role, $cap, $grant );
+				// add only missing capabilities
+				if ( ! array_key_exists( $cap, $role_caps ) ) {
+					$wp_roles->add_cap( $role, $cap, $grant );
+				}
 			}
 		}
 
