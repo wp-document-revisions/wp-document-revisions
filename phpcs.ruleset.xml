@@ -13,10 +13,6 @@
 	<rule ref="WordPress-Docs" />
 	<rule ref="WordPress-Extra" />
 
-	<rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">
-		<exclude-pattern>includes/class-wp-document-revisions-front-end.php</exclude-pattern>
-	</rule>
-
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>
 </ruleset>
