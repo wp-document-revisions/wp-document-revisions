@@ -3,3 +3,4 @@ tests/wp-tests-config.php
 vendor
 bin
 wpcs
+build/logs/clover.xml

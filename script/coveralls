@@ -4,4 +4,4 @@ set -e
 
 export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
 
-phpunit
+php-coveralls -v
