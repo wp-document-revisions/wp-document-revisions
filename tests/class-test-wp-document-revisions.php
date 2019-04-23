@@ -346,14 +346,17 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		$_GET['post_type'] = 'document';
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via explicit' );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_GET['post_type'] );
 
 		$_GET['post'] = $doc_id;
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via get' );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_GET['post'] );
 
 		$_REQUEST['post_id'] = $doc_id;
 		$this->assertTrue( $wpdr->verify_post_type(), 'verify post type via request (post_id)' );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_REQUEST['post_id'] );
 
 		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
