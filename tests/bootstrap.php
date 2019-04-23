@@ -73,7 +73,7 @@ function _make_user( $role = 'administrator', $user_login = '', $pass = '', $ema
 			'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
 		);
 
-	$user_id = wp_insert_user( $user );
+		$user_id = wp_insert_user( $user );
 
 		return $user_id;
 
