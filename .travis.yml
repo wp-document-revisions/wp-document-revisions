@@ -35,7 +35,11 @@ before_script:
           composer global require "phpunit/phpunit=7.5.*"
       fi
       if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then
-          composer global require "phpunit/phpunit=7.5.*"
+        if [[ ${WP_VERSION:0:3} == "4.9" ]]; then
+		        composer global require "phpunit/phpunit=5.7.*"
+		    else
+            composer global require "phpunit/phpunit=7.5.*"
+        fi
       fi
       if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then
           # composer global require "phpunit/phpunit=8.2.*" except WP barfs - #46149 to fix
