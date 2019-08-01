@@ -122,13 +122,6 @@ install_db() {
 	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
 }
 
-# Wait for MySQL availability before proceeding with installation
-echo -en $(status_message "Attempting to connect to MySQL...")
-while ! mysqladmin ping -h"$DB_HOST" --silent; do
-	echo -n '.'
-	sleep 2
-done
-
 install_wp
 install_test_suite
 install_db
