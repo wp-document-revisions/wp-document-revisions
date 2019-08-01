@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Include useful functions
+. "$(dirname "$0")/includes"
+
 if [ $# -lt 3 ]; then
 	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation]"
 	exit 1
@@ -14,14 +17,6 @@ SKIP_DB_CREATE=${6-false}
 
 WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
 WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress/}
-
-download() {
-    if [ `which curl` ]; then
-        curl -s "$1" > "$2";
-    elif [ `which wget` ]; then
-        wget -nv -O "$2" "$1"
-    fi
-}
 
 if [[ $WP_VERSION =~ [0-9]+\.[0-9]+(\.[0-9]+)? ]]; then
 	WP_TESTS_TAG="tags/$WP_VERSION"
@@ -39,7 +34,7 @@ else
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
 
-set -e
+set -ex
 
 install_wp() {
 
@@ -119,8 +114,15 @@ install_db() {
 	fi
 
 	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA --execute "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
 }
+
+# Wait for MySQL availability before proceeding with installation
+echo -en $(status_message "Attempting to connect to MySQL...")
+while ! mysqladmin ping -h"$DB_HOST" --silent; do
+	echo -n '.'
+	sleep 2
+done
 
 install_wp
 install_test_suite
