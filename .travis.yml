@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 
 language: php
 
@@ -7,6 +7,9 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
+services:
+  - mysql
+  
 matrix:
   include:
     - php: 7.3
