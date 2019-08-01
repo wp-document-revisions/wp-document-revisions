@@ -66,16 +66,16 @@ require $_tests_dir . '/includes/bootstrap.php';
  */
 function _make_user( $role = 'administrator', $user_login = '', $pass = '', $email = '' ) {
 
-		$user = array(
-			'role' => $role,
-			'user_login' => ( $user_login ) ? $user_login : rand_str(),
-			'user_pass' => ( $pass ) ? $pass : rand_str(),
-			'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
-		);
+	$user = array(
+		'role' => $role,
+		'user_login' => ( $user_login ) ? $user_login : rand_str(),
+		'user_pass' => ( $pass ) ? $pass : rand_str(),
+		'user_email' => ( $email ) ? $email : rand_str() . '@example.com',
+	);
 
-		$user_id = wp_insert_user( $user );
+	$user_id = wp_insert_user( $user );
 
-		return $user_id;
+	return $user_id;
 
 }
 
@@ -134,8 +134,8 @@ function _rrmdir( $dir ) {
  * Remove any uploaded files
  */
 function _destroy_uploads() {
-		$uploads = wp_upload_dir();
-		$files = array_diff( scandir( $uploads['basedir'] ), array( '..', '.' ) );
+	$uploads = wp_upload_dir();
+	$files = array_diff( scandir( $uploads['basedir'] ), array( '..', '.' ) );
 	foreach ( $files as $file ) {
 		_rrmdir( $uploads['basedir'] . '/' . $file );
 	}
@@ -146,7 +146,7 @@ function _destroy_uploads() {
  * this will flush everything and reload it from the db
  */
 function _flush_roles() {
-		unset( $GLOBALS['wp_user_roles'] );
-		global $wp_roles;
-		$wp_roles->for_site();
+	unset( $GLOBALS['wp_user_roles'] );
+	global $wp_roles;
+	$wp_roles->for_site();
 }

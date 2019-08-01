@@ -1,5 +1,19 @@
 ## Changelog
 
+### 3.2.3
+
+* Review for WP Coding standard 2.1.1 and newer phpunit (#174) @NeilWJames
+* Bump version to V3.2.3 and Tested WP 5.2.2 (#174) @NeilWJames
+
+### 3.2.2
+
+* Version 3.2.2 gives an "property of non-object" at line 1403 on load (#161) @NeilWJames
+* Add default capabilities only when they are absent. (#146) @NeilWJames
+* Fix multi-network (needs WP 4.6) (#143) @geminorum 
+* Allow Sites to use WP_POST_REVISIONS for other post types (#140)
+* Media Library URL’s change after plugin update (#139) @NeilWJames
+* New crowdin translations (#137/#138) @benbalter
+
 ### 3.2.1
 
 * Fix for $wp_query->query_vars being null (#136) @benbalter
