@@ -31,7 +31,7 @@ class WP_Document_Revisions_Front_End {
 	 * @var $shortcode_defaults
 	 */
 	public $shortcode_defaults = array(
-		'id' => null,
+		'id'     => null,
 		'number' => null,
 	);
 
@@ -120,13 +120,17 @@ class WP_Document_Revisions_Front_End {
 		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
 		// loop through each revision
-		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
-		foreach ( $revisions as $revision ) { ?>
+		// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+		foreach ( $revisions as $revision ) {
+			?>
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
-				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
+				<?php
+				// html - string not to be translated
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
+				?>
 			</li>
-		<?php
-		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+			<?php
+		// phpcs:enable WordPress.XSS.EscapeOutput.OutputNotEscaped
 		}
 		?>
 		</ul>
@@ -151,7 +155,7 @@ class WP_Document_Revisions_Front_End {
 
 		$defaults = array(
 			'orderby' => 'modified',
-			'order' => 'DESC',
+			'order'   => 'DESC',
 		);
 
 		// list of all string or int based query vars (because we are going through shortcode)
@@ -232,7 +236,7 @@ class WP_Document_Revisions_Front_End {
 
 		// check whether to show update option. Default - only administrator role
 		$show_edit = false;
-		$user = wp_get_current_user();
+		$user      = wp_get_current_user();
 		if ( $user->ID > 0 ) {
 			// logged on user only
 			$roles = (array) $user->roles;
@@ -268,13 +272,12 @@ class WP_Document_Revisions_Front_End {
 			if ( $show_edit && current_user_can( 'edit_document', $document->ID ) ) {
 				$link = add_query_arg(
 					array(
-						'post' => $document->ID,
+						'post'   => $document->ID,
 						'action' => 'edit',
 					),
 					admin_url( 'post.php' )
 				);
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . __( 'Edit', 'wp-document-revisions' ) . ']</a>';
+				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a>';
 			}
 			?>
 			</li>

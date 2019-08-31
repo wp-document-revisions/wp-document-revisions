@@ -21,7 +21,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		'post_status' => array(
 			'publish' => true,
 			'private' => false,
-			'draft' => false,
+			'draft'   => false,
 		),
 		'show_author' => true,
 	);
@@ -68,13 +68,13 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
 		foreach ( $documents as $document ) :
 			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
-					'post' => $document->ID,
+					'post'   => $document->ID,
 					'action' => 'edit',
 				),
 				admin_url( 'post.php' )
@@ -89,7 +89,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			<?php
 		endforeach;
 
-		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</ul>' . $args['after_widget'];
 	}
 
@@ -138,7 +138,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 
-		$instance = $old_instance;
+		$instance                = $old_instance;
 		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
 		$instance['numberposts'] = (int) $new_instance['numberposts'];
 		$instance['show_author'] = (bool) $new_instance['show_author'];

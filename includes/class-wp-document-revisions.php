@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.2';
+	public $version = '3.2.3';
 
 	/**
 	 * The WP default directory cache
@@ -100,7 +100,7 @@ class WP_Document_Revisions {
 		// rewrites and permalinks
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
-		add_filter( 'init', array( &$this, 'inject_rules' ) );
+		add_action( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
 		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
@@ -218,20 +218,20 @@ class WP_Document_Revisions {
 	public function register_cpt() {
 
 		$labels = array(
-			'name'               => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
-			'singular_name'      => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
-			'add_new'            => _x( 'Add Document', 'document', 'wp-document-revisions' ),
-			'add_new_item'       => __( 'Add New Document', 'wp-document-revisions' ),
-			'edit_item'          => __( 'Edit Document', 'wp-document-revisions' ),
-			'new_item'           => __( 'New Document', 'wp-document-revisions' ),
-			'view_item'          => __( 'View Document', 'wp-document-revisions' ),
-			'view_items'         => __( 'View Documents', 'wp-document-revisions' ),
-			'search_items'       => __( 'Search Documents', 'wp-document-revisions' ),
-			'not_found'          => __( 'No documents found', 'wp-document-revisions' ),
-			'not_found_in_trash' => __( 'No documents found in Trash', 'wp-document-revisions' ),
-			'parent_item_colon'  => '',
-			'menu_name'          => __( 'Documents', 'wp-document-revisions' ),
-			'all_items'          => __( 'All Documents', 'wp-document-revisions' ),
+			'name'                  => _x( 'Documents', 'post type general name', 'wp-document-revisions' ),
+			'singular_name'         => _x( 'Document', 'post type singular name', 'wp-document-revisions' ),
+			'add_new'               => _x( 'Add Document', 'document', 'wp-document-revisions' ),
+			'add_new_item'          => __( 'Add New Document', 'wp-document-revisions' ),
+			'edit_item'             => __( 'Edit Document', 'wp-document-revisions' ),
+			'new_item'              => __( 'New Document', 'wp-document-revisions' ),
+			'view_item'             => __( 'View Document', 'wp-document-revisions' ),
+			'view_items'            => __( 'View Documents', 'wp-document-revisions' ),
+			'search_items'          => __( 'Search Documents', 'wp-document-revisions' ),
+			'not_found'             => __( 'No documents found', 'wp-document-revisions' ),
+			'not_found_in_trash'    => __( 'No documents found in Trash', 'wp-document-revisions' ),
+			'parent_item_colon'     => '',
+			'menu_name'             => __( 'Documents', 'wp-document-revisions' ),
+			'all_items'             => __( 'All Documents', 'wp-document-revisions' ),
 			'featured_image'        => __( 'Document Image', 'wp-document-revisions' ),
 			'set_featured_image'    => __( 'Set Document Image', 'wp-document-revisions' ),
 			'remove_featured_image' => __( 'Remove Document Image', 'wp-document-revisions' ),
@@ -550,9 +550,15 @@ class WP_Document_Revisions {
 		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public)
-		$my_rules[ $slug . '/?$' ] = 'index.php?post_type=document';
+		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
 		$my_rules[ $slug . '/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
 
+		/**
+		 * Filters the Document rewrite rules.
+		 *
+		 * @param array $my_rules Array of rewrite rules to add for for Documents.
+		 * @param array $rules    Array of rewrite rules being built.
+		 */
 		$my_rules = apply_filters( 'document_rewrite_rules', $my_rules, $rules );
 
 		return $my_rules + $rules;
@@ -595,10 +601,10 @@ class WP_Document_Revisions {
 
 		// check if it's a revision
 		if ( 'revision' === $document->post_type ) {
-			$parent = clone get_post( $document->post_parent );
-			$revision_num = $this->get_revision_number( $document->ID );
+			$parent            = clone get_post( $document->post_parent );
+			$revision_num      = $this->get_revision_number( $document->ID );
 			$parent->post_name = $parent->post_name . __( '-revision-', 'wp-document-revisions' ) . $revision_num;
-			$document = $parent;
+			$document          = $parent;
 		}
 
 		// if no permastruct
@@ -612,12 +618,18 @@ class WP_Document_Revisions {
 
 		// build documents/yyyy/mm/slug
 		$extension = $this->get_file_type( $document );
-
 		$timestamp = strtotime( $document->post_date );
-		$link = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
+
+		$link  = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
 		$link .= ( $leavename ) ? '%document%' : $document->post_name;
 		$link .= $extension;
 
+		/**
+		 * Filters the Document permalink.
+		 *
+		 * @param string $link     generated permalink.
+		 * @param object $document Post object.
+		 */
 		$link = apply_filters( 'document_permalink', $link, $document );
 
 		return $link;
@@ -734,10 +746,10 @@ class WP_Document_Revisions {
 			return false;
 		}
 
-		$rev_query = new WP_Query();
-		$rev_query->posts = $posts;
+		$rev_query             = new WP_Query();
+		$rev_query->posts      = $posts;
 		$rev_query->post_count = count( $posts );
-		$rev_query->is_feed = $feed;
+		$rev_query->is_feed    = $feed;
 
 		return $rev_query;
 
@@ -881,7 +893,7 @@ class WP_Document_Revisions {
 			// this will send 404 and no cache headers
 			// and tell wp_query that this is a 404 so that is_404() works as expected
 			// and theme formats appropriatly
-			$wp_query->posts = array();
+			$wp_query->posts          = array();
 			$wp_query->queried_object = null;
 			$wp->handle_404();
 
@@ -906,7 +918,7 @@ class WP_Document_Revisions {
 		status_header( 200 );
 
 		// fake the filename
-		$filename = $post->post_name;
+		$filename  = $post->post_name;
 		$filename .= ( '' === $version ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version;
 
 		// we want the true attachment URL, not the permalink, so temporarily remove our filter
@@ -957,11 +969,11 @@ class WP_Document_Revisions {
 		$headers['Content-Length'] = filesize( $file );
 
 		// modified
-		$last_modified = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
-		$etag = '"' . md5( $last_modified ) . '"';
+		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
+		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
-		$headers['ETag'] = $etag;
-		$headers['Expires'] = gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT';
+		$headers['ETag']          = $etag;
+		$headers['Expires']       = gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT';
 
 		/**
 		 * Filters the HTTP headers sent when a file is served through WP Document Revisions.
@@ -972,7 +984,7 @@ class WP_Document_Revisions {
 		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
 
 		foreach ( $headers as $header => $value ) {
-			//@codingStandardsIgnoreLine WordPress.PHP.NoSilencedErrors.Discouraged
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@header( $header . ': ' . $value );
 		}
 
@@ -1000,7 +1012,7 @@ class WP_Document_Revisions {
 		}
 
 		// in case this is a large file, remove PHP time limits
-		//@codingStandardsIgnoreLine WordPress.PHP.NoSilencedErrors.Discouraged
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		@set_time_limit( 0 );
 
 		// clear output buffer to prevent other plugins from corrupting the file
@@ -1011,7 +1023,7 @@ class WP_Document_Revisions {
 
 		// If we made it this far, just serve the file
 		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons
-		//@codingStandardsIgnoreLine WordPress.WP.AlternativeFunctions.file_system_read_readfile
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
 		readfile( $file );
 
 	}
@@ -1088,7 +1100,7 @@ class WP_Document_Revisions {
 				return false;
 			}
 
-			$latest_attachment = reset( $attachments );
+			$latest_attachment          = reset( $attachments );
 			$revisions[0]->post_content = $latest_attachment->ID;
 
 		}
@@ -1170,7 +1182,7 @@ class WP_Document_Revisions {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
-			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
+			$dir                     = str_replace( '%site_id%', $wpdb->blogid, $dir );
 			self::$wpdr_document_dir = $dir;
 		}
 
@@ -1183,7 +1195,7 @@ class WP_Document_Revisions {
 	 * Directory with which to namespace document URLs
 	 * Defaults to "documents"
 	 *
-	 * @return unknown
+	 * @return string
 	 */
 	public function document_slug() {
 
@@ -1193,6 +1205,11 @@ class WP_Document_Revisions {
 			$slug = 'documents';
 		}
 
+		/**
+		 * Filters the document slug.
+		 *
+		 * @param string $slug The slug (default or parameter).
+		 */
 		return apply_filters( 'document_slug', $slug );
 
 	}
@@ -1231,8 +1248,8 @@ class WP_Document_Revisions {
 			'post-new.php',
 		);
 		if ( in_array( $pagenow, $pages, true ) ) {
-			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
 				'_wp_post_thumbnail_html',
@@ -1247,10 +1264,10 @@ class WP_Document_Revisions {
 		}
 
 		self::$doc_image = false;
-		$dir['path'] = $this->document_upload_dir() . $dir['subdir'];
-		$dir['url'] = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
-		$dir['basedir'] = $this->document_upload_dir();
-		$dir['baseurl'] = home_url( '/' . $this->document_slug() );
+		$dir['path']     = $this->document_upload_dir() . $dir['subdir'];
+		$dir['url']      = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
+		$dir['basedir']  = $this->document_upload_dir();
+		$dir['baseurl']  = home_url( '/' . $this->document_slug() );
 
 		return $dir;
 
@@ -1285,7 +1302,7 @@ class WP_Document_Revisions {
 	public function filename_rewrite( $file ) {
 
 		// verify this is a document
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			self::$doc_image = true;
 			return $file;
@@ -1300,8 +1317,8 @@ class WP_Document_Revisions {
 
 		if ( 'async-upload.php' === $pagenow ) {
 			// got past cookie, but may be in thumbnail code
-			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
 				'_wp_post_thumbnail_html',
@@ -1336,7 +1353,7 @@ class WP_Document_Revisions {
 	public function rewrite_file_url( $file ) {
 
 		// verify that this is a document
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( $_POST['post_id'] ) ) {
 			self::$doc_image = true;
 			return $file;
@@ -1351,8 +1368,8 @@ class WP_Document_Revisions {
 
 		if ( 'async-upload.php' === $pagenow ) {
 			// got past cookie, but may be in thumbnail code
-			// @codingStandardsIgnoreLine WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
 				'wp_ajax_get_post_thumbnail_html',
 				'_wp_post_thumbnail_html',
@@ -1368,7 +1385,7 @@ class WP_Document_Revisions {
 		}
 
 		self::$doc_image = false;
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$file['url'] = get_permalink( $_POST['post_id'] );
 
 		return $file;
@@ -1394,7 +1411,7 @@ class WP_Document_Revisions {
 		if ( false === $documentish ) {
 
 			// check for post_type query arg (post new)
-			// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET['post_type'] ) && 'document' === $_GET['post_type'] ) {
 				return true;
 			}
@@ -1406,18 +1423,18 @@ class WP_Document_Revisions {
 			}
 
 			// if post isn't set, try get vars (edit post)
-			// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.NoNonceVerification
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_GET['post'] ) ) {
 				$documentish = intval( $_GET['post'] );
-			// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.NoNonceVerification
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			}
 
 			// look for post_id via post or get (media upload)
-			// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.NoNonceVerification
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 			if ( isset( $_REQUEST['post_id'] ) ) {
 				$documentish = intval( $_REQUEST['post_id'] );
 			}
-			// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.NoNonceVerification
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		}
 
 		if ( false === $documentish ) {
@@ -1527,13 +1544,13 @@ class WP_Document_Revisions {
 		global $wpdb;
 
 		// verify key exists
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['key'] ) ) {
 			return false;
 		}
 
 		// make alphanumeric
-		// @codingStandardsIgnoreLine WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$key = preg_replace( '/[^a-z0-9]/i', '', $_GET['key'] );
 
 		// verify length
@@ -1622,7 +1639,7 @@ class WP_Document_Revisions {
 		$message .= __( 'Any changes you have made will be lost.', 'wp-document-revisions' ) . "\n\n";
 		// translators: %s is the blog name
 		$message .= sprintf( __( '- The %s Team', 'wp-document-revisions' ), get_bloginfo( 'name' ) );
-		$message = apply_filters( 'lock_override_notice_message', $message );
+		$message  = apply_filters( 'lock_override_notice_message', $message );
 
 		apply_filters( 'document_lock_override_email', $message, $post_id, $current_user_id, $lock_owner );
 
@@ -1641,8 +1658,8 @@ class WP_Document_Revisions {
 	public function add_caps() {
 		global $wp_roles;
 		if ( ! is_object( $wp_roles ) ) {
-			// @codingStandardsIgnoreLine
-			$wp_roles = new WP_Roles;
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$wp_roles = new WP_Roles();
 		}
 
 		// default role => capability mapping; based off of _post options
@@ -1664,7 +1681,7 @@ class WP_Document_Revisions {
 				'publish_documents'          => true,
 				'override_document_lock'     => true,
 			),
-			'editor' =>
+			'editor'        =>
 			array(
 				'edit_documents'             => true,
 				'edit_others_documents'      => true,
@@ -1680,7 +1697,7 @@ class WP_Document_Revisions {
 				'publish_documents'          => true,
 				'override_document_lock'     => true,
 			),
-			'author' =>
+			'author'        =>
 			array(
 				'edit_documents'             => true,
 				'edit_others_documents'      => false,
@@ -1696,7 +1713,7 @@ class WP_Document_Revisions {
 				'publish_documents'          => true,
 				'override_document_lock'     => false,
 			),
-			'contributor' =>
+			'contributor'   =>
 			array(
 				'edit_documents'             => true,
 				'edit_others_documents'      => false,
@@ -1712,7 +1729,7 @@ class WP_Document_Revisions {
 				'publish_documents'          => false,
 				'override_document_lock'     => false,
 			),
-			'subscriber' =>
+			'subscriber'    =>
 			array(
 				'edit_documents'             => false,
 				'edit_others_documents'      => false,
@@ -1927,10 +1944,10 @@ class WP_Document_Revisions {
 	 */
 	public function get_documents( $args = array(), $return_attachments = false ) {
 
-		$args = (array) $args;
+		$args              = (array) $args;
 		$args['post_type'] = 'document';
-		$documents = get_posts( $args );
-		$output = array();
+		$documents         = get_posts( $args );
+		$output            = array();
 
 		if ( $return_attachments ) {
 
@@ -1939,7 +1956,7 @@ class WP_Document_Revisions {
 			// but allows querying of document metadata and returns only latest revision
 			foreach ( $documents as $document ) {
 				$document_object = $this->get_latest_revision( $document->ID );
-				$output[] = get_post( $document_object->post_content );
+				$output[]        = get_post( $document_object->post_content );
 			}
 		} else {
 
@@ -2053,7 +2070,7 @@ class WP_Document_Revisions {
 
 		$taxs = get_taxonomies(
 			array(
-				'object_type' => 'document',
+				'object_type'           => 'document',
 				'update_count_callback' => '',
 			),
 			'objects'
@@ -2067,10 +2084,11 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Removes auto-appended trailing slash from document requests prior to serving
+	 * Removes auto-appended trailing slash from document requests prior to serving.
+	 *
 	 * WordPress SEO rules properly dictate that all post requests should be 301 redirected with a trailing slash
-	 * Because documents end with a phaux file extension, we don't want that
-	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working
+	 * Because documents end with a phaux file extension, we don't want that unless there is a named extension
+	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working.
 	 *
 	 * @param String $redirect the redirect URL
 	 * @param Object $request the request object
@@ -2108,7 +2126,7 @@ class WP_Document_Revisions {
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
 
 		$direct = wp_get_attachment_url( $id );
-		$image = image_downsize( $id, $size );
+		$image  = image_downsize( $id, $size );
 
 		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );

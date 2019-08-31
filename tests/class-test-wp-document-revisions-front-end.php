@@ -47,7 +47,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_shortcode_unauthed() {
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
@@ -61,7 +61,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_shortcode() {
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
@@ -79,7 +79,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revision_shortcode_limit() {
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
 		// admin should be able to access
@@ -142,7 +142,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_document_shortcode_post_meta_filter() {
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $doc_id );
 
@@ -181,12 +181,12 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_get_documents_returns_attachments() {
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc
 		wp_publish_post( $doc_id );
 
 		$docs = get_documents( null, true );
-		$doc = array_pop( $docs );
+		$doc  = array_pop( $docs );
 
 		$this->assertEquals( $doc->post_type, 'attachment', 'get_documents not returning attachments' );
 
@@ -222,7 +222,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 * Tests the get_revisions function
 	 */
 	public function test_get_document_revisions() {
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document(); // add a doc
 		$this->assertCount( 2, get_document_revisions( $doc_id ) );
 	}

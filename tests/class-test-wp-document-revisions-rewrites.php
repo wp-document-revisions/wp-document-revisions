@@ -117,7 +117,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 
@@ -136,7 +136,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function test_private_document_as_unauthenticated() {
 
 		// make new private document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		global $current_user;
@@ -157,7 +157,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function test_private_document_as_contributor() {
 
 		// make new private document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// contibutor should be denied
@@ -177,11 +177,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function test_private_document_as_admin() {
 
 		// make new private document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// admin should be able to access
-		$id = _make_user( 'administrator' );
+		$id   = _make_user( 'administrator' );
 		$user = wp_set_current_user( $id );
 
 		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
@@ -198,11 +198,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 		$revisions = $wpdr->get_revisions( $doc_id );
-		$revision = array_pop( $revisions );
+		$revision  = array_pop( $revisions );
 
 		global $current_user;
 		unset( $current_user );
@@ -224,11 +224,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 		$revisions = $wpdr->get_revisions( $doc_id );
-		$revision = array_pop( $revisions );
+		$revision  = array_pop( $revisions );
 
 		// admin should be able to access
 		$id = _make_user( 'administrator' );
@@ -250,7 +250,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 
 		// make new public, revised document
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 		wp_publish_post( $doc_id );
 
@@ -265,7 +265,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_archive() {
 		global $wpdr;
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 		flush_rewrite_rules();
 		$this->go_to( get_home_url( null, $wpdr->document_slug() ) );
@@ -279,9 +279,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function test_permalink() {
 
 		global $wpdr;
-		$tdr = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document();
-		$doc = get_post( $doc_id );
+		$tdr       = new Test_WP_Document_Revisions();
+		$doc_id    = $tdr->test_add_document();
+		$doc       = get_post( $doc_id );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 
@@ -294,10 +294,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function test_revision_permalink() {
 
 		global $wpdr;
-		$tdr = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		$tdr       = new Test_WP_Document_Revisions();
+		$doc_id    = $tdr->test_revise_document();
 		$revisions = $wpdr->get_revisions( $doc_id );
-		$revision = array_pop( $revisions );
+		$revision  = array_pop( $revisions );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . get_post( $doc_id )->post_name . '-revision-1' . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $revision->ID ), 'Bad revision permalink' );
 	}
@@ -346,7 +346,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// try to get an un auth'd feed
@@ -368,7 +368,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		define( 'WP_ADMIN', true );
 
 		$wpdr->admin_init();
-		$tdr = new Test_WP_Document_Revisions();
+		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 
 		// try to get an auth'd feed
