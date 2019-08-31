@@ -375,16 +375,20 @@ class WP_Document_Revisions_Admin {
 			</a>
 		</div>
 		<p>
-		<strong><?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>:</strong>
-		<strong><a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_BLANK"><?php esc_html_e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
-		<em>
-		<?php
-		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-		// translators: %1$s is the post date in words, %2$s is the post date in time format, %3$s is how long ago the post was modified, %4$s is the author's name
-		printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', null, $post->ID ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
-		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-		?>
-		</a></em>
+		<?php if ( is_object( $latest_version ) ) { ?>
+			<strong>
+			<?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>
+			</strong>
+			<strong><a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_BLANK"><?php esc_html_e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
+			<em>
+			<?php
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+			// translators: %1$s is the post date in words, %2$s is the post date in time format, %3$s is how long ago the post was modified, %4$s is the author's name
+			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', null, $post->ID ), current_time( 'timestamp' ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+			</a></em>
+		<?php } ?>
 		</p>
 		<div class="clear"></div>
 		<?php
