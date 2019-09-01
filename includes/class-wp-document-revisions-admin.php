@@ -369,16 +369,16 @@ class WP_Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-		<?php $latest_version = $this->get_latest_revision( $post->ID ); ?>
 			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
 				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
 		</div>
-		<p>
-		<?php if ( is_object( $latest_version ) ) { ?>
-			<strong>
-			<?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?>
-			</strong>
+		<?php
+		$latest_version = $this->get_latest_revision( $post->ID );
+		if ( is_object( $latest_version ) ) {
+			?>
+			<p>
+			<strong><?php esc_html_e( 'Latest Version of the Document', 'wp-document-revisions' ); ?></strong>
 			<strong><a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_BLANK"><?php esc_html_e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
 			<em>
 			<?php
@@ -388,8 +388,8 @@ class WP_Document_Revisions_Admin {
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			</a></em>
+			</p>
 		<?php } ?>
-		</p>
 		<div class="clear"></div>
 		<?php
 	}
