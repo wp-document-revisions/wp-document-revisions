@@ -89,6 +89,7 @@ class WP_Document_Revisions {
 		// admin
 		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
 		add_action( 'plugins_loaded', array( &$this, 'i18n' ), 5 );
+		add_action( 'admin_notices', array( &$this, 'activation_error_notice' ) );
 
 		// CPT/CT
 		add_action( 'init', array( &$this, 'register_cpt' ) );
@@ -154,6 +155,31 @@ class WP_Document_Revisions {
 	public function activation_hook() {
 		$this->add_caps();
 		flush_rewrite_rules();
+		if ( ! current_user_can( 'edit_documents' ) ) {
+			// Unfortunately we cannot create a message directly out of the activation process, so create transient data
+			set_transient( 'wpdr_activation_issue', true, 15 );
+		}
+	}
+
+	/**
+	 * Called when the plugin is initially activated and checks whether the user has edit_documents capability.
+	 *
+	 * This can occur if the user has multiple roles with one denying access overriding the admin access
+	 *
+	 * @since 3.2.3
+	 * @return void
+	 */
+	public function activation_error_notice() {
+		if ( get_transient( 'wpdr_activation_issue' ) ) {
+			delete_transient( 'wpdr_activation_issue' );
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'Documents menu may not be displayed completely with "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+		}
 	}
 
 	/**
