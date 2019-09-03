@@ -107,26 +107,26 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	public function spoof_upload( $post_id, $file ) {
 
 		global $wpdr;
-		$file = dirname( __FILE__ ) . '/' . $file;
+		$file             = dirname( __FILE__ ) . '/' . $file;
 		$_POST['post_id'] = $post_id;
-		$upload_dir = wp_upload_dir();
+		$upload_dir       = wp_upload_dir();
 
 		$wp_filetype = wp_check_filetype( basename( $file ), null );
-		$file_array = apply_filters(
+		$file_array  = apply_filters(
 			'wp_handle_upload_prefilter',
 			array(
-				'name' => basename( $file ),
+				'name'     => basename( $file ),
 				'tmp_name' => $file,
-				'type' => $wp_filetype['type'],
-				'size' => 1,
+				'type'     => $wp_filetype['type'],
+				'size'     => 1,
 			)
 		);
 
 		$attachment = array(
 			'post_mime_type' => $wp_filetype['type'],
-			'post_title' => preg_replace( '/\.[^.]+$/', '', basename( $file ) ),
-			'post_content' => '',
-			'post_status' => 'inherit',
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file ) ),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
 		);
 
 		// If the directory is not available, the upload does not succeed.
@@ -156,11 +156,11 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		global $wpdb;
 
 		$doc = array(
-			'post_title' => 'Test Document - ' . time(),
-			'post_status' => 'private',
+			'post_title'   => 'Test Document - ' . time(),
+			'post_status'  => 'private',
 			'post_content' => '',
 			'post_excerpt' => 'Test Upload',
-			'post_type' => 'document',
+			'post_type'    => 'document',
 		);
 
 		// insert post
@@ -218,8 +218,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		$attach_id = $this->spoof_upload( $doc_id, $this->test_file2 );
 
-		$doc = array(
-			'ID' => $doc_id,
+		$doc    = array(
+			'ID'           => $doc_id,
 			'post_content' => $attach_id,
 			'post_excerpt' => 'revised',
 		);
@@ -247,7 +247,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 			return;
 		}
 
-		$doc = get_post( $post_id );
+		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
 
 		$this->assertFileEquals( dirname( __FILE__ ) . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
@@ -266,11 +266,11 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		// grab an attachment
 		$attachments = $wpdr->get_attachments( $doc_id );
-		$attachment = end( $attachments );
+		$attachment  = end( $attachments );
 
 		// grab a revision
 		$revisions = $wpdr->get_revisions( $doc_id );
-		$revision = end( $revisions );
+		$revision  = end( $revisions );
 
 		// get as postID
 		$this->assertCount( 2, $attachments, 'Bad attachment count via get_attachments as postID' );
@@ -298,7 +298,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		// grab an attachment
 		$attachments = $wpdr->get_attachments( $doc_id );
-		$attachment = end( $attachments );
+		$attachment  = end( $attachments );
 
 		global $wpdr;
 		$this->assertEquals( '.txt', $wpdr->get_file_type( $doc_id ), 'Didn\'t detect filetype via document ID' );
@@ -327,9 +327,9 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		$doc_id = $this->test_revise_document();
+		$doc_id    = $this->test_revise_document();
 		$revisions = $wpdr->get_revisions( $doc_id );
-		$last = end( $revisions );
+		$last      = end( $revisions );
 		$this->assertEquals( 1, $wpdr->get_revision_number( $last->ID ) );
 		$this->assertEquals( $last->ID, $wpdr->get_revision_id( 1, $doc_id ) );
 
@@ -359,10 +359,10 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_REQUEST['post_id'] );
 
-		// @codingStandardsIgnoreStart WordPress.Variables.GlobalVariables.OverrideProhibited
+		// phpcs:disable WordPress.Variables.GlobalVariables.OverrideProhibited
 		global $post;
 		$post = get_post( $doc_id );
-		// @codingStandardsIgnoreEnd WordPress.Variables.GlobalVariables.OverrideProhibited
+		// phpcs:enable WordPress.Variables.GlobalVariables.OverrideProhibited
 
 		$this->assertTrue( $wpdr->verify_post_type( $post ), 'verify post type via global $post' );
 		unset( $post );
