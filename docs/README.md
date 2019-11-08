@@ -6,7 +6,7 @@ A document management and version control plugin that allows teams of any size t
 
 ## Description
 
-[WP Document Revisions](http://wordpress.org/extend/plugins/wp-document-revisions/) is a [document management](httpgs://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
+[WP Document Revisions](https://wordpress.org/plugins/wp-document-revisions/) is a [document management](https://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
 ### WP Document Revisions is three things
 
@@ -29,6 +29,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * [Links](links.md)
 * [Where to get Support or Report an Issue](SUPPORT.md)
 * [Translations](translations.md)
+* [Plugin Filters](filters.md)
 * [Useful Plugins and Tools](useful-plugins-and-tools.md)
 
 ### Get Involved
