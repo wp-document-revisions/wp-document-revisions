@@ -47,5 +47,5 @@ global $wpdr;
 $wpdr = new WP_Document_Revisions();
 require_once dirname( __FILE__ ) . '/includes/template-functions.php';
 
-// Activation hooks must be relative to the main plugin file
+// Activation hooks must be relative to the main plugin file.
 register_activation_hook( __FILE__, array( &$wpdr, 'activation_hook' ) );

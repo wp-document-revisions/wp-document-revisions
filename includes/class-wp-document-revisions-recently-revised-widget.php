@@ -1,13 +1,13 @@
 <?php
 /**
- * Helper class for WP_Document_Revisions that registers the recently revised widget
+ * Helper class for WP_Document_Revisions that registers the recently revised widget.
  *
  * @since 3.2.2
  * @package WP_Document_Revisions
  */
 
 /**
- * Recently revised documents widget
+ * Recently revised documents widget.
  */
 class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
@@ -27,21 +27,21 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	);
 
 	/**
-	 * Init widget and register
+	 * Init widget and register.
 	 */
 	public function __construct() {
 		parent::__construct( 'WP_Document_Revisions_Recently_Revised_Widget', __( 'Recently Revised Documents', 'wp-document-revisions' ) );
 
-		// can't i18n outside of a function
+		// can't i18n outside of a function.
 		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
 	}
 
 
 	/**
-	 * Callback to display widget contents
+	 * Callback to display widget contents.
 	 *
-	 * @param Array  $args the widget arguments
-	 * @param Object $instance the WP Document Revisions instance
+	 * @param Array  $args the widget arguments.
+	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
 
@@ -50,7 +50,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$wpdr = new WP_Document_Revisions();
 		}
 
-		// enabled statuses are stored as status => bool, but we want an array of only activated statuses
+		// enabled statuses are stored as status => bool, but we want an array of only activated statuses.
 		$statuses = array_filter( (array) $instance['post_status'] );
 		$statuses = array_keys( $statuses );
 
@@ -63,7 +63,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		$documents = $wpdr->get_documents( $query );
 
-		// no documents, don't bother
+		// no documents, don't bother.
 		if ( ! $documents ) {
 			return;
 		}
@@ -79,7 +79,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				),
 				admin_url( 'post.php' )
 			) : get_permalink( $document->ID );
-			// translators: %1$s is the time ago in words, %2$s is the author
+			// translators: %1$s is the time ago in words, %2$s is the author.
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 			?>
 			<li>
@@ -95,9 +95,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 
 	/**
-	 * Callback to display widget options form
+	 * Callback to display widget options form.
 	 *
-	 * @param Object $instance the WP Document Revisions instance
+	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function form( $instance ) {
 
@@ -131,10 +131,10 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 
 	/**
-	 * Sanitizes options and saves
+	 * Sanitizes options and saves.
 	 *
-	 * @param Object $new_instance the new instance
-	 * @param Object $old_instance the old instance
+	 * @param Object $new_instance the new instance.
+	 * @param Object $old_instance the old instance.
 	 */
 	public function update( $new_instance, $old_instance ) {
 
@@ -143,7 +143,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance['numberposts'] = (int) $new_instance['numberposts'];
 		$instance['show_author'] = (bool) $new_instance['show_author'];
 
-		// merge post statuses into an array
+		// merge post statuses into an array.
 		foreach ( $this->defaults['post_status'] as $status => $value ) {
 			$instance['post_status'][ $status ] = (bool) isset( $new_instance[ 'post_status_' . $status ] );
 		}
@@ -155,7 +155,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 }
 
 /**
- * Callback to register the recently revised widget
+ * Callback to register the recently revised widget.
  */
 function drrrw_widgets_init() {
 	register_widget( 'WP_Document_Revisions_Recently_Revised_Widget' );
