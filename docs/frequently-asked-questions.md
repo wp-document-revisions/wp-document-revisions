@@ -86,7 +86,7 @@ Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) 
 
 ### I want some small changes to the processing, but there are few configuration options. How do I do this?
 
-Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](filters.md). This will need some coding to be done.
+Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](./filters.md). This will need some coding to be done.
 
 ### Can I make it so that users can only access documents assigned to them (or documents that they create)?
 
