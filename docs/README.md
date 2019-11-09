@@ -14,7 +14,7 @@ A document management and version control plugin that allows teams of any size t
 2. A **collaboration tool** to empower teams to collaboratively draft, edit, and refine documents
 3. A **file hosting solution** to publish and securely deliver files to a team, to clients, or to the public
 
-See [**the full list of features**](features.md) for more information.
+See [**the full list of features**](./features.md) for more information.
 
 ## Documentation
 
@@ -22,19 +22,19 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 ### Learn
 
-* [Features and Overview](features.md)
-* [Screenshots](screenshots.md)
-* [Installation](installation.md)
-* [Frequently Asked Questions](frequently-asked-questions.md)
-* [Links](links.md)
-* [Where to get Support or Report an Issue](SUPPORT.md)
-* [Translations](translations.md)
-* [Plugin Filters](filters.md)
-* [Useful Plugins and Tools](useful-plugins-and-tools.md)
+* [Features and Overview](./features.md)
+* [Screenshots](./screenshots.md)
+* [Installation](./installation.md)
+* [Frequently Asked Questions](./frequently-asked-questions.md)
+* [Links](./links.md)
+* [Where to get Support or Report an Issue](./SUPPORT.md)
+* [Translations](./translations.md)
+* [Plugin Filters](./filters.md)
+* [Useful Plugins and Tools](./useful-plugins-and-tools.md)
 
 ### Get Involved
 
-* [How to Contribute](CONTRIBUTING.md)
+* [How to Contribute](./CONTRIBUTING.md)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 [Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
