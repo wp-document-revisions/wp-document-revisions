@@ -160,7 +160,7 @@ Filters setting the new document status to private.
 
 In: class-wp-document-revisions.php
 
-Filter to switch off use of Edit_Flow statuses and taxonomy.
+Filter to switch off use of standard Workflow States taxonomy. For internal use.
 
 ## Filter document_verify_feed_key
 

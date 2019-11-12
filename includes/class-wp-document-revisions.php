@@ -2017,7 +2017,10 @@ class WP_Document_Revisions {
 		}
 
 		// are we going to use Edit_Flow processes if installed and active.
-		return $this->use_workflow_states();
+		// make sure use_workflow_states returns false.
+		add_filter( 'document_use_workflow_states', '__return_false' );
+
+		return true;
 
 	}
 
@@ -2030,9 +2033,9 @@ class WP_Document_Revisions {
 	public function use_workflow_states() {
 
 		/**
-		 * Filter to switch off use of Edit_Flow statuses and taxonomy.
+		 * Filter to switch off use of standard Workflow States taxonomy. For internal use.
 		 *
-		 * @param boolean true default value to use Edit_Flow processes if installed and active.
+		 * @param boolean true default value to use standard WorkFlow States taxonomy. For internal use.
 		 */
 		return apply_filters( 'document_use_workflow_states', true );
 
