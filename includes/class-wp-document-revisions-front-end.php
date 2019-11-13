@@ -1,32 +1,32 @@
 <?php
 /**
- * Helper class for WP_Document_Revisions that registers shortcodes, widgets, etc. for use on the front-end
+ * Helper class for WP_Document_Revisions that registers shortcodes, widgets, etc. for use on the front-end.
  *
  * @since 1.2
  * @package WP_Document_Revisions
  */
 
 /**
- * WP Document Revisions Front End
+ * WP Document Revisions Front End.
  */
 class WP_Document_Revisions_Front_End {
 
 	/**
-	 * The Parent WP_Document_Revisions instance
+	 * The Parent WP_Document_Revisions instance.
 	 *
 	 * @var $parent
 	 */
 	public static $parent;
 
 	/**
-	 * The Singleton instance
+	 * The Singleton instance.
 	 *
 	 * @var $instance
 	 */
 	public static $instance;
 
 	/**
-	 * Array of accepted shortcode keys and default values
+	 * Array of accepted shortcode keys and default values.
 	 *
 	 * @var $shortcode_defaults
 	 */
@@ -36,15 +36,15 @@ class WP_Document_Revisions_Front_End {
 	);
 
 	/**
-	 *  Registers front end hooks
+	 *  Registers front end hooks.
 	 *
-	 * @param Object $instance The WP Document Revisions instance
+	 * @param Object $instance The WP Document Revisions instance.
 	 */
 	public function __construct( &$instance = null ) {
 
 		self::$instance = &$this;
 
-		// create or store parent instance
+		// create or store parent instance.
 		if ( is_null( $instance ) ) {
 			self::$parent = new WP_Document_Revisions();
 		} else {
@@ -55,18 +55,18 @@ class WP_Document_Revisions_Front_End {
 		add_shortcode( 'documents', array( &$this, 'documents_shortcode' ) );
 		add_filter( 'document_shortcode_atts', array( &$this, 'shortcode_atts_hyphen_filter' ) );
 
-		// Queue up JS (low priority to be at end)
+		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_front' ), 50 );
 
 	}
 
 
 	/**
-	 * Provides support to call functions of the parent class natively
+	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param function $function the function to call
-	 * @param array    $args the arguments to pass to the function
+	 * @param function $function the function to call.
+	 * @param array    $args the arguments to pass to the function.
 	 * @returns mixed the result of the function
 	 */
 	public function __call( $function, $args ) {
@@ -75,10 +75,10 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Provides support to call properties of the parent class natively
+	 * Provides support to call properties of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param string $name the property to fetch
+	 * @param string $name the property to fetch.
 	 * @returns mixed the property's value
 	 */
 	public function __get( $name ) {
@@ -87,46 +87,46 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Callback to display revisions
+	 * Callback to display revisions.
 	 *
-	 * @param array $atts attributes passed via short code
+	 * @param array $atts attributes passed via short code.
 	 * @returns string a UL with the revisions
 	 * @since 1.2
 	 */
 	public function revisions_shortcode( $atts ) {
 
-		// normalize args
+		// normalize args.
 		$atts = shortcode_atts( $this->shortcode_defaults, $atts );
 		foreach ( array_keys( $this->shortcode_defaults ) as $key ) {
 			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
 		}
 
-		// do not show output to users that do not have the read_document_revisions capability
+		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			return;
 		}
 
-		// get revisions
+		// get revisions.
 		$revisions = $this->get_revisions( $id );
 
-		// show a limited number of revisions
+		// show a limited number of revisions.
 		if ( null !== $number ) {
 			$revisions = array_slice( $revisions, 0, (int) $number );
 		}
 
-		// buffer output to return rather than echo directly
+		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
 		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
-		// loop through each revision
+		// loop through each revision.
 		// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 		foreach ( $revisions as $revision ) {
 			?>
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
 				<?php
-				// html - string not to be translated
-				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
+				// html - string not to be translated.
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
 				?>
 			</li>
 			<?php
@@ -135,7 +135,7 @@ class WP_Document_Revisions_Front_End {
 		?>
 		</ul>
 		<?php
-		// grab buffer contents and clear
+		// grab buffer contents and clear.
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -143,12 +143,12 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Shortcode to query for documents
+	 * Shortcode to query for documents.
 	 * Takes most standard WP_Query parameters (must be int or string, no arrays)
-	 * See get_documents in wp-document-revisions.php for more information
+	 * See get_documents in wp-document-revisions.php for more information.
 	 *
 	 * @since 1.2
-	 * @param array $atts shortcode attributes
+	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
 	public function documents_shortcode( $atts ) {
@@ -159,7 +159,7 @@ class WP_Document_Revisions_Front_End {
 		);
 
 		// list of all string or int based query vars (because we are going through shortcode)
-		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters
+		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters.
 		$keys = array(
 			'author',
 			'author_name',
@@ -221,24 +221,29 @@ class WP_Document_Revisions_Front_End {
 			'objects'
 		);
 
-		// allow querying by custom taxonomy
+		// allow querying by custom taxonomy.
 		foreach ( $taxs as $tax ) {
 			$defaults[ $tax->query_var ] = null;
 		}
 
+		/**
+		 * Filters the Document shortcode attributes.
+		 *
+		 * @param array $atts attributes set on the shortcode.
+		 */
 		$atts = apply_filters( 'document_shortcode_atts', $atts );
 
-		// default arguments, can be overriden by shortcode attributes
+		// default arguments, can be overriden by shortcode attributes.
 		$atts = shortcode_atts( $defaults, $atts );
 		$atts = array_filter( $atts );
 
 		$documents = $this->get_documents( $atts );
 
-		// check whether to show update option. Default - only administrator role
+		// check whether to show update option. Default - only administrator role.
 		$show_edit = false;
 		$user      = wp_get_current_user();
 		if ( $user->ID > 0 ) {
-			// logged on user only
+			// logged on user only.
 			$roles = (array) $user->roles;
 			if ( in_array( 'administrator', $roles, true ) ) {
 				$show_edit = true;
@@ -256,12 +261,12 @@ class WP_Document_Revisions_Front_End {
 		 */
 		$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
 
-		// buffer output to return rather than echo directly
+		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
 		<ul class="documents">
 		<?php
-		// loop through found documents
+		// loop through found documents.
 		foreach ( $documents as $document ) {
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
@@ -284,7 +289,7 @@ class WP_Document_Revisions_Front_End {
 		<?php } ?>
 		</ul>
 		<?php
-		// grab buffer contents and clear
+		// grab buffer contents and clear.
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -292,7 +297,7 @@ class WP_Document_Revisions_Front_End {
 	}
 
 	/**
-	 * Shortcode can have CSS on any page
+	 * Shortcode can have CSS on any page.
 	 *
 	 * @since 3.2.0
 	 */
@@ -300,7 +305,7 @@ class WP_Document_Revisions_Front_End {
 
 		$wpdr = self::$parent;
 
-		// enqueue CSS for shortcode
+		// enqueue CSS for shortcode.
 		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', dirname( __FILE__ ) ), null, $wpdr->version );
 
 	}
@@ -308,9 +313,9 @@ class WP_Document_Revisions_Front_End {
 
 	/**
 	 * Provides workaround for taxonomies with hyphens in their name
-	 * User should replace hyphen with underscope and plugin will compensate
+	 * User should replace hyphen with underscope and plugin will compensate.
 	 *
-	 * @param Array $atts shortcode attributes
+	 * @param Array $atts shortcode attributes.
 	 * @return Array modified shortcode attributes
 	 */
 	public function shortcode_atts_hyphen_filter( $atts ) {

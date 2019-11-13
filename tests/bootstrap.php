@@ -59,10 +59,10 @@ require $_tests_dir . '/includes/bootstrap.php';
  * Utility functions used for testing document revisions
  * Most adapted from the core testing framework: http://svn.automattic.com/wordpress-tests/
  *
- * @param String $role the user's role
- * @param String $user_login the user's login
- * @param String $pass the user's password
- * @param string $email the user's email
+ * @param String $role the user's role.
+ * @param String $user_login the user's login.
+ * @param String $pass the user's password.
+ * @param string $email the user's email.
  */
 function _make_user( $role = 'administrator', $user_login = '', $pass = '', $email = '' ) {
 
@@ -80,13 +80,13 @@ function _make_user( $role = 'administrator', $user_login = '', $pass = '', $ema
 }
 
 /**
- * Remove a user from the DB
+ * Remove a user from the DB.
  *
- * @param Int $user_id the user to remove
+ * @param Int $user_id the user to remove.
  */
 function _destroy_user( $user_id ) {
 
-	// non-admin
+	// non-admin.
 	if ( ! function_exists( 'wp_delete_user' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 	}
@@ -100,18 +100,19 @@ function _destroy_user( $user_id ) {
 }
 
 /**
- * Remove all users from DB
+ * Remove all users from DB.
  */
 function _destroy_users() {
 	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	$users = $wpdb->get_col( "SELECT ID from $wpdb->users" );
-		array_map( array( $this, '_destroy_user' ), $users );
+		array_map( '_destroy_user', $users );
 }
 
 /**
- * Recursively delete a directory
+ * Recursively delete a directory.
  *
- * @param String $dir the directory to delete
+ * @param String $dir the directory to delete.
  */
 function _rrmdir( $dir ) {
 	if ( is_dir( $dir ) ) {
@@ -131,7 +132,7 @@ function _rrmdir( $dir ) {
 }
 
 /**
- * Remove any uploaded files
+ * Remove any uploaded files.
  */
 function _destroy_uploads() {
 	$uploads = wp_upload_dir();
@@ -143,7 +144,7 @@ function _destroy_uploads() {
 
 /**
  * We want to make sure we're testing against the db, not just in-memory data
- * this will flush everything and reload it from the db
+ * this will flush everything and reload it from the db.
  */
 function _flush_roles() {
 	unset( $GLOBALS['wp_user_roles'] );

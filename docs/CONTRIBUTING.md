@@ -9,7 +9,7 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ## Looking for support?
 
-We'd love to help. Check out [the support guidelines](SUPPORT.md).
+We'd love to help. Check out [the support guidelines](./SUPPORT.md).
 
 ## How to report a bug
 
@@ -86,7 +86,7 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 ## Code of conduct
 
-This project is governed by [the Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+This project is governed by [the Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ## Additional Resources
 

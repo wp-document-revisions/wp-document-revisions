@@ -4,3 +4,4 @@ vendor
 bin
 wpcs
 build/logs/clover.xml
+

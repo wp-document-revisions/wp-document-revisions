@@ -2,7 +2,7 @@
 
 ### Automatic Install
 
-1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](http://codex.wordpress.org/Installing_WordPress)
+1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](https://wordpress.org/support/article/how-to-install-wordpress/)
 2. Navigate to Plugins->Add New from the menu on the left
 3. Search for WP Document Revisions
 4. Click "Install"
