@@ -126,7 +126,7 @@ class WP_Document_Revisions_Front_End {
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
 				<?php
 				// html - string not to be translated.
-				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
 				?>
 			</li>
 			<?php

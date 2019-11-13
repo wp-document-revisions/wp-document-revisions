@@ -677,7 +677,7 @@ class WP_Document_Revisions {
 			$extension = $this->get_file_type( $document );
 			$timestamp = strtotime( $document->post_date );
 
-			$link  = home_url() . '/' . $this->document_slug() . '/' . date( 'Y', $timestamp ) . '/' . date( 'm', $timestamp ) . '/';
+			$link  = home_url() . '/' . $this->document_slug() . '/' . gmdate( 'Y', $timestamp ) . '/' . gmdate( 'm', $timestamp ) . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
 
@@ -752,7 +752,7 @@ class WP_Document_Revisions {
 		}
 
 		// correct the modified date.
-		$document->post_date = date( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $post_id ) );
+		$document->post_date = gmdate( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $post_id ) );
 
 		// grab the post author.
 		$post_author = $document->post_author;

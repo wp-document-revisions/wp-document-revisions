@@ -282,7 +282,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$tdr       = new Test_WP_Document_Revisions();
 		$doc_id    = $tdr->test_add_document();
 		$doc       = get_post( $doc_id );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 
 	}
@@ -298,7 +298,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$doc_id    = $tdr->test_revise_document();
 		$revisions = $wpdr->get_revisions( $doc_id );
 		$revision  = array_pop( $revisions );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . date( 'Y' ) . '/' . date( 'm' ) . '/' . get_post( $doc_id )->post_name . '-revision-1' . $wpdr->get_file_type( $doc_id );
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . get_post( $doc_id )->post_name . '-revision-1' . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $revision->ID ), 'Bad revision permalink' );
 	}
 
