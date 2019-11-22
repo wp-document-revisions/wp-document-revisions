@@ -2,6 +2,7 @@
 
 ### 3.2.3
 
+* Full phpcs 2.2 standardisation, complete filter documentation (#192) @NeilWJames
 * On plugin activation, admin warning if user doesn't have edit_documents capability (#180) @NeilWJames
 * PHPCS Review (no functional changes) (#179) @NeilWJames
 * Review for WP Coding standard 2.1.1 and newer phpunit (#174) @NeilWJames

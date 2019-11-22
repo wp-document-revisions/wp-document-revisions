@@ -208,6 +208,9 @@ class WP_Document_Revisions_Front_End {
 			'meta_value_num',
 			'meta_compare',
 			'meta_query',
+			// Presentation attributes (will be dealt with before getting documents).
+			'show_edit',
+			'new_tab',
 		);
 
 		foreach ( $keys as $key ) {
@@ -226,6 +229,17 @@ class WP_Document_Revisions_Front_End {
 			$defaults[ $tax->query_var ] = null;
 		}
 
+		// show_edit and new_tab may be entered without name (implies value true)
+		// convert to name value pair.
+		if ( isset( $atts[0] ) ) {
+			$atts[ $atts[0] ] = true;
+			unset( $atts[0] );
+		}
+		if ( isset( $atts[1] ) ) {
+			$atts[ $atts[1] ] = true;
+			unset( $atts[1] );
+		}
+
 		/**
 		 * Filters the Document shortcode attributes.
 		 *
@@ -234,32 +248,54 @@ class WP_Document_Revisions_Front_End {
 		$atts = apply_filters( 'document_shortcode_atts', $atts );
 
 		// default arguments, can be overriden by shortcode attributes.
-		$atts = shortcode_atts( $defaults, $atts );
+		// note that the filter shortcode_atts_document is also available to filter the attributes.
+		$atts = shortcode_atts( $defaults, $atts, 'document' );
+
+		// Presentation attributes may set set as false, so process before array_filter and remove.
+		if ( isset( $atts['show_edit'] ) ) {
+			$atts_show_edit = filter_var( $atts['show_edit'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['show_edit'] );
+		} else {
+			// Want to know if there was a shortcode as it will override.
+			$atts_show_edit = null;
+		}
+		if ( isset( $atts['new_tab'] ) ) {
+			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['new_tab'] );
+		} else {
+			$atts_new_tab = false;
+		}
+
 		$atts = array_filter( $atts );
 
 		$documents = $this->get_documents( $atts );
 
-		// check whether to show update option. Default - only administrator role.
-		$show_edit = false;
-		$user      = wp_get_current_user();
-		if ( $user->ID > 0 ) {
-			// logged on user only.
-			$roles = (array) $user->roles;
-			if ( in_array( 'administrator', $roles, true ) ) {
-				$show_edit = true;
+		// Determine whether to output edit option - shortcode value will override.
+		if ( is_null( $atts_show_edit ) ) {
+			// check whether to show update option. Default - only administrator role.
+			$show_edit = false;
+			$user      = wp_get_current_user();
+			if ( $user->ID > 0 ) {
+				// logged on user only.
+				$roles = (array) $user->roles;
+				if ( in_array( 'administrator', $roles, true ) ) {
+					$show_edit = true;
+				}
 			}
+			/**
+			 * Filters the controlling option to display an edit option against each document.
+			 *
+			 * By default, only logged-in administrators be able to have an edit option.
+			 * The user will also need to be able to edit the individual document before it is displayed.
+			 *
+			 * @since 3.2.0
+			 *
+			 * @param boolean $show_edit default value.
+			 */
+			$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
+		} else {
+			$show_edit = $atts_show_edit;
 		}
-		/**
-		 * Filters the controlling option to display an edit option against each document.
-		 *
-		 * By default, only logged-in administrators be able to have an edit option.
-		 * The user will also need to be able to edit the individual document before it is displayed.
-		 *
-		 * @since 3.2.0
-		 *
-		 * @param boolean $show_edit default value.
-		 */
-		$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
 
 		// buffer output to return rather than echo directly.
 		ob_start();
@@ -270,7 +306,8 @@ class WP_Document_Revisions_Front_End {
 		foreach ( $documents as $document ) {
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
-			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
+			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
+				<?php echo ( $atts_new_tab ? ' target="_blank"' : '' ); ?>>
 				<?php echo esc_html( get_the_title( $document->ID ) ); ?>
 			</a>
 			<?php
