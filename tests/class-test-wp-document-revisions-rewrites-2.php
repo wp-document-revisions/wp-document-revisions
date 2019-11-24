@@ -11,7 +11,7 @@
 /**
  * Test class for WP Document Revisions Rewrites.
  */
-class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 	/**
 	 * SetUp initial settings.
@@ -302,90 +302,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$revision  = array_pop( $revisions );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . get_post( $doc_id )->post_name . '-revision-1' . $wpdr->get_file_type( $doc_id );
 		$this->assertEquals( $permalink, get_permalink( $revision->ID ), 'Bad revision permalink' );
-	}
-
-
-	/**
-	 * Simulate accessing a revision log feed.
-	 *
-	 * @param string $url the URL to try.
-	 *
-	 * @return string the content returned
-	 * @throws Exception If there's an error.
-	 */
-	public function simulate_feed( $url = null ) {
-		if ( ! $url ) {
-			return '';
-		}
-
-		global $wpdr;
-		flush_rewrite_rules();
-
-		$this->go_to( $url );
-		$wpdr->revision_feed_auth();
-
-		if ( _wpdr_is_wp_die() ) {
-			return '';
-		}
-
-		ob_start();
-		global $post;
-		try {
-			require dirname( __DIR__ ) . '/includes/revision-feed.php';
-			$content = ob_get_clean();
-		} catch ( Exception $e ) {
-			$content = ob_get_clean();
-			throw ( $e );
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Can the public access a revision log feed?
-	 */
-	public function test_feed_as_unauthenticated() {
-
-		global $wpdr;
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document();
-
-		// try to get an un auth'd feed.
-		$content = $this->simulate_feed( get_permalink( $doc_id ) . '/feed/' );
-		$this->assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-		$this->assertTrue( _wpdr_is_wp_die(), 'not properly denying access to feeds' );
-		$this->assertEquals( 0, substr_count( $content, '<item>' ), 'denied feed leaking items' );
-
-	}
-
-
-	/**
-	 * Can a user with the proper feed key access a feed?
-	 */
-	public function test_feed_as_authorized() {
-
-		global $wpdr;
-
-		define( 'WP_ADMIN', true );
-
-		$wpdr->admin_init();
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document();
-
-		// try to get an auth'd feed.
-		$user_id = _make_user( 'administrator' );
-		$wpdr->admin->generate_new_feed_key( $user_id );
-		$key = $wpdr->admin->get_feed_key( $user_id );
-
-		wp_set_current_user( $user_id );
-		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $doc_id ) . '/feed/' ) );
-		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-		$this->assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds' );
-		$this->assertEquals( count( $wpdr->get_revisions( $doc_id ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
-		wp_set_current_user( 0 );
-		_destroy_user( $user_id );
-
 	}
 
 }
