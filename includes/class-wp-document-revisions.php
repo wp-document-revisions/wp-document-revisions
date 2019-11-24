@@ -600,13 +600,13 @@ class WP_Document_Revisions {
 		$my_rules = array();
 
 		// revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{3,4}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		// revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{3,4})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		// documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{3,4}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
@@ -680,7 +680,8 @@ class WP_Document_Revisions {
 			$link  = home_url() . '/' . $this->document_slug() . '/' . gmdate( 'Y', $timestamp ) . '/' . gmdate( 'm', $timestamp ) . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
-
+			// add trailing slash if user has set it as their permalink.
+			$link = user_trailingslashit( $link );
 		}
 
 		/**
@@ -1541,7 +1542,6 @@ class WP_Document_Revisions {
 	 * @param int $post_id the post ID.
 	 */
 	public function clear_cache( $post_id ) {
-		wp_cache_delete( $post_id, 'document_post_type' );
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
 	}
@@ -2222,6 +2222,12 @@ class WP_Document_Revisions {
 	public function redirect_canonical_filter( $redirect, $request ) {
 
 		if ( ! $this->verify_post_type() ) {
+			return $redirect;
+		}
+
+		// if the URL already has an extension, then no need to remove.
+		$path = wp_parse_url( $redirect, PHP_URL_PATH );
+		if ( preg_match( '([^.]+)\.[A-Za-z0-9]{1,7}/?$', $path ) ) {
 			return $redirect;
 		}
 

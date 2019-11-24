@@ -2,7 +2,7 @@
 /**
  * Unit tests for permalink and rewrite system.
  *
- * Permalink with trailing slash
+ * Permalink without trailing slash
  *
  * @author Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_revisions
@@ -22,7 +22,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// init permalink structure.
 		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%' );
 		$wp_rewrite->flush_rules();
 
 		$GLOBALS['is_wp_die'] = false;
@@ -352,7 +352,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$doc_id = $tdr->test_add_document();
 
 		// try to get an un auth'd feed.
-		$content = $this->simulate_feed( get_permalink( $doc_id ) . 'feed/' );
+		$content = $this->simulate_feed( get_permalink( $doc_id ) . '/feed/' );
 		$this->assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertTrue( _wpdr_is_wp_die(), 'not properly denying access to feeds' );
 		$this->assertEquals( 0, substr_count( $content, '<item>' ), 'denied feed leaking items' );
@@ -379,33 +379,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$key = $wpdr->admin->get_feed_key( $user_id );
 
 		wp_set_current_user( $user_id );
-		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $doc_id ) . 'feed/' ) );
+		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $doc_id ) . '/feed/' ) );
 		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds' );
 		$this->assertEquals( count( $wpdr->get_revisions( $doc_id ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
 		wp_set_current_user( 0 );
 		_destroy_user( $user_id );
-
-	}
-
-	/**
-	 * Tests that changing the document slug is reflected in permalinks.
-	 */
-	public function test_document_slug() {
-
-		global $wp_rewrite;
-		$tdr = new Test_WP_Document_Revisions();
-
-		// set new slug.
-		update_site_option( 'document_slug', 'docs' );
-
-		// add doc and flush.
-		$doc_id = $tdr->test_add_document();
-		wp_publish_post( $doc_id );
-		wp_cache_flush();
-
-		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
-		$this->assertContains( '/docs/', get_permalink( $doc_id ), 'revised document slug not in permalink' );
 
 	}
 
