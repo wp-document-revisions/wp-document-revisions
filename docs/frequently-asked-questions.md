@@ -84,6 +84,8 @@ WP Document Revisions doesn't use the traditional folder metaphor to organize fi
 
 Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if [Edit Flow](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
 
+Equally the [PublishPress Plugin](https://publishpress.com), a fork of Edit Flow, is detected and can be used with WP Document Revisions in exactly the same manner as Edit Flow.
+
 ### I want some small changes to the processing, but there are few configuration options. How do I do this?
 
 Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](./filters.md). This will need some coding to be done.
@@ -128,7 +130,7 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 ### Can I limit access to documents based on workflow state, department, or some other custom taxonomy?
 
-Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](http://wordpress.org/extend/plugins/members/).
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
 
 ### Is it possible to do a bulk import of existing documents / files already on the server?
 

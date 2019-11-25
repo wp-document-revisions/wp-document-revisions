@@ -78,6 +78,26 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Taxonomy key - Workflow state or EditFlow or PublishPress statuses to use.
+	 *
+	 * @var String $taxonomy_key_val
+	 *
+	 * @since 3.3
+	 */
+	public static $taxonomy_key_val = 'workflow_state';
+
+	/**
+	 * Function to return Taxonomy key.
+	 *
+	 * @return String $taxonomy_key
+	 *
+	 * @since 3.3
+	 */
+	public function taxonomy_key() {
+		return self::$taxonomy_key_val;
+	}
+
+	/**
 	 * Initiates an instance of the class and adds hooks.
 	 *
 	 * @since 0.5
@@ -93,7 +113,7 @@ class WP_Document_Revisions {
 
 		// CPT/CT.
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'init', array( &$this, 'register_ct' ), 15 ); // note: priority must be > 11 to allow for edit flow support.
+		add_action( 'wp_loaded', array( &$this, 'register_ct' ) ); // note: at wp_loaded to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
@@ -134,9 +154,9 @@ class WP_Document_Revisions {
 		// cache.
 		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
 
-		// edit flow.
-		add_action( 'init', array( &$this, 'edit_flow_support' ), 11 );
-		add_action( 'init', array( &$this, 'use_workflow_states' ), 50 );
+		// edit flow or PublishPress.
+		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
+		add_action( 'pp_module_options_loaded', array( &$this, 'publishpress_support' ) );
 
 		// load front-end features (shortcode, widgets, etc.).
 		include dirname( __FILE__ ) . '/class-wp-document-revisions-front-end.php';
@@ -1978,49 +1998,87 @@ class WP_Document_Revisions {
 
 	/**
 	 * Provides support for edit flow and disables the default workflow state taxonomy.
-	 *
-	 * @return unknown
 	 */
 	public function edit_flow_support() {
 
-		global $edit_flow;
-
 		// verify edit flow is enabled.
 		/**
-		 * Filter to switch off use of Edit_Flow capabilities.
+		 * Filter to switch off integration with Edit_Flow statuses.
 		 *
 		 * @param boolean true default value to use Edit_Flow processes if installed and active.
 		 */
 		if ( ! class_exists( 'EF_Custom_Status' ) || ! apply_filters( 'document_revisions_use_edit_flow', true ) ) {
-			return false;
+			return;
 		}
 
-		// verify proper firing order.
-		if ( ! did_action( 'ef_init' ) ) {
-			_doing_it_wrong( 'edit_flow_support', 'Cannot call before ef_init has fired', null );
-			return false;
-		}
+		global $edit_flow;
 
 		// verify custom_status is enabled.
 		if ( ! $edit_flow->custom_status->module_enabled( 'custom_status' ) ) {
-			return false;
+			return;
 		}
 
 		// prevent errors if options aren't init'd yet.
 		if ( ! isset( $edit_flow->custom_status->module->options->post_types['document'] ) ) {
-			return false;
+			return;
 		}
 
 		// check if enabled.
 		if ( 'off' === $edit_flow->custom_status->module->options->post_types['document'] ) {
-			return false;
+			return;
 		}
+
+		// update the taxonomy key.
+		self::$taxonomy_key_val = EF_Custom_Status::taxonomy_key;
 
 		// are we going to use Edit_Flow processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
 
-		return true;
+		// remove the workflow_state.
+		$this->disable_workflow_states();
+
+	}
+
+
+	/**
+	 * Provides support for publish_press_support and disables the default workflow state taxonomy.
+	 *
+	 * @since 3.2.3
+	 */
+	public function publishpress_support() {
+
+		// verify publishpress is enabled.
+		/**
+		 * Filter to switch off integration with PublishPress statuses.
+		 *
+		 * @param boolean true default value to use PublishPress processes if installed and active.
+		 */
+		if ( ! class_exists( 'PP_Custom_Status' ) || ! apply_filters( 'document_revisions_use_edit_flow', true ) ) {
+			return;
+		}
+
+		global $publishpress;
+
+		// prevent errors if options aren't init'd yet.
+		if ( ! isset( $publishpress->modules->custom_status->options->post_types['document'] ) ) {
+			return;
+		}
+
+		// check if enabled for documents.
+		if ( 'off' === $publishpress->modules->custom_status->options->post_types['document'] ) {
+			return;
+		}
+
+		// update the taxonomy key.
+		self::$taxonomy_key_val = PP_Custom_Status::taxonomy_key;
+
+		// are we going to use Edit_Flow processes if installed and active.
+		// make sure use_workflow_states returns false.
+		add_filter( 'document_use_workflow_states', '__return_false' );
+
+		// remove the workflow_state.
+		$this->disable_workflow_states();
 
 	}
 
@@ -2033,9 +2091,9 @@ class WP_Document_Revisions {
 	public function use_workflow_states() {
 
 		/**
-		 * Filter to switch off use of standard Workflow States taxonomy. For internal use.
+		 * Filter to switch off use of Edit_Flow statuses and taxonomy.
 		 *
-		 * @param boolean true default value to use standard WorkFlow States taxonomy. For internal use.
+		 * @param boolean true default value to use Edit_Flow processes if installed and active. Normally internally used.
 		 */
 		return apply_filters( 'document_use_workflow_states', true );
 
@@ -2052,7 +2110,7 @@ class WP_Document_Revisions {
 		}
 
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		remove_action( 'init', array( &$this, 'register_ct' ), 15 );
+		remove_action( 'wp_loaded', array( &$this, 'register_ct' ) );
 
 	}
 

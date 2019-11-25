@@ -91,8 +91,8 @@ class WP_Document_Revisions_Admin {
 		// cleanup.
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document' ), 10, 1 );
 
-		// edit flow support.
-		add_action( 'admin_init', array( &$this, 'disable_workflow_states' ), 20 );
+		// edit flow or publishpress support.
+		add_action( 'admin_init', array( &$this, 'disable_workflow_states' ) );
 
 		// admin css.
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
@@ -1010,20 +1010,21 @@ class WP_Document_Revisions_Admin {
 		// Only applies to document post type.
 		if ( 'document' === $typenow ) {
 
-			// Filter by workflow state/edit flow state.
-			$tax_slug = 'workflow_state';
+			// Filter by workflow state/edit flow/publishpress state.
+			$tax_slug = self::$parent->taxonomy_key();
+			$so_all   = __( 'All workflow states', 'wp-document-revisions' );
 			if ( $this->disable_workflow_states() ) {
-				$tax_slug = EF_Custom_Status::taxonomy_key;
+				$soa = __( 'All statuses', 'wp-document-revisions' );
 			}
 			$args = array(
 				'name'            => 'workflow_state',
-				'show_option_all' => __( 'All workflow states', 'wp-document-revisions' ),
+				'show_option_all' => $so_all,
 				'hide_empty'      => false,
 				'taxonomy'        => $tax_slug,
 			);
 
 			// set selected workflow state.
-			if ( isset( $wp_query->query[ $tax_slug ] ) ) {
+			if ( isset( $wp_query->query[ $tax_slug ] ) && '' !== $wp_query->query[ $tax_slug ] ) {
 				$term_id = $wp_query->query[ $tax_slug ];
 				if ( ! is_numeric( $term_id ) && '0' !== $term_id ) {
 					$term    = get_term_by( 'slug', $wp_query->query[ $tax_slug ], $tax_slug );
@@ -1032,7 +1033,7 @@ class WP_Document_Revisions_Admin {
 				$args['selected'] = $term_id;
 				wp_dropdown_categories( $args );
 			} else {
-				if ( taxonomy_exists( 'workflow_state' ) && ! $this->disable_workflow_states() ) {
+				if ( taxonomy_exists( $tax_slug ) ) {
 					wp_dropdown_categories( $args );
 				}
 			}
@@ -1059,11 +1060,9 @@ class WP_Document_Revisions_Admin {
 	public function convert_id_to_term( $query ) {
 		global $pagenow, $typenow;
 		if ( 'edit.php' === $pagenow && 'document' === $typenow ) {
-			$tax_slug = 'workflow_state';
-			if ( $this->disable_workflow_states() ) {
-				$tax_slug = EF_Custom_Status::taxonomy_key;
-			}
-			$var = &$query->query_vars[ $tax_slug ];
+			// get the appropriate taxonomy key.
+			$tax_slug = self::$parent->taxonomy_key();
+			$var      = &$query->query_vars[ $tax_slug ];
 			if ( isset( $var ) && is_numeric( $var ) && '0' !== $var ) {
 				$term = get_term_by( 'id', $var, $tax_slug );
 				$var  = $term->slug;
@@ -1521,16 +1520,6 @@ class WP_Document_Revisions_Admin {
 				}
 			}
 		}
-	}
-
-
-	/**
-	 * Provides support for edit flow and disables the default workflow state taxonomy.
-	 *
-	 * @since 1.1
-	 */
-	public function edit_flow_admin_support() {
-		_deprecated_function( 'edit_flow_admin_support', '1.3.2 of WP Document Revisions', 'disable_workflow_states' );
 	}
 
 

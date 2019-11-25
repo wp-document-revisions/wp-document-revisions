@@ -118,7 +118,7 @@ Filters the HTTP headers sent when a file is served through WP Document Revision
 
 In: class-wp-document-revisions.php
 
-Filter to switch off use of Edit_Flow capabilities.
+Filter to switch off integration with Edit_Flow/PublishPress statuses.
 
 ## Filter document_rewrite_rules
 
