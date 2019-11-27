@@ -4,7 +4,7 @@ Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 
 == Description ==
 
@@ -101,6 +101,15 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 
 == Changelog ==
+
+= 3.2.4 =
+
+* Address technical debt for WP Document Standards  (#192) @NeilWJames
+* On plugin activation, check that the user has edit_documents capability. If not, a warning message will be output that the menu may be incorrect. (#180) @NeilWJames
+* PHPCS review (#179) @NeilWJames
+* Bump phpunit/phpunit from 8.2.5 to 8.3.4 (#177) @dependabot-preview
+* Addresses phpunit and toolset versions and prepare for future release (#174) @NeilWJames
+* Version 3.2.2 gives an "property of non-object" at line 1403 on load (#161) @NeilWJames
 
 = 3.2.3 =
 

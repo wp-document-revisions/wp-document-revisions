@@ -1,9 +1,10 @@
 <?php
+
 /**
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 3.2.3
+Version: 3.2.4
 Author: Ben Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -36,16 +37,16 @@ Domain Path: /languages
  *
  *  @copyright 2011-2019
  *  @license GPL v3
- *  @version 3.2.3
+ *  @version 3.2.4
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
-require_once dirname( __FILE__ ) . '/includes/class-wp-document-revisions.php';
+require_once dirname(__FILE__) . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
 global $wpdr;
 $wpdr = new WP_Document_Revisions();
-require_once dirname( __FILE__ ) . '/includes/template-functions.php';
+require_once dirname(__FILE__) . '/includes/template-functions.php';
 
 // Activation hooks must be relative to the main plugin file.
-register_activation_hook( __FILE__, array( &$wpdr, 'activation_hook' ) );
+register_activation_hook(__FILE__, array(&$wpdr, 'activation_hook'));
