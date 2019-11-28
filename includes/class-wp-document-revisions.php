@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Main class for WP Document Revisions.
  *
@@ -543,7 +542,7 @@ class WP_Document_Revisions {
 	 * @param object|int $document_or_attachment document or attachment.
 	 * @return string the extension to the latest revision
 	 */
-	public function get_file_type( $document_or_attachment = '' ) 	{
+	public function get_file_type( $document_or_attachment = '' ) {
 		if ( '' === $document_or_attachment ) {
 			global $post;
 			$document_or_attachment = $post;
@@ -1342,7 +1341,7 @@ class WP_Document_Revisions {
 	 * @param int    $id attachment ID.
 	 * @return string empty string
 	 */
-	public function attachment_link_filter( $link, $id ) 	{
+	public function attachment_link_filter( $link, $id ) {
 
 		if ( ! $this->verify_post_type( $id ) ) {
 			return $link;
