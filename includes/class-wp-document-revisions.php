@@ -737,15 +737,13 @@ class WP_Document_Revisions {
 	 * Retrieves all revisions for a given post (including the current post)
 	 * Workaround for #16215 to ensure revision author is accurate
 	 * http://core.trac.wordpress.org/ticket/16215.
+	 * Workaround removed as a) 16215 fixed 6 years ago and b) gives erroneous results
 	 *
 	 * @since 1.0
 	 * @param int $post_id the post ID.
 	 * @return array array of post objects
 	 */
 	public function get_revisions( $post_id ) {
-		// Revision authors are actually shifted by one
-		// This moves each revision author up one, and then uses the post_author as the initial revision
-		// get the actual post.
 		$document = get_post( $post_id );
 
 		if ( ! $document ) {
@@ -760,32 +758,26 @@ class WP_Document_Revisions {
 		// correct the modified date.
 		$document->post_date = gmdate( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $post_id ) );
 
-		// grab the post author.
-		$post_author = $document->post_author;
-
 		// fix for Quotes in the most recent post because it comes from get_post.
 		$document->post_excerpt = html_entity_decode( $document->post_excerpt );
 
-		// get revisions, and prepend the post.
-		$revs = wp_get_post_revisions(
+		// get revisions, remove autosaves, and prepend the post.
+		$get_revs = wp_get_post_revisions(
 			$post_id,
 			array(
 				'order' => 'DESC',
 			)
 		);
-		array_unshift( $revs, $document );
 
-		// loop through revisions.
-		foreach ( $revs as $id => &$rev ) {
-
-			if ( $id < count( $revs ) - 1 ) {
-				// if this is anything other than the first revision, shift author 1.
-				$rev->post_author = $revs[ $id + 1 ]->post_author;
-			} else {
-				// if last revision, get the post author.
-				$rev->post_author = $post_author;
+		$revs     = array();
+		$post_rev = $post_id . '-autosave';
+		foreach ( $get_revs as $id => &$get_rev ) {
+			if ( false === strpos( $get_rev->post_name, $post_rev ) ) {
+				// not an autosave.
+				$revs[ $id ] = $get_rev;
 			}
 		}
+		array_unshift( $revs, $document );
 
 		wp_cache_set( $post_id, $revs, 'document_revisions' );
 
@@ -845,9 +837,14 @@ class WP_Document_Revisions {
 
 		$i = 1;
 
-		$output = array();
+		// ignore autosaves keeping only real revisions.
+		$output   = array();
+		$post_rev = $post_id . '-autosave';
 		foreach ( $revs as $rev ) {
-			$output[ $i++ ] = $rev->ID;
+			if ( false === strpos( $rev->post_name, $post_rev ) ) {
+				// not an autosave.
+				$output[ $i++ ] = $rev->ID;
+			}
 		}
 
 		if ( ! empty( $output ) ) {
