@@ -591,7 +591,7 @@ class WP_Document_Revisions {
 	 */
 	public function inject_rules() {
 		global $wp_rewrite;
-		$wp_rewrite->add_rewrite_tag( '%document%', '([^.]+)\.[A-Za-z0-9]{3,4}?', 'document=' );
+		$wp_rewrite->add_rewrite_tag( '%document%', '([^.]+)\.[A-Za-z0-9]{1,7}?', 'document=' );
 	}
 
 
