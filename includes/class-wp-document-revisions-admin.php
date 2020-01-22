@@ -397,7 +397,7 @@ class WP_Document_Revisions_Admin {
 			<?php
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			// translators: %1$s is the post date in words, %2$s is the post date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', null, $post->ID ) ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
+			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			</a></em>
@@ -463,7 +463,7 @@ class WP_Document_Revisions_Admin {
 			}
 			?>
 			<tr>
-				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_date ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_date ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_date ) ) ); ?></a></td>
+				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_date ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_date ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_date_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_doc && $post->ID !== $revision->ID ) { ?>
@@ -1528,7 +1528,6 @@ class WP_Document_Revisions_Admin {
 	 * use filter `document_use_workflow_states` to disable.
 	 */
 	public function disable_workflow_states() {
-
 		if ( self::$parent->use_workflow_states() ) {
 			return false;
 		}
@@ -1632,7 +1631,7 @@ class WP_Document_Revisions_Admin {
 				<?php
 				printf(
 					esc_html( $format_string ),
-					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ),
+					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ), time() ) ),
 					esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
 					esc_html( ucwords( $document->post_status ) )
 				);
