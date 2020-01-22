@@ -160,6 +160,10 @@ class WP_Document_Revisions {
 		// don't leak summary information if user can't access admin pages.
 		add_filter( 'get_the_excerpt', array( &$this, 'empty_excerpt_return' ), 10, 2 );
 
+		// no next/previous navigation links (would appear on password entry page).
+		add_filter( 'get_next_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
+		add_filter( 'get_previous_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
+
 		// load front-end features (shortcode, widgets, etc.).
 		include dirname( __FILE__ ) . '/class-wp-document-revisions-front-end.php';
 		include dirname( __FILE__ ) . '/class-wp-document-revisions-recently-revised-widget.php';
@@ -2281,6 +2285,35 @@ class WP_Document_Revisions {
 		}
 
 		return $excerpt;
+	}
+
+
+	/**
+	 * Filters the WHERE clause in the SQL for an adjacent post query.
+	 *
+	 * Add 1=0 test to WHERE clause for documents.
+	 *
+	 * @since 3.4
+	 *
+	 * @param string  $where          The `WHERE` clause in the SQL.
+	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
+	 * @param array   $excluded_terms Array of excluded term IDs.
+	 * @param string  $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
+	 * @param WP_Post $post           WP_Post object.
+	 *
+	 * @return string
+	 */
+	public function suppress_adjacent_doc( $where, $in_same_term, $excluded_terms, $taxonomy, $post ) {
+		// Leakage arises on queries with the same term.
+		if ( ! $in_same_term ) {
+			return $where;
+		}
+
+		if ( ! $this->verify_post_type( $post->ID ) ) {
+			return $where;
+		}
+
+		return $where . ' AND 1 = 0 ';
 	}
 
 
