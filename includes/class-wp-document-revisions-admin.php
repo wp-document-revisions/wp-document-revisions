@@ -540,8 +540,8 @@ class WP_Document_Revisions_Admin {
 			return $this->document_upload_dir();
 		}
 
-		// if the path is not absolute, assume it's relative to ABSPATH.
-		if ( '/' !== substr( $dir, 0, 1 ) ) {
+		// if the path is not absolute (Linux and Windows tests), assume it's relative to ABSPATH.
+		if ( '/' !== substr( $dir, 0, 1 ) && false === strpos( $dir, ':' ) ) {
 			$dir = ABSPATH . $dir;
 		}
 
