@@ -50,6 +50,16 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Output message to log.
+	 *
+	 * @param string $text text to output.
+	 */
+	public function consoleLog( $text ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+			fwrite( STDERR, $text . "\n" );
+	}
+
+	/**
 	 * Tests that a given URL actually returns the right file.
 	 *
 	 * @param string $url to check.
@@ -117,6 +127,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_public_document() {
 		global $wpdr;
+
+		$this->consoleLog( 'Test_WP_Document_Revisions_Rewrites - Start' );
 
 		// make new public document.
 		$tdr    = new Test_WP_Document_Revisions();
