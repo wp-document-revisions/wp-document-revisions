@@ -1011,10 +1011,11 @@ class WP_Document_Revisions_Admin {
 		if ( 'document' === $typenow ) {
 
 			// Filter by workflow state/edit flow/publishpress state.
+			// Note that the name is always workflow state as using post_status will invoke edfault status handling.
 			$tax_slug = self::$parent->taxonomy_key();
 			$so_all   = __( 'All workflow states', 'wp-document-revisions' );
 			if ( $this->disable_workflow_states() ) {
-				$soa = __( 'All statuses', 'wp-document-revisions' );
+				$so_all = __( 'All statuses', 'wp-document-revisions' );
 			}
 			$args = array(
 				'name'            => 'workflow_state',
@@ -1024,8 +1025,8 @@ class WP_Document_Revisions_Admin {
 			);
 
 			// set selected workflow state.
-			if ( isset( $wp_query->query[ $tax_slug ] ) && '' !== $wp_query->query[ $tax_slug ] ) {
-				$term_id = $wp_query->query[ $tax_slug ];
+			if ( isset( $wp_query->query['workflow_state'] ) && '' !== $wp_query->query['workflow_state'] ) {
+				$term_id = $wp_query->query['workflow_state'];
 				if ( ! is_numeric( $term_id ) && '0' !== $term_id ) {
 					$term    = get_term_by( 'slug', $wp_query->query[ $tax_slug ], $tax_slug );
 					$term_id = $term->term_id;
@@ -1055,17 +1056,24 @@ class WP_Document_Revisions_Admin {
 	/**
 	 * Converts id to term used in filter dropdown.
 	 *
+	 * May need to manipulate workflow_state into taxonomy slug for EF/PP.
+	 *
 	 * @param Object $query the WP_Query object.
 	 */
 	public function convert_id_to_term( $query ) {
 		global $pagenow, $typenow;
 		if ( 'edit.php' === $pagenow && 'document' === $typenow ) {
-			// get the appropriate taxonomy key.
+			// parameter sent using 'workflow_state', look up with the appropriate taxonomy key.
+			$var      = &$query->query_vars['workflow_state'];
 			$tax_slug = self::$parent->taxonomy_key();
-			$var      = &$query->query_vars[ $tax_slug ];
 			if ( isset( $var ) && is_numeric( $var ) && '0' !== $var ) {
 				$term = get_term_by( 'id', $var, $tax_slug );
 				$var  = $term->slug;
+			}
+			if ( 'workflow_state' !== $tax_slug ) {
+				// need to query the correct taxonomy.
+				$query->query_vars[ $tax_slug ]      = $query->query_vars['workflow_state'];
+				$query->query_vars['workflow_state'] = 0;
 			}
 		}
 	}
@@ -1401,11 +1409,6 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function filter_media_where( $where ) {
 		global $wpdb;
-
-		// fix for mysql column ambiguity.
-		// see http://core.trac.wordpress.org/ticket/19779 and http://core.trac.wordpress.org/ticket/20193.
-		$where = str_replace( ' post_parent < 1', " {$wpdb->posts}.post_parent < 1", $where );
-		$where = str_replace( '(post_mime_type LIKE', "({$wpdb->posts}.post_mime_type LIKE", $where );
 
 		$where .= " AND ( wpdr_post_parent.post_type IS NULL OR wpdr_post_parent.post_type != 'document' )";
 

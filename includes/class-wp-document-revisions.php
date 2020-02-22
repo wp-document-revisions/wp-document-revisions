@@ -112,7 +112,7 @@ class WP_Document_Revisions {
 
 		// CPT/CT.
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'wp_loaded', array( &$this, 'register_ct' ) ); // note: at wp_loaded to allow for edit flow/publishpress support.
+		add_action( 'init', array( &$this, 'register_ct' ), 99 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
@@ -1977,12 +1977,79 @@ class WP_Document_Revisions {
 		// update the taxonomy key.
 		self::$taxonomy_key_val = EF_Custom_Status::taxonomy_key;
 
-		// are we going to use Edit_Flow processes if installed and active.
+		// EF doesn't add Status to Document view so need to add it.
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_post_status_column' ) );
+		add_action( 'manage_document_posts_custom_column', array( &$this, 'post_status_column_cb' ), 10, 2 );
+
+		// we are going to use Edit_Flow processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
 
 		// remove the workflow_state.
 		$this->disable_workflow_states();
+	}
+
+
+	/**
+	 * Adds EditFlow support for post status to the admin table.
+	 *
+	 * @since 3.3
+	 * @param array $defaults the column chosen of the all documents list.
+	 * @return array the updated column list.
+	 */
+	public function add_post_status_column( $defaults ) {
+		// get checkbox and title.
+		$output = array_slice( $defaults, 0, 2 );
+
+		// splice in workflow state.
+		$output['status'] = __( 'Status', 'wp-document-revisions' );
+
+		// get the rest of the columns.
+		$output = array_merge( $output, array_slice( $defaults, 2 ) );
+
+		return $output;
+	}
+
+
+	/**
+	 * Adds EditFlow support for post status to the admin table (when using EF Custom statuses).
+	 *
+	 * @since 3.3
+	 * @param string $column_name the column name of the all documents list to be populated.
+	 * @param string $post_id     the post id of the all documents list to be populated.
+	 */
+	public function post_status_column_cb( $column_name, $post_id ) {
+
+		// verify column.
+		if ( 'status' !== $column_name || ! $this->verify_post_type( $post_id ) ) {
+			return;
+		}
+
+		$wp_status = array(
+			'publish' => __( 'Published', 'wp-document-revisions' ),
+			'draft'   => __( 'Draft', 'wp-document-revisions' ),
+			'future'  => __( 'Scheduled', 'wp-document-revisions' ),
+			'private' => __( 'Private', 'wp-document-revisions' ),
+			'pending' => __( 'Pending Review', 'wp-document-revisions' ),
+			'trash'   => __( 'Trash', 'wp-document-revisions' ),
+		);
+
+		$post   = get_post( $post_id );
+		$status = $post->post_status;
+		// Try builtin first.
+		if ( array_key_exists( $status, $wp_status ) ) {
+			echo esc_html( $wp_status[ $status ] );
+			return;
+		}
+
+		// Try to see if EF Custom Status.
+		$res = get_term_by( 'slug', $status, self::$taxonomy_key_val );
+		if ( ! $res ) {
+			// not found.
+			echo esc_html( $status );
+		} else {
+			echo esc_html( $res->name );
+		}
 	}
 
 
@@ -2017,7 +2084,9 @@ class WP_Document_Revisions {
 		// update the taxonomy key.
 		self::$taxonomy_key_val = PP_Custom_Status::taxonomy_key;
 
-		// are we going to use Edit_Flow processes if installed and active.
+		// PP adds the Post Status column so nothing to do.
+
+		// we are going to use PP processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
 
@@ -2050,7 +2119,7 @@ class WP_Document_Revisions {
 		}
 
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		remove_action( 'wp_loaded', array( &$this, 'register_ct' ) );
+		remove_action( 'init', array( &$this, 'register_ct' ), 99 );
 	}
 
 
@@ -2174,7 +2243,7 @@ class WP_Document_Revisions {
 	 * @return String the modified query
 	 */
 	public function term_count_query_filter( $query ) {
-		return str_replace( "post_status = 'publish'", "post_status != 'trash'", $query );
+		return str_replace( "= 'publish'", "!= 'trash'", $query );
 	}
 
 
@@ -2290,7 +2359,7 @@ class WP_Document_Revisions {
 	 *
 	 * Add 1=0 test to WHERE clause for documents.
 	 *
-	 * @since 3.4
+	 * @since 3.3
 	 *
 	 * @param string  $where          The `WHERE` clause in the SQL.
 	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
