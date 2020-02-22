@@ -596,6 +596,21 @@ class WP_Document_Revisions {
 
 
 	/**
+	 * Filter to remove previous rewrite rules.
+	 *
+	 * @since 3.3
+	 * @param string $key key of rewrite rule.
+	 */
+	private function remove_old_rules( $key ) {
+		$slug = $this->document_slug();
+		if ( 0 === strpos( $key, $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)' ) ) {
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
 	 * Adds document rewrite rules to the rewrite array.
 	 *
 	 * @since 0.5
@@ -604,6 +619,9 @@ class WP_Document_Revisions {
 	 */
 	public function revision_rewrite( $rules ) {
 		$slug = $this->document_slug();
+
+		// remove any previous versions of file matches (will be added back if same).
+		$rules = array_filter( $rules, array( $this, 'remove_old_rules' ), ARRAY_FILTER_USE_KEY );
 
 		$my_rules = array();
 
