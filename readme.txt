@@ -4,7 +4,7 @@ Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 3.2.4
+Stable tag: 3.3.0
 
 == Description ==
 
@@ -95,12 +95,37 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 == Useful plugins and tools ==
 
-* [Members](https://wordpress.org/plugins/members/)
-* [Edit Flow](https://editflow.org)
-* [Simple Taxonomy](https://wordpress.org/plugins/simple-taxonomy/)
+= Permissions management =
 
+* [User Role Editor by Members – Best User, Role and Capability Management Plugin for WordPress](https://wordpress.org/plugins/members/)
+
+	(Previously named Members)
+
+= Taxonomy management =
+
+* [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+
+= Document workflow management =
+
+* [Edit Flow](https://wordpress.org/plugins/edit-flow/)
+* [PublishPress](https://wordpress.org/plugins/publishpress/)
 
 == Changelog ==
+
+= 3.3.0 =
+
+* NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
+* NEW: Integrate with either Edit-flow or PublishPress plugins
+* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
+* FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
+* FIX: Suppress excerpt output in feeds to stop information leakage
+* FIX: Password-protected document can leak information (by showing next/previous)
+* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Fix error in time difference display when client and server are in different time zones
+* FIX: Document directory incorrectly test for Absolute/Relative entry on Windows implementations
+* FIX: Review documentation.
+  (#208) @NeilWJames
 
 = 3.2.4 =
 

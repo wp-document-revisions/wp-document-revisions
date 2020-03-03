@@ -82,7 +82,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $taxonomy_key_val
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 */
 	public static $taxonomy_key_val = 'workflow_state';
 
@@ -91,7 +91,7 @@ class WP_Document_Revisions {
 	 *
 	 * @return String $taxonomy_key
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 */
 	public function taxonomy_key() {
 		return self::$taxonomy_key_val;
@@ -112,10 +112,10 @@ class WP_Document_Revisions {
 
 		// CPT/CT.
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'init', array( &$this, 'register_ct' ), 99 ); // note: low priority to allow for edit flow/publishpress support.
+		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
-		add_action( 'wp_loaded', array( &$this, 'register_term_count_cb' ), 100, 1 );
+		add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
 
 		// rewrites and permalinks.
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
@@ -165,9 +165,14 @@ class WP_Document_Revisions {
 		add_filter( 'get_previous_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
 
 		// load front-end features (shortcode, widgets, etc.).
-		include dirname( __FILE__ ) . '/class-wp-document-revisions-front-end.php';
-		include dirname( __FILE__ ) . '/class-wp-document-revisions-recently-revised-widget.php';
-		new WP_Document_Revisions_Front_End( $this );
+		include __DIR__ . '/class-wp-document-revisions-front-end.php';
+		include __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
+
+		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
+		global $wpdr_fe, $wpdr_widget;
+
+		$wpdr_fe     = new WP_Document_Revisions_Front_End( $this );
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 	}
 
 	/**
@@ -212,7 +217,7 @@ class WP_Document_Revisions {
 	 * Must be done early on init because they need to be in place when register_cpt is called.
 	 */
 	public function i18n() {
-		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( dirname( __FILE__ ) ) ) . '/languages/' );
+		load_plugin_textdomain( 'wp-document-revisions', false, plugin_basename( dirname( __DIR__ ) ) . '/languages/' );
 	}
 
 
@@ -255,7 +260,7 @@ class WP_Document_Revisions {
 			return;
 		}
 
-		include dirname( __FILE__ ) . '/class-wp-document-revisions-admin.php';
+		include __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 	}
 
@@ -598,7 +603,7 @@ class WP_Document_Revisions {
 	/**
 	 * Filter to remove previous rewrite rules.
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 * @param string $key key of rewrite rule.
 	 */
 	private function remove_old_rules( $key ) {
@@ -651,7 +656,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Tell's WP to recognize document query vars.
+	 * Tells WP to recognize document query vars.
 	 *
 	 * @since 0.5
 	 * @param array $vars the query vars.
@@ -1562,7 +1567,7 @@ class WP_Document_Revisions {
 		remove_filter( 'get_the_excerpt', 'twentyeleven_custom_excerpt_more' );
 
 		// include the feed and then die.
-		load_template( dirname( __FILE__ ) . '/revision-feed.php' );
+		load_template( __DIR__ . '/revision-feed.php' );
 	}
 
 
@@ -1999,6 +2004,9 @@ class WP_Document_Revisions {
 		add_filter( 'manage_document_posts_columns', array( &$this, 'add_post_status_column' ) );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'post_status_column_cb' ), 10, 2 );
 
+		// workflow_state will be used as a query_var, but is not one.
+		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
+
 		// we are going to use Edit_Flow processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
@@ -2011,7 +2019,7 @@ class WP_Document_Revisions {
 	/**
 	 * Adds EditFlow support for post status to the admin table.
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 * @param array $defaults the column chosen of the all documents list.
 	 * @return array the updated column list.
 	 */
@@ -2032,7 +2040,7 @@ class WP_Document_Revisions {
 	/**
 	 * Adds EditFlow support for post status to the admin table (when using EF Custom statuses).
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 * @param string $column_name the column name of the all documents list to be populated.
 	 * @param string $post_id     the post id of the all documents list to be populated.
 	 */
@@ -2070,6 +2078,17 @@ class WP_Document_Revisions {
 		}
 	}
 
+	/**
+	 * Tells WP to recognize workflow_state as a query vars.
+	 *
+	 * @since 3.3.0
+	 * @param array $vars the query vars.
+	 * @return array the modified query vars
+	 */
+	public function add_qv_workflow_state( $vars ) {
+		$vars[] = 'workflow_state';
+		return $vars;
+	}
 
 	/**
 	 * Provides support for publish_press_support and disables the default workflow state taxonomy.
@@ -2104,6 +2123,9 @@ class WP_Document_Revisions {
 
 		// PP adds the Post Status column so nothing to do.
 
+		// workflow_state will be used as a query_var, but is not one.
+		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
+
 		// we are going to use PP processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
@@ -2137,7 +2159,7 @@ class WP_Document_Revisions {
 		}
 
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		remove_action( 'init', array( &$this, 'register_ct' ), 99 );
+		remove_action( 'init', array( &$this, 'register_ct' ), 2000 );
 	}
 
 
@@ -2351,7 +2373,7 @@ class WP_Document_Revisions {
 	 * Return an empty excerpt for documents on front end views to avoid leaking
 	 * revision notes (except if the user could see them by editting the post).
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 * @param string  $excerpt The original excerpt text associated with a post.
 	 * @param WP_Post $post    The post object.
 	 *
@@ -2377,7 +2399,7 @@ class WP_Document_Revisions {
 	 *
 	 * Add 1=0 test to WHERE clause for documents.
 	 *
-	 * @since 3.3
+	 * @since 3.3.0
 	 *
 	 * @param string  $where          The `WHERE` clause in the SQL.
 	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.

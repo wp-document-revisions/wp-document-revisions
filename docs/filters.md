@@ -4,6 +4,12 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
+## Filter document_block_taxonomies
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the Document taxonomies (allowing users to select the first three for the block widget.
+
 ## Filter document_caps
 
 In: class-wp-document-revisions.php

@@ -63,7 +63,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'manage_document_posts_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
-		add_filter( 'parse_query', array( &$this, 'convert_id_to_term' ) );
+		add_filter( 'parse_query', array( &$this, 'convert_workflow_state_to_post_status' ) );
 
 		// settings.
 		add_action( 'admin_init', array( &$this, 'settings_fields' ) );
@@ -442,7 +442,8 @@ class WP_Document_Revisions_Admin {
 				<?php
 				if ( $can_edit_doc ) {
 					?>
-<th><?php esc_html_e( 'Actions', 'wp-document-revisions' ); ?></th><?php } ?>
+					<th><?php esc_html_e( 'Actions', 'wp-document-revisions' ); ?></th>
+				<?php } ?>
 			</tr>
 		<?php
 
@@ -1006,12 +1007,12 @@ class WP_Document_Revisions_Admin {
 	 * Allow some filtering of the All Documents list.
 	 */
 	public function filter_documents_list() {
-		global $typenow, $wp_query;
+		global $typenow;
 		// Only applies to document post type.
 		if ( 'document' === $typenow ) {
-
 			// Filter by workflow state/edit flow/publishpress state.
-			// Note that the name is always workflow state as using post_status will invoke edfault status handling.
+			// Note that the name is always workflow state as using post_status will invoke default status handling.
+			// However it may be different on coming back.
 			$tax_slug = self::$parent->taxonomy_key();
 			$so_all   = __( 'All workflow states', 'wp-document-revisions' );
 			if ( $this->disable_workflow_states() ) {
@@ -1020,60 +1021,39 @@ class WP_Document_Revisions_Admin {
 			$args = array(
 				'name'            => 'workflow_state',
 				'show_option_all' => $so_all,
-				'hide_empty'      => false,
 				'taxonomy'        => $tax_slug,
+				'hide_empty'      => false,
+				'value_field'     => 'slug',
+				'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_STRING ),
 			);
-
-			// set selected workflow state.
-			if ( isset( $wp_query->query['workflow_state'] ) && '' !== $wp_query->query['workflow_state'] ) {
-				$term_id = $wp_query->query['workflow_state'];
-				if ( ! is_numeric( $term_id ) && '0' !== $term_id ) {
-					$term    = get_term_by( 'slug', $wp_query->query[ $tax_slug ], $tax_slug );
-					$term_id = $term->term_id;
-				}
-				$args['selected'] = $term_id;
-				wp_dropdown_categories( $args );
-			} else {
-				if ( taxonomy_exists( $tax_slug ) ) {
-					wp_dropdown_categories( $args );
-				}
-			}
+			wp_dropdown_categories( $args );
 
 			// author/owner filtering.
 			$args = array(
 				'name'            => 'author',
 				'show_option_all' => __( 'All owners', 'wp-document-revisions' ),
+				'value_field'     => 'slug',
+				'selected'        => filter_input( INPUT_GET, 'author', FILTER_SANITIZE_STRING ),
+				'orderby'         => 'name',
+				'order'           => 'ASC',
 			);
-			// phpcs:disable WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET['author'] ) ) {
-				$args['selected'] = sanitize_text_field( wp_unslash( $_GET['author'] ) );
-			}
-			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			wp_dropdown_users( $args );
 		}
 	}
 
 	/**
-	 * Converts id to term used in filter dropdown.
+	 * Need to manipulate workflow_state into taxonomy slug for EF/PP.
 	 *
-	 * May need to manipulate workflow_state into taxonomy slug for EF/PP.
+	 * Only invoked if taxonomy slug needs to be changed.
 	 *
 	 * @param Object $query the WP_Query object.
 	 */
-	public function convert_id_to_term( $query ) {
+	public function convert_workflow_state_to_post_status( $query ) {
 		global $pagenow, $typenow;
 		if ( 'edit.php' === $pagenow && 'document' === $typenow ) {
-			// parameter sent using 'workflow_state', look up with the appropriate taxonomy key.
-			$var      = &$query->query_vars['workflow_state'];
-			$tax_slug = self::$parent->taxonomy_key();
-			if ( isset( $var ) && is_numeric( $var ) && '0' !== $var ) {
-				$term = get_term_by( 'id', $var, $tax_slug );
-				$var  = $term->slug;
-			}
-			if ( 'workflow_state' !== $tax_slug ) {
-				// need to query the correct taxonomy.
-				$query->query_vars[ $tax_slug ]      = $query->query_vars['workflow_state'];
-				$query->query_vars['workflow_state'] = 0;
+			if ( 'workflow_state' !== self::$parent->taxonomy_key() && array_key_exists( 'workflow_state', $query->query_vars ) ) {
+				// parameter sent using 'workflow_state', look up with the appropriate taxonomy key.
+				$query->query_vars[ self::$parent->taxonomy_key() ] = $query->query_vars['workflow_state'];
 			}
 		}
 	}
@@ -1372,7 +1352,7 @@ class WP_Document_Revisions_Admin {
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		wp_enqueue_script(
 			'wp_document_revisions',
-			plugins_url( '/js/wp-document-revisions' . $suffix . '.js', dirname( __FILE__ ) ),
+			plugins_url( '/js/wp-document-revisions' . $suffix . '.js', __DIR__ ),
 			array( 'jquery' ),
 			$wpdr->version,
 			false

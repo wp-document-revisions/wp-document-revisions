@@ -78,7 +78,7 @@ Yes. You can use the [Simple Taxonomy plugin](https://wordpress.org/plugins/simp
 
 ### Can I put my documents in folders?
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy](https://wordpress.org/plugins/simple-taxonomy/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
 
 ### What if I want even more control over my workflow?
 
@@ -96,21 +96,13 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 
 ### How do I use the documents shortcode?
 
-In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts *most* [Standard WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`. Specifically, the shortcode accepts: `author__in`, `author__not_in`, `author_name`, `author`, `cat`, `category__and`, `category__in`, `category__not_in`, `category_name`, `date_query`, `day`, `has_password`, `hour`, `m`, `meta_compare`, `meta_key`, `meta_query`, `meta_value_num`, `meta_value`, `minute`, `monthnum`, `name`, `numberposts`, `p`, `page_id`, `pagename`, `post__in`, `post__not_in`, `post_name__in`, `post_parent__in`, `post_parent__not_in`, `post_parent`, `post_password`, `post_status`, `s`, `second`, `tag__and`, `tag__in`, `tag__not_in`, `tag_id`, `tag_slug__and`, `tag_slug__in`, `tag`, `tax_query`, `title`, `w` and `year`.
-
-It is also possible to add formatting parameters: `show_edit` that will add a button next to each documument that the user can edit to edit the document; and `new_tab` that will open the document in a new browser tab rather than in the current one. Both of these are boolean variables, but can be simply entered without a value (with default value true). 
-
-By default, administrators will have the show_edit implicitly active.
- 
-If you're using a custom taxonomy, you can add the taxonomy name as a parameter in your shortcode. For example, if your custom taxonomy is called "document_categories", you can write insert a shortcode like this:
-
-`[documents numberposts="6" document_categories="category-name"]`
-
-(Where "category-name" is the taxonomy's slug)
+In a post or page, simply type `[documents]` to display a list of documents. 
+More information is on [this](./shortcodes.md) page.
 
 ### How do I use the document revisions shortcode?
 
-In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. You can find the ID in the URL of the edit document page. To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+More information is on [this](./shortcodes.md) page.
 
 ### How do I use the recently revised documents widget?
 
