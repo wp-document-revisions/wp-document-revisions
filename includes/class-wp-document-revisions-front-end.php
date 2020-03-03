@@ -247,8 +247,10 @@ class WP_Document_Revisions_Front_End {
 
 		// allow querying by custom taxonomy.
 		$taxs = $this->get_taxonomy_details();
-		foreach ( $taxs['taxos'] as $tax ) {
-			$defaults[ $tax['query'] ] = null;
+		if ( $taxs['stmax'] > 0 ) {
+			foreach ( $taxs['taxos'] as $tax ) {
+				$defaults[ $tax['query'] ] = null;
+			}
 		}
 
 		// show_edit and new_tab may be entered without name (implies value true)
@@ -610,18 +612,18 @@ class WP_Document_Revisions_Front_End {
 
 		if ( false === $taxonomy_details ) {
 			// build and create cache entry. Get name only to allow easier filtering.
-			$taxonomies = get_object_taxonomies( 'document' );
-			sort( $taxonomies );
+			$taxos = get_object_taxonomies( 'document' );
+			sort( $taxos );
 
 			/**
 			 * Filters the Document taxonomies (allowing users to select the first three for the block widget.
 			 *
-			 * @param array $taxonomies taxonomies available for selection in the list block.
+			 * @param array $taxos taxonomies available for selection in the list block.
 			 */
-			$taxonomies = apply_filters( 'document_block_taxonomies', $taxonomies );
+			$taxos = apply_filters( 'document_block_taxonomies', $taxos );
 
 			$taxonomy_details = array();
-			foreach ( $taxonomies as $taxonomy ) {
+			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
 				$terms[0] = array(
@@ -668,7 +670,7 @@ class WP_Document_Revisions_Front_End {
 				'taxos' => $taxonomy_details,
 			);
 
-			wp_cache_set( 'wpdr_document_taxonomies', $taxonomies, '', 6 );
+			wp_cache_set( 'wpdr_document_taxonomies', $taxonomies, '', 300 );
 		}
 
 		return $taxonomy_details;
