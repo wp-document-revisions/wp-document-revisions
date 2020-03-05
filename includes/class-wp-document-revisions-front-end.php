@@ -709,7 +709,7 @@ class WP_Document_Revisions_Front_End {
 				'taxos'   => $taxonomy_elements,
 			);
 
-			wp_cache_set( 'wpdr_document_taxonomies', $taxonomy_details, '', 5 );
+			wp_cache_set( 'wpdr_document_taxonomies', $taxonomy_details, '', ( WP_DEBUG ? 10 : 120 ) );
 		}
 
 		return $taxonomy_details;
