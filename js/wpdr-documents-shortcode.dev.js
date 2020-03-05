@@ -247,7 +247,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				type: 'block',
 				blocks: ['core/shortcode'],
 				isMatch: function( {text} ) {
-					return /^\[?documents\s/.test(text);
+					return /^\[?documents\b\s*/.test(text);
 				},
 				transform: ({text}) => {
 
@@ -273,7 +273,8 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					var args = iput.split(" ");
 					args.shift();
 
-					var taxo  = wpdr_data.taxos;
+					var taxo    = wpdr_data.taxos;
+					var wf_efpp = wpdr_data.wf_efpp;
 
 					function slug_to_id( n, val ) {
 						var terms = taxo[n].terms;
@@ -295,6 +296,10 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 						var parm = i.split("=");
 						if ( parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0 ) {
 							parm[1] = parm[1].slice(1, parm[1].length-1);
+						}
+						// existing parameter may be wf_state - convert to post_status.
+						if ( wf_efpp === '1' && parm[0] === 'workflow_state') {
+							parm[0] = 'post_status';
 						}
 						if ( wpdr_data.stmax > 0 && parm[0] === taxo[0].query ) {
 							staxonomy_0 = parm[0];
@@ -378,25 +383,25 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					}
 
 					var content = '[documents ';
-					if ( "" != attributes.taxonomy_0 && 0 != attributes.term_0 ) {
+					if ( "" !== attributes.taxonomy_0 && 0 != attributes.term_0 ) {
 						content += " " + attributes.taxonomy_0 + "=" + id_to_slug( 0, attributes.term_0 );
 					}
-					if ( "" != attributes.taxonomy_1 && 0 != attributes.term_1 ) {
+					if ( "" !== attributes.taxonomy_1 && 0 != attributes.term_1 ) {
 						content += " " + attributes.taxonomy_1 + "=" + id_to_slug( 1, attributes.term_1 );
 					}
-					if ( "" != attributes.taxonomy_2 && 0 != attributes.term_2 ) {
+					if ( "" !== attributes.taxonomy_2 && 0 != attributes.term_2 ) {
 						content += " " + attributes.taxonomy_2 + "=" + id_to_slug( 2, attributes.term_2 );
 					}
-					if ( "" != attributes.numberposts ) {
+					if ( "" !== attributes.numberposts ) {
 						content += ' numberposts="' + attributes.numberposts + '"';
 					}
-					if ( "" != attributes.orderby ) {
+					if ( undefined !== attributes.orderby && "" !== attributes.orderby ) {
 						content += ' orderby="' + attributes.orderby + '"';
 					}
-					if ( "" != attributes.order && "" != attributes.orderby ) {
+					if ( "" !== attributes.order && undefined !== attributes.orderby && "" !== attributes.orderby ) {
 						content += ' order="' + attributes.order + '"';
 					}
-					if ( "" != attributes.show_edit ) {
+					if ( "" !== attributes.show_edit ) {
 						content += ' show_edit="' + attributes.show_edit + '"';
 					}
 					if ( ! attributes.new_tab ) {
@@ -404,7 +409,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					} else {
 						content += " new_tab=true";
 					}
-					if ( "" != attributes.freeform ) {
+					if ( "" !== attributes.freeform  &&undefined !== attributes.freeform ) {
 						content += ' ' + attributes.freeform;
 					}
 					content += " ]";
@@ -426,4 +431,3 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 	window.wp.serverSideRender,
 	window.wp.i18n
 ) );
-

@@ -100,7 +100,7 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 				type: 'block',
 				blocks: ['core/shortcode'],
 				isMatch: function( {text} ) {
-					return /^\[?document_revisions\s/.test(text);
+					return /^\[?document_revisions\b\s*/.test(text);
 				},
 				transform: ({text}) => {
 

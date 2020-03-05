@@ -172,14 +172,39 @@ class WP_Document_Revisions_Front_End {
 
 	/**
 	 * Shortcode to query for documents.
+	 * Called from shortcode sirectly.
+	 *
+	 * @since 3.3
+	 * @param array $atts shortcode attributes.
+	 * @return string the shortcode output
+	 */
+	public function documents_shortcode( $atts ) {
+
+		// Only need to do something if workflow_state points to post_status.
+		if ( 'workflow_state' !== self::$parent->taxonomy_key() ) {
+			if ( in_array( 'workflow_state', $atts, true ) ) {
+				$atts['post_status'] = $atts['workflow_state'];
+				unset( $atts['workflow_state'] );
+			}
+		}
+
+		return self::documents_shortcode_int( $atts );
+	}
+
+
+	/**
+	 * Shortcode to query for documents.
 	 * Takes most standard WP_Query parameters (must be int or string, no arrays)
 	 * See get_documents in wp-document-revisions.php for more information.
+	 *
+	 * This is the original documents_shortcode function but an added layer for sorting
+	 * reuse of workflow_state when EditLlow or PublishPressi is used.
 	 *
 	 * @since 1.2
 	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
-	public function documents_shortcode( $atts ) {
+	public function documents_shortcode_int( $atts ) {
 
 		$defaults = array(
 			'orderby' => 'modified',
@@ -247,10 +272,8 @@ class WP_Document_Revisions_Front_End {
 
 		// allow querying by custom taxonomy.
 		$taxs = $this->get_taxonomy_details();
-		if ( $taxs['stmax'] > 0 ) {
-			foreach ( $taxs['taxos'] as $tax ) {
-				$defaults[ $tax['query'] ] = null;
-			}
+		foreach ( $taxs['taxos'] as $tax ) {
+			$defaults[ $tax['query'] ] = null;
 		}
 
 		// show_edit and new_tab may be entered without name (implies value true)
@@ -264,6 +287,22 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts[1] );
 		}
 
+		// Presentation attributes may be set as false, so process before array_filter and remove.
+		if ( isset( $atts['show_edit'] ) ) {
+			$atts_show_edit = filter_var( $atts['show_edit'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['show_edit'] );
+		} else {
+			// Want to know if there was a shortcode as it will override.
+			$atts_show_edit = null;
+		}
+
+		if ( isset( $atts['new_tab'] ) ) {
+			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['new_tab'] );
+		} else {
+			$atts_new_tab = false;
+		}
+
 		/**
 		 * Filters the Document shortcode attributes.
 		 *
@@ -275,20 +314,6 @@ class WP_Document_Revisions_Front_End {
 		// note that the filter shortcode_atts_document is also available to filter the attributes.
 		$atts = shortcode_atts( $defaults, $atts, 'document' );
 
-		// Presentation attributes may set set as false, so process before array_filter and remove.
-		if ( isset( $atts['show_edit'] ) ) {
-			$atts_show_edit = filter_var( $atts['show_edit'], FILTER_VALIDATE_BOOLEAN );
-			unset( $atts['show_edit'] );
-		} else {
-			// Want to know if there was a shortcode as it will override.
-			$atts_show_edit = null;
-		}
-		if ( isset( $atts['new_tab'] ) ) {
-			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
-			unset( $atts['new_tab'] );
-		} else {
-			$atts_new_tab = false;
-		}
 		$atts = array_filter( $atts );
 
 		$documents = $this->get_documents( $atts );
@@ -475,8 +500,7 @@ class WP_Document_Revisions_Front_End {
 						'type' => 'string',
 					),
 					'show_edit'   => array(
-						'type'    => 'string',
-						'default' => '',
+						'type' => 'string',
 					),
 					'new_tab'     => array(
 						'type'    => 'boolean',
@@ -613,16 +637,23 @@ class WP_Document_Revisions_Front_End {
 		if ( false === $taxonomy_details ) {
 			// build and create cache entry. Get name only to allow easier filtering.
 			$taxos = get_object_taxonomies( 'document' );
+			// Make sure 'workflow_state' is in the list.
+			if ( ! in_array( 'workflow_state', (array) $taxos, true ) ) {
+				$taxos[] = 'workflow_state';
+			}
+
 			sort( $taxos );
 
 			/**
 			 * Filters the Document taxonomies (allowing users to select the first three for the block widget.
 			 *
-			 * @param array $taxos taxonomies available for selection in the list block.
+			 * @param array $taxonomies taxonomies available for selection in the list block.
 			 */
 			$taxos = apply_filters( 'document_block_taxonomies', $taxos );
 
-			$taxonomy_details = array();
+			$taxonomy_elements = array();
+			// Has worflow_state been mangled? Note. set here as it could be filtered out.
+			$wf_efpp = 0;
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
@@ -632,7 +663,14 @@ class WP_Document_Revisions_Front_End {
 					'',  // underscore-separated slug.
 				);
 				// Look up taxonomy.
-				$tax = get_taxonomy( $taxonomy );
+				if ( 'workflow_state' === $taxonomy && 'workflow_state' !== self::$parent->taxonomy_key() ) {
+					// EF/PP - Mis-use of 'post_status' taxonomy.
+					$tax        = get_taxonomy( self::$parent->taxonomy_key() );
+					$tax->label = 'Post Status';
+					$wf_efpp    = 1;
+				} else {
+					$tax = get_taxonomy( $taxonomy );
+				}
 
 				// Hierarchical or flat taxonomy ?
 				if ( $tax->hierarchical ) {
@@ -642,7 +680,7 @@ class WP_Document_Revisions_Front_End {
 				} else {
 					self::$tax_terms = get_terms(
 						array(
-							'taxonomy'     => $taxonomy,
+							'taxonomy'     => $tax->name,
 							'hide_empty'   => false,
 							'hierarchical' => false,
 						)
@@ -658,19 +696,20 @@ class WP_Document_Revisions_Front_End {
 				}
 
 				// Will use Query_var not (necessarily) the slug.
-				$taxonomy_details[] = array(
+				$taxonomy_elements[] = array(
 					'slug'  => $tax->name,
 					'query' => ( empty( $tax->query_var ) ? $tax->name : $tax->query_var ),
 					'label' => $tax->label,
 					'terms' => $terms,
 				);
 			}
-			$taxonomies = array(
-				'stmax' => count( $taxonomy_details ),
-				'taxos' => $taxonomy_details,
+			$taxonomy_details = array(
+				'stmax'   => count( $taxonomy_elements ),
+				'wf_efpp' => $wf_efpp,
+				'taxos'   => $taxonomy_elements,
 			);
 
-			wp_cache_set( 'wpdr_document_taxonomies', $taxonomies, '', 300 );
+			wp_cache_set( 'wpdr_document_taxonomies', $taxonomy_details, '', 5 );
 		}
 
 		return $taxonomy_details;
@@ -693,9 +732,6 @@ class WP_Document_Revisions_Front_End {
 			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
 		}
 
-		// taxonomies.
-		$taxonomies = $wpdr_fe->get_taxonomy_details();
-
 		$atts = shortcode_atts(
 			array(
 				'taxonomy_0'  => '',
@@ -716,7 +752,7 @@ class WP_Document_Revisions_Front_End {
 		);
 
 		// Remove attribute if not an over-ride.
-		if ( is_null( $atts['show_edit'] ) ) {
+		if ( 0 === strlen( $atts['show_edit'] ) ) {
 			unset( $atts['show_edit'] );
 		}
 
@@ -763,7 +799,13 @@ class WP_Document_Revisions_Front_End {
 		}
 		unset( $atts['freeform'] );
 
-		$output = $wpdr_fe->documents_shortcode( $atts );
+		// if empty orderby attribute, then order is not relevant.
+		if ( empty( $atts['orderby'] ) ) {
+			unset( $atts['orderby'] );
+			unset( $atts['order'] );
+		}
+
+		$output = $wpdr_fe->documents_shortcode_int( $atts );
 		return $output;
 	}
 

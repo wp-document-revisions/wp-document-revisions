@@ -93,7 +93,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.3.0
 	 */
-	public function taxonomy_key() {
+	public static function taxonomy_key() {
 		return self::$taxonomy_key_val;
 	}
 
