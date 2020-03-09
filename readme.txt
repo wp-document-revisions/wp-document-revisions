@@ -116,6 +116,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 * NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
+* FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
 * FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
 * FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
 * FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
@@ -560,6 +561,12 @@ Filters the controlling option to display an edit option against each document.
 In: class-wp-document-revisions.php
 
 Filters the document slug.
+
+== Filter document_taxonomy_term_count
+
+In: class-wp-document-revisions.php
+
+Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
 == Filter document_title ==
 

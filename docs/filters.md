@@ -150,6 +150,12 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
+## Filter document_taxonomy_term_count
+
+In: class-wp-document-revisions.php
+
+Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
+
 ## Filter document_title
 
 In: class-wp-document-revisions.php

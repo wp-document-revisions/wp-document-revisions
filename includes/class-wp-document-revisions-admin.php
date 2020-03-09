@@ -321,7 +321,7 @@ class WP_Document_Revisions_Admin {
 
 		global $post;
 
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
 			return $body_class;
 		}
 
@@ -927,7 +927,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function manage_document_revisions_limit( $num, $post ) {
 
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
 			return $num;
 		}
 
@@ -960,7 +960,7 @@ class WP_Document_Revisions_Admin {
 
 		global $post;
 
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
 			return;
 		}
 
@@ -1531,7 +1531,7 @@ class WP_Document_Revisions_Admin {
 		global $post;
 
 		// verify that this is a new document.
-		if ( ! isset( $post ) || ! $this->verify_post_type( ( isset( $post->ID ) ? $post->ID : false ) ) || strlen( $post->post_content ) > 0 ) {
+		if ( ! isset( $post ) || ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || strlen( $post->post_content ) > 0 ) {
 			return;
 		}
 

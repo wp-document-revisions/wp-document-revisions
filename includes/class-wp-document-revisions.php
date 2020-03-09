@@ -1583,7 +1583,7 @@ class WP_Document_Revisions {
 	public function hijack_feed( $default ) {
 		global $post;
 
-		if ( ! $this->verify_post_type( ( isset( $post->id ) ? $post->id : false ) ) || ! apply_filters( 'document_custom_feed', true ) ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || ! apply_filters( 'document_custom_feed', true ) ) {
 			return $default;
 		}
 
@@ -1886,7 +1886,7 @@ class WP_Document_Revisions {
 	public function no_title_prepend( $prepend ) {
 		global $post;
 
-		if ( ! $this->verify_post_type( $post->ID ) ) {
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $prepend;
 		}
 
@@ -2294,19 +2294,30 @@ class WP_Document_Revisions {
 	 * @since 1.2.1
 	 */
 	public function register_term_count_cb() {
+		// This will return only taxonomies for documents only, e.g. ignore those for documents AND another.
 		$taxs = get_taxonomies(
 			array(
-				'object_type'           => 'document',
+				'object_type'           => array( 'document' ),
 				'update_count_callback' => '',
 			),
-			'objects'
+			'names'
 		);
 
-		foreach ( $taxs as $tax ) {
-			$tax->update_count_callback = array( &$this, 'term_count_cb' );
+		/**
+		 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
+		 *
+		 * @param array $taxs document taxonomies .
+		 */
+		$taxs = apply_filters( 'document_taxonomy_term_count', $taxs );
+
+		if ( ! empty( $taxs ) ) {
+			global $wp_taxonomies;
+
+			foreach ( $taxs as $tax ) {
+					$wp_taxonomies[ $tax ]->update_count_callback = array( &$this, 'term_count_cb' );
+			}
 		}
 	}
-
 
 	/**
 	 * Removes auto-appended trailing slash from document requests prior to serving.
@@ -2380,7 +2391,7 @@ class WP_Document_Revisions {
 	 * @return string
 	 */
 	public function empty_excerpt_return( $excerpt, $post ) {
-		if ( '' === $excerpt || ! $this->verify_post_type( $post->ID ) ) {
+		if ( '' === $excerpt || ! $this->verify_post_type( $post ) ) {
 			return $excerpt;
 		}
 
@@ -2397,7 +2408,7 @@ class WP_Document_Revisions {
 	/**
 	 * Filters the WHERE clause in the SQL for an adjacent post query.
 	 *
-	 * Add 1=0 test to WHERE clause for documents.
+	 * Add 1=0 test to WHERE clause for documents for a single page.
 	 *
 	 * @since 3.3.0
 	 *
@@ -2410,12 +2421,12 @@ class WP_Document_Revisions {
 	 * @return string
 	 */
 	public function suppress_adjacent_doc( $where, $in_same_term, $excluded_terms, $taxonomy, $post ) {
-		// Leakage arises on queries with the same term.
-		if ( ! $in_same_term ) {
+		if ( ! $this->verify_post_type( $post ) ) {
 			return $where;
 		}
 
-		if ( ! $this->verify_post_type( $post->ID ) ) {
+		// Leakage arises on queries on a single page.
+		if ( ! is_singular() ) {
 			return $where;
 		}
 
