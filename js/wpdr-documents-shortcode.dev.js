@@ -75,7 +75,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			// Set taxonomy slug
 			if ( i == 0 ) {
 				setAttributes( { taxonomy_0: taxo[0].query } )
-				return createElement( PanelBody, { title: __( 'Taxonomy - ', 'wp-document-revisions' ) + taxo[0].label, initialOpen: false },
+				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[0].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
 							type: 'string',
@@ -91,7 +91,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			}
 			if ( i == 1 ) {
 				setAttributes( { taxonomy_1: taxo[1].query } )
-				return createElement( PanelBody, { title: __( 'Taxonomy - ', 'wp-document-revisions' ) + taxo[1].label, initialOpen: false },
+				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[1].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
 							type: 'string',
@@ -107,12 +107,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			}
 			if ( i == 2 ) {
 				setAttributes( { taxonomy_2: taxo[2].query } )
-				return createElement( PanelBody, { title: __( 'Taxonomy - ', 'wp-document-revisions' ) + taxo[2].label, initialOpen: false },
+				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[2].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
 							type: 'string',
 							label: taxo[2].label,
-						selected: attributes.term_1,
+						selected: attributes.term_2,
 						options: opts,
 						onChange: function( val ) {
 										setAttributes( { term_2: parseInt( val ) } );

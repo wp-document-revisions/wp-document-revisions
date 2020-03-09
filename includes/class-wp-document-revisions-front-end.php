@@ -637,7 +637,7 @@ class WP_Document_Revisions_Front_End {
 		if ( false === $taxonomy_details ) {
 			// build and create cache entry. Get name only to allow easier filtering.
 			$taxos = get_object_taxonomies( 'document' );
-			// Make sure 'workflow_state' is in the list.
+			// Make sure 'workflow_state' is in the list. With EF/PP it uses the post_status taxonomy.
 			if ( ! in_array( 'workflow_state', (array) $taxos, true ) ) {
 				$taxos[] = 'workflow_state';
 			}
@@ -652,7 +652,7 @@ class WP_Document_Revisions_Front_End {
 			$taxos = apply_filters( 'document_block_taxonomies', $taxos );
 
 			$taxonomy_elements = array();
-			// Has worflow_state been mangled? Note. set here as it could be filtered out.
+			// Has workflow_state been mangled? Note. set here as it could be filtered out.
 			$wf_efpp = 0;
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
