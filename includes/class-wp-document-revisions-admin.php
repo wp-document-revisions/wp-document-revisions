@@ -395,9 +395,10 @@ class WP_Document_Revisions_Admin {
 			<strong><a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_BLANK"><?php esc_html_e( 'Download', 'wp-document-revisions' ); ?></a></strong><br />
 			<em>
 			<?php
+			$mod_date = $latest_version->post_modified;
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-			// translators: %1$s is the post date in words, %2$s is the post date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $latest_version->post_date, strtotime( $latest_version->post_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
+			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $mod_date, strtotime( $mod_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			</a></em>
@@ -447,6 +448,7 @@ class WP_Document_Revisions_Admin {
 			</tr>
 		<?php
 
+		$i = 0;
 		foreach ( $revisions as $revision ) {
 
 			if ( ! current_user_can( 'read_post', $revision->ID ) || wp_is_post_autosave( $revision ) ) {
@@ -464,10 +466,10 @@ class WP_Document_Revisions_Admin {
 			}
 			?>
 			<tr>
-				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_date ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_date ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_date_gmt ), time() ) ); ?></a></td>
+				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 0 ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -487,6 +489,7 @@ class WP_Document_Revisions_Admin {
 				<?php } ?>
 			</tr>
 			<?php
+			$i++;
 		}
 		?>
 		</table>
