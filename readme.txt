@@ -5,7 +5,7 @@ Tags: documents, uploads, attachments, document management, enterprise, version 
 Requires at least: 4.6
 Tested up to: 5.3
 Stable tag: 3.3.0
-
+\
 == Description ==
 
 [WP Document Revisions](https://wordpress.org/plugins/wp-document-revisions/) is a [document management](https://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
@@ -837,4 +837,3 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 === Security Policy ===
 
 To report a security vulnerability, please email [ben@balter.com](mailto:ben@balter.com).
-

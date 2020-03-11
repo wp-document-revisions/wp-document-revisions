@@ -1,4 +1,5 @@
 <?php
+
 /**
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
