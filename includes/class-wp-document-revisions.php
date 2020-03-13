@@ -1638,6 +1638,18 @@ class WP_Document_Revisions {
 			return false;
 		}
 
+		// is a user logged on?
+		$user = wp_get_current_user();
+		if ( $user->exists() ) {
+			// yes, validate against their key, i.e. act somewhat like nonce.
+			$key_user = get_user_option( self::$meta_key );
+			if ( $key === $key_user ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		// lookup key and, if found, set user_id (so current_user_can will work).
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$feed_user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) );
