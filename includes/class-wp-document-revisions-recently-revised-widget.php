@@ -38,12 +38,12 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 
 	/**
-	 * Callback to display widget contents.
+	 * Generate widget contents.
 	 *
 	 * @param Array  $args the widget arguments.
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
-	public function widget( $args, $instance ) {
+	public function widget_gen( $args, $instance ) {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -68,6 +68,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
+		// buffer output to return rather than echo directly.
+		ob_start();
+
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
@@ -91,8 +94,24 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</ul>' . $args['after_widget'];
+
+		// grab buffer contents and clear.
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
 	}
 
+	/**
+	 * Callback to display widget contents in classic widget.
+	 *
+	 * @param Array  $args the widget arguments.
+	 * @param Object $instance the WP Document Revisions instance.
+	 */
+	public function widget( $args, $instance ) {
+		$output = $this->widget_gen( $args, $instance );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
+	}
 
 	/**
 	 * Callback to display widget options form.
@@ -152,14 +171,130 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	}
 
 
+	/**
+	 * Register widget block.
+	 *
+	 * @since 3.3.0
+	 */
+	public function documents_widget_block() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active, e.g. Old WP version installed.
+			return;
+		}
+
+		$dir      = dirname( __DIR__ );
+		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
+		$index_js = 'js/wpdr-documents-widget' . $suffix . '.js';
+		wp_register_script(
+			'wpdr-documents-widget-editor',
+			plugins_url( $index_js, __DIR__ ),
+			array(
+				'wp-blocks',
+				'wp-element',
+				'wp-block-editor',
+				'wp-components',
+				'wp-server-side-render',
+				'wp-i18n',
+			),
+			filemtime( "$dir/$index_js" ),
+			true
+		);
+
+		$index_css = 'css/wpdr-widget-editor-style.css';
+		wp_register_style(
+			'wpdr-documents-widget-editor-style',
+			plugins_url( $index_css, __DIR__ ),
+			array( 'wp-edit-blocks' ),
+			filemtime( plugin_dir_path( "$dir/$index_css" ) )
+		);
+
+		register_block_type(
+			'wp-document-revisions/documents-widget',
+			array(
+				'editor_script'   => 'wpdr-documents-widget-editor',
+				'editor_style'    => 'wpdr-documents-widget-editor-style',
+				'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
+				'attributes'      => array(
+					'header'            => array(
+						'type' => 'string',
+					),
+					'numberposts'       => array(
+						'type'    => 'number',
+						'default' => 5,
+					),
+					'post_stat_publish' => array(
+						'type' => 'boolean',
+					),
+					'post_stat_private' => array(
+						'type' => 'boolean',
+					),
+					'post_stat_draft'   => array(
+						'type' => 'boolean',
+					),
+					'show_author'       => array(
+						'type' => 'boolean',
+					),
+				),
+			)
+		);
+
+		// set translations.
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'wpdr-documents-widget-editor', 'wp-document-revisions' );
+		}
+	}
+
+
+	/**
+	 * Render widget block server side.
+	 *
+	 * @param array $atts block attributes coming from block.
+	 * @since 3.3.0
+	 */
+	public function wpdr_documents_widget_display( $atts ) {
+		// Create the two parameter sets.
+		$args                    = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+		$instance                = array();
+		$instance['title']       = ( isset( $atts['header'] ) ? $atts['header'] : '' );
+		$instance['numberposts'] = ( isset( $atts['numberposts'] ) ? (int) $atts['numberposts'] : 5 );
+		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : false );
+		$instance['post_status'] = array(  // temp.
+			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : false ),
+			'private' => ( isset( $atts['post_stat_private'] ) ? (bool) $atts['post_stat_private'] : false ),
+			'draft'   => ( isset( $atts['post_stat_draft'] ) ? (bool) $atts['post_stat_draft'] : false ),
+		);
+
+		$output = $this->widget_gen( $args, $instance );
+		return $output;
+	}
 }
+
 
 /**
  * Callback to register the recently revised widget.
  */
-function drrrw_widgets_init() {
-	register_widget( 'WP_Document_Revisions_Recently_Revised_Widget' );
+function wpdr_widgets_init() {
+	global $wpdr_widget;
+
+	register_widget( $wpdr_widget );
 }
 
+add_action( 'widgets_init', 'wpdr_widgets_init' );
 
-add_action( 'widgets_init', 'drrrw_widgets_init' );
+/**
+ * Callback to register the recently revised widget block.
+ *
+ * Call with low priority to let taxonomies be registered.
+ */
+function wpdr_widgets_block_init() {
+	global $wpdr_widget;
+
+	$wpdr_widget->documents_widget_block();
+}
+
+add_action( 'init', 'wpdr_widgets_block_init', 99 );

@@ -1,10 +1,9 @@
 <?php
-
 /**
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 3.2.4
+Version: 3.3.0
 Author: Ben Balter
 Author URI: http://ben.balter.com
 License: GPL3
@@ -20,7 +19,7 @@ Domain Path: /languages
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
  *
- *  Copyright (C) 2011-2017 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
+ *  Copyright (C) 2011-2020 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,18 +34,18 @@ Domain Path: /languages
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @copyright 2011-2019
+ *  @copyright 2011-2020
  *  @license GPL v3
- *  @version 3.2.4
+ *  @version 3.3.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
-require_once dirname(__FILE__) . '/includes/class-wp-document-revisions.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
 global $wpdr;
 $wpdr = new WP_Document_Revisions();
-require_once dirname(__FILE__) . '/includes/template-functions.php';
+require_once __DIR__ . '/includes/template-functions.php';
 
 // Activation hooks must be relative to the main plugin file.
-register_activation_hook(__FILE__, array(&$wpdr, 'activation_hook'));
+register_activation_hook( __FILE__, array( &$wpdr, 'activation_hook' ) );

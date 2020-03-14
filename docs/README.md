@@ -30,6 +30,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * [Where to get Support or Report an Issue](./SUPPORT.md)
 * [Translations](./translations.md)
 * [Plugin Filters](./filters.md)
+* [Plugin Shortcodes and Widget](./shortcodes.md)
 * [Useful Plugins and Tools](./useful-plugins-and-tools.md)
 
 ### Get Involved

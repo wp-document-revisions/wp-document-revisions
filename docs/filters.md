@@ -4,6 +4,12 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
+## Filter document_block_taxonomies
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the Document taxonomies (allowing users to select the first three for the block widget.
+
 ## Filter document_caps
 
 In: class-wp-document-revisions.php
@@ -118,7 +124,7 @@ Filters the HTTP headers sent when a file is served through WP Document Revision
 
 In: class-wp-document-revisions.php
 
-Filter to switch off use of Edit_Flow capabilities.
+Filter to switch off integration with Edit_Flow/PublishPress statuses.
 
 ## Filter document_rewrite_rules
 
@@ -143,6 +149,12 @@ Filters the controlling option to display an edit option against each document.
 In: class-wp-document-revisions.php
 
 Filters the document slug.
+
+## Filter document_taxonomy_term_count
+
+In: class-wp-document-revisions.php
+
+Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
 ## Filter document_title
 

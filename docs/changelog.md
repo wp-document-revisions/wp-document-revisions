@@ -1,5 +1,21 @@
 ## Changelog
 
+### 3.3.0
+
+* NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
+* NEW: Integrate with either Edit-flow or PublishPress plugins
+* FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
+* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
+* FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
+* FIX: Suppress excerpt output in feeds to stop information leakage
+* FIX: Password-protected document can leak information (by showing next/previous)
+* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Fix error in time difference display when client and server are in different time zones
+* FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
+* FIX: Review documentation.
+  (#208) @NeilWJames
+
 ### 3.2.4
 
 * Address technical debt for WP Document Standards  (#192) @NeilWJames
@@ -11,6 +27,7 @@
 
 ### 3.2.3
 
+* Full phpcs 2.2 standardisation, complete filter documentation (#192) @NeilWJames
 * On plugin activation, admin warning if user doesn't have edit_documents capability (#180) @NeilWJames
 * PHPCS Review (no functional changes) (#179) @NeilWJames
 * Review for WP Coding standard 2.1.1 and newer phpunit (#174) @NeilWJames

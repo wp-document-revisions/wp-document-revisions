@@ -78,11 +78,13 @@ Yes. You can use the [Simple Taxonomy plugin](https://wordpress.org/plugins/simp
 
 ### Can I put my documents in folders?
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy](https://wordpress.org/plugins/simple-taxonomy/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
 
 ### What if I want even more control over my workflow?
 
 Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if [Edit Flow](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
+
+Equally the [PublishPress Plugin](https://publishpress.com), a fork of Edit Flow, is detected and can be used with WP Document Revisions in exactly the same manner as Edit Flow.
 
 ### I want some small changes to the processing, but there are few configuration options. How do I do this?
 
@@ -94,19 +96,13 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 
 ### How do I use the documents shortcode?
 
-In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts *most* [Standard WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`. Specifically, the shortcode accepts: `author__in`, `author__not_in`, `author_name`, `author`, `cat`, `category__and`, `category__in`, `category__not_in`, `category_name`, `date_query`, `day`, `has_password`, `hour`, `m`, `meta_compare`, `meta_key`, `meta_query`, `meta_value_num`, `meta_value`, `minute`, `monthnum`, `name`, `numberposts`, `p`, `page_id`, `pagename`, `post__in`, `post__not_in`, `post_name__in`, `post_parent__in`, `post_parent__not_in`, `post_parent`, `post_password`, `post_status`, `s`, `second`, `tag__and`, `tag__in`, `tag__not_in`, `tag_id`, `tag_slug__and`, `tag_slug__in`, `tag`, `tax_query`, `title`, `w` and `year`.
-
-It is also possible to add formatting parameters: `show_edit` that will add a button next to each documument that the user can edit to edit the document; and `new_tab` that will open the document in a new browser tab rather than in the current one. Both of these are boolean variables, but can be simply entered without a value (with default value true). 
- 
-If you're using a custom taxonomy, you can add the taxonomy name as a parameter in your shortcode. For example, if your custom taxonomy is called "document_categories", you can write insert a shortcode like this:
-
-`[documents numberposts="6" document_categories="category-name"]`
-
-(Where "category-name" is the taxonomy's slug)
+In a post or page, simply type `[documents]` to display a list of documents. 
+More information is on [this](./shortcodes.md) page.
 
 ### How do I use the document revisions shortcode?
 
-In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. You can find the ID in the URL of the edit document page. To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+More information is on [this](./shortcodes.md) page.
 
 ### How do I use the recently revised documents widget?
 
@@ -126,7 +122,7 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 ### Can I limit access to documents based on workflow state, department, or some other custom taxonomy?
 
-Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](http://wordpress.org/extend/plugins/members/).
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
 
 ### Is it possible to do a bulk import of existing documents / files already on the server?
 
