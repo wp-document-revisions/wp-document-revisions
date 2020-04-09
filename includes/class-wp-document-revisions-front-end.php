@@ -637,8 +637,8 @@ class WP_Document_Revisions_Front_End {
 		if ( false === $taxonomy_details ) {
 			// build and create cache entry. Get name only to allow easier filtering.
 			$taxos = get_object_taxonomies( 'document' );
-			// Make sure 'workflow_state' is in the list. With EF/PP it uses the post_status taxonomy.
-			if ( ! in_array( 'workflow_state', (array) $taxos, true ) ) {
+			// Make sure 'workflow_state' is in the list if not disabled. With EF/PP it uses the post_status taxonomy.
+			if ( ! empty( self::$parent->taxonomy_key() ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
 				$taxos[] = 'workflow_state';
 			}
 
@@ -766,8 +766,10 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// create atts in the appropriate form tax->query_var = term slug.
-			$term                        = get_term( $atts['term_0'] );
-			$atts[ $atts['taxonomy_0'] ] = $term->slug;
+			$term = get_term( $atts['term_0'], '', ARRAY_A );
+			if ( isset( $term['slug'] ) ) {
+				$atts[ $atts['taxonomy_0'] ] = $term['slug'];
+			}
 		}
 		unset( $atts['taxonomy_0'] );
 		unset( $atts['term_0'] );
@@ -776,8 +778,10 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// create atts in the appropriate form tax->query_var = term slug.
-			$term                        = get_term( $atts['term_1'] );
-			$atts[ $atts['taxonomy_1'] ] = $term->slug;
+			$term = get_term( $atts['term_1'], '', ARRAY_A );
+			if ( isset( $term['slug'] ) ) {
+				$atts[ $atts['taxonomy_1'] ] = $term['slug'];
+			}
 		}
 		unset( $atts['taxonomy_1'] );
 		unset( $atts['term_1'] );
@@ -786,8 +790,10 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// create atts in the appropriate form tax->query_var = term slug).
-			$term                        = get_term( $atts['term_2'] );
-			$atts[ $atts['taxonomy_2'] ] = $term->slug;
+			$term = get_term( $atts['term_2'], '', ARRAY_A );
+			if ( isset( $term['slug'] ) ) {
+				$atts[ $atts['taxonomy_2'] ] = $term['slug'];
+			}
 		}
 		unset( $atts['taxonomy_2'] );
 		unset( $atts['term_2'] );
