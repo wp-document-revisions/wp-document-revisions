@@ -544,6 +544,12 @@ In: class-wp-document-revisions.php
 
 Filters the Document rewrite rules.
 
+== Filter document_serve ==
+
+In: class-wp-document-revisions.php
+
+Filters file name of document served. (Useful if file is encrypted at rest).
+
 == Filter document_shortcode_atts ==
 
 In: class-wp-document-revisions-front-end.php

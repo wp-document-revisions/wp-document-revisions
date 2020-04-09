@@ -92,7 +92,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'delete_post', array( &$this, 'delete_attachments_with_document' ), 10, 1 );
 
 		// edit flow or publishpress support.
-		add_action( 'admin_init', array( &$this, 'disable_workflow_states' ) );
+		add_action( 'init', array( &$this, 'disable_workflow_states' ), 1901 );  // After main class called.
 
 		// admin css.
 		add_filter( 'admin_body_class', array( &$this, 'admin_body_class_filter' ) );
@@ -1013,23 +1013,25 @@ class WP_Document_Revisions_Admin {
 		global $typenow;
 		// Only applies to document post type.
 		if ( 'document' === $typenow ) {
-			// Filter by workflow state/edit flow/publishpress state.
-			// Note that the name is always workflow state as using post_status will invoke default status handling.
-			// However it may be different on coming back.
 			$tax_slug = self::$parent->taxonomy_key();
-			$so_all   = __( 'All workflow states', 'wp-document-revisions' );
-			if ( $this->disable_workflow_states() ) {
-				$so_all = __( 'All statuses', 'wp-document-revisions' );
+			if ( ! empty( $tax_slug ) ) {
+				// Filter by workflow state/edit flow/publishpress state.
+				// Note that the name is always workflow state as using post_status will invoke default status handling.
+				// However it may be different on coming back.
+				$so_all = __( 'All workflow states', 'wp-document-revisions' );
+				if ( 'workflow_state' !== $tax_slug ) {
+					$so_all = __( 'All statuses', 'wp-document-revisions' );
+				}
+				$args = array(
+					'name'            => 'workflow_state',
+					'show_option_all' => $so_all,
+					'taxonomy'        => $tax_slug,
+					'hide_empty'      => false,
+					'value_field'     => 'slug',
+					'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_STRING ),
+				);
+				wp_dropdown_categories( $args );
 			}
-			$args = array(
-				'name'            => 'workflow_state',
-				'show_option_all' => $so_all,
-				'taxonomy'        => $tax_slug,
-				'hide_empty'      => false,
-				'value_field'     => 'slug',
-				'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_STRING ),
-			);
-			wp_dropdown_categories( $args );
 
 			// author/owner filtering.
 			$args = array(
@@ -1508,7 +1510,6 @@ class WP_Document_Revisions_Admin {
 		}
 	}
 
-
 	/**
 	 * Remove all hooks that activate workflow state support
 	 * use filter `document_use_workflow_states` to disable.
@@ -1521,7 +1522,11 @@ class WP_Document_Revisions_Admin {
 		remove_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
 		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'save_post', array( &$this, 'workflow_state_save' ) );
-		remove_action( 'admin_head', array( &$this, 'make_private' ) );
+
+		// Have changed taxonomy key for EF/PP support, so switch off make private.
+		if ( ! empty( self::$parent->taxonomy_key() ) && 'workflow_state' !== self::$parent->taxonomy_key() ) {
+			remove_action( 'admin_head', array( &$this, 'make_private' ) );
+		}
 		return true;
 	}
 

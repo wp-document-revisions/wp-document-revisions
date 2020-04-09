@@ -156,6 +156,8 @@ class WP_Document_Revisions {
 		// edit flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
 		add_action( 'pp_module_options_loaded', array( &$this, 'publishpress_support' ) );
+		// always called to determine whether user has turned off workflow_state support.
+		add_action( 'init', array( &$this, 'disable_workflow_states' ), 1900 );
 
 		// don't leak summary information if user can't access admin pages.
 		add_filter( 'get_the_excerpt', array( &$this, 'empty_excerpt_return' ), 10, 2 );
@@ -567,9 +569,9 @@ class WP_Document_Revisions {
 		if ( 'attachment' === get_post_type( $document_or_attachment ) ) {
 			$attachment = $document_or_attachment;
 		} elseif ( 'document' === get_post_type( $document_or_attachment ) ) {
-				$latest_revision = $this->get_latest_revision( $document_or_attachment->ID );
+			$latest_revision = $this->get_latest_revision( $document_or_attachment->ID );
 
-				// verify a previous revision exists.
+			// verify a previous revision exists.
 			if ( ! $latest_revision ) {
 				return '';
 			}
@@ -631,13 +633,13 @@ class WP_Document_Revisions {
 		$my_rules = array();
 
 		// revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)\.[A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		// revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)([.][A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		// documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)\.[A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
@@ -945,15 +947,15 @@ class WP_Document_Revisions {
 
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
-			$rev_id = $this->get_latest_revision( $post->ID );
+			$rev_id = $this->get_latest_revision( $post->ID )->ID;
 		} else {
 			$rev_id = $this->get_revision_id( $version, $post->ID );
 		}
 
 		$rev_post = get_post( $rev_id );
-		$revision = get_post( $rev_post->post_content ); // @todo can this be simplified?
+		$attach   = get_post( $rev_post->post_content ); // @todo can this be simplified?
 
-		$file = get_attached_file( $revision->ID );
+		$file = get_attached_file( $attach->ID );
 		// Above used a cached version of std directory, so cannot change within call and may be wrong,
 		// so possibly replace it in the output.
 		if ( empty( self::$wp_default_dir ) ) {
@@ -1006,7 +1008,22 @@ class WP_Document_Revisions {
 			return false; // for unit testing.
 		}
 
+		/**
+		 * Action hook when the document is served.
+		 *
+		 * @param integer $post->ID     Post id of the document.
+		 * @param string  $file         File name to be served.
+		 */
 		do_action( 'serve_document', $post->ID, $file );
+
+		/**
+		 * Filters file name of document served. (Useful if file is encrypted at rest).
+		 *
+		 * @param string  $file       File name to be served.
+		 * @param integer $post->ID   Post id of the document.
+		 * @param integer $attach->ID Post id of the attachment.
+		 */
+		$file = apply_filters( 'document_serve', $file, $post->ID, $attach->ID );
 
 		// We may override this later.
 		status_header( 200 );
@@ -1017,7 +1034,7 @@ class WP_Document_Revisions {
 
 		// we want the true attachment URL, not the permalink, so temporarily remove our filter.
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
-		$filename .= $this->get_extension( wp_get_attachment_url( $revision->ID ) );
+		$filename .= $this->get_extension( wp_get_attachment_url( $attach->ID ) );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
 		$headers = array();
@@ -2022,11 +2039,7 @@ class WP_Document_Revisions {
 		// we are going to use Edit_Flow processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
-
-		// remove the workflow_state.
-		$this->disable_workflow_states();
 	}
-
 
 	/**
 	 * Adds EditFlow support for post status to the admin table.
@@ -2141,11 +2154,7 @@ class WP_Document_Revisions {
 		// we are going to use PP processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
-
-		// remove the workflow_state.
-		$this->disable_workflow_states();
 	}
-
 
 	/**
 	 * Toggles workflow states on and off.
@@ -2170,10 +2179,14 @@ class WP_Document_Revisions {
 			return;
 		}
 
+		// Have not changed taxonomy key for EF/PP support, so user turned off and neither should exist.
+		if ( 'workflow_state' === self::$taxonomy_key_val ) {
+			self::$taxonomy_key_val = '';
+		}
+
 		remove_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		remove_action( 'init', array( &$this, 'register_ct' ), 2000 );
 	}
-
 
 	/**
 	 * Returns array of document objects matching supplied criteria.
@@ -2349,13 +2362,13 @@ class WP_Document_Revisions {
 
 		// if the URL already has an extension, then no need to remove.
 		$path = wp_parse_url( $redirect, PHP_URL_PATH );
-		if ( preg_match( '([^.]+)\.[A-Za-z0-9]{1,7}/?$', $path ) ) {
+
+		if ( preg_match( '([^.]+)[.][A-Za-z0-9]{1,7}/?$', $path ) ) {
 			return $redirect;
 		}
 
 		return untrailingslashit( $redirect );
 	}
-
 
 	/**
 	 * Provides a workaround for the attachment url filter breaking wp_get_attachment_image_src
@@ -2384,13 +2397,12 @@ class WP_Document_Revisions {
 
 		// if WordPress is going to return the direct url to the real file,
 		// serve the document permalink (or revision permalink) instead.
-		if ( $image[0] === $direct ) {
+		if ( $image && $image[0] === $direct ) {
 			$image[0] = wp_get_attachment_url( $id );
 		}
 
 		return $image;
 	}
-
 
 	/**
 	 * Return an empty excerpt for documents on front end views to avoid leaking
