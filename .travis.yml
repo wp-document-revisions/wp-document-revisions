@@ -12,6 +12,8 @@ services:
   
 matrix:
   include:
+    - php: 7.4
+      env: WP_VERSION=latest
     - php: 7.3
       env: WP_VERSION=latest
     - php: 7.2
@@ -22,7 +24,7 @@ matrix:
       env: WP_VERSION=latest
     - php: 5.6
       env: WP_VERSION=latest
-    - php: 7.1
+    - php: 7.2
       env: WP_TRAVISCI=phpcs
 
 before_script:
@@ -49,6 +51,10 @@ before_script:
           composer global require "phpunit/phpunit=7.5.*"
       fi
       if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then
+          # composer global require "phpunit/phpunit=8.2.*" except WP barfs - #46149 to fix
+          composer global require "phpunit/phpunit=7.5.*"
+      fi
+      if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.4" ]]; then
           # composer global require "phpunit/phpunit=8.2.*" except WP barfs - #46149 to fix
           composer global require "phpunit/phpunit=7.5.*"
       fi
