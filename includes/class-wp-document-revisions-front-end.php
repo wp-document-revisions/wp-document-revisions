@@ -521,7 +521,7 @@ class WP_Document_Revisions_Front_End {
 				'attributes'      => array(
 					'id'          => array(
 						'type'    => 'number',
-						'default' => 1,
+						'default' => 0,
 					),
 					'numberposts' => array(
 						'type'    => 'number',
@@ -665,9 +665,10 @@ class WP_Document_Revisions_Front_End {
 				// Look up taxonomy.
 				if ( 'workflow_state' === $taxonomy && 'workflow_state' !== self::$parent->taxonomy_key() ) {
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax        = get_taxonomy( self::$parent->taxonomy_key() );
-					$tax->label = 'Post Status';
-					$wf_efpp    = 1;
+					$tax               = get_taxonomy( self::$parent->taxonomy_key() );
+					$tax->hierarchical = false;
+					$tax->label        = 'Post Status';
+					$wf_efpp           = 1;
 				} else {
 					$tax = get_taxonomy( $taxonomy );
 				}
@@ -727,7 +728,7 @@ class WP_Document_Revisions_Front_End {
 		global $wpdr, $wpdr_fe;
 
 		// sanity check.
-		// do not show output to users that do not have the read_document capability.
+		// do not show output to users that do not have the read_documents capability.
 		if ( ! current_user_can( 'read_documents' ) ) {
 			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
 		}
@@ -750,6 +751,18 @@ class WP_Document_Revisions_Front_End {
 			$atts,
 			'document'
 		);
+		// Check taxonomy grouping is same as current taxonomy.
+		$taxonomy_details = $this->get_taxonomy_details();
+		$curr_tax_max     = $taxonomy_details['stmax'];
+		$curr_taxos       = $taxonomy_details['taxos'];
+		$errs             = '';
+		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		if ( ( $curr_tax_max >= 1 && ( ! empty( $atts['taxonomy_0'] ) ) && $atts['taxonomy_0'] !== $curr_taxos[0]['query'] ) ||
+		     ( $curr_tax_max >= 2 && ( ! empty( $atts['taxonomy_1'] ) ) && $atts['taxonomy_1'] !== $curr_taxos[1]['query'] ) ||
+		     ( $curr_tax_max >= 3 && ( ! empty( $atts['taxonomy_2'] ) ) && $atts['taxonomy_2'] !== $curr_taxos[2]['query'] ) ) {
+			$errs .= '<p>' . esc_html__( ' Taxonomy details in this block have changed.', 'wp-document-revisions' ) . '</p>';
+		}
+		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
 
 		// Remove attribute if not an over-ride.
 		if ( 0 === strlen( $atts['show_edit'] ) ) {
@@ -761,14 +774,18 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['new_tab'] );
 		}
 
-		// Deal with explicit taxonomomies.
+		// Deal with explicit taxonomomies. Note taxonomy_i is query_var, not slug.
 		if ( empty( $atts['taxonomy_0'] ) || empty( $atts['term_0'] ) ) {
 			null;
 		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
-			$term = get_term( $atts['term_0'], '', ARRAY_A );
-			if ( isset( $term['slug'] ) ) {
-				$atts[ $atts['taxonomy_0'] ] = $term['slug'];
+			$term = get_term( $atts['term_0'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_0'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (1)</p>';
 			}
 		}
 		unset( $atts['taxonomy_0'] );
@@ -777,10 +794,14 @@ class WP_Document_Revisions_Front_End {
 		if ( empty( $atts['taxonomy_1'] ) || empty( $atts['term_1'] ) ) {
 			null;
 		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
-			$term = get_term( $atts['term_1'], '', ARRAY_A );
-			if ( isset( $term['slug'] ) ) {
-				$atts[ $atts['taxonomy_1'] ] = $term['slug'];
+			$term = get_term( $atts['term_1'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_1'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (2)</p>';
 			}
 		}
 		unset( $atts['taxonomy_1'] );
@@ -789,10 +810,14 @@ class WP_Document_Revisions_Front_End {
 		if ( empty( $atts['taxonomy_2'] ) || empty( $atts['term_2'] ) ) {
 			null;
 		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug).
-			$term = get_term( $atts['term_2'], '', ARRAY_A );
-			if ( isset( $term['slug'] ) ) {
-				$atts[ $atts['taxonomy_2'] ] = $term['slug'];
+			$term = get_term( $atts['term_2'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_2'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (3)</p>';
 			}
 		}
 		unset( $atts['taxonomy_2'] );
@@ -811,7 +836,10 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['order'] );
 		}
 
-		$output = $wpdr_fe->documents_shortcode_int( $atts );
+		if ( ! empty( $errs ) ) {
+			$errs = '<div class="notice notice-error">' . $errs . '</div>';
+		}
+		$output = $errs . $wpdr_fe->documents_shortcode_int( $atts );
 		return $output;
 	}
 

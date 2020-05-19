@@ -2,7 +2,7 @@
 
 ### Permissions management
 
-* [User Role Editor by Members – Best User, Role and Capability Management Plugin for WordPress](https://wordpress.org/plugins/members/)
+* [Members – Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 

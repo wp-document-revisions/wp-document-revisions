@@ -2,6 +2,16 @@
 
 ### 3.3.0
 
+* NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
+* NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
+* FIX: Queries on post_status do not do proper permissions check
+* FIX: Remove restore option on the current document and latest revision as it makes no sense.
+* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
+* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
+  (#216) @NeilWJames
+
 * NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
 * FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 

@@ -112,10 +112,11 @@ class WP_Document_Revisions {
 
 		// CPT/CT.
 		add_action( 'init', array( &$this, 'register_cpt' ) );
+		add_action( 'init', array( &$this, 'use_read_capability' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 		add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
+		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 
 		// rewrites and permalinks.
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
@@ -150,8 +151,8 @@ class WP_Document_Revisions {
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
 
-		// cache.
-		add_action( 'save_post', array( &$this, 'clear_cache' ), 10, 1 );
+		// cache clean.
+		add_action( 'save_post_document', array( &$this, 'clear_cache' ) );
 
 		// edit flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
@@ -333,9 +334,32 @@ class WP_Document_Revisions {
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later).
 		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : true );
-
 	}
 
+	/**
+	 * Determines if read requires read_document instead of read.
+	 *
+	 * @since 3.3
+	 */
+	public function use_read_capability() {
+		// user requires read_document and not just read to read document.
+		/**
+		 * Filters the users capacities to require read (or read_document) capability.
+		 *
+		 * @since 3.3
+		 *
+		 * @param boolean true  default action to capability read for documents (not read_docuemnt).
+		 */
+		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
+			// invoke logic.
+			add_filter( 'map_meta_cap', array( &$this, 'map_meta_cap' ), 10, 4 );
+			add_filter( 'user_has_cap', array( &$this, 'user_has_cap' ), 10, 4 );
+			add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+		}
+
+		// filter the queries.
+		add_action( 'pre_get_posts', array( &$this, 'retrieve_documents' ) );
+	}
 
 	/**
 	 * Registers custom status taxonomy.
@@ -707,7 +731,7 @@ class WP_Document_Revisions {
 		} else {
 			// build documents/yyyy/mm/slug.
 			$extension = $this->get_file_type( $document );
-			$timestamp = strtotime( $document->post_date );
+			$timestamp = strtotime( $document->post_date_gmt );
 
 			$link  = home_url() . '/' . $this->document_slug() . '/' . gmdate( 'Y', $timestamp ) . '/' . gmdate( 'm', $timestamp ) . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
@@ -952,10 +976,10 @@ class WP_Document_Revisions {
 			$rev_id = $this->get_revision_id( $version, $post->ID );
 		}
 
-		$rev_post = get_post( $rev_id );
-		$attach   = get_post( $rev_post->post_content ); // @todo can this be simplified?
+		// get the attachment (id in post_content of rev_id).
+		$attach = get_post( get_post_field( 'post_content', $rev_id ) );
+		$file   = get_attached_file( $attach->ID );
 
-		$file = get_attached_file( $attach->ID );
 		// Above used a cached version of std directory, so cannot change within call and may be wrong,
 		// so possibly replace it in the output.
 		if ( empty( self::$wp_default_dir ) ) {
@@ -995,17 +1019,31 @@ class WP_Document_Revisions {
 		/**
 		 * Filters the decision to serve the document through WP Document Revisions.
 		 *
+		 * I.e. return null if user not logged on and want to deny existence.
+		 * (only if filter 'document_read_uses_read' returns false)
+		 *
 		 * @param boolean true     default action to serve file.
 		 * @param object  $post    WP Post to be served.
 		 * @param string  $version Document revision.
 		 */
-		if ( ! apply_filters( 'serve_document_auth', true, $post, $version ) ) {
-			wp_die(
-				esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
-				null,
-				array( 'response' => 403 )
-			);
-			return false; // for unit testing.
+		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version );
+		if ( ! $serve_file ) {
+			if ( false === $serve_file ) {
+				wp_die(
+					esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
+					null,
+					array( 'response' => 403 )
+				);
+				return false; // for unit testing.
+			} else {
+				// not logged on, deny file existence (as above).
+				$wp_query->posts          = array();
+				$wp_query->queried_object = null;
+				$wp->handle_404();
+
+				// tell WP to serve the theme's standard 404 template, this is a filter after all...
+				return get_404_template();
+			}
 		}
 
 		/**
@@ -1017,7 +1055,7 @@ class WP_Document_Revisions {
 		do_action( 'serve_document', $post->ID, $file );
 
 		/**
-		 * Filters file name of document served. (Useful if file is encrypted at rest).
+		 * Filters file name of document to be served. (Useful if file is encrypted at rest).
 		 *
 		 * @param string  $file       File name to be served.
 		 * @param integer $post->ID   Post id of the document.
@@ -1136,8 +1174,17 @@ class WP_Document_Revisions {
 		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
 		readfile( $file );
-	}
 
+		/**
+		 * Action hook after the document is served.
+		 *
+		 * Useful to delete temporary file.
+		 *
+		 * @param string  $file        File name that was served.
+		 * @param integer $attach->ID  Post id of the attachment.
+		 */
+		do_action( 'document_serve_done', $file, $attach->ID );
+	}
 
 	/**
 	 * Filter to authenticate document delivery.
@@ -1148,25 +1195,30 @@ class WP_Document_Revisions {
 	 * @return unknown
 	 */
 	public function serve_document_auth( $default, $post, $version ) {
+		$user     = wp_get_current_user();
+		$ret_null = ( 0 === $user->ID && ! apply_filters( 'document_read_uses_read', true ) );
 		// public file, not a revision, no need to go any further
 		// note: non-authenticated users only have the "read" cap, so can't auth via read_document.
 		if ( ! $version && 'publish' === $post->post_status ) {
-			return $default;
+			if ( 0 === $user->ID && apply_filters( 'document_read_uses_read', true ) ) {
+				// Not logged on. But only default read capability.
+				return $default;
+			}
 		}
 
+		// need to check access.
 		// attempting to access a revision.
 		if ( $version && ! current_user_can( 'read_document_revisions' ) ) {
-			return false;
+			return ( $ret_null ? null : false );
 		}
 
 		// specific document cap check.
 		if ( ! current_user_can( 'read_document', $post->ID ) ) {
-			return false;
+			return ( $ret_null ? null : false );
 		}
 
 		return $default;
 	}
-
 
 	/**
 	 * Deprecated for consistency of terms.
@@ -1200,7 +1252,6 @@ class WP_Document_Revisions {
 		// verify that there's an upload ID in the content field
 		// if there's no upload ID for some reason, default to latest attached upload.
 		if ( ! is_numeric( $revisions[0]->post_content ) ) {
-
 			$attachments = $this->get_attachments( $post_id );
 
 			if ( empty( $attachments ) ) {
@@ -1209,12 +1260,10 @@ class WP_Document_Revisions {
 
 			$latest_attachment          = reset( $attachments );
 			$revisions[0]->post_content = $latest_attachment->ID;
-
 		}
 
 		return $revisions[0];
 	}
-
 
 	/**
 	 * Deprecated for consistency sake.
@@ -1436,7 +1485,7 @@ class WP_Document_Revisions {
 		$file['name'] = md5( $file['name'] . time() ) . $this->get_extension( $file['name'] );
 
 		/**
-		 * Filters the encoded file name for the attached document.
+		 * Filters the encoded file name for the attached document (on save).
 		 *
 		 * @param array $file encoded file name.
 		 */
@@ -1483,7 +1532,6 @@ class WP_Document_Revisions {
 					return $file;
 				}
 			endforeach;
-
 		}
 
 		self::$doc_image = false;
@@ -1560,7 +1608,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Clears cache on post_save.
+	 * Clears cache on post_save_document.
 	 *
 	 * @param int $post_id the post ID.
 	 */
@@ -1568,7 +1616,6 @@ class WP_Document_Revisions {
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
 	}
-
 
 	/**
 	 * Callback to handle revision RSS feed.
@@ -2457,6 +2504,130 @@ class WP_Document_Revisions {
 		return $where . ' AND 1 = 0 ';
 	}
 
+	/**
+	 * Try to retrieve only correct documents.
+	 *
+	 * Queries by post_status do not do proper permissions check.
+	 * See https://developer.wordpress.org/reference/classes/wp_query/
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param WP_Query $query  Query object.
+	 */
+	public function retrieve_documents( $query ) {
+		$query_fields = (array) $query->query;
+		if ( isset( $query_fields['post_type'] ) && 'document' === $query_fields['post_type'] ) {
+			// not for administrator.
+			$user = wp_get_current_user();
+			if ( in_array( 'administrator', $user->roles, true ) ) {
+				return;
+			}
+
+			// dropped through initial tests.
+			if ( isset( $query_fields['post_status'] ) && ! empty( $query_fields['post_status'] ) ) {
+				if ( ! isset( $query->query->perm ) ) {
+					// create/modify taxonomy query.
+					$query->set( 'perm', 'readable' );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Maps caps from e.g., `read` to `read_document`
+	 *
+	 * @param array   $caps    Array of the user's required capabilities.
+	 * @param string  $cap     Capability name.
+	 * @param integer $user_id The user ID.
+	 * @param array   $args    Adds the context to the cap. Typically the object ID.
+	 * @return unknown
+	 */
+	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
+		// check that cap wanted is read_post.
+		if ( 'read_post' !== $cap ) {
+			return $caps;
+		}
+
+		// attempt to grab the post_ID.
+		// note: will default to global $post if none passed.
+		$post_ID = ( ! empty( $args ) ) ? $args[0] : null;
+
+		// kick if not related to a document.
+		if ( ! $this->verify_post_type( $post_ID ) ) {
+			return $caps;
+		}
+
+		return array( 'read_documents' );
+	}
+
+	/**
+	 * Dynamically filter a user's capabilities.
+	 *
+	 * @param bool[]   $allcaps Array of key/value pairs where keys represent a capability name and boolean values
+	 *                          represent whether the user has that capability.
+	 * @param string[] $caps    Required primitive capabilities for the requested capability.
+	 * @param array    $args {
+	 *     Arguments that accompany the requested capability check.
+	 *
+	 *     @type string    $0 Requested capability.
+	 *     @type int       $1 Concerned user ID.
+	 *     @type mixed  ...$2 Optional second and further parameters, typically object ID.
+	 * }
+	 * @param WP_User  $user    The user object.
+	 */
+	public function user_has_cap( $allcaps, $caps, $args, $user ) {
+		// Is user an administrator. If so, bail.
+		if ( in_array( 'administrator', $user->roles, true ) ) {
+			return $allcaps;
+		}
+
+		// must have a base object that is a document.
+		if ( isset( $args[2] ) && $this->verify_post_type( $args[2] ) ) {
+			// remove the read capability for this test.
+			unset( $allcaps['read'] );
+		}
+
+		return $allcaps;
+	}
+
+	/**
+	 * Review WP_Query SQL results.
+	 *
+	 * Only invoked when user should not access documents via 'read'.
+	 *
+	 * @param WP_Post[] $results      Array of post objects.
+	 * @param WP_Query  $query_object Query object.
+	 * @return WP_Post[] Array of post objects.
+	 */
+	public function posts_results( $results, $query_object ) {
+		$no_read = ( ! current_user_can( 'read_documents' ) );
+		$match   = false;
+		foreach ( $results as $key => $result ) {
+			// confirm a document.
+			if ( $this->verify_post_type( $result ) && $no_read ) {
+				// user has no access, remove from result.
+				unset( $results[ $key ] );
+				$match = true;
+			}
+		}
+		// re-evaluate count.
+		if ( $match ) {
+			// reindex array.
+			$results = array_values( $results );
+
+			if ( is_array( $results ) ) {
+				$query_object->found_posts = count( $results );
+			} else {
+				if ( null === $results ) {
+					$query_object->found_posts = 0;
+				} else {
+					$query_object->found_posts = 1;
+				}
+			}
+		}
+
+		return $results;
+	}
 
 	/**
 	 * Remove nocache headers from document downloads on IE < 8
