@@ -3,7 +3,7 @@
 Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 5.3
+Tested up to: 5.4.1
 Stable tag: 3.3.0
 
 == Description ==
@@ -122,7 +122,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
 * FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
 * FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
-  (#216) @NeilWJames
+  (#217) @NeilWJames
 
 * NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
