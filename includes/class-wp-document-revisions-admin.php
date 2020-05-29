@@ -747,7 +747,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function document_slug_cb() {
 		?>
-	<code><?php bloginfo( 'url' ); ?>/<input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
+	<code><?php echo esc_html( home_url() ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 	<span class="description">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
