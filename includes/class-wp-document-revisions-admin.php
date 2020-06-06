@@ -294,8 +294,8 @@ class WP_Document_Revisions_Admin {
 	 * Forces postcustom metabox to be hidden by default, despite the fact that the CPT creates it.
 	 *
 	 * @since 1.0
-	 * @param array $hidden the default hidden metaboxes.
-	 * @param array $screen the current screen.
+	 * @param array     $hidden the default hidden metaboxes.
+	 * @param WP_Screen $screen the current screen.
 	 * @returns array defaults with postcustom
 	 */
 	public function hide_postcustom_metabox( $hidden, $screen ) {
@@ -395,7 +395,7 @@ class WP_Document_Revisions_Admin {
 			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $mod_date, strtotime( $mod_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
-			</a></em>
+			</em>
 			</p>
 		<?php } ?>
 		<div class="clear"></div>
@@ -412,7 +412,7 @@ class WP_Document_Revisions_Admin {
 		?>
 		<label class="screen-reader-text" for="excerpt"><?php esc_html_e( 'Revision Summary' ); ?></label>
 		<textarea rows="1" cols="40" name="excerpt" tabindex="6" id="excerpt"></textarea>
-		<p><?php esc_html_e( 'Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file.', 'wp-document-revisions' ); ?></a></p>
+		<p><?php esc_html_e( 'Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file.', 'wp-document-revisions' ); ?></p>
 		<?php
 	}
 
