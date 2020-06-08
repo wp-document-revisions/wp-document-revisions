@@ -733,7 +733,7 @@ class WP_Document_Revisions {
 			$extension = $this->get_file_type( $document );
 			$timestamp = strtotime( $document->post_date_gmt );
 
-			$link  = home_url() . '/' . $this->document_slug() . '/' . gmdate( 'Y', $timestamp ) . '/' . gmdate( 'm', $timestamp ) . '/';
+			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . '/' . gmdate( 'Y', $timestamp ) . '/' . gmdate( 'm', $timestamp ) . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
 			// add trailing slash if user has set it as their permalink.
