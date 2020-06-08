@@ -3,7 +3,7 @@
 Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 5.3
+Tested up to: 5.4.1
 Stable tag: 3.3.0
 
 == Description ==
@@ -97,7 +97,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = Permissions management =
 
-* [User Role Editor by Members – Best User, Role and Capability Management Plugin for WordPress](https://wordpress.org/plugins/members/)
+* [Members – Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously named Members)
 
@@ -114,11 +114,21 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = 3.3.0 =
 
+* NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
+* NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
+* FIX: Queries on post_status do not do proper permissions check
+* FIX: Remove restore option on the current document and latest revision as it makes no sense.
+* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
+* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
+  (#217) @NeilWJames
+
 * NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
 * FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
 * FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
-* FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* FIX: Update code to WP Coding Standards 2.3 (and fix new sniff errors)
 * FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
 * FIX: Suppress excerpt output in feeds to stop information leakage
 * FIX: Password-protected document can leak information (by showing next/previous)
@@ -422,6 +432,12 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
+== Filter document_block_taxonomies ==
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the Document taxonomies (allowing users to select the first three for the block widget.
+
 == Filter document_caps ==
 
 In: class-wp-document-revisions.php
@@ -464,7 +480,7 @@ Filters the default help text for current screen.
 
 In: class-wp-document-revisions.php
 
-Filters the encoded file name for the attached document.
+Filters the encoded file name for the attached document (on save).
 
 == Filter document_lock_check ==
 
@@ -489,6 +505,12 @@ Filters the file name for WAMP settings (filter routine provided by plugin).
 In: class-wp-document-revisions.php
 
 Filters the Document permalink.
+
+== Filter document_read_uses_read ==
+
+In: class-wp-document-revisions.php
+
+Filters the users capacities to require read (or read_document) capability.
 
 == Filter document_revision_query ==
 
@@ -544,6 +566,12 @@ In: class-wp-document-revisions.php
 
 Filters the Document rewrite rules.
 
+== Filter document_serve ==
+
+In: class-wp-document-revisions.php
+
+Filters file name of document served. (Useful if file is encrypted at rest).
+
 == Filter document_shortcode_atts ==
 
 In: class-wp-document-revisions-front-end.php
@@ -592,7 +620,7 @@ In: class-wp-document-revisions.php
 
 Allows the RSS feed to be switched off.
 
-== Filter default_workflow_state ==
+== Filter default_workflow_states ==
 
 In: class-wp-document-revisions.php
 
@@ -621,6 +649,55 @@ Filters the option to send a locked document override email
 In: class-wp-document-revisions.php
 
 Filters the decision to serve the document through WP Document Revisions.
+
+=== WP-Documents-Revisions Action Hooks ===
+
+This plugin makes use of some action hooks to tailor the delivered processing according to a site's needs.
+
+Most of them are named with a leading 'document-' but there are a few additional non-standard ones.
+
+== Action change_document_workflow_state ==
+
+Called when the post is saved and Workflow_State taxonomy value is changed. (Only post_ID and new value are available)
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_change_workflow_state ==
+
+Called when the post is saved and Workflow_State taxonomy value is changed. (post_ID, new and old value are available)
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_edit ==
+
+Called as part of the Workflow_State taxonomy when putting the metabox on the admin page
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_lock_notice ==
+
+Called when putting the lock notice on the admin edit screen.
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_lock_override ==
+
+Called after trying to over-ride the lock and possibly a notice has been sent.
+
+In: class-wp-document-revisions.php
+
+== Action document_serve_done ==
+
+Called just after serving the file to the user.
+
+In: class-wp-document-revisions.php
+
+== Action serve_document ==
+
+Called just before serving the file to the user.
+
+In: class-wp-document-revisions.php
+
 
 
 == Where to get help or report an issue ==

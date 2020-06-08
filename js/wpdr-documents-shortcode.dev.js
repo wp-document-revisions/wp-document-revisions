@@ -65,6 +65,39 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 		const setAttributes =  props.setAttributes;
 
 		var taxo  = wpdr_data.taxos;
+
+		function id_to_slug( n, tax, val ) {
+			for( i = 0; i < wpdr_data.stmax; i++ ) {
+				if ( i != n && tax === taxo[i].query ) {
+					var terms = taxo[i].terms;
+					for ( j = 0, lenj = terms.length; j < lenj; j++) {
+						if ( val === terms[j][0] ) {
+							return tax + '="' + terms[j][2] + '"';
+						}
+					}
+					return tax + '="??"';
+				}
+			}
+			return tax + '="???"';
+		}
+
+		// consistency check (possibly reordered). If same order, this does nothing.
+		if ( wpdr_data.stmax > 0 && "" !== attributes.taxonomy_0 && attributes.taxonomy_0 !== taxo[0].query ) {
+			setAttributes( { freeform: attributes.freeform + " " + id_to_slug( 0, attributes.taxonomy_0, attributes.term_0 ) } ); 
+			setAttributes( { taxonomy_0: taxo[0].query } );
+			setAttributes( { term_0: 0 } );
+		}
+		if ( wpdr_data.stmax > 1 && "" !== attributes.taxonomy_1 && attributes.taxonomy_1 !== taxo[1].query ) {
+			setAttributes( { freeform: attributes.freeform + " " + id_to_slug( 1, attributes.taxonomy_1, attributes.term_1 ) } ); 
+			setAttributes( { taxonomy_1: taxo[1].query } );
+			setAttributes( { term_1: 0 } );
+		}
+		if ( wpdr_data.stmax > 2 && "" !== attributes.taxonomy_2 && attributes.taxonomy_2 !== taxo[2].query ) {
+			setAttributes( { freeform: attributes.freeform + " " + id_to_slug( 2, attributes.taxonomy_2, attributes.term_2 ) } ); 
+			setAttributes( { taxonomy_2: taxo[2].query } );
+			setAttributes( { term_2: 0 } );
+		}
+
 		//Function to create the select grouping
 		function tax_n( i ) {
 			var terms = taxo[i].terms;
@@ -130,18 +163,11 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				);
 			}
 
-			if ( wpdr_data.stmax == 1 ) {
-				return tax_n( 0 );
+			var taxos = [];
+			for (var i = 0; i < wpdr_data.stmax; i++) {
+				taxos.push( tax_n( i ) );
 			}
-			
-			if ( wpdr_data.stmax == 2 ) {
-				return [ tax_n( 0 ), tax_n( 1 ) ];
-			}
-
-			if ( wpdr_data.stmax >= 3 ) {
-				return [ tax_n( 0 ), tax_n( 1 ), tax_n( 2 ) ];
-			}
-
+			return taxos;
 		}
 
 		//Display block preview and UI
@@ -382,16 +408,24 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 						return "??";
 					}
 
+					function decode_taxo( tax, val ) {
+						if ( "" !== tax && 0 != val ) {
+							var i;
+							for ( i in [0, 1, 2] ) {
+								if ( tax === taxo[i].query ) {
+									content += " " + tax + "=" + id_to_slug( i, val );
+									return;
+								}
+							}
+							content += " " + tax + "=" + val;
+						}
+						return;
+					}
+
 					var content = '[documents ';
-					if ( "" !== attributes.taxonomy_0 && 0 != attributes.term_0 ) {
-						content += " " + attributes.taxonomy_0 + "=" + id_to_slug( 0, attributes.term_0 );
-					}
-					if ( "" !== attributes.taxonomy_1 && 0 != attributes.term_1 ) {
-						content += " " + attributes.taxonomy_1 + "=" + id_to_slug( 1, attributes.term_1 );
-					}
-					if ( "" !== attributes.taxonomy_2 && 0 != attributes.term_2 ) {
-						content += " " + attributes.taxonomy_2 + "=" + id_to_slug( 2, attributes.term_2 );
-					}
+					decode_taxo( attributes.taxonomy_0, attributes.term_0 );
+					decode_taxo( attributes.taxonomy_1, attributes.term_1 );
+					decode_taxo( attributes.taxonomy_2, attributes.term_2 );
 					if ( "" !== attributes.numberposts ) {
 						content += ' numberposts="' + attributes.numberposts + '"';
 					}

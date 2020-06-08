@@ -52,7 +52,7 @@ Filters the default help text for current screen.
 
 In: class-wp-document-revisions.php
 
-Filters the encoded file name for the attached document.
+Filters the encoded file name for the attached document (on save).
 
 ## Filter document_lock_check
 
@@ -77,6 +77,12 @@ Filters the file name for WAMP settings (filter routine provided by plugin).
 In: class-wp-document-revisions.php
 
 Filters the Document permalink.
+
+## Filter document_read_uses_read
+
+In: class-wp-document-revisions.php
+
+Filters the users capacities to require read (or read_document) capability.
 
 ## Filter document_revision_query
 
@@ -132,6 +138,12 @@ In: class-wp-document-revisions.php
 
 Filters the Document rewrite rules.
 
+## Filter document_serve
+
+In: class-wp-document-revisions.php
+
+Filters file name of document served. (Useful if file is encrypted at rest).
+
 ## Filter document_shortcode_atts
 
 In: class-wp-document-revisions-front-end.php
@@ -180,7 +192,7 @@ In: class-wp-document-revisions.php
 
 Allows the RSS feed to be switched off.
 
-## Filter default_workflow_state
+## Filter default_workflow_states
 
 In: class-wp-document-revisions.php
 
