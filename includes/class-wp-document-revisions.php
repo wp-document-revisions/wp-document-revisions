@@ -205,13 +205,16 @@ class WP_Document_Revisions {
 	public function activation_error_notice() {
 		if ( get_transient( 'wpdr_activation_issue' ) ) {
 			delete_transient( 'wpdr_activation_issue' );
-			?>
-			<div class="notice notice-warning is-dismissible"><p>
-			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
-			</p><p>
-			<?php esc_html_e( 'Documents menu may not be displayed completely with "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
-			</p></div>
-			<?php
+			// timing of initial permissions being set as can give message before initial activation.
+			if ( ! current_user_can( 'edit_documents' ) ) {
+				?>
+				<div class="notice notice-warning is-dismissible"><p>
+				<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
+				</p><p>
+				<?php esc_html_e( 'Documents menu may not be displayed completely with "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
+				</p></div>
+				<?php
+			}
 		}
 	}
 
@@ -1745,7 +1748,7 @@ class WP_Document_Revisions {
 
 		// verify that there is a lock.
 		$current_owner = wp_check_post_lock( $post_id );
-		if ( ! ( $current_user ) ) {
+		if ( ! ( $current_owner ) ) {
 			die( '-1' );
 		}
 
@@ -2423,14 +2426,20 @@ class WP_Document_Revisions {
 	 * Will also check to make sure the returned image doesn't leak the file's true path.
 	 *
 	 * @since 1.2.2
-	 * @param bool   $false will always be false.
-	 * @param int    $id the ID of the attachment.
-	 * @param string $size the size requested.
-	 * @return array the image array returned from image_downsize()
+	 * @param bool|array $downsize Whether to short-circuit the image downsize.
+	 * @param int        $id       the ID of the attachment.
+	 * @param string     $size     the size requested.
+	 * @return bool|array false or the image array to be returned from image_downsize()
 	 */
-	public function image_downsize( $false, $id, $size ) {
+	public function image_downsize( $downsize, $id, $size ) {
+		// previous filter code wants to short-cut the process.
+		if ( is_array( $downsize ) ) {
+			return $downsize;
+		}
+
+		// not a document.
 		if ( ! $this->verify_post_type( $id ) ) {
-			return false;
+			return $downsize;
 		}
 
 		remove_filter( 'image_downsize', array( &$this, 'image_downsize' ) );
@@ -2525,7 +2534,7 @@ class WP_Document_Revisions {
 
 			// dropped through initial tests.
 			if ( isset( $query_fields['post_status'] ) && ! empty( $query_fields['post_status'] ) ) {
-				if ( ! isset( $query->query->perm ) ) {
+				if ( ! isset( $query_fields['perm'] ) ) {
 					// create/modify taxonomy query.
 					$query->set( 'perm', 'readable' );
 				}
