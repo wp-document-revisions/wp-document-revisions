@@ -2,7 +2,7 @@
 
 ### 3.3.0
 
-* FIX: Design conflict with Elementor (#208) @NeilWJames
+* FIX: Design conflict with Elementor (#230) @NeilWJames
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
 * NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
