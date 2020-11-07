@@ -745,39 +745,6 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Callback to inject JavaScript in page after upload is complete (pre 3.3).
-	 *
-	 * @since 0.5
-	 * @param int $id the ID of the attachment.
-	 * @return unknown
-	 */
-	public function post_upload_js( $id ) {
-		// get the post object.
-		$document = get_post( $id );
-
-		// begin output buffer so the javascript can be returned as a string, rather than output directly to the browser.
-		ob_start();
-
-		?>
-		<script>
-		var attachmentID = <?php echo (int) $id; ?>;
-		var extension = '<?php echo esc_js( $this->get_file_type( $document ) ); ?>';
-		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
-		</script>
-		<?php
-
-		// get contents of output buffer.
-		$js = ob_get_contents();
-
-		// dump output buffer.
-		ob_end_clean();
-
-		// return javascript.
-		return $js;
-	}
-
-
-	/**
 	 * Binds our post-upload javascript callback to the plupload event
 	 * Note: in footer because it has to be called after handler.js is loaded and initialized.
 	 *

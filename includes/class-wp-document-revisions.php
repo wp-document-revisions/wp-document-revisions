@@ -1118,7 +1118,8 @@ class WP_Document_Revisions {
 			$headers['Content-Type'] = $mimetype;
 		}
 
-		$headers['Content-Length'] = filesize( $file );
+		$filesize                  = filesize( $file );
+		$headers['Content-Length'] = $filesize;
 
 		// modified.
 		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
@@ -1167,10 +1168,58 @@ class WP_Document_Revisions {
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		@set_time_limit( 0 );
 
-		// clear output buffer to prevent other plugins from corrupting the file.
-		if ( ob_get_level() ) {
-			ob_clean();
-			flush();
+		// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
+		$levels = ob_get_level();
+		for ( $i = 0; $i < $levels; $i++ ) {
+			ob_end_clean();
+		}
+		if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
+			// oops, at least one still there,  deleted and contains data.
+			wp_die( esc_html__( 'Sorry, Output buffer exists with data. File writing suppressed.', 'wp-document-revisions' ) );
+		}
+
+		// data may already have been flushed so should error.
+		if ( headers_sent() ) {
+			/**
+			 * Filters to output even if output already written.
+			 *
+			 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
+			 *
+			 * @param bool $debug Set to false.
+			 */
+			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+				// normal case is to fail as can cause corrupted output.
+				wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
+			}
+		}
+
+		/**
+		 * Filter to define file writing buffer size.
+		 *
+		 * Note: Use `add_filter( 'document_use_gzip', '__return_false' )` to shortcircuit.
+		 *       This is always subject to browser negociation.
+		 *
+		 * @param integer $buffsize  0 (no intermediate flushing).
+		 * @param integer $filesize  File size.
+		 */
+		$buffsize = apply_filters( 'document_buffer_size', 0, $filesize );
+
+		// Make sure that there is a buffer to be written on close.
+		/**
+		 * Filter to see if gzip should be used.
+		 *
+		 * Note: Use `add_filter( 'document_use_gzip', '__return_false' )` to shortcircuit.
+		 *       This is always subject to browser negociation.
+		 *
+		 * @param bool    $default   true.
+		 * @param string  $mimetype  Mime type to be served.
+		 * @param integer $filesize  File size.
+		 */
+		if ( apply_filters( 'document_use_gzip', true, $mimetype, $filesize ) ) {
+			// request compression.
+			ob_start( 'ob_gzhandler', $buffsize );
+		} else {
+			ob_start( null, $buffsize );
 		}
 
 		// If we made it this far, just serve the file
@@ -1187,6 +1236,9 @@ class WP_Document_Revisions {
 		 * @param integer $attach->ID  Post id of the attachment.
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
+
+		// stop WP processing to ensure nothing else adds output.
+		exit;
 	}
 
 	/**

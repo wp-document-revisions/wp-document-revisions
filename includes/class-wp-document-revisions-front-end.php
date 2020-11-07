@@ -163,10 +163,8 @@ class WP_Document_Revisions_Front_End {
 		?>
 		</ul>
 		<?php
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
+		// grab buffer contents and remove.
+		return ob_get_clean();
 	}
 
 
@@ -374,11 +372,8 @@ class WP_Document_Revisions_Front_End {
 		<?php } ?>
 		</ul>
 		<?php
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
-
+		// grab buffer contents and remove.
+		return ob_get_clean();
 	}
 
 	/**
@@ -654,6 +649,7 @@ class WP_Document_Revisions_Front_End {
 			$taxonomy_elements = array();
 			// Has workflow_state been mangled? Note. set here as it could be filtered out.
 			$wf_efpp = 0;
+			$tax_key = self::$parent->taxonomy_key();
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
@@ -663,9 +659,9 @@ class WP_Document_Revisions_Front_End {
 					'',  // underscore-separated slug.
 				);
 				// Look up taxonomy.
-				if ( 'workflow_state' === $taxonomy && 'workflow_state' !== self::$parent->taxonomy_key() ) {
+				if ( 'workflow_state' === $taxonomy && ! empty( $tax_key ) && 'workflow_state' !== $tax_key ) {
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax               = get_taxonomy( self::$parent->taxonomy_key() );
+					$tax               = get_taxonomy( $tax_key );
 					$tax->hierarchical = false;
 					$tax->label        = 'Post Status';
 					$wf_efpp           = 1;

@@ -95,10 +95,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</ul>' . $args['after_widget'];
 
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
+		// return buffer contents and remove it.
+		return ob_get_clean();
 	}
 
 	/**
