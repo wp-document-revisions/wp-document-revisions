@@ -30,9 +30,6 @@ matrix:
 before_install:
   - export PATH="$HOME/bin:$PATH"
  
-  # Unless we need XDebug, disable it for improved performance.
-  - phpenv config-rm xdebug.ini || return 0
- 
 install:
   # Install an older version of PHPUnit if we're running old versions of WP.
   - |
