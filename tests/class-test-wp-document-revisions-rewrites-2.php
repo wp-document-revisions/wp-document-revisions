@@ -79,7 +79,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->serve_file( '' );
+		$wpdr->test_serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -112,7 +112,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->serve_file( '' );
+		$wpdr->test_serve_file( '' );
 		$content = ob_get_contents();
 		ob_end_clean();
 
