@@ -1238,7 +1238,7 @@ class WP_Document_Revisions {
 		do_action( 'document_serve_done', $file, $attach->ID );
 
 		// stop WP processing to ensure nothing else adds output.
-		exit;
+		// exit;
 	}
 
 	/**
