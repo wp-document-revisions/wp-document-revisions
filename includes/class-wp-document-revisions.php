@@ -971,7 +971,7 @@ class WP_Document_Revisions {
 	 * @return String the resolved template
 	 */
 	public function test_serve_file( $template ) {
-		$return $this->int_serve_file( $template );
+		return $this->int_serve_file( $template );
 	}
 
 	/**
