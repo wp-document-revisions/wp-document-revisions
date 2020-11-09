@@ -19,6 +19,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();
+		add_filter( 'document_use_gzip', '__return_false' );
 
 		// init permalink structure.
 		global $wp_rewrite;
@@ -45,6 +46,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$wp_rewrite->set_permalink_structure( '' );
 
 		_destroy_uploads();
+		remove_filter( 'document_use_gzip', '__return_false' )
 		parent::tearDown();
 
 	}
@@ -79,9 +81,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_clean();
+		$wpdr->test_serve_file( '' );
+		$content = ob_get_clean();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
 		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
@@ -112,9 +113,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_clean();
+		$wpdr->test_serve_file( '' );
+		$content = ob_get_clean();
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
