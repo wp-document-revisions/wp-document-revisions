@@ -46,7 +46,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$wp_rewrite->set_permalink_structure( '' );
 
 		_destroy_uploads();
-		remove_filter( 'document_use_gzip', '__return_false' )
+		remove_filter( 'document_use_gzip', '__return_false' );
 		parent::tearDown();
 
 	}
