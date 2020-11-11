@@ -1,5 +1,5 @@
-# Copyright (C) 2019 WP Document Revisions 3.2.0
-# This file is distributed under the same license as the WP Document Revisions 3.2.0 package.
+# Copyright (C) 2020 WP Document Revisions 3.3.0
+# This file is distributed under the same license as the WP Document Revisions 3.3.0 package.
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
@@ -12,557 +12,614 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
+"X-Crowdin-Project-ID: 290225\n"
 "X-Crowdin-Language: id\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
-"Last-Translator: benbalter <ben.balter@github.com>\n"
+"X-Crowdin-File-ID: 33\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
-"PO-Revision-Date: 2019-01-11 15:21\n"
+"PO-Revision-Date: 2020-11-11 22:19\n"
 
-#. translators: %s is the download link
-#: includes/class-wp-document-revisions-admin.php:140
+#. translators: %s is the download link.
+#: includes/class-wp-document-revisions-admin.php:143
 msgid "Document updated. <a href=\"%s\">Download document</a>"
 msgstr "Dokumen diperbarui <a href=\" %s \">Mengunduh dokumen</a>"
 
-#: includes/class-wp-document-revisions-admin.php:141
+#: includes/class-wp-document-revisions-admin.php:144
 msgid "Custom field updated."
 msgstr "Bidang kustom diperbarui."
 
-#: includes/class-wp-document-revisions-admin.php:142
+#: includes/class-wp-document-revisions-admin.php:145
 msgid "Custom field deleted."
 msgstr "Bidang kustom dihapus."
 
-#: includes/class-wp-document-revisions-admin.php:143
+#: includes/class-wp-document-revisions-admin.php:146
 msgid "Document updated."
 msgstr "Dokumen diperbarui."
 
-#. translators: %s is the revision ID
-#: includes/class-wp-document-revisions-admin.php:146
+#. translators: %s is the revision ID.
+#: includes/class-wp-document-revisions-admin.php:149
 msgid "Document restored to revision from %s"
 msgstr "Dokumen dikembalikan ke revisi dari %s"
 
-#. translators: %s is the download link
-#: includes/class-wp-document-revisions-admin.php:148
+#. translators: %s is the download link.
+#: includes/class-wp-document-revisions-admin.php:152
 msgid "Document published. <a href=\"%s\">Download document</a>"
 msgstr "Dokumen diterbitkan <a href=\"%s\">Mengunduh dokumen</a>"
 
-#: includes/class-wp-document-revisions-admin.php:149
+#: includes/class-wp-document-revisions-admin.php:153
 msgid "Document saved."
 msgstr "Dokumen disimpan."
 
-#. translators: %s is the download link
-#: includes/class-wp-document-revisions-admin.php:151
+#. translators: %s is the download link.
+#: includes/class-wp-document-revisions-admin.php:155
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Dokumen diserahkan <a target=\"_blank\" href=\"%s\">Unduh dokumen</a>"
 
-#. translators: %1$s is the date, %2$s is the preview link
-#: includes/class-wp-document-revisions-admin.php:153
+#. translators: %1$s is the date, %2$s is the preview link.
+#: includes/class-wp-document-revisions-admin.php:157
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
 msgstr "Dokumen dijadwalkan untuk: <strong>%1$s</strong>. <a target=\"_blank\" href=\" %2$s\">Preview document</a>"
 
-#. translators: %s is the link to download the document
-#: includes/class-wp-document-revisions-admin.php:155
+#. translators: %s is the link to download the document.
+#: includes/class-wp-document-revisions-admin.php:159
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a>"
 
-#: includes/class-wp-document-revisions-admin.php:205
-msgid "Basic Usage"
-msgstr "Penggunaan Dasar"
-
-#: includes/class-wp-document-revisions-admin.php:206
+#: includes/class-wp-document-revisions-admin.php:208
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer."
 msgstr "Layar ini memungkinkan pengguna untuk secara kolaboratif mengedit dokumen dan melacak riwayat revisi mereka. Untuk memulai, masukkan judul untuk dokumen, <code>Upload Versi Baru</code> dan pilih file dari komputer Anda."
 
-#: includes/class-wp-document-revisions-admin.php:207
+#: includes/class-wp-document-revisions-admin.php:209
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
 msgstr "Setelah berhasil diunggah, Anda dapat memasukkan pesan log revisi, menetapkan dokumen sebagai pengarang, dan menjelaskan keadaan alur kerja saat ini."
 
-#: includes/class-wp-document-revisions-admin.php:208
+#: includes/class-wp-document-revisions-admin.php:210
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr "Setelah selesai, cukup klik <code>Perbaharui</code> untuk menyimpan perubahan Anda"
 
-#: includes/class-wp-document-revisions-admin.php:209, includes/class-wp-document-revisions-admin.php:256
-msgid "Revision Log"
-msgstr "Log Revisi"
-
-#: includes/class-wp-document-revisions-admin.php:210
+#: includes/class-wp-document-revisions-admin.php:212
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
 msgstr "Log revisi tersebut memberikan ringkasan singkat tentang perubahan yang tercermin dalam revisi tertentu.\n"
 "Digunakan secara luas di komunitas open-source, ini memberikan sejarah komprehensif tentang sekilas dokumen."
 
-#: includes/class-wp-document-revisions-admin.php:211
+#: includes/class-wp-document-revisions-admin.php:213
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
 msgstr "Anda dapat mendownload dan melihat versi dokumen sebelumnya dengan mengklik stempel waktu dalam log revisi. Anda juga dapat mengembalikan revisi dengan mengklik <code>mengembalikan</code> tombol di samping revisi."
 
-#: includes/class-wp-document-revisions-admin.php:212, includes/class-wp-document-revisions-admin.php:260, includes/class-wp-document-revisions-admin.php:986
-msgid "Workflow State"
-msgstr "Negara alur kerja"
-
-#: includes/class-wp-document-revisions-admin.php:213
+#: includes/class-wp-document-revisions-admin.php:215
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
 msgstr "Bidang alur kerja dapat digunakan untuk membantu anggota tim memahami pada tahap apa sebuah dokumen berada dalam organisasi tertentu&quot;s alur kerja Bidang ini opsional, dan dapat disesuaikan atau ditanyakan dengan mengklik <code>Workflow States</code> di sisi kiri."
 
-#: includes/class-wp-document-revisions-admin.php:214
-msgid "Publishing Documents"
-msgstr "Dokumen Penerbitan"
-
-#: includes/class-wp-document-revisions-admin.php:215
+#: includes/class-wp-document-revisions-admin.php:217
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr "Secara default, dokumen yang diunggah hanya dapat diakses oleh pengguna yang masuk. Dokumen dapat dipublikasikan, sehingga membuatnya dapat diakses oleh dunia, dengan mengalihkan visibilitas mereka di kotak \"Publikasikan\" di pojok kanan atas. Dokumen apa pun yang ditandai sebagai dipublikasikan akan dapat diakses oleh siapa saja yang memiliki URL yang tepat."
 
-#: includes/class-wp-document-revisions-admin.php:218, includes/class-wp-document-revisions.php:232
-msgid "Documents"
-msgstr "Dokumen"
-
-#: includes/class-wp-document-revisions-admin.php:219
+#: includes/class-wp-document-revisions-admin.php:221
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
 msgstr "Berikut adalah daftar semua dokumen yang dapat Anda akses. Klik judul dokumen untuk mengedit dokumen atau mendownload versi terbaru."
 
-#: includes/class-wp-document-revisions-admin.php:220
+#: includes/class-wp-document-revisions-admin.php:222
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
 msgstr "Untuk menambahkan dokumen baru, klik <strong>Tambah Dokumen</strong> di sisi kiri."
 
-#: includes/class-wp-document-revisions-admin.php:221
+#: includes/class-wp-document-revisions-admin.php:223
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
 msgstr "Untuk melihat semua dokumen pada keadaan alur kerja tertentu, klik <strong>Serikat alur kerja</strong> di menu di sebelah kiri."
 
-#: includes/class-wp-document-revisions-admin.php:252
+#: includes/class-wp-document-revisions-admin.php:264
 msgid "Revision Summary"
 msgstr "Ringkasan Revisi"
 
-#: includes/class-wp-document-revisions-admin.php:253
+#: includes/class-wp-document-revisions-admin.php:265
 msgid "Document"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:268, includes/class-wp-document-revisions-admin.php:966, includes/class-wp-document-revisions-admin.php:1172
+#: includes/class-wp-document-revisions-admin.php:268
+msgid "Revision Log"
+msgstr "Log Revisi"
+
+#: includes/class-wp-document-revisions-admin.php:272, includes/class-wp-document-revisions-admin.php:1073
+msgid "Workflow State"
+msgstr "Negara alur kerja"
+
+#: includes/class-wp-document-revisions-admin.php:280, includes/class-wp-document-revisions-admin.php:1054, includes/class-wp-document-revisions-admin.php:1298
 msgid "Owner"
 msgstr "Pemilik"
 
-#. translators: %s is the user that holds the document lock
-#: includes/class-wp-document-revisions-admin.php:356
+#. translators: %s is the user that holds the document lock.
+#: includes/class-wp-document-revisions-admin.php:370
 msgid "%s has prevented other users from making changes."
 msgstr "%s mencegah pengguna lain melakukan perubahan."
 
-#: includes/class-wp-document-revisions-admin.php:359
+#: includes/class-wp-document-revisions-admin.php:373
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr "<br/>Jika Anda yakin ini salah, Anda dapat <a href=\"#\" id=\"override_link\">mengganti kunci </a>, namun perubahannya akan hilang."
 
-#: includes/class-wp-document-revisions-admin.php:366
+#: includes/class-wp-document-revisions-admin.php:379
 msgid "Upload Document"
 msgstr "Mengunggah Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:367
+#: includes/class-wp-document-revisions-admin.php:380
 msgid "Upload New Version"
 msgstr "Mengunggah Versi Baru"
 
-#: includes/class-wp-document-revisions-admin.php:374
+#: includes/class-wp-document-revisions-admin.php:388
 msgid "Latest Version of the Document"
 msgstr "Versi terbaru dari Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:375
+#: includes/class-wp-document-revisions-admin.php:389
 msgid "Download"
 msgstr "Download"
 
-#: includes/class-wp-document-revisions-admin.php:376
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#: includes/class-wp-document-revisions-admin.php:395
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
 msgstr "Diperiksa dalam <abbr class =\"timestamp\" title =\"%1$s\"id=\"%2$s\">%3$s</abbr> yang lalu oleh %4$s"
 
-#: includes/class-wp-document-revisions-admin.php:396
+#: includes/class-wp-document-revisions-admin.php:415
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
 msgstr "Ringkasan revisi adalah catatan opsional untuk disimpan bersamaan dengan revisi ini yang memungkinkan pengguna lain untuk melihat perubahan yang dibuat dengan cepat dan mudah tanpa perlu membuka file yang sebenarnya."
 
-#: includes/class-wp-document-revisions-admin.php:415
+#: includes/class-wp-document-revisions-admin.php:433
 msgid "Modified"
 msgstr "Diubah"
 
-#: includes/class-wp-document-revisions-admin.php:416
+#: includes/class-wp-document-revisions-admin.php:434
 msgid "User"
 msgstr "Pengguna"
 
-#: includes/class-wp-document-revisions-admin.php:417
+#: includes/class-wp-document-revisions-admin.php:435
 msgid "Summary"
 msgstr "Ringkasan"
 
-#: includes/class-wp-document-revisions-admin.php:421
+#: includes/class-wp-document-revisions-admin.php:439
 msgid "Actions"
 msgstr "Tindakan"
 
-#: includes/class-wp-document-revisions-admin.php:461
+#: includes/class-wp-document-revisions-admin.php:481
 msgid "Restore"
 msgstr "Mengembalikan"
 
-#: includes/class-wp-document-revisions-admin.php:468
+#: includes/class-wp-document-revisions-admin.php:488
 msgid "RSS Feed"
 msgstr "RSS Makan"
 
-#: includes/class-wp-document-revisions-admin.php:499, includes/class-wp-document-revisions-admin.php:578
+#: includes/class-wp-document-revisions-admin.php:518, includes/class-wp-document-revisions-admin.php:595
 msgid "Document Upload Directory"
 msgstr "Direktori Upload Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:500, includes/class-wp-document-revisions-admin.php:585
+#: includes/class-wp-document-revisions-admin.php:519, includes/class-wp-document-revisions-admin.php:602
 msgid "Document Slug"
 msgstr "Dokumen Slug"
 
-#: includes/class-wp-document-revisions-admin.php:532
+#: includes/class-wp-document-revisions-admin.php:550
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
 msgstr "Dokumen upload direktori berubah, tapi upload yang ada mungkin perlu dipindahkan ke folder baru untuk memastikan mereka tetap dapat diakses."
 
-#: includes/class-wp-document-revisions-admin.php:562
+#: includes/class-wp-document-revisions-admin.php:579
 msgid "Document slug changed, but some previously published URLs may now be broken."
 msgstr "Slug dokumen berubah, namun beberapa URL yang diterbitkan sebelumnya mungkin sudah rusak."
 
-#: includes/class-wp-document-revisions-admin.php:575
+#: includes/class-wp-document-revisions-admin.php:592
 msgid "Document Settings"
 msgstr "Pengaturan Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:609, includes/class-wp-document-revisions-admin.php:638, includes/class-wp-document-revisions.php:1558
+#: includes/class-wp-document-revisions-admin.php:626, includes/class-wp-document-revisions-admin.php:656, includes/class-wp-document-revisions.php:1746
 msgid "Not authorized"
 msgstr "Tidak diizinkan"
 
-#: includes/class-wp-document-revisions-admin.php:696
+#: includes/class-wp-document-revisions-admin.php:714
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr "Direktori tempat menyimpan dokumen upload. Defaultnya ada di map <code>wp_content/uploads</code>anda (atau folder unggahan default lainnya yang didefinisikan di tempat lain), namun bisa dipindahkan ke folder di luar <code>htdocs</code> atau <code>public_html</code> untuk keamanan tambahan."
 
-#. translators: %site_id% is not interpolated and should not be translated
-#: includes/class-wp-document-revisions-admin.php:702
+#. translators: %site_id% is not interpolated and should not be translated.
+#: includes/class-wp-document-revisions-admin.php:722
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
 msgstr "Anda dapat secara opsional menyertakan string <code>%site_id%</code> di dalam path untuk memisahkan file menurut situs."
 
-#: includes/class-wp-document-revisions-admin.php:716
+#: includes/class-wp-document-revisions-admin.php:736
 msgid "example-document-title"
 msgstr "contoh-dokumen-judul"
 
-#: includes/class-wp-document-revisions-admin.php:720
+#: includes/class-wp-document-revisions-admin.php:740
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
 msgstr "\"Slug\" yang digunakan untuk awalan semua URL untuk dokumen (dan arsip dokumen). Defaultnya adalah <code>dokumen</code>."
 
-#: includes/class-wp-document-revisions-admin.php:804
+#: includes/class-wp-document-revisions-admin.php:825
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
 msgstr "Saat ini Anda telah memeriksa file ini. Tidak ada pengguna lain yang dapat mengedit dokumen ini selama Anda tetap berada di halaman ini."
 
-#: includes/class-wp-document-revisions-admin.php:819
+#: includes/class-wp-document-revisions-admin.php:840
 msgid "Feed Privacy"
 msgstr "Makan Privasi"
 
-#: includes/class-wp-document-revisions-admin.php:822
+#: includes/class-wp-document-revisions-admin.php:843
 msgid "Secret Feed Key"
 msgstr "Kunci umpan rahasia"
 
-#: includes/class-wp-document-revisions-admin.php:825
+#: includes/class-wp-document-revisions-admin.php:846
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
 msgstr "Untuk melindungi privasi Anda, Anda perlu menambahkan kunci untuk memberi makan untuk digunakan pada pembaca feed."
 
-#: includes/class-wp-document-revisions-admin.php:827
+#: includes/class-wp-document-revisions-admin.php:848
 msgid "Generate New Key"
 msgstr "Buat Kunci Baru"
 
-#: includes/class-wp-document-revisions-admin.php:902
+#: includes/class-wp-document-revisions-admin.php:978
+msgid "Maximum number of revisions reached for this document. Making changes will delete data."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:969
+msgid "More revisions exist for this document than is permitted. Making changes will delete data."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:956
+msgid "Maximum number of document revisions set to zero using a filter. Check your configuration."
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1000
 msgid "All workflow states"
 msgstr "Semua alur kerja menyatakan"
 
-#: includes/class-wp-document-revisions-admin.php:925
+#: includes/class-wp-document-revisions-admin.php:1002
+msgid "All statuses"
+msgstr ""
+
+#: includes/class-wp-document-revisions-admin.php:1018
 msgid "All owners"
 msgstr "Semua pemilik"
 
-#: includes/class-wp-document-revisions-admin.php:1034
+#: includes/class-wp-document-revisions-admin.php:1119
 msgid "Currently Editing"
 msgstr "Saat ini sedang mengedit"
 
-#: includes/class-wp-document-revisions-admin.php:1083
+#: includes/class-wp-document-revisions-admin.php:1166
 msgid "Current State"
 msgstr "Kondisi saat ini"
 
-#: includes/class-wp-document-revisions-admin.php:1173
+#: includes/class-wp-document-revisions-admin.php:1299
 msgid "Document Owner"
 msgstr "Pemilik Dokumen"
 
-#: includes/class-wp-document-revisions-admin.php:1208
+#: includes/class-wp-document-revisions-admin.php:1341
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr "Yakin ingin mengembalikan revisi ini? Jika Anda melakukannya, tidak ada sejarah yang hilang. Revisi ini akan disalin dan menjadi revisi terbaru."
 
-#: includes/class-wp-document-revisions-admin.php:1210
-msgid "File uploaded successfully. Add a revision summary below (optional) or press <strong>Update</strong> to save your changes."
-msgstr "Berkas berhasil diunggah. Tambahkan ringkasan revisi di bawah ini (opsional) atau tekan <strong>Perbarui</strong> untuk menyimpan perubahan Anda."
+#: includes/class-wp-document-revisions-admin.php:1343
+msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
+msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1211
+#: includes/class-wp-document-revisions-admin.php:1344
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
 msgstr "Setelah menyimpan dokumen Anda di perangkat lunak perkantoran Anda, <a href=\"#\" onClick=\"location.reload();\">muat ulang halaman ini</a> untuk melihat perubahan Anda."
 
-#. translators: %s is the title of the document
-#: includes/class-wp-document-revisions-admin.php:1213
+#. translators: %s is the title of the document.
+#: includes/class-wp-document-revisions-admin.php:1346
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr "Kunci Anda pada dokumen %s telah diganti. Setiap perubahan akan hilang."
 
-#: includes/class-wp-document-revisions-admin.php:1214
+#: includes/class-wp-document-revisions-admin.php:1347
 msgid "An error has occurred, please try reloading the page."
 msgstr "Telah terjadi kesalahan, coba muat ulang laman."
 
-#: includes/class-wp-document-revisions-admin.php:1215
+#: includes/class-wp-document-revisions-admin.php:1348
 msgid "Lost Document Lock"
 msgstr "Kunci Dokumen hilang"
 
-#. translators: %d is the numeric minutes, when singular
-#. translators: %d is the numeric minutes, when plural
-#: includes/class-wp-document-revisions-admin.php:1218, includes/class-wp-document-revisions-admin.php:1220
+#. translators: %d is the numeric minutes, when singular.
+#. translators: %d is the numeric minutes, when plural.
+#: includes/class-wp-document-revisions-admin.php:1351, includes/class-wp-document-revisions-admin.php:1353
 msgid "%d mins"
 msgstr "%d menit"
 
-#. translators: %d is the numeric hour, when singular
-#: includes/class-wp-document-revisions-admin.php:1222
+#. translators: %d is the numeric hour, when singular.
+#: includes/class-wp-document-revisions-admin.php:1355
 msgid "%d hour"
 msgstr "%d jam"
 
-#. translators: %d is the numeric hour, when plural
-#: includes/class-wp-document-revisions-admin.php:1224
+#. translators: %d is the numeric hour, when plural.
+#: includes/class-wp-document-revisions-admin.php:1357
 msgid "%d hours"
 msgstr "%d jam"
 
-#. translators: %d is the numeric day, when singular
-#: includes/class-wp-document-revisions-admin.php:1226
+#. translators: %d is the numeric day, when singular.
+#: includes/class-wp-document-revisions-admin.php:1359
 msgid "%d day"
 msgstr "%d hari"
 
-#. translators: %d is the numeric days, when plural
-#: includes/class-wp-document-revisions-admin.php:1228
+#. translators: %d is the numeric days, when plural.
+#: includes/class-wp-document-revisions-admin.php:1361
 msgid "%d days"
 msgstr "%d hari"
 
-#: includes/class-wp-document-revisions-admin.php:1423, includes/class-wp-document-revisions-front-end.php:361, includes/class-wp-document-revisions-front-end.php:364
+#: includes/class-wp-document-revisions-admin.php:1590, includes/class-wp-document-revisions-recently-revised-widget.php:33, includes/class-wp-document-revisions-recently-revised-widget.php:36
 msgid "Recently Revised Documents"
 msgstr "Dokumen yang baru saja direvisi"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status
-#: includes/class-wp-document-revisions-admin.php:1468
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#: includes/class-wp-document-revisions-admin.php:1634
 msgid "%1$s ago by %2$s [%3$s]"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:126
-msgid "<a href=\"%1$s\" title=\"%2$s\" id=\"%3$s\" class=\"timestamp\">%4$s</a> <span class=\"agoby\">ago by</a> <span class=\"author\">%5$s</a>"
-msgstr "<a href=\"%1$s\"title=\"%2$s\" id=\"%3$s\"class=\"timestamp\">%4$s</a> <span class=\"agoby\">yang lalu oleh</a> <span class=\"author\">%5$s</a>"
+#: includes/class-wp-document-revisions-front-end.php:155
+msgid "ago by"
+msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:277
+#: includes/class-wp-document-revisions-front-end.php:370
 msgid "Edit"
 msgstr ""
 
-#. translators: %1$s is the time ago in words, %2$s is the author
-#: includes/class-wp-document-revisions-front-end.php:411
+#: includes/class-wp-document-revisions-front-end.php:441
+msgid "WP Document Revisions"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:662
+msgid "No selection"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:733, includes/class-wp-document-revisions-front-end.php:872
+msgid "You are not authorized to read this data"
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:763
+msgid " Taxonomy details in this block have changed."
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:788, includes/class-wp-document-revisions-front-end.php:804, includes/class-wp-document-revisions-front-end.php:820
+msgid " Taxonomy term does not belong to this taxonomy."
+msgstr ""
+
+#: includes/class-wp-document-revisions-front-end.php:877
+msgid "This is not a valid document."
+msgstr ""
+
+#. translators: %1$s is the time ago in words, %2$s is the author.
+#: includes/class-wp-document-revisions-recently-revised-widget.php:86
 msgid "%1$s ago by %2$s"
 msgstr "%1$s lalu oleh %2$s"
 
-#: includes/class-wp-document-revisions-front-end.php:411
+#: includes/class-wp-document-revisions-recently-revised-widget.php:86
 msgid "%1$s ago"
 msgstr "%1$s yang lalu"
 
-#: includes/class-wp-document-revisions-front-end.php:439
+#: includes/class-wp-document-revisions-recently-revised-widget.php:130
 msgid "Title:"
 msgstr "Judul:"
 
-#: includes/class-wp-document-revisions-front-end.php:443
+#: includes/class-wp-document-revisions-recently-revised-widget.php:134
 msgid "Number of Posts:"
 msgstr "Jumlah post:"
 
-#: includes/class-wp-document-revisions-front-end.php:447
+#: includes/class-wp-document-revisions-recently-revised-widget.php:138
 msgid "Posts to Show:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:454
+#: includes/class-wp-document-revisions-recently-revised-widget.php:145
 msgid "Display Document Author:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:455
+#: includes/class-wp-document-revisions-recently-revised-widget.php:146
 msgid "Yes"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:220
+#: includes/class-wp-document-revisions.php:212
+msgid "You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:214
+msgid "Documents menu may not be displayed completely with \"All Documents\" and \"Add Document\" options missing"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:281
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions.php:221
+#: includes/class-wp-document-revisions.php:282
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions.php:222
+#: includes/class-wp-document-revisions.php:283
 msgctxt "document"
 msgid "Add Document"
 msgstr "Tambahkan Dokumen"
 
-#: includes/class-wp-document-revisions.php:223
+#: includes/class-wp-document-revisions.php:284
 msgid "Add New Document"
 msgstr "Tambahkan Dokumen Baru"
 
-#: includes/class-wp-document-revisions.php:224
+#: includes/class-wp-document-revisions.php:285
 msgid "Edit Document"
 msgstr "Edit Dokumen"
 
-#: includes/class-wp-document-revisions.php:225
+#: includes/class-wp-document-revisions.php:286
 msgid "New Document"
 msgstr "Dokumen baru"
 
-#: includes/class-wp-document-revisions.php:226
+#: includes/class-wp-document-revisions.php:287
 msgid "View Document"
 msgstr "Lihat Dokumen"
 
-#: includes/class-wp-document-revisions.php:227
+#: includes/class-wp-document-revisions.php:288
 msgid "View Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:228
+#: includes/class-wp-document-revisions.php:289
 msgid "Search Documents"
 msgstr "Cari Dokumen"
 
-#: includes/class-wp-document-revisions.php:229
+#: includes/class-wp-document-revisions.php:290
 msgid "No documents found"
 msgstr "Tidak ditemukan dokumen"
 
-#: includes/class-wp-document-revisions.php:230
+#: includes/class-wp-document-revisions.php:291
 msgid "No documents found in Trash"
 msgstr "Tidak ada dokumen yang ditemukan di Sampah"
 
-#: includes/class-wp-document-revisions.php:233
+#: includes/class-wp-document-revisions.php:293
+msgid "Documents"
+msgstr "Dokumen"
+
+#: includes/class-wp-document-revisions.php:294
 msgid "All Documents"
 msgstr "Semua dokumen"
 
-#: includes/class-wp-document-revisions.php:234
+#: includes/class-wp-document-revisions.php:295
 msgid "Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:235
+#: includes/class-wp-document-revisions.php:296
 msgid "Set Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:236
+#: includes/class-wp-document-revisions.php:297
 msgid "Remove Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:237
+#: includes/class-wp-document-revisions.php:298
 msgid "Use as Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:284
+#: includes/class-wp-document-revisions.php:374
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:285
+#: includes/class-wp-document-revisions.php:375
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Negara alur kerja"
 
-#: includes/class-wp-document-revisions.php:286
+#: includes/class-wp-document-revisions.php:376
 msgid "Search Workflow States"
 msgstr "Cari Workflow States"
 
-#: includes/class-wp-document-revisions.php:287
+#: includes/class-wp-document-revisions.php:377
 msgid "All Workflow States"
 msgstr "Semua Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:288
+#: includes/class-wp-document-revisions.php:378
 msgid "Parent Workflow State"
 msgstr "Induk Alur kerja Negara"
 
-#: includes/class-wp-document-revisions.php:289
+#: includes/class-wp-document-revisions.php:379
 msgid "Parent Workflow State:"
 msgstr "Induk Alur kerja negara:"
 
-#: includes/class-wp-document-revisions.php:290
+#: includes/class-wp-document-revisions.php:380
 msgid "Edit Workflow State"
 msgstr "Edit Alur kerja Negara"
 
-#: includes/class-wp-document-revisions.php:291
+#: includes/class-wp-document-revisions.php:381
 msgid "Update Workflow State"
 msgstr "Memperbarui alur kerja negara"
 
-#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:382
 msgid "Add New Workflow State"
 msgstr "Menambahkan Alur kerja baru Negara"
 
-#: includes/class-wp-document-revisions.php:293
+#: includes/class-wp-document-revisions.php:383
 msgid "New Workflow State Name"
 msgstr "Nama Alur Kerja Baru Negara"
 
-#: includes/class-wp-document-revisions.php:294
+#: includes/class-wp-document-revisions.php:384
 msgid "Workflow States"
 msgstr "Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:335
-msgid "In Progress"
-msgstr "Sedang berlangsung"
-
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:430
 msgid "Document is in the process of being written"
 msgstr "Dokumen sedang dalam proses penulisan"
 
-#: includes/class-wp-document-revisions.php:336
-msgid "Initial Draft"
-msgstr "Draft Awal"
-
-#: includes/class-wp-document-revisions.php:336
+#: includes/class-wp-document-revisions.php:431
 msgid "Document is being edited and refined"
 msgstr "Dokumen sedang diedit dan disempurnakan"
 
-#: includes/class-wp-document-revisions.php:337
-msgid "Under Review"
-msgstr "Di bawah ulasan"
-
-#: includes/class-wp-document-revisions.php:337
+#: includes/class-wp-document-revisions.php:432
 msgid "Document is pending final review"
 msgstr "Dokumen sedang menunggu tinjauan akhir"
 
-#: includes/class-wp-document-revisions.php:338
-msgid "Final"
-msgstr "Terakhir"
-
-#: includes/class-wp-document-revisions.php:338
+#: includes/class-wp-document-revisions.php:433
 msgid "Document is in its final form"
 msgstr "Dokumen dalam bentuk akhirnya"
 
-#: includes/class-wp-document-revisions.php:592, includes/class-wp-document-revisions.php:902
+#: includes/class-wp-document-revisions.php:545
+msgid "Somebody"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:724, includes/class-wp-document-revisions.php:1074
 msgid "-revision-"
 msgstr "-revisi-"
 
-#: includes/class-wp-document-revisions.php:888
+#: includes/class-wp-document-revisions.php:1036
 msgid "You are not authorized to access that file."
 msgstr "Anda tidak berwenang mengakses file itu."
 
-#: includes/class-wp-document-revisions.php:1505
+#: includes/class-wp-document-revisions.php:1679
 msgid "Sorry, this is a private feed."
 msgstr "Maaf, ini adalah umpan pribadi."
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title
-#: includes/class-wp-document-revisions.php:1606
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#: includes/class-wp-document-revisions.php:1797
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr "%1$s: %2$s telah mengganti kunci Anda pada %3$s"
 
-#. translators: %s is the user's name
-#: includes/class-wp-document-revisions.php:1611
+#. translators: %s is the user's name.
+#: includes/class-wp-document-revisions.php:1807
 msgid "Dear %s:"
 msgstr "Yang terhormat %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL
-#: includes/class-wp-document-revisions.php:1613
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#: includes/class-wp-document-revisions.php:1809
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr "%1$s (%2$s), telah menggantikan kunci Anda pada dokumen %3$s (%4$s)."
 
-#: includes/class-wp-document-revisions.php:1614
+#: includes/class-wp-document-revisions.php:1810
 msgid "Any changes you have made will be lost."
 msgstr "Setiap perubahan yang Anda buat akan hilang."
 
-#. translators: %s is the blog name
-#: includes/class-wp-document-revisions.php:1616
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions.php:1812
 msgid "- The %s Team"
 msgstr "- Itu %s Tim"
 
-#. translators: %s is the document title
-#: includes/class-wp-document-revisions.php:1787
+#. translators: %s is the document title.
+#: includes/class-wp-document-revisions.php:2002
 msgid "%s - Latest Revision"
 msgstr "%s - Revisi terbaru"
 
-#. translators: %1$s is the document title, %2$d is the revision ID
-#: includes/class-wp-document-revisions.php:1804
+#. translators: %1$s is the document title, %2$d is the revision ID.
+#: includes/class-wp-document-revisions.php:2023
 msgid "%1$s - Revision %2$d"
 msgstr "%1$s - Revisi %2$d"
+
+#: includes/class-wp-document-revisions.php:2106
+msgid "Status"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2130
+msgid "Published"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2131
+msgid "Draft"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2132
+msgid "Scheduled"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2133
+msgid "Private"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2134
+msgid "Pending Review"
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:2135
+msgid "Trash"
+msgstr ""
 
