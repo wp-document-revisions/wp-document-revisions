@@ -1,50 +1,52 @@
 <?php
 /**
- * Helper class for WP_Document_Revisions that registers shortcodes, widgets, etc. for use on the front-end
+ * Helper class for WP_Document_Revisions that registers shortcodes, etc. for use on the front-end.
  *
  * @since 1.2
  * @package WP_Document_Revisions
  */
 
 /**
- * WP Document Revisions Front End
+ * WP Document Revisions Front End.
  */
 class WP_Document_Revisions_Front_End {
 
 	/**
-	 * The Parent WP_Document_Revisions instance
+	 * The Parent WP_Document_Revisions instance.
 	 *
 	 * @var $parent
 	 */
 	public static $parent;
 
 	/**
-	 * The Singleton instance
+	 * The Singleton instance.
 	 *
 	 * @var $instance
 	 */
 	public static $instance;
 
 	/**
-	 * Array of accepted shortcode keys and default values
+	 * Array of accepted shortcode keys and default values.
 	 *
 	 * @var $shortcode_defaults
 	 */
 	public $shortcode_defaults = array(
-		'id' => null,
-		'number' => null,
+		'id'          => null,
+		'numberposts' => null,
+		'summary'     => false,
+		'new_tab'     => true,
 	);
 
 	/**
-	 *  Registers front end hooks
+	 *  Registers front end hooks.
 	 *
-	 * @param Object $instance The WP Document Revisions instance
+	 * @param Object $instance The WP Document Revisions instance.
 	 */
 	public function __construct( &$instance = null ) {
 
 		self::$instance = &$this;
 
-		// create or store parent instance
+		// create or store parent instance.
 		if ( is_null( $instance ) ) {
 			self::$parent = new WP_Document_Revisions();
 		} else {
@@ -55,18 +57,21 @@ class WP_Document_Revisions_Front_End {
 		add_shortcode( 'documents', array( &$this, 'documents_shortcode' ) );
 		add_filter( 'document_shortcode_atts', array( &$this, 'shortcode_atts_hyphen_filter' ) );
 
-		// Queue up JS (low priority to be at end)
+		// Add blocks. Done after wp_loaded so that the taxonomies have been defined.
+		add_action( 'wp_loaded', array( &$this, 'documents_shortcode_blocks' ), 100 );
+
+		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_front' ), 50 );
 
 	}
 
 
 	/**
-	 * Provides support to call functions of the parent class natively
+	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param function $function the function to call
-	 * @param array    $args the arguments to pass to the function
+	 * @param function $function the function to call.
+	 * @param array    $args the arguments to pass to the function.
 	 * @returns mixed the result of the function
 	 */
 	public function __call( $function, $args ) {
@@ -75,10 +80,10 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Provides support to call properties of the parent class natively
+	 * Provides support to call properties of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param string $name the property to fetch
+	 * @param string $name the property to fetch.
 	 * @returns mixed the property's value
 	 */
 	public function __get( $name ) {
@@ -87,51 +92,78 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Callback to display revisions
+	 * Callback to display revisions.
 	 *
-	 * @param array $atts attributes passed via short code
+	 * @param array $atts attributes passed via short code.
 	 * @returns string a UL with the revisions
 	 * @since 1.2
 	 */
 	public function revisions_shortcode( $atts ) {
 
-		// normalize args
-		$atts = shortcode_atts( $this->shortcode_defaults, $atts );
+		// change attribute number into numberposts (for backward compatibility).
+		if ( array_key_exists( 'number', $atts ) && ! array_key_exists( 'numberposts', $atts ) ) {
+			$atts['numberposts'] = $atts['number'];
+			unset( $atts['number'] );
+		}
+
+		// normalize args.
+		$atts = shortcode_atts( $this->shortcode_defaults, $atts, 'document' );
 		foreach ( array_keys( $this->shortcode_defaults ) as $key ) {
 			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
 		}
 
-		// do not show output to users that do not have the read_document_revisions capability
+		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			return;
+			return '';
 		}
 
-		// get revisions
+		// get revisions.
 		$revisions = $this->get_revisions( $id );
 
-		// show a limited number of revisions
-		if ( null !== $number ) {
-			$revisions = array_slice( $revisions, 0, (int) $number );
+		// show a limited number of revisions.
+		if ( null !== $numberposts ) {
+			$revisions = array_slice( $revisions, 0, (int) $numberposts );
 		}
 
-		// buffer output to return rather than echo directly
+		if ( isset( $atts['summary'] ) ) {
+			$atts_summary = filter_var( $atts['summary'], FILTER_VALIDATE_BOOLEAN );
+		} else {
+			$atts_summary = false;
+		}
+
+		if ( isset( $atts['new_tab'] ) ) {
+			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
+		} else {
+			$atts_new_tab = false;
+		}
+
+		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
 		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
 		<?php
-		// loop through each revision
-		// @codingStandardsIgnoreStart WordPress.XSS.EscapeOutput.OutputNotEscaped
-		foreach ( $revisions as $revision ) { ?>
+		// loop through each revision.
+		foreach ( $revisions as $revision ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
-				<?php printf( __( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp">%4$s</a> <span class="agoby">ago by</a> <span class="author">%5$s</a>', 'wp-document-revisions' ), esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_date ), esc_html( strtotime( $revision->post_date ) ), esc_html( human_time_diff( strtotime( $revision->post_date ) ), current_time( 'timestamp' ) ), esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) ); ?>
+				<?php
+				// html - string not to be translated.
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( strtotime( $revision->post_modified ) ) );
+				echo ( $atts_new_tab ? ' target="_blank"' : '' );
+				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) );
+				esc_html_e( 'ago by', 'wp-document-revisions' );
+				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
+				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
+				?>
 			</li>
-		<?php
-		// @codingStandardsIgnoreEnd WordPress.XSS.EscapeOutput.OutputNotEscaped
+			<?php
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		?>
 		</ul>
 		<?php
-		// grab buffer contents and clear
+		// grab buffer contents and clear.
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -139,23 +171,48 @@ class WP_Document_Revisions_Front_End {
 
 
 	/**
-	 * Shortcode to query for documents
-	 * Takes most standard WP_Query parameters (must be int or string, no arrays)
-	 * See get_documents in wp-document-revisions.php for more information
+	 * Shortcode to query for documents.
+	 * Called from shortcode sirectly.
 	 *
-	 * @since 1.2
-	 * @param array $atts shortcode attributes
+	 * @since 3.3
+	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
 	public function documents_shortcode( $atts ) {
 
+		// Only need to do something if workflow_state points to post_status.
+		if ( 'workflow_state' !== self::$parent->taxonomy_key() ) {
+			if ( in_array( 'workflow_state', $atts, true ) ) {
+				$atts['post_status'] = $atts['workflow_state'];
+				unset( $atts['workflow_state'] );
+			}
+		}
+
+		return self::documents_shortcode_int( $atts );
+	}
+
+
+	/**
+	 * Shortcode to query for documents.
+	 * Takes most standard WP_Query parameters (must be int or string, no arrays)
+	 * See get_documents in wp-document-revisions.php for more information.
+	 *
+	 * This is the original documents_shortcode function but an added layer for sorting
+	 * reuse of workflow_state when EditLlow or PublishPressi is used.
+	 *
+	 * @since 1.2
+	 * @param array $atts shortcode attributes.
+	 * @return string the shortcode output
+	 */
+	public function documents_shortcode_int( $atts ) {
+
 		$defaults = array(
 			'orderby' => 'modified',
-			'order' => 'DESC',
+			'order'   => 'DESC',
 		);
 
 		// list of all string or int based query vars (because we are going through shortcode)
-		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters
+		// via http://codex.wordpress.org/Class_Reference/WP_Query#Parameters.
 		$keys = array(
 			'author',
 			'author_name',
@@ -204,84 +261,120 @@ class WP_Document_Revisions_Front_End {
 			'meta_value_num',
 			'meta_compare',
 			'meta_query',
+			// Presentation attributes (will be dealt with before getting documents).
+			'show_edit',
+			'new_tab',
 		);
 
 		foreach ( $keys as $key ) {
 			$defaults[ $key ] = null;
 		}
 
-		$taxs = get_taxonomies(
-			array(
-				'object_type' => array( 'document' ),
-			),
-			'objects'
-		);
-
-		// allow querying by custom taxonomy
-		foreach ( $taxs as $tax ) {
-			$defaults[ $tax->query_var ] = null;
+		// allow querying by custom taxonomy.
+		$taxs = $this->get_taxonomy_details();
+		foreach ( $taxs['taxos'] as $tax ) {
+			$defaults[ $tax['query'] ] = null;
 		}
 
+		// show_edit and new_tab may be entered without name (implies value true)
+		// convert to name value pair.
+		if ( isset( $atts[0] ) ) {
+			$atts[ $atts[0] ] = true;
+			unset( $atts[0] );
+		}
+		if ( isset( $atts[1] ) ) {
+			$atts[ $atts[1] ] = true;
+			unset( $atts[1] );
+		}
+
+		// Presentation attributes may be set as false, so process before array_filter and remove.
+		if ( isset( $atts['show_edit'] ) ) {
+			$atts_show_edit = filter_var( $atts['show_edit'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['show_edit'] );
+		} else {
+			// Want to know if there was a shortcode as it will override.
+			$atts_show_edit = null;
+		}
+
+		if ( isset( $atts['new_tab'] ) ) {
+			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['new_tab'] );
+		} else {
+			$atts_new_tab = false;
+		}
+
+		/**
+		 * Filters the Document shortcode attributes.
+		 *
+		 * @param array $atts attributes set on the shortcode.
+		 */
 		$atts = apply_filters( 'document_shortcode_atts', $atts );
 
-		// default arguments, can be overriden by shortcode attributes
-		$atts = shortcode_atts( $defaults, $atts );
+		// default arguments, can be overriden by shortcode attributes.
+		// note that the filter shortcode_atts_document is also available to filter the attributes.
+		$atts = shortcode_atts( $defaults, $atts, 'document' );
+
 		$atts = array_filter( $atts );
 
 		$documents = $this->get_documents( $atts );
 
-		// check whether to show update option. Default - only administrator role
-		$show_edit = false;
-		$user = wp_get_current_user();
-		if ( $user->ID > 0 ) {
-			// logged on user only
-			$roles = (array) $user->roles;
-			if ( in_array( 'administrator', $roles, true ) ) {
-				$show_edit = true;
+		// Determine whether to output edit option - shortcode value will override.
+		if ( is_null( $atts_show_edit ) ) {
+			// check whether to show update option. Default - only administrator role.
+			$show_edit = false;
+			$user      = wp_get_current_user();
+			if ( $user->ID > 0 ) {
+				// logged on user only.
+				$roles = (array) $user->roles;
+				if ( in_array( 'administrator', $roles, true ) ) {
+					$show_edit = true;
+				}
 			}
+			/**
+			 * Filters the controlling option to display an edit option against each document.
+			 *
+			 * By default, only logged-in administrators be able to have an edit option.
+			 * The user will also need to be able to edit the individual document before it is displayed.
+			 *
+			 * @since 3.2.0
+			 *
+			 * @param boolean $show_edit default value.
+			 */
+			$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
+		} else {
+			$show_edit = $atts_show_edit;
 		}
-		/**
-		 * Filters the controlling option to display an edit option against each document.
-		 *
-		 * By default, only logged-in administrators be able to have an edit option.
-		 * The user will also need to be able to edit the individual document before it is displayed.
-		 *
-		 * @since 3.2.0
-		 *
-		 * @param boolean $show_edit default value.
-		 */
-		$show_edit = apply_filters( 'document_shortcode_show_edit', $show_edit );
 
-		// buffer output to return rather than echo directly
+		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
 		<ul class="documents">
 		<?php
-		// loop through found documents
+		// loop through found documents.
 		foreach ( $documents as $document ) {
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
-			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>">
+			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
+				<?php echo ( $atts_new_tab ? ' target="_blank"' : '' ); ?>>
 				<?php echo esc_html( get_the_title( $document->ID ) ); ?>
 			</a>
 			<?php
 			if ( $show_edit && current_user_can( 'edit_document', $document->ID ) ) {
 				$link = add_query_arg(
 					array(
-						'post' => $document->ID,
+						'post'   => $document->ID,
 						'action' => 'edit',
 					),
 					admin_url( 'post.php' )
 				);
-				// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . __( 'Edit', 'wp-document-revisions' ) . ']</a>';
+				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a>';
 			}
 			?>
 			</li>
 		<?php } ?>
 		</ul>
 		<?php
-		// grab buffer contents and clear
+		// grab buffer contents and clear.
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -289,7 +382,7 @@ class WP_Document_Revisions_Front_End {
 	}
 
 	/**
-	 * Shortcode can have CSS on any page
+	 * Shortcode can have CSS on any page.
 	 *
 	 * @since 3.2.0
 	 */
@@ -297,17 +390,17 @@ class WP_Document_Revisions_Front_End {
 
 		$wpdr = self::$parent;
 
-		// enqueue CSS for shortcode
-		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', dirname( __FILE__ ) ), null, $wpdr->version );
+		// enqueue CSS for shortcode.
+		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), null, $wpdr->version );
 
 	}
 
 
 	/**
 	 * Provides workaround for taxonomies with hyphens in their name
-	 * User should replace hyphen with underscope and plugin will compensate
+	 * User should replace hyphen with underscope and plugin will compensate.
 	 *
-	 * @param Array $atts shortcode attributes
+	 * @param Array $atts shortcode attributes.
 	 * @return Array modified shortcode attributes
 	 */
 	public function shortcode_atts_hyphen_filter( $atts ) {
@@ -331,163 +424,462 @@ class WP_Document_Revisions_Front_End {
 		return $atts;
 	}
 
-}
-
-
-/**
- * Recently revised documents widget
- */
-class Document_Revisions_Recently_Revised_Widget extends WP_Widget {
-
 	/**
-	 * Default widget settings
+	 * Register WP Document Revisions block category.
 	 *
-	 * @var $defaults
+	 * @since 3.3.0
+	 * @param Array   $categories Block categories available.
+	 * @param WP_Post $post       Post for which the block is to be available.
 	 */
-	private $defaults = array(
-		'numberposts' => 5,
-		'post_status' => array(
-			'publish' => true,
-			'private' => false,
-			'draft' => false,
-		),
-		'show_author' => true,
-	);
+	public function wpdr_block_categories( $categories, $post ) {
 
-	/**
-	 * Init widget and register
-	 */
-	public function __construct() {
-		parent::__construct( 'Document_Revisions_Recently_Revised_Widget', __( 'Recently Revised Documents', 'wp-document-revisions' ) );
-
-		// can't i18n outside of a function
-		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
+		return array_merge(
+			$categories,
+			array(
+				array(
+					'slug'  => 'wpdr-category',
+					'title' => __( 'WP Document Revisions', 'wp-document-revisions' ),
+				),
+			)
+		);
 	}
 
 
 	/**
-	 * Callback to display widget contents
+	 * Register revisions-shortcode block
 	 *
-	 * @param Array  $args the widget arguments
-	 * @param Object $instance the WP Document Revisions instance
+	 * @since 3.3.0
 	 */
-	public function widget( $args, $instance ) {
-
-		global $wpdr;
-		if ( ! $wpdr ) {
-			$wpdr = new WP_Document_Revisions();
-		}
-
-		// enabled statuses are stored as status => bool, but we want an array of only activated statuses
-		$statuses = array_filter( (array) $instance['post_status'] );
-		$statuses = array_keys( $statuses );
-
-		$query = array(
-			'orderby'     => 'modified',
-			'order'       => 'DESC',
-			'numberposts' => (int) $instance['numberposts'],
-			'post_status' => $statuses,
-		);
-
-		$documents = $wpdr->get_documents( $query );
-
-		// no documents, don't bother
-		if ( ! $documents ) {
+	public function documents_shortcode_blocks() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active, e.g. Old WP version installed.
 			return;
 		}
 
-		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
+		// add the plugin category.
+		add_filter( 'block_categories', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
-		foreach ( $documents as $document ) :
-			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
-				array(
-					'post' => $document->ID,
-					'action' => 'edit',
+		register_block_type(
+			'wp-document-revisions/documents-shortcode',
+			array(
+				'editor_script'   => 'wpdr-documents-shortcode-editor',
+				'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
+				'attributes'      => array(
+					'taxonomy_0'  => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'term_0'      => array(
+						'type'    => 'number',
+						'default' => 0,
+					),
+					'taxonomy_1'  => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'term_1'      => array(
+						'type'    => 'number',
+						'default' => 0,
+					),
+					'taxonomy_2'  => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'term_2'      => array(
+						'type'    => 'number',
+						'default' => 0,
+					),
+					'numberposts' => array(
+						'type'    => 'number',
+						'default' => 5,
+					),
+					'orderby'     => array(
+						'type' => 'string',
+					),
+					'order'       => array(
+						'type' => 'string',
+					),
+					'show_edit'   => array(
+						'type' => 'string',
+					),
+					'new_tab'     => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'freeform'    => array(
+						'type' => 'string',
+					),
 				),
-				admin_url( 'post.php' )
-			) : get_permalink( $document->ID );
-			// translators: %1$s is the time ago in words, %2$s is the author
-			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
-			?>
-			<li>
-				<a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( get_the_title( $document->ID ) ); ?></a><br />
-				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
-			</li>
-			<?php
-		endforeach;
+			)
+		);
 
-		// @codingStandardsIgnoreLine WordPress.XSS.EscapeOutput.OutputNotEscaped
-		echo '</ul>' . $args['after_widget'];
+		register_block_type(
+			'wp-document-revisions/revisions-shortcode',
+			array(
+				'editor_script'   => 'wpdr-revisions-shortcode-editor',
+				'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
+				'attributes'      => array(
+					'id'          => array(
+						'type'    => 'number',
+						'default' => 0,
+					),
+					'numberposts' => array(
+						'type'    => 'number',
+						'default' => 5,
+					),
+					'summary'     => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'new_tab'     => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+				),
+			)
+		);
+
+		// register scripts.
+		$dir      = dirname( __DIR__ );
+		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
+		$index_js = 'js/wpdr-documents-shortcode' . $suffix . '.js';
+		wp_register_script(
+			'wpdr-documents-shortcode-editor',
+			plugins_url( $index_js, __DIR__ ),
+			array(
+				'wp-blocks',
+				'wp-element',
+				'wp-block-editor',
+				'wp-components',
+				'wp-compose',
+				'wp-server-side-render',
+				'wp-i18n',
+			),
+			filemtime( "$dir/$index_js" ),
+			true
+		);
+
+		// Add supplementary script for additional information.
+		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
+		// Ensure taxonomies are set.
+		$taxonomies = $this->get_taxonomy_details();
+		wp_localize_script( 'wpdr-documents-shortcode-editor', 'wpdr_data', $taxonomies );
+
+		$index_js = 'js/wpdr-revisions-shortcode' . $suffix . '.js';
+		wp_register_script(
+			'wpdr-revisions-shortcode-editor',
+			plugins_url( $index_js, __DIR__ ),
+			array(
+				'wp-blocks',
+				'wp-element',
+				'wp-block-editor',
+				'wp-components',
+				'wp-compose',
+				'wp-server-side-render',
+				'wp-i18n',
+			),
+			filemtime( "$dir/$index_js" ),
+			true
+		);
+
+		// set translations.
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'wpdr-documents-shortcode-editor', 'wp-document-revisions' );
+			wp_set_script_translations( 'wpdr-revisions-shortcode-editor', 'wp-document-revisions' );
+		}
 	}
+
+	/**
+	 * Flattened taxonomy term list.
+	 *
+	 * @var array $tax_terms array of terms.
+	 */
+	private static $tax_terms = array();
 
 
 	/**
-	 * Callback to display widget options form
+	 * Get taxonomy structure.
 	 *
-	 * @param Object $instance the WP Document Revisions instance
+	 * @param String  $taxonomy Taxonomy name.
+	 * @param Integer $parent   parent term.
+	 * @param Integer $level    level in hierarchy.
+	 * @since 3.3.0
 	 */
-	public function form( $instance ) {
+	private function get_taxonomy_hierarchy( $taxonomy, $parent = 0, $level = 0 ) {
+		// get all direct descendants of the $parent.
+		$terms = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'parent'     => $parent,
+			)
+		);
+		// go through all the direct descendants of $parent, and recurse their children.
+		// this creates a treewalk in simple array format.
+		foreach ( $terms as $term ) {
+			// Mis-use term_group to hold level.
+			$term->term_group  = $level;
+			self::$tax_terms[] = $term;
+			// recurse to get the direct descendants of "this" term.
+			$this->get_taxonomy_hierarchy( $taxonomy, $term->term_id, $level + 1 );
+		}
+	}
 
-		foreach ( $this->defaults as $key => $value ) {
-			if ( ! isset( $instance[ $key ] ) ) {
-				$instance[ $key ] = $value;
+	/**
+	 * Get taxonomy names for documents (use cache).
+	 *
+	 * @return Array Taxonomy names for documents
+	 * @since 3.3.0
+	 */
+	public function get_taxonomy_details() {
+		$taxonomy_details = wp_cache_get( 'wpdr_document_taxonomies' );
+
+		if ( false === $taxonomy_details ) {
+			// build and create cache entry. Get name only to allow easier filtering.
+			$taxos = get_object_taxonomies( 'document' );
+			// Make sure 'workflow_state' is in the list if not disabled. With EF/PP it uses the post_status taxonomy.
+			if ( ! empty( self::$parent->taxonomy_key() ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
+				$taxos[] = 'workflow_state';
+			}
+
+			sort( $taxos );
+
+			/**
+			 * Filters the Document taxonomies (allowing users to select the first three for the block widget.
+			 *
+			 * @param array $taxonomies taxonomies available for selection in the list block.
+			 */
+			$taxos = apply_filters( 'document_block_taxonomies', $taxos );
+
+			$taxonomy_elements = array();
+			// Has workflow_state been mangled? Note. set here as it could be filtered out.
+			$wf_efpp = 0;
+			foreach ( $taxos as $taxonomy ) {
+				// Find the terms.
+				$terms    = array();
+				$terms[0] = array(
+					0,  // value.
+					__( 'No selection', 'wp-document-revisions' ),  // label.
+					'',  // underscore-separated slug.
+				);
+				// Look up taxonomy.
+				if ( 'workflow_state' === $taxonomy && 'workflow_state' !== self::$parent->taxonomy_key() ) {
+					// EF/PP - Mis-use of 'post_status' taxonomy.
+					$tax               = get_taxonomy( self::$parent->taxonomy_key() );
+					$tax->hierarchical = false;
+					$tax->label        = 'Post Status';
+					$wf_efpp           = 1;
+				} else {
+					$tax = get_taxonomy( $taxonomy );
+				}
+
+				// Hierarchical or flat taxonomy ?
+				if ( $tax->hierarchical ) {
+					self::$tax_terms = array();
+					// Get hierarchical list.
+					$this->get_taxonomy_hierarchy( $taxonomy );
+				} else {
+					self::$tax_terms = get_terms(
+						array(
+							'taxonomy'     => $tax->name,
+							'hide_empty'   => false,
+							'hierarchical' => false,
+						)
+					);
+				}
+				foreach ( self::$tax_terms as $terms_obj ) {
+					$indent  = ( $tax->hierarchical ? str_repeat( ' ', $terms_obj->term_group ) : '' );
+					$terms[] = array(
+						$terms_obj->term_id,
+						$indent . $terms_obj->name,
+						str_replace( '-', '_', $terms_obj->slug ), // Used for block<-> shortcode conversion.
+					);
+				}
+
+				// Will use Query_var not (necessarily) the slug.
+				$taxonomy_elements[] = array(
+					'slug'  => $tax->name,
+					'query' => ( empty( $tax->query_var ) ? $tax->name : $tax->query_var ),
+					'label' => $tax->label,
+					'terms' => $terms,
+				);
+			}
+			$taxonomy_details = array(
+				'stmax'   => count( $taxonomy_elements ),
+				'wf_efpp' => $wf_efpp,
+				'taxos'   => $taxonomy_elements,
+			);
+
+			wp_cache_set( 'wpdr_document_taxonomies', $taxonomy_details, '', ( WP_DEBUG ? 10 : 120 ) );
+		}
+
+		return $taxonomy_details;
+	}
+
+	/**
+	 * Server side block to render the documents list.
+	 *
+	 * @param array $atts shortcode attributes.
+	 * @returns string a UL with the revisions
+	 * @since 3.3.0
+	 */
+	public function wpdr_documents_shortcode_display( $atts ) {
+		// get instance of global class.
+		global $wpdr, $wpdr_fe;
+
+		// sanity check.
+		// do not show output to users that do not have the read_documents capability.
+		if ( ! current_user_can( 'read_documents' ) ) {
+			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
+		}
+
+		$atts = shortcode_atts(
+			array(
+				'taxonomy_0'  => '',
+				'term_0'      => 0,
+				'taxonomy_1'  => '',
+				'term_1'      => 0,
+				'taxonomy_2'  => '',
+				'term_2'      => 0,
+				'numberposts' => 5,
+				'orderby'     => '',
+				'order'       => 'ASC',
+				'show_edit'   => '',
+				'new_tab'     => true,
+				'freeform'    => '',
+			),
+			$atts,
+			'document'
+		);
+		// Check taxonomy grouping is same as current taxonomy.
+		$taxonomy_details = $this->get_taxonomy_details();
+		$curr_tax_max     = $taxonomy_details['stmax'];
+		$curr_taxos       = $taxonomy_details['taxos'];
+		$errs             = '';
+		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		if ( ( $curr_tax_max >= 1 && ( ! empty( $atts['taxonomy_0'] ) ) && $atts['taxonomy_0'] !== $curr_taxos[0]['query'] ) ||
+		     ( $curr_tax_max >= 2 && ( ! empty( $atts['taxonomy_1'] ) ) && $atts['taxonomy_1'] !== $curr_taxos[1]['query'] ) ||
+		     ( $curr_tax_max >= 3 && ( ! empty( $atts['taxonomy_2'] ) ) && $atts['taxonomy_2'] !== $curr_taxos[2]['query'] ) ) {
+			$errs .= '<p>' . esc_html__( ' Taxonomy details in this block have changed.', 'wp-document-revisions' ) . '</p>';
+		}
+		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+
+		// Remove attribute if not an over-ride.
+		if ( 0 === strlen( $atts['show_edit'] ) ) {
+			unset( $atts['show_edit'] );
+		}
+
+		// Remove new_tab if false.
+		if ( empty( $atts['new_tab'] ) ) {
+			unset( $atts['new_tab'] );
+		}
+
+		// Deal with explicit taxonomomies. Note taxonomy_i is query_var, not slug.
+		if ( empty( $atts['taxonomy_0'] ) || empty( $atts['term_0'] ) ) {
+			null;
+		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
+			// create atts in the appropriate form tax->query_var = term slug.
+			$term = get_term( $atts['term_0'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_0'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (1)</p>';
 			}
 		}
-		?>
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'wp-document-revisions' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
-		</p>
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'numberposts' ) ); ?>"><?php esc_html_e( 'Number of Posts:', 'wp-document-revisions' ); ?></label><br />
-			<input class="small-text" id="<?php echo esc_attr( $this->get_field_id( 'numberposts' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'numberposts' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['numberposts'] ); ?>" />
-		</p>
-		<p>
-			<?php esc_html_e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
-			<?php foreach ( $instance['post_status'] as $status => $value ) : ?>
-				<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>" type="text" <?php checked( $value ); ?> />
-				<label for="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>"><?php echo esc_html( ucwords( $status ) ); ?></label><br />
-			<?php endforeach; ?>
-		</p>
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php esc_html_e( 'Display Document Author:', 'wp-document-revisions' ); ?></label><br />
-			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
-		</p>
-		<?php
+		unset( $atts['taxonomy_0'] );
+		unset( $atts['term_0'] );
+
+		if ( empty( $atts['taxonomy_1'] ) || empty( $atts['term_1'] ) ) {
+			null;
+		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
+			// create atts in the appropriate form tax->query_var = term slug.
+			$term = get_term( $atts['term_1'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_1'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (2)</p>';
+			}
+		}
+		unset( $atts['taxonomy_1'] );
+		unset( $atts['term_1'] );
+
+		if ( empty( $atts['taxonomy_2'] ) || empty( $atts['term_2'] ) ) {
+			null;
+		} else {
+			// get likely taxonomy.
+			$taxo = ( $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
+			// create atts in the appropriate form tax->query_var = term slug).
+			$term = get_term( $atts['term_2'], $taxo );
+			if ( $term instanceof WP_Term ) {
+				$atts[ $atts['taxonomy_2'] ] = $term->slug;
+			} else {
+				$errs .= '<p>' . esc_html__( ' Taxonomy term does not belong to this taxonomy.', 'wp-document-revisions' ) . ' (3)</p>';
+			}
+		}
+		unset( $atts['taxonomy_2'] );
+		unset( $atts['term_2'] );
+
+		// deal with freeform attributes.
+		if ( ! empty( $atts['freeform'] ) ) {
+			$freeform = shortcode_parse_atts( $atts['freeform'] );
+			$atts     = array_merge( $freeform, $atts );
+		}
+		unset( $atts['freeform'] );
+
+		// if empty orderby attribute, then order is not relevant.
+		if ( empty( $atts['orderby'] ) ) {
+			unset( $atts['orderby'] );
+			unset( $atts['order'] );
+		}
+
+		if ( ! empty( $errs ) ) {
+			$errs = '<div class="notice notice-error">' . $errs . '</div>';
+		}
+		$output = $errs . $wpdr_fe->documents_shortcode_int( $atts );
+		return $output;
 	}
 
 
 	/**
-	 * Sanitizes options and saves
+	 * Server side block to render the revisions list.
 	 *
-	 * @param Object $new_instance the new instance
-	 * @param Object $old_instance the old instance
+	 * @param array $atts shortcode attributes.
+	 * @returns string a UL with the revisions
+	 * @since 3.3.0
 	 */
-	public function update( $new_instance, $old_instance ) {
+	public function wpdr_revisions_shortcode_display( $atts ) {
+		// get instance of global class.
+		global $wpdr, $wpdr_fe;
 
-		$instance = $old_instance;
-		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
-		$instance['numberposts'] = (int) $new_instance['numberposts'];
-		$instance['show_author'] = (bool) $new_instance['show_author'];
+		$atts = shortcode_atts(
+			array(
+				'id'          => 0,
+				'numberposts' => 5,
+				'summary'     => false,
+				'new_tab'     => true,
+			),
+			$atts,
+			'document'
+		);
 
-		// merge post statuses into an array
-		foreach ( $this->defaults['post_status'] as $status => $value ) {
-			$instance['post_status'][ $status ] = (bool) isset( $new_instance[ 'post_status_' . $status ] );
+		// sanity check.
+		// do not show output to users that do not have the read_document_revisions capability.
+		if ( ! current_user_can( 'read_document_revisions' ) ) {
+			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
 		}
 
-		return $instance;
+		// Check it is a document.
+		if ( ! $wpdr->verify_post_type( $atts['id'] ) ) {
+			return esc_html__( 'This is not a valid document.', 'wp-document-revisions' );
+		}
+
+		$output  = '<p class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</p>';
+		$output .= $wpdr_fe->revisions_shortcode( $atts );
+		return $output;
 	}
-
-
 }
 
-/**
- * Callback to register the recently revised widget
- */
-function drrrw_widgets_init() {
-	register_widget( 'Document_Revisions_Recently_Revised_Widget' );
-}
-
-
-add_action( 'widgets_init', 'drrrw_widgets_init' );

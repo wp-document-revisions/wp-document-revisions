@@ -13,7 +13,7 @@ if ( ! $wpdr ) {
 
 $rev_query = $wpdr->get_revision_query( $post->ID, true );
 
-// @codingStandardsIgnoreLine WordPress.PHP.NoSilencedErrors.Discouraged
+// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 @header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 
 echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_charset' ) ) ) . '"?' . '>'; ?>

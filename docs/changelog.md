@@ -1,5 +1,65 @@
 ## Changelog
 
+### 3.3.0
+
+* FIX: Design conflict with Elementor (#230) @NeilWJames
+* NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
+* NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
+* FIX: Queries on post_status do not do proper permissions check
+* FIX: Remove restore option on the current document and latest revision as it makes no sense.
+* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
+* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
+  (#217) @NeilWJames
+
+* NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
+* NEW: Integrate with either Edit-flow or PublishPress plugins
+* FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
+* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
+* FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
+* FIX: Suppress excerpt output in feeds to stop information leakage
+* FIX: Password-protected document can leak information (by showing next/previous)
+* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Fix error in time difference display when client and server are in different time zones
+* FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
+* FIX: Review documentation.
+  (#208) @NeilWJames
+
+### 3.2.4
+
+* Address technical debt for WP Document Standards  (#192) @NeilWJames
+* On plugin activation, check that the user has edit_documents capability. If not, a warning message will be output that the menu may be incorrect. (#180) @NeilWJames
+* PHPCS review (#179) @NeilWJames
+* Bump phpunit/phpunit from 8.2.5 to 8.3.4 (#177) @dependabot-preview
+* Addresses phpunit and toolset versions and prepare for future release (#174) @NeilWJames
+* Version 3.2.2 gives an "property of non-object" at line 1403 on load (#161) @NeilWJames
+
+### 3.2.3
+
+* Full phpcs 2.2 standardisation, complete filter documentation (#192) @NeilWJames
+* On plugin activation, admin warning if user doesn't have edit_documents capability (#180) @NeilWJames
+* PHPCS Review (no functional changes) (#179) @NeilWJames
+* Review for WP Coding standard 2.1.1 and newer phpunit (#174) @NeilWJames
+* Bump version to V3.2.3 and Tested WP 5.2.2 (#174) @NeilWJames
+
+### 3.2.2
+
+* Version 3.2.2 gives an "property of non-object" at line 1403 on load (#161) @NeilWJames
+* Add default capabilities only when they are absent. (#146) @NeilWJames
+* Fix multi-network (needs WP 4.6) (#143) @geminorum 
+* Allow Sites to use WP_POST_REVISIONS for other post types (#140)
+* Media Library URL’s change after plugin update (#139) @NeilWJames
+* New crowdin translations (#137/#138) @benbalter
+
+### 3.2.1
+
+* Fix for $wp_query->query_vars being null (#136) @benbalter
+* Media Library URL’s change after plugin update (#139) @NeilWJames
+* New Crowdin translations (#137) @benbalter
+* New Crowdin translations (#138) @benbalter
+
 ### 3.2.0
 
 * Enable filter by workflow_state on Admin screen (#121) @NeilWJames

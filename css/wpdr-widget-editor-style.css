@@ -1,0 +1,12 @@
+/* Style post statuses block elements to be grouped */
+.wp-block-wp-document-revisions-documents-widget > .components-base-control,
+.wp-block-wp-document-revisions-documents-widget p
+	{
+		margin-bottom: 8px;
+	}
+
+/* But make sure entire block has standard marginss */
+.wp-block-wp-document-revisions-documents-widget
+	{
+		margin-bottom: 24px;
+	}

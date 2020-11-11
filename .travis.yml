@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 
 language: php
 
@@ -7,31 +7,46 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
+services:
+  - mysql
+  
 matrix:
   include:
-    - php: 7.1
+    - php: 7.4
       env: WP_VERSION=latest
+    - php: 7.3
+      env: WP_VERSION=latest
+    - php: 7.2
+      env: WP_VERSION=latest WP_MULTISITE=1
+    - php: 7.1
+      env: WP_VERSION=4.9
     - php: 7.0
       env: WP_VERSION=latest
     - php: 5.6
       env: WP_VERSION=latest
-    - php: 5.3
-      dist: precise
-      env: WP_VERSION=latest
-    - php: 7.1
+    - php: 7.2
       env: WP_TRAVISCI=phpcs
 
-before_script:
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  -  script/setup
+before_install:
+  - export PATH="$HOME/bin:$PATH"
+ 
+  # Unless we need XDebug, disable it for improved performance.
+  - phpenv config-rm xdebug.ini || return 0
+ 
+install:
+  # Install an older version of PHPUnit if we're running old versions of WP.
   - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
-        composer global require "phpunit/phpunit=4.8.*"
-      else
-        composer global require "phpunit/phpunit=5.7.*"
-      fi
+    if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.1" ]]; then
+      composer require "phpunit/phpunit=5.7.*"
     fi
+
+  # Install our Composer dependencies
+  - composer install --prefer-dist --no-interaction
+
+before_script:
+  - mkdir -p build/logs
+  - chmod +x script/*
+  - script/setup
 
 script:
   - |
@@ -42,3 +57,6 @@ script:
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
       script/cibuild-phpcs
     fi
+
+after_success:
+  - script/coveralls

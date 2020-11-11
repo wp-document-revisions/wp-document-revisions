@@ -1,21 +1,9 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for Plugins">
-	<description>Generally-applicable sniffs for WordPress plugins</description>
+<ruleset name="WordPress Coding Standards">
 
-	<rule ref="WordPress-Core">
-		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop" />
-		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
-		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged" />
-		<exclude name="WordPress.CSRF.NonceVerification.NoNonceVerification" />
-		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
-		<exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
-	</rule>
-	<rule ref="WordPress-Docs" />
-	<rule ref="WordPress-Extra" />
+	<extensions>*/php</extensions>
 
-	<rule ref="Generic.Files.OneClassPerFile">
-		<exclude-pattern>includes/class-wp-document-revisions-front-end.php</exclude-pattern>
-	</rule>
+	<rule ref="WordPress"/>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>

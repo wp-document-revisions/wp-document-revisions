@@ -7,8 +7,17 @@
 	convertWarningsToExceptions="true"
 	>
 	<testsuites>
-		<testsuite>
+		<testsuite name="WPDR Tests">
 			<directory prefix="class-test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<logging>
+		<log type="coverage-clover" target="build/logs/clover.xml"/>
+	</logging>
+	<filter>
+	  <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+	    <directory suffix=".php">./includes</directory>
+	    <file>./wp-document-revisions.php</file>
+	  </whitelist>
+	</filter>
 </phpunit>
