@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
-"PO-Revision-Date: 2020-11-11 22:19\n"
+"PO-Revision-Date: 2020-11-12 00:21\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:143
@@ -248,15 +248,15 @@ msgstr "Neuen Schl&uuml;ssel erstellen"
 
 #: includes/class-wp-document-revisions-admin.php:978
 msgid "Maximum number of revisions reached for this document. Making changes will delete data."
-msgstr ""
+msgstr "Maximale Anzahl von Revisionen für dieses Dokument erreicht. Bei Änderungen werden Daten gelöscht."
 
 #: includes/class-wp-document-revisions-admin.php:969
 msgid "More revisions exist for this document than is permitted. Making changes will delete data."
-msgstr ""
+msgstr "Für dieses Dokument existieren mehr Revisionen als zulässig. Bei Änderungen werden Daten gelöscht."
 
 #: includes/class-wp-document-revisions-admin.php:956
 msgid "Maximum number of document revisions set to zero using a filter. Check your configuration."
-msgstr ""
+msgstr "Maximale Anzahl von Dokumentrevisionen, die mit einem Filter auf Null gesetzt werden. Überprüfen Sie Ihre Konfiguration."
 
 #: includes/class-wp-document-revisions-admin.php:1000
 msgid "All workflow states"
@@ -264,7 +264,7 @@ msgstr "Alle Workflow Stati"
 
 #: includes/class-wp-document-revisions-admin.php:1002
 msgid "All statuses"
-msgstr ""
+msgstr "Alle Stati"
 
 #: includes/class-wp-document-revisions-admin.php:1018
 msgid "All owners"
@@ -288,7 +288,7 @@ msgstr "Sind Sie sicher, dass die diese Überarbeiten wiederherstellen wollen? B
 
 #: includes/class-wp-document-revisions-admin.php:1343
 msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
-msgstr ""
+msgstr "Datei erfolgreich hochgeladen. Fügen Sie unten eine Revisionszusammenfassung hinzu (optional) und drücken Sie <strong>Aktualisieren</strong>, um Ihre Änderungen zu speichern."
 
 #: includes/class-wp-document-revisions-admin.php:1344
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
@@ -344,7 +344,7 @@ msgstr "%1$s von %2$s [%3$s] vor"
 
 #: includes/class-wp-document-revisions-front-end.php:155
 msgid "ago by"
-msgstr ""
+msgstr "geschrieben von"
 
 #: includes/class-wp-document-revisions-front-end.php:370
 msgid "Edit"
