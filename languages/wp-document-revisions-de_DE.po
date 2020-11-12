@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
-"PO-Revision-Date: 2020-11-12 00:21\n"
+"PO-Revision-Date: 2020-11-12 00:31\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:143
@@ -348,31 +348,31 @@ msgstr "geschrieben von"
 
 #: includes/class-wp-document-revisions-front-end.php:370
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: includes/class-wp-document-revisions-front-end.php:441
 msgid "WP Document Revisions"
-msgstr ""
+msgstr "WP-Dokument-Revisionen"
 
 #: includes/class-wp-document-revisions-front-end.php:662
 msgid "No selection"
-msgstr ""
+msgstr "Keine Auswahl"
 
 #: includes/class-wp-document-revisions-front-end.php:733, includes/class-wp-document-revisions-front-end.php:872
 msgid "You are not authorized to read this data"
-msgstr ""
+msgstr "Sie sind nicht berechtigt, diese Daten zu lesen"
 
 #: includes/class-wp-document-revisions-front-end.php:763
 msgid " Taxonomy details in this block have changed."
-msgstr ""
+msgstr " Die Taxonomie-Details in diesem Block haben sich geändert."
 
 #: includes/class-wp-document-revisions-front-end.php:788, includes/class-wp-document-revisions-front-end.php:804, includes/class-wp-document-revisions-front-end.php:820
 msgid " Taxonomy term does not belong to this taxonomy."
-msgstr ""
+msgstr " Der Taxonomie-Begriff gehört nicht zu dieser Taxonomie."
 
 #: includes/class-wp-document-revisions-front-end.php:877
 msgid "This is not a valid document."
-msgstr ""
+msgstr "Dies ist kein gültiges Dokument."
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:86
@@ -405,11 +405,11 @@ msgstr "Ja"
 
 #: includes/class-wp-document-revisions.php:212
 msgid "You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!"
-msgstr ""
+msgstr "Sie verfügen nicht über die Dokumenten-Änderungsberechtigungen, was möglicherweise auf mehrere konfliktbehaftete Rollen oder die Verwendung einer benutzerdefinierten Rolle zurückzuführen ist!"
 
 #: includes/class-wp-document-revisions.php:214
 msgid "Documents menu may not be displayed completely with \"All Documents\" and \"Add Document\" options missing"
-msgstr ""
+msgstr "Das Menü \"Dokumente\" wird möglicherweise nicht vollständig angezeigt, wobei die Optionen \"Alle Dokumente\" und \"Dokument hinzufügen\" fehlen"
 
 #: includes/class-wp-document-revisions.php:281
 msgctxt "post type general name"
@@ -444,7 +444,7 @@ msgstr "Dokument ansehen"
 
 #: includes/class-wp-document-revisions.php:288
 msgid "View Documents"
-msgstr ""
+msgstr "Dokumente anzeigen"
 
 #: includes/class-wp-document-revisions.php:289
 msgid "Search Documents"
@@ -468,19 +468,19 @@ msgstr "Alle Dokumente"
 
 #: includes/class-wp-document-revisions.php:295
 msgid "Document Image"
-msgstr ""
+msgstr "Bild-Dokument"
 
 #: includes/class-wp-document-revisions.php:296
 msgid "Set Document Image"
-msgstr ""
+msgstr "Dokumentenbild festlegen"
 
 #: includes/class-wp-document-revisions.php:297
 msgid "Remove Document Image"
-msgstr ""
+msgstr "Dokumentenbild entfernen"
 
 #: includes/class-wp-document-revisions.php:298
 msgid "Use as Document Image"
-msgstr ""
+msgstr "Bild als Dokumentenbild verwenden"
 
 #: includes/class-wp-document-revisions.php:374
 msgctxt "taxonomy general name"
@@ -546,7 +546,7 @@ msgstr "Dokument ist in seiner finalen Form"
 
 #: includes/class-wp-document-revisions.php:545
 msgid "Somebody"
-msgstr ""
+msgstr "Jemand"
 
 #: includes/class-wp-document-revisions.php:724, includes/class-wp-document-revisions.php:1074
 msgid "-revision-"
@@ -596,29 +596,29 @@ msgstr "%1$s - Revision %2$d"
 
 #: includes/class-wp-document-revisions.php:2106
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: includes/class-wp-document-revisions.php:2130
 msgid "Published"
-msgstr ""
+msgstr "Veröffentlicht"
 
 #: includes/class-wp-document-revisions.php:2131
 msgid "Draft"
-msgstr ""
+msgstr "Entwurf"
 
 #: includes/class-wp-document-revisions.php:2132
 msgid "Scheduled"
-msgstr ""
+msgstr "Geplant"
 
 #: includes/class-wp-document-revisions.php:2133
 msgid "Private"
-msgstr ""
+msgstr "Privat"
 
 #: includes/class-wp-document-revisions.php:2134
 msgid "Pending Review"
-msgstr ""
+msgstr "Ausstehende Überprüfung"
 
 #: includes/class-wp-document-revisions.php:2135
 msgid "Trash"
-msgstr ""
+msgstr "Papierkorb"
 
