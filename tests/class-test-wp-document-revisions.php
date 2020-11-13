@@ -61,9 +61,21 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Output message to log.
+	 *
+	 * @param string $text text to output.
+	 */
+	public function consoleLog( $text ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+			fwrite( STDERR, "\n" . $text . ' : ');
+	}
+
+	/**
 	 * Make sure plugin is activated.
 	 */
 	public function test_activated() {
+
+		$this->consoleLog( 'Test_Main - Start' );
 
 		$this->assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 
