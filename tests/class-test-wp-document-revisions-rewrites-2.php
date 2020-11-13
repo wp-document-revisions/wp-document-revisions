@@ -56,7 +56,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 */
 	public function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, $text . "\n" );
+			fwrite( STDERR, "\n" . $text . ' : ');
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	public function test_public_document() {
 		global $wpdr;
 
-		$this->consoleLog( 'Test_WP_Document_Revisions_Rewrites_Without - Start' );
+		$this->consoleLog( 'Test_Rewrites_Without - public_document' );
 
 		// make new public document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -148,6 +148,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 * Can the public access a private file? (no).
 	 */
 	public function test_private_document_as_unauthenticated() {
+
+		$this->consoleLog( 'Test_Rewrites_Without - private_document_as_unauthenticated' );
 
 		// make new private document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -170,6 +172,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_contributor() {
 
+		$this->consoleLog( 'Test_Rewrites_Without - private_document_as_contributor' );
+
 		// make new private document.
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
@@ -189,6 +193,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 * Can an admin access a private file? (yes).
 	 */
 	public function test_private_document_as_admin() {
+
+		$this->consoleLog( 'Test_Rewrites_Without - private_document_as_admin' );
 
 		// make new private document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -210,6 +216,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 */
 	public function test_document_revision_as_a_unauthenticated() {
 		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites_Without - document_revision_as_a_unauthenticated' );
 
 		// make new public, revised document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -237,6 +245,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		global $wpdr;
 
+		$this->consoleLog( 'Test_Rewrites_Without - document_revision_as_admin' );
+
 		// make new public, revised document.
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -263,6 +273,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		global $wpdr;
 
+		$this->consoleLog( 'Test_Rewrites_Without - revised_document' );
+
 		// make new public, revised document.
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -278,6 +290,9 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 * Does the document archive work?
 	 */
 	public function test_archive() {
+
+		$this->consoleLog( 'Test_Rewrites_Without - archive' );
+
 		global $wpdr;
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
@@ -291,6 +306,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 * Does get_permalink generate the right permalink?
 	 */
 	public function test_permalink() {
+
+		$this->consoleLog( 'Test_Rewrites_Without - permalink' );
 
 		global $wpdr;
 		$tdr       = new Test_WP_Document_Revisions();
@@ -306,6 +323,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 * Test get_permalink() on a revision.
 	 */
 	public function test_revision_permalink() {
+
+		$this->consoleLog( 'Test_Rewrites_Without - revision_permalink' );
 
 		global $wpdr;
 		$tdr       = new Test_WP_Document_Revisions();
