@@ -43,6 +43,16 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Output message to log.
+	 *
+	 * @param string $text text to output.
+	 */
+	public function consoleLog( $text ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+			fwrite( STDERR, "\n" . $text . ' : ');
+	}
+
+	/**
 	 * Verify joe public can't access a list of revisions.
 	 */
 	public function test_revisions_shortcode_unauthed() {
@@ -60,6 +70,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 * Verify auth'd user can view revision shortcode and can truncate proper count.
 	 */
 	public function test_revisions_shortcode() {
+
+		$this->consoleLog( 'Test_Front_End - revisions_shortcode' );
 
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
@@ -79,6 +91,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revision_shortcode_limit() {
 
+		$this->consoleLog( 'Test_Front_End - revision_shortcode_limit' );
+
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
@@ -97,6 +111,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_document_shortcode() {
 
+		$this->consoleLog( 'Test_Front_End - document_shortcode' );
+
 		$tdr = new Test_WP_Document_Revisions();
 
 		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
@@ -112,6 +128,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 * Tests the documents shortcode with a workflow state filter.
 	 */
 	public function test_document_shortcode_wfs_filter() {
+
+		$this->consoleLog( 'Test_Front_End - document_shortcode_wfs_filter' );
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -138,9 +156,11 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 
 	/**
-	 * Test documetn shortcode with a post_meta filter.
+	 * Test document shortcode with a post_meta filter.
 	 */
 	public function test_document_shortcode_post_meta_filter() {
+
+		$this->consoleLog( 'Test_Front_End - document_shortcode_post_meta_filter' );
 
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc.
@@ -163,6 +183,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_get_documents() {
 
+		$this->consoleLog( 'Test_Front_End - get_documents' );
+
 		$tdr = new Test_WP_Document_Revisions();
 
 		$doc_id = $tdr->test_revise_document(); // add a doc.
@@ -181,6 +203,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_get_documents_returns_attachments() {
 
+		$this->consoleLog( 'Test_Front_End - get_documents_returns_attachments' );
+
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document(); // add a doc.
 		wp_publish_post( $doc_id );
@@ -197,6 +221,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 * Tests that get_documents properly filters when asked.
 	 */
 	public function test_get_documents_filter() {
+
+		$this->consoleLog( 'Test_Front_End - get_documents_filter' );
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -222,10 +248,12 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 * Tests the get_revisions function.
 	 */
 	public function test_get_document_revisions() {
+
+		$this->consoleLog( 'Test_Front_End - get_document_revisions' );
+
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document(); // add a doc.
 		$this->assertCount( 2, get_document_revisions( $doc_id ) );
 	}
-
 
 }
