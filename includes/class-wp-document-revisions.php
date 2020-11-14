@@ -951,37 +951,6 @@ class WP_Document_Revisions {
 	 * @return String the resolved template
 	 */
 	public function serve_file( $template ) {
-		$ret = $this->int_serve_file( $template );
-
-		if ( is_null( $template ) ) {
-			// file served, exit.
-			exit;
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Test function to serve document files.
-	 *
-	 * This is needed as we want the standard process to exit after successful output, but tests to continue.
-	 *
-	 * @since 3.4
-	 * @param String $template the requested template.
-	 * @return String the resolved template
-	 */
-	public function test_serve_file( $template ) {
-		return $this->int_serve_file( $template );
-	}
-
-	/**
-	 * Internal function to serves document files.
-	 *
-	 * @since 3.4
-	 * @param String $template the requested template.
-	 * @return String the resolved template
-	 */
-	private function int_serve_file( $template ) {
 		global $post;
 		global $wp_query;
 		global $wp;
@@ -1268,8 +1237,11 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
-		// successful call, return null.
-		return null;
+		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
+		if ( class_exists( 'WP_UnitTestCase' ) ) {
+			return $template;
+		}
+		exit;
 	}
 
 	/**
