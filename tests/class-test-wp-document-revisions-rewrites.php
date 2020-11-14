@@ -138,8 +138,21 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
 		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
 		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
+
+		remove_filter( 'document_read_uses_read', '__return_true' );
+
+		// non-logged on user does not have read_document so should not read.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
+		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
 
 	}
 
