@@ -58,7 +58,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ');
+			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->test_serve_file( '' );
+		$wpdr->serve_file( '' );
 		$content = ob_get_clean();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
@@ -113,7 +113,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// verify contents are actually served.
 		ob_start();
-		$wpdr->test_serve_file( '' );
+		$wpdr->serve_file( '' );
 		$content = ob_get_clean();
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
