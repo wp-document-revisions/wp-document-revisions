@@ -458,6 +458,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_publish_post( $doc_id );
 		wp_cache_flush();
 
+		$this->consoleLog( 'Permalink:' . get_permalink( $doc_id ) );
 
 		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
 		$this->assertContains( '/docs/', get_permalink( $doc_id ), 'revised document slug not in permalink' );
