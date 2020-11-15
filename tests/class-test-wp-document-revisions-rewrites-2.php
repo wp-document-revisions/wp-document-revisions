@@ -56,7 +56,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 */
 	public function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ');
+			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
 
 	/**
