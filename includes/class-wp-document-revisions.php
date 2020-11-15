@@ -1175,11 +1175,6 @@ class WP_Document_Revisions {
 		}
 		if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
 			// oops, at least one still there,  deleted and contains data.
-			wp_die( esc_html__( 'Sorry, Output buffer exists with data. File writing suppressed.', 'wp-document-revisions' ) );
-		}
-
-		// data may already have been flushed so should error.
-		if ( headers_sent() ) {
 			/**
 			 * Filters to output even if output already written.
 			 *
@@ -1187,6 +1182,14 @@ class WP_Document_Revisions {
 			 *
 			 * @param bool $debug Set to false.
 			 */
+			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+				// normal case is to fail as can cause corrupted output.
+				wp_die( esc_html__( 'Sorry, Output buffer exists with data. File writing suppressed.', 'wp-document-revisions' ) );
+			}
+		}
+
+		// data may already have been flushed so should error.
+		if ( headers_sent() ) {
 			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
 				// normal case is to fail as can cause corrupted output.
 				wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
