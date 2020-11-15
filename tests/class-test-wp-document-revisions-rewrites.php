@@ -79,10 +79,15 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$this->go_to( $url );
 
+		// headers already sent so need to switch this plugin function off.
+		add_filter( 'document_output_sent_is_ok', '__return_true' );
+
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
 		$content = ob_get_clean();
+
+		remove_filter( 'document_output_sent_is_ok', '__return_true' );
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
 		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
@@ -111,10 +116,15 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$this->go_to( $url );
 
+		// headers already sent so need to switch this plugin function off.
+		add_filter( 'document_output_sent_is_ok', '__return_true' );
+
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
 		$content = ob_get_clean();
+
+		remove_filter( 'document_output_sent_is_ok', '__return_true' );
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
@@ -459,13 +469,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_cache_flush();
 
 		$this->consoleLog( 'Permalink:' . get_permalink( $doc_id ) . ':' . class_exists( 'WP_UnitTestCase' ) );
-		add_filter( 'document_output_sent_is_ok', '__return_true' );
 
 		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
 		$this->assertContains( '/docs/', get_permalink( $doc_id ), 'revised document slug not in permalink' );
-
-		remove_filter( 'document_output_sent_is_ok', '__return_true' );
-		$this->consoleLog( 'Permalink:' . get_permalink( $doc_id ) . ':' . $tdr->test_file );
 
 	}
 
