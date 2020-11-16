@@ -1173,24 +1173,23 @@ class WP_Document_Revisions {
 		for ( $i = 0; $i < $levels; $i++ ) {
 			ob_end_clean();
 		}
-		if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
-			// oops, at least one still there,  deleted and contains data.
-			/**
-			 * Filters to output even if output already written.
-			 *
-			 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
-			 *
-			 * @param bool $debug Set to false.
-			 */
-			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
-				// normal case is to fail as can cause corrupted output.
-				wp_die( esc_html__( 'Sorry, Output buffer exists with data. File writing suppressed.', 'wp-document-revisions' ) );
-			}
-		}
 
-		// data may already have been flushed so should error.
-		if ( headers_sent() ) {
-			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+		// If any output has been generated (by another plugin, it could cause corruption.
+		/**
+		 * Filters to output even if output already written.
+		 *
+		 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
+		 *
+		 * @param bool $debug Set to false.
+		 */
+		if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+			// oops, at least one still there,  deleted and contains data.	
+			if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
+				wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
+			}
+
+			// data may already have been flushed so should error.
+			if ( headers_sent() ) {
 				// normal case is to fail as can cause corrupted output.
 				wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
 			}
@@ -1272,6 +1271,9 @@ class WP_Document_Revisions {
 		if ( $version && ! current_user_can( 'read_document_revisions' ) ) {
 			return ( $ret_null ? null : false );
 		}
+
+		// expect to finish, flush output.
+		ob_end_flush();
 
 		// specific document cap check.
 		if ( ! current_user_can( 'read_document', $post->ID ) ) {
