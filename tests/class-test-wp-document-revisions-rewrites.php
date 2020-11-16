@@ -281,8 +281,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
-		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file, 'Admin revision clean' );
-		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file, 'Admin revision ugly' );
+		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file2, 'Admin revision clean' );
+		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file2, 'Admin revision ugly' );
 		_destroy_user( $id );
 
 	}
@@ -466,8 +466,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 		wp_cache_flush();
-
-		$this->consoleLog( 'Permalink:' . get_permalink( $doc_id ) . ':' . class_exists( 'WP_UnitTestCase' ) );
 
 		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'revised document slug permalink doesn\'t rewrite' );
 		$this->assertContains( '/docs/', get_permalink( $doc_id ), 'revised document slug not in permalink' );
