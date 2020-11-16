@@ -281,7 +281,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
-		$this->markTestSkipped();
 		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file, 'Admin revision clean' );
 		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file, 'Admin revision ugly' );
 		_destroy_user( $id );
