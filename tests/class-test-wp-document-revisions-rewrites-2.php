@@ -225,8 +225,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 		$id   = _make_user( 'administrator' );
 		$user = wp_set_current_user( $id );
 
-		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file2, 'Private, Admin Ugly Permalink' );
-		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file2, 'Private, Admin Pretty Permalink' );
+		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Admin Ugly Permalink' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Admin Pretty Permalink' );
 		_destroy_user( $id );
 
 	}
@@ -279,8 +279,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 		$id = _make_user( 'administrator' );
 		wp_set_current_user( $id );
 
-		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file, 'Admin revision clean' );
-		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file, 'Admin revision ugly' );
+		$this->verify_download( get_permalink( $revision->ID ), $tdr->test_file2, 'Admin revision clean' );
+		$this->verify_download( "?p=$doc_id&post_type=document&revision=1", $tdr->test_file2, 'Admin revision ugly' );
 		_destroy_user( $id );
 
 	}
