@@ -57,6 +57,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_shortcode_unauthed() {
 
+		$this->consoleLog( 'Test_Front_End - revisions_shortcode_unauthed' );
+
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
 
