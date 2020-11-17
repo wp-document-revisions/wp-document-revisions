@@ -52,7 +52,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Verify published post on widget.
+	 * Verify published post on widget (no author info).
 	 */
 	public function test_widget_noauth() {
 
@@ -77,6 +77,45 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$instance['title']       = 'title';
 		$instance['numberposts'] = 5;
 		$instance['show_author'] = false;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+		$this->consoleLog( $output );
+
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauth' );
+
+	}
+
+	/**
+	 * Verify published post on widget (with author info).
+	 */
+	public function test_widget_noauth() {
+
+		$this->consoleLog( 'Test_Widget - widget_auth' );
+
+		// create post with a user.
+		$user_id = _make_user( 'administrator' );
+		wp_set_current_user( $user_id );
+
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_revise_document();
+		wp_publish_post( $doc_id );
+
+		// Create the two parameter sets.
+		$args                    = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = true;
 
 		// published status only.
 		$instance['post_status']['publish'] = true;
