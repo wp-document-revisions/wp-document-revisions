@@ -1168,10 +1168,16 @@ class WP_Document_Revisions {
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		@set_time_limit( 0 );
 
-		// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
-		$levels = ob_get_level();
-		for ( $i = 0; $i < $levels; $i++ ) {
-			ob_end_clean();
+		// In normal operation, corruption can occur if ouput is written by any other process.
+		// However, when doing PHPUnit teting, this will occur, so we need to check whether we are in a test harness. 
+		$under_test = class_exists( 'WP_UnitTestCase' );
+
+		if ( ! $under_test ) {
+			// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				ob_end_clean();
+			}
 		}
 
 		// If any output has been generated (by another plugin), it could cause corruption.
@@ -1182,7 +1188,7 @@ class WP_Document_Revisions {
 		 *
 		 * @param bool $debug Set to false.
 		 */
-		if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+		if ( $under_test || ! apply_filters( 'document_output_sent_is_ok', false ) ) {
 			// oops, at least one still there,  deleted and contains data.
 			if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
 				wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
@@ -1240,7 +1246,7 @@ class WP_Document_Revisions {
 		do_action( 'document_serve_done', $file, $attach->ID );
 
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
-		if ( class_exists( 'WP_UnitTestCase' ) ) {
+		if ( $under_test ) {
 			return $template;
 		}
 		exit;

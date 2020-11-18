@@ -54,9 +54,9 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	/**
 	 * Verify published post on widget (no author info).
 	 */
-	public function test_widget_noauth() {
+	public function test_widget_noauthor() {
 
-		$this->consoleLog( 'Test_Widget - widget_noauth' );
+		$this->consoleLog( 'Test_Widget - widget_noauthor' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator' );
@@ -67,7 +67,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		wp_publish_post( $doc_id );
 
 		// Create the two parameter sets.
-		$args                    = array(
+		$args = array(
 			'before_widget' => '',
 			'before_title'  => '',
 			'after_title'   => '',
@@ -93,9 +93,9 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	/**
 	 * Verify published post on widget (with author info).
 	 */
-	public function test_widget_noauth() {
+	public function test_widget_author() {
 
-		$this->consoleLog( 'Test_Widget - widget_auth' );
+		$this->consoleLog( 'Test_Widget - widget_author' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator' );
@@ -106,7 +106,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		wp_publish_post( $doc_id );
 
 		// Create the two parameter sets.
-		$args                    = array(
+		$args = array(
 			'before_widget' => '',
 			'before_title'  => '',
 			'after_title'   => '',
