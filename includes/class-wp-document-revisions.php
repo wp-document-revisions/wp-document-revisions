@@ -1169,7 +1169,7 @@ class WP_Document_Revisions {
 		@set_time_limit( 0 );
 
 		// In normal operation, corruption can occur if ouput is written by any other process.
-		// However, when doing PHPUnit teting, this will occur, so we need to check whether we are in a test harness.
+		// However, when doing PHPUnit testing, this will occur, so we need to check whether we are in a test harness.
 		$under_test = class_exists( 'WP_UnitTestCase' );
 
 		if ( ! $under_test ) {
