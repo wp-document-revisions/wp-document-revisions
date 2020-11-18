@@ -262,7 +262,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance['numberposts'] = ( isset( $atts['numberposts'] ) ? (int) $atts['numberposts'] : 5 );
 		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : false );
 		$instance['post_status'] = array(  // temp.
-			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : false ),
+			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : true ),
 			'private' => ( isset( $atts['post_stat_private'] ) ? (bool) $atts['post_stat_private'] : false ),
 			'draft'   => ( isset( $atts['post_stat_draft'] ) ? (bool) $atts['post_stat_draft'] : false ),
 		);

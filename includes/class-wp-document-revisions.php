@@ -1188,7 +1188,7 @@ class WP_Document_Revisions {
 		 *
 		 * @param bool $debug Set to false.
 		 */
-		if ( $under_test || ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+		if ( ( ! $under_test ) || ! apply_filters( 'document_output_sent_is_ok', false ) ) {
 			// oops, at least one still there,  deleted and contains data.
 			if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
 				wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );

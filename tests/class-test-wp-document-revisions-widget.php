@@ -59,7 +59,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Widget - widget_noauthor' );
 
 		// create post with a user.
-		$user_id = _make_user( 'administrator' );
+		$user_id = _make_user( 'administrator', 'test_user' );
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
@@ -84,9 +84,9 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauth' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
+		$this->assertEquals( 0, (int) substr_count( $output, 'test_user' ), 'noauthor' );
 
 	}
 
@@ -98,7 +98,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Widget - widget_author' );
 
 		// create post with a user.
-		$user_id = _make_user( 'administrator' );
+		$user_id = _make_user( 'administrator', 'test_user' );
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
@@ -123,9 +123,43 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauth' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published__withauthor' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'withauthor' );
+
+	}
+
+	/**
+	 * Verify published and privatepost on b;ock widget (with author info).
+	 */
+	public function test_block widget() {
+
+		$this->consoleLog( 'Test_Widget - block widget' );
+
+		// create post with a user.
+		$user_id = _make_user( 'administrator', 'test_user' );
+		wp_set_current_user( $user_id );
+
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_revise_document();
+		wp_publish_post( $doc_id );
+
+		// create a private post.
+		$doc_id = $tdr->test_revise_document();
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$atts   = array();
+		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
+
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );
+
+		$atts['post_stat_private'] = true;
+		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
+
+		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );
 
 	}
 
