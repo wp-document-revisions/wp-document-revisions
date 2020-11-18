@@ -130,11 +130,11 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Verify published and privatepost on b;ock widget (with author info).
+	 * Verify published and private post on block widget (with author info).
 	 */
-	public function test_block widget() {
+	public function test_block_widget() {
 
-		$this->consoleLog( 'Test_Widget - block widget' );
+		$this->consoleLog( 'Test_Widget - block_widget' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator', 'test_user' );
