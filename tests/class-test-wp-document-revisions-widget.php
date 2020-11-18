@@ -87,6 +87,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
 		$this->assertEquals( 0, (int) substr_count( $output, 'test_user_1' ), 'noauthor' );
+		_destroy_user( $user_id );
 
 	}
 
@@ -126,6 +127,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_2' ), 'withauthor' );
+		_destroy_user( $user_id );
 
 	}
 
@@ -165,10 +167,11 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		// request that only one is shown, so should be 1.
 		$atts['numberposts'] = 1;
-		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth' );
+		_destroy_user( $user_id );
 
 	}
 

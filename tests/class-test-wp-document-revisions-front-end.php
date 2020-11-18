@@ -84,6 +84,56 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
 		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
+		_destroy_user( $id );
+
+	}
+
+	/**
+	 * Verify joe public can't access a block list of revisions.
+	 */
+	public function test_revisions_block_unauthed() {
+
+		$this->consoleLog( 'Test_Front_End - revisions_block_unauthed' );
+
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_revise_document();
+		
+		global $wpdr_fe;
+		
+		$atts = array(
+			'id' => $doc_id,
+		);
+		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
+
+		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision block' );
+		_destroy_user( $id );
+
+	}
+
+
+	/**
+	 * Verify auth'd user can view revision block and can truncate proper count.
+	 */
+	public function test_revisions_block() {
+
+		$this->consoleLog( 'Test_Front_End - revisions_block' );
+
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_revise_document();
+
+		// admin should be able to access.
+		$id = _make_user( 'administrator' );
+		wp_set_current_user( $id );
+
+		global $wpdr_fe;
+		
+		$atts = array(
+			'id' => $doc_id,
+		);
+		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
+
+		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision block' );
+		_destroy_user( $id );
 
 	}
 
@@ -104,6 +154,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 		$output = do_shortcode( '[document_revisions number="1" id="' . $doc_id . '"]' );
 		$this->assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
+		_destroy_user( $id );
 
 	}
 
@@ -177,6 +228,44 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
 		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
+
+	}
+
+	/**
+	 * Tests the documents block with a workflow state filter.
+	 */
+	public function test_document_block_wfs_filter() {
+
+		$this->consoleLog( 'Test_Front_End - document_b;ock_wfs_filter' );
+
+		$tdr = new Test_WP_Document_Revisions();
+
+		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
+		wp_publish_post( $doc_id );
+
+		$doc_id = $tdr->test_add_document(); // add another doc.
+		wp_publish_post( $doc_id );
+
+		// move a doc to another workflow state (default is index 0).
+		$terms = get_terms(
+			'workflow_state',
+			array(
+				'hide_empty' => false,
+			)
+		);
+		wp_set_post_terms( $doc_id, array( $terms[1]->slug ), 'workflow_state' );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		
+		$atts = array(
+			'taxonomy_0'  => 'workflow_state',
+			'term_0'      => $terms[1]->term_id,
+		);
+		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
+		$this->consoleLog( $output );
+
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document block filter count' );
 
 	}
 
