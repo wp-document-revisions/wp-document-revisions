@@ -123,8 +123,9 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
+		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published__withauthor' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'withauthor' );
 
 	}
@@ -151,12 +152,14 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		$atts   = array();
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );
 
 		$atts['post_stat_private'] = true;
 		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$this->consoleLog( $output );
 
 		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish' );
 		$this->assertEquals( 2, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );

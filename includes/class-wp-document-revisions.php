@@ -1178,26 +1178,26 @@ class WP_Document_Revisions {
 			for ( $i = 0; $i < $levels; $i++ ) {
 				ob_end_clean();
 			}
-		}
 
-		// If any output has been generated (by another plugin), it could cause corruption.
-		/**
-		 * Filters to output even if output already written.
-		 *
-		 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
-		 *
-		 * @param bool $debug Set to false.
-		 */
-		if ( ( ! $under_test ) || ! apply_filters( 'document_output_sent_is_ok', false ) ) {
-			// oops, at least one still there,  deleted and contains data.
-			if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
-				wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
-			}
-
-			// data may already have been flushed so should error.
-			if ( headers_sent() ) {
-				// normal case is to fail as can cause corrupted output.
-				wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
+			// If any output has been generated (by another plugin), it could cause corruption.
+			/**
+			 * Filters to output even if output already written.
+			 *
+			 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
+			 *
+			 * @param bool $debug Set to false.
+			 */
+			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+				// oops, at least one still there,  deleted and contains data.
+				if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
+					wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
+				}
+	
+				// data may already have been flushed so should error.
+				if ( headers_sent() ) {
+					// normal case is to fail as can cause corrupted output.
+					wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
+				}
 			}
 		}
 
