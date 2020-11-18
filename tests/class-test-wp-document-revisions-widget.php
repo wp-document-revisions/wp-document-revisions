@@ -59,7 +59,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Widget - widget_noauthor' );
 
 		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user' );
+		$user_id = _make_user( 'administrator', 'test_user_1' );
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
@@ -86,7 +86,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
-		$this->assertEquals( 0, (int) substr_count( $output, 'test_user' ), 'noauthor' );
+		$this->assertEquals( 0, (int) substr_count( $output, 'test_user_1' ), 'noauthor' );
 
 	}
 
@@ -98,7 +98,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Widget - widget_author' );
 
 		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user' );
+		$user_id = _make_user( 'administrator', 'test_user_2' );
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
@@ -126,7 +126,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'withauthor' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_2' ), 'withauthor' );
 
 	}
 
@@ -138,7 +138,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Widget - block_widget' );
 
 		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user' );
+		$user_id = _make_user( 'administrator', 'test_user_3' );
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
@@ -162,7 +162,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$this->consoleLog( $output );
 
 		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish' );
-		$this->assertEquals( 2, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth' );
 
 	}
 

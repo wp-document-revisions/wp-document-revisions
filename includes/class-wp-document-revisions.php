@@ -1169,7 +1169,7 @@ class WP_Document_Revisions {
 		@set_time_limit( 0 );
 
 		// In normal operation, corruption can occur if ouput is written by any other process.
-		// However, when doing PHPUnit teting, this will occur, so we need to check whether we are in a test harness. 
+		// However, when doing PHPUnit teting, this will occur, so we need to check whether we are in a test harness.
 		$under_test = class_exists( 'WP_UnitTestCase' );
 
 		if ( ! $under_test ) {
@@ -1192,7 +1192,7 @@ class WP_Document_Revisions {
 				if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
 					wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
 				}
-	
+
 				// data may already have been flushed so should error.
 				if ( headers_sent() ) {
 					// normal case is to fail as can cause corrupted output.
