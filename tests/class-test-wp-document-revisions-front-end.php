@@ -97,10 +97,10 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_revise_document();
-		
+
 		global $wpdr_fe;
-		
-		$atts = array(
+
+		$atts   = array(
 			'id' => $doc_id,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
@@ -126,8 +126,8 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 		wp_set_current_user( $id );
 
 		global $wpdr_fe;
-		
-		$atts = array(
+
+		$atts   = array(
 			'id' => $doc_id,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
@@ -232,11 +232,11 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tests the documents block with a workflow state filter.
+	 * Tests the documents block with a workflow state filter. with and without read_document aps.
 	 */
 	public function test_document_block_wfs_filter() {
 
-		$this->consoleLog( 'Test_Front_End - document_b;ock_wfs_filter' );
+		$this->consoleLog( 'Test_Front_End - document_block_wfs_filter' );
 
 		$tdr = new Test_WP_Document_Revisions();
 
@@ -257,15 +257,23 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 		wp_cache_flush();
 
 		global $wpdr_fe;
-		
-		$atts = array(
-			'taxonomy_0'  => 'workflow_state',
-			'term_0'      => $terms[1]->term_id,
+
+		$atts   = array(
+			'taxonomy_0' => 'workflow_state',
+			'term_0'     => $terms[1]->term_id,
 		);
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document block filter count' );
+		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
+
+		//  using document_read capability means no access.
+		add_filter( 'document_read_uses_read', '__return_false' );
+		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
+		$this->consoleLog( $output );
+		
+		$this->assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
+		remove_filter( 'document_read_uses_read', '__return_false' );
 
 	}
 

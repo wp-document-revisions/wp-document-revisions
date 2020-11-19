@@ -351,7 +351,7 @@ class WP_Document_Revisions {
 		 *
 		 * @since 3.3
 		 *
-		 * @param boolean true  default action to capability read for documents (not read_docuemnt).
+		 * @param boolean true  default action to capability read for documents (not read_document).
 		 */
 		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
 			// invoke logic.

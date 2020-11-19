@@ -724,8 +724,8 @@ class WP_Document_Revisions_Front_End {
 		global $wpdr, $wpdr_fe;
 
 		// sanity check.
-		// do not show output to users that do not have the read_documents capability.
-		if ( ! current_user_can( 'read_documents' ) ) {
+		// do not show output to users that do not have the read_documents capability and don't get it via read.
+		if ( ( ! current_user_can( 'read_documents' ) ) && ! apply_filters( 'document_read_uses_read', true ) ) {
 			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
 		}
 
