@@ -106,7 +106,6 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
 
 		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision block' );
-		_destroy_user( $id );
 
 	}
 
@@ -232,7 +231,7 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tests the documents block with a workflow state filter. with and without read_document aps.
+	 * Tests the documents block with a workflow state filter. with and without read_document caps.
 	 */
 	public function test_document_block_wfs_filter() {
 
@@ -263,15 +262,13 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 			'term_0'     => $terms[1]->term_id,
 		);
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
 
-		//  using document_read capability means no access.
+		// using document_read capability means no access for an unauthorized use..
 		add_filter( 'document_read_uses_read', '__return_false' );
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		$this->consoleLog( $output );
-		
+
 		$this->assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
 
