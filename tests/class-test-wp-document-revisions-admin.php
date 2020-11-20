@@ -26,6 +26,10 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$this->user_ids = array();
 		wp_set_current_user( 0 );
 
+		// set up admin.
+		define( 'WP_ADMIN', true );
+		$wpdr->admin_init();
+
 		// flush cache for good measure.
 		wp_cache_flush();
 
