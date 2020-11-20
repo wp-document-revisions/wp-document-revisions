@@ -82,7 +82,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
-		$content = ob_get_clean();
+		$content = ob_get_contents();
+		ob_end_flush();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
 		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
@@ -417,9 +418,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$this->consoleLog( 'Test_Rewrites - feed_as_authorized' );
 
-		define( 'WP_ADMIN', true );
-
+		// set up admin.
+		defined('WP_ADMIN') or define( 'WP_ADMIN', true );
 		$wpdr->admin_init();
+
 		$tdr    = new Test_WP_Document_Revisions();
 		$doc_id = $tdr->test_add_document();
 

@@ -26,10 +26,6 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$this->user_ids = array();
 		wp_set_current_user( 0 );
 
-		// set up admin.
-		define( 'WP_ADMIN', true );
-		$wpdr->admin_init();
-
 		// flush cache for good measure.
 		wp_cache_flush();
 
@@ -62,6 +58,10 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		$this->consoleLog( 'Test_Admin - dashboard_display' );
 
+		// set up admin.
+		defined('WP_ADMIN') or define( 'WP_ADMIN', true );
+		$wpdr->admin_init();
+
 		// create post with a user.
 		$user_id = _make_user( 'administrator', 'test_user_1' );
 		wp_set_current_user( $user_id );
@@ -76,9 +76,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->dashboard_display();
+		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
-		ob_end_clean();
+		ob_end_flush();
 		$this->consoleLog( $output );
 
 		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count' );
@@ -106,9 +106,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->revision_metabox( $doc_id );
+		$wpdr->admin->revision_metabox( $doc_id );
 		$output = ob_get_contents();
-		ob_end_clean();
+		ob_end_flush();
 		$this->consoleLog( $output );
 
 		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'revision count' );
@@ -134,9 +134,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->document_metabox( $doc_id );
+		$wpdr->admin->document_metabox( $doc_id );
 		$output = ob_get_contents();
-		ob_end_clean();
+		ob_end_flush();
 		$this->consoleLog( $output );
 
 		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'revision count' );
