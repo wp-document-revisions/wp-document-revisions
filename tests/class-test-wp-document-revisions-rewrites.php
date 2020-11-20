@@ -82,8 +82,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_flush();
+		$content = ob_get_clean();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
 		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );

@@ -56,6 +56,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_dashboard_display() {
 
+		global $wpdr;
+
 		$this->consoleLog( 'Test_Admin - dashboard_display' );
 
 		// set up admin.
@@ -93,6 +95,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_revision_metabox() {
 
+		global $wpdr;
+
 		$this->consoleLog( 'Test_Admin - revision_metabox' );
 
 		// create post with a user.
@@ -120,6 +124,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 * Verify document log metabox.
 	 */
 	public function test_document_metabox() {
+
+		global $wpdr;
 
 		$this->consoleLog( 'Test_Admin - document_metabox' );
 
