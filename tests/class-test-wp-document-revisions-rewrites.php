@@ -418,7 +418,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Rewrites - feed_as_authorized' );
 
 		// set up admin.
-		defined('WP_ADMIN') or define( 'WP_ADMIN', true );
+		if ( ! defined('WP_ADMIN') ) {
+			define( 'WP_ADMIN', true );
+		}
 		$wpdr->admin_init();
 
 		$tdr    = new Test_WP_Document_Revisions();

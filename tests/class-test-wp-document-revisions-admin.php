@@ -61,7 +61,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Admin - dashboard_display' );
 
 		// set up admin.
-		defined('WP_ADMIN') or define( 'WP_ADMIN', true );
+		if ( ! defined('WP_ADMIN') ) {
+			define( 'WP_ADMIN', true );
+		}
 		$wpdr->admin_init();
 
 		// create post with a user.
@@ -69,11 +71,11 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 
 		// create a private post.
-		$doc_id = $tdr->test_revise_document();
+		$doc_id = $tdr->test_add_document();
 
 		global $wpdr;
 
@@ -134,7 +136,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 
 		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 
 		global $wpdr;
