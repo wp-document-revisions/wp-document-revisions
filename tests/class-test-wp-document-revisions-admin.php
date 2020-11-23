@@ -61,7 +61,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Admin - dashboard_display' );
 
 		// set up admin.
-		if ( ! defined('WP_ADMIN') ) {
+		if ( ! defined( 'WP_ADMIN' ) ) {
 			define( 'WP_ADMIN', true );
 		}
 		$wpdr->admin_init();
@@ -79,16 +79,26 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		global $wpdr;
 
+		// see that one post only is seen.
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
 		ob_end_flush();
 		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Public' ), 'display public' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Private' ), 'display private' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display public' );
+
+		// see that two posts are seen.
+		wp_publish_post( $doc_id );
+		ob_start();
+		$wpdr->admin->dashboard_display();
+		$output = ob_get_contents();
+		ob_end_flush();
+
 		_destroy_user( $user_id );
+		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display public' );
 
 	}
 
@@ -112,7 +122,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->admin->revision_metabox( $doc_id );
+		$wpdr->admin->revision_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
 		ob_end_flush();
 		$this->consoleLog( $output );
@@ -142,12 +152,12 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->admin->document_metabox( $doc_id );
+		$wpdr->admin->document_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
 		ob_end_flush();
 		$this->consoleLog( $output );
 
-		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'revision count' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'revision count' );
 		_destroy_user( $user_id );
 
 	}

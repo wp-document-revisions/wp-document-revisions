@@ -135,14 +135,16 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$doc_id = $tdr->test_add_document();
 		wp_publish_post( $doc_id );
 
+		global $current_user;
+		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
 		// non-logged on user has read so should read.
 		add_filter( 'document_read_uses_read', '__return_true' );
 
-		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
-		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
+		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink Read' );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' Ewad );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 
@@ -418,7 +420,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$this->consoleLog( 'Test_Rewrites - feed_as_authorized' );
 
 		// set up admin.
-		if ( ! defined('WP_ADMIN') ) {
+		if ( ! defined( 'WP_ADMIN' ) ) {
 			define( 'WP_ADMIN', true );
 		}
 		$wpdr->admin_init();
