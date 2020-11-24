@@ -82,7 +82,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
-		$content = ob_get_clean();
+		$content = ob_get_contents();
+		ob_end_clean();
 
 		$this->assertFalse( is_404(), "404 ($msg)" );
 		$this->assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
@@ -114,7 +115,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
-		$content = ob_get_clean();
+		$content = ob_get_contents();
+		ob_end_clean();
 
 		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );

@@ -83,22 +83,21 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
-		ob_end_flush();
-		$this->consoleLog( $output );
+		ob_end_clean();
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display public' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count nopriv' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish nopriv' );
 
 		// see that two posts are seen.
 		wp_publish_post( $doc_id );
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
-		ob_end_flush();
+		ob_end_clean();
 
 		_destroy_user( $user_id );
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count' );
-		$this->assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display public' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count all' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish all' );
 
 	}
 
@@ -124,10 +123,12 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		ob_start();
 		$wpdr->admin->revision_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
-		ob_end_flush();
+		ob_end_clean();
 		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'revision count' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<tr' ), 'revision count' );
+		$this->assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		$this->assertEquals( 2, (int) substr_count( $output, '-revision-21.' ), 'revision count revision 2' );
 		_destroy_user( $user_id );
 
 	}
@@ -154,10 +155,11 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		ob_start();
 		$wpdr->admin->document_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
-		ob_end_flush();
+		ob_end_clean();
 		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'revision count' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'post_id=' . $doc_id . '&' ), 'document metabox post_id' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'document metabox author' );
 		_destroy_user( $user_id );
 
 	}
