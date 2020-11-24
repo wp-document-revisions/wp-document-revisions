@@ -144,7 +144,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink Read' );
-		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' Ewad );
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 
