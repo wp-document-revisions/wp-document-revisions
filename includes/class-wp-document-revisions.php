@@ -1245,13 +1245,14 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
+		// opened buffer, so flush output.
+		ob_end_flush();
+
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
 			return $template;
 		}
 
-		// make sure output is flushed.
-		ob_end_flush();
 		exit;
 	}
 
@@ -1280,9 +1281,6 @@ class WP_Document_Revisions {
 		if ( $version && ! current_user_can( 'read_document_revisions' ) ) {
 			return ( $ret_null ? null : false );
 		}
-
-		// expect to finish, flush output.
-		ob_end_flush();
 
 		// specific document cap check.
 		if ( ! current_user_can( 'read_document', $post->ID ) ) {

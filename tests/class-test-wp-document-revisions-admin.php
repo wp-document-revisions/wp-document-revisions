@@ -125,7 +125,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<tr>' ), 'revision count' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<a href' ), 'revision count' );
 		$this->assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 		$this->assertEquals( 2, (int) substr_count( $output, '-revision-21.' ), 'revision count revision 2' );
 		_destroy_user( $user_id );
