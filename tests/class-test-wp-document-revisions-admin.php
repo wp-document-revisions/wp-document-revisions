@@ -124,9 +124,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$wpdr->admin->revision_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
 		ob_end_clean();
-		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<tr' ), 'revision count' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<tr>' ), 'revision count' );
 		$this->assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 		$this->assertEquals( 2, (int) substr_count( $output, '-revision-21.' ), 'revision count revision 2' );
 		_destroy_user( $user_id );
@@ -156,9 +155,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$wpdr->admin->document_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
 		ob_end_clean();
-		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, 'post_id=' . $doc_id . '&' ), 'document metabox post_id' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'post_id=' . $doc_id . '&' ), 'document metabox post_id' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'document metabox author' );
 		_destroy_user( $user_id );
 
