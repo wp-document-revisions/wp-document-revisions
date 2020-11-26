@@ -151,3 +151,14 @@ function _flush_roles() {
 	global $wp_roles;
 	$wp_roles->for_site();
 }
+
+/**
+ * Several tests will try tio erve a file twice, this would fail, so suppress headers from being written.
+ */
+function _remove_headers( $headers, $file ) {
+	if ( headers_sent() ) {
+		return array();
+	}
+}
+	
+add_filter( 'document_revisions_serve_file_headers', '_remove_headers' );
