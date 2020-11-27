@@ -156,6 +156,9 @@ function _flush_roles() {
  * Several tests will try to serve a file twice, this would fail, so suppress headers from being written.
  *
  * Tests also require buffers opened to be closed (and so send headers).
+ +
+ * @param array  $headers any headers for the file being served.
+ * @param string $file    file name of file being served.
  */
 function _remove_headers( $headers, $file ) {
 	if ( headers_sent() ) {
@@ -163,5 +166,5 @@ function _remove_headers( $headers, $file ) {
 	}
 	return $headers;
 }
-	
+
 add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );

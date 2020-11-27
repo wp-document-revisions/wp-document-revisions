@@ -112,7 +112,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$this->go_to( $url );
 
-		// verify contents are actually served.
+		// verify whether contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
 		$content = ob_get_contents();
@@ -234,12 +234,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 
 	/**
-	 * Can the public access a private file? (no).
+	 * Can the public access a private file - doc_id? (no).
 	 */
-	public function test_private_document_as_unauthenticated() {
+	public function test_private_document_as_unauthenticated_docid() {
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated' );
+		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated docid' );
 
 		// make new private document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -252,6 +252,28 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// public should be denied.
 		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
+
+	}
+
+
+	/**
+	 * Can the public access a private file - permalink? (no).
+	 */
+	public function test_private_document_as_unauthenticated_pretty() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated pretty' );
+
+		// make new private document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// public should be denied.
 		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
 
 	}
