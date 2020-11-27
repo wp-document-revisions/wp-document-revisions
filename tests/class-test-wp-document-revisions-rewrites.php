@@ -125,12 +125,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 
 	/**
-	 * Can the public access a public file? (yes).
+	 * Can the public access a public file - doc_id using read? (yes).
 	 */
-	public function test_public_document() {
+	public function test_public_document_docid_read() {
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Rewrites - public_document' );
+		$this->consoleLog( 'Test_Rewrites - public_document docid read' );
 
 		// make new public document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -146,18 +146,90 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink Read' );
+
+		remove_filter( 'document_read_uses_read', '__return_true' );
+
+	}
+
+
+	/**
+	 * Can the public access a public file - permalink using read? (yes).
+	 */
+	public function test_public_document_pretty_read() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - public_document pretty read' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
 		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+
+	/**
+	 * Can the public access a public file - doc_id using document_read? (no).
+	 */
+	public function test_public_document_docid_docread() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - public_document docid docread' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
 		// non-logged on user does not have read_document so should not read.
 		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+
+	/**
+	 * Can the public access a public file - permalink using document_read? (no).
+	 */
+	public function test_public_document_pretty_docread() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - public_document pretty docread' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user does not have read_document so should not read.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
 		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
-
 	}
 
 
@@ -165,6 +237,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can the public access a private file? (no).
 	 */
 	public function test_private_document_as_unauthenticated() {
+		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated' );
 
@@ -188,6 +261,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can a contributor access a public file? (no).
 	 */
 	public function test_private_document_as_contributor() {
+		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - private_document_as_contributor' );
 
@@ -210,6 +284,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can an admin access a private file? (yes).
 	 */
 	public function test_private_document_as_admin() {
+		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - private_document_as_admin' );
 
@@ -259,7 +334,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can an admin access a document revision? (yes).
 	 */
 	public function test_document_revision_as_admin() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - document_revision_as_admin' );
@@ -286,7 +360,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Do we serve the latest version of a document?
 	 */
 	public function test_revised_document() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - revised_document' );
@@ -306,7 +379,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Does the document archive work?
 	 */
 	public function test_archive() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - archive' );
@@ -323,7 +395,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Does get_permalink generate the right permalink?
 	 */
 	public function test_permalink() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - permalink' );
@@ -341,7 +412,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Test get_permalink() on a revision.
 	 */
 	public function test_revision_permalink() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - revision_permalink' );
@@ -395,7 +465,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can the public access a revision log feed?
 	 */
 	public function test_feed_as_unauthenticated() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - feed_as_unauthenticated' );
@@ -416,7 +485,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Can a user with the proper feed key access a feed?
 	 */
 	public function test_feed_as_authorized() {
-
 		global $wpdr;
 
 		$this->consoleLog( 'Test_Rewrites - feed_as_authorized' );
@@ -449,8 +517,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Tests that changing the document slug is reflected in permalinks.
 	 */
 	public function test_document_slug() {
-
-		global $wp_rewrite;
+		global $wpdr, $wp_rewrite;
 
 		$this->consoleLog( 'Test_Rewrites - document_slug' );
 
