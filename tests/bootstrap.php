@@ -153,12 +153,15 @@ function _flush_roles() {
 }
 
 /**
- * Several tests will try tio erve a file twice, this would fail, so suppress headers from being written.
+ * Several tests will try to serve a file twice, this would fail, so suppress headers from being written.
+ *
+ * Tests also require buffers opened to be closed (and so send headers).
  */
 function _remove_headers( $headers, $file ) {
 	if ( headers_sent() ) {
 		return array();
 	}
+	return $headers;
 }
 	
-add_filter( 'document_revisions_serve_file_headers', '_remove_headers' );
+add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
