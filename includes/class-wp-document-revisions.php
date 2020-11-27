@@ -1011,6 +1011,7 @@ class WP_Document_Revisions {
 			// and theme formats appropriately.
 			$wp_query->posts          = array();
 			$wp_query->queried_object = null;
+			$wp_query->is_404         = true;
 			$wp->handle_404();
 
 			// tell WP to serve the theme's standard 404 template, this is a filter after all...
@@ -1042,6 +1043,7 @@ class WP_Document_Revisions {
 				// not logged on, deny file existence (as above).
 				$wp_query->posts          = array();
 				$wp_query->queried_object = null;
+				$wp_query->is_404         = true;
 				$wp->handle_404();
 
 				// tell WP to serve the theme's standard 404 template, this is a filter after all...

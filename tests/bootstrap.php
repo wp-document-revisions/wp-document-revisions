@@ -156,7 +156,7 @@ function _flush_roles() {
  * Several tests will try to serve a file twice, this would fail, so suppress headers from being written.
  *
  * Tests also require buffers opened to be closed (and so send headers).
- +
+ *
  * @param array  $headers any headers for the file being served.
  * @param string $file    file name of file being served.
  */
