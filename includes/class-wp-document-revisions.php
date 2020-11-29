@@ -1038,7 +1038,9 @@ class WP_Document_Revisions {
 					null,
 					array( 'response' => 403 )
 				);
-				return false; // for unit testing.
+				// for unit testing.
+				$wp_query->is_404 = true;
+				return false;
 			} else {
 				// not logged on, deny file existence (as above).
 				$wp_query->posts          = array();
@@ -1163,7 +1165,7 @@ class WP_Document_Revisions {
 			: ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) )
 		) {
 			status_header( 304 );
-			return;
+			return $template;
 		}
 
 		// in case this is a large file, remove PHP time limits.
