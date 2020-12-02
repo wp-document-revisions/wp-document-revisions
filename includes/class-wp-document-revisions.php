@@ -2700,6 +2700,7 @@ class WP_Document_Revisions {
 			} else {
 				if ( null === $results ) {
 					$query_object->found_posts = 0;
+					$query_object->is_404      = true;
 				} else {
 					$query_object->found_posts = 1;
 				}
