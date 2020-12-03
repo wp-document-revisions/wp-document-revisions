@@ -55,6 +55,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
 		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
+		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
@@ -347,6 +348,39 @@ class WP_Document_Revisions_Admin {
 				#media-upload-header {display:none;}
 			</style>
 			<?php
+		}
+	}
+
+
+	/**
+	 * Check that those having edit_document can upload documents.
+	 *
+	 * @since 3.3
+	 */
+	public function check_upload_files() {
+		global $typenow, $pagenow;
+
+		if ( ! current_user_can( 'edit_documents' ) || 'document' !== $typenow || current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		if ( 'post.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload documents though you may be able change some attributes.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+		} elseif ('post-new.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload any documents.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+			// Need to switch off save capability.
 		}
 	}
 

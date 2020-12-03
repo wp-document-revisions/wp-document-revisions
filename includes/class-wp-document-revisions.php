@@ -357,7 +357,10 @@ class WP_Document_Revisions {
 			// invoke logic.
 			add_filter( 'map_meta_cap', array( &$this, 'map_meta_cap' ), 10, 4 );
 			add_filter( 'user_has_cap', array( &$this, 'user_has_cap' ), 10, 4 );
-			add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+			if ( ! current_user_can( 'read_documents' ) ) {
+				// user does not have read_documents capability, so any need to be filtered out of results.
+				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );		
+			}
 		}
 
 		// filter the queries.
@@ -974,7 +977,19 @@ class WP_Document_Revisions {
 
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
-			$rev_id = $this->get_latest_revision( $post->ID )->ID;
+			$revn = $this->get_latest_revision( $post->ID );
+			if ( false === $revn ) {
+				// no revision.
+				wp_die(
+					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
+					null,
+					array( 'response' => 403 )
+				);
+				// for unit testing.
+				$wp_query->is_404 = true;
+				return false;
+			}
+			$rev_id = $revn->ID;
 		} else {
 			$rev_id = $this->get_revision_id( $version, $post->ID );
 		}
@@ -2484,7 +2499,7 @@ class WP_Document_Revisions {
 		// if the URL already has an extension, then no need to remove.
 		$path = wp_parse_url( $redirect, PHP_URL_PATH );
 
-		if ( preg_match( '([^.]+)[.][A-Za-z0-9]{1,7}/?$', $path ) ) {
+		if ( preg_match( '#(^.+)\.[A-Za-z0-9]{1,7}/?$#', $path ) ) {
 			return $redirect;
 		}
 
@@ -2673,21 +2688,22 @@ class WP_Document_Revisions {
 	/**
 	 * Review WP_Query SQL results.
 	 *
-	 * Only invoked when user should not access documents via 'read'.
+	 * Only invoked when user should NOT access documents via 'read' but does not have 'read_document'. Remove any documents.
 	 *
 	 * @param WP_Post[] $results      Array of post objects.
 	 * @param WP_Query  $query_object Query object.
 	 * @return WP_Post[] Array of post objects.
 	 */
 	public function posts_results( $results, $query_object ) {
-		$no_read = ( ! current_user_can( 'read_documents' ) );
 		$match   = false;
-		foreach ( $results as $key => $result ) {
-			// confirm a document.
-			if ( $this->verify_post_type( $result ) && $no_read ) {
-				// user has no access, remove from result.
-				unset( $results[ $key ] );
-				$match = true;
+		if ( is_array( $results ) ) {
+			foreach ( $results as $key => $result ) {
+				// confirm a document.
+				if ( $this->verify_post_type( $result ) ) {
+					// user has no access, remove from result.
+					unset( $results[ $key ] );
+					$match = true;
+				}
 			}
 		}
 		// re-evaluate count.
@@ -2697,6 +2713,7 @@ class WP_Document_Revisions {
 
 			if ( is_array( $results ) ) {
 				$query_object->found_posts = count( $results );
+				$query_object->is_404      = (bool) ( 0 == $query_object->found_posts );
 			} else {
 				if ( null === $results ) {
 					$query_object->found_posts = 0;
