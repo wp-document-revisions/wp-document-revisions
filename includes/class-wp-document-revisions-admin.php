@@ -372,7 +372,7 @@ class WP_Document_Revisions_Admin {
 			<?php esc_html_e( 'You will not be able to upload documents though you may be able change some attributes.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
-		} elseif ('post-new.php' === $pagenow ) {
+		} elseif ( 'post-new.php' === $pagenow ) {
 			?>
 			<div class="notice notice-warning is-dismissible"><p>
 			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>

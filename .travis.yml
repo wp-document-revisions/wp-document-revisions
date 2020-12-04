@@ -6,6 +6,8 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
+    - $TRAVIS_BUILD_DIR/composer/cache
+    - $TRAVIS_BUILD_DIR/vendor/composer/cache
 
 services:
   - mysql
@@ -19,7 +21,6 @@ matrix:
     - php: 7.2
       env: WP_VERSION=latest WP_MULTISITE=1
     - php: 7.1
-      env: WP_VERSION=4.9
     - php: 7.0
       env: WP_VERSION=latest
     - php: 5.6
@@ -56,4 +57,7 @@ script:
     fi
 
 after_success:
-  - script/coveralls
+  - |
+    if [[ "$WP_COVERAGE" == "coveralls" ]] ; then
+      script/coveralls
+    fi

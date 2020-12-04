@@ -359,7 +359,7 @@ class WP_Document_Revisions {
 			add_filter( 'user_has_cap', array( &$this, 'user_has_cap' ), 10, 4 );
 			if ( ! current_user_can( 'read_documents' ) ) {
 				// user does not have read_documents capability, so any need to be filtered out of results.
-				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );		
+				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );	
 			}
 		}
 
@@ -2695,7 +2695,7 @@ class WP_Document_Revisions {
 	 * @return WP_Post[] Array of post objects.
 	 */
 	public function posts_results( $results, $query_object ) {
-		$match   = false;
+		$match = false;
 		if ( is_array( $results ) ) {
 			foreach ( $results as $key => $result ) {
 				// confirm a document.
@@ -2713,7 +2713,7 @@ class WP_Document_Revisions {
 
 			if ( is_array( $results ) ) {
 				$query_object->found_posts = count( $results );
-				$query_object->is_404      = (bool) ( 0 == $query_object->found_posts );
+				$query_object->is_404      = (bool) ( 0 === $query_object->found_posts );
 			} else {
 				if ( null === $results ) {
 					$query_object->found_posts = 0;

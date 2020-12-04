@@ -118,11 +118,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		$this->consoleLog( '$content:' . $content );
-		$this->consoleLog( 'is_404:' . is_404() );
-		$this->consoleLog( '_wpdr_is_wp_die:' . _wpdr_is_wp_die() );
+		global $wp_query;
 
-		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
+		$this->assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
+		$this->assertTrue( ( empty($content) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
 
 	}
