@@ -120,7 +120,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		global $wp_query;
 
-		$this->assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
+		if ( ! _wpdr_is_wp_die() ) {
+			$this->assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
+		}
 		$this->assertTrue( ( empty($content) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
 

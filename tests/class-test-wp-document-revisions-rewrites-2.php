@@ -19,6 +19,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	public function setUp() {
 
 		parent::setUp();
+		add_filter( 'document_use_gzip', '__return_false' );
 
 		// init permalink structure.
 		global $wp_rewrite;
@@ -45,6 +46,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 		$wp_rewrite->set_permalink_structure( '' );
 
 		_destroy_uploads();
+		remove_filter( 'document_use_gzip', '__return_false' );
 		parent::tearDown();
 
 	}
@@ -112,21 +114,27 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
-		$content = ob_get_clean();
+		$content = ob_get_contents();
+		ob_end_clean();
 
-		$this->assertTrue( ( is_404() || _wpdr_is_wp_die() ), "Not 404'd or wp_die'd ($msg)" );
+		global $wp_query;
+
+		if ( ! _wpdr_is_wp_die() ) {
+			$this->assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
+		}
+		$this->assertTrue( ( empty($content) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
 		$this->assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
 
 	}
 
 
 	/**
-	 * Can the public access a public file? (yes).
+	 * Can the public access a public file - doc_id using read? (yes).
 	 */
-	public function test_public_document() {
+	public function test_public_document_docid_read() {
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Rewrites_Without - public_document' );
+		$this->consoleLog( 'Test_Rewrites - public_document docid read' );
 
 		// make new public document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -142,27 +150,100 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		$this->verify_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink Read' );
-		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
-
-		// non-logged on user does not have read_document so should not read.
-		add_filter( 'document_read_uses_read', '__return_false' );
-
-		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
-		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
-
-		remove_filter( 'document_read_uses_read', '__return_false' );
 
 	}
 
 
 	/**
-	 * Can the public access a private file? (no).
+	 * Can the public access a public file - permalink using read? (yes).
 	 */
-	public function test_private_document_as_unauthenticated() {
+	public function test_public_document_pretty_read() {
+		global $wpdr;
 
-		$this->consoleLog( 'Test_Rewrites_Without - private_document_as_unauthenticated' );
+		$this->consoleLog( 'Test_Rewrites - public_document pretty read' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		$this->verify_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink Read' );
+
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+
+	/**
+	 * Can the public access a public file - doc_id using document_read? (no).
+	 */
+	public function test_public_document_docid_docread() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - public_document docid docread' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user does not have read_document so should not read.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Public Ugly Permalink' );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+
+	/**
+	 * Can the public access a public file - permalink using document_read? (no).
+	 */
+	public function test_public_document_pretty_docread() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - public_document pretty docread' );
+
+		// make new public document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+		wp_publish_post( $doc_id );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user does not have read_document so should not read.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Public Pretty Permalink' );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+
+	/**
+	 * Can the public access a private file - doc_id? (no).
+	 */
+	public function test_private_document_as_unauthenticated_docid() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated docid' );
 
 		// make new private document.
 		$tdr    = new Test_WP_Document_Revisions();
@@ -175,10 +256,31 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		// public should be denied.
 		$this->verify_cant_download( "?p=$doc_id&post_type=document", $tdr->test_file, 'Private, Unauthenticated Ugly Permalink' );
-		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
 
 	}
 
+
+	/**
+	 * Can the public access a private file - permalink? (no).
+	 */
+	public function test_private_document_as_unauthenticated_pretty() {
+		global $wpdr;
+
+		$this->consoleLog( 'Test_Rewrites - private_document_as_unauthenticated pretty' );
+
+		// make new private document.
+		$tdr    = new Test_WP_Document_Revisions();
+		$doc_id = $tdr->test_add_document();
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// public should be denied.
+		$this->verify_cant_download( get_permalink( $doc_id ), $tdr->test_file, 'Private, Unauthenticated Pretty Permalink' );
+
+	}
 
 	/**
 	 * Can a contributor access a public file? (no).

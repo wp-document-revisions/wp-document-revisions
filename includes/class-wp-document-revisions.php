@@ -861,10 +861,11 @@ class WP_Document_Revisions {
 			$posts = array_slice( $posts, 0, 1, true );
 		}
 
-		$rev_query             = new WP_Query();
-		$rev_query->posts      = $posts;
-		$rev_query->post_count = count( $posts );
-		$rev_query->is_feed    = $feed;
+		$rev_query              = new WP_Query();
+		$rev_query->posts       = $posts;
+		$rev_query->found_posts = count( $posts );
+		$rev_query->is_404      = (bool) ( 0 === $rev_query->found_posts );
+		$rev_query->is_feed     = $feed;
 
 		return $rev_query;
 	}
