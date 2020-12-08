@@ -535,9 +535,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		$content = $this->simulate_feed( add_query_arg( 'key', $key, get_permalink( $doc_id ) . 'feed/' ) );
 		$this->consoleLog( $content );
+		$this->consoleLog( 'get-_rev:' . count( $wpdr->get_revisions( $doc_id ) ) . 'get-_rev_query:' . count( $wpdr->get_revision_query( $doc_id ) ) . ':' . current_user_can( 'read_document_revisions' ) );
 		$this->assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		$this->assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds' );
-		// $this->assertEquals( count( $wpdr->get_revisions( $doc_id ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count' );
+		// $this-> assertEquals( count( $wpdr->get_revisions( $doc_id ) ), xxx(int) substr_count( $content, '<item>' ), 'improper feed item count' );
 		wp_set_current_user( 0 );
 		_destroy_user( $user_id );
 

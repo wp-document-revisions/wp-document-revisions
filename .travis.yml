@@ -47,6 +47,9 @@ before_script:
   - chmod +x script/*
   - script/setup
 
+  # disable xdebug if not coverage
+  - if [[ $WP_COVERAGE == "" ]]; then phpenv config-rm xdebug.ini; fi
+
 script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
