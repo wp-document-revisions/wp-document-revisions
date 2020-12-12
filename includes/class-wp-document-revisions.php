@@ -863,9 +863,12 @@ class WP_Document_Revisions {
 
 		$rev_query              = new WP_Query();
 		$rev_query->posts       = $posts;
-		$rev_query->found_posts = count( $posts );
-		$rev_query->is_404      = (bool) ( 0 === $rev_query->found_posts );
+		$rev_query->post_count  = count( $posts );
+		$rev_query->found_posts = $rev_query->post_count;
+		$rev_query->is_404      = (bool) ( 0 === $rev_query->post_count );
+		$rev_query->post        = ( $rev_query->is_404 ? null : $posts[0] );
 		$rev_query->is_feed     = $feed;
+		$rev_query->rewind_posts();
 
 		return $rev_query;
 	}
@@ -2713,10 +2716,12 @@ class WP_Document_Revisions {
 			$results = array_values( $results );
 
 			if ( is_array( $results ) ) {
-				$query_object->found_posts = count( $results );
-				$query_object->is_404      = (bool) ( 0 === $query_object->found_posts );
+				$query_object->post_count  = count( $results );
+				$query_object->found_posts = $query_object->post_count;
+				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
 			} else {
 				if ( null === $results ) {
+					$query_object->post_count  = 0;
 					$query_object->found_posts = 0;
 					$query_object->is_404      = true;
 				} else {
