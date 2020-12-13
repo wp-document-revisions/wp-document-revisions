@@ -52,12 +52,11 @@ before_script:
 
 script:
   - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      if [[ "$WP_COVERAGE" == "coveralls" ]] ; then
-        script/cibuild-phpunit-coverage
-      else
-        script/cibuild-phpunit
-      fi
+    if [[ ! -z "$WP_VERSION" ]] && [[ $WP_COVERAGE == "" ]]; then
+      script/cibuild-phpunit
+    fi
+    if [[ ! -z "$WP_VERSION" ]] && [[ "$WP_COVERAGE" == "coveralls" ]] ; then
+      script/cibuild-phpunit-coverage
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
