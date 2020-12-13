@@ -21,9 +21,9 @@ matrix:
     - php: 7.2
       env: WP_VERSION=latest WP_MULTISITE=1
     - php: 7.1
-      env: WP_VERSION=latest WP_COVERAGE=coveralls
+      env: WP_VERSION=latest
     - php: 7.0
-      env: WP_VERSION=4.9
+      env: WP_VERSION=4.9 WP_COVERAGE=coveralls
     - php: 5.6
       env: WP_VERSION=latest
     - php: 7.2
@@ -55,6 +55,7 @@ script:
     if [[ ! -z "$WP_VERSION" ]] && [[ $WP_COVERAGE == "" ]]; then
       script/cibuild-phpunit
     fi
+  - |
     if [[ ! -z "$WP_VERSION" ]] && [[ "$WP_COVERAGE" == "coveralls" ]] ; then
       script/cibuild-phpunit-coverage
     fi
