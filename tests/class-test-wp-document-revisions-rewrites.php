@@ -74,6 +74,26 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public static $test_file2 = 'documents/test-file-2.txt';
 
 	/**
+	 * Make sure a file is properly uploaded and attached.
+	 *
+	 * @param int    $post_id the ID of the parent post.
+	 * @param string $file relative url to file.
+	 * @param string $msg message to display on failure.
+	 */
+	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+
+		if ( ! $post_id ) {
+			return;
+		}
+
+		$doc        = get_post( $post_id );
+		$attachment = get_attached_file( $doc->post_content );
+
+		self::assertFileEquals( dirname( __FILE__ ) . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
+
+	}
+
+	/**
 	 * Add test file attachment to post.
 	 *
 	 * @param integer $post_id  The Post ID to attach.
