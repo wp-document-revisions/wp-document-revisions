@@ -84,6 +84,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
+		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
 		$this->assertEquals( 0, (int) substr_count( $output, 'test_user_1' ), 'noauthor' );
@@ -124,6 +125,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
+		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_2' ), 'withauthor' );
@@ -154,23 +156,26 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		// default widget - one public post.
 		$atts   = array();
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth_1' );
 
 		// now include the private pos, so should be 2.
 		$atts['post_stat_private'] = true;
 		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$this->consoleLog( $output );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish' );
-		$this->assertEquals( 2, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth' );
+		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
+		$this->assertEquals( 2, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_2' );
 
 		// request that only one is shown, so should be 1.
 		$atts['numberposts'] = 1;
 		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		$this->consoleLog( $output );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_3' );
 		_destroy_user( $user_id );
 
 	}

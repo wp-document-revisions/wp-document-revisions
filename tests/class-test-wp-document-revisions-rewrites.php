@@ -88,8 +88,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
+		$post_meta  = get_post_meta( )$post_id, '_wp_attached_file', true );
 
-		self::assertFileEquals( dirname( __FILE__ ) . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
+		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
+		// self::assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 
 	}
 
@@ -149,7 +151,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Set up common data before tests.
 	 *
-	 * @param WP_UnitTest_Factory $factory.
+	 * @param object $factory.
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
@@ -321,7 +323,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$doc       = get_post( self::$author_public_post );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id ) . '/';
-		$this->assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
+		self::assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 
 	}
 
