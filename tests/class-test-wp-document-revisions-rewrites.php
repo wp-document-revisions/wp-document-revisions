@@ -15,63 +15,63 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @var integer $contributor_user_id
 	 */
-	public static $contributor_user_id;
+	private static $contributor_user_id;
 
 	/**
 	 * Author user id
 	 *
 	 * @var integer $author_user_id
 	 */
-	public static $author_user_id;
+	private static $author_user_id;
 
 	/**
 	 * Editor user id
 	 *
 	 * @var integer $editor_user_id
 	 */
-	public static $editor_user_id;
+	private static $editor_user_id;
 
 	/**
 	 * Workflow_state term id
 	 *
 	 * @var integer $ws_term_id
 	 */
-	public static $ws_term_id;
+	private static $ws_term_id;
 
 	/**
 	 * Author Public Post ID
 	 *
 	 * @var integer $author_public_post
 	 */
-	public static $author_public_post;
+	private static $author_public_post;
 
 	/**
 	 * Author Private Post ID
 	 *
 	 * @var integer $author_private_post
 	 */
-	public static $author_private_post;
+	private static $author_private_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
 	 * @var integer $editor_private_post
 	 */
-	public static $editor_private_post;
+	private static $editor_private_post;
 
 	/**
 	 * Path to test file
 	 *
 	 * @var $test_file
 	 */
-	public static $test_file = 'documents/test-file.txt';
+	private static $test_file = 'documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	public static $test_file2 = 'documents/test-file-2.txt';
+	private static $test_file2 = 'documents/test-file-2.txt';
 
 	/**
 	 * Make sure a file is properly uploaded and attached.
@@ -88,10 +88,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
-		$post_meta  = get_post_meta( )$post_id, '_wp_attached_file', true );
+		$post_meta  = get_post_meta( $post_id, '_wp_attached_file', true );
 
+		// self:: assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $att achment, "Uploaded files don\'t match original ($msg)" );
 		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-		// self::assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 
 	}
 
@@ -151,7 +151,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	/**
 	 * Set up common data before tests.
 	 *
-	 * @param object $factory.
+	 * @param WP_UnitTest_Factory $factory.
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
@@ -203,7 +203,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
-		// add terms.
+		// add term and attachment.
 		self::add_document_attachment( self::$author_public_post, self::$test_file );
 
 		// Author Private.
@@ -220,7 +220,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
 
-		// add terms.
+		// add terms and attachment.
 		self::add_document_attachment( self::$author_private_post, self::$test_file );
 
 		// Editor Private.
@@ -237,7 +237,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
-		// add terms.
+		// add term and attachment.
 		self::add_document_attachment( self::$editor_private_post, self::$test_file );
 
 	}
@@ -247,7 +247,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @param string $text text to output.
 	 */
-	public static function consoleLog( $text ) {
+	private static function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
 			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
@@ -323,8 +323,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		$doc       = get_post( self::$author_public_post );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id ) . '/';
-		self::assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 
+		self::assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
 	}
 
 	/**

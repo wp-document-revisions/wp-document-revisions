@@ -2,42 +2,200 @@
 /**
  * Tests admin functionality.
  *
- * @author Benjamin J. Balter <ben@balter.com>
+ * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
  */
 
 /**
- * Disolay tests
+ * Admin tests
  */
+	public function test_dashboard_display_1() {
+		global $wpdr;
+
+		$this->consoleLog( 'dashboard_display 1' );
+
 class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
+	/**
+	 * Editor user id
+	 *
+	 * @var integer $editor_user_id
+	 */
+	private static $editor_user_id;
 
 	/**
-	 * SetUp initial settings.
+	 * Author Public Post ID
+	 *
+	 * @var integer $editor_public_post
 	 */
-	public function setUp() {
+	private static $editor_public_post;;
 
-		parent::setUp();
+	/**
+	 * Editor Private Post ID
+	 *
+	 * @var integer $editor_private_post
+	 */
+	private static $editor_private_post;
 
-		// init user roles.
-		global $wpdr;
-		$wpdr->add_caps();
-		_flush_roles();
-		$this->user_ids = array();
-		wp_set_current_user( 0 );
+	/**
+	 * Path to test file
+	 *
+	 * @var $test_file
+	 */
+	private static $test_file = 'documents/test-file.txt';
 
-		// flush cache for good measure.
-		wp_cache_flush();
+	/**
+	 * Make sure a file is properly uploaded and attached.
+	 *
+	 * @param int    $post_id the ID of the parent post.
+	 * @param string $file relative url to file.
+	 * @param string $msg message to display on failure.
+	 */
+	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+
+		if ( ! $post_id ) {
+			return;
+		}
+
+		$doc        = get_post( $post_id );
+		$attachment = get_attached_file( $doc->post_content );
+		$post_meta  = get_post_meta( )$post_id, '_wp_attached_file', true );
+
+		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
+		// self::assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 
 	}
 
 	/**
-	 * Break down for next test.
+	 * Add test file attachment to post.
+	 *
+	 * @param integer $post_id  The Post ID to attach.
+	 * @param string  $filename The file name to attach.
+	 * @return void.
 	 */
-	public function tearDown() {
+	private static function add_document_attachment( $post_id, $filename ) {
+		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
-		_destroy_uploads();
-		parent::tearDown();
+		// Check the type of file. We'll use this as the 'post_mime_type'.
+		$filetype = wp_check_filetype( basename( $filename ), null );
+
+		// Get the path to the upload directory.
+		$wp_upload_dir = wp_upload_dir();
+
+		// create and store attachment ID as post content without creating a revision.
+		$attach_id = wp_insert_attachment(
+			array(
+				'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
+				'post_mime_type' => $filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			),
+			$filename,
+			$post_id
+		);
+
+		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
+
+		global $wpdb;
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery
+		$result = $wpdb->update(
+			$wpdb->posts,
+			array(
+				'post_content' => $attach_id,
+			),
+			array(
+				'ID' => $post_id,
+			)
+		);
+		wp_cache_flush();
+
+		global $wpdr;
+
+		self::assertGreaterThan( 0, $result, 'Cannot update document post_content with attachment ID' );
+		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
+		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
+	}
+
+	/**
+	 * Set up common data before tests.
+	 *
+	 * @param object $factory.
+	 * @return void.
+	 */
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		self::consoleLog( 'Test_Admin' );
+
+		global $wpdr;
+
+		// set up admin.
+		if ( ! defined( 'WP_ADMIN' ) ) {
+			define( 'WP_ADMIN', true );
+		}
+		$wpdr->admin_init();
+
+		// create users.
+		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
+		self::$editor_user_= $factory->user->create( 
+			array(
+				'user_nicename' => 'Editor',
+				'role'          => 'editor',
+			)
+		);
+
+		// init user roles.
+		global $wpdr;
+		$wpdr->add_caps();
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// add terms and use one.
+		$wpdr->initialize_workflow_states();
+		$ws_terms   = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+		$ws_term_id = $ws_terms[0]->term_id;
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// add term and attachment.
+		self::add_document_attachment( self::$editor_public_post, self::$test_file );
+
+		// Editor Private.
+		self::$editor_private_post = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Private - ' . time(),
+				'post_status'  => 'private',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
+
+		// add terms.
+		self::add_document_attachment( self::$editor_private_post, self::$test_file );
 
 	}
 
@@ -46,7 +204,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 *
 	 * @param string $text text to output.
 	 */
-	public function consoleLog( $text ) {
+	private static function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
 			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
@@ -54,30 +212,10 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	/**
 	 * Verify dashboard display.
 	 */
-	public function test_dashboard_display() {
-
+	public function test_dashboard_display_1() {
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Admin - dashboard_display' );
-
-		// set up admin.
-		if ( ! defined( 'WP_ADMIN' ) ) {
-			define( 'WP_ADMIN', true );
-		}
-		$wpdr->admin_init();
-
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_1' );
-		wp_set_current_user( $user_id );
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document();
-		wp_publish_post( $doc_id );
-
-		// create a private post.
-		$doc_id = $tdr->test_add_document();
-
-		global $wpdr;
+		self::consoleLog( 'dashboard_display 1' );
 
 		// see that one post only is seen.
 		ob_start();
@@ -85,11 +223,20 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count nopriv' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish nopriv' );
+		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count public 1' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
+	}
+
+	/**
+	 * Verify dashboard display. Publish the private one, so now two seen.
+	 */
+	public function test_dashboard_display_2) {
+		global $wpdr;
+
+		self::consoleLog( 'dashboard_display 2' );
 
 		// see that two posts are seen.
-		wp_publish_post( $doc_id );
+		wp_publish_post( self::$editor_private_post );
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
@@ -102,26 +249,15 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Verify revision log metabox.
+	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */
 	public function test_revision_metabox() {
-
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Admin - revision_metabox' );
-
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_2' );
-		wp_set_current_user( $user_id );
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
-		wp_publish_post( $doc_id );
-
-		global $wpdr;
+		self::consoleLog( 'Test_Admin - revision_metabox' );
 
 		ob_start();
-		$wpdr->admin->revision_metabox( get_post( $doc_id ) );
+		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -129,38 +265,23 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$this->assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
 		$this->assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 		$this->assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
-		_destroy_user( $user_id );
-
 	}
 
 	/**
 	 * Verify document log metabox.
 	 */
 	public function test_document_metabox() {
-
 		global $wpdr;
 
-		$this->consoleLog( 'Test_Admin - document_metabox' );
-
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_3' );
-		wp_set_current_user( $user_id );
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document();
-		wp_publish_post( $doc_id );
-
-		global $wpdr;
+		self::consoleLog( 'document_metabox' );
 
 		ob_start();
 		$wpdr->admin->document_metabox( get_post( $doc_id ) );
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( 1, (int) substr_count( $output, 'post_id=' . $doc_id . '&' ), 'document metabox post_id' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'document metabox author' );
-		_destroy_user( $user_id );
-
+		$this->assertEquals( 1, (int) substr_count( $output, 'post_id=' . self::$editor_private_post . '&' ), 'document metabox post_id' );
+		$this->assertEquals( 1, (int) substr_count( $output, 'Editor' ), 'document metabox author' );
 	}
 
 }
