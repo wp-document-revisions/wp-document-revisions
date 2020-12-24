@@ -9,11 +9,6 @@
 /**
  * Admin tests
  */
-	public function test_dashboard_display_1() {
-		global $wpdr;
-
-		$this->consoleLog( 'dashboard_display 1' );
-
 class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 	/**
@@ -24,11 +19,18 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	private static $editor_user_id;
 
 	/**
+	 * Workflow_state term id
+	 *
+	 * @var integer $ws_term_id
+	 */
+	private static $ws_term_id;
+
+	/**
 	 * Author Public Post ID
 	 *
 	 * @var integer $editor_public_post
 	 */
-	private static $editor_public_post;;
+	private static $editor_public_post;
 
 	/**
 	 * Editor Private Post ID
@@ -59,11 +61,10 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
-		$post_meta  = get_post_meta( )$post_id, '_wp_attached_file', true );
+		$post_meta  = get_post_meta( $post_id, '_wp_attached_file', true );
 
 		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-		// self::assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attachment, "Uploaded files don\'t match original ($msg)" );
-
+		// self::assert FileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attach ment, "Uploaded files don\'t match original ($msg)" );.
 	}
 
 	/**
@@ -122,7 +123,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	/**
 	 * Set up common data before tests.
 	 *
-	 * @param object $factory.
+	 * @param WP_UnitTest_Factory $factory.
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
@@ -138,7 +139,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
-		self::$editor_user_= $factory->user->create( 
+		self::$editor_user_id = $factory->user->create(
 			array(
 				'user_nicename' => 'Editor',
 				'role'          => 'editor',
@@ -223,14 +224,14 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count public 1' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count public 1' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
 	}
 
 	/**
 	 * Verify dashboard display. Publish the private one, so now two seen.
 	 */
-	public function test_dashboard_display_2) {
+	public function test_dashboard_display_2() {
 		global $wpdr;
 
 		self::consoleLog( 'dashboard_display 2' );
@@ -242,9 +243,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		_destroy_user( $user_id );
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count all' );
-		$this->assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish all' );
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count all' );
+		self::assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish all' );
 
 	}
 
@@ -262,9 +262,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		ob_end_clean();
 
 		// There will be 2 links to documents plus 1 for RSS feed.
-		$this->assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
-		$this->assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
-		$this->assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
+		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
 	}
 
 	/**
@@ -280,8 +280,8 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( 1, (int) substr_count( $output, 'post_id=' . self::$editor_private_post . '&' ), 'document metabox post_id' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'Editor' ), 'document metabox author' );
+		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . self::$editor_private_post . '&' ), 'document metabox post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Editor' ), 'document metabox author' );
 	}
 
 }

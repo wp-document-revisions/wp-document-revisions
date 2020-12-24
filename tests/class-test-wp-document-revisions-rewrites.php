@@ -60,6 +60,13 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	private static $editor_private_post;
 
 	/**
+	 * Editor Public Post ID (contains revision)
+	 *
+	 * @var integer $editor_public_post
+	 */
+	private static $editor_public_post;
+
+	/**
 	 * Path to test file
 	 *
 	 * @var $test_file
@@ -90,7 +97,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $post_id, '_wp_attached_file', true );
 
-		// self:: assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $att achment, "Uploaded files don\'t match original ($msg)" );
+		// self:: assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $att achment, "Uploaded files don\'t match original ($msg)" );.
 		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 
 	}
@@ -154,7 +161,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @param WP_UnitTest_Factory $factory.
 	 * @return void.
 	 */
-	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {  //phpcs:ignore
 		self::consoleLog( 'Test_Rewrites' );
 
 		// don't use gzip.
@@ -163,7 +170,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
 		self::$contributor_user_id = $factory->user->create( array( 'role' => 'contributor' ) );
-		self::$author_user_id      = $factory->user->create( array( 'role' => 'contributor' ) );
+		self::$author_user_id      = $factory->user->create( array( 'role' => 'author' ) );
 		self::$editor_user_id      = $factory->user->create( array( 'role' => 'editor' ) );
 
 		// init permalink structure.
@@ -240,6 +247,39 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// add term and attachment.
 		self::add_document_attachment( self::$editor_private_post, self::$test_file );
 
+		// For debug.
+		$posts = $wpdr->get_revisions( self::$editor_private_post );
+		self::consoleLog( 'Editor Private' );
+		foreach( $posts as $post ) {
+			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content  . '/' . $post->post_type );
+		}
+
+		// Editor Private.
+		self::$editor_public_post = $factory->post->create(
+			array(
+				'post_title'   => 'Author Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document' );
+
+		// add term and attachment.
+		self::add_document_attachment( self::$editor_public_post, self::$test_file );
+
+		// add term and attachment (again).
+		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
+
+		// For debug.
+		$posts = $wpdr->get_revisions( self::$editor_public_post );
+		self::consoleLog( 'Editor Public' );
+		foreach( $posts as $post ) {
+			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content  . '/' . $post->post_type );
+		}
 	}
 
 	/**
@@ -316,15 +356,27 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Does the document archive work?
+	 */
+	public function test_archive() {
+		global $wpdr;
+
+		self::consoleLog( 'test archive' );
+
+		self::go_to( get_home_url( null, $wpdr->document_slug() ) );
+		self::assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
+	}
+
+	/**
 	 * Does get_permalink generate the right permalink?
 	 */
 	public function test_permalink() {
 		global $wpdr;
 
 		$doc       = get_post( self::$author_public_post );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc_id ) . '/';
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc->ID ) . '/';
 
-		self::assertEquals( $permalink, get_permalink( $doc_id ), 'Bad permalink' );
+		self::assertEquals( $permalink, get_permalink( $doc->ID ), 'Bad permalink' );
 	}
 
 	/**
