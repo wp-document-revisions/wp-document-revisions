@@ -155,13 +155,15 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 	}
 
+	// phpcs:disable
 	/**
 	 * Set up common data before tests.
 	 *
 	 * @param WP_UnitTest_Factory $factory.
 	 * @return void.
 	 */
-	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {  //phpcs:ignore
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+	// phpcs:enable
 		self::consoleLog( 'Test_Rewrites' );
 
 		// don't use gzip.
@@ -250,8 +252,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_private_post );
 		self::consoleLog( 'Editor Private' );
-		foreach( $posts as $post ) {
-			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content  . '/' . $post->post_type );
+		foreach ( $posts as $post ) {
+			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
 		// Editor Private.
@@ -277,8 +279,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_public_post );
 		self::consoleLog( 'Editor Public' );
-		foreach( $posts as $post ) {
-			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content  . '/' . $post->post_type );
+		foreach ( $posts as $post ) {
+			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 	}
 

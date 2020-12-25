@@ -63,6 +63,14 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $post_id, '_wp_attached_file', true );
 
+		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
+		self::consoleLog( 'Attached ' . $attachment );
+		if ( is_array( $post_meta ) ) {
+					self::consoleLog( 'Array ' . $post_meta[0] );
+		} else {
+					self::consoleLog( 'String ' . $post_meta );
+		}
+
 		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 		// self::assert FileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attach ment, "Uploaded files don\'t match original ($msg)" );.
 	}
@@ -120,6 +128,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 	}
 
+	// phpcs:disable
 	/**
 	 * Set up common data before tests.
 	 *
@@ -127,6 +136,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// phpcs:enable
 		self::consoleLog( 'Test_Admin' );
 
 		global $wpdr;
