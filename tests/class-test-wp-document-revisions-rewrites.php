@@ -386,21 +386,21 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// retrieve document and revisions.
 		$posts = $wpdr->get_revisions( $post_id );
 		foreach ( $posts as $post ) {
-			$all_posts[ $post->ID ] => 1;
+			$all_posts[ $post->ID ] = 1;
 			// add attachment records.
-			$all_posts[ $post->post_content ] => 1;
+			$all_posts[ $post->post_content ] = 1;
 		}
-		
+
 		// first trash the document.
-		$result = wp_trash_post ( $post_id );
-		
+		$result = wp_trash_post( $post_id );
+
 		// Is this expected to work?
 		if ( ! $trash ) {
-			self::assertFalse( $result InstanceOf WP_Post, "Trash document should not work" );
+			self::assertFalse( $result instanceof WP_Post, 'Trash document should not work' );
 			return;
 		}
-		
-		self::assertTrue( $result InstanceOf WP_Post, "Trash document did not work" );
+
+		self::assertTrue( $result InstanceOf WP_Post, 'Trash document did not work' );
 
 		// check everything remains with trash status.
 		foreach ( $all_posts as $id => $i ) {
@@ -408,7 +408,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		}
 
 		// delete the post.
-		wp_delete_post ( $post_id );
+		wp_delete_post( $post_id );
 
 		// check nothing remains.
 		foreach ( $all_posts as $id => $i ) {
