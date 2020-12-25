@@ -104,12 +104,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		if ( is_array( $post_meta ) ) {
 			self::consoleLog( 'Array ' . $post_meta[0] );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
-		} else {
+		 	self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );.
+		} else 
 			self::consoleLog( 'String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
+		 	self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );.
 		}
-
-		// self:: assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $att achment, "Uploaded files don\'t match original ($msg)" );.
 	}
 
 	/**
@@ -156,7 +156,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertGreaterThan( 0, $result, 'Cannot update document post_content with attachment ID' );
 		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 	}
@@ -361,6 +360,39 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertTrue( ( empty( $content ) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
 		self::assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
 
+	}
+
+	/**
+	 * Tests that all elements of a post are trashed or deleted.
+	 *
+	 * @param integer $post_id Post ID.
+	 * @param boolean $delete  Whether to delete (or just trash).
+	 */
+	private static function check_trash_delete( $post_id = null, $delete = null ) {
+
+		if ( ( ! $post_id ) || ( ! $delete ) ) {
+			return;
+		}
+
+		global $wpdr;
+
+		// create a list of all elements.
+		// retrieve document and revisions.
+		
+		// fetch attachment records.
+		
+	
+		if ( $delete) {
+			// delete the post.
+			wp_delete_post ( $post_id );
+			// check nothing remains.
+
+		} else {
+			// trash the post.
+			wp_trash_post ( $post_id );
+			// check everything remains with trash status.
+
+		}
 	}
 
 	/**

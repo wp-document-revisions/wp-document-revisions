@@ -124,7 +124,6 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertGreaterThan( 0, $result, 'Cannot update document post_content with attachment ID' );
 		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 	}
