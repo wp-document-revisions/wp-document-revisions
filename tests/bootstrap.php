@@ -17,9 +17,9 @@ require_once $_tests_dir . '/includes/functions.php';
  *
  * @param string $text text to output.
  */
-public static function consoleLog( $text ) {
+static function console_log( $text ) {
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-		fwrite( STDERR, "\n" . $text . ' : ' );
+	fwrite( STDERR, "\n" . $text . ' : ' );
 }
 
 /**

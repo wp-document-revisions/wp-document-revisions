@@ -57,9 +57,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Make sure plugin is activated.
 	 */
 	public function test_activated() {
-
-		consoleLog( 'Test_Main:' );
-		consoleLog( 'Start:' );
+		console_log( 'Test_Main' );
+		console_log( 'activated' );
 
 		self::assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 
@@ -70,9 +69,9 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Post type is properly registered.
 	 */
 	public function test_post_type_exists() {
+		console_log( 'post_type_exists' );
 
 		self::assertTrue( post_type_exists( 'document' ), 'Document post type does not exist' );
-
 	}
 
 
@@ -80,6 +79,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Workflow states exists and are initialized.
 	 */
 	public function test_workflow_states_exist() {
+		console_log( 'workflow_states_exist' );
 
 		$terms = get_terms(
 			'workflow_state',
@@ -89,7 +89,6 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		);
 		self::assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
 		self::assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
-
 	}
 
 
@@ -227,7 +226,6 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 		self::verify_attachment_matches_file( $result, self::test_file2, 'revise document' );
 
 		return $result;
-
 	}
 
 
@@ -256,6 +254,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Validate the get_attachments function are few different ways.
 	 */
 	public function test_get_attachments() {
+		console_log( 'get_attachments' );
 
 		global $wpdr;
 
@@ -288,6 +287,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Verify the get_file_Type function works.
 	 */
 	public function test_file_type() {
+		console_log( 'file_type' );
 
 		global $wpdr;
 
@@ -308,6 +308,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Make sure get_revisions() works.
 	 */
 	public function test_get_revisions() {
+		console_log( 'get_revisions' );
+
 		global $wpdr;
 
 		$doc_id = self::test_revise_document();
@@ -321,6 +323,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Test get_revision_number().
 	 */
 	public function test_get_revision_number() {
+		console_log( 'get_revision_number' );
 
 		global $wpdr;
 
@@ -337,6 +340,8 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * Tests varify_post_type() with the various ways used throughout
 	 */
 	public function test_verify_post_type() {
+		console_log( 'verify_post_type' );
+
 		global $wpdr;
 
 		$doc_id = self::test_add_document();
