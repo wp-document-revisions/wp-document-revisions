@@ -113,7 +113,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdb;
 
 		// now link the attachment, it'll create a revision.
-		wp_update_post( 
+		wp_update_post(
 			array(
 				'ID'           => $post_id,
 				'post_content' => $attach_id,

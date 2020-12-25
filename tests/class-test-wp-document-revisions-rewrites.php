@@ -104,11 +104,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		if ( is_array( $post_meta ) ) {
 			self::consoleLog( 'Array ' . $post_meta[0] );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
-		 	self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );.
-		} else 
+			self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );
+		} else {
 			self::consoleLog( 'String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-		 	self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );.
+			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );.
 		}
 	}
 
@@ -145,7 +145,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
 
 		// now link the attachment, it'll create a revision.
-		wp_update_post( 
+		wp_update_post(
 			array(
 				'ID'           => $post_id,
 				'post_content' => $attach_id,
