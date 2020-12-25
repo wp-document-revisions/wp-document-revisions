@@ -99,14 +99,14 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertTrue( $post_meta, 'Attached file not found on ' . $doc->post_content );
 
-		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
-		self::consoleLog( 'Attached ' . $attachment );
+		console_log( ' Post ' . $post_id . '/' . $doc->post_title );
+		console_log( ' Attached ' . $attachment );
 		if ( is_array( $post_meta ) ) {
-			self::consoleLog( 'Array ' . $post_meta[0] );
+			console_log( ' Array ' . $post_meta[0] );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
 			self::assertFileEquals( $attachment, $file, "Uploaded files don\'t match original ($msg)" );
 		} else {
-			self::consoleLog( 'String ' . $post_meta );
+			console_log( ' String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 			self::assertFileEquals( $attachment, $file, "Uploaded files don\'t match original ($msg)" );
 		}
@@ -169,7 +169,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		self::consoleLog( 'Test_Rewrites' );
+		console_log( 'Test_Rewrites' );
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
@@ -261,7 +261,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_private_post );
-		self::consoleLog( 'Editor Private' );
+		console_log( ' Editor Private' );
 		foreach ( $posts as $post ) {
 			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
@@ -289,16 +289,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// add term and attachment (again).
 		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
-	}
-
-	/**
-	 * Output message to log.
-	 *
-	 * @param string $text text to output.
-	 */
-	public static function consoleLog( $text ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
 
 	/**
@@ -422,12 +412,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_public_post );
-		self::consoleLog( 'Editor Public' );
+		console_log( ' Editor Public' );
 		foreach ( $posts as $post ) {
 			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
-		self::consoleLog( 'test archive' );
+		console_log( ' test archive' );
 
 		self::go_to( get_home_url( null, $wpdr->document_slug() ) );
 		self::assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
@@ -453,7 +443,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'public_document_docid_read' );
+		console_log( ' public_document_docid_read' );
 
 		global $current_user;
 		unset( $current_user );
@@ -475,7 +465,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'public_document_docid_docread' );
+		console_log( ' public_document_docid_docread' );
 
 		global $current_user;
 		unset( $current_user );
@@ -497,7 +487,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'public_document_pretty_read' );
+		console_log( ' public_document_pretty_read' );
 
 		global $current_user;
 		unset( $current_user );
@@ -519,7 +509,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'public_document_pretty_docread' );
+		console_log( ' public_document_pretty_docread' );
 
 		global $current_user;
 		unset( $current_user );
@@ -541,7 +531,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_unauth_docid_read' );
+		console_log( ' private_document_as_unauth_docid_read' );
 
 		global $current_user;
 		unset( $current_user );
@@ -564,7 +554,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_unauth_docid_docread' );
+		console_log( ' private_document_as_unauth_docid_docread' );
 
 		global $current_user;
 		unset( $current_user );
@@ -587,7 +577,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_unauth_pretty_read' );
+		console_log( ' private_document_as_unauth_pretty_read' );
 
 		global $current_user;
 		unset( $current_user );
@@ -610,7 +600,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_unauth_pretty_docread' );
+		console_log( ' private_document_as_unauth_pretty_docread' );
 
 		global $current_user;
 		unset( $current_user );
@@ -633,7 +623,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_owner' );
+		console_log( ' private_document_as_owner' );
 
 		global $current_user;
 		unset( $current_user );
@@ -650,7 +640,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_other' );
+		console_log( ' private_document_as_other' );
 
 		global $current_user;
 		unset( $current_user );
@@ -667,7 +657,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'private_document_as_admin' );
+		console_log( ' private_document_as_admin' );
 
 		global $current_user;
 		unset( $current_user );
@@ -684,7 +674,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'other_private_document_as_author' );
+		console_log( ' other_private_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );
@@ -701,7 +691,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'del_own_public_document_as_author' );
+		console_log( ' del_own_public_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );
@@ -718,7 +708,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'del_other_public_document_as_author' );
+		console_log( ' del_other_public_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );

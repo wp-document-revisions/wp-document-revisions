@@ -65,14 +65,14 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		self::assertTrue( $post_meta, 'Attached file not found on ' . $doc->post_content );
 
-		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
-		self::consoleLog( 'Attached ' . $attachment );
+		console_log( ' Post ' . $post_id . '/' . $doc->post_title );
+		console_log( ' Attached ' . $attachment );
 		if ( is_array( $post_meta ) ) {
-			self::consoleLog( 'Array ' . $post_meta[0] );
+			console_log( ' Array ' . $post_meta[0] );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
 			self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );
 		} else {
-			self::consoleLog( 'String ' . $post_meta );
+			console_log( ' String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );
 		}
@@ -137,7 +137,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// phpcs:enable
-		self::consoleLog( 'Test_Admin' );
+		console_log( 'Test_Admin' );
 
 		global $wpdr;
 
@@ -227,7 +227,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'dashboard_display 1' );
+		console_log( ' dashboard_display 1' );
 
 		// see that one post only is seen.
 		ob_start();
@@ -246,7 +246,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'dashboard_display 2' );
+		console_log( ' dashboard_display 2' );
 
 		// see that two posts are seen.
 		wp_publish_post( self::$editor_private_post );
@@ -267,7 +267,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'revision_metabox' );
+		console_log( ' revision_metabox' );
 
 		ob_start();
 		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
@@ -287,7 +287,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'document_metabox' );
+		console_log( ' document_metabox' );
 
 		ob_start();
 		$wpdr->admin->document_metabox( get_post( $doc_id ) );
