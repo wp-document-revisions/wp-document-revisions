@@ -245,7 +245,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
 			array(
-				'post_title'   => 'Author Private - ' . time(),
+				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
 				'post_author'  => self::$editor_user_id,
 				'post_content' => '',
@@ -266,10 +266,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
-		// Editor Private.
+		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
 			array(
-				'post_title'   => 'Author Public - ' . time(),
+				'post_title'   => 'Editor Public - ' . time(),
 				'post_status'  => 'publish',
 				'post_author'  => self::$editor_user_id,
 				'post_content' => '',
@@ -285,13 +285,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// add term and attachment (again).
 		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
-
-		// For debug.
-		$posts = $wpdr->get_revisions( self::$editor_public_post );
-		self::consoleLog( 'Editor Public' );
-		foreach ( $posts as $post ) {
-			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
-		}
 	}
 
 	/**
@@ -421,6 +414,13 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_archive() {
 		global $wpdr;
+
+		// For debug.
+		$posts = $wpdr->get_revisions( self::$editor_public_post );
+		self::consoleLog( 'Editor Public' );
+		foreach ( $posts as $post ) {
+			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+		}
 
 		self::consoleLog( 'test archive' );
 

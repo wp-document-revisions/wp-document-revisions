@@ -63,7 +63,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $doc->post_content, '_wp_attached_file', true );
 
-		self::assertTrue( post_meta, 'Attached file not found on ' . $doc->post_content );
+		self::assertTrue( $post_meta, 'Attached file not found on ' . $doc->post_content );
 
 		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
 		self::consoleLog( 'Attached ' . $attachment );
