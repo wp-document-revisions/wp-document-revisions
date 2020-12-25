@@ -13,6 +13,16 @@ if ( ! $_tests_dir ) {
 require_once $_tests_dir . '/includes/functions.php';
 
 /**
+ * Output message to log.
+ *
+ * @param string $text text to output.
+ */
+public static function consoleLog( $text ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+		fwrite( STDERR, "\n" . $text . ' : ' );
+}
+
+/**
  * Require the WP Document Revisions Plugin on load
  */
 function _manually_load_plugin() {

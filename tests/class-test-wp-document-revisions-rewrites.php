@@ -265,9 +265,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		foreach ( $posts as $post ) {
 			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
-		self::assertFalse( true, 'Editor Private');
+		self::assertFalse( true, 'Editor Private' );
 		foreach ( $posts as $post ) {
-			self::assertFalse( true,  $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+			self::assertFalse( true, $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
 		// Editor Public.
