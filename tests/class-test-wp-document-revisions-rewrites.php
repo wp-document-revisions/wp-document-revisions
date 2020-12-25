@@ -97,18 +97,18 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $doc->post_content, '_wp_attached_file', true );
 
-		self::assertTrue( post_meta, 'Attached file not found on ' . $doc->post_content );
+		self::assertTrue( $post_meta, 'Attached file not found on ' . $doc->post_content );
 
 		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
 		self::consoleLog( 'Attached ' . $attachment );
 		if ( is_array( $post_meta ) ) {
 			self::consoleLog( 'Array ' . $post_meta[0] );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
-			self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );
+			self::assertFileEquals( $attachment, $file, "Uploaded files don\'t match original ($msg)" );
 		} else {
 			self::consoleLog( 'String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );
+			self::assertFileEquals( $attachment, $file, "Uploaded files don\'t match original ($msg)" );
 		}
 	}
 
@@ -173,6 +173,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
+
+		// Set EMPTY_TRASH_DAYS to 2 (so trash will work).
+		if ( ! defined( 'EMPTY_TRASH_DAYS' ) ) {
+			define( 'EMPTY_TRASH_DAYS', 2 );
+		}
 
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
@@ -366,9 +371,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * Tests that all elements of a post are trashed or deleted.
 	 *
 	 * @param integer $post_id Post ID.
-	 * @param boolean $delete  Whether to delete (or just trash).
+	 * @param boolean $trash   Expect to work (Permissions check..
 	 */
-	private static function check_trash_delete( $post_id = null, $delete = null ) {
+	private static function check_trash_delete( $post_id = null, $trash = null ) {
 
 		if ( ( ! $post_id ) || ( ! $delete ) ) {
 			return;
@@ -376,22 +381,38 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		// create a list of all elements.
+		// create a list of all elements (document, revisions and attachments).
+		$all_posts = array();
 		// retrieve document and revisions.
+		$posts = $wpdr->get_revisions( $post_id );
+		foreach ( $posts as $post ) {
+			$all_posts[ $post->ID ] => 1;
+			// add attachment records.
+			$all_posts[ $post->post_content ] => 1;
+		}
 		
-		// fetch attachment records.
+		// first trash the document.
+		$result = wp_trash_post ( $post_id );
 		
-	
-		if ( $delete) {
-			// delete the post.
-			wp_delete_post ( $post_id );
-			// check nothing remains.
+		// Is this expected to work?
+		if ( ! $trash ) {
+			self::assertFalse( $result InstanceOf WP_Post, "Trash document should not work" );
+			return;
+		}
+		
+		self::assertTrue( $result InstanceOf WP_Post, "Trash document did not work" );
 
-		} else {
-			// trash the post.
-			wp_trash_post ( $post_id );
-			// check everything remains with trash status.
+		// check everything remains with trash status.
+		foreach ( $all_posts as $id => $i ) {
+			self::assertEquals( get_post_status( $id ), $trash, "Post $id not set to trash" );
+		}
 
+		// delete the post.
+		wp_delete_post ( $post_id );
+
+		// check nothing remains.
+		foreach ( $all_posts as $id => $i ) {
+			self::assertNull( get_post( $id ), "Post $id not deleted" );
 		}
 	}
 
@@ -637,6 +658,54 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_cache_flush();
 
 		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Admin' );
+	}
+
+	/**
+	 * Can an author delete another's private file? (no).
+	 */
+	public function test_del_other_private_document_as_author() {
+		global $wpdr;
+
+		self::consoleLog( 'del_other_private_document_as_author' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		self::check_trash_delete( self::$editor_private_post ), false );
+	}
+
+	/**
+	 * Can an author delete own published file? (yes).
+	 */
+	public function test_del_own_public_document_as_author() {
+		global $wpdr;
+
+		self::consoleLog( 'test_del_own_public_document_as_author' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		self::check_trash_delete( self::$author_public_post ), true );
+	}
+
+	/**
+	 * Can an author delete another's published file? (yes).
+	 */
+	public function test_del_other_public_document_as_author() {
+		global $wpdr;
+
+		self::consoleLog( 'test_del_other_public_document_as_author' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		self::check_trash_delete( self::$editor_public_post ), true );
 	}
 
 }
