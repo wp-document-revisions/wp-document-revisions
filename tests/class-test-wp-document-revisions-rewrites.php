@@ -400,7 +400,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			return;
 		}
 
-		self::assertTrue( $result InstanceOf WP_Post, 'Trash document did not work' );
+		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
 
 		// check everything remains with trash status.
 		foreach ( $all_posts as $id => $i ) {
@@ -673,7 +673,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		wp_set_current_user( self::$author_user_id );
 		wp_cache_flush();
 
-		self::check_trash_delete( self::$editor_private_post ), false );
+		self::check_trash_delete( self::$editor_private_post, false );
 	}
 
 	/**
