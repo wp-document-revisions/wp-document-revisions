@@ -108,7 +108,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		} else {
 			self::consoleLog( 'String ' . $post_meta );
 			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );.
+			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );
 		}
 	}
 
