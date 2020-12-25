@@ -265,6 +265,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		foreach ( $posts as $post ) {
 			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
+		self::assertFalse( true, 'Editor Private');
+		foreach ( $posts as $post ) {
+			self::assertFalse( true,  $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+		}
 
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
@@ -292,7 +296,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @param string $text text to output.
 	 */
-	private static function consoleLog( $text ) {
+	public static function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
 			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
@@ -414,6 +418,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_archive() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_public_post );
@@ -433,6 +438,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_permalink() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		$doc       = get_post( self::$author_public_post );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc->ID ) . '/';
@@ -445,6 +451,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_public_document_docid_read() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'public_document_docid_read' );
 
@@ -466,6 +473,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_public_document_docid_docread() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'public_document_docid_docread' );
 
@@ -487,6 +495,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_public_document_pretty_read() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'public_document_pretty_read' );
 
@@ -508,6 +517,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_public_document_pretty_docread() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'public_document_pretty_docread' );
 
@@ -529,6 +539,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_unauth_docid_read() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_unauth_docid_read' );
 
@@ -551,6 +562,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_unauth_docid_docread() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_unauth_docid_docread' );
 
@@ -573,6 +585,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_unauth_pretty_read() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_unauth_pretty_read' );
 
@@ -595,6 +608,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_unauth_pretty_docread() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_unauth_pretty_docread' );
 
@@ -617,6 +631,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_owner() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_owner' );
 
@@ -633,6 +648,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_other() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_other' );
 
@@ -649,6 +665,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_private_document_as_admin() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'private_document_as_admin' );
 
@@ -665,8 +682,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_del_other_private_document_as_author() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'del_other_private_document_as_author' );
+		self::consoleLog( 'other_private_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );
@@ -681,8 +699,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_del_own_public_document_as_author() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'test_del_own_public_document_as_author' );
+		self::consoleLog( 'del_own_public_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );
@@ -697,8 +716,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	public function test_del_other_public_document_as_author() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'test_del_other_public_document_as_author' );
+		self::consoleLog( 'del_other_public_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );

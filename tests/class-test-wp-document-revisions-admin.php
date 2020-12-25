@@ -215,7 +215,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 *
 	 * @param string $text text to output.
 	 */
-	private static function consoleLog( $text ) {
+	public static function consoleLog( $text ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
 			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
@@ -225,6 +225,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_dashboard_display_1() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'dashboard_display 1' );
 
@@ -243,6 +244,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_dashboard_display_2() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'dashboard_display 2' );
 
@@ -263,8 +265,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_revision_metabox() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
-		self::consoleLog( 'Test_Admin - revision_metabox' );
+		self::consoleLog( 'revision_metabox' );
 
 		ob_start();
 		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
@@ -282,6 +285,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 */
 	public function test_document_metabox() {
 		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
 
 		self::consoleLog( 'document_metabox' );
 
