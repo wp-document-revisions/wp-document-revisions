@@ -66,12 +66,13 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
 		self::consoleLog( 'Attached ' . $attachment );
 		if ( is_array( $post_meta ) ) {
-					self::consoleLog( 'Array ' . $post_meta[0] );
+			self::consoleLog( 'Array ' . $post_meta[0] );
+			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
 		} else {
-					self::consoleLog( 'String ' . $post_meta );
+			self::consoleLog( 'String ' . $post_meta );
+			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 		}
 
-		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 		// self::assert FileEquals( wp_upload_dir() . '/' .  . '/' . $file, $attach ment, "Uploaded files don\'t match original ($msg)" );.
 	}
 

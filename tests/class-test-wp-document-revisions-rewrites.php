@@ -97,8 +97,17 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $post_id, '_wp_attached_file', true );
 
+		self::consoleLog( 'Post ' . $post_id . '/' . $doc->post_title );
+		self::consoleLog( 'Attached ' . $attachment );
+		if ( is_array( $post_meta ) ) {
+			self::consoleLog( 'Array ' . $post_meta[0] );
+			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
+		} else {
+			self::consoleLog( 'String ' . $post_meta );
+			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
+		}
+
 		// self:: assertFileEquals( wp_upload_dir() . '/' .  . '/' . $file, $att achment, "Uploaded files don\'t match original ($msg)" );.
-		self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
 
 	}
 
