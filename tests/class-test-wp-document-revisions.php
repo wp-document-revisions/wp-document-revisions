@@ -16,14 +16,14 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	public $test_file = 'documents/test-file.txt';
+	public static $test_file = 'documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	public $test_file2 = 'documents/test-file-2.txt';
+	public static $test_file2 = 'documents/test-file-2.txt';
 
 	// phpcs:disable
 	/**
@@ -56,7 +56,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Make sure plugin is activated.
 	 */
-	public function test_activated() {
+	public static function test_activated() {
 		console_log( 'Test_Main' );
 		console_log( 'activated' );
 
@@ -68,7 +68,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Post type is properly registered.
 	 */
-	public function test_post_type_exists() {
+	public static function test_post_type_exists() {
 		console_log( 'post_type_exists' );
 
 		self::assertTrue( post_type_exists( 'document' ), 'Document post type does not exist' );
@@ -78,7 +78,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Workflow states exists and are initialized.
 	 */
-	public function test_workflow_states_exist() {
+	public static function test_workflow_states_exist() {
 		console_log( 'workflow_states_exist' );
 
 		$terms = get_terms(
@@ -99,7 +99,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * @param string $file relative URL to file to "upload".
 	 * @return int the attachment ID
 	 */
-	public function spoof_upload( $post_id, $file ) {
+	public static function spoof_upload( $post_id, $file ) {
 
 		global $wpdr;
 		$file             = dirname( __FILE__ ) . '/' . $file;
@@ -146,7 +146,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 *
 	 * @return int document id
 	 */
-	public function test_add_document() {
+	public static function test_add_document() {
 		global $wpdr;
 		global $wpdb;
 
@@ -208,7 +208,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 *
 	 * @return int the revision ID
 	 */
-	public function test_revise_document() {
+	public static function test_revise_document() {
 
 		$doc_id = self::test_add_document();
 
@@ -236,7 +236,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 * @param string $file relative url to file.
 	 * @param string $msg message to display on failure.
 	 */
-	public function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+	public static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
 		if ( ! $post_id ) {
 			return;
@@ -253,7 +253,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Validate the get_attachments function are few different ways.
 	 */
-	public function test_get_attachments() {
+	public static function test_get_attachments() {
 		console_log( 'get_attachments' );
 
 		global $wpdr;
@@ -286,7 +286,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Verify the get_file_Type function works.
 	 */
-	public function test_file_type() {
+	public static function test_file_type() {
 		console_log( 'file_type' );
 
 		global $wpdr;
@@ -307,7 +307,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Make sure get_revisions() works.
 	 */
-	public function test_get_revisions() {
+	public static function test_get_revisions() {
 		console_log( 'get_revisions' );
 
 		global $wpdr;
@@ -322,7 +322,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Test get_revision_number().
 	 */
-	public function test_get_revision_number() {
+	public static function test_get_revision_number() {
 		console_log( 'get_revision_number' );
 
 		global $wpdr;
@@ -339,7 +339,7 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	/**
 	 * Tests varify_post_type() with the various ways used throughout
 	 */
-	public function test_verify_post_type() {
+	public static function test_verify_post_type() {
 		console_log( 'verify_post_type' );
 
 		global $wpdr;
