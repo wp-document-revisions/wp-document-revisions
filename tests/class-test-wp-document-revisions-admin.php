@@ -112,16 +112,14 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		global $wpdb;
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery
-		$result = $wpdb->update(
-			$wpdb->posts,
+		// now link the attachment, it'll create a revision.
+		wp_update_post( 
 			array(
+				'ID'           => $post_id,
 				'post_content' => $attach_id,
-			),
-			array(
-				'ID' => $post_id,
 			)
 		);
+
 		wp_cache_flush();
 
 		global $wpdr;
