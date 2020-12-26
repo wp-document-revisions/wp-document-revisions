@@ -63,7 +63,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 		$post_meta  = get_post_meta( $doc->post_content, '_wp_attached_file', true );
 
-		self::assertTrue( $post_meta, 'Attached file not found on ' . $doc->post_content );
+		if ( false === $post_meta ) {
+			self::assertTrue( $post_meta, 'Attached file (' . $attachment . ') not found on ' . $doc->post_content );
+		}
 
 		console_log( ' Post ' . $post_id . '/' . $doc->post_title );
 		console_log( ' Attached ' . $attachment );
@@ -124,7 +126,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
+		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content, 'Latest reviosion not updated to revision' );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 	}
 
