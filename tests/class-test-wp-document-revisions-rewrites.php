@@ -96,7 +96,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
 
-		self::assertIsString( $attachment, 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
+		self::assertTrue( is_string( $attachment ), 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
 		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 	}
 
