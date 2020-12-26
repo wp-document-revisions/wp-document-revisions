@@ -44,7 +44,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file = 'documents/test-file.txt';
+	private static $test_file = __DIR__ . '/../tests/documents/test-file.txt';
 
 	/**
 	 * Make sure a file is properly uploaded and attached.
@@ -63,7 +63,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$attachment = get_attached_file( $doc->post_content );
 
 		self::assertIsString( $attachment, 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
-		self::assertFileEquals( _wp_relative_upload_path( $file ), $attachment, "Uploaded files don\'t match original ($msg)" );
+		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 	}
 
 	/**
