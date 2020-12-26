@@ -251,7 +251,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$posts = $wpdr->get_revisions( self::$editor_private_post );
 		console_log( ' Editor Private' );
 		foreach ( $posts as $post ) {
-			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+			console_log( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 		self::assertFalse( true, 'Editor Private' );
 		foreach ( $posts as $post ) {
@@ -402,7 +402,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$posts = $wpdr->get_revisions( self::$editor_public_post );
 		console_log( ' Editor Public' );
 		foreach ( $posts as $post ) {
-			self::consoleLog( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+			console_log( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
 		console_log( ' test archive' );

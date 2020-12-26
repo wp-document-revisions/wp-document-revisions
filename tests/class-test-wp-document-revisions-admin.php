@@ -251,11 +251,40 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	/**
 	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */
-	public function test_revision_metabox() {
+	public function test_revision_metabox_unauth() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		console_log( ' revision_metabox' );
+		console_log( ' revision_metabox_unauth' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be 1 for RSS feed.
+		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+	}
+
+	/**
+	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
+	 */
+	public function test_revision_metabox_auth() {
+		global $wpdr;
+		$GLOBALS['is_wp_die'] = false;
+
+		console_log( ' revision_metabox_auth' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
 		ob_start();
 		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
@@ -263,9 +292,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		ob_end_clean();
 		console_log( $output );
 
-		// There will be 2 links to documents plus 1 for RSS feed.
-		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		// There will be 1 for RSS feed.
+		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
 	}
 
