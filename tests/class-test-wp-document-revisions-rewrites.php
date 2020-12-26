@@ -282,7 +282,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	private static function verify_download( $url = null, $file = null, $msg = null ) {
+	private function verify_download( $url = null, $file = null, $msg = null ) {
 
 		if ( ! $url ) {
 			return;
@@ -312,7 +312,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	private static function verify_cant_download( $url = null, $file = null, $msg = null ) {
+	private function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
 		if ( ! $url ) {
 			return;
@@ -346,7 +346,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	private static function check_trash_delete( $post_id = null, $trash = null ) {
 
-		if ( ( ! $post_id ) || ( ! $delete ) ) {
+		if ( ( ! $post_id ) || ( ! $trash ) ) {
 			return;
 		}
 
