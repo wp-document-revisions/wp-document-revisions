@@ -61,23 +61,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		$doc        = get_post( $post_id );
 		$attachment = get_attached_file( $doc->post_content );
-		$post_meta  = get_post_meta( $doc->post_content, '_wp_attached_file', true );
 
-		if ( false === $post_meta ) {
-			self::assertTrue( $post_meta, 'Attached file (' . $attachment . ') not found on ' . $doc->post_content );
-		}
-
-		console_log( ' Post ' . $post_id . '/' . $doc->post_title );
-		console_log( ' Attached ' . $attachment );
-		if ( is_array( $post_meta ) ) {
-			console_log( ' Array ' . $post_meta[0] );
-			self::assertEquals( $attachment, wp_upload_dir() . $post_meta[0], "Uploaded files don\'t match original ($msg)" );
-			self::assertFileEquals( wp_upload_dir() . $post_meta[0], $attachment, "Uploaded files don\'t match original ($msg)" );
-		} else {
-			console_log( ' String ' . $post_meta );
-			self::assertEquals( $attachment, wp_upload_dir() . $post_meta, "Uploaded files don\'t match original ($msg)" );
-			self::assertFileEquals( wp_upload_dir() . $post_meta, $attachment, "Uploaded files don\'t match original ($msg)" );
-		}
+		self::assertIsString( $attachment, 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
+		self::assertFileEquals( _wp_relative_upload_path( $file ), $attachment, "Uploaded files don\'t match original ($msg)" );
 	}
 
 	/**
