@@ -26,7 +26,7 @@ function console_log( $text ) {
  * Require the WP Document Revisions Plugin on load
  */
 function _manually_load_plugin() {
-	require dirname( __FILE__ ) . '/../wp-document-revisions.php';
+	require __DIR__ . '/../wp-document-revisions.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
