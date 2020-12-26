@@ -290,11 +290,10 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		// There will be 1 for RSS feed.
-		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
 	}
 
