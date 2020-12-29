@@ -347,6 +347,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	private static function check_trash_delete( $post_id = null, $trash = null ) {
 
 		if ( ( ! $post_id ) || ( ! $trash ) ) {
+			self::assertTrue( false, 'Parameters not entered' );
 			return;
 		}
 
@@ -658,7 +659,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		console_log( ' other_private_document_as_author' );
+		console_log( ' del_other_private_document_as_author' );
 
 		global $current_user;
 		unset( $current_user );

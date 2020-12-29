@@ -171,10 +171,7 @@ function _flush_roles() {
  * @param string $file    file name of file being served.
  */
 function _remove_headers( $headers, $file ) {
-	if ( headers_sent() ) {
-		return array();
-	}
-	return $headers;
+	return array();
 }
 
 add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );

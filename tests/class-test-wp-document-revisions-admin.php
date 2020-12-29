@@ -306,8 +306,13 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		console_log( ' document_metabox' );
 
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
 		ob_start();
-		$wpdr->admin->document_metabox( get_post( self::$editor_public_post ) );
+		$wpdr->admin->document_metabox( get_post( self::$editor_private_post ) );
 		$output = ob_get_contents();
 		ob_end_clean();
 
