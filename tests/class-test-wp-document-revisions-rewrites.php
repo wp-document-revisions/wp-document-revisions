@@ -251,7 +251,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$posts = $wpdr->get_revisions( self::$editor_private_post );
 		console_log( ' Editor Private' );
 		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
 		// Editor Public.
@@ -284,7 +284,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	private function verify_download( $url = null, $file = null, $msg = null ) {
 
-		if ( ! $url ) {
+		if ( is_null( $url ) || is_null( $file ) ) {
+			self::assertTrue( false, 'Parameter URL or file not entered' );
 			return;
 		}
 
@@ -302,7 +303,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertFalse( is_404(), "404 ($msg)" );
 		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
 		self::assertTrue( is_single(), "Not single ($msg)" );
-		self::assertStringEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "Contents don\'t match file ($msg)" );
+		self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
 	}
 
 	/**
@@ -314,7 +315,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	private function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
-		if ( ! $url ) {
+		if ( is_null( $url ) || is_null( $file ) ) {
+			self::assertTrue( false, 'Parameter URL or file not entered' );
+		if ( is_null( $url ) || is_null( $file ) ) {
+			self::assertTrue( false, 'Parameter URL or file not entered' );
 			return;
 		}
 
@@ -334,8 +338,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
 		self::assertTrue( ( empty( $content ) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
-		self::assertStringNotEqualsFile( dirname( __FILE__ ) . '/' . $file, $content, "File being erroneously served ($msg)" );
-
+		self::assertStringNotEqualsFile( $file, $content, "File being erroneously served ($msg)" );
 	}
 
 	/**
@@ -346,7 +349,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 */
 	private static function check_trash_delete( $post_id = null, $trash = null ) {
 
-		if ( ( ! $post_id ) || ( ! $trash ) ) {
+		if ( is_null( $post_id ) || is_null( $trash ) ) {
 			self::assertTrue( false, 'Parameters not entered' );
 			return;
 		}
@@ -399,7 +402,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		$posts = $wpdr->get_revisions( self::$editor_public_post );
 		console_log( ' Editor Public' );
 		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->name . '/' . $post->post_content . '/' . $post->post_type );
+			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
 		}
 
 		console_log( ' test archive' );
