@@ -315,6 +315,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		$wpdr->admin->document_metabox( get_post( self::$editor_private_post ) );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . self::$editor_private_post . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Editor' ), 'document metabox author' );

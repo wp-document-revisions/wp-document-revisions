@@ -42,21 +42,11 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Output message to log.
-	 *
-	 * @param string $text text to output.
-	 */
-	public function consoleLog( $text ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ' );
-	}
-
-	/**
 	 * Verify published post on widget (no author info).
 	 */
 	public function test_widget_noauthor() {
 
-		$this->consoleLog( 'Test_Widget - widget_noauthor' );
+		console_log( 'Test_Widget - widget_noauthor' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator', 'test_user_1' );
@@ -84,7 +74,6 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
 		$this->assertEquals( 0, (int) substr_count( $output, 'test_user_1' ), 'noauthor' );
@@ -97,7 +86,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	 */
 	public function test_widget_author() {
 
-		$this->consoleLog( 'Test_Widget - widget_author' );
+		console_log( 'Test_Widget - widget_author' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator', 'test_user_2' );
@@ -125,7 +114,6 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_2' ), 'withauthor' );
@@ -138,7 +126,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	 */
 	public function test_block_widget() {
 
-		$this->consoleLog( 'Test_Widget - block_widget' );
+		console_log( 'Test_Widget - block_widget' );
 
 		// create post with a user.
 		$user_id = _make_user( 'administrator', 'test_user_3' );
@@ -156,7 +144,6 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		// default widget - one public post.
 		$atts   = array();
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth_1' );
@@ -164,7 +151,6 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		// now include the private pos, so should be 2.
 		$atts['post_stat_private'] = true;
 		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
 		$this->assertEquals( 2, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_2' );
@@ -172,7 +158,6 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		// request that only one is shown, so should be 1.
 		$atts['numberposts'] = 1;
 		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
-		$this->consoleLog( $output );
 
 		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
 		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_3' );

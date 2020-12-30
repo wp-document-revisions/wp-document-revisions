@@ -85,7 +85,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @param int    $post_id the ID of the parent post.
 	 * @param string $file relative url to file.
-	 * @param string $msg message to display on failure.
+	 * @param string $msg message to display on failure.30/12/2020 23:00:16
 	 */
 	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
@@ -352,6 +352,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			return;
 		}
 
+		self::assertGreaterThan( 0, EMPTY_TRASH_DAYS, 'Empty Trash Days not set' );
+
 		global $wpdr;
 
 		// create a list of all elements (document, revisions and attachments).
@@ -359,9 +361,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// retrieve document and revisions.
 		$posts = $wpdr->get_revisions( $post_id );
 		foreach ( $posts as $post ) {
-			$all_posts[ $post->ID ] = 1;
+			$all_posts[ $post->ID ] = null;
 			// add attachment records.
-			$all_posts[ $post->post_content ] = 1;
+			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
 		}
 
 		// first trash the document.
@@ -375,10 +377,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
 
-		// check everything remains with trash status.
-		foreach ( $all_posts as $id => $i ) {
-			self::assertEquals( get_post_status( $id ), $trash, "Post $id not set to trash" );
-		}
+		// check trash status.
+		self::assertEquals( get_post_status( $id ), $trash, "Post $id not set to trash" );
 
 		// delete the post.
 		wp_delete_post( $post_id );
@@ -386,6 +386,9 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// check nothing remains.
 		foreach ( $all_posts as $id => $i ) {
 			self::assertNull( get_post( $id ), "Post $id not deleted" );
+			if ( ! is_null( $i ) ) {
+				self::assertFileNotExists( $i, 'Attachment file still exists' );
+			}
 		}
 	}
 

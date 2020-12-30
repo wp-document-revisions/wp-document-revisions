@@ -171,6 +171,7 @@ function _flush_roles() {
  * @param string $file    file name of file being served.
  */
 function _remove_headers( $headers, $file ) {
+	console_log( 'remove_headers' );
 	return array();
 }
 
