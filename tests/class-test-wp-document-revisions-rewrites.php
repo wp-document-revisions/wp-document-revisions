@@ -317,8 +317,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		if ( is_null( $url ) || is_null( $file ) ) {
 			self::assertTrue( false, 'Parameter URL or file not entered' );
-		if ( is_null( $url ) || is_null( $file ) ) {
-			self::assertTrue( false, 'Parameter URL or file not entered' );
 			return;
 		}
 
