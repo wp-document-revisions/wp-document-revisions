@@ -5,6 +5,9 @@
  * @package WP_Document_Revisions
  */
 
+// Save error reporting level (for eversion after file delete).
+$err_level = error_reporting();
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
 	$_tests_dir = '/tmp/wordpress-tests-lib';
@@ -126,6 +129,9 @@ function _destroy_users() {
  */
 function _rrmdir( $dir ) {
 	if ( is_dir( $dir ) ) {
+		// no warnings here (as can output headers).
+		error_reporting( E_ERROR | E_WARNING | E_PARSE );
+
 		$objects = scandir( $dir );
 		foreach ( $objects as $object ) {
 			if ( '.' !== $object && '..' !== $object ) {
@@ -138,6 +144,9 @@ function _rrmdir( $dir ) {
 		}
 		reset( $objects );
 		rmdir( $dir );
+
+		// revert warnings.
+		error_reporting( $err_level );
 	}
 }
 

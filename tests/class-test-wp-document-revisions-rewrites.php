@@ -85,7 +85,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @param int    $post_id the ID of the parent post.
 	 * @param string $file relative url to file.
-	 * @param string $msg message to display on failure.30/12/2020 23:00:16
+	 * @param string $msg message to display on failure.
 	 */
 	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
@@ -378,7 +378,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
 
 		// check trash status.
-		self::assertEquals( get_post_status( $id ), $trash, "Post $id not set to trash" );
+		self::assertEquals( get_post_status( $post_id ), $trash, "Post $post_id not set to trash" );
 
 		// delete the post.
 		wp_delete_post( $post_id );

@@ -30,9 +30,12 @@ class Test_WP_Document_Revisions extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 
-		global $wpdr;
-
 		parent::setUp();
+
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
 
 		// init workflow states.
 		foreach ( get_terms(
