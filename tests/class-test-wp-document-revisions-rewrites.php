@@ -369,6 +369,12 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// first trash the document.
 		$result = wp_trash_post( $post_id );
 
+		if ( $result instanceof WP_Post ) {
+			console_log(  $result->post_status );
+		} else {
+			console_log(  'Result: ' . $result );
+		}
+
 		// Is this expected to work?
 		if ( ! $trash ) {
 			self::assertFalse( $result instanceof WP_Post, 'Trash document should not work' );
