@@ -6,6 +6,7 @@
  */
 
 // Save error reporting level (for eversion after file delete).
+// phpcs:ignore
 $err_level = error_reporting();
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -130,6 +131,7 @@ function _destroy_users() {
 function _rrmdir( $dir ) {
 	if ( is_dir( $dir ) ) {
 		// no warnings here (as can output headers).
+		// phpcs:ignore
 		error_reporting( E_ERROR | E_WARNING | E_PARSE );
 
 		$objects = scandir( $dir );
@@ -146,6 +148,7 @@ function _rrmdir( $dir ) {
 		rmdir( $dir );
 
 		// revert warnings.
+		// phpcs:ignore
 		error_reporting( $err_level );
 	}
 }

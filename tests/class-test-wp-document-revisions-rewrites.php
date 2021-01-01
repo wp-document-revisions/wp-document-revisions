@@ -464,7 +464,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// non-logged on user has read so should read.
 		add_filter( 'document_read_uses_read', '__return_false' );
 
-		self::verify_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink DocRead' );
+		self::verify_cant_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink DocRead' );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
@@ -508,7 +508,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// non-logged on user has read so should read.
 		add_filter( 'document_read_uses_read', '__return_false' );
 
-		self::verify_download( get_permalink( self::$author_public_post ), self::$test_file, 'Public Pretty Permalink DocRead' );
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$test_file, 'Public Pretty Permalink DocRead' );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
