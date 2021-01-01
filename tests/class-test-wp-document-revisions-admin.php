@@ -310,15 +310,16 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
-		
+
 		$post_obj = get_post( self::$editor_private_post );
+		console_log( 'Post: ' . $post_obj->ID );
 
 		ob_start();
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->post_content . '&' ), 'document metabox post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_private_post ) ), 'document metabox permalin' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}
