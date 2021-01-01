@@ -366,7 +366,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
 		}
 
-		console_log( 'Delete? : ' . current_user_can( 'delete_document', $post_id );
+		console_log( 'Delete? : ' . current_user_can( 'delete_document', $post_id ) );
 		
 		// first trash the document.
 		$result = wp_trash_post( $post_id );
