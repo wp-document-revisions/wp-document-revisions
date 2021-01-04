@@ -71,14 +71,14 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
+	private $test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	private static $test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
+	private $test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 	/**
 	 * Make sure a file is properly uploaded and attached.
