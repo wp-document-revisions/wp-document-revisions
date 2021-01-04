@@ -92,4 +92,5 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		console_log( 'Test Common WPDR' );
 
 		assertTrue( true, 'common wpdr loaded' );
+	}
 }
