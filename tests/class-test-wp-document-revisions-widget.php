@@ -1,60 +1,154 @@
 <?php
 /**
- * Tests widgett functionality.
+ * Tests widget functionality.
  *
- * @author Benjamin J. Balter <ben@balter.com>
+ * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
  */
 
 /**
  * Front end tests
  */
-class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
-
+class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 	/**
-	 * SetUp initial settings.
+	 * Author user id
+	 *
+	 * @var integer $author_user_id
 	 */
-	public function setUp() {
+	private static $author_user_id;
 
-		parent::setUp();
+	/**
+	 * Editor user id
+	 *
+	 * @var integer $editor_user_id
+	 */
+	private static $editor_user_id;
+
+	/**
+	 * Workflow_state term id
+	 *
+	 * @var integer $ws_term_id
+	 */
+	private static $ws_term_id;
+
+	/**
+	 * Author Public Post ID
+	 *
+	 * @var integer $author_public_post
+	 */
+	private static $author_public_post;
+
+	/**
+	 * Editor Private Post ID
+	 *
+	 * @var integer $editor_private_post
+	 */
+	private static $editor_private_post;
+
+	/**
+	 * Path to test file
+	 *
+	 * @var $test_file
+	 */
+	private static $test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
+
+	/**
+	 * Path to another test file
+	 *
+	 * @var $test-file2
+	 */
+	private static $test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
+
+	// phpcs:disable
+	/**
+	 * Set up common data before tests.
+	 *
+	 * @param WP_UnitTest_Factory $factory.
+	 * @return void.
+	 */
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+	// phpcs:enable
+		console_log( 'Test_Widget' );
+
+		// create users.
+		self::$author_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Author',
+				'role'          => 'author',
+			)
+		);
+		self::$editor_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Editor',
+				'role'          => 'editor',
+			)
+		);
+
+		// init permalink structure.
+		global $wp_rewrite;
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+		$wp_rewrite->flush_rules();
 
 		// init user roles.
 		global $wpdr;
 		$wpdr->add_caps();
-		_flush_roles();
-		$this->user_ids = array();
-		wp_set_current_user( 0 );
 
 		// flush cache for good measure.
 		wp_cache_flush();
 
-	}
+		// add terms and use one.
+		$wpdr->initialize_workflow_states();
+		$ws_terms   = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+		$ws_term_id = $ws_terms[0]->term_id;
 
-	/**
-	 * Break down for next test.
-	 */
-	public function tearDown() {
+		// create posts for scenarios.
+		// Author Public.
+		self::$author_public_post = $factory->post->create(
+			array(
+				'post_title'   => 'Author Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$author_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
 
-		_destroy_uploads();
-		parent::tearDown();
+		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
+		// add term and attachment.
+		self::add_document_attachment( self::$author_public_post, self::$test_file );
+
+		// Editor Private.
+		self::$editor_private_post = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Private - ' . time(),
+				'post_status'  => 'private',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
+
+		// add term and attachment.
+		self::add_document_attachment( self::$editor_private_post, self::$test_file );
 	}
 
 	/**
 	 * Verify published post on widget (no author info).
 	 */
-	public function test_widget_noauthor() {
+	public function test_widget_noauthor_nopriv() {
 
-		console_log( 'Test_Widget - widget_noauthor' );
-
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_1' );
-		wp_set_current_user( $user_id );
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
-		wp_publish_post( $doc_id );
+		console_log( ' widget_noauthor_nopriv' );
 
 		// Create the two parameter sets.
 		$args = array(
@@ -75,26 +169,49 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_noauthor' );
-		$this->assertEquals( 0, (int) substr_count( $output, 'test_user_1' ), 'noauthor' );
-		_destroy_user( $user_id );
-
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'publish_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_noauthor_2' );
 	}
 
 	/**
-	 * Verify published post on widget (with author info).
+	 * Verify published and private post on widget (no author info).
 	 */
-	public function test_widget_author() {
+	public function test_widget_noauthor_priv() {
 
-		console_log( 'Test_Widget - widget_author' );
+		console_log( ' widget_noauthor_priv' );
 
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_2' );
-		wp_set_current_user( $user_id );
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
-		wp_publish_post( $doc_id );
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = false;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+		$instance['post_status']['private'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+	}
+
+	/**
+	 * Verify published post on widget (author info).
+	 */
+	public function test_widget_author_nopriv() {
+
+		console_log( ' widget_author_nopriv' );
 
 		// Create the two parameter sets.
 		$args = array(
@@ -115,10 +232,41 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'published_withauthor' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_2' ), 'withauthor' );
-		_destroy_user( $user_id );
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_author' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'publish_author_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_author_2' );
+	}
 
+	/**
+	 * Verify published and private post on widget (author info).
+	 */
+	public function test_widget_author_priv() {
+
+		console_log( ' widget_author_priv' );
+
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = true;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+		$instance['post_status']['private'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_author_2' );
 	}
 
 	/**
@@ -126,18 +274,7 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 	 */
 	public function test_block_widget() {
 
-		console_log( 'Test_Widget - block_widget' );
-
-		// create post with a user.
-		$user_id = _make_user( 'administrator', 'test_user_3' );
-		wp_set_current_user( $user_id );
-
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
-		wp_publish_post( $doc_id );
-
-		// create a private post.
-		$doc_id = $tdr->test_revise_document();
+		console_log( 'block_widget' );
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
@@ -145,24 +282,23 @@ class Test_WP_Document_Revisions_Widget extends WP_UnitTestCase {
 		$atts   = array();
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user' ), 'block_publish_auth_1' );
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'block_publish_auth_1' );
 
-		// now include the private pos, so should be 2.
+		// now include the private post, so should be 2.
 		$atts['post_stat_private'] = true;
 		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
-		$this->assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
-		$this->assertEquals( 2, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_2' );
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'block_publish_auth_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'block_publish_auth_3' );
 
-		// request that only one is shown, so should be 1.
+		// request that only one is shown, so should be 1. (latest is by Editor).
 		$atts['numberposts'] = 1;
 		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
-		$this->assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
-		$this->assertEquals( 1, (int) substr_count( $output, 'test_user_3' ), 'block_publish_auth_3' );
-		_destroy_user( $user_id );
-
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'block_publish_auth_4' );
 	}
 
 }

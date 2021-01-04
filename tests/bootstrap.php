@@ -5,7 +5,7 @@
  * @package WP_Document_Revisions
  */
 
-// Save error reporting level (for eversion after file delete).
+// Save error reporting level (for reversion after file delete).
 // phpcs:ignore
 $err_level = error_reporting();
 
@@ -183,8 +183,28 @@ function _flush_roles() {
  * @param string $file    file name of file being served.
  */
 function _remove_headers( $headers, $file ) {
-	console_log( 'remove_headers' );
 	return array();
 }
 
 add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
+
+/**
+ * Prepare a copy of the input file with encoded name...
+ *
+ * N.B. Delete tests will delete this file.
+ *
+ * @param integer $post_id post id of document.
+ * @param string  $file    file name of file being loaded.
+ * @return string  file name of copied file to link to attachment.
+ */
+function create_file_copy( $post_id, $file ) {
+	global $wpdr;
+
+	$_POST['post_id'] = $post_id;
+
+	$new_file = wp_upload_dir() . '/' . $wpdr->filename_rewrite( basename( $file ) );
+
+	copy( $file, $new_file );
+
+	return $new_file;
+}

@@ -71,14 +71,14 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file = __DIR__ . '/../tests/documents/test-file.txt';
+	private static $test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	private static $test_file2 = __DIR__ . '/../tests/documents/test-file-2.txt';
+	private static $test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 	/**
 	 * Make sure a file is properly uploaded and attached.
@@ -117,7 +117,10 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// Get the path to the upload directory.
 		$wp_upload_dir = wp_upload_dir();
 
-		// create and store attachment ID as post content without creating a revision.
+		// Create a copy of the input file.
+		$new_file = create_file_copy( $post_id, $file );
+
+		// create and store attachment ID as post content..
 		$attach_id = wp_insert_attachment(
 			array(
 				'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
@@ -126,7 +129,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 				'post_content'   => '',
 				'post_status'    => 'inherit',
 			),
-			$filename,
+			$new_file,
 			$post_id
 		);
 
@@ -364,10 +367,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			$all_posts[ $post->ID ] = null;
 			// add attachment records.
 			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
+			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
 
 		console_log( 'Delete? : ' . current_user_can( 'delete_document', $post_id ) );
-		
+
 		// first trash the document.
 		$result = wp_trash_post( $post_id );
 
