@@ -202,9 +202,14 @@ function create_file_copy( $post_id, $file ) {
 
 	$_POST['post_id'] = $post_id;
 
-	$new_file = wp_upload_dir() . '/' . $wpdr->filename_rewrite( basename( $file ) );
+	// create file structure.
+	$file_name = array( 'name' => basename( $file ) );
+	$new_name  = $wpdr->filename_rewrite( $file_name );
+	$new_file  = wp_upload_dir() . '/' . $new_name['name'];
 
 	copy( $file, $new_file );
+	
+	console_log( $file . ' to ' . $new_file );
 
 	return $new_file;
 }

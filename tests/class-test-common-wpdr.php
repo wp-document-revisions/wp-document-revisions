@@ -40,15 +40,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $filename The file name to attach.
 	 * @return void.
 	 */
-	private static function add_document_attachment( $post_id, $filename ) {
+	public static function add_document_attachment( $post_id, $filename ) {
 		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $filename ), null );
-
-		// Get the path to the upload directory.
-		$wp_upload_dir = wp_upload_dir();
 
 		// Create a copy of the input file.
 		$new_file = create_file_copy( $post_id, $file );
