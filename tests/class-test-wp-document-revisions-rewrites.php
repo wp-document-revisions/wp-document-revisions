@@ -114,11 +114,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $filename ), null );
 
-		// Get the path to the upload directory.
-		$wp_upload_dir = wp_upload_dir();
-
 		// Create a copy of the input file.
-		$new_file = create_file_copy( $post_id, $file );
+		$new_file = create_file_copy( $post_id, $filename );
 
 		// create and store attachment ID as post content..
 		$attach_id = wp_insert_attachment(
@@ -149,6 +146,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
+		self::verify_attachment_matches_file( $post_id, $new_file, 'Loaded File' );
 	}
 
 	// phpcs:disable

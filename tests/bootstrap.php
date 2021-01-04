@@ -208,7 +208,7 @@ function create_file_copy( $post_id, $file ) {
 	$new_file  = wp_upload_dir() . '/' . $new_name['name'];
 
 	copy( $file, $new_file );
-	
+
 	console_log( $file . ' to ' . $new_file );
 
 	return $new_file;
