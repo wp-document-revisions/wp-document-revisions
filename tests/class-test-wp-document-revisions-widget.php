@@ -52,7 +52,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * @var $test_file
 	 */
 	private $test_file;
-	self::$test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
@@ -60,7 +59,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * @var $test-file2
 	 */
 	private $test_file2;
-	self::$test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 	// phpcs:disable
 	/**
@@ -72,6 +70,10 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
 		console_log( 'Test_Widget' );
+		
+		// set source file names.
+		self::$test_file  = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
+		self::$test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 		// create users.
 		self::$author_user_id = $factory->user->create(
