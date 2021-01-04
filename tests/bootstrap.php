@@ -205,7 +205,7 @@ function create_file_copy( $post_id, $file ) {
 	// create file structure.
 	$file_name = array( 'name' => basename( $file ) );
 	$new_name  = $wpdr->filename_rewrite( $file_name );
-	$new_file  = wp_upload_dir() . '/' . $new_name['name'];
+	$new_file  = wp_upload_dir()['path'] . '/' . $new_name['name'];
 
 	copy( $file, $new_file );
 
