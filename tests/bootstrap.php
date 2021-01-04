@@ -201,6 +201,7 @@ function create_file_copy( $post_id, $file ) {
 	global $wpdr;
 
 	$_POST['post_id'] = $post_id;
+	$wpdr::$doc_image = false;
 
 	// create file structure.
 	$file_name = array( 'name' => basename( $file ) );

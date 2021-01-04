@@ -41,6 +41,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @return void.
 	 */
 	public static function add_document_attachment( $post_id, $filename ) {
+		// check $post_id is a document.
+		global $wpdr;
+		self::assertTrue( $wpdr->verify_post_type( $post_id ), 'check document attach' );
+		
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $filename ), null );
 
