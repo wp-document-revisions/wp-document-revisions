@@ -470,15 +470,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		console_log( ' get_documents_filter' );
 
-		global $wpdr;
-
 		// set unauthorised user.
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		$docs = $wpdr->get_documents(
+		$docs = get_documents(
 			array(
 				'test_meta_key' => 'test_value',
 			)
@@ -493,16 +491,14 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		console_log( ' get_document_revisions' );
 
-		global $wpdr;
-
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		self::assertCount( 2, $wpdr->get_document_revisions( self::$editor_private_post ) );
-		self::assertCount( 3, $wpdr->get_document_revisions( self::$editor_private_post ) );
+		self::assertCount( 2, get_document_revisions( self::$editor_private_post ) );
+		self::assertCount( 3, get_document_revisions( self::$editor_private_post ) );
 	}
 
 }
