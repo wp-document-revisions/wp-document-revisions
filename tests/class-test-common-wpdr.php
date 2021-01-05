@@ -33,9 +33,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$file_name = array( 'name' => basename( $file ) );
 
 		// call coding function.
-		$new_name  = $wpdr->filename_rewrite( $file_name );
+		$new_name = $wpdr->filename_rewrite( $file_name );
 
-		$new_file  = wp_upload_dir()['path'] . '/' . $new_name['name'];
+		$new_file = wp_upload_dir()['path'] . '/' . $new_name['name'];
 
 		// check directory exists.
 		self::assertTrue( wp_mkdir_p( dirname( $new_file ) ), 'check directory exists' );
@@ -75,7 +75,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public static function add_document_attachment( $post_id, $filename ) {
 		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
-		
+
 		// check $post_id is a document.
 		global $wpdr;
 		self::assertTrue( $wpdr->verify_post_type( $post_id ), 'check document attach' );

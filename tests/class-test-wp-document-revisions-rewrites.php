@@ -71,14 +71,14 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file;
+	private static $test_file = __DIR__ . '/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	private static $test_file2;
+	private static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 
 	/**
 	 * Make sure a file is properly uploaded and attached.
@@ -157,10 +157,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
 		console_log( 'Test_Rewrites' );
-
-		// set source file names.
-		self::$test_file  = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
-		self::$test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );

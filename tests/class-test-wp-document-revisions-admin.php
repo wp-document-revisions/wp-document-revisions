@@ -44,7 +44,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file;
+	private static $test_file = __DIR__ . '/documents/test-file.txt';
 
 	// phpcs:disable
 	/**
@@ -56,9 +56,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// phpcs:enable
 		console_log( 'Test_Admin' );
-
-		// set source file name.
-		self::$test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
 
 		global $wpdr;
 
@@ -92,7 +89,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		$ws_term_id = $ws_terms[0]->term_id;
+		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
 		// Editor Public.

@@ -109,7 +109,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		$ws_term_id = $ws_terms[0]->term_id;
+		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
 		// Author Public.
