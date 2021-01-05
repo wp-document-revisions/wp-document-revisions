@@ -284,7 +284,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_block_widget() {
 
-		console_log( 'block_widget' );
+		console_log( ' block_widget' );
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 

@@ -58,7 +58,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		console_log( 'Test_Admin' );
 
 		// set source file name.
-		$test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
+		self::$test_file = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
 
 		global $wpdr;
 

@@ -83,10 +83,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// Create a copy of the input file.
 		$new_file = create_file_copy( $post_id, $filename );
 
+		// Get upload directory.
+		$upload_dir = wp_upload_dir();
+
 		// create and store attachment ID as post content..
 		$attach_id = wp_insert_attachment(
 			array(
-				'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
+				'guid'           => $upload_dir['url'] . '/' . basename( $filename ),
 				'post_mime_type' => $filetype['type'],
 				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
 				'post_content'   => '',
