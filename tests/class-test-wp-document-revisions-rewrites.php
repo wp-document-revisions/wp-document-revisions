@@ -108,8 +108,6 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 	 * @return void.
 	 */
 	private static function add_document_attachment( $post_id, $filename ) {
-		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
-		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $filename ), null );
@@ -192,13 +190,13 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 
 		// add terms and use one.
 		$wpdr->initialize_workflow_states();
-		$ws_terms   = get_terms(
+		$ws_terms         = get_terms(
 			array(
 				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
 			)
 		);
-		$ws_term_id = $ws_terms[0]->term_id;
+		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
 		// Author Public.
@@ -216,6 +214,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
+		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( self::$author_public_post, self::$test_file );
 
 		// Author Private.
@@ -233,6 +233,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
 
 		// add terms and attachment.
+		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( self::$author_private_post, self::$test_file );
 
 		// Editor Private.
@@ -250,6 +252,8 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
 		// add term and attachment.
+		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( self::$editor_private_post, self::$test_file );
 
 		// For debug.
@@ -274,9 +278,11 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
+		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( self::$editor_public_post, self::$test_file );
 
-		// add term and attachment (again).
+		// add attachment (again).
 		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
 	}
 

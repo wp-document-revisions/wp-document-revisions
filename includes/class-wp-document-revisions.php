@@ -1575,7 +1575,7 @@ class WP_Document_Revisions {
 
 		self::$doc_image = false;
 		// hash and replace filename, appending extension.
-		$file['name'] = md5( $file['name'] . time() ) . $this->get_extension( $file['name'] );
+		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).

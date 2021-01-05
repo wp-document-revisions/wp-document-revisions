@@ -9,7 +9,7 @@
 /**
  * Admin tests
  */
-class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 	/**
 	 * Editor user id
@@ -44,77 +44,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file = __DIR__ . '/../tests/documents/test-file.txt';
-
-	/**
-	 * Make sure a file is properly uploaded and attached.
-	 *
-	 * @param int    $post_id the ID of the parent post.
-	 * @param string $file relative url to file.
-	 * @param string $msg message to display on failure.
-	 */
-	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
-
-		if ( ! $post_id ) {
-			return;
-		}
-
-		$doc        = get_post( $post_id );
-		$attachment = get_attached_file( $doc->post_content );
-
-		self::assertTrue( is_string( $attachment ), 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
-		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
-	}
-
-	/**
-	 * Add test file attachment to post.
-	 *
-	 * @param integer $post_id  The Post ID to attach.
-	 * @param string  $filename The file name to attach.
-	 * @return void.
-	 */
-	private static function add_document_attachment( $post_id, $filename ) {
-		$terms = wp_set_post_terms( $post_id, self::$ws_term_id, 'workflow_state' );
-		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
-
-		// Check the type of file. We'll use this as the 'post_mime_type'.
-		$filetype = wp_check_filetype( basename( $filename ), null );
-
-		// Get the path to the upload directory.
-		$wp_upload_dir = wp_upload_dir();
-
-		// create and store attachment ID as post content without creating a revision.
-		$attach_id = wp_insert_attachment(
-			array(
-				'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
-				'post_mime_type' => $filetype['type'],
-				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			),
-			$filename,
-			$post_id
-		);
-
-		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
-
-		global $wpdb;
-
-		// now link the attachment, it'll create a revision.
-		wp_update_post(
-			array(
-				'ID'           => $post_id,
-				'post_content' => $attach_id,
-			)
-		);
-
-		wp_cache_flush();
-
-		global $wpdr;
-
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content, 'Latest reviosion not updated to revision' );
-		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
-	}
+	private static $test_file;
 
 	// phpcs:disable
 	/**
@@ -126,6 +56,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// phpcs:enable
 		console_log( 'Test_Admin' );
+
+		// set source file name.
+		$test_file = dirname __DIR__ ) . '/tests/documents/test-file.txt';
 
 		global $wpdr;
 
@@ -177,6 +110,7 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add term and attachment.
+		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 		self::add_document_attachment( self::$editor_public_post, self::$test_file );
 
 		// Editor Private.
@@ -193,19 +127,9 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
 
-		// add terms.
+		// add term and attachment.
+		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		self::add_document_attachment( self::$editor_private_post, self::$test_file );
-
-	}
-
-	/**
-	 * Output message to log.
-	 *
-	 * @param string $text text to output.
-	 */
-	public static function consoleLog( $text ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ' );
 	}
 
 	/**
@@ -245,7 +169,6 @@ class Test_WP_Document_Revisions_Admin extends WP_UnitTestCase {
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count all' );
 		self::assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish all' );
-
 	}
 
 	/**

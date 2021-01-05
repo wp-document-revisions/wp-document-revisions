@@ -2,54 +2,245 @@
 /**
  * Tests front-end functionality.
  *
- * @author Benjamin J. Balter <ben@balter.com>
+ * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
  */
 
 /**
  * Front end tests
  */
-class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
-
+class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 	/**
-	 * SetUp initial settings.
+	 * Author user id
+	 *
+	 * @var integer $author_user_id
 	 */
-	public function setUp() {
+	private static $author_user_id;
 
-		parent::setUp();
+	/**
+	 * Editor user id
+	 *
+	 * @var integer $editor_user_id
+	 */
+	private static $editor_user_id;
+
+	/**
+	 * Workflow_state term id 0
+	 *
+	 * @var integer $ws_term_id_0
+	 */
+	private static $ws_term_id_0;
+
+	/**
+	 * Workflow_state slug 0
+	 *
+	 * @var integer $ws_slug_0
+	 */
+	private static $ws_slug_0;
+
+	/**
+	 * Workflow_state term id 1
+	 *
+	 * @var integer $ws_term_id 1
+	 */
+	private static $ws_term_id_1;
+
+	/**
+	 * Workflow_state slug 1
+	 *
+	 * @var integer $ws_slug_1
+	 */
+	private static $ws_slug_1;
+
+	/**
+	 * Author Public Post ID
+	 *
+	 * @var integer $author_public_post
+	 */
+	private static $author_public_post;
+
+	/**
+	 * Author Private Post ID
+	 *
+	 * @var integer $author_private_post
+	 */
+	private static $author_private_post;
+
+	/**
+	 * Editor Private Post ID
+	 *
+	 * @var integer $editor_private_post
+	 */
+	private static $editor_private_post;
+
+	/**
+	 * Editor Public Post ID (contains revision)
+	 *
+	 * @var integer $editor_public_post
+	 */
+	private static $editor_public_post;
+
+	/**
+	 * Path to test file
+	 *
+	 * @var $test_file
+	 */
+	private static $test_file;
+
+	/**
+	 * Path to another test file
+	 *
+	 * @var $test-file2
+	 */
+	private static $test_file2;
+
+	// phpcs:disable
+	/**
+	 * Set up common data before tests.
+	 *
+	 * @param WP_UnitTest_Factory $factory.
+	 * @return void.
+	 */
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+	// phpcs:enable
+		console_log( 'Test_Front_End' );
+
+		// set source file names.
+		self::$test_file  = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
+		self::$test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
+
+		// create users.
+		self::$author_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Author',
+				'role'          => 'author',
+			)
+		);
+		self::$editor_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Editor',
+				'role'          => 'editor',
+			)
+		);
+
+		// init permalink structure.
+		global $wp_rewrite;
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+		$wp_rewrite->flush_rules();
 
 		// init user roles.
 		global $wpdr;
 		$wpdr->add_caps();
-		_flush_roles();
-		$this->user_ids = array();
-		wp_set_current_user( 0 );
 
 		// flush cache for good measure.
 		wp_cache_flush();
 
-	}
+		// add terms and use one.
+		$wpdr->initialize_workflow_states();
+		$ws_terms           = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+		self::$ws_term_id_0 = $ws_terms[0]->term_id;
+		self::$ws_slug_0    = $ws_terms[0]->slug;
+		self::$ws_term_id_0 = $ws_terms[1]->term_id;
+		self::$ws_slug_1    = $ws_terms[1]->slug;
 
+		// create posts for scenarios.
+		// Author Public.
+		self::$author_public_post = $factory->post->create(
+			array(
+				'post_title'   => 'Author Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$author_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
 
-	/**
-	 * Break down for next test.
-	 */
-	public function tearDown() {
+		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
-		_destroy_uploads();
-		parent::tearDown();
+		// add term and attachment.
+		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id_0, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
+		self::add_document_attachment( self::$author_public_post, self::$test_file );
 
-	}
+		// Author Private.
+		self::$author_private_post = $factory->post->create(
+			array(
+				'post_title'   => 'Author Private - ' . time(),
+				'post_status'  => 'private',
+				'post_author'  => self::$author_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
 
-	/**
-	 * Output message to log.
-	 *
-	 * @param string $text text to output.
-	 */
-	public function consoleLog( $text ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-			fwrite( STDERR, "\n" . $text . ' : ' );
+		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
+
+		// add terms and attachment.
+		$terms = wp_set_post_terms( self::$author_private_post, self::$ws_term_id_0, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
+		self::add_document_attachment( self::$author_private_post, self::$test_file );
+
+		// give postmeta to it.
+		update_post_meta( self::$author_private_post, 'test_meta_key', 'test_value' );
+
+		// Editor Private.
+		self::$editor_private_post = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Private - ' . time(),
+				'post_status'  => 'private',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
+
+		// add term and attachment.
+		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id_1, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
+		self::add_document_attachment( self::$editor_private_post, self::$test_file );
+
+		// For debug.
+		$posts = $wpdr->get_revisions( self::$editor_private_post );
+		console_log( ' Editor Private' );
+		foreach ( $posts as $post ) {
+			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
+		}
+
+		// Editor Public. N.B. This has a Revision, i.e. two revision posts.
+		self::$editor_public_post = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document' );
+
+		// add term and attachment.
+		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id_1, 'workflow_state' );
+		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
+		self::add_document_attachment( self::$editor_public_post, self::$test_file );
+
+		// add attachment (again).
+		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
+
+		// clear cache.
+		wp_cache_flush();
 	}
 
 	/**
@@ -57,14 +248,17 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_shortcode_unauthed() {
 
-		$this->consoleLog( 'Test_Front_End - revisions_shortcode_unauthed' );
+		console_log( ' revisions_shortcode_unauthed' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
-		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
-		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision shortcode' );
+		$output = do_shortcode( '[document_revisions id="' . self::$author_public_post . '"]' );
 
+		self::assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision shortcode' );
 	}
 
 
@@ -73,19 +267,17 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_shortcode() {
 
-		$this->consoleLog( 'Test_Front_End - revisions_shortcode' );
+		console_log( ' revisions_shortcode' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
-		// admin should be able to access.
-		$id = _make_user( 'administrator' );
-		wp_set_current_user( $id );
+		$output = do_shortcode( '[document_revisions id="' . self::$author_public_post . '"]' );
 
-		$output = do_shortcode( '[document_revisions id="' . $doc_id . '"]' );
-		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
-		_destroy_user( $id );
-
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
 	}
 
 	/**
@@ -93,20 +285,22 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_block_unauthed() {
 
-		$this->consoleLog( 'Test_Front_End - revisions_block_unauthed' );
+		console_log( ' revisions_block_unauthed' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
 		global $wpdr_fe;
 
 		$atts   = array(
-			'id' => $doc_id,
+			'id' => self::$author_public_post,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
 
-		$this->assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision block' );
-
+		self::assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision block' );
 	}
 
 
@@ -115,25 +309,22 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revisions_block() {
 
-		$this->consoleLog( 'Test_Front_End - revisions_block' );
+		console_log( ' revisions_block' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
-
-		// admin should be able to access.
-		$id = _make_user( 'administrator' );
-		wp_set_current_user( $id );
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
 		global $wpdr_fe;
 
 		$atts   = array(
-			'id' => $doc_id,
+			'id' => self::$author_public_post,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
 
-		$this->assertEquals( 2, substr_count( $output, '<li' ), 'admin revision block' );
-		_destroy_user( $id );
-
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'admin revision block' );
 	}
 
 
@@ -142,68 +333,54 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_revision_shortcode_limit() {
 
-		$this->consoleLog( 'Test_Front_End - revision_shortcode_limit' );
+		console_log( ' revision_shortcode_limit' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document();
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
-		// admin should be able to access.
-		$id = _make_user( 'administrator' );
-		wp_set_current_user( $id );
+		$output = do_shortcode( '[document_revisions number="1" id="' . self::$author_public_post . '"]' );
 
-		$output = do_shortcode( '[document_revisions number="1" id="' . $doc_id . '"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
-		_destroy_user( $id );
-
+		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
 	}
-
 
 	/**
 	 * Tests the documents shortcode.
+	 *
+	 * An unauthorised user cannot see post revisions.
 	 */
 	public function test_document_shortcode() {
 
-		$this->consoleLog( 'Test_Front_End - document_shortcode' );
+		console_log( ' document_shortcode' );
 
-		$tdr = new Test_WP_Document_Revisions();
-
-		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
-		wp_publish_post( $doc_id );
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
 		$output = do_shortcode( '[documents]' );
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode count' );
 
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
 	}
-
 
 	/**
 	 * Tests the documents shortcode with a workflow state filter.
 	 */
 	public function test_document_shortcode_wfs_filter() {
 
-		$this->consoleLog( 'Test_Front_End - document_shortcode_wfs_filter' );
+		console_log( ' document_shortcode_wfs_filter' );
 
-		$tdr = new Test_WP_Document_Revisions();
-
-		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
-		wp_publish_post( $doc_id );
-
-		$doc_id = $tdr->test_add_document(); // add another doc.
-		wp_publish_post( $doc_id );
-
-		// move a doc to another workflow state (default is index 0).
-		$terms = get_terms(
-			'workflow_state',
-			array(
-				'hide_empty' => false,
-			)
-		);
-		wp_set_post_terms( $doc_id, array( $terms[1]->slug ), 'workflow_state' );
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$output = do_shortcode( '[documents workflow_state="' . $terms[1]->slug . '"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
-
+		$output = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
+		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
 	}
 
 
@@ -212,22 +389,17 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_document_shortcode_post_meta_filter() {
 
-		$this->consoleLog( 'Test_Front_End - document_shortcode_post_meta_filter' );
+		console_log( ' document_shortcode_post_meta_filter' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document(); // add a doc.
-		wp_publish_post( $doc_id );
-
-		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
-		wp_publish_post( $doc_id );
-
-		// give postmeta to a doc.
-		update_post_meta( $doc_id, 'test_meta_key', 'test_value' );
+		// author should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
 
+		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
 	}
 
 	/**
@@ -235,43 +407,31 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_document_block_wfs_filter() {
 
-		$this->consoleLog( 'Test_Front_End - document_block_wfs_filter' );
+		console_log( ' document_block_wfs_filter' );
 
-		$tdr = new Test_WP_Document_Revisions();
-
-		$doc_id = $tdr->test_revise_document(); // add a doc w/ revisions.
-		wp_publish_post( $doc_id );
-
-		$doc_id = $tdr->test_add_document(); // add another doc.
-		wp_publish_post( $doc_id );
-
-		// move a doc to another workflow state (default is index 0).
-		$terms = get_terms(
-			'workflow_state',
-			array(
-				'hide_empty' => false,
-			)
-		);
-		wp_set_post_terms( $doc_id, array( $terms[1]->slug ), 'workflow_state' );
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
 		wp_cache_flush();
 
 		global $wpdr_fe;
 
 		$atts   = array(
 			'taxonomy_0' => 'workflow_state',
-			'term_0'     => $terms[1]->term_id,
+			'term_0'     => self::$ws_term_id_0,
 		);
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 
-		$this->assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
+		self::assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
 
 		// using document_read capability means no access for an unauthorized use..
 		add_filter( 'document_read_uses_read', '__return_false' );
+
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 
-		$this->assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
+		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
-
 	}
 
 	/**
@@ -279,77 +439,74 @@ class Test_WP_Document_Revisions_Front_End extends WP_UnitTestCase {
 	 */
 	public function test_get_documents() {
 
-		$this->consoleLog( 'Test_Front_End - get_documents' );
+		console_log( ' get_documents' );
 
-		$tdr = new Test_WP_Document_Revisions();
+		global $wpdr;
 
-		$doc_id = $tdr->test_revise_document(); // add a doc.
-		wp_publish_post( $doc_id );
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
-		$doc_id = $tdr->test_add_document(); // add another doc.
-		wp_publish_post( $doc_id );
-
-		$this->assertCount( 2, get_documents(), 'get_document() count' );
-
+		self::assertCount( 2, $wpdr->get_documents(), 'get_document() count' );
 	}
-
 
 	/**
 	 * Tests that get_documents returns attachments when asked.
 	 */
 	public function test_get_documents_returns_attachments() {
 
-		$this->consoleLog( 'Test_Front_End - get_documents_returns_attachments' );
+		console_log( ' get_documents_returns_attachments' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_add_document(); // add a doc.
-		wp_publish_post( $doc_id );
+		global $wpdr;
 
-		$docs = get_documents( null, true );
+		$docs = $wpdr->get_documents( null, true );
 		$doc  = array_pop( $docs );
 
-		$this->assertEquals( $doc->post_type, 'attachment', 'get_documents not returning attachments' );
-
+		self::assertEquals( $doc->post_type, 'attachment', 'get_documents not returning attachments' );
 	}
-
 
 	/**
 	 * Tests that get_documents properly filters when asked.
 	 */
 	public function test_get_documents_filter() {
 
-		$this->consoleLog( 'Test_Front_End - get_documents_filter' );
+		console_log( ' get_documents_filter' );
 
-		$tdr = new Test_WP_Document_Revisions();
+		global $wpdr;
 
-		$tdr->test_add_document(); // add a doc.
-		$doc_id = $tdr->test_add_document(); // add another doc.
-		wp_publish_post( $doc_id );
-
-		// give postmeta to a doc.
-		update_post_meta( $doc_id, 'test_meta_key', 'test_value' );
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		$docs = get_documents(
+		$docs = $wpdr->get_documents(
 			array(
 				'test_meta_key' => 'test_value',
 			)
 		);
-		$this->assertCount( 1, $docs, 'get_documents filter count' );
-
+		self::assertCount( 1, $docs, 'get_documents filter count' );
 	}
-
 
 	/**
 	 * Tests the get_revisions function.
 	 */
 	public function test_get_document_revisions() {
 
-		$this->consoleLog( 'Test_Front_End - get_document_revisions' );
+		console_log( ' get_document_revisions' );
 
-		$tdr    = new Test_WP_Document_Revisions();
-		$doc_id = $tdr->test_revise_document(); // add a doc.
-		$this->assertCount( 2, get_document_revisions( $doc_id ) );
+		global $wpdr;
+
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		self::assertCount( 2, $wpdr->get_document_revisions( self::$editor_private_post ) );
+		self::assertCount( 3, $wpdr->get_document_revisions( self::$editor_private_post ) );
 	}
 
 }

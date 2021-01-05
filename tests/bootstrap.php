@@ -200,6 +200,7 @@ add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
 function create_file_copy( $post_id, $file ) {
 	global $wpdr;
 
+	// ensure that rename function will be called.
 	$_POST['post_id'] = $post_id;
 	$wpdr::$doc_image = false;
 
@@ -208,6 +209,10 @@ function create_file_copy( $post_id, $file ) {
 	$new_name  = $wpdr->filename_rewrite( $file_name );
 	$new_file  = wp_upload_dir()['path'] . '/' . $new_name['name'];
 
+	// check directory exists.
+	wp_mkdir_p( dirname( $new_file ) );
+
+	// create the file copy.
 	copy( $file, $new_file );
 
 	console_log( $file . ' to ' . $new_file );

@@ -14,6 +14,38 @@
 class Test_Common_WPDR extends WP_UnitTestCase {
 
 	/**
+	 * Prepare a copy of the input file with encoded name...
+	 *
+	 * N.B. Delete tests will delete this file.
+	 *
+	 * @param integer $post_id post id of document.
+	 * @param string  $file    file name of file being loaded.
+	 * @return string  file name of copied file to link to attachment.
+	 */
+	private static function create_file_copy( $post_id, $file ) {
+		global $wpdr;
+
+		// ensure that rename function will be called.
+		$_POST['post_id'] = $post_id;
+		$wpdr::$doc_image = false;
+
+		// create file structure.
+		$file_name = array( 'name' => basename( $file ) );
+		$new_name  = $wpdr->filename_rewrite( $file_name );
+		$new_file  = wp_upload_dir()['path'] . '/' . $new_name['name'];
+
+		// check directory exists.
+		self::assertTrue( wp_mkdir_p( dirname( $new_file ) ), 'check directory exists' );
+
+		// create the file copy.
+		copy( $file, $new_file );
+
+		console_log( $file . ' to ' . $new_file );
+
+		return $new_file;
+	}
+
+	/**
 	 * Make sure a file is properly uploaded and attached.
 	 *
 	 * @param int    $post_id the ID of the parent post.
@@ -44,7 +76,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// check $post_id is a document.
 		global $wpdr;
 		self::assertTrue( $wpdr->verify_post_type( $post_id ), 'check document attach' );
-		
+
 		// Check the type of file. We'll use this as the 'post_mime_type'.
 		$filetype = wp_check_filetype( basename( $filename ), null );
 
