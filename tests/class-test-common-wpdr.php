@@ -31,7 +31,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// create file structure.
 		$file_name = array( 'name' => basename( $file ) );
+
+		// call coding function.
 		$new_name  = $wpdr->filename_rewrite( $file_name );
+
 		$new_file  = wp_upload_dir()['path'] . '/' . $new_name['name'];
 
 		// check directory exists.
@@ -39,8 +42,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// create the file copy.
 		copy( $file, $new_file );
-
-		console_log( $file . ' to ' . $new_file );
 
 		return $new_file;
 	}
@@ -73,6 +74,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @return void.
 	 */
 	public static function add_document_attachment( $post_id, $filename ) {
+		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
+		
 		// check $post_id is a document.
 		global $wpdr;
 		self::assertTrue( $wpdr->verify_post_type( $post_id ), 'check document attach' );
@@ -81,7 +84,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$filetype = wp_check_filetype( basename( $filename ), null );
 
 		// Create a copy of the input file.
-		$new_file = create_file_copy( $post_id, $filename );
+		$new_file = self::create_file_copy( $post_id, $filename );
 
 		// Get upload directory.
 		$upload_dir = wp_upload_dir();
