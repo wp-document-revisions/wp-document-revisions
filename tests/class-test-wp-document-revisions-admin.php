@@ -83,7 +83,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		// add terms and use one.
 		$wpdr->initialize_workflow_states();
-		$ws_terms   = get_terms(
+		$ws_terms         = get_terms(
 			array(
 				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,

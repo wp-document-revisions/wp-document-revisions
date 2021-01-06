@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	/**
 	 * Contributor user id
 	 *
@@ -374,7 +374,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
 
-		console_log( 'Delete? : ' . +current_user_can( 'delete_document', $post_id ) . ':' );
+		console_log( 'Delete? : ' . + current_user_can( 'delete_document', $post_id ) . ':' );
 
 		// first trash the document.
 		$result = wp_trash_post( $post_id );
