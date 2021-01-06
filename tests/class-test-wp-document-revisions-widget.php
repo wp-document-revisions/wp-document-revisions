@@ -155,10 +155,17 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 	/**
 	 * Verify published post on widget (no author info).
+	 *
+	 * Should see Author (Public) and not Editor (Private)
 	 */
-	public function test_widget_noauthor_nopriv() {
+	public function test_widget_publ_noauthor_nopriv() {
 
-		console_log( ' widget_noauthor_nopriv' );
+		console_log( ' widget_publ_noauthor_nopriv' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
 
 		// Create the two parameter sets.
 		$args = array(
@@ -186,10 +193,97 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 	/**
 	 * Verify published and private post on widget (no author info).
+	 *
+	 * Should see Author (Public) and not Editor (Private)
 	 */
-	public function test_widget_noauthor_priv() {
+	public function test_widget_publ_noauthor_priv() {
 
-		console_log( ' widget_noauthor_priv' );
+		console_log( ' widget_publ_noauthor_priv' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = false;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+		$instance['post_status']['private'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+		console_log( $output );
+
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+	}
+
+	/**
+	 * Verify published and private post on widget (no author info).
+	 *
+	 * Should see Author (Public) and not Editor (Private)
+	 */
+	public function test_widget_auth_noauthor_priv() {
+
+		console_log( ' widget_auth_noauthor_priv' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = false;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+		$instance['post_status']['private'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+		console_log( $output );
+
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+	}
+
+	/**
+	 * Verify published and private post on widget (no author info).
+	 *
+	 * Should see Author (Public) and not Editor (Private)
+	 */
+	public function test_widget_edit_noauthor_priv() {
+
+		console_log( ' widget_edit_noauthor_priv' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
 		// Create the two parameter sets.
 		$args = array(
@@ -224,6 +318,11 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		console_log( ' widget_author_nopriv' );
 
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
 		// Create the two parameter sets.
 		$args = array(
 			'before_widget' => '',
@@ -256,6 +355,11 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		console_log( ' widget_author_priv' );
 
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
 		// Create the two parameter sets.
 		$args = array(
 			'before_widget' => '',
@@ -287,6 +391,11 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	public function test_block_widget() {
 
 		console_log( ' block_widget' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
