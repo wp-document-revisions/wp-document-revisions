@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
+class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * Contributor user id
 	 *
@@ -66,87 +66,6 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 	 */
 	private static $editor_public_post;
 
-	/**
-	 * Path to test file
-	 *
-	 * @var $test_file
-	 */
-	private static $test_file = __DIR__ . '/documents/test-file.txt';
-
-	/**
-	 * Path to another test file
-	 *
-	 * @var $test-file2
-	 */
-	private static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
-
-	/**
-	 * Make sure a file is properly uploaded and attached.
-	 *
-	 * @param int    $post_id the ID of the parent post.
-	 * @param string $file relative url to file.
-	 * @param string $msg message to display on failure.
-	 */
-	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
-
-		if ( ! $post_id ) {
-			return;
-		}
-
-		$doc        = get_post( $post_id );
-		$attachment = get_attached_file( $doc->post_content );
-
-		self::assertTrue( is_string( $attachment ), 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
-		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
-	}
-
-	/**
-	 * Add test file attachment to post.
-	 *
-	 * @param integer $post_id  The Post ID to attach.
-	 * @param string  $filename The file name to attach.
-	 * @return void.
-	 */
-	private static function add_document_attachment( $post_id, $filename ) {
-
-		// Check the type of file. We'll use this as the 'post_mime_type'.
-		$filetype = wp_check_filetype( basename( $filename ), null );
-
-		// Create a copy of the input file.
-		$new_file = create_file_copy( $post_id, $filename );
-
-		// create and store attachment ID as post content..
-		$attach_id = wp_insert_attachment(
-			array(
-				'guid'           => wp_upload_dir()['url'] . '/' . basename( $filename ),
-				'post_mime_type' => $filetype['type'],
-				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
-				'post_content'   => '',
-				'post_status'    => 'inherit',
-			),
-			$new_file,
-			$post_i
-		);
-
-		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
-
-		// now link the attachment, it'll create a revision.
-		wp_update_post(
-			array(
-				'ID'           => $post_id,
-				'post_content' => $attach_id,
-			)
-		);
-
-		wp_cache_flush();
-
-		global $wpdr;
-
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
-		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
-		self::verify_attachment_matches_file( $post_id, $new_file, 'Loaded File' );
-	}
-
 	// phpcs:disable
 	/**
 	 * Set up common data before tests.
@@ -179,6 +98,9 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		// init user roles.
 		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
 		$wpdr->add_caps();
 
 		// flush cache for good measure.
@@ -280,138 +202,6 @@ class Test_WP_Document_Revisions_Rewrites_Without extends WP_UnitTestCase {
 
 		// add attachment (again).
 		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
-	}
-
-	/**
-	 * Tests that a given URL actually returns the right file.
-	 *
-	 * @param string $url to check.
-	 * @param string $file relative path of expected file.
-	 * @param string $msg message describing failure.
-	 */
-	private function verify_download( $url = null, $file = null, $msg = null ) {
-
-		if ( is_null( $url ) || is_null( $file ) ) {
-			self::assertTrue( false, 'Parameter URL or file not entered' );
-			return;
-		}
-
-		global $wpdr;
-		flush_rewrite_rules();
-
-		self::go_to( $url );
-
-		// verify contents are actually served.
-		ob_start();
-		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		self::assertFalse( is_404(), "404 ($msg)" );
-		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
-		self::assertTrue( is_single(), "Not single ($msg)" );
-		self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
-	}
-
-	/**
-	 * Tests that a given url *DOES NOT* return a file.
-	 *
-	 * @param string $url to check.
-	 * @param string $file relative path of expected file.
-	 * @param string $msg message describing failure.
-	 */
-	private function verify_cant_download( $url = null, $file = null, $msg = null ) {
-
-		if ( is_null( $url ) || is_null( $file ) ) {
-			self::assertTrue( false, 'Parameter URL or file not entered' );
-			return;
-		}
-
-		global $wpdr;
-
-		flush_rewrite_rules();
-
-		self::go_to( $url );
-
-		// verify whether contents are actually served.
-		ob_start();
-		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		global $wp_query;
-
-		self::assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
-		self::assertTrue( ( empty( $content ) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
-		self::assertStringNotEqualsFile( $file, $content, "File being erroneously served ($msg)" );
-	}
-
-	/**
-	 * Tests that all elements of a post are trashed or deleted.
-	 *
-	 * @param integer $post_id Post ID.
-	 * @param boolean $trash   Expect to work (Permissions check..
-	 */
-	private static function check_trash_delete( $post_id = null, $trash = null ) {
-
-		if ( is_null( $post_id ) || is_null( $trash ) ) {
-			self::assertTrue( false, 'Parameters not entered' );
-			return;
-		}
-
-		self::assertGreaterThan( 0, EMPTY_TRASH_DAYS, 'Empty Trash Days not set' );
-
-		global $wpdr;
-
-		// create a list of all elements (document, revisions and attachments).
-		$all_posts = array();
-		// retrieve document and revisions.
-		$posts = $wpdr->get_revisions( $post_id );
-		foreach ( $posts as $post ) {
-			$all_posts[ $post->ID ] = null;
-			// add attachment records.
-			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
-			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
-		}
-
-		console_log( 'Delete? : ' . + current_user_can( 'delete_document', $post_id ) . ':' );
-
-		// first trash the document.
-		$result = wp_trash_post( $post_id );
-
-		if ( $result instanceof WP_Post ) {
-			console_log( $result->post_status );
-		} else {
-			console_log( 'Result: ' . $result );
-		}
-
-		// Is this expected to work?
-		if ( ! $trash ) {
-			self::assertFalse( $result instanceof WP_Post, 'Trash document should not work' );
-			return;
-		}
-
-		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
-
-		// check trash status.
-		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
-
-		// add the attachment delete process.
-		add_action( 'delete_post', array( $wpr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
-
-		// delete the post.
-		wp_delete_post( $post_id );
-
-		// add the attachment delete process.
-		remove_action( 'delete_post', array( $wpr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
-
-		// check nothing remains.
-		foreach ( $all_posts as $id => $i ) {
-			self::assertNull( get_post( $id )->ID, "Post $id not deleted" );
-			if ( ! is_null( $i ) ) {
-				self::assertFileNotExists( $i, 'Attachment file still exists' );
-			}
-		}
 	}
 
 	/**

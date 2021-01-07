@@ -39,13 +39,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	private static $editor_private_post;
 
-	/**
-	 * Path to test file
-	 *
-	 * @var $test_file
-	 */
-	private static $test_file = __DIR__ . '/documents/test-file.txt';
-
 	// phpcs:disable
 	/**
 	 * Set up common data before tests.
@@ -58,6 +51,9 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		console_log( 'Test_Admin' );
 
 		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
 
 		// set up admin.
 		if ( ! defined( 'WP_ADMIN' ) ) {
@@ -75,7 +71,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		);
 
 		// init user roles.
-		global $wpdr;
 		$wpdr->add_caps();
 
 		// flush cache for good measure.
