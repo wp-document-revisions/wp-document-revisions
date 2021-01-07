@@ -118,7 +118,7 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// create and store attachment ID as post content..
 		$attach_id = wp_insert_attachment(
 			array(
-				'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ),
+				'guid'           => wp_upload_dir()['url'] . '/' . basename( $filename ),
 				'post_mime_type' => $filetype['type'],
 				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
 				'post_content'   => '',
@@ -396,12 +396,18 @@ class Test_WP_Document_Revisions_Rewrites extends WP_UnitTestCase {
 		// check trash status.
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
+		// add the attachment delete process.
+		add_action( 'delete_post', array( $wpr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
+
 		// delete the post.
 		wp_delete_post( $post_id );
 
+		// add the attachment delete process.
+		remove_action( 'delete_post', array( $wpr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
+
 		// check nothing remains.
 		foreach ( $all_posts as $id => $i ) {
-			self::assertNull( get_post( $id ), "Post $id not deleted" );
+			self::assertNull( get_post( $id )->ID, "Post $id not deleted" );
 			if ( ! is_null( $i ) ) {
 				self::assertFileNotExists( $i, 'Attachment file still exists' );
 			}
