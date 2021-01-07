@@ -81,20 +81,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	private static $editor_public_post;
 
-	/**
-	 * Path to test file
-	 *
-	 * @var $test_file
-	 */
-	private static $test_file = __DIR__ . '/documents/test-file.txt';
-
-	/**
-	 * Path to another test file
-	 *
-	 * @var $test-file2
-	 */
-	private static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
-
 	// phpcs:disable
 	/**
 	 * Set up common data before tests.

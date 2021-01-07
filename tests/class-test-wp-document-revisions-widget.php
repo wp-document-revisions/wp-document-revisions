@@ -46,20 +46,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	private static $editor_private_post;
 
-	/**
-	 * Path to test file
-	 *
-	 * @var $test_file
-	 */
-	private static $test_file;
-
-	/**
-	 * Path to another test file
-	 *
-	 * @var $test-file2
-	 */
-	private static $test_file2;
-
 	// phpcs:disable
 	/**
 	 * Set up common data before tests.
@@ -70,10 +56,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
 		console_log( 'Test_Widget' );
-
-		// set source file names.
-		self::$test_file  = dirname( __DIR__ ) . '/tests/documents/test-file.txt';
-		self::$test_file2 = dirname( __DIR__ ) . '/documents/test-file-2.txt';
 
 		// create users.
 		self::$author_user_id = $factory->user->create(
