@@ -255,10 +255,10 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_REQUEST['post_id'] );
 
-		// phpcs:disable WordPress.Variables.GlobalVariables.OverrideProhibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		global $post;
 		$post = get_post( self::$editor_public_post );
-		// phpcs:enable WordPress.Variables.GlobalVariables.OverrideProhibited
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		self::assertTrue( $wpdr->verify_post_type( $post ), 'verify post type via global $post' );
 		unset( $post );

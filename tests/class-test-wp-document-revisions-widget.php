@@ -376,6 +376,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
+		console_log( $output );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
@@ -405,6 +406,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		// now include the private post, so should be 2.
 		$atts['post_stat_private'] = true;
+		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'block_publish_auth_2' );

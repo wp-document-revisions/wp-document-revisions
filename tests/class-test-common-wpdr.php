@@ -18,14 +18,14 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 *
 	 * @var $test_file
 	 */
-	private static $test_file = __DIR__ . '/documents/test-file.txt';
+	public static $test_file = __DIR__ . '/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
 	 * @var $test-file2
 	 */
-	private static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
+	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 
 	/**
 	 * Prepare a copy of the input file with encoded name...
@@ -36,7 +36,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $file    file name of file being loaded.
 	 * @return string  file name of copied file to link to attachment.
 	 */
-	private static function create_file_copy( $post_id, $file ) {
+	public static function create_file_copy( $post_id, $file ) {
 		global $wpdr;
 
 		// ensure that rename function will be called.
@@ -67,7 +67,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative url to file.
 	 * @param string $msg message to display on failure.
 	 */
-	private static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+	public static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
 		if ( ! $post_id ) {
 			return;
@@ -142,7 +142,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	private static function verify_download( $url = null, $file = null, $msg = null ) {
+	public static function verify_download( $url = null, $file = null, $msg = null ) {
 
 		if ( is_null( $url ) || is_null( $file ) ) {
 			self::assertTrue( false, 'Parameter URL or file not entered' );
@@ -173,7 +173,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	private static function verify_cant_download( $url = null, $file = null, $msg = null ) {
+	public static function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
 		if ( is_null( $url ) || is_null( $file ) ) {
 			self::assertTrue( false, 'Parameter URL or file not entered' );
@@ -205,7 +205,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param integer $post_id Post ID.
 	 * @param boolean $trash   Expect to work (Permissions check..
 	 */
-	private static function check_trash_delete( $post_id = null, $trash = null ) {
+	public static function check_trash_delete( $post_id = null, $trash = null ) {
 
 		if ( is_null( $post_id ) || is_null( $trash ) ) {
 			self::assertTrue( false, 'Parameters not entered' );
