@@ -36,7 +36,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $file    file name of file being loaded.
 	 * @return string  file name of copied file to link to attachment.
 	 */
-	public static function create_file_copy( $post_id, $file ) {
+	public function create_file_copy( $post_id, $file ) {
 		global $wpdr;
 
 		// ensure that rename function will be called.
@@ -67,7 +67,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative url to file.
 	 * @param string $msg message to display on failure.
 	 */
-	public static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+	public function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
 		if ( ! $post_id ) {
 			return;
@@ -87,7 +87,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $filename The file name to attach.
 	 * @return void.
 	 */
-	public static function add_document_attachment( $post_id, $filename ) {
+	public function add_document_attachment( $post_id, $filename ) {
 		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
 
 		// check $post_id is a document.
@@ -142,7 +142,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	public static function verify_download( $url = null, $file = null, $msg = null ) {
+	public function verify_download( $url = null, $file = null, $msg = null ) {
 
 		if ( is_null( $url ) || is_null( $file ) ) {
 			self::assertTrue( false, 'Parameter URL or file not entered' );
@@ -173,7 +173,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative path of expected file.
 	 * @param string $msg message describing failure.
 	 */
-	public static function verify_cant_download( $url = null, $file = null, $msg = null ) {
+	public function verify_cant_download( $url = null, $file = null, $msg = null ) {
 
 		if ( is_null( $url ) || is_null( $file ) ) {
 			self::assertTrue( false, 'Parameter URL or file not entered' );
@@ -205,7 +205,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param integer $post_id Post ID.
 	 * @param boolean $trash   Expect to work (Permissions check..
 	 */
-	public static function check_trash_delete( $post_id = null, $trash = null ) {
+	public function check_trash_delete( $post_id = null, $trash = null ) {
 
 		if ( is_null( $post_id ) || is_null( $trash ) ) {
 			self::assertTrue( false, 'Parameters not entered' );
@@ -263,7 +263,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// check nothing remains.
 		foreach ( $all_posts as $id => $i ) {
-			self::assertNull( get_post( $id )->ID, "Post $id not deleted" );
+			$test_post = get_post( $id );
+			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
 			if ( ! is_null( $i ) ) {
 				self::assertFileNotExists( $i, 'Attachment file still exists' );
 			}

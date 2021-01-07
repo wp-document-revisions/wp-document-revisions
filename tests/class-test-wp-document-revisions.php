@@ -224,10 +224,10 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $wpdr;
 
-		$revisions = $wpdr->get_revisions( editor_private_post );
+		$revisions = $wpdr->get_revisions( self::$editor_private_post );
 		$last      = end( $revisions );
 		self::assertEquals( 1, $wpdr->get_revision_number( $last->ID ) );
-		self::assertEquals( $last->ID, $wpdr->get_revision_id( 1, editor_private_post ) );
+		self::assertEquals( $last->ID, $wpdr->get_revision_id( 1, self::$editor_private_post ) );
 	}
 
 	/**
@@ -237,8 +237,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		console_log( ' verify_post_type' );
 
 		global $wpdr;
-
-		$doc_id = $this->test_add_document();
 
 		$_GET['post_type'] = 'document';
 		self::assertTrue( $wpdr->verify_post_type(), 'verify post type via explicit' );
