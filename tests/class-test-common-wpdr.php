@@ -36,7 +36,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $file    file name of file being loaded.
 	 * @return string  file name of copied file to link to attachment.
 	 */
-	public function create_file_copy( $post_id, $file ) {
+	public static function create_file_copy( $post_id, $file ) {
 		global $wpdr;
 
 		// ensure that rename function will be called.
@@ -67,7 +67,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string $file relative url to file.
 	 * @param string $msg message to display on failure.
 	 */
-	public function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
+	public static function verify_attachment_matches_file( $post_id = null, $file = null, $msg = null ) {
 
 		if ( ! $post_id ) {
 			return;
@@ -87,7 +87,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * @param string  $filename The file name to attach.
 	 * @return void.
 	 */
-	public function add_document_attachment( $post_id, $filename ) {
+	public static function add_document_attachment( $post_id, $filename ) {
 		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
 
 		// check $post_id is a document.
