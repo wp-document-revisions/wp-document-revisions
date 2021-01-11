@@ -122,7 +122,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
 
 		// now link the attachment, it'll create a revision.
-		self::$editor_public_post = $factory->post->update(
+		self::$editor_public_post = $factory->post->update_object(
 			array(
 				'ID'           => $post_id,
 				'post_content' => $attach_id,
