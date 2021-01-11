@@ -80,14 +80,17 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 	}
 
+	// phpcs:disable
 	/**
 	 * Add test file attachment to post.
 	 *
+	 * @param WP_UnitTest_Factory $factory.
 	 * @param integer $post_id  The Post ID to attach.
 	 * @param string  $filename The file name to attach.
 	 * @return void.
 	 */
-	public static function add_document_attachment( $post_id, $filename ) {
+	public static function add_document_attachment( WP_UnitTest_Factory $factory, $post_id, $filename ) {
+		// phpcs:enable
 		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
 
 		// check $post_id is a document.
@@ -104,22 +107,22 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$upload_dir = wp_upload_dir();
 
 		// create and store attachment ID as post content..
-		$attach_id = wp_insert_attachment(
+		$attach_id = $factory->attachment->create(
 			array(
 				'guid'           => $upload_dir['url'] . '/' . basename( $filename ),
 				'post_mime_type' => $filetype['type'],
 				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
 				'post_content'   => '',
 				'post_status'    => 'inherit',
-			),
-			$new_file,
-			$post_id
+				'post_parent'    => $post_id,
+				'file'           => $new_file,
+			)
 		);
 
 		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
 
 		// now link the attachment, it'll create a revision.
-		wp_update_post(
+		self::$editor_public_post = $factory->post->update(
 			array(
 				'ID'           => $post_id,
 				'post_content' => $attach_id,
@@ -144,10 +147,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public function verify_download( $url = null, $file = null, $msg = null ) {
 
-		if ( is_null( $url ) || is_null( $file ) ) {
-			self::assertTrue( false, 'Parameter URL or file not entered' );
-			return;
-		}
+		// check parameters.
+		self::assertNotNull( $url, 'Parameter url not entered' );
+		self::assertNotNull( $file, 'Parameter file not entered' );
 
 		global $wpdr;
 		flush_rewrite_rules();
@@ -164,6 +166,53 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
 		self::assertTrue( is_single(), "Not single ($msg)" );
 		self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
+	}
+
+	/**
+	 * Tests that the Document stucture is correct.
+	 *
+	 * @param int $post_id the ID of the parent post.
+	 * @param int $revns   number of revisions expected.
+	 * @param int $attach  number of attachments expected.
+	 */
+	public function verify_structure( $post_id = null, $revns = null, $attach = null ) {
+
+		// check parameters.
+		self::assertNotNull( $post_id, 'Parameter post_id not entered' );
+		self::assertNotNull( $revns, 'Parameter #revisions not entered' );
+		self::assertNotNull( $attach, 'Parameter #attachments not entered' );
+
+		// confirm post is document.
+		$doc = get_post( $post_id );
+		self::assertInstanceOf( WP_Post, $doc, "Post $post_id does not exist" );
+		self::assertInternalType( PHPUnit_IsType::TYPE_INT, $doc->post_content );
+
+		// check post type.
+		self::assertEquals( get_post_type( $doc ), 'document', "Post $post_id not a document" );
+
+		// get revisions.
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$revs = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM wp_posts WHERE post_parent = %d AND post_type = 'revision' ORDER BY ID ASC",
+				$post_id
+			)
+		);
+
+		self::assertEquals( $revns, $wpdb->num_rows, "Expected revisions of $post_id not found" );
+
+		// check attachments.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$attchs = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM wp_posts WHERE post_parent = %d AND post_type = 'attachment' ORDER BY ID ASC",
+				$post_id
+			)
+		);
+
+		self::assertEquals( $attach, $wpdb->num_rows, "Expected attachments of $post_id not found" );
+		self::assertEquals( $doc->post_content, end( $attchs )->ID, 'Document held is not the last one' );
 	}
 
 	/**

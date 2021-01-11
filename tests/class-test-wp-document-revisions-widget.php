@@ -112,7 +112,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
-		self::add_document_attachment( self::$author_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
 
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
@@ -132,7 +132,15 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
-		self::add_document_attachment( self::$editor_private_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+	}
+
+	/**
+	 * Tests that the test Document stuctures are correct.
+	 */
+	public function test_structure() {
+		self::verify_structure( $author_public_post, 1, 1 );
+		self::verify_structure( $editor_private_post, 1, 1 );
 	}
 
 	/**
@@ -171,6 +179,47 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'publish_noauthor_1' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_noauthor_2' );
+	}
+
+	/**
+	 * Verify published post on widget (no author info) using doc_read.
+	 *
+	 * Public should see nothing.
+	 */
+	public function test_widget_publ_docread_noauthor_nopriv() {
+
+		console_log( ' widget_publ_docread_noauthor_nopriv' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = false;
+
+		// published status only.
+		$instance['post_status']['publish'] = true;
+
+		// non-logged on user does not use read so should not read anything.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+
+		self::assertEquals( 0, (int) substr_count( $output, '<li' ), 'publish_docread_noauthor' );
 	}
 
 	/**
@@ -334,11 +383,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		console_log( ' widget_author_priv' );
 
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
-		wp_cache_flush();
-
 		// Create the two parameter sets.
 		$args = array(
 			'before_widget' => '',
@@ -351,11 +395,29 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$instance['numberposts'] = 5;
 		$instance['show_author'] = true;
 
-		// published status only.
+		// published and private status.
 		$instance['post_status']['publish'] = true;
 		$instance['post_status']['private'] = true;
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		// run first as author. Cannot see other private posts.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		$output = $wpdr_widget->widget_gen( $args, $instance );
+		console_log( $output );
+
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_author_2' );
+
+		// then run as editor. Cant see own and others private posts.
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 		console_log( $output );
@@ -397,6 +459,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		// request that only one is shown, so should be 1. (latest is by Editor).
 		$atts['numberposts'] = 1;
 		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
+		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'block_publish_auth_4' );

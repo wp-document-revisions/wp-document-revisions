@@ -87,14 +87,14 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( $factory, self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
-		self::add_document_attachment( self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
 		// add second attachment.
-		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file2 );
 
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
@@ -112,7 +112,15 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
-		self::add_document_attachment( self::$editor_private_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+	}
+
+	/**
+	 * Tests that the test Document stuctures are correct.
+	 */
+	public function test_structure() {
+		self::verify_structure( $editor_public_post, 2, 2 );
+		self::verify_structure( $editor_private_post, 1, 1 );
 	}
 
 	/**

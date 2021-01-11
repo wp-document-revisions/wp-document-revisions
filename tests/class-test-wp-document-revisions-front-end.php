@@ -149,7 +149,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id_0, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
-		self::add_document_attachment( self::$author_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
 
 		// Author Private.
 		self::$author_private_post = $factory->post->create(
@@ -168,7 +168,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// add terms and attachment.
 		$terms = wp_set_post_terms( self::$author_private_post, self::$ws_term_id_0, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
-		self::add_document_attachment( self::$author_private_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$author_private_post, self::$test_file );
 
 		// give postmeta to it.
 		update_post_meta( self::$author_private_post, 'test_meta_key', 'test_value' );
@@ -190,7 +190,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id_1, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
-		self::add_document_attachment( self::$editor_private_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
 
 		// For debug.
 		$posts = $wpdr->get_revisions( self::$editor_private_post );
@@ -216,13 +216,21 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id_1, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
-		self::add_document_attachment( self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
 		// add attachment (again).
-		self::add_document_attachment( self::$editor_public_post, self::$test_file2 );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file2 );
 
 		// clear cache.
 		wp_cache_flush();
+	}
+
+	/**
+	 * Tests that the test Document stuctures are correct.
+	 */
+	public function test_structure() {
+		self::verify_structure( $editor_private_post, 1, 1 );
+		self::verify_structure( $editor_public_post, 2, 2 );
 	}
 
 	/**
