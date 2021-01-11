@@ -119,8 +119,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Tests that the test Document stuctures are correct.
 	 */
 	public function test_structure() {
-		self::verify_structure( $editor_public_post, 2, 2 );
-		self::verify_structure( $editor_private_post, 1, 1 );
+		self::verify_structure( self::$editor_public_post, 2, 2 );
+		self::verify_structure( self::$editor_private_post, 1, 1 );
 	}
 
 	/**
@@ -202,14 +202,12 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $wpdr;
 
-		$doc_id = $this->test_add_document();
-
 		// grab an attachment.
 		$attachments = $wpdr->get_attachments( self::$editor_private_post );
 		$attachment  = end( $attachments );
 
-		self::assertEquals( '.txt', $wpdr->get_file_type( self::$editor_private_post ), 'Didn\'t detect filetype via document ID' );
-		self::assertEquals( '.txt', $wpdr->get_file_type( $attachment->ID ), 'Didn\'t detect filetype via attachment ID' );
+		self::assertEquals( '.txt', $wpdr->get_file_type( self::$editor_private_post ), "Didn't detect filetype via document ID" );
+		self::assertEquals( '.txt', $wpdr->get_file_type( $attachment->ID ), "Didn't detect filetype via attachment ID" );
 	}
 
 	/**

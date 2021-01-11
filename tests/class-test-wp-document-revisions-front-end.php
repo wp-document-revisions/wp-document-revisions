@@ -229,8 +229,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests that the test Document stuctures are correct.
 	 */
 	public function test_structure() {
-		self::verify_structure( $editor_private_post, 1, 1 );
-		self::verify_structure( $editor_public_post, 2, 2 );
+		self::verify_structure( self::$author_public_post, 1, 1 );
+		self::verify_structure( self::$author_private_post, 1, 1 );
+		self::verify_structure( self::$editor_private_post, 1, 1 );
+		self::verify_structure( self::$editor_public_post, 2, 2 );
 	}
 
 	/**
@@ -265,7 +267,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$output = do_shortcode( '[document_revisions id="' . self::$author_public_post . '"]' );
+		$output = do_shortcode( '[document_revisions id="' . self::$editor_public_post . '"]' );
 		console_log( $output );
 
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
@@ -285,6 +287,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
 
 		$atts   = array(
 			'id' => self::$author_public_post,
@@ -292,6 +297,34 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
 
 		self::assertEquals( 0, (int) substr_count( $output, '<li' ), 'unauthed revision block' );
+	}
+
+
+	/**
+	 * Verify auth'd user can view revision block and can truncate proper count.
+	 */
+	public function test_revisions_block_noauth() {
+
+		console_log( ' revisions_block_noauth' );
+
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$atts   = array(
+			'id' => self::$author_public_post,
+		);
+		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
+		console_log( $output );
+
+		self::assertEquals( 1, substr_count( $output, 'You are not authorized' ), 'admin revision block' );
 	}
 
 
@@ -309,14 +342,17 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
 
 		$atts   = array(
-			'id' => self::$author_public_post,
+			'id' => self::$editor_public_post,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
 		console_log( $output );
 
-		self::assertEquals( 2, substr_count( $output, '<li' ), 'admin revision block' );
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'editor revision block' );
 	}
 
 
@@ -333,7 +369,12 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$output = do_shortcode( '[document_revisions number="1" id="' . self::$author_public_post . '"]' );
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$output = do_shortcode( '[document_revisions number="1" id="' . self::$editor_public_post . '"]' );
 		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
@@ -353,6 +394,11 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
 
 		$output = do_shortcode( '[documents]' );
 
@@ -392,6 +438,11 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$author_user_id );
 		wp_cache_flush();
 
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
 		console_log( $output );
 
@@ -412,6 +463,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
 
 		$atts   = array(
 			'taxonomy_0' => 'workflow_state',
@@ -482,7 +536,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 				'test_meta_key' => 'test_value',
 			)
 		);
-		console_log( $docs );
+		console_log( 'Retrieved: ' . count( $docs ) );
 		self::assertCount( 1, $docs, 'get_documents filter count' );
 	}
 

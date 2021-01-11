@@ -128,7 +128,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 				'post_content' => $attach_id,
 			)
 		);
-		console_log( 'updt: ' . $updt . ' on ' . $post_id );
 
 		self::assertGreaterThan( 0, $updt, 'Cannot update post' );
 

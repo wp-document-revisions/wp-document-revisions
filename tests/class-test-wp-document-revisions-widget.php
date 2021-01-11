@@ -139,8 +139,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Tests that the test Document stuctures are correct.
 	 */
 	public function test_structure() {
-		self::verify_structure( $author_public_post, 1, 1 );
-		self::verify_structure( $editor_private_post, 1, 1 );
+		self::verify_structure( self::$author_public_post, 1, 1 );
+		self::verify_structure( self::$editor_private_post, 1, 1 );
 	}
 
 	/**
