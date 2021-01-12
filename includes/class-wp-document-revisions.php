@@ -1270,9 +1270,9 @@ class WP_Document_Revisions {
 
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
-			if ( ob_get_level() > 1 ){
+			if ( ob_get_level() > 1 ) {
 				// opened buffer, so flush output if at higher level of nesting.
-				ob_end_flush();	
+				ob_end_flush();
 			}
 			return $template;
 		}

@@ -216,6 +216,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
+		console_log( $output );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
 

@@ -59,6 +59,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			'order'       => 'DESC',
 			'numberposts' => (int) $instance['numberposts'],
 			'post_status' => $statuses,
+			'perm'        => 'readable',
 		);
 
 		$documents = $wpdr->get_documents( $query );
