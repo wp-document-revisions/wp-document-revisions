@@ -149,8 +149,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		console_log( ' workflow_states_exist' );
 
 		$terms = get_terms(
-			'workflow_state',
 			array(
+				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
 			)
 		);

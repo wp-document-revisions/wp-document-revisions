@@ -186,7 +186,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// confirm post is document.
 		$doc = get_post( $post_id );
-		self::assertInstanceOf( WP_Post, $doc, "Post $post_id does not exist" );
+		self::assertInstanceOf( WP_Post::class, $doc, "Post $post_id does not exist" );
 		self::assertInternalType( PHPUnit_IsType::TYPE_INT, $doc->post_content );
 
 		// check post type.

@@ -10,7 +10,7 @@
 if ( ! function_exists( 'get_documents' ) ) {
 
 	/**
-	 * Retreives all documents matching a query.
+	 * Retrieves all documents matching a query.
 	 * Takes standard WP_Query parameters
 	 * See in-line documentation in wp-document-revisions.php for more information ( function get_documents() )
 	 *

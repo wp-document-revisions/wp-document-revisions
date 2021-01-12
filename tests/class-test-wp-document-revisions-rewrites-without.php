@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests rewrite and access functionality with trailing '/' character.
+ * Tests rewrite and access functionality without trailing '/' character.
  *
  * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
@@ -283,7 +283,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		// non-logged on user has read so should not read.
+		// non-logged on user does not has read_document so should not read.
 		add_filter( 'document_read_uses_read', '__return_false' );
 
 		self::verify_cant_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink DocRead' );
@@ -464,18 +464,18 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * Can an editor access another's private file? (yes).
 	 */
-	public function test_private_document_as_admin() {
+	public function test_private_document_as_editor() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		console_log( ' private_document_as_admin' );
+		console_log( ' private_document_as_editor' );
 
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Admin' );
+		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Editor' );
 	}
 
 	/**

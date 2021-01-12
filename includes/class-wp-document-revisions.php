@@ -1268,13 +1268,17 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
-		// opened buffer, so flush output.
-		ob_end_flush();
-
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
+			if ( ob_get_level() > 1 ){
+				// opened buffer, so flush output if at higher level of nesting.
+				ob_end_flush();	
+			}
 			return $template;
 		}
+
+		// opened buffer, so flush output.
+		ob_end_flush();
 
 		exit;
 	}
@@ -2340,6 +2344,7 @@ class WP_Document_Revisions {
 	public function get_documents( $args = array(), $return_attachments = false ) {
 		$args              = (array) $args;
 		$args['post_type'] = 'document';
+		$args['perm']      = 'readable';
 		$documents         = get_posts( $args );
 		$output            = array();
 
