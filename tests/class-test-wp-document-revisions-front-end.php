@@ -261,6 +261,11 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		console_log( ' revisions_shortcode' );
 
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );

@@ -197,7 +197,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$revs = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM wp_posts WHERE post_parent = %d AND post_type = 'revision' ORDER BY ID ASC",
+				"SELECT * FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'revision' ORDER BY ID ASC",
 				$post_id
 			)
 		);
@@ -208,7 +208,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$attchs = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM wp_posts WHERE post_parent = %d AND post_type = 'attachment' ORDER BY ID ASC",
+				"SELECT * FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'attachment' ORDER BY ID ASC",
 				$post_id
 			)
 		);
