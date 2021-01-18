@@ -236,6 +236,22 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Verify shortcodes exist.
+	 */
+	public function test_shortcodes_defined() {
+
+		console_log( ' shortcodes_defined' );
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		self::assertTrue( shortcode_exists( 'document_revisions' ) );
+		self::assertTrue( shortcode_exists( 'documents' ) );
+	}
+
+	/**
 	 * Verify joe public can't access a list of revisions.
 	 */
 	public function test_revisions_shortcode_unauthed() {
@@ -247,6 +263,14 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
+
+		// can user read_revisions?
+		self::assertFalse( current_user_can( 'read_document_revisions' ), 'Can read document revisions' );
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
 
 		$output = do_shortcode( '[document_revisions id="' . self::$author_public_post . '"]' );
 
@@ -272,6 +296,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// can user read_revisions?
+		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read document revisionst' );
+
 		$output = do_shortcode( '[document_revisions id="' . self::$editor_public_post . '"]' );
 		console_log( $output );
 
@@ -291,6 +318,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		// can user read_revisions?
+		self::assertFalse( current_user_can( 'read_document_revisions' ), 'Can read document revisions' );
+
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
@@ -306,7 +336,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 
 	/**
-	 * Verify auth'd user can view revision block and can truncate proper count.
+	 * Verify unauth'd user cannot view revision block and can truncate proper count.
 	 */
 	public function test_revisions_block_noauth() {
 
@@ -317,6 +347,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
+
+		// can user read_revisions?
+		self::assertFalse( current_user_can( 'read_document_revisions' ), 'Can read document revisions' );
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -346,6 +379,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// can user read_revisions?
+		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read document revisions' );
+
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
@@ -373,6 +409,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
+
+		// can user read_revisions?
+		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read document revisions' );
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -406,6 +445,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents]' );
+		console_log( $output );
 
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
 	}
@@ -485,6 +525,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
+		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
 		remove_filter( 'document_read_uses_read', '__return_false' );

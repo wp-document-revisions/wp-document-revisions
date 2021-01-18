@@ -323,6 +323,15 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Try to make sure that are no extraneous headers. .
+	 */
+	public function setUp() {
+		if ( ! headers_sent() ) {
+			header_remove();
+		}
+	}
+
+	/**
 	 * Verify class is loaded (and to avoid a warning).
 	 */
 	public function test_class_loaded() {
