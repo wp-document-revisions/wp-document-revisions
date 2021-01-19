@@ -128,7 +128,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		);
 		self::$ws_term_id_0 = $ws_terms[0]->term_id;
 		self::$ws_slug_0    = $ws_terms[0]->slug;
-		self::$ws_term_id_0 = $ws_terms[1]->term_id;
+		self::$ws_term_id_1 = $ws_terms[1]->term_id;
 		self::$ws_slug_1    = $ws_terms[1]->slug;
 
 		// create posts for scenarios.
@@ -360,7 +360,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			'id' => self::$author_public_post,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, 'You are not authorized' ), 'admin revision block' );
 	}

@@ -323,12 +323,17 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Try to make sure that are no extraneous headers. .
+	 * Ensure environment is as wanted.
 	 */
 	public function setUp() {
+		// Try to make sure that are no extraneous headers before each test.
 		if ( ! headers_sent() ) {
 			header_remove();
 		}
+
+		// init user roles.
+		global $wpdr;
+		$wpdr->add_caps();
 	}
 
 	/**
