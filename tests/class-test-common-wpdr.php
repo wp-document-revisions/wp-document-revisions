@@ -157,9 +157,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		flush_rewrite_rules();
 
 		self::go_to( $url );
+		self::assertQueryTrue( 'is_single', 'single post not returned' );
 
-		global $post;
-		self::assertTrue( current_user_can( 'read_document', $post->ID ), 'User cannot read document' );
+		global $wp_query;
+		self::assertTrue( current_user_can( 'read_document', $wp_query->posts[0]->ID ), 'User cannot read document' );
 
 		// verify contents are actually served.
 		ob_start();

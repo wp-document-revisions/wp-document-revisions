@@ -92,7 +92,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		);
 		self::$ws_term_id = $ws_terms[0]->term_id;
 		console_log( 'WS Count: ' . count( $ws_terms ) );
-		
 
 		// create posts for scenarios.
 		// Editor Public.

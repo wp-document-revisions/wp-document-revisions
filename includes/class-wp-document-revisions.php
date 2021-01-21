@@ -415,7 +415,7 @@ class WP_Document_Revisions {
 	 * Propagates initial workflow states on plugin activation.
 	 *
 	 * @since 0.5
-	 * @return unknown
+	 * @return void
 	 */
 	public function initialize_workflow_states() {
 		$terms = get_terms(
@@ -426,7 +426,7 @@ class WP_Document_Revisions {
 		);
 
 		if ( ! empty( $terms ) ) {
-			return false;
+			return;
 		}
 
 		$states = array(
