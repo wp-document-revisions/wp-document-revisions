@@ -92,6 +92,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	// phpcs:enable
 		console_log( 'Test_Front_End' );
 
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
+
 		// create users.
 		self::$author_user_id = $factory->user->create(
 			array(
@@ -110,10 +117,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		$wp_rewrite->flush_rules();
-
-		// init user roles.
-		global $wpdr;
-		$wpdr->add_caps();
 
 		// flush cache for good measure.
 		wp_cache_flush();

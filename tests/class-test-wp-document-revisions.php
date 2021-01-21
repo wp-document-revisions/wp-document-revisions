@@ -57,6 +57,13 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	// phpcs:enable
 		console_log( 'Test_Main' );
 
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
+
 		// create users.
 		// Note that editor can do everything admin can do.
 		self::$author_user_id = $factory->user->create(
@@ -72,13 +79,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			)
 		);
 
-		// init user roles.
-		global $wpdr;
-		if ( ! $wpdr ) {
-			$wpdr = new WP_Document_Revisions();
-		}
-		$wpdr->add_caps();
-
 		// flush cache for good measure.
 		wp_cache_flush();
 
@@ -91,6 +91,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			)
 		);
 		self::$ws_term_id = $ws_terms[0]->term_id;
+		console_log( 'WS Count: ' . count( $ws_terms ) );
+		
 
 		// create posts for scenarios.
 		// Editor Public.
@@ -201,7 +203,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
 		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
 		self::assertFalse( current_user_can( 'delete_published_documents' ), 'Can delete_published_documents' );
-		self::assertFalse( current_user_can( 'publish_documents'  ), 'Can publish_documents' );
+		self::assertFalse( current_user_can( 'publish_documents' ), 'Can publish_documents' );
 		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
 	}
 
@@ -227,7 +229,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
 		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
 		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
-		self::assertTrue( current_user_can( 'publish_documents'  ), 'Cannot publish_documents' );
+		self::assertTrue( current_user_can( 'publish_documents' ), 'Cannot publish_documents' );
 		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
 	}
 
@@ -253,7 +255,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertTrue( current_user_can( 'delete_others_documents' ), 'Cannot delete_others_documents' );
 		self::assertTrue( current_user_can( 'delete_private_documents' ), 'Cannot delete_private_documents' );
 		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
-		self::assertTrue( current_user_can( 'publish_documents'  ), 'Cannot publish_documents' );
+		self::assertTrue( current_user_can( 'publish_documents' ), 'Cannot publish_documents' );
 		self::assertTrue( current_user_can( 'override_document_lock' ), 'Cannot override_document_lock' );
 	}
 
