@@ -12,6 +12,13 @@
 class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 	/**
+	 * Author user id
+	 *
+	 * @var integer $author_user_id
+	 */
+	private static $author_user_id;
+
+	/**
 	 * Editor user id
 	 *
 	 * @var integer $editor_user_id
@@ -52,7 +59,18 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// create users.
 		// Note that editor can do everything admin can do.
-		self::$editor_user_id = $factory->user->create( array( 'role' => 'editor' ) );
+		self::$author_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Author',
+				'role'          => 'author',
+			)
+		);
+		self::$editor_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Editor',
+				'role'          => 'editor',
+			)
+		);
 
 		// init user roles.
 		global $wpdr;
@@ -154,8 +172,89 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
+		foreach ( $terms as $term ) {
+			console_log( $term->term_id . ':' . $term->slug . ':' . $term->name );
+		}
 		self::assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
 		self::assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
+	}
+
+	/**
+	 * Check capabilities are correct for Non-logged-on User.
+	 */
+	public function test_non_logged_on_caps() {
+		console_log( ' non_logged_on_caps' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		self::assertFalse( current_user_can( 'edit_documents' ), 'Can edit_documents' );
+		self::assertFalse( current_user_can( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( current_user_can( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertFalse( current_user_can( 'edit_published_documents' ), 'Can edit_published_documents' );
+		self::assertFalse( current_user_can( 'read_documents' ), 'Can read_documents' );
+		self::assertFalse( current_user_can( 'read_document_revisions' ), 'Can read_document_revisions' );
+		self::assertFalse( current_user_can( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertFalse( current_user_can( 'delete_documents' ), 'Can delete_documents' );
+		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertFalse( current_user_can( 'delete_published_documents' ), 'Can delete_published_documents' );
+		self::assertFalse( current_user_can( 'publish_documents'  ), 'Can publish_documents' );
+		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
+	}
+
+	/**
+	 * Check capabilities are correct for Author.
+	 */
+	public function test_author_caps() {
+		console_log( ' author_caps' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
+		self::assertFalse( current_user_can( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( current_user_can( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertTrue( current_user_can( 'edit_published_documents' ), 'Cannot edit_published_documents' );
+		self::assertTrue( current_user_can( 'read_documents' ), 'Cannot read_documents' );
+		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertFalse( current_user_can( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertTrue( current_user_can( 'delete_documents' ), 'Cannot delete_documents' );
+		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
+		self::assertTrue( current_user_can( 'publish_documents'  ), 'Cannot publish_documents' );
+		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
+	}
+
+	/**
+	 * Check capabilities are correct for Editor.
+	 */
+	public function test_editor_caps() {
+		console_log( ' editor_caps' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
+		self::assertTrue( current_user_can( 'edit_others_documents' ), 'Cannot edit_others_documents' );
+		self::assertTrue( current_user_can( 'edit_private_documents' ), 'Cannot edit_private_documents' );
+		self::assertTrue( current_user_can( 'edit_published_documents' ), 'Cannot edit_published_documents' );
+		self::assertTrue( current_user_can( 'read_documents' ), 'Cannot read_documents' );
+		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertTrue( current_user_can( 'read_private_documents' ), 'Cannot read_private_documents' );
+		self::assertTrue( current_user_can( 'delete_documents' ), 'Cannot delete_documents' );
+		self::assertTrue( current_user_can( 'delete_others_documents' ), 'Cannot delete_others_documents' );
+		self::assertTrue( current_user_can( 'delete_private_documents' ), 'Cannot delete_private_documents' );
+		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
+		self::assertTrue( current_user_can( 'publish_documents'  ), 'Cannot publish_documents' );
+		self::assertTrue( current_user_can( 'override_document_lock' ), 'Cannot override_document_lock' );
 	}
 
 	/**

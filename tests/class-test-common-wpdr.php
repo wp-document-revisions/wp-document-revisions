@@ -158,6 +158,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		self::go_to( $url );
 
+		global $post;
+		self::assertTrue( current_user_can ( 'read_document', $post->ID ), 'User cannot read document' );
+
 		// verify contents are actually served.
 		ob_start();
 		$wpdr->serve_file( '' );
@@ -236,6 +239,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		flush_rewrite_rules();
 
 		self::go_to( $url );
+
+		global $post;
+		self::assertFalse( current_user_can ( 'read_document', $post->ID ), 'User can read document' );
 
 		// verify whether contents are actually served.
 		ob_start();
@@ -333,6 +339,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// init user roles.
 		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
 		$wpdr->add_caps();
 	}
 
