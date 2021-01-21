@@ -90,7 +90,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		self::$ws_term_id = $ws_terms[0]->term_id;
+		self::$ws_term_id = (string) $ws_terms[0]->term_id;
 		console_log( 'WS Count: ' . count( $ws_terms ) );
 
 		// create posts for scenarios.
@@ -110,6 +110,13 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
+		if ( ! is_wp_error( $terms ) ) {
+			if ( is_array( $terms ) ) {
+				console_log( 'tt_id: ' . $terms[0] );
+			} else {
+				console_log( 'term err: ' . $terms );
+			}
+		}
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
 		// add second attachment.
@@ -131,8 +138,15 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
+		if ( ! is_wp_error( $terms ) ) {
+			if ( is_array( $terms ) ) {
+				console_log( 'tt_id: ' . $terms[0] );
+			} else {
+				console_log( 'term err: ' . $terms );
+			}
+		}
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
-	}
+	} 
 
 	/**
 	 * Tests that the test Document stuctures are correct.
