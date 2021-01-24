@@ -2518,7 +2518,7 @@ class WP_Document_Revisions {
 				$tax = get_taxonomy( $taxonomy );
 				// check if taxonomy has a callback defined or is not for documents.
 				if ( '' !== $tax->update_count_callback || ! in_array( 'document', $tax->object_type, true ) ) {
-					$tax_status =  $status;
+					$tax_status = $status;
 				} else {
 					// get the list of statuses.
 					$tax_status = get_post_stati();
@@ -2530,7 +2530,7 @@ class WP_Document_Revisions {
 			}
 			wp_cache_set( 'wpdr_statuses_' . $taxonomy, $tax_status, '', 60 );
 		}
-		
+
 		return $tax_status;
 	}
 
