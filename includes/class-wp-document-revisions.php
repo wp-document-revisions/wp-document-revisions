@@ -115,7 +115,13 @@ class WP_Document_Revisions {
 		add_action( 'init', array( &$this, 'use_read_capability' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
+		// check whether to invoke old or new count method (Change will need #38843).
+		if ( version_compare( $GLOBALS['wp_version'], '5.7', '>=' ) ) {
+			// core method introduced with version 5.7.
+			add_filter( 'update_post_term_count_statuses', array( &$this, 'review_count_statuses' ), 30, 2 );
+		} else {
+			add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
+		}
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 
 		// rewrites and permalinks.
@@ -2488,6 +2494,44 @@ class WP_Document_Revisions {
 			}
 		}
 	}
+
+	/**
+	 * Filters the term_count post_statuses for all custom taxonomies associated with documents
+	 * Unless taxonomy already has a custom callback.
+	 *
+	 * @since 3.3.0
+	 */
+	public function review_count_statuses( $status, $taxonomy ) {
+		$tax_status = wp_cache_get( 'wpdr_statuses_' . $taxonomy );
+		if ( false === $tax_status ) {
+			// if filtered out, don't need to look at taxonomy. N.B. Odd format for compatibility.
+			/**
+			 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
+			 *
+			 * @param array $taxs document taxonomies .
+			 */
+			if ( ! in_array( $taxonomy, apply_filters( 'document_taxonomy_term_count', $taxonomy ), true ) ) {
+				$tax_status = $status;
+			} else {
+				$tax = get_taxonomy( $taxonomy );
+				// check if taxonomy has a callback defined or is not for documents.
+				if ( '' !== $tax->update_count_callback || ! in_array( 'document', $tax->object_type, true ) ) {
+					$tax_status =  $status;
+				} else {
+					// get the list of statuses.
+					$tax_status = get_post_stati();
+					// trash, inherit and auto-draft to be excluded.
+					unset( $tax_status['trash'] );
+					unset( $tax_status['inherit'] );
+					unset( $tax_status['auto-draft'] );
+				}
+			}
+			wp_cache_set( 'wpdr_statuses_' . $taxonomy, $tax_status, '', 60 );
+		}
+		
+		return $tax_status;
+	}
+
 
 	/**
 	 * Removes auto-appended trailing slash from document requests prior to serving.

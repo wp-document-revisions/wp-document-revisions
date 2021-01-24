@@ -91,7 +91,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			)
 		);
 		self::$ws_term_id = (string) $ws_terms[0]->term_id;
-		console_log( 'WS Count: ' . count( $ws_terms ) );
+		console_log( 'WS Count: ' . count( $ws_terms ) . ':' . self::$ws_term_id );
 
 		// create posts for scenarios.
 		// Editor Public.
@@ -112,7 +112,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 		if ( ! is_wp_error( $terms ) ) {
 			if ( is_array( $terms ) ) {
-				console_log( 'tt_id: ' . $terms[0] );
+				console_log( 'tt_id: ' . $terms[0] . '/' . self::$ws_term_id );
 			} else {
 				console_log( 'term err: ' . $terms );
 			}
@@ -140,13 +140,13 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		if ( ! is_wp_error( $terms ) ) {
 			if ( is_array( $terms ) ) {
-				console_log( 'tt_id: ' . $terms[0] );
+				console_log( 'tt_id: ' . $terms[0] . '/' . self::$ws_term_id );
 			} else {
 				console_log( 'term err: ' . $terms );
 			}
 		}
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
-	} 
+	}
 
 	/**
 	 * Tests that the test Document stuctures are correct.
@@ -228,9 +228,10 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( 0 );
+		wp_set_current_user( self::$author_user_id );
 		wp_cache_flush();
 
+		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
 		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertFalse( current_user_can( 'edit_others_documents' ), 'Can edit_others_documents' );
 		self::assertFalse( current_user_can( 'edit_private_documents' ), 'Can edit_private_documents' );
@@ -257,6 +258,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );
 		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertTrue( current_user_can( 'edit_others_documents' ), 'Cannot edit_others_documents' );
 		self::assertTrue( current_user_can( 'edit_private_documents' ), 'Cannot edit_private_documents' );
