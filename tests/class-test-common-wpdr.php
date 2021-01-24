@@ -170,7 +170,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			( is_page() ? 'is_page:' : '' ) . 
 			( is_paged() ? 'is_paged:' : '' ) .
 			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_posts_page() ? 'is_posts_page:' : '' ) . 
 			( is_search() ? 'is_search:' : '' ) . 
 			( is_single() ? 'is_single:' : '' ) . 
 			( is_singular() ? 'is_singular:' : '' ) . 
@@ -271,7 +270,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			( is_page() ? 'is_page:' : '' ) . 
 			( is_paged() ? 'is_paged:' : '' ) .
 			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_posts_page() ? 'is_posts_page:' : '' ) . 
 			( is_search() ? 'is_search:' : '' ) . 
 			( is_single() ? 'is_single:' : '' ) . 
 			( is_singular() ? 'is_singular:' : '' ) . 

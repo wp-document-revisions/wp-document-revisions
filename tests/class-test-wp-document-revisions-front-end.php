@@ -497,6 +497,40 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests the documents block with and without read_document caps.
+	 */
+	public function test_document_block() {
+
+		console_log( ' document_block' );
+
+		// set unauthorised user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$atts   = array();
+		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
+		console_log( $output );
+
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'document block read' );
+
+		// using document_read capability means no access for an unauthorized use..
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
+		console_log( $output );
+
+		self::assertEquals( 0, substr_count( $output, '<li' ), 'document block docread' );
+		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+	/**
 	 * Tests the documents block with a workflow state filter. with and without read_document caps.
 	 */
 	public function test_document_block_wfs_filter() {
@@ -529,7 +563,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 		console_log( $output );
 
-		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block filter noauth' );
+		self::assertEquals( 0, substr_count( $output, '<li' ), 'document block filter noauth' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
 
@@ -585,6 +619,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			)
 		);
 		console_log( 'Retrieved: ' . count( $docs ) );
+		foreach( %docs as $doc ) {
+			console_log( 'Post:' . $doc=>ID . ' ' .  $doc->post_title )
+		}
 		self::assertCount( 1, $docs, 'get_documents filter count' );
 	}
 
