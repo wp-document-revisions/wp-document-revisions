@@ -2500,6 +2500,8 @@ class WP_Document_Revisions {
 	 * Unless taxonomy already has a custom callback.
 	 *
 	 * @since 3.3.0
+	 * @param array  $status   statuses for counting posts.
+	 * @param string $taxonomy taxonomy name.
 	 */
 	public function review_count_statuses( $status, $taxonomy ) {
 		$tax_status = wp_cache_get( 'wpdr_statuses_' . $taxonomy );

@@ -161,18 +161,18 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			( is_404() ? 'is_404:' : '' ) .
 			( is_admin() ? 'is_admin:' : '' ) .
 			( is_archive() ? 'is_archive:' : '' ) .
-			( is_attachment() ? 'is_attachment:' : '' ) . 
-			( is_author() ? 'is_author:' : '' ) . 
-			( is_category() ? 'is_category:' : '' ) . 
-			( is_feed() ? 'is_feed:' : '' ) . 
-			( is_front_page() ? 'is_front_page:' : '' ) . 
-			( is_home() ? 'is_home:' : '' ) . 
-			( is_page() ? 'is_page:' : '' ) . 
+			( is_attachment() ? 'is_attachment:' : '' ) .
+			( is_author() ? 'is_author:' : '' ) .
+			( is_category() ? 'is_category:' : '' ) .
+			( is_feed() ? 'is_feed:' : '' ) .
+			( is_front_page() ? 'is_front_page:' : '' ) .
+			( is_home() ? 'is_home:' : '' ) .
+			( is_page() ? 'is_page:' : '' ) .
 			( is_paged() ? 'is_paged:' : '' ) .
 			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_search() ? 'is_search:' : '' ) . 
-			( is_single() ? 'is_single:' : '' ) . 
-			( is_singular() ? 'is_singular:' : '' ) . 
+			( is_search() ? 'is_search:' : '' ) .
+			( is_single() ? 'is_single:' : '' ) .
+			( is_singular() ? 'is_singular:' : '' ) .
 			( is_tag() ? 'is_tag:' : '' )
 		);
 		self::assertQueryTrue( 'is_single' );
@@ -261,18 +261,18 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			( is_404() ? 'is_404:' : '' ) .
 			( is_admin() ? 'is_admin:' : '' ) .
 			( is_archive() ? 'is_archive:' : '' ) .
-			( is_attachment() ? 'is_attachment:' : '' ) . 
-			( is_author() ? 'is_author:' : '' ) . 
-			( is_category() ? 'is_category:' : '' ) . 
-			( is_feed() ? 'is_feed:' : '' ) . 
-			( is_front_page() ? 'is_front_page:' : '' ) . 
-			( is_home() ? 'is_home:' : '' ) . 
-			( is_page() ? 'is_page:' : '' ) . 
+			( is_attachment() ? 'is_attachment:' : '' ) .
+			( is_author() ? 'is_author:' : '' ) .
+			( is_category() ? 'is_category:' : '' ) .
+			( is_feed() ? 'is_feed:' : '' ) .
+			( is_front_page() ? 'is_front_page:' : '' ) .
+			( is_home() ? 'is_home:' : '' ) .
+			( is_page() ? 'is_page:' : '' ) .
 			( is_paged() ? 'is_paged:' : '' ) .
 			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_search() ? 'is_search:' : '' ) . 
-			( is_single() ? 'is_single:' : '' ) . 
-			( is_singular() ? 'is_singular:' : '' ) . 
+			( is_search() ? 'is_search:' : '' ) .
+			( is_single() ? 'is_single:' : '' ) .
+			( is_singular() ? 'is_singular:' : '' ) .
 			( is_tag() ? 'is_tag:' : '' )
 		);
 

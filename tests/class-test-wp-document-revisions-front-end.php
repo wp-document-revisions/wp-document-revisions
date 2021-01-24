@@ -619,8 +619,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			)
 		);
 		console_log( 'Retrieved: ' . count( $docs ) );
-		foreach( %docs as $doc ) {
-			console_log( 'Post:' . $doc=>ID . ' ' .  $doc->post_title )
+		foreach ( $docs as $doc ) {
+			console_log( 'Post:' . $doc->ID . ' ' .  $doc->post_title )
 		}
 		self::assertCount( 1, $docs, 'get_documents filter count' );
 	}
