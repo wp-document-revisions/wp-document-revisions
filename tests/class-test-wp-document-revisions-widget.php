@@ -256,7 +256,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
@@ -409,7 +408,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
@@ -421,7 +419,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
-		console_log( $output );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );

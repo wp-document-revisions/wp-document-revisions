@@ -516,7 +516,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		$atts   = array();
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document block read' );
 
@@ -524,9 +523,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		console_log( $output );
 
-		self::assertEquals( 0, substr_count( $output, '<li' ), 'document block docread' );
+		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block docread' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
 
@@ -563,7 +561,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 		console_log( $output );
 
-		self::assertEquals( 0, substr_count( $output, '<li' ), 'document block filter noauth' );
+		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block docread' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
 

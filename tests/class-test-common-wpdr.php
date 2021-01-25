@@ -157,25 +157,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		flush_rewrite_rules();
 
 		self::go_to( $url );
-		console_log(
-			( is_404() ? 'is_404:' : '' ) .
-			( is_admin() ? 'is_admin:' : '' ) .
-			( is_archive() ? 'is_archive:' : '' ) .
-			( is_attachment() ? 'is_attachment:' : '' ) .
-			( is_author() ? 'is_author:' : '' ) .
-			( is_category() ? 'is_category:' : '' ) .
-			( is_feed() ? 'is_feed:' : '' ) .
-			( is_front_page() ? 'is_front_page:' : '' ) .
-			( is_home() ? 'is_home:' : '' ) .
-			( is_page() ? 'is_page:' : '' ) .
-			( is_paged() ? 'is_paged:' : '' ) .
-			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_search() ? 'is_search:' : '' ) .
-			( is_single() ? 'is_single:' : '' ) .
-			( is_singular() ? 'is_singular:' : '' ) .
-			( is_tag() ? 'is_tag:' : '' )
-		);
-		self::assertQueryTrue( 'is_single' );
+
+		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
 
 		global $wp_query;
 		console_log( ' Query:' . $wp_query->found_posts );
@@ -365,6 +348,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * Ensure environment is as wanted.
 	 */
 	public function setUp() {
+		parent::setUp();
+
 		// Try to make sure that are no extraneous headers before each test.
 		if ( ! headers_sent() ) {
 			header_remove();
@@ -374,8 +359,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
-			$wpdr->add_caps();
 		}
+		$wpdr->add_caps();
 	}
 
 	/**
