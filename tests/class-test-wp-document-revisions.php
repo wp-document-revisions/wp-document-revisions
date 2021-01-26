@@ -181,6 +181,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_workflow_states_exist() {
 		console_log( ' workflow_states_exist' );
 
+		// remove all terms.
 		$terms = get_terms(
 			array(
 				'taxonomy'   => 'workflow_state',
@@ -188,8 +189,12 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			)
 		);
 		foreach ( $terms as $term ) {
-			console_log( $term->term_id . ':' . $term->slug . ':' . $term->name );
+			wp_delete_term( $term->term_id, 'workflow_state' );
 		}
+
+		// add terms.
+		global $wpdr;
+		$wpdr->initialize_workflow_states();
 		self::assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
 		self::assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
 	}
@@ -205,19 +210,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		self::assertFalse( current_user_can( 'edit_documents' ), 'Can edit_documents' );
-		self::assertFalse( current_user_can( 'edit_others_documents' ), 'Can edit_others_documents' );
-		self::assertFalse( current_user_can( 'edit_private_documents' ), 'Can edit_private_documents' );
-		self::assertFalse( current_user_can( 'edit_published_documents' ), 'Can edit_published_documents' );
-		self::assertFalse( current_user_can( 'read_documents' ), 'Can read_documents' );
-		self::assertFalse( current_user_can( 'read_document_revisions' ), 'Can read_document_revisions' );
-		self::assertFalse( current_user_can( 'read_private_documents' ), 'Can read_private_documents' );
-		self::assertFalse( current_user_can( 'delete_documents' ), 'Can delete_documents' );
-		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
-		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
-		self::assertFalse( current_user_can( 'delete_published_documents' ), 'Can delete_published_documents' );
-		self::assertFalse( current_user_can( 'publish_documents' ), 'Can publish_documents' );
-		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
+		self::assertFalse( $current_user->has_cap( 'edit_documents' ), 'Can edit_documents' );
+		self::assertFalse( $current_user->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( $current_user->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertFalse( $current_user->has_cap( 'edit_published_documents' ), 'Can edit_published_documents' );
+		self::assertFalse( $current_user->has_cap( 'read_documents' ), 'Can read_documents' );
+		self::assertFalse( $current_user->has_cap( 'read_document_revisions' ), 'Can read_document_revisions' );
+		self::assertFalse( $current_user->has_cap( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_documents' ), 'Can delete_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_published_documents' ), 'Can delete_published_documents' );
+		self::assertFalse( $current_user->has_cap( 'publish_documents' ), 'Can publish_documents' );
+		self::assertFalse( $current_user->has_cap( 'override_document_lock' ), 'Can override_document_lock' );
 	}
 
 	/**
@@ -232,19 +237,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
-		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
-		self::assertFalse( current_user_can( 'edit_others_documents' ), 'Can edit_others_documents' );
-		self::assertFalse( current_user_can( 'edit_private_documents' ), 'Can edit_private_documents' );
-		self::assertTrue( current_user_can( 'edit_published_documents' ), 'Cannot edit_published_documents' );
-		self::assertTrue( current_user_can( 'read_documents' ), 'Cannot read_documents' );
-		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read_document_revisions' );
-		self::assertFalse( current_user_can( 'read_private_documents' ), 'Can read_private_documents' );
-		self::assertTrue( current_user_can( 'delete_documents' ), 'Cannot delete_documents' );
-		self::assertFalse( current_user_can( 'delete_others_documents' ), 'Can delete_others_documents' );
-		self::assertFalse( current_user_can( 'delete_private_documents' ), 'Can delete_private_documents' );
-		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
-		self::assertTrue( current_user_can( 'publish_documents' ), 'Cannot publish_documents' );
-		self::assertFalse( current_user_can( 'override_document_lock' ), 'Can override_document_lock' );
+		self::assertTrue( $current_user->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
+		self::assertFalse( $current_user->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( $current_user->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertTrue( $current_user->has_cap( 'edit_published_documents' ), 'Cannot edit_published_documents' );
+		self::assertTrue( $current_user->has_cap( 'read_documents' ), 'Cannot read_documents' );
+		self::assertTrue( $current_user->has_cap( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertFalse( $current_user->has_cap( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertTrue( $current_user->has_cap( 'delete_documents' ), 'Cannot delete_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( $current_user->has_cap( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertTrue( $current_user->has_cap( 'delete_published_documents' ), 'Cannot delete_published_documents' );
+		self::assertTrue( $current_user->has_cap( 'publish_documents' ), 'Cannot publish_documents' );
+		self::assertFalse( $current_user->has_cap( 'override_document_lock' ), 'Can override_document_lock' );
 	}
 
 	/**

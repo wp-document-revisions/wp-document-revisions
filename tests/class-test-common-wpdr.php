@@ -161,8 +161,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
 
 		global $wp_query;
-		console_log( ' Query:' . $wp_query->found_posts );
-		self::assertTrue( current_user_can( 'read_document', $wp_query->posts[0]->ID ), 'User cannot read document' );
+		if ( isset(  $wp_query->posts ) ) {
+			self::assertTrue( current_user_can( 'read_document', $wp_query->posts[0]->ID ), 'User cannot read document' );
+		}
 
 		// verify contents are actually served.
 		ob_start();
@@ -240,24 +241,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::go_to( $url );
 
 		global $wpdr;
-		console_log(
-			( is_404() ? 'is_404:' : '' ) .
-			( is_admin() ? 'is_admin:' : '' ) .
-			( is_archive() ? 'is_archive:' : '' ) .
-			( is_attachment() ? 'is_attachment:' : '' ) .
-			( is_author() ? 'is_author:' : '' ) .
-			( is_category() ? 'is_category:' : '' ) .
-			( is_feed() ? 'is_feed:' : '' ) .
-			( is_front_page() ? 'is_front_page:' : '' ) .
-			( is_home() ? 'is_home:' : '' ) .
-			( is_page() ? 'is_page:' : '' ) .
-			( is_paged() ? 'is_paged:' : '' ) .
-			( is_post_type_archive() ? 'is_post_type_archive:' : '' ) .
-			( is_search() ? 'is_search:' : '' ) .
-			( is_single() ? 'is_single:' : '' ) .
-			( is_singular() ? 'is_singular:' : '' ) .
-			( is_tag() ? 'is_tag:' : '' )
-		);
+
+		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
 
 		// verify whether contents are actually served.
 		ob_start();
