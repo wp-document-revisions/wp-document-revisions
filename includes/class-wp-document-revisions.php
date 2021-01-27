@@ -1274,20 +1274,15 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
-		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
-		if ( $under_test ) {
-			if ( ob_get_level() > 1 ) {
-				// opened buffer, so flush output if at higher level of nesting.
-				ob_end_flush();
-			}
-			return $template;
-		}
-
 		// opened buffer, so flush output.
 		ob_end_flush();
 
-		exit;
-	}
+		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
+		if ( $under_test ) {
+			return $template;
+		}
+
+		exit;	}
 
 	/**
 	 * Filter to authenticate document delivery.
