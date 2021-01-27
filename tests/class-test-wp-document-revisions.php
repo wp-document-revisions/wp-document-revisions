@@ -57,14 +57,16 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		}
 		$wpdr->add_caps();
 
-		// create users.
+		// create users and assign role.
 		// Note that editor can do everything admin can do.
-		self::$author_user_id = $factory->user->create(
+		$author = $factory->user->create_and_get(
 			array(
 				'user_nicename' => 'Author',
-				'role'          => 'author',
 			)
 		);
+		$author->add_role( 'author' );
+		self::$author_user_id = $author->ID;
+
 		self::$editor_user_id = $factory->user->create(
 			array(
 				'user_nicename' => 'Editor',
@@ -150,9 +152,15 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// add terms.
 		global $wpdr;
 		$wpdr->initialize_workflow_states();
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
 
-		self::assertFalse( is_wp_error( $terms ), 'Workflow State taxonomy does not exist' );
-		self::assertCount( 4, $terms, 'Initial Workflow States not properly registered' );
+		self::assertFalse( is_wp_error( $ws_terms ), 'Workflow State taxonomy does not exist' );
+		self::assertCount( 4, $ws_terms, 'Initial Workflow States not properly registered' );
 	}
 
 	/**
