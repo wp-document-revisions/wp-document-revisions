@@ -1282,7 +1282,8 @@ class WP_Document_Revisions {
 			return $template;
 		}
 
-		exit;	}
+		exit;
+	}
 
 	/**
 	 * Filter to authenticate document delivery.

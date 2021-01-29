@@ -12,6 +12,13 @@
 class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 	/**
+	 * Author user
+	 *
+	 * @var integer $author_user
+	 */
+	private static $author_user;
+
+	/**
 	 * Author user id
 	 *
 	 * @var integer $author_user_id
@@ -59,13 +66,15 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
-		$author = $factory->user->create_and_get(
-			array(
-				'user_nicename' => 'Author',
+		self::$author_user = new WP_User(
+			self::factory()->user->create(
+				array(
+					'user_nicename' => 'Author',
+					'role'          => 'author',
+				)
 			)
 		);
-		$author->add_role( 'author' );
-		self::$author_user_id = $author->ID;
+		self::$author_user_id = self::$author_user->ID;
 
 		self::$editor_user_id = $factory->user->create(
 			array(
