@@ -1274,13 +1274,13 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
-		// opened buffer, so flush output.
-		ob_end_flush();
-
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
 			return $template;
 		}
+
+		// opened buffer, so flush output.
+		ob_end_flush();
 
 		exit;
 	}
