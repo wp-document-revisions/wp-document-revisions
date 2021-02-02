@@ -12,11 +12,13 @@
 class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 	/**
+	 * List of users being tested.
+	 *
 	 * @var WP_User[] $users
 	 */
 	protected static $users = array(
-		'editor'        => null,
-		'author'        => null,
+		'editor' => null,
+		'author' => null,
 	);
 
 	/**
@@ -53,17 +55,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
-		self::$users       = array(
+		self::$users = array(
 			'editor' => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Editor',
 					'role'          => 'editor',
-				) ),
+				)
+			),
 			'author' => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
-				) ),
+				)
+			),
 		);
 
 		// flush cache for good measure.
@@ -114,15 +118,16 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function setUp() {
 		parent::setUp();
 		// Keep track of users we create.
-		self::_flush_roles();
+		self::flush_roles();
 	}
 
 	/**
 	 * Get the roles data refreshed.
 	 */
-	function _flush_roles() {
+	private function flush_roles() {
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
@@ -248,19 +253,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );
-		self::assertTrue( current_user_can( 'edit_documents' ), 'Cannot edit_documents' );
-		self::assertTrue( current_user_can( 'edit_others_documents' ), 'Cannot edit_others_documents' );
-		self::assertTrue( current_user_can( 'edit_private_documents' ), 'Cannot edit_private_documents' );
-		self::assertTrue( current_user_can( 'edit_published_documents' ), 'Cannot edit_published_documents' );
-		self::assertTrue( current_user_can( 'read_documents' ), 'Cannot read_documents' );
-		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read_document_revisions' );
-		self::assertTrue( current_user_can( 'read_private_documents' ), 'Cannot read_private_documents' );
-		self::assertTrue( current_user_can( 'delete_documents' ), 'Cannot delete_documents' );
-		self::assertTrue( current_user_can( 'delete_others_documents' ), 'Cannot delete_others_documents' );
-		self::assertTrue( current_user_can( 'delete_private_documents' ), 'Cannot delete_private_documents' );
-		self::assertTrue( current_user_can( 'delete_published_documents' ), 'Cannot delete_published_documents' );
-		self::assertTrue( current_user_can( 'publish_documents' ), 'Cannot publish_documents' );
-		self::assertTrue( current_user_can( 'override_document_lock' ), 'Cannot override_document_lock' );
+		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
+		self::assertTrue( $usr->has_cap( 'edit_others_documents' ), 'Cannot edit_others_documents' );
+		self::assertTrue( $usr->has_cap( 'edit_private_documents' ), 'Cannot edit_private_documents' );
+		self::assertTrue( $usr->has_cap( 'edit_published_documents' ), 'Cannot edit_published_documents' );
+		self::assertTrue( $usr->has_cap( 'read_documents' ), 'Cannot read_documents' );
+		self::assertTrue( $usr->has_cap( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertTrue( $usr->has_cap( 'read_private_documents' ), 'Cannot read_private_documents' );
+		self::assertTrue( $usr->has_cap( 'delete_documents' ), 'Cannot delete_documents' );
+		self::assertTrue( $usr->has_cap( 'delete_others_documents' ), 'Cannot delete_others_documents' );
+		self::assertTrue( $usr->has_cap( 'delete_private_documents' ), 'Cannot delete_private_documents' );
+		self::assertTrue( $usr->has_cap( 'delete_published_documents' ), 'Cannot delete_published_documents' );
+		self::assertTrue( $usr->has_cap( 'publish_documents' ), 'Cannot publish_documents' );
+		self::assertTrue( $usr->has_cap( 'override_document_lock' ), 'Cannot override_document_lock' );
 	}
 
 	/**
@@ -369,7 +374,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$post = get_post( self::$editor_public_post );
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
-		self::assertTrue( $wpdr->verify_post_type( $post ), "verify post type via global $post" );
+		self::assertTrue( $wpdr->verify_post_type( $post ), 'verify post type via global ' . $post->ID );
 		unset( $post );
 
 		self::assertTrue( $wpdr->verify_post_type( self::$editor_public_post ) );

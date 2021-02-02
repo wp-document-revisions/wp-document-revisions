@@ -12,18 +12,14 @@
 class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 	/**
-	 * Author user id
+	 * List of users being tested.
 	 *
-	 * @var integer $author_user_id
+	 * @var WP_User[] $users
 	 */
-	private static $author_user_id;
-
-	/**
-	 * Editor user id
-	 *
-	 * @var integer $editor_user_id
-	 */
-	private static $editor_user_id;
+	protected static $users = array(
+		'editor' => null,
+		'author' => null,
+	);
 
 	/**
 	 * Workflow_state term id
@@ -57,28 +53,34 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	// phpcs:enable
 		console_log( 'Test_Widget' );
 
-		// create users.
-		self::$author_user_id = $factory->user->create(
-			array(
-				'user_nicename' => 'Author',
-				'role'          => 'author',
-			)
-		);
-		self::$editor_user_id = $factory->user->create(
-			array(
-				'user_nicename' => 'Editor',
-				'role'          => 'editor',
-			)
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+			'author' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Author',
+					'role'          => 'author',
+				)
+			),
 		);
 
 		// init permalink structure.
 		global $wp_rewrite;
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		$wp_rewrite->flush_rules();
-
-		// init user roles.
-		global $wpdr;
-		$wpdr->add_caps();
 
 		// flush cache for good measure.
 		wp_cache_flush();
@@ -99,7 +101,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Author Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$author_user_id,
+				'post_author'  => self::$users['author']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -119,7 +121,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -133,6 +135,35 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+	}
+
+	/**
+	 * Get the roles data refreshed. (Taken from WP Test Suite).
+	 */
+	public function setUp() {
+		parent::setUp();
+		// Keep track of users we create.
+		self::flush_roles();
+	}
+
+	/**
+	 * Get the roles data refreshed.
+	 */
+	private function flush_roles() {
+		// We want to make sure we're testing against the DB, not just in-memory data.
+		// This will flush everything and reload it from the DB.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		unset( $GLOBALS['wp_user_roles'] );
+		global $wp_roles;
+		$wp_roles = new WP_Roles();
+	}
+
+	/**
+	 * Delete the posts. (Taken from WP Test Suite).
+	 */
+	public static function wpTearDownAfterClass() {
+		wp_delete_post( self::$author_public_post, true );
+		wp_delete_post( self::$editor_private_post, true );
 	}
 
 	/**
@@ -177,7 +208,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'publish_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_noauthor_1' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_noauthor_2' );
 	}
 
@@ -258,7 +289,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
 	}
 
@@ -273,7 +304,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		// Create the two parameter sets.
@@ -297,8 +328,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_noauthor_2' );
 	}
 
 	/**
@@ -312,7 +343,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		// Create the two parameter sets.
@@ -336,8 +367,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_noauthor_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_noauthor_2' );
 	}
 
 	/**
@@ -372,8 +403,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_author' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'publish_author_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_author_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_author_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'publish_author_2' );
 	}
 
 	/**
@@ -404,25 +435,25 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		// run first as author. Cannot see other private posts.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_author_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_author_2' );
 
 		// then run as editor. Cant see own and others private posts.
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'pubpriv_author_1' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_author_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_author_2' );
 	}
 
 	/**
@@ -434,7 +465,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
@@ -444,15 +475,15 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'block_publish_auth_1' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'block_publish_auth_1' );
 
 		// now include the private post, so should be 2.
 		$atts['post_stat_private'] = true;
 		$output                    = $wpdr_widget->wpdr_documents_widget_display( $atts );
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'block_publish_2' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$author_user_id ) ), 'block_publish_auth_2' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'block_publish_auth_3' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'block_publish_auth_2' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'block_publish_auth_3' );
 
 		// request that only one is shown, so should be 1. (latest is by Editor).
 		$atts['numberposts'] = 1;
@@ -460,7 +491,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'block_publish_auth_4' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'block_publish_auth_4' );
 	}
 
 }

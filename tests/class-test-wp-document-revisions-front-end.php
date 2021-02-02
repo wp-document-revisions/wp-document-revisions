@@ -12,18 +12,14 @@
 class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 	/**
-	 * Author user id
+	 * List of users being tested.
 	 *
-	 * @var integer $author_user_id
+	 * @var WP_User[] $users
 	 */
-	private static $author_user_id;
-
-	/**
-	 * Editor user id
-	 *
-	 * @var integer $editor_user_id
-	 */
-	private static $editor_user_id;
+	protected static $users = array(
+		'editor' => null,
+		'author' => null,
+	);
 
 	/**
 	 * Workflow_state term id 0
@@ -99,18 +95,21 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 		$wpdr->add_caps();
 
-		// create users.
-		self::$author_user_id = $factory->user->create(
-			array(
-				'user_nicename' => 'Author',
-				'role'          => 'author',
-			)
-		);
-		self::$editor_user_id = $factory->user->create(
-			array(
-				'user_nicename' => 'Editor',
-				'role'          => 'editor',
-			)
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+			'author' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Author',
+					'role'          => 'author',
+				)
+			),
 		);
 
 		// init permalink structure.
@@ -140,7 +139,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Author Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$author_user_id,
+				'post_author'  => self::$users['author']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -159,7 +158,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Author Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$author_user_id,
+				'post_author'  => self::$users['author']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -181,7 +180,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -207,7 +206,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -226,6 +225,37 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// clear cache.
 		wp_cache_flush();
+	}
+
+	/**
+	 * Get the roles data refreshed. (Taken from WP Test Suite).
+	 */
+	public function setUp() {
+		parent::setUp();
+		// Keep track of users we create.
+		self::flush_roles();
+	}
+
+	/**
+	 * Get the roles data refreshed.
+	 */
+	private function flush_roles() {
+		// We want to make sure we're testing against the DB, not just in-memory data.
+		// This will flush everything and reload it from the DB.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		unset( $GLOBALS['wp_user_roles'] );
+		global $wp_roles;
+		$wp_roles = new WP_Roles();
+	}
+
+	/**
+	 * Delete the posts. (Taken from WP Test Suite).
+	 */
+	public static function wpTearDownAfterClass() {
+		wp_delete_post( self::$author_public_post, true );
+		wp_delete_post( self::$author_private_post, true );
+		wp_delete_post( self::$editor_private_post, true );
+		wp_delete_post( self::$editor_public_post, true );
 	}
 
 	/**
@@ -296,7 +326,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		// can user read_revisions?
@@ -378,7 +408,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		// can user read_revisions?
@@ -409,7 +439,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		// can user read_revisions?
@@ -462,7 +492,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
@@ -482,7 +512,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// author should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		global $wpdr_fe;
@@ -633,7 +663,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		self::assertCount( 2, get_document_revisions( self::$editor_private_post ), 'private count' );
