@@ -12,25 +12,12 @@
 class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 	/**
-	 * Author user
-	 *
-	 * @var integer $author_user
+	 * @var WP_User[] $users
 	 */
-	private static $author_user;
-
-	/**
-	 * Author user id
-	 *
-	 * @var integer $author_user_id
-	 */
-	private static $author_user_id;
-
-	/**
-	 * Editor user id
-	 *
-	 * @var integer $editor_user_id
-	 */
-	private static $editor_user_id;
+	protected static $users = array(
+		'editor'        => null,
+		'author'        => null,
+	);
 
 	/**
 	 * Author Public Post ID
@@ -66,21 +53,17 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
-		self::$author_user = new WP_User(
-			self::factory()->user->create(
+		self::$users       = array(
+			'editor' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				) ),
+			'author' => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
-				)
-			)
-		);
-		self::$author_user_id = self::$author_user->ID;
-
-		self::$editor_user_id = $factory->user->create(
-			array(
-				'user_nicename' => 'Editor',
-				'role'          => 'editor',
-			)
+				) ),
 		);
 
 		// flush cache for good measure.
@@ -92,7 +75,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -112,7 +95,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -123,6 +106,34 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		// add attachment.
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+	}
+
+	/**
+	 * Get the roles data refreshed. (Taken from WP Test Suite).
+	 */
+	public function setUp() {
+		parent::setUp();
+		// Keep track of users we create.
+		self::_flush_roles();
+	}
+
+	/**
+	 * Get the roles data refreshed.
+	 */
+	function _flush_roles() {
+		// We want to make sure we're testing against the DB, not just in-memory data.
+		// This will flush everything and reload it from the DB.
+		unset( $GLOBALS['wp_user_roles'] );
+		global $wp_roles;
+		$wp_roles = new WP_Roles();
+	}
+
+	/**
+	 * Delete the posts. (Taken from WP Test Suite).
+	 */
+	public static function wpTearDownAfterClass() {
+		wp_delete_post( self::$editor_public_post, true );
+		wp_delete_post( self::$editor_private_post, true );
 	}
 
 	/**
@@ -206,7 +217,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( self::$author_user_id );
+		$usr = wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
@@ -233,7 +244,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );
@@ -262,7 +273,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		// Use editor public post.
@@ -358,7 +369,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$post = get_post( self::$editor_public_post );
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
-		self::assertTrue( $wpdr->verify_post_type( $post ), 'verify post type via global $post' );
+		self::assertTrue( $wpdr->verify_post_type( $post ), "verify post type via global $post" );
 		unset( $post );
 
 		self::assertTrue( $wpdr->verify_post_type( self::$editor_public_post ) );
