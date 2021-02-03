@@ -127,10 +127,11 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	private function flush_roles() {
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -249,7 +250,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$users['editor']->ID );
+		$usr = wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );

@@ -108,7 +108,7 @@ class WP_Document_Revisions_Front_End {
 
 		// normalize args.
 		$atts = shortcode_atts( $this->shortcode_defaults, $atts, 'document' );
-		foreach ( array_keys( $this->shortcode_defaults ) as $key ) {
+		foreach ( array_keys( (array) $this->shortcode_defaults ) as $key ) {
 			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
 		}
 
@@ -186,7 +186,7 @@ class WP_Document_Revisions_Front_End {
 			}
 		}
 
-		return self::documents_shortcode_int( $atts );
+		return $this->documents_shortcode_int( $atts );
 	}
 
 
@@ -202,7 +202,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
-	public function documents_shortcode_int( $atts ) {
+	private function documents_shortcode_int( $atts ) {
 
 		$defaults = array(
 			'orderby' => 'modified',
@@ -314,7 +314,9 @@ class WP_Document_Revisions_Front_End {
 
 		$atts = array_filter( $atts );
 
-		$documents = $this->get_documents( $atts );
+		global $wpdr;
+
+		$documents = $wpdr->get_documents( $atts );
 
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
@@ -721,7 +723,7 @@ class WP_Document_Revisions_Front_End {
 	 */
 	public function wpdr_documents_shortcode_display( $atts ) {
 		// get instance of global class.
-		global $wpdr, $wpdr_fe;
+		global $wpdr;
 
 		// sanity check.
 		// do not show output to users that do not have the read_documents capability and don't get it via read.
@@ -835,7 +837,7 @@ class WP_Document_Revisions_Front_End {
 		if ( ! empty( $errs ) ) {
 			$errs = '<div class="notice notice-error">' . $errs . '</div>';
 		}
-		$output = $errs . $wpdr_fe->documents_shortcode_int( $atts );
+		$output = $errs . $this->documents_shortcode_int( $atts );
 		return $output;
 	}
 

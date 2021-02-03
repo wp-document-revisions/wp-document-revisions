@@ -152,10 +152,11 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	private function flush_roles() {
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -209,7 +210,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_noauthor_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'publish_noauthor_2' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'publish_noauthor_2' );
 	}
 
 	/**
@@ -290,7 +291,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
-		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'pubpriv_noauthor_2' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_noauthor_2' );
 	}
 
 	/**

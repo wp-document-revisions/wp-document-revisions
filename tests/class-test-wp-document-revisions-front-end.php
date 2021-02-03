@@ -194,13 +194,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
 
-		// For debug.
-		$posts = $wpdr->get_revisions( self::$editor_private_post );
-		console_log( ' Editor Private' );
-		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
-		}
-
 		// Editor Public. N.B. This has a Revision, i.e. two revision posts.
 		self::$editor_public_post = $factory->post->create(
 			array(
@@ -214,6 +207,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		);
 
 		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document' );
+
+		// give postmeta to it.
+		update_post_meta( self::$editor_public_post, 'test_meta_key', 'test_value' );
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id_1, 'workflow_state' );
@@ -242,10 +238,11 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	private function flush_roles() {
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $GLOBALS['wp_user_roles'] );
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -335,7 +332,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$output = do_shortcode( '[document_revisions id="' . self::$editor_public_post . '"]' );
 		console_log( $output );
 
-		self::assertEquals( 2, substr_count( $output, '<li' ), 'admin revision shortcode' );
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'admin revision shortcode' );
 	}
 
 	/**
@@ -432,9 +429,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Tests the document_revisions shortcode with a number=1 limit.
 	 */
-	public function test_revision_shortcode_limit() {
+	public function test_revisions_shortcode_limit() {
 
-		console_log( ' revision_shortcode_limit' );
+		console_log( ' revisions_shortcode_limit' );
 
 		// editor should be able to access.
 		global $current_user;
@@ -640,6 +637,18 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
+
+		$docs = get_documents(
+			array(
+				'meta_key'   => 'test_meta_key',
+				'meta_value' => 'test_value',
+			)
+		);
+		console_log( 'Retrieved: ' . count( $docs ) );
+		foreach ( $docs as $doc ) {
+			console_log( 'Post:' . $doc->ID . ' ' . $doc->post_title );
+		}
+		self::assertCount( 1, $docs, 'get_documents filter count' );
 
 		$docs = get_documents(
 			array(
