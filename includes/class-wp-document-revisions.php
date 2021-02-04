@@ -115,8 +115,11 @@ class WP_Document_Revisions {
 		add_action( 'init', array( &$this, 'use_read_capability' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		// check whether to invoke old or new count method (Change will need #38843).
-		if ( version_compare( $GLOBALS['wp_version'], '5.7', '>=' ) ) {
+		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
+		global $wp_version;
+		$vers = strpos( $wp_version, '-' );
+		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
+		if ( version_compare( $vers, '5.7') >= 0 ) {
 			// core method introduced with version 5.7.
 			add_filter( 'update_post_term_count_statuses', array( &$this, 'review_count_statuses' ), 30, 2 );
 		} else {

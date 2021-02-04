@@ -116,6 +116,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
 
+		// sleep to ensure timestamps different.
+		sleep( 1 );
+
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
 			array(

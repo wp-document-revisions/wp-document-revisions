@@ -161,9 +161,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
 
 		global $wp_query;
-		if ( $wp_query->found_posts > 0 ) {
-			self::assertTrue( current_user_can( 'read_document', $wp_query->posts[0]->ID ), 'User cannot read document' );
-		}
+		self::assertGreaterThan( 0, $wp_query->found_posts, 'Cannot find document' );
 
 		// verify contents are actually served.
 		ob_start();

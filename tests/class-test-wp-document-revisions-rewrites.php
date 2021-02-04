@@ -84,8 +84,8 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
-		self::$users      = array(
-			'editor' => $factory->user->create_and_get(
+		self::$users = array(
+			'editor'      => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Editor',
 					'role'          => 'editor',

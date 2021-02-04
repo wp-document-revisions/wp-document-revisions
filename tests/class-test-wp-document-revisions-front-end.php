@@ -31,7 +31,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Workflow_state slug 0
 	 *
-	 * @var integer $ws_slug_0
+	 * @var string $ws_slug_0
 	 */
 	private static $ws_slug_0;
 
@@ -45,7 +45,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Workflow_state slug 1
 	 *
-	 * @var integer $ws_slug_1
+	 * @var string $ws_slug_1
 	 */
 	private static $ws_slug_1;
 
@@ -168,7 +168,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
 
 		// add terms and attachment.
-		$terms = wp_set_post_terms( self::$author_private_post, self::$ws_term_id_0, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_private_post, array( self::$ws_term_id_0 ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$author_private_post, self::$test_file );
 
@@ -190,7 +190,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id_1, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id_1 ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
 
@@ -212,7 +212,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		update_post_meta( self::$editor_public_post, 'test_meta_key', 'test_value' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id_1, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id_1 ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
@@ -330,9 +330,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertTrue( current_user_can( 'read_document_revisions' ), 'Cannot read document revisionst' );
 
 		$output = do_shortcode( '[document_revisions id="' . self::$editor_public_post . '"]' );
-		console_log( $output );
 
-		self::assertEquals( 3, substr_count( $output, '<li' ), 'admin revision shortcode' );
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'editor revision shortcode' );
 	}
 
 	/**
@@ -450,7 +449,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$output = do_shortcode( '[document_revisions number="1" id="' . self::$editor_public_post . '"]' );
 		console_log( $output );
 
-		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode count' );
+		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode limit' );
 	}
 
 	/**
@@ -474,8 +473,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents]' );
-		console_log( $output );
 
+		// read the two published ones.
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
 	}
 
@@ -493,11 +492,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$output = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
+		self::assertEquals( 1, substr_count( $output, 'Editor Public' ), 'document shortcode filter title' );
 	}
-
 
 	/**
 	 * Test document shortcode with a post_meta filter.
@@ -638,12 +636,15 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		$docs = get_documents(
 			array(
 				'meta_key'   => 'test_meta_key',
 				'meta_value' => 'test_value',
 			)
 		);
+		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+
 		console_log( 'Retrieved: ' . count( $docs ) );
 		foreach ( $docs as $doc ) {
 			console_log( 'Post:' . $doc->ID . ' ' . $doc->post_title );
