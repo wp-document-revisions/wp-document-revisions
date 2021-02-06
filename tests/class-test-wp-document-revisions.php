@@ -228,7 +228,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_subscriber_caps() {
 		console_log( ' subscriber_caps' );
 
-		$usr_id = wp_insert_user(
+		$usr = self::factory()->user->create_and_get(
 			array(
 				'user_nicename' => 'Subscriber',
 				'role'          => 'subscriber',
@@ -237,7 +237,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( $usr_id );
+		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'subscriber' ), 'Not subscriber role' );
@@ -262,7 +262,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_contributor_caps() {
 		console_log( ' contributor_caps' );
 
-		$usr_id = wp_insert_user(
+		$usr = self::factory()->user->create_and_get(
 			array(
 				'user_nicename' => 'Contributor',
 				'role'          => 'contributor',
@@ -271,7 +271,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( $usr_id );
+		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'contributor' ), 'Not contributor role' );
@@ -300,6 +300,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		unset( $current_user );
 		$usr = wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
+		console_log( $usr . '/' . $usr->user_nicename . '/' . $usr->user_role  );
 
 		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
 		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );

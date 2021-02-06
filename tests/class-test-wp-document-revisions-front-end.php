@@ -243,6 +243,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		// re-init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
 	}
 
 	/**
@@ -490,10 +497,16 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
-		$output = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
+		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
 
-		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
-		self::assertEquals( 1, substr_count( $output, 'Editor Public' ), 'document shortcode filter title' );
+		self::assertEquals( 1, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
+		self::assertEquals( 1, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_0' );
+
+		$output_1 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
+
+		self::assertEquals( 2, substr_count( $output_1, '<li' ), 'document shortcode filter count_1' );
+		self::assertEquals( 1, substr_count( $output_1, 'Editor Private' ), 'document shortcode filter title_11' );
+		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'document shortcode filter title_12' );
 	}
 
 	/**
@@ -515,10 +528,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents meta_key="test_meta_key" meta_value="test_value"]' );
-		console_log( $output );
 
-		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
-		self::assertStringContainsString( 'Author Private', $output, 'document shortcode filter post' );
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode filter count' );
+		self::assertEquals( 1, substr_count( $output, 'Author Private' ), $output, 'document shortcode filter post_1' );
+		self::assertEquals( 1, substr_count( $output, 'Editor Public' ), $output, 'document shortcode filter post_2' );
 	}
 
 	/**
@@ -570,6 +583,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
+
+		$output = $wpdr_fe->wpdr_documents_shortcode_display( array() );
+		console_log( $output );
 
 		$atts   = array(
 			'taxonomy_0' => 'workflow_state',

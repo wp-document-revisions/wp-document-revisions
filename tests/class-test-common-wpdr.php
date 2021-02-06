@@ -283,25 +283,18 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
 
-		console_log( 'Delete? : ' . + current_user_can( 'delete_document', $post_id ) . ':' );
-
 		// first trash the document.
 		$result = wp_trash_post( $post_id );
 
-		if ( $result instanceof WP_Post ) {
-			console_log( $result->post_status );
-		} else {
-			console_log( 'Result: ' . $result );
-		}
+		// flush cache to assure result.
+		wp_cache_flush();
 
 		// Is this expected to work?
 		if ( ! $trash ) {
-			self::assertFalse( $result instanceof WP_Post, 'Trash document should not work' );
+			// check not trash status.
+			self::assertNotEquals( get_post_status( $post_id ), 'trash', "Post $post_id set to trash" );
 			return;
 		}
-
-		// flush cache to assure result.
-		wp_cache_flush();
 
 		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
 
@@ -318,11 +311,11 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		remove_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
 
 		// check nothing remains.
-		foreach ( $all_posts as $id => $i ) {
+		foreach ( $all_posts as $id => $file ) {
 			$test_post = get_post( $id );
 			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
-			if ( ! is_null( $i ) ) {
-				self::assertFileNotExists( $i, 'Attachment file still exists' );
+			if ( ! is_null( $file ) ) {
+				self::assertFileNotExists( $file, 'Attachment file still exists' );
 			}
 		}
 	}

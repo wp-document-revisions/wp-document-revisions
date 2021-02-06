@@ -267,13 +267,6 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		// For debug.
-		$posts = $wpdr->get_revisions( self::$editor_public_post );
-		console_log( ' Editor Public' );
-		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
-		}
-
 		console_log( ' test archive' );
 
 		self::go_to( get_home_url( null, $wpdr->document_slug() ) );
