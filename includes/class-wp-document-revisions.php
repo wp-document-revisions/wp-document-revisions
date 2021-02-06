@@ -1204,7 +1204,11 @@ class WP_Document_Revisions {
 		// However, when doing PHPUnit testing, this will occur, so we need to check whether we are in a test harness.
 		$under_test = class_exists( 'WP_UnitTestCase' );
 
-		if ( ! $under_test ) {
+		if ( $under_test ) {
+			// Under test. We know that we have done an ob_start, so remove_headers and buffer,prior to open another.
+			remove_headers();
+			ob_end_clean();
+		} else {
 			// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
 			$levels = ob_get_level();
 			for ( $i = 0; $i < $levels; $i++ ) {
@@ -1277,13 +1281,13 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
-		// opened buffer, so flush output.
-		ob_end_flush();
-
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
 			return $template;
 		}
+
+		// opened buffer, so flush output.
+		ob_end_flush();
 
 		exit;
 	}
@@ -2340,32 +2344,39 @@ class WP_Document_Revisions {
 	/**
 	 * Returns array of document objects matching supplied criteria.
 	 *
-	 * See http://codex.wordpress.org/Class_Reference/WP_Query#Parameters for more information on potential parameters
+	 * See https://developer.wordpress.org/reference/classes/wp_query/ for more information on potential parameters
 	 *
 	 * @param array   $args (optional) an array of WP_Query arguments.
-	 * @param unknown $return_attachments (optional).
+	 * @param boolean $return_attachments (optional).
 	 * @return array an array of post objects
 	 */
 	public function get_documents( $args = array(), $return_attachments = false ) {
-		$args              = (array) $args;
-		$args['post_type'] = 'document';
-		$args['perm']      = 'readable';
-		$documents         = get_posts( $args );
-		$output            = array();
+		$args                = (array) $args;
+		$args['post_type']   = 'document';
+		$args['perm']        = 'readable';
+		if ( isset( $args['numberposts'] ) ) {
+			// get all of them.
+			$args['posts_per_page'] = $args['numberposts'];
+		}
+
+		$query  = new WP_Query( $args );
+		$output = array();
 
 		if ( $return_attachments ) {
 
 			// loop through each document and build an array of attachment objects
 			// this would be the same output as a query for post_type = attachment
 			// but allows querying of document metadata and returns only latest revision.
-			foreach ( $documents as $document ) {
+			foreach ( $query->posts as $document ) {
 				$document_object = $this->get_latest_revision( $document->ID );
-				$output[]        = get_post( $document_object->post_content );
+				if ( is_numeric( $document_object->post_content ) ) {
+					$output[] = get_post( $document_object->post_content );
+				}
 			}
 		} else {
 
 			// used internal get_revision function so that filter work and revision bug is offset.
-			foreach ( $documents as $document ) {
+			foreach ( $query->posts as $document ) {
 				$output[] = $this->get_latest_revision( $document->ID );
 			}
 		}

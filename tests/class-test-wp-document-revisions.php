@@ -19,8 +19,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	protected static $users = array(
 		'editor'      => null,
 		'author'      => null,
-		'contributor' => null,
-		'subscriber'  => null,
 	);
 
 	/**
@@ -68,18 +66,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
-				)
-			),
-			'contributor' => $factory->user->create_and_get(
-				array(
-					'user_nicename' => 'Contributor',
-					'role'          => 'contributor',
-				)
-			),
-			'subscriber'  => $factory->user->create_and_get(
-				array(
-					'user_nicename' => 'Subscriber',
-					'role'          => 'subscriber',
 				)
 			),
 		);
@@ -242,12 +228,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_subscriber_caps() {
 		console_log( ' subscriber_caps' );
 
+		$usr = self::$factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Subscriber',
+					'role'          => 'subscriber',
+				)
+			);
+
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( self::$users['subscriber']->ID );
+		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
-		self::assertTrue( current_user_can( 'subscriber' ), 'Not author role' );
+		self::assertTrue( current_user_can( 'subscriber' ), 'Not subscriber role' );
 		self::assertFalse( $usr->has_cap( 'edit_documents' ), 'Can edit_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
@@ -269,12 +262,19 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_contributor_caps() {
 		console_log( ' contributor_caps' );
 
+		$usr = self::$factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Contributor',
+					'role'          => 'contributor',
+				)
+			);
+
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( self::$users['contributor']->ID );
+		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
-		self::assertTrue( current_user_can( 'contributor' ), 'Not author role' );
+		self::assertTrue( current_user_can( 'contributor' ), 'Not contributor role' );
 		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
