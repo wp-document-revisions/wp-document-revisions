@@ -1205,8 +1205,7 @@ class WP_Document_Revisions {
 		$under_test = class_exists( 'WP_UnitTestCase' );
 
 		if ( $under_test ) {
-			// Under test. We know that we have done an ob_start, so remove_headers and buffer,prior to open another.
-			remove_headers();
+			// Under test. We know that we have done an ob_start, so remove buffer,prior to open another.
 			ob_end_clean();
 		} else {
 			// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
@@ -2351,9 +2350,9 @@ class WP_Document_Revisions {
 	 * @return array an array of post objects
 	 */
 	public function get_documents( $args = array(), $return_attachments = false ) {
-		$args                = (array) $args;
-		$args['post_type']   = 'document';
-		$args['perm']        = 'readable';
+		$args              = (array) $args;
+		$args['post_type'] = 'document';
+		$args['perm']      = 'readable';
 		if ( isset( $args['numberposts'] ) ) {
 			// get all of them.
 			$args['posts_per_page'] = $args['numberposts'];

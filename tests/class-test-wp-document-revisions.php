@@ -17,8 +17,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * @var WP_User[] $users
 	 */
 	protected static $users = array(
-		'editor'      => null,
-		'author'      => null,
+		'editor' => null,
+		'author' => null,
 	);
 
 	/**
@@ -56,13 +56,13 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
 		self::$users = array(
-			'editor'      => $factory->user->create_and_get(
+			'editor' => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Editor',
 					'role'          => 'editor',
 				)
 			),
-			'author'      => $factory->user->create_and_get(
+			'author' => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
@@ -228,16 +228,16 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_subscriber_caps() {
 		console_log( ' subscriber_caps' );
 
-		$usr = self::$factory->user->create_and_get(
-				array(
-					'user_nicename' => 'Subscriber',
-					'role'          => 'subscriber',
-				)
-			);
+		$usr_id = wp_insert_user(
+			array(
+				'user_nicename' => 'Subscriber',
+				'role'          => 'subscriber',
+			)
+		);
 
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( $usr->ID );
+		$usr = wp_set_current_user( $usr_id );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'subscriber' ), 'Not subscriber role' );
@@ -262,16 +262,16 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_contributor_caps() {
 		console_log( ' contributor_caps' );
 
-		$usr = self::$factory->user->create_and_get(
-				array(
-					'user_nicename' => 'Contributor',
-					'role'          => 'contributor',
-				)
-			);
+		$usr_id = wp_insert_user(
+			array(
+				'user_nicename' => 'Contributor',
+				'role'          => 'contributor',
+			)
+		);
 
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( $usr->ID );
+		$usr = wp_set_current_user( $usr_id );
 		wp_cache_flush();
 
 		self::assertTrue( current_user_can( 'contributor' ), 'Not contributor role' );
