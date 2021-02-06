@@ -17,8 +17,10 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * @var WP_User[] $users
 	 */
 	protected static $users = array(
-		'editor' => null,
-		'author' => null,
+		'editor'      => null,
+		'author'      => null,
+		'contributor' => null,
+		'subscriber'  => null,
 	);
 
 	/**
@@ -56,16 +58,28 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
 		self::$users = array(
-			'editor' => $factory->user->create_and_get(
+			'editor'      => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Editor',
 					'role'          => 'editor',
 				)
 			),
-			'author' => $factory->user->create_and_get(
+			'author'      => $factory->user->create_and_get(
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
+				)
+			),
+			'contributor' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Contributor',
+					'role'          => 'contributor',
+				)
+			),
+			'subscriber'  => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Subscriber',
+					'role'          => 'subscriber',
 				)
 			),
 		);
@@ -132,6 +146,13 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		// confirm user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
 	}
 
 	/**
@@ -208,6 +229,60 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( $usr->has_cap( 'read_document_revisions' ), 'Can read_document_revisions' );
 		self::assertFalse( $usr->has_cap( 'read_private_documents' ), 'Can read_private_documents' );
 		self::assertFalse( $usr->has_cap( 'delete_documents' ), 'Can delete_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_published_documents' ), 'Can delete_published_documents' );
+		self::assertFalse( $usr->has_cap( 'publish_documents' ), 'Can publish_documents' );
+		self::assertFalse( $usr->has_cap( 'override_document_lock' ), 'Can override_document_lock' );
+	}
+
+	/**
+	 * Check capabilities are correct subscriber User.
+	 */
+	public function test_subscriber_caps() {
+		console_log( ' subscriber_caps' );
+
+		global $current_user;
+		unset( $current_user );
+		$usr = wp_set_current_user( self::$users['subscriber']->ID );
+		wp_cache_flush();
+
+		self::assertTrue( current_user_can( 'subscriber' ), 'Not author role' );
+		self::assertFalse( $usr->has_cap( 'edit_documents' ), 'Can edit_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_published_documents' ), 'Can edit_published_documents' );
+		self::assertTrue( $usr->has_cap( 'read_documents' ), 'Cannot read_documents' );
+		self::assertFalse( $usr->has_cap( 'read_document_revisions' ), 'Can read_document_revisions' );
+		self::assertFalse( $usr->has_cap( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_documents' ), 'Can delete_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_others_documents' ), 'Can delete_others_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertFalse( $usr->has_cap( 'delete_published_documents' ), 'Can delete_published_documents' );
+		self::assertFalse( $usr->has_cap( 'publish_documents' ), 'Can publish_documents' );
+		self::assertFalse( $usr->has_cap( 'override_document_lock' ), 'Can override_document_lock' );
+	}
+
+	/**
+	 * Check capabilities are correct contributor User.
+	 */
+	public function test_contributor_caps() {
+		console_log( ' contributor_caps' );
+
+		global $current_user;
+		unset( $current_user );
+		$usr = wp_set_current_user( self::$users['contributor']->ID );
+		wp_cache_flush();
+
+		self::assertTrue( current_user_can( 'contributor' ), 'Not author role' );
+		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_private_documents' ), 'Can edit_private_documents' );
+		self::assertFalse( $usr->has_cap( 'edit_published_documents' ), 'Can edit_published_documents' );
+		self::assertTrue( $usr->has_cap( 'read_documents' ), 'Cannot read_documents' );
+		self::assertTrue( $usr->has_cap( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertFalse( $usr->has_cap( 'read_private_documents' ), 'Can read_private_documents' );
+		self::assertTrue( $usr->has_cap( 'delete_documents' ), 'Cannot delete_documents' );
 		self::assertFalse( $usr->has_cap( 'delete_others_documents' ), 'Can delete_others_documents' );
 		self::assertFalse( $usr->has_cap( 'delete_private_documents' ), 'Can delete_private_documents' );
 		self::assertFalse( $usr->has_cap( 'delete_published_documents' ), 'Can delete_published_documents' );

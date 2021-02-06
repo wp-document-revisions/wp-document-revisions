@@ -119,7 +119,7 @@ class WP_Document_Revisions {
 		global $wp_version;
 		$vers = strpos( $wp_version, '-' );
 		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		if ( version_compare( $vers, '5.7') >= 0 ) {
+		if ( version_compare( $vers, '5.7' ) >= 0 ) {
 			// core method introduced with version 5.7.
 			add_filter( 'update_post_term_count_statuses', array( &$this, 'review_count_statuses' ), 30, 2 );
 		} else {
@@ -1277,13 +1277,13 @@ class WP_Document_Revisions {
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
 
+		// opened buffer, so flush output.
+		ob_end_flush();
+
 		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
 		if ( $under_test ) {
 			return $template;
 		}
-
-		// opened buffer, so flush output.
-		ob_end_flush();
 
 		exit;
 	}

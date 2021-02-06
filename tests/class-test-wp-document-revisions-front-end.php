@@ -447,7 +447,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[document_revisions number="1" id="' . self::$editor_public_post . '"]' );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode limit' );
 	}
@@ -519,6 +518,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'document shortcode filter count' );
+		self::assertStringContainsString( 'Author Private', $output, 'document shortcode filter post' );
 	}
 
 	/**
