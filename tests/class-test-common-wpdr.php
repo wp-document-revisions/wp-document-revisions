@@ -107,7 +107,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$upload_dir = wp_upload_dir();
 
 		// create and store attachment ID as post content..
-		$attach_id = $factory->attachment->create(
+		$attach_id = self::factory()->attachment->create(
 			array(
 				'guid'           => $upload_dir['url'] . '/' . basename( $filename ),
 				'post_mime_type' => $filetype['type'],
@@ -143,11 +143,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Tests that a given URL actually returns the right file.
 	 *
-	 * @param string $url to check.
-	 * @param string $file relative path of expected file.
-	 * @param string $msg message describing failure.
+	 * @param string  $url     to check.
+	 * @param string  $file    relative path of expected file.
+	 * @param string  $msg     message describing failure.
+	 * @param boolean $no_file Whether to check file contents (default Author cannot upload_file/create attachment).
 	 */
-	public function verify_download( $url = null, $file = null, $msg = null ) {
+	public function verify_download( $url = null, $file = null, $msg = null, $no_file = false ) {
 
 		// check parameters.
 		self::assertNotNull( $url, 'Parameter url not entered' );
@@ -172,7 +173,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertFalse( is_404(), "404 ($msg)" );
 		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
 		self::assertTrue( is_single(), "Not single ($msg)" );
-		self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
+		if ( ! no_file ) {
+			self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
+		}
 	}
 
 	/**
@@ -283,9 +286,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
 
-		// need edit capability to trash the document.
-		self::assertTrue( current_user_can( 'edit_document', $post_id ), 'User cannot edit post' );
-
 		// first trash the document.
 		wp_trash_post( $post_id );
 
@@ -338,7 +338,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Get the roles data refreshed.
 	 */
-	private function flush_roles() {
+	public function flush_roles() {
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited

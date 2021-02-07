@@ -58,6 +58,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
 		// create users and assign role.
@@ -86,6 +87,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// add terms and use one.
+		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
 		$ws_terms         = get_terms(
 			array(

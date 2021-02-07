@@ -65,7 +65,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Rewrites' );
+		console_log( 'Test_Rewrites_Without' );
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
@@ -187,13 +187,6 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
-
-		// For debug.
-		$posts = $wpdr->get_revisions( self::$editor_private_post );
-		console_log( ' Editor Private' );
-		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
-		}
 
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
@@ -492,7 +485,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
-		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Editor' );
+		// Note that Author cannot upload files so no access possible.
+		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Editor', true );
 	}
 
 	/**
