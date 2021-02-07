@@ -57,7 +57,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 					'delete_terms' => 'edit_documents',
 					'assign_terms' => 'edit_documents',
 				),
-			),
+			)
 		);
 
 		foreach ( $ws_terms as $ws_term ) {
