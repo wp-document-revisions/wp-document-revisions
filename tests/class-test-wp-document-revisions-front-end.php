@@ -224,35 +224,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Get the roles data refreshed. (Taken from WP Test Suite).
-	 */
-	public function setUp() {
-		parent::setUp();
-		// Keep track of users we create.
-		self::flush_roles();
-	}
-
-	/**
-	 * Get the roles data refreshed.
-	 */
-	private function flush_roles() {
-		// We want to make sure we're testing against the DB, not just in-memory data.
-		// This will flush everything and reload it from the DB.
-		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		unset( $GLOBALS['wp_user_roles'] );
-		global $wp_roles;
-		$wp_roles = new WP_Roles();
-		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
-
-		// re-init user roles.
-		global $wpdr;
-		if ( ! $wpdr ) {
-			$wpdr = new WP_Document_Revisions();
-		}
-		$wpdr->add_caps();
-	}
-
-	/**
 	 * Delete the posts. (Taken from WP Test Suite).
 	 */
 	public static function wpTearDownAfterClass() {
@@ -492,17 +463,17 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		console_log( 'APu - QT:' . self::$ws_slug_0 );
 		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state' );
 		foreach ( $terms as $term ) {
-		 	 console_log( 'AT:' . $term->term_ID . '/' . $term->slug );
+			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
 
 		console_log( 'APrEPu - QT:' . self::$ws_slug_1 );
 		$terms = wp_get_post_terms( self::$author_private_post, 'workflow_state' );
 		foreach ( $terms as $term ) {
-		 	 console_log( 'AT:' . $term->term_ID . '/' . $term->slug );
+			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
 		$terms = wp_get_post_terms( self::$editor_public_post, 'workflow_state' );
 		foreach ( $terms as $term ) {
-		 	 console_log( 'AT:' . $term->term_ID . '/' . $term->slug );
+			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
 
 		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );

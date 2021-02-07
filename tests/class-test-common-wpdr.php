@@ -282,24 +282,17 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
-4
+
 		// need edit capability to trash the document.
 		self::assertTrue( current_user_can( 'edit_document', $post_id ), 'User cannot edit post' );
-		
+
 		// first trash the document.
 		wp_trash_post( $post_id );
 
 		// flush cache to assure result.
 		wp_cache_flush();
 
-		// check trash status. This is expected to work
-		self::assertNotEquals( get_post_status( $post_id ), 'trash', "Post $post_id set to trash" );
-			return;
-		}
-
-		self::assertTrue( $result instanceof WP_Post, 'Trash document did not work' );
-
-		// check trash status.
+		// check trash status. This is expected to work.
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
 		// add the attachment delete process.
@@ -307,14 +300,14 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// delete the post.
 		$result = wp_delete_post( $post_id );
-		
+
 		// if this expected to work?
 		if ( ! $trash ) {
 			self::assertFalse( $result, 'Should not be able to delete post' );
 			return;
 		}
 
-		// add the attachment delete process.
+		// delete successful, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
 
 		// check nothing remains.
@@ -337,6 +330,22 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		if ( ! headers_sent() ) {
 			header_remove();
 		}
+
+		// Keep track of users we create.
+		self::flush_roles();
+	}
+
+	/**
+	 * Get the roles data refreshed.
+	 */
+	private function flush_roles() {
+		// We want to make sure we're testing against the DB, not just in-memory data.
+		// This will flush everything and reload it from the DB.
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		unset( $GLOBALS['wp_user_roles'] );
+		global $wp_roles;
+		$wp_roles = new WP_Roles();
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		// init user roles.
 		global $wpdr;

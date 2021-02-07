@@ -113,35 +113,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Get the roles data refreshed. (Taken from WP Test Suite).
-	 */
-	public function setUp() {
-		parent::setUp();
-		// Keep track of users we create.
-		self::flush_roles();
-	}
-
-	/**
-	 * Get the roles data refreshed.
-	 */
-	private function flush_roles() {
-		// We want to make sure we're testing against the DB, not just in-memory data.
-		// This will flush everything and reload it from the DB.
-		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		unset( $GLOBALS['wp_user_roles'] );
-		global $wp_roles;
-		$wp_roles = new WP_Roles();
-		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
-
-		// confirm user roles.
-		global $wpdr;
-		if ( ! $wpdr ) {
-			$wpdr = new WP_Document_Revisions();
-		}
-		$wpdr->add_caps();
-	}
-
-	/**
 	 * Delete the posts. (Taken from WP Test Suite).
 	 */
 	public static function wpTearDownAfterClass() {

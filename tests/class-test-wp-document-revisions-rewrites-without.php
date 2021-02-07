@@ -9,27 +9,17 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	/**
-	 * Contributor user id
+	 * List of users being tested.
 	 *
-	 * @var integer $contributor_user_id
+	 * @var WP_User[] $users
 	 */
-	private static $contributor_user_id;
-
-	/**
-	 * Author user id
-	 *
-	 * @var integer $author_user_id
-	 */
-	private static $author_user_id;
-
-	/**
-	 * Editor user id
-	 *
-	 * @var integer $editor_user_id
-	 */
-	private static $editor_user_id;
+	protected static $users = array(
+		'editor'      => null,
+		'author'      => null,
+		'contributor' => null,
+	);
 
 	/**
 	 * Workflow_state term id
@@ -75,7 +65,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Rewrites-Without' );
+		console_log( 'Test_Rewrites' );
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
@@ -85,11 +75,35 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			define( 'EMPTY_TRASH_DAYS', 2 );
 		}
 
-		// create users.
-		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
-		self::$contributor_user_id = $factory->user->create( array( 'role' => 'contributor' ) );
-		self::$author_user_id      = $factory->user->create( array( 'role' => 'author' ) );
-		self::$editor_user_id      = $factory->user->create( array( 'role' => 'editor' ) );
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor'      => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+			'author'      => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Author',
+					'role'          => 'author',
+				)
+			),
+			'contributor' => $factory->user->create_and_get(
+				array(
+					'user_nicename' => 'Contributor',
+					'role'          => 'contributor',
+				)
+			),
+		);
 
 		// init permalink structure.
 		global $wp_rewrite;
@@ -122,7 +136,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Author Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$author_user_id,
+				'post_author'  => self::$users['author']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -141,7 +155,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Author Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$author_user_id,
+				'post_author'  => self::$users['author']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -160,7 +174,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -186,7 +200,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			array(
 				'post_title'   => 'Editor Public - ' . time(),
 				'post_status'  => 'publish',
-				'post_author'  => self::$editor_user_id,
+				'post_author'  => self::$users['editor']->ID,
 				'post_content' => '',
 				'post_excerpt' => 'Test Upload',
 				'post_type'    => 'document',
@@ -205,6 +219,16 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Delete the posts. (Taken from WP Test Suite).
+	 */
+	public static function wpTearDownAfterClass() {
+		wp_delete_post( self::$author_public_post, true );
+		wp_delete_post( self::$author_private_post, true );
+		wp_delete_post( self::$editor_private_post, true );
+		wp_delete_post( self::$editor_public_post, true );
+	}
+
+	/**
 	 * Tests that the test Document stuctures are correct.
 	 */
 	public function test_structure() {
@@ -220,13 +244,6 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	public function test_archive() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
-
-		// For debug.
-		$posts = $wpdr->get_revisions( self::$editor_public_post );
-		console_log( ' Editor Public' );
-		foreach ( $posts as $post ) {
-			console_log( $post->ID . '/' . $post->post_content . '/' . $post->post_type );
-		}
 
 		console_log( ' test archive' );
 
@@ -438,7 +455,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Owner' );
@@ -455,7 +472,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$contributor_user_id );
+		wp_set_current_user( self::$users['contributor']->ID );
 		wp_cache_flush();
 
 		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Other' );
@@ -472,7 +489,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
 		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Editor' );
@@ -489,7 +506,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		self::check_trash_delete( self::$editor_private_post, false );
@@ -506,7 +523,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		self::check_trash_delete( self::$author_public_post, true );
@@ -523,7 +540,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$author_user_id );
+		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
 		self::check_trash_delete( self::$editor_public_post, true );
