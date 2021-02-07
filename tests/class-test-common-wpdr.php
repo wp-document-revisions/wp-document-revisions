@@ -36,7 +36,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public static function create_term_fixtures() {
 		// get the ws terms.
-		$ws_terms         = get_terms(
+		$ws_terms = get_terms(
 			array(
 				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
@@ -48,7 +48,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			'wfs',
 			array( 'document' ),
 			array(
-				'public' => true,
+				'public'       => true,
 				'hierarchical' => true,
 				'show_in_rest' => true,
 				'capabilities' => array(
@@ -359,7 +359,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// if this expected to work?
 		if ( ! $trash ) {
-			self::assertTrue( get_post_status( $post_id ), 'trash' 'Should not be able to delete post' );
+			self::assertTrue( get_post_status( $post_id ), 'trash', 'Should not be able to delete post' );
 			return;
 		}
 
