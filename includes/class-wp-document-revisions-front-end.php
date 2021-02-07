@@ -114,7 +114,12 @@ class WP_Document_Revisions_Front_End {
 
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			return '';
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// Check it is a document.
+		if ( ! $wpdr->verify_post_type( $id ) ) {
+			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
 		// get revisions.
@@ -867,12 +872,12 @@ class WP_Document_Revisions_Front_End {
 		// sanity check.
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
 		// Check it is a document.
 		if ( ! $wpdr->verify_post_type( $atts['id'] ) ) {
-			return esc_html__( 'This is not a valid document.', 'wp-document-revisions' );
+			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
 		$output  = '<p class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</p>';

@@ -810,7 +810,7 @@ class WP_Document_Revisions {
 	public function get_revisions( $post_id ) {
 		$document = get_post( $post_id );
 
-		if ( ! $document ) {
+		if ( ! $document || 'document' !== $document->post_type ) {
 			return false;
 		}
 

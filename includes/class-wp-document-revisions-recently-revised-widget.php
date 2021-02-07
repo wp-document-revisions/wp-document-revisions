@@ -66,7 +66,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 		// no documents, don't bother.
 		if ( ! $documents ) {
-			return;
+			return '';
 		}
 
 		// buffer output to return rather than echo directly.

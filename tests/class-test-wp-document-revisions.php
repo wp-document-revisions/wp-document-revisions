@@ -240,6 +240,9 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
+		// Keep track of users we create.
+		self::flush_roles();
+
 		self::assertTrue( current_user_can( 'subscriber' ), 'Not subscriber role' );
 		self::assertFalse( $usr->has_cap( 'edit_documents' ), 'Can edit_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
@@ -274,6 +277,9 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
 
+		// Keep track of users we create.
+		self::flush_roles();
+
 		self::assertTrue( current_user_can( 'contributor' ), 'Not contributor role' );
 		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertFalse( $usr->has_cap( 'edit_others_documents' ), 'Can edit_others_documents' );
@@ -296,11 +302,20 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_author_caps() {
 		console_log( ' author_caps' );
 
+		$usr = self::factory()->user->create_and_get(
+			array(
+				'user_nicename' => 'New Author',
+				'role'          => 'author',
+			)
+		);
+
 		global $current_user;
 		unset( $current_user );
-		$usr = wp_set_current_user( self::$users['author']->ID );
+		$usr = wp_set_current_user( $usr->ID );
 		wp_cache_flush();
-		console_log( $usr . '/' . $usr->user_nicename . '/' . $usr->user_role  );
+
+		// Keep track of users we create.
+		self::flush_roles();
 
 		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
 		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );
@@ -328,6 +343,9 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		unset( $current_user );
 		$usr = wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
+
+		// Keep track of users we create.
+		self::flush_roles();
 
 		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );
 		self::assertTrue( $usr->has_cap( 'edit_documents' ), 'Cannot edit_documents' );

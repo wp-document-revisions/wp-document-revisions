@@ -282,17 +282,18 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
 		}
-
+4
+		// need edit capability to trash the document.
+		self::assertTrue( current_user_can( 'edit_document', $post_id ), 'User cannot edit post' );
+		
 		// first trash the document.
-		$result = wp_trash_post( $post_id );
+		wp_trash_post( $post_id );
 
 		// flush cache to assure result.
 		wp_cache_flush();
 
-		// Is this expected to work?
-		if ( ! $trash ) {
-			// check not trash status.
-			self::assertNotEquals( get_post_status( $post_id ), 'trash', "Post $post_id set to trash" );
+		// check trash status. This is expected to work
+		self::assertNotEquals( get_post_status( $post_id ), 'trash', "Post $post_id set to trash" );
 			return;
 		}
 
@@ -305,7 +306,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		add_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
 
 		// delete the post.
-		wp_delete_post( $post_id );
+		$result = wp_delete_post( $post_id );
+		
+		// if this expected to work?
+		if ( ! $trash ) {
+			self::assertFalse( $result, 'Should not be able to delete post' );
+			return;
+		}
 
 		// add the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
