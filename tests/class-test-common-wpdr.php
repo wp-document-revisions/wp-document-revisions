@@ -46,12 +46,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// register taxoonomy.
 		register_taxonomy(
 			'wfs',
-			array{ 'document' ),
+			array( 'document' ),
 			array(
 				'public' => true,
 				'hierarchical' => true,
 				'show_in_rest' => true,
-				'capabilities' => array( 
+				'capabilities' => array(
 					'manage_terms' => 'edit_documents',
 					'edit_terms'   => 'edit_documents',
 					'delete_terms' => 'edit_documents',

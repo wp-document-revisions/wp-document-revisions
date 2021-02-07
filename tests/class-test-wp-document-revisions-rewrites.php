@@ -126,7 +126,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		$wpdr->initialize_workflow_states();
 
 		// Taxonomy wfs is clone of workflow_state.
-		$ws_terms = self::create_term_fixtures();
+		$ws_terms         = self::create_term_fixtures();
 		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
