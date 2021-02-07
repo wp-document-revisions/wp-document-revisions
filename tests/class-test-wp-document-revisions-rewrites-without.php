@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
