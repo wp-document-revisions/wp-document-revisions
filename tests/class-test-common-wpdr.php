@@ -61,7 +61,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		);
 
 		foreach ( $ws_terms as $ws_term ) {
-			self::factory()->terms->create(
+			self::factory()->term->create(
 				array(
 					'taxonomy' => 'wfs',
 					'name'     => $ws_term->name,
