@@ -124,12 +124,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// add terms and use one.
 		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
-		$ws_terms           = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
+
+		// Taxonomy wfs is clone of workflow_state.
+		$ws_terms = self::create_term_fixtures();
 		self::$ws_term_id_0 = $ws_terms[0]->term_id;
 		self::$ws_slug_0    = $ws_terms[0]->slug;
 		self::$ws_term_id_1 = $ws_terms[1]->term_id;
@@ -151,7 +148,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id_0, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id_0, 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
 
@@ -170,7 +167,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
 
 		// add terms and attachment.
-		$terms = wp_set_post_terms( self::$author_private_post, array( self::$ws_term_id_0 ), 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_private_post, array( self::$ws_term_id_0 ), 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$author_private_post, self::$test_file );
 
@@ -192,7 +189,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id_1 ), 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id_1 ), 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
 
@@ -214,7 +211,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		update_post_meta( self::$editor_public_post, 'test_meta_key', 'test_value' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id_1 ), 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id_1 ), 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
@@ -463,27 +460,27 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 		console_log( 'APu - QT:' . self::$ws_slug_0 );
-		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state' );
+		$terms = wp_get_post_terms( self::$author_public_post, 'wfs' );
 		foreach ( $terms as $term ) {
 			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
 
 		console_log( 'APrEPu - QT:' . self::$ws_slug_1 );
-		$terms = wp_get_post_terms( self::$author_private_post, 'workflow_state' );
+		$terms = wp_get_post_terms( self::$author_private_post, 'wfs' );
 		foreach ( $terms as $term ) {
 			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
-		$terms = wp_get_post_terms( self::$editor_public_post, 'workflow_state' );
+		$terms = wp_get_post_terms( self::$editor_public_post, 'wfs' );
 		foreach ( $terms as $term ) {
 			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
 		}
 
-		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
+		$output_0 = do_shortcode( '[documents wfs="' . self::$ws_slug_0 . '"]' );
 
 		self::assertEquals( 1, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
 		self::assertEquals( 1, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_0' );
 
-		$output_1 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
+		$output_1 = do_shortcode( '[documents wfs="' . self::$ws_slug_1 . '"]' );
 
 		self::assertEquals( 2, substr_count( $output_1, '<li' ), 'document shortcode filter count_1' );
 		self::assertEquals( 1, substr_count( $output_1, 'Editor Private' ), 'document shortcode filter title_11' );
@@ -569,7 +566,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		console_log( $output );
 
 		$atts   = array(
-			'taxonomy_0' => 'workflow_state',
+			'taxonomy_0' => 'wfs',
 			'term_0'     => self::$ws_term_id_0,
 		);
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );

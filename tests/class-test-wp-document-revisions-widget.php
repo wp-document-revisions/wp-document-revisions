@@ -89,12 +89,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		// add terms and use one.
 		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
-		$ws_terms         = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
+
+		// Taxonomy wfs is clone of workflow_state.
+		$ws_terms = self::create_term_fixtures();
 		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
@@ -113,7 +110,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id, 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
 		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
@@ -136,7 +133,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'wfs' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );

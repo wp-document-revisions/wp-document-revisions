@@ -28,6 +28,59 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 
 	/**
+	 * Create shadow terms...
+	 *
+	 * Workflow_state tems are creatd by a separate process. Need them as fixtures.
+	 *
+	 * @return WP_Term[]  Array of WFS Terms.
+	 */
+	public static function create_term_fixtures() {
+		// get the ws terms.
+		$ws_terms         = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// register taxoonomy.
+		register_taxonomy(
+			'wfs',
+			array{ 'document' ),
+			array(
+				'public' => true,
+				'hierarchical' => true,
+				'show_in_rest' => true,
+				'capabilities' => array( 
+					'manage_terms' => 'edit_documents',
+					'edit_terms'   => 'edit_documents',
+					'delete_terms' => 'edit_documents',
+					'assign_terms' => 'edit_documents',
+				),
+			),
+		);
+
+		foreach ( $ws_terms as $ws_term ) {
+			self::factory()->terms->create(
+				array(
+					'taxonomy' => 'wfs',
+					'name'     => $ws_term->name,
+					'slug'     => $ws_term->slug,
+				)
+			);
+		}
+
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'wfs',
+				'hide_empty' => false,
+			)
+		);
+
+		return $ws_terms;
+	}
+
+	/**
 	 * Prepare a copy of the input file with encoded name...
 	 *
 	 * N.B. Delete tests will delete this file.
@@ -173,7 +226,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertFalse( is_404(), "404 ($msg)" );
 		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
 		self::assertTrue( is_single(), "Not single ($msg)" );
-		if ( ! no_file ) {
+		if ( ! $no_file ) {
 			self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
 		}
 	}
@@ -301,14 +354,14 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// delete the post.
 		$result = wp_delete_post( $post_id );
 
-		// if this expected to work?
-		if ( ! $trash ) {
-			self::assertFalse( $result, 'Should not be able to delete post' );
-			return;
-		}
-
 		// delete successful, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
+
+		// if this expected to work?
+		if ( ! $trash ) {
+			self::assertTrue( get_post_status( $post_id ), 'trash' 'Should not be able to delete post' );
+			return;
+		}
 
 		// check nothing remains.
 		foreach ( $all_posts as $id => $file ) {
