@@ -55,10 +55,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 			$wpdr = new WP_Document_Revisions();
 		}
 
-		// set up admin.
-		if ( ! defined( 'WP_ADMIN' ) ) {
-			define( 'WP_ADMIN', true );
-		}
 		$wpdr->admin_init();
 
 		// create users.

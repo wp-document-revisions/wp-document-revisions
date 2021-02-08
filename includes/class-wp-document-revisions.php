@@ -270,9 +270,12 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 */
 	public function admin_init() {
-		// only fire on admin + escape hatch to prevent fatal errors.
-		if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			return;
+
+		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
+		if ( ! class_exists( 'WP_UnitTestCase' ) ) {
+			if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
+				return;
+			}
 		}
 
 		include __DIR__ . '/class-wp-document-revisions-admin.php';

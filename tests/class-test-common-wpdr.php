@@ -30,7 +30,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Create shadow terms...
 	 *
-	 * Workflow_state tems are creatd by a separate process. Need them as fixtures.
+	 * Workflow_state tems are created by a separate process. Need them as fixtures.
 	 *
 	 * @return WP_Term[]  Array of WFS Terms.
 	 */
@@ -43,36 +43,24 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			)
 		);
 
-		// register taxoonomy.
-		register_taxonomy(
-			'wfs',
-			array( 'document' ),
-			array(
-				'public'       => true,
-				'hierarchical' => true,
-				'show_in_rest' => true,
-				'capabilities' => array(
-					'manage_terms' => 'edit_documents',
-					'edit_terms'   => 'edit_documents',
-					'delete_terms' => 'edit_documents',
-					'assign_terms' => 'edit_documents',
-				),
-			)
-		);
-
+		// delete them all and recreate them as fixtures.
 		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+
 			self::factory()->term->create(
 				array(
-					'taxonomy' => 'wfs',
-					'name'     => $ws_term->name,
-					'slug'     => $ws_term->slug,
+					'taxonomy'    => 'workflow_state',
+					'name'        => $ws_term->name,
+					'slug'        => $ws_term->slug,
+					'description' => $ws_term->description,
 				)
 			);
 		}
 
 		$ws_terms = get_terms(
 			array(
-				'taxonomy'   => 'wfs',
+				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
 			)
 		);
@@ -348,6 +336,11 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// check trash status. This is expected to work.
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
+		// make sure that we have the admin set up.
+		if ( ! isset( $wpdr->admin::$instance ) ) {
+			$wpdr->admin_init();
+		}
+
 		// add the attachment delete process.
 		add_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
 
@@ -392,6 +385,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 * Get the roles data refreshed.
 	 */
 	public function flush_roles() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->add_caps();
+
 		// We want to make sure we're testing against the DB, not just in-memory data.
 		// This will flush everything and reload it from the DB.
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -399,13 +399,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wp_roles;
 		$wp_roles = new WP_Roles();
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
-
-		// init user roles.
-		global $wpdr;
-		if ( ! $wpdr ) {
-			$wpdr = new WP_Document_Revisions();
-		}
-		$wpdr->add_caps();
 	}
 
 	/**
