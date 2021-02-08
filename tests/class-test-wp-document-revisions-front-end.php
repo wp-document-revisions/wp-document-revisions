@@ -349,7 +349,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// can user read_revisions?
-		self::assertTrue( user_can( $usr,  'read_document_revisions' ), 'Cannot read document revisions' );
+		self::assertTrue( user_can( $usr, 'read_document_revisions' ), 'Cannot read document revisions' );
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -409,7 +409,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// can user read_revisions?
-		self::assertTrue( user_can( $usr,  'read_document_revisions' ), 'Cannot read document revisions' );
+		self::assertTrue( user_can( $usr, 'read_document_revisions' ), 'Cannot read document revisions' );
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {

@@ -274,7 +274,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( self::role_has_cap( 'contributor', 'edit_private_documents' ), 'Can edit_private_documents' );
 		self::assertFalse( self::role_has_cap( 'contributor', 'edit_published_documents' ), 'Can edit_published_documents' );
 		self::assertTrue( self::role_has_cap( 'contributor', 'read_documents' ), 'Cannot read_documents' );
-		self::assertTrue( self::role_has_cap( 'contributor',( 'read_document_revisions' ), 'Cannot read_document_revisions' );
+		self::assertTrue( self::role_has_cap( 'contributor', 'read_document_revisions' ), 'Cannot read_document_revisions' );
 		self::assertFalse( self::role_has_cap( 'contributor', 'read_private_documents' ), 'Can read_private_documents' );
 		self::assertTrue( self::role_has_cap( 'contributor', 'delete_documents' ), 'Cannot delete_documents' );
 		self::assertFalse( self::role_has_cap( 'contributor', 'delete_others_documents' ), 'Can delete_others_documents' );
@@ -315,7 +315,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( self::role_has_cap( 'author', 'read_private_documents' ), 'Can read_private_documents' );
 		self::assertTrue( self::role_has_cap( 'author', 'delete_documents' ), 'Cannot delete_documents' );
 		self::assertFalse( self::role_has_cap( 'author', 'delete_others_documents' ), 'Can delete_others_documents' );
-		self::assertFalse( self::role_has_cap( 'author',( 'delete_private_documents' ), 'Can delete_private_documents' );
+		self::assertFalse( self::role_has_cap( 'author', 'delete_private_documents' ), 'Can delete_private_documents' );
 		self::assertTrue( self::role_has_cap( 'author', 'delete_published_documents' ), 'Cannot delete_published_documents' );
 		self::assertTrue( self::role_has_cap( 'author', 'publish_documents' ), 'Cannot publish_documents' );
 		self::assertFalse( self::role_has_cap( 'author', 'override_document_lock' ), 'Can override_document_lock' );
