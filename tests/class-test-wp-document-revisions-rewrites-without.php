@@ -116,6 +116,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
 		// flush cache for good measure.
@@ -126,8 +127,9 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		$wpdr->initialize_workflow_states();
 
 		// Taxonomy terms recreated as fixtures.
-		$ws_terms         = self::create_term_fixtures();
+		$ws_terms         = self::create_term_fixtures( $factory );
 		self::$ws_term_id = $ws_terms[0]->term_id;
+		console_log( 'WS: ' . count( $ws_terms ) );
 
 		// create posts for scenarios.
 		// Author Public.

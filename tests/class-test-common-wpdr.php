@@ -27,14 +27,17 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 
+	// phpcs:disable
 	/**
 	 * Create shadow terms...
 	 *
 	 * Workflow_state tems are created by a separate process. Need them as fixtures.
 	 *
+	 * @param WP_UnitTest_Factory $factory.
 	 * @return WP_Term[]  Array of WFS Terms.
 	 */
-	public static function create_term_fixtures() {
+	public static function create_term_fixtures( WP_UnitTest_Factory $factory ) {
+		// phpcs:enable
 		// get the ws terms.
 		$ws_terms = get_terms(
 			array(
@@ -48,7 +51,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			wp_delete_term( $ws_term->term_id, 'workflow_state' );
 			clean_term_cache( $ws_term->term_id, 'workflow_state' );
 
-			self::factory()->term->create(
+			$term_id = $factory->term->create(
 				array(
 					'taxonomy'    => 'workflow_state',
 					'name'        => $ws_term->name,
@@ -200,7 +203,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		self::go_to( $url );
 
-		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
+		self::assertQueryTrue( 'is_single', 'is_singular' );
 
 		global $wp_query;
 		self::assertGreaterThan( 0, $wp_query->found_posts, 'Cannot find document' );

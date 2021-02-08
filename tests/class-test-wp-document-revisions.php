@@ -129,10 +129,10 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 */
 	private function role_has_cap( $role, $cap ) {
 		global $wp_roles;
-		self::assertTrue( array_key_exists( $role, $wp_roles->role_names, true ), "Role $role does not exist" );
+		self::assertTrue( array_key_exists( $role, $wp_roles->role_names ), "Role $role does not exist" );
 
 		$role_caps = $wp_roles->roles[ $role ]['capabilities'];
-		if ( array_key_exists( $cap, $role_caps, true ) ) {
+		if ( array_key_exists( $cap, $role_caps ) ) {
 			return $role_caps[ $cap ];
 		}
 		return false;

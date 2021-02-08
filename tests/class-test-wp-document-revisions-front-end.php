@@ -126,7 +126,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$wpdr->initialize_workflow_states();
 
 		// Taxonomy terms recreated as fixtures.
-		$ws_terms           = self::create_term_fixtures();
+		$ws_terms           = self::create_term_fixtures( $factory );
 		self::$ws_term_id_0 = $ws_terms[0]->term_id;
 		self::$ws_slug_0    = $ws_terms[0]->slug;
 		self::$ws_term_id_1 = $ws_terms[1]->term_id;
@@ -360,9 +360,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			'id' => self::$editor_public_post,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
-		console_log( $output );
 
-		self::assertEquals( 2, substr_count( $output, '<li' ), 'editor revision block' );
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'editor revision block' );
 	}
 
 	/**
@@ -563,7 +562,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( array() );
-		console_log( $output );
+
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'document block nofilter count' );
+		self::assertEquals( 1, substr_count( $output, 'Author Public' ), 'document block nofilter post_1' );
+		self::assertEquals( 1, substr_count( $output, 'Editor Public' ), 'document block nofilter post_2' );
 
 		$atts   = array(
 			'taxonomy_0' => 'workflow_state',
@@ -573,6 +575,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
+		self::assertEquals( 1, substr_count( $output, 'Author Public' ), 'document block nofilter auth_1' );
 
 		// using document_read capability means no access for an unauthorized use..
 		add_filter( 'document_read_uses_read', '__return_false' );
@@ -630,6 +633,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		// Proper query.
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		$docs = get_documents(
 			array(
@@ -639,22 +643,19 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		);
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 
-		console_log( 'Retrieved: ' . count( $docs ) );
-		foreach ( $docs as $doc ) {
-			console_log( 'Post:' . $doc->ID . ' ' . $doc->post_title );
-		}
-		self::assertCount( 1, $docs, 'get_documents filter count' );
+		self::assertCount( 1, $docs, 'get_documents filter count_1' );
+		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'get_documents filter title_11' );
 
+		// Incorrect query. Will retrieve all public rows.
 		$docs = get_documents(
 			array(
 				'test_meta_key' => 'test_value',
 			)
 		);
-		console_log( 'Retrieved: ' . count( $docs ) );
-		foreach ( $docs as $doc ) {
-			console_log( 'Post:' . $doc->ID . ' ' . $doc->post_title );
-		}
-		self::assertCount( 1, $docs, 'get_documents filter count' );
+
+		self::assertCount( 2, $docs, 'get_documents filter count_2' );
+		self::assertEquals( 1, substr_count( $output_1, 'Author Public' ), 'get_documents filter title_21' );
+		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'get_documents filter title_22' );
 	}
 
 	/**

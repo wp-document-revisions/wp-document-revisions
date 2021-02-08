@@ -80,6 +80,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
 		// create users and assign role.
@@ -121,12 +122,12 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// flush cache for good measure.
 		wp_cache_flush();
 
-		// add terms and use one.
+		// create terms and use one.
 		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
 
 		// Taxonomy terms recreated as fixtures.
-		$ws_terms         = self::create_term_fixtures();
+		$ws_terms         = self::create_term_fixtures( $factory );
 		self::$ws_term_id = $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
