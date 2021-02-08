@@ -118,6 +118,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// Check it is a document.
+		global $wpdr;
 		if ( ! $wpdr->verify_post_type( $id ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
