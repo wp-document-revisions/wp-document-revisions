@@ -287,7 +287,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertQueryTrue( 'is_admin', 'is_single', 'is_singular' );
+		// either 404 or will be stopped later.
+		if ( is_404() ) {
+			self::assertQueryTrue( 'is_404' );
+		} else {	
+			self::assertQueryTrue( 'is_single', 'is_singular' );
+		}
 
 		// verify whether contents are actually served.
 		ob_start();

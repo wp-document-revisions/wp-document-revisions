@@ -230,6 +230,20 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_delete_post( self::$author_private_post, true );
 		wp_delete_post( self::$editor_private_post, true );
 		wp_delete_post( self::$editor_public_post, true );
+
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
 	}
 
 	/**
@@ -644,7 +658,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 
 		self::assertCount( 1, $docs, 'get_documents filter count_1' );
-		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'get_documents filter title_11' );
+		self::assertEquals( 1, substr_count( $docs, 'Editor Public' ), 'get_documents filter title_11' );
 
 		// Incorrect query. Will retrieve all public rows.
 		$docs = get_documents(
@@ -654,8 +668,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		);
 
 		self::assertCount( 2, $docs, 'get_documents filter count_2' );
-		self::assertEquals( 1, substr_count( $output_1, 'Author Public' ), 'get_documents filter title_21' );
-		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'get_documents filter title_22' );
+		self::assertEquals( 1, substr_count( $docs, 'Author Public' ), 'get_documents filter title_21' );
+		self::assertEquals( 1, substr_count( $docs, 'Editor Public' ), 'get_documents filter title_22' );
 	}
 
 	/**

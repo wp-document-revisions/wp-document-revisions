@@ -129,7 +129,6 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		// Taxonomy terms recreated as fixtures.
 		$ws_terms         = self::create_term_fixtures( $factory );
 		self::$ws_term_id = $ws_terms[0]->term_id;
-		console_log( 'WS: ' . count( $ws_terms ) );
 
 		// create posts for scenarios.
 		// Author Public.
@@ -220,6 +219,20 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_delete_post( self::$author_private_post, true );
 		wp_delete_post( self::$editor_private_post, true );
 		wp_delete_post( self::$editor_public_post, true );
+
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
 	}
 
 	/**

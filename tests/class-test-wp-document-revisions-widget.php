@@ -145,6 +145,20 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	public static function wpTearDownAfterClass() {
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$editor_private_post, true );
+
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
 	}
 
 	/**
