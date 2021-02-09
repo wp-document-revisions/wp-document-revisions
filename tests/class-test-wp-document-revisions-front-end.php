@@ -658,7 +658,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 
 		self::assertCount( 1, $docs, 'get_documents filter count_1' );
-		self::assertEquals( 1, substr_count( $docs, 'Editor Public' ), 'get_documents filter title_11' );
+		self::assertEquals( self::$editor_public_post, $docs[0]->ID, 'get_documents filter title_11' );
 
 		// Incorrect query. Will retrieve all public rows.
 		$docs = get_documents(
@@ -668,8 +668,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		);
 
 		self::assertCount( 2, $docs, 'get_documents filter count_2' );
-		self::assertEquals( 1, substr_count( $docs, 'Author Public' ), 'get_documents filter title_21' );
-		self::assertEquals( 1, substr_count( $docs, 'Editor Public' ), 'get_documents filter title_22' );
+		if ( self::$author_public_post === $docs[0]->ID ) {
+			self::assertEquals( self::$author_public_post, $docs[0]->ID, 'get_documents filter title_21' );
+			self::assertEquals( self::$editor_public_post, $docs[1]->ID, 'get_documents filter title_22' );
+		} else {
+			self::assertEquals( self::$author_public_post, $docs[1]->ID, 'get_documents filter title_21' );
+			self::assertEquals( self::$editor_public_post, $docs[0]->ID, 'get_documents filter title_22' );
+		}
 	}
 
 	/**

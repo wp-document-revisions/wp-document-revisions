@@ -233,6 +233,8 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 			wp_delete_term( $ws_term->term_id, 'workflow_state' );
 			clean_term_cache( $ws_term->term_id, 'workflow_state' );
 		}
+
+		unregister_taxonomy( 'workflow state' );
 	}
 
 	/**
