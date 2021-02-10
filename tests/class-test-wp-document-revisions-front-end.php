@@ -123,7 +123,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// add terms and use one.
 		$wpdr->register_ct();
-		
+
 		// Check no values.
 		$ws_terms = get_terms(
 			array(
@@ -477,11 +477,36 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests the documents shortcode with a workflow state filter.
+	 * Tests the documents shortcode with a workflow state filter - authoe.
 	 */
-	public function test_document_shortcode_wfs_filter() {
+	public function test_document_shortcode_wfs_filter_auth() {
 
-		console_log( ' document_shortcode_wfs_filter' );
+		console_log( ' document_shortcode_wfs_filter_auth' );
+
+		// editor should be able to access.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
+
+		self::assertEquals( 2, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
+		self::assertEquals( 1, substr_count( $output_0, 'Author Public' ), 'document shortcode filter title_01' );
+		self::assertEquals( 1, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_02' );
+
+		$output_1 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
+
+		self::assertEquals( 1, substr_count( $output_1, '<li' ), 'document shortcode filter count_1' );
+		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'document shortcode filter title_1' );
+	}
+
+	/**
+	 * Tests the documents shortcode with a workflow state filter - editor.
+	 */
+	public function test_document_shortcode_wfs_filter_edit() {
+
+		console_log( ' document_shortcode_wfs_filter_edit' );
 
 		// editor should be able to access.
 		global $current_user;
@@ -491,8 +516,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
 
-		self::assertEquals( 1, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
-		self::assertEquals( 1, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_0' );
+		self::assertEquals( 2, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
+		self::assertEquals( 1, substr_count( $output_0, 'Author Public' ), 'document shortcode filter title_01' );
+		self::assertEquals( 1, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_02' );
 
 		$output_1 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
 
@@ -593,7 +619,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			'term_0'     => self::$ws_term_id_0,
 		);
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, '<li' ), 'document block filter auth' );
 		self::assertEquals( 1, substr_count( $output, 'Author Public' ), 'document block nofilter auth_1' );
@@ -602,7 +627,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block docread' );
 		remove_filter( 'document_read_uses_read', '__return_false' );
