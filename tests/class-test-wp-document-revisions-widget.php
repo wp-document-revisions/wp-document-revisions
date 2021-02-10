@@ -143,6 +143,10 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Delete the posts. (Taken from WP Test Suite).
 	 */
 	public static function wpTearDownAfterClass() {
+		// remove terms.
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow state' );
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
+
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$editor_private_post, true );
 

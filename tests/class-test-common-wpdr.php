@@ -290,7 +290,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// either 404 or will be stopped later.
 		if ( is_404() ) {
 			self::assertQueryTrue( 'is_404' );
-		} else {	
+		} else {
 			self::assertQueryTrue( 'is_single', 'is_singular' );
 		}
 
@@ -360,7 +360,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// if this expected to work?
 		if ( ! $trash ) {
-			self::assertTrue( get_post_status( $post_id ), 'trash', 'Should not be able to delete post' );
+			self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
 			return;
 		}
 

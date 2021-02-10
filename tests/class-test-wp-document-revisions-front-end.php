@@ -226,6 +226,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Delete the posts. (Taken from WP Test Suite).
 	 */
 	public static function wpTearDownAfterClass() {
+		// remove terms.
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id_0, 'workflow_state' );	
+		wp_remove_object_terms( self::$author_private_post, self::$ws_term_id_0, 'workflow_state' );
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id_1, 'workflow_state' );
+		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id_1, 'workflow_state' );
+
+		// delete posts.
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$author_private_post, true );
 		wp_delete_post( self::$editor_private_post, true );
@@ -403,7 +410,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			'id' => 2,
 		);
 		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 1, substr_count( $output, 'This is not a valid document' ), 'editor revision block nondoc' );
 	}
@@ -472,21 +478,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
-		console_log( 'APu - QT:' . self::$ws_slug_0 );
-		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state' );
-		foreach ( $terms as $term ) {
-			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
-		}
-
-		console_log( 'APrEPu - QT:' . self::$ws_slug_1 );
-		$terms = wp_get_post_terms( self::$author_private_post, 'workflow_state' );
-		foreach ( $terms as $term ) {
-			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
-		}
-		$terms = wp_get_post_terms( self::$editor_public_post, 'workflow_state' );
-		foreach ( $terms as $term ) {
-			console_log( 'AT:' . $term->term_id . '/' . $term->slug );
-		}
 
 		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
 
@@ -580,6 +571,12 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document block nofilter count' );
 		self::assertEquals( 1, substr_count( $output, 'Author Public' ), 'document block nofilter post_1' );
 		self::assertEquals( 1, substr_count( $output, 'Editor Public' ), 'document block nofilter post_2' );
+
+		$term = get_term( self::$ws_term_id_0, 'workflow_state' );
+		self::assertEquals( self::$ws_slug_0, $term->slug, 'slug equal' );
+
+		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state', array( 'fields' => 'term_id' ) );
+		self::assertEquals( self::$ws_term_id_0, $terms[0]->term_id, 'term_id equal' );
 
 		$atts   = array(
 			'taxonomy_0' => 'workflow_state',

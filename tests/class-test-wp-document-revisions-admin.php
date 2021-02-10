@@ -76,7 +76,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
 
-		// Taxonomy wfs is clone of workflow_state.
+		// Taxonomy terms recreated as fixtures.
 		$ws_terms         = self::create_term_fixtures( $factory );
 		self::$ws_term_id = $ws_terms[0]->term_id;
 
@@ -96,7 +96,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'wfs' );
+		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
 		// Editor Private.
@@ -114,8 +114,36 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'wfs' );
+		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+	}
+
+	/**
+	 * Delete the posts. (Taken from WP Test Suite).
+	 */
+	public static function wpTearDownAfterClass() {
+		// remove terms.
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
+		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow state' );
+
+		wp_delete_post( self::$editor_private_post, true );
+		wp_delete_post( self::$editor_public_post, true );
+
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
+
+		unregister_taxonomy( 'workflow state' );
 	}
 
 	/**

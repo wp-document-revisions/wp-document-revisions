@@ -165,7 +165,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_private_post ), 'Failed inserting document' );
 
 		// add terms and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_private_post, self::$ws_term_id, 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
 		self::add_document_attachment( $factory, self::$author_private_post, self::$test_file );
 
@@ -215,6 +215,12 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 * Delete the posts. (Taken from WP Test Suite).
 	 */
 	public static function wpTearDownAfterClass() {
+		// remove terms.
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );	
+		wp_remove_object_terms( self::$author_private_post, self::$ws_term_id, 'workflow_state' );
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
+		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow state' );
+
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$author_private_post, true );
 		wp_delete_post( self::$editor_private_post, true );
