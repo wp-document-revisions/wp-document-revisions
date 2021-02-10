@@ -363,7 +363,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// if this expected to work?
 		if ( ! $trash ) {
-			// self::assert NotNull( get_post( $post_id ), 'Should not be able to delete post' );
+			// self::assert NotNull( get_ post( $post_id ), 'Should not be able to delete post' );  --.
 			return;
 		}
 
