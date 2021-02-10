@@ -124,7 +124,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		// create terms and use one.
 		$wpdr->register_ct();
-		
+
 		// Check no values.
 		$ws_terms = get_terms(
 			array(

@@ -131,7 +131,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		self::assertEquals( 0, count( $ws_term ), 'Taxonomy not empty' );
+		self::assertEquals( 0, count( $ws_terms ), 'Taxonomy not empty' );
 
 		$wpdr->initialize_workflow_states();
 
@@ -585,7 +585,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$term = get_term( self::$ws_term_id_0, 'workflow_state' );
 		self::assertEquals( self::$ws_slug_0, $term->slug, 'slug equal' );
 
-		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state', array( 'fields' => 'term_id' ) );
+		$terms = wp_get_post_terms( self::$author_public_post, 'workflow_state' );
 		self::assertEquals( self::$ws_term_id_0, $terms[0]->term_id, 'term_id equal' );
 
 		$atts   = array(

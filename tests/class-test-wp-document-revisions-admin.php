@@ -74,7 +74,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		// add terms and use one.
 		$wpdr->register_ct();
-		
+
 		// Check no values.
 		$ws_terms = get_terms(
 			array(
@@ -82,7 +82,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		self::assertEquals( 0, count( $ws_term ), 'Taxonomy not empty' );
+		self::assertEquals( 0, count( $ws_terms ), 'Taxonomy not empty' );
 
 		$wpdr->initialize_workflow_states();
 
