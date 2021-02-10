@@ -110,7 +110,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$author_public_post, array( self::$ws_term_id ), 'workflow state' );
+		$terms = wp_set_post_terms( self::$author_public_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
 
 		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
@@ -133,7 +133,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow state' );
+		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
 
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );

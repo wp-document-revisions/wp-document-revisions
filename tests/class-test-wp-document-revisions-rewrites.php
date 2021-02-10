@@ -132,7 +132,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 				'hide_empty' => false,
 			)
 		);
-		self::assertEquals( 0, count( $ws_term ), 'Taxonomy not empty' );
+		self::assertEquals( 0, count( $ws_terms ), 'Taxonomy not empty' );
 
 		$wpdr->initialize_workflow_states();
 
