@@ -489,7 +489,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		// request that only one is shown, so should be 1. (latest is by Editor).
 		$atts['numberposts'] = 1;
 		$output              = $wpdr_widget->wpdr_documents_widget_display( $atts );
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_3' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'block_publish_auth_4' );

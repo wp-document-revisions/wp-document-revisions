@@ -75,7 +75,11 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
-		foreach ( $documents as $document ) :
+		foreach ( $documents as $document ) {
+			if ( ! current_user_can( 'read_document', $document->ID ) ) {
+				continue;
+			}
+
 			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
 					'post'   => $document->ID,
@@ -91,7 +95,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
 			</li>
 			<?php
-		endforeach;
+		}
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</ul>' . $args['after_widget'];

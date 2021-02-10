@@ -15,7 +15,7 @@ services:
 matrix:
   include:
     - php: 7.4
-      env: WP_VERSION=latest
+      env: WP_VERSION=latest WP_COVERAGE=coveralls
 #    - php: 7.3
 #      env: WP_VERSION=latest
 #    - php: 7.2
