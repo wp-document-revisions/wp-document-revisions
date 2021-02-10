@@ -216,7 +216,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public static function wpTearDownAfterClass() {
 		// remove terms.
-		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );	
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );
 		wp_remove_object_terms( self::$author_private_post, self::$ws_term_id, 'workflow_state' );
 		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
 		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow state' );

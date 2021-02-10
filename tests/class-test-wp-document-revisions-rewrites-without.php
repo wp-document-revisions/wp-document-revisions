@@ -124,6 +124,17 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		// create terms and use one.
 		$wpdr->register_ct();
+		
+		// Check no values.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+		self::assertEquals( 0, count( $ws_term ), 'Taxonomy not empty' );
+
+
 		$wpdr->initialize_workflow_states();
 
 		// Taxonomy terms recreated as fixtures.
@@ -216,7 +227,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	 */
 	public static function wpTearDownAfterClass() {
 		// remove terms.
-		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );	
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );
 		wp_remove_object_terms( self::$author_private_post, self::$ws_term_id, 'workflow_state' );
 		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
 		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow state' );

@@ -358,6 +358,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// delete successful, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin::$instance, 'delete_attachments_with_document' ), 10, 1 );
 
+		// flush cache to assure result.
+		wp_cache_flush();
+
 		// if this expected to work?
 		if ( ! $trash ) {
 			self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
