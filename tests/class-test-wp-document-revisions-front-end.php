@@ -137,9 +137,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// Taxonomy terms recreated as fixtures.
 		$ws_terms           = self::create_term_fixtures( $factory );
-		self::$ws_term_id_0 = $ws_terms[0]->term_id;
+		self::$ws_term_id_0 = (int) $ws_terms[0]->term_id;
 		self::$ws_slug_0    = $ws_terms[0]->slug;
-		self::$ws_term_id_1 = $ws_terms[1]->term_id;
+		self::$ws_term_id_1 = (int) $ws_terms[1]->term_id;
 		self::$ws_slug_1    = $ws_terms[1]->slug;
 
 		// create posts for scenarios.
@@ -158,7 +158,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$author_public_post ), 'Failed inserting document' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$author_public_post, self::$ws_term_id_0, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$author_public_post, array( self::$ws_term_id_0 ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow states to document' );
 		self::add_document_attachment( $factory, self::$author_public_post, self::$test_file );
 

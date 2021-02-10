@@ -88,7 +88,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		// Taxonomy terms recreated as fixtures.
 		$ws_terms         = self::create_term_fixtures( $factory );
-		self::$ws_term_id = $ws_terms[0]->term_id;
+		self::$ws_term_id = (int) $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
 		// Editor Public.
@@ -106,7 +106,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
 
 		// Editor Private.
@@ -124,7 +124,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
 
 		// add term and attachment.
-		$terms = wp_set_post_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
+		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
 	}
 
