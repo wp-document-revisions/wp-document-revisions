@@ -76,10 +76,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
 		foreach ( $documents as $document ) {
-			if ( ! current_user_can( 'read_document', $document->ID ) ) {
-				continue;
-			}
-
 			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
 					'post'   => $document->ID,
