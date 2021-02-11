@@ -289,7 +289,11 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// either 404 or will be stopped later.
 		if ( is_404() ) {
-			self::assertQueryTrue( 'is_404', 'is_single', 'is_singular' );
+			if ( is_single() ) {
+				self::assertQueryTrue( 'is_404', 'is_single', 'is_singular' );
+			} else {
+				self::assertQueryTrue( 'is_404' );
+			}
 		} else {
 			self::assertQueryTrue( 'is_single', 'is_singular' );
 		}
