@@ -363,7 +363,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// if this expected to work?
 		if ( ! $trash ) {
-			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );  // phpcs:ignore
+			// phpcs:disable
+			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
+			// phpcs:enable
 			return;
 		}
 
@@ -425,7 +427,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$wpdr = new WP_Document_Revisions();
 		}
 		// add a number of data access filters and actions.
-		$wpdr->use_read_capability;
+		$wpdr->use_read_capability();
 	}
 
 	/**
