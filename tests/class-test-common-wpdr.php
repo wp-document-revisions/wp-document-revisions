@@ -289,16 +289,21 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// either 404 or will be stopped later.
 		if ( is_404() ) {
-			self::assertQueryTrue( 'is_404' );
+			if ( is_single() ) {
+				self::assertQueryTrue( 'is_404', 'is_single', 'is_singular' );
+			} else {
+				self::assertQueryTrue( 'is_404' );
+			}
+			$content = '';
 		} else {
 			self::assertQueryTrue( 'is_single', 'is_singular' );
-		}
 
-		// verify whether contents are actually served.
-		ob_start();
-		$wpdr->serve_file( '' );
-		$content = ob_get_contents();
-		ob_end_clean();
+			// verify whether contents are actually served.
+			ob_start();
+			$wpdr->serve_file( '' );
+			$content = ob_get_contents();
+			ob_end_clean();
+		}
 
 		global $wp_query;
 

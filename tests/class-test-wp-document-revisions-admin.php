@@ -303,9 +303,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		global $post;
 
-		// set to near empty with minimal fields.
+		// set only required fields for test.
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post              = new WP_Post();
 		$post->ID          = 0;
 		$post->post_status = 'draft';
 		$post->post_type   = 'document';
