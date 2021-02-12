@@ -315,11 +315,11 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertEquals( 'private', $post->post_status, 'status not changed to private' );
 
 		// add filter to make public.
-		add_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
+		add_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
 
 		$wpdr->admin->make_private();
 
-		remove_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
+		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
 
 		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
 	}
