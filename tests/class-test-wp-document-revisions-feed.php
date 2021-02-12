@@ -65,7 +65,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$wpdr->add_caps();
 
 		// make sure that we have the admin set up - to use feed functions.
-		if ( ! isset( $wpdr->admin::$instance ) ) {
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			$wpdr->admin_init();
 		}
 

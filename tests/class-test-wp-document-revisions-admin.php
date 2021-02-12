@@ -56,7 +56,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		}
 
 		// make sure that we have the admin set up.
-		if ( ! isset( $wpdr->admin::$instance ) ) {
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			$wpdr->admin_init();
 		}
 
