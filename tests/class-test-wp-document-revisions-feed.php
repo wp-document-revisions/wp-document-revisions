@@ -270,6 +270,8 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		// try to get an auth'd feed.
 		$wpdr->admin->generate_new_feed_key( self::$users['author']->ID );
 		$key = $wpdr->admin->get_feed_key( self::$users['author']->ID );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = $key;
 
 		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 
@@ -300,7 +302,9 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		// try to get an auth'd feed.
 		$wpdr->admin->generate_new_feed_key( self::$users['contributor']->ID );
-		$key = $wpdr->admin->get_feed_key( self::$users['autcontributorhor']->ID );
+		$key = $wpdr->admin->get_feed_key( self::$users['contributor']->ID );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = $key;
 
 		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 

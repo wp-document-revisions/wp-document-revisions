@@ -318,11 +318,11 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// non-logged on user does not has read_document so should not read.
-		add_filter( 'document_read_uses_read', '__return_false' );
+		self::set_up_document_read();
 
 		self::verify_cant_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink DocRead' );
 
-		remove_filter( 'document_read_uses_read', '__return_false' );
+		self::tear_down_document_read();
 	}
 
 	/**
@@ -362,11 +362,11 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// non-logged on user has read so should read.
-		add_filter( 'document_read_uses_read', '__return_false' );
+		self::set_up_document_read();
 
 		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$test_file, 'Public Pretty Permalink DocRead' );
 
-		remove_filter( 'document_read_uses_read', '__return_false' );
+		self::tear_down_document_read();
 	}
 
 	/**
@@ -407,12 +407,12 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// non-logged on user has read so should not read.
-		add_filter( 'document_read_uses_read', '__return_false' );
+		self::set_up_document_read();
 
 		// public should be denied.
 		self::verify_cant_download( '?p=' . self::$author_private_post . '&post_type=document', self::$test_file, 'Private, Unauthenticated Ugly Permalink DocRead' );
 
-		remove_filter( 'document_read_uses_read', '__return_false' );
+		self::tear_down_document_read();
 	}
 
 	/**
@@ -453,12 +453,12 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// non-logged on user should not read.
-		add_filter( 'document_read_uses_read', '__return_false' );
+		self::set_up_document_read();
 
 		// public should be denied.
 		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private, Unauthenticated Pretty Permalink DocRead' );
 
-		remove_filter( 'document_read_uses_read', '__return_false' );
+		self::tear_down_document_read();
 	}
 
 	/**

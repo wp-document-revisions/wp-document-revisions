@@ -418,6 +418,42 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Set up processing for using document_read for reading..
+	 */
+	public function set_up_document_read() {
+
+		// using document_read capability means no access for an unauthorized use..
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		// add a number of data access filters and actions.
+		$wpdr->use_read_capability();
+	}
+
+	/**
+	 * Tear down processing for using document_read for reading..
+	 */
+	public function tear_down_document_read() {
+
+		global $wpdr;
+
+		// tear down the data access filters and actions.
+		remove_filter( 'map_meta_cap', array( $wpdr, 'map_meta_cap' ), 10, 4 );
+		remove_filter( 'user_has_cap', array( $wpdr, 'user_has_cap' ), 10, 4 );
+		if ( ! current_user_can( 'read_documents' ) ) {
+			remove_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10, 2 );
+		}
+
+		// no longer filter the queries.
+		remove_action( 'pre_get_posts', array( $wpdr, 'retrieve_documents' ) );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+	/**
 	 * Verify class is loaded (and to avoid a warning).
 	 */
 	public function test_class_loaded() {
