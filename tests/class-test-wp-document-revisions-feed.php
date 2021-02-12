@@ -64,8 +64,10 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
-		// load admin init - to use feed functions.
-		$wpdr->admin_init();
+		// make sure that we have the admin set up - to use feed functions.
+		if ( ! isset( $wpdr->admin::$instance ) ) {
+			$wpdr->admin_init();
+		}
 
 		// create users and assign role.
 		// Note that editor can do everything admin can do.

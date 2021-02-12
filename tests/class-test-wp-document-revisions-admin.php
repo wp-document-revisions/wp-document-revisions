@@ -55,7 +55,10 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 			$wpdr = new WP_Document_Revisions();
 		}
 
-		$wpdr->admin_init();
+		// make sure that we have the admin set up.
+		if ( ! isset( $wpdr->admin::$instance ) ) {
+			$wpdr->admin_init();
+		}
 
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
