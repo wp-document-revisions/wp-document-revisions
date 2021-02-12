@@ -133,8 +133,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public static function wpTearDownAfterClass() {
 		// remove terms.
-		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
-		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow state' );
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
+		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 
 		wp_delete_post( self::$editor_private_post, true );
 		wp_delete_post( self::$editor_public_post, true );
@@ -153,7 +153,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 			clean_term_cache( $ws_term->term_id, 'workflow_state' );
 		}
 
-		unregister_taxonomy( 'workflow state' );
+		unregister_taxonomy( 'workflow_state' );
 	}
 
 	/**
@@ -276,6 +276,49 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalin' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
+	}
+
+	/**
+	 * Test filter for make_private routine.
+	 *
+	 * @param WP_Post $post     link to (new) global post.
+	 * @param WP_Post $post_pre link to clone of global post.
+	 */
+	public make_public( $post, $post_pre ) {
+		$new_post              = clone $post;
+		$new_post->post_status = 'publish;'
+		return $new_post;
+	}
+
+	/**
+	 * Verify make_private routine.
+	 */
+	public function test_make_public() {
+		global $wpdr;
+
+		console_log( ' make private' );
+
+		global $post;
+		
+		// set to near empty.
+		$post = new WP_Post(
+			'ID'          => 0,
+			'post_status' => 'draft',
+			'post_type'   => 'document',
+		);
+
+		$wpdr->admin->make_private();
+
+		self::assertEquals( 'private', $post->post_status, 'status not changed to private' );
+
+		// add filter to make public.
+		add_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
+
+		$wpdr->admin->make_private();
+		
+		remove_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
+
+		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
 	}
 
 }

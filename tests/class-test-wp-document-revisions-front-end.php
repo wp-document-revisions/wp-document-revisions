@@ -576,12 +576,12 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document block read' );
 
 		// using document_read capability means no access for an unauthorized use..
-		self::set_up_document_read();
+		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 
 		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block docread' );
-		self::tear_down_document_read();
+		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
 
 	/**
@@ -624,12 +624,12 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertEquals( 1, substr_count( $output, 'Author Public' ), 'document block nofilter auth_1' );
 
 		// using document_read capability means no access for an unauthorized use..
-		self::set_up_document_read();
+		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$output = $wpdr_fe->wpdr_documents_shortcode_display( $atts );
 
 		self::assertEquals( 1, substr_count( $output, 'not authorized' ), 'document block docread' );
-		self::tear_down_document_read();
+		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
 
 	/**

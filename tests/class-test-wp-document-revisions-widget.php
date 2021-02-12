@@ -144,8 +144,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public static function wpTearDownAfterClass() {
 		// remove terms.
-		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow state' );
-		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow state' );
+		wp_remove_object_terms( self::$author_public_post, self::$ws_term_id, 'workflow_state' );
+		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$editor_private_post, true );
@@ -164,7 +164,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			clean_term_cache( $ws_term->term_id, 'workflow_state' );
 		}
 
-		unregister_taxonomy( 'workflow state' );
+		unregister_taxonomy( 'workflow_state' );
 	}
 
 	/**
@@ -243,13 +243,13 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$instance['post_status']['publish'] = true;
 
 		// non-logged on user does not use read so should not read anything.
-		self::set_up_document_read();
+		add_filter( 'document_read_uses_read', '__return_false' );
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		$output = $wpdr_widget->widget_gen( $args, $instance );
 
-		self::tear_down_document_read();
+		remove_filter( 'document_read_uses_read', '__return_false' );
 
 		self::assertEquals( 0, (int) substr_count( $output, '<li' ), 'publish_docread_noauthor' );
 	}
