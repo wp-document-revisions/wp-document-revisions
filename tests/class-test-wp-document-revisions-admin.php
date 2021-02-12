@@ -286,7 +286,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function make_public( $post, $post_pre ) {
 		$new_post              = clone $post;
-		$new_post->post_status = 'publish;'
+		$new_post->post_status = 'publish';
 		return $new_post;
 	}
 

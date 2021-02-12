@@ -287,7 +287,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	/**
 	 * Can a user with the proper feed key access a feed (contributor)?
 	 */
-	public function test_feed_as_authorized_auth() {
+	public function test_feed_as_authorized_contrib() {
 
 		global $wpdr;
 
