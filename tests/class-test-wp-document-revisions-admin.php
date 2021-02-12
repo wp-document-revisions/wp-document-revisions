@@ -303,9 +303,11 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// set to near empty.
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post(
-			'ID'          => 0,
-			'post_status' => 'draft',
-			'post_type'   => 'document',
+			array(
+				'ID'          => 0,
+				'post_status' => 'draft',
+				'post_type'   => 'document',
+			)
 		);
 
 		$wpdr->admin->make_private();
