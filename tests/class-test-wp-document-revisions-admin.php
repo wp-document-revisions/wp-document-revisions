@@ -284,7 +284,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 * @param WP_Post $post     link to (new) global post.
 	 * @param WP_Post $post_pre link to clone of global post.
 	 */
-	public make_public( $post, $post_pre ) {
+	public function make_public( $post, $post_pre ) {
 		$new_post              = clone $post;
 		$new_post->post_status = 'publish;'
 		return $new_post;
@@ -299,8 +299,9 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		console_log( ' make private' );
 
 		global $post;
-		
+
 		// set to near empty.
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post(
 			'ID'          => 0,
 			'post_status' => 'draft',
@@ -315,7 +316,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		add_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
 
 		$wpdr->admin->make_private();
-		
+
 		remove_filter( 'document_to_private', array( __CLASS__, 'make_public' ), 10, 2 );
 
 		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );

@@ -363,7 +363,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// if this expected to work?
 		if ( ! $trash ) {
-			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );  // phpcs:ignore
+			$post_obj = get_post( $post_id );
+			console_log( ( $post_obj instanceof WP_Post ? $post_obj->post_status : 'null' ) );
+			self::assertTrue( true, 'no delete route' );
+			// phpcs:disable  Squiz.PHP.CommentedOutCode.Found, Squiz.Commenting.InlineComment.InvalidEndChar
+			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
+			// phpcs:enable  Squiz.PHP.CommentedOutCode.Found, Squiz.Commenting.InlineComment.InvalidEndChar
 			return;
 		}
 
