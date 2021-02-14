@@ -206,7 +206,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		global $wpdr;
 
 		$this->go_to( $url );
-		console_log( 'is_feed : ' . (int) is_feed() );
+		console_log( 'url : ' . $url );
 		$wpdr->revision_feed_auth();
 		console_log( 'is_wp_die : ' . (int) _wpdr_is_wp_die() );
 

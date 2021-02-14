@@ -79,6 +79,6 @@ function _wpdr_die_handler() {
 function _wpdr_die_handler_filter() {
 	return '_wpdr_die_handler';
 }
-tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 100 );
+add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 100 );
 
 require $_tests_dir . '/includes/bootstrap.php';

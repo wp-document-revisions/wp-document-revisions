@@ -301,13 +301,18 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		console_log( ' make private' );
 
+		// create post object.
 		global $post;
 
-		// set only required fields for test.
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post->ID          = 0;
-		$post->post_status = 'draft';
-		$post->post_type   = 'document';
+		$post = $factory->post->create_and_get(
+			array(
+				'post_title'   => 'Test private',
+				'post_status'  => 'draft',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_type'    => 'document',
+			)
+		);
 
 		$wpdr->admin->make_private();
 

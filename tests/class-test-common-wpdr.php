@@ -393,6 +393,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		// set/reset WP_DIE detection.
+		$GLOBALS['is_wp_die'] = false;
+		 
 		// Try to make sure that are no extraneous headers before each test.
 		if ( ! headers_sent() ) {
 			header_remove();
