@@ -204,18 +204,18 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		}
 
 		global $wpdr;
-		flush_rewrite_rules();
 
 		$this->go_to( $url );
-
+		console_log( 'is_feed : ' . (int) is_feed() );
 		$wpdr->revision_feed_auth();
+		console_log( 'is_wp_die : ' . (int) _wpdr_is_wp_die() );
 
 		if ( _wpdr_is_wp_die() ) {
 			return '';
 		}
 
+		console_log( 'go for it ' );
 		ob_start();
-		global $post;
 		try {
 			require dirname( __DIR__ ) . '/includes/revision-feed.php';
 			$content = ob_get_clean();

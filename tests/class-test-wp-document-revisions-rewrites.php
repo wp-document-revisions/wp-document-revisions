@@ -132,6 +132,17 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		$ws_terms         = self::create_term_fixtures( $factory );
 		self::$ws_term_id = (int) $ws_terms[0]->term_id;
 
+		// manage term counting.
+		global $wp_version;
+		$vers = strpos( $wp_version, '-' );
+		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
+		if ( version_compare( $vers, '5.7' ) >= 0 ) {
+			// core method introduced with version 5.7.
+			add_filter( 'update_post_term_count_statuses', array( $wpdr, 'review_count_statuses' ), 30, 2 );
+		} else {
+			$wpdr->register_term_count_cb();
+		}
+
 		// create posts for scenarios.
 		// Author Public.
 		self::$author_public_post = $factory->post->create(
@@ -253,6 +264,10 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		self::verify_structure( self::$author_private_post, 1, 1 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
 		self::verify_structure( self::$editor_public_post, 2, 2 );
+
+		// All posts have been assigned to term 1.
+		$term = get_term( self::$ws_term_id, 'workflow_state' );
+		self::assertEquals( 4, $term->count, 'Term count not correct' );
 	}
 
 	/**

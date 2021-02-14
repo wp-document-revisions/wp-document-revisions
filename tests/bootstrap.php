@@ -35,6 +35,20 @@ function _manually_load_plugin() {
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 /**
+ * Several tests will try to serve a file twice, this would fail, so suppress headers from being written.
+ *
+ * Tests also require buffers opened to be closed (and so send headers).
+ *
+ * @param array  $headers any headers for the file being served.
+ * @param string $file    file name of file being served.
+ */
+function _remove_headers( $headers, $file ) {
+	return array();
+}
+
+tests_add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
+
+/**
  * Whether we wp_die'd this test.
  *
  * @return bool True if wp_die() has been used. False if not.
@@ -68,17 +82,3 @@ function _wpdr_die_handler_filter() {
 tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 100 );
 
 require $_tests_dir . '/includes/bootstrap.php';
-
-/**
- * Several tests will try to serve a file twice, this would fail, so suppress headers from being written.
- *
- * Tests also require buffers opened to be closed (and so send headers).
- *
- * @param array  $headers any headers for the file being served.
- * @param string $file    file name of file being served.
- */
-function _remove_headers( $headers, $file ) {
-	return array();
-}
-
-add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
