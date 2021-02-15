@@ -203,15 +203,17 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 			return '';
 		}
 
-		global $wpdr;
-
 		$this->go_to( $url );
+
+		global $wpdr, $post, $wp_query;
 
 		$wpdr->revision_feed_auth();
 
 		if ( _wpdr_is_wp_die() || is_404() ) {
 			return '';
 		}
+		console_log( 'Post_id:' . $post->ID . $wp_query->found_posts );
+		console_log( 'Post_id:' . $wp_quer->posts[0]->ID );
 
 		ob_start();
 		try {
@@ -314,7 +316,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( 3, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 
