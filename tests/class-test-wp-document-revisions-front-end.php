@@ -399,32 +399,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests the document_revisions shortcode with a number=1 limit.
-	 */
-	public function test_revisions_shortcode_limit() {
-
-		console_log( ' revisions_shortcode_limit' );
-
-		// editor should be able to access.
-		global $current_user;
-		unset( $current_user );
-		$usr = wp_set_current_user( self::$users['editor']->ID );
-		wp_cache_flush();
-
-		// can user read_revisions?
-		// Removed.
-
-		global $wpdr_fe;
-		if ( ! $wpdr_fe ) {
-			$wpdr_fe = new WP_Document_Revisions_Front_End();
-		}
-
-		$output = do_shortcode( '[document_revisions number="1" id="' . self::$editor_public_post . '"]' );
-
-		self::assertEquals( 1, substr_count( $output, '<li' ), 'revision shortcode limit' );
-	}
-
-	/**
 	 * Tests the documents shortcode.
 	 *
 	 * An unauthorised user cannot see post revisions.

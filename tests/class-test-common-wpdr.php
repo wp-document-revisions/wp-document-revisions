@@ -355,7 +355,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		}
 
 		// add the attachment delete process.
-		if ( 5.6 === (float) phpversion() ) {
+		if ( 7.0 <= (float) phpversion() ) {
 			$class = $wpdr->admin->instance;
 		} else {
 			$class = $wpdr->admin::$instance;
