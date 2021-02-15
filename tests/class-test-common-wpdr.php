@@ -360,7 +360,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		} else {
 			$class = $wpdr->admin::$instance;
 		}
-		
 		add_action( 'delete_post', array( $class, 'delete_attachments_with_document' ), 10, 1 );
 
 		// delete the post.

@@ -412,7 +412,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// can user read_revisions?
-		self::assertTrue( user_can( $usr, 'read_document_revisions' ), 'Cannot read document revisions' );
+		// Removed.
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -473,32 +473,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		self::assertEquals( 1, substr_count( $output_1, '<li' ), 'document shortcode filter count_1' );
 		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'document shortcode filter title_1' );
-	}
-
-	/**
-	 * Tests the documents shortcode with a workflow state filter - editor.
-	 */
-	public function test_document_shortcode_wfs_filter_edit() {
-
-		console_log( ' document_shortcode_wfs_filter_edit' );
-
-		// editor should be able to access.
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$users['editor']->ID );
-		wp_cache_flush();
-
-		$output_0 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_0 . '"]' );
-
-		self::assertEquals( 1, substr_count( $output_0, '<li' ), 'document shortcode filter count_0' );
-		self::assertEquals( 1, substr_count( $output_0, 'Author Public' ), 'document shortcode filter title_01' );
-		self::assertEquals( 0, substr_count( $output_0, 'Author Private' ), 'document shortcode filter title_02' );
-
-		$output_1 = do_shortcode( '[documents workflow_state="' . self::$ws_slug_1 . '"]' );
-
-		self::assertEquals( 2, substr_count( $output_1, '<li' ), 'document shortcode filter count_1' );
-		self::assertEquals( 1, substr_count( $output_1, 'Editor Private' ), 'document shortcode filter title_11' );
-		self::assertEquals( 1, substr_count( $output_1, 'Editor Public' ), 'document shortcode filter title_12' );
 	}
 
 	/**
