@@ -204,6 +204,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		}
 
 		$this->go_to( $url );
+		console_log( $url );
 
 		global $wpdr, $post, $wp_query;
 
@@ -213,7 +214,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 			return '';
 		}
 		console_log( 'Post_id:' . $post->ID . $wp_query->found_posts );
-		console_log( 'Post_id:' . $wp_quer->posts[0]->ID );
+		console_log( 'Post_id:' . $wp_query->posts[0]->ID );
 
 		ob_start();
 		try {
