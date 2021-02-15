@@ -204,7 +204,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		}
 
 		$this->go_to( $url );
-		console_log( $url );
 
 		global $wpdr, $post, $wp_query;
 
