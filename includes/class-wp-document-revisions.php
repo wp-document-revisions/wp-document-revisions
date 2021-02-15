@@ -832,7 +832,8 @@ class WP_Document_Revisions {
 		$get_revs = wp_get_post_revisions(
 			$post_id,
 			array(
-				'order' => 'DESC',
+				'order'            => 'DESC',
+				'suppress_filters' => true,   // try to avoid 'perm' overrides.
 			)
 		);
 
