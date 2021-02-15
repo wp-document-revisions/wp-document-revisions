@@ -206,15 +206,13 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		global $wpdr;
 
 		$this->go_to( $url );
-		console_log( 'url : ' . $url );
+
 		$wpdr->revision_feed_auth();
-		console_log( 'is_wp_die : ' . (int) _wpdr_is_wp_die() );
 
 		if ( _wpdr_is_wp_die() ) {
 			return '';
 		}
 
-		console_log( 'go for it ' );
 		ob_start();
 		try {
 			require dirname( __DIR__ ) . '/includes/revision-feed.php';
@@ -258,41 +256,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Can a user with the proper feed key access a feed (author)?
-	 */
-	public function test_feed_as_authorized_auth() {
-
-		global $wpdr;
-
-		console_log( ' feed_as_authorized_auth' );
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$users['author']->ID );
-		wp_cache_flush();
-
-		// try to get an auth'd feed.
-		$wpdr->admin->generate_new_feed_key( self::$users['author']->ID );
-		$key = $wpdr->admin->get_feed_key( self::$users['author']->ID );
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['key'] = $key;
-
-		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
-		console_log( '/' . $content . '/' );
-
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
-
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
-		console_log( '/' . $content . '/' );
-
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
-	}
-
-	/**
 	 * Can a user with the proper feed key access a feed (contributor)?
 	 */
 	public function test_feed_as_authorized_contrib() {
@@ -322,6 +285,39 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 		console_log( '/' . $content . '/' );
+
+		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+	}
+
+	/**
+	 * Can a user with the proper feed key access a feed (author)?
+	 */
+	public function test_feed_as_authorized_auth() {
+
+		global $wpdr;
+
+		console_log( ' feed_as_authorized_auth' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		// try to get an auth'd feed.
+		$wpdr->admin->generate_new_feed_key( self::$users['author']->ID );
+		$key = $wpdr->admin->get_feed_key( self::$users['author']->ID );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = $key;
+
+		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
+
+		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
+
+		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+
+		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
 		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
