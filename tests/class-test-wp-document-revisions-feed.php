@@ -262,40 +262,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Can a user with the proper feed key access a feed (contributor)?
-	 */
-	public function test_feed_as_authorized_contrib() {
-
-		global $wpdr;
-
-		console_log( ' feed_as_authorized_contrib' );
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$users['contributor']->ID );
-		wp_cache_flush();
-
-		// try to get an auth'd feed.
-		$wpdr->admin->generate_new_feed_key( self::$users['contributor']->ID );
-		$key = $wpdr->admin->get_feed_key( self::$users['contributor']->ID );
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['key'] = $key;
-
-		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
-		console_log( '/' . $content . '/' );
-
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
-
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
-
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertTrue( is_404(), 'Finding an others private post feeds_2' );
-	}
-
-	/**
 	 * Can a user with the proper feed key access a feed (author)?
 	 */
 	public function test_feed_as_authorized_auth() {
