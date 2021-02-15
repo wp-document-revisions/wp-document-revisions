@@ -209,7 +209,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		$wpdr->revision_feed_auth();
 
-		if ( _wpdr_is_wp_die() ) {
+		if ( _wpdr_is_wp_die() || is_404() ) {
 			return '';
 		}
 
@@ -281,13 +281,12 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
-		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+		self::assertTrue( is_404(), 'Finding an others private post feeds_2' );
 	}
 
 	/**
@@ -315,7 +314,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 
