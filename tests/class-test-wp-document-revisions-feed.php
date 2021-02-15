@@ -286,7 +286,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( 3, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 

@@ -118,6 +118,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		$wp_rewrite->flush_rules();
 
+		// init user roles.
+		$wpdr->add_caps();
+
 		// flush cache for good measure.
 		wp_cache_flush();
 
