@@ -399,35 +399,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Verify auth'd user can view revision block and can truncate proper count.
-	 */
-	public function test_revisions_block_nondoc() {
-
-		console_log( ' revisions_block' );
-
-		// editor should be able to access.
-		global $current_user;
-		unset( $current_user );
-		$usr = wp_set_current_user( self::$users['editor']->ID );
-		wp_cache_flush();
-
-		// can user read_revisions?
-		// Test removed as it fails - even though previous test has identical one.
-
-		global $wpdr_fe;
-		if ( ! $wpdr_fe ) {
-			$wpdr_fe = new WP_Document_Revisions_Front_End();
-		}
-
-		$atts   = array(
-			'id' => 2,
-		);
-		$output = $wpdr_fe->wpdr_revisions_shortcode_display( $atts );
-
-		self::assertEquals( 1, substr_count( $output, 'This is not a valid document' ), 'editor revision block nondoc' );
-	}
-
-	/**
 	 * Tests the document_revisions shortcode with a number=1 limit.
 	 */
 	public function test_revisions_shortcode_limit() {
