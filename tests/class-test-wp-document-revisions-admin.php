@@ -301,10 +301,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		console_log( ' make private' );
 
-		// create post object.
-		global $post;
-
-		$post = $factory->post->create_and_get(
+		// create post object and assign to global.
+		$post_id = wp_insert_post(
 			array(
 				'post_title'   => 'Test private',
 				'post_status'  => 'draft',
@@ -313,6 +311,11 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 				'post_type'    => 'document',
 			)
 		);
+
+		global $post;
+
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $post_id );
 
 		$wpdr->admin->make_private();
 

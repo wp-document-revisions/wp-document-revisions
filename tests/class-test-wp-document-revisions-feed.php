@@ -242,6 +242,8 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		global $wpdr;
 
+		console_log( ' feed_as_unauthenticated' );
+
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -262,6 +264,8 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		global $wpdr;
 
+		console_log( ' feed_as_authorized_auth' );
+
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['author']->ID );
@@ -279,13 +283,13 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( count( $wpdr->get_revisions( self::$author_public_post ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertEquals( count( $wpdr->get_revisions( self::$author_private_post ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
 	}
 
 	/**
@@ -294,6 +298,8 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	public function test_feed_as_authorized_contrib() {
 
 		global $wpdr;
+
+		console_log( ' feed_as_authorized_contrib' );
 
 		global $current_user;
 		unset( $current_user );
@@ -312,13 +318,13 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( count( $wpdr->get_revisions( self::$author_public_post ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_public_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
 		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
 		console_log( '/' . $content . '/' );
 
 		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertEquals( count( $wpdr->get_revisions( self::$author_private_post ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+		self::assertEquals( count( $wpdr->get_revision_query( self::$author_private_post, true ) ), (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
 	}
 
 }
