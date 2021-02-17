@@ -114,7 +114,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = 3.3.0 =
 
-* NEW: Fix WP 5.8 Breaking change (#38843) for Term Counts.  (#246) @NeilWJames
+* NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#246) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
 * FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
 
