@@ -235,6 +235,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 
 		// make sure that we have the admin set up.
+		global $wpdr;
 		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			$wpdr->admin_init();
 		}

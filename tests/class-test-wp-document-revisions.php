@@ -118,6 +118,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 */
 	public static function wpTearDownAfterClass() {
 		// make sure that we have the admin set up.
+		global $wpdr;
 		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			$wpdr->admin_init();
 		}
