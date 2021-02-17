@@ -234,10 +234,21 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_remove_object_terms( self::$editor_private_post, self::$ws_term_id, 'workflow_state' );
 		wp_remove_object_terms( self::$editor_public_post, self::$ws_term_id, 'workflow_state' );
 
+		// make sure that we have the admin set up.
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+			$wpdr->admin_init();
+		}
+
+		// add the attachment delete process.
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
 		wp_delete_post( self::$author_public_post, true );
 		wp_delete_post( self::$author_private_post, true );
 		wp_delete_post( self::$editor_private_post, true );
 		wp_delete_post( self::$editor_public_post, true );
+
+		// delete done, remove the attachment delete process.
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 
 		// clear down the ws terms.
 		$ws_terms = get_terms(

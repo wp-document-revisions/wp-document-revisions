@@ -360,7 +360,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// delete the post.
 		$result = wp_delete_post( $post_id );
 
-		// delete successful, remove the attachment delete process.
+		// delete done, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 
 		// flush cache to assure result.
