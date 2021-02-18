@@ -2513,24 +2513,26 @@ class WP_Document_Revisions {
 	 * Unless taxonomy already has a custom callback.
 	 *
 	 * @since 3.3.0
-	 * @param array  $status   statuses for counting posts.
-	 * @param string $taxonomy taxonomy name.
+	 * @param string[]    $post_statuses List of post statuses to include in the count. Default is 'publish'.
+	 * @param WP_Taxonomy $taxonomy      Current taxonomy object.
 	 */
 	public function review_count_statuses( $status, $taxonomy ) {
-		$tax_status = wp_cache_get( 'wpdr_statuses_' . $taxonomy );
+		$tax_name   = $taxonomy->name;
+		$tax_status = wp_cache_get( 'wpdr_statuses_' . $tax_name );
 		if ( false === $tax_status ) {
 			// if filtered out, don't need to look at taxonomy. N.B. Odd format for compatibility.
 			/**
 			 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 			 *
+			 * In prior versions input parameter was an array of all affected post types.
+			 * 
 			 * @param array $taxs document taxonomies .
 			 */
-			if ( ! in_array( $taxonomy, apply_filters( 'document_taxonomy_term_count', $taxonomy ), true ) ) {
+			if ( ! in_array( $tax_name, apply_filters( 'document_taxonomy_term_count', array( $tax_name ) ), true ) ) {
 				$tax_status = $status;
 			} else {
-				$tax = get_taxonomy( $taxonomy );
 				// check if taxonomy has a callback defined or is not for documents.
-				if ( '' !== $tax->update_count_callback || ! in_array( 'document', $tax->object_type, true ) ) {
+				if ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
 					$tax_status = $status;
 				} else {
 					// get the list of statuses.
@@ -2541,7 +2543,7 @@ class WP_Document_Revisions {
 					unset( $tax_status['auto-draft'] );
 				}
 			}
-			wp_cache_set( 'wpdr_statuses_' . $taxonomy, $tax_status, '', 60 );
+			wp_cache_set( 'wpdr_statuses_' . $tax_name, $tax_status, '', 60 );
 		}
 
 		return $tax_status;

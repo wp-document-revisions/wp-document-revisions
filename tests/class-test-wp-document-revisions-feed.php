@@ -231,11 +231,15 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		}
 
 		ob_start();
+		$exception = null;
 		try {
 			require dirname( __DIR__ ) . '/includes/revision-feed.php';
 			$content = ob_get_clean();
-		} catch ( Exception $e ) {
+		} catch ( WPDieException $e ) {
 			$content = ob_get_clean();
+			_wpdr_die_handler();
+			$exception = $e;
+		} catch ( Exception $e ) {
 			throw ( $e );
 		}
 
