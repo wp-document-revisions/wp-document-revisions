@@ -239,8 +239,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 			$content = ob_get_clean();
 			_wpdr_die_handler();
 			$exception = $e;
-		} catch ( Exception $e ) {
-			throw ( $e );
 		}
 
 		return $content;
