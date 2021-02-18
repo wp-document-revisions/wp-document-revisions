@@ -79,6 +79,12 @@ function _wpdr_die_handler() {
 function _wpdr_die_handler_filter() {
 	return '_wpdr_die_handler';
 }
-tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 5 );
+
+global $wp_version;
+if ( version_compare( $vers, '5.0' ) >= 0 ) {
+	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 5 );
+} else {
+	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 20 );
+}
 
 require $_tests_dir . '/includes/bootstrap.php';
