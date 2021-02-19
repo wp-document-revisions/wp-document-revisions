@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests rewrite and access functionality with trailing '/' character.
+ * Tests feed functionality.
  *
  * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
@@ -219,7 +219,13 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		global $wpdr, $post, $wp_query;
 
-		$wpdr->revision_feed_auth();
+		$exception = null;
+		try {
+			$wpdr->revision_feed_auth();
+		} catch ( WPDieException $e ) {
+			_wpdr_die_handler();
+			$exception = $e;
+		}
 
 		if ( _wpdr_is_wp_die() || is_404() ) {
 			return '';

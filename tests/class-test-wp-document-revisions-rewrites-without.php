@@ -68,7 +68,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		console_log( 'Test_Rewrites_Without' );
 
 		// don't use gzip.
-		add_filter( 'document_use_gzip', '__return_false' );
+		add_filter( 'document_serve_use_gzip', '__return_false' );
 
 		// Set EMPTY_TRASH_DAYS to 2 (so trash will work).
 		if ( ! defined( 'EMPTY_TRASH_DAYS' ) ) {

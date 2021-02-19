@@ -1220,7 +1220,7 @@ class WP_Document_Revisions {
 
 			// If any output has been generated (by another plugin), it could cause corruption.
 			/**
-			 * Filters to output even if output already written.
+			 * Filter to serve file even if output already written.
 			 *
 			 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
 			 *
@@ -1241,10 +1241,9 @@ class WP_Document_Revisions {
 		}
 
 		/**
-		 * Filter to define file writing buffer size.
+		 * Filter to define file writing buffer size (Default 0 = No buffering).
 		 *
-		 * Note: Use `add_filter( 'document_use_gzip', '__return_false' )` to shortcircuit.
-		 *       This is always subject to browser negociation.
+		 * Note: This is always subject to browser negoTiation.
 		 *
 		 * @param integer $buffsize  0 (no intermediate flushing).
 		 * @param integer $filesize  File size.
@@ -1253,16 +1252,16 @@ class WP_Document_Revisions {
 
 		// Make sure that there is a buffer to be written on close.
 		/**
-		 * Filter to see if gzip should be used.
+		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 		 *
-		 * Note: Use `add_filter( 'document_use_gzip', '__return_false' )` to shortcircuit.
+		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_false' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
 		 * @param bool    $default   true.
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
-		if ( apply_filters( 'document_use_gzip', true, $mimetype, $filesize ) ) {
+		if ( apply_filters( 'document_serve_use_gzip', true, $mimetype, $filesize ) ) {
 			// request compression.
 			ob_start( 'ob_gzhandler', $buffsize );
 		} else {

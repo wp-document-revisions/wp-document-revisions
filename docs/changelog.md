@@ -4,6 +4,9 @@
 
 * NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#246) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
+* NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
+* NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.
+* NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
 
 * FIX: Design conflict with Elementor (#230) @NeilWJames
