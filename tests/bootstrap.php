@@ -81,7 +81,7 @@ function _wpdr_die_handler_filter() {
 }
 
 global $wp_version;
-if ( version_compare( $vers, '5.0' ) >= 0 ) {
+if ( version_compare( (float) $wp_version, '5.0' ) >= 0 ) {
 	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 5 );
 } else {
 	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 20 );
