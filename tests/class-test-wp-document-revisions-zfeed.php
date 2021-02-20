@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_zFeed extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
