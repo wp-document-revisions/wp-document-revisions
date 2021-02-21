@@ -332,7 +332,7 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Hide header (gallery, URL, library, etc.) links from media-upload
+	 * Hide header (gallery, URL, library, etc.) links from media-new
 	 * No real use case for a revision being an already uploaded file,
 	 * and javascript not compatible for that usecase as written.
 	 *
@@ -342,10 +342,12 @@ class WP_Document_Revisions_Admin {
 		global $pagenow;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
+		if ( 'media-new.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
 			?>
 			<style>
-				#media-upload-header {display:none;}
+				#wpwrap #wpadminbar {display:none;}
+				#wpwrap #adminmenuwrap {display:none;}
+				#wpwrap #screen-meta-links {display:none;}
 			</style>
 			<?php
 		}
@@ -410,7 +412,7 @@ class WP_Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
+			<a href="media-new.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
 				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
 		</div>
@@ -537,7 +539,7 @@ class WP_Document_Revisions_Admin {
 
 		wp_enqueue_script( 'autosave' );
 		add_thickbox();
-		wp_enqueue_script( 'media-upload' );
+		wp_enqueue_script( 'media-new' );
 	}
 
 
@@ -787,7 +789,7 @@ class WP_Document_Revisions_Admin {
 	public function bind_upload_cb() {
 		global $pagenow;
 
-		if ( 'media-upload.php' === $pagenow ) :
+		if ( 'media-new.php' === $pagenow ) :
 			?>
 		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 			<?php
