@@ -543,12 +543,15 @@ class WP_Document_Revisions_Admin {
 	}
 
 
-/**
+	/**
 	 * Only load documenrs from Computer.
 	 *
 	 * @since 3.3
+	 *
+	 * @param string[] $_default_tabs An array of media tabs.
 	 */
 	public function media_upload_tabs_computer( $_default_tabs ) {
+		// phpcs:ignore  WordPress.Security.NonceVerification.Recommended
 		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
 			// keep just load from computer for the document (but not the thumbnail).
 			unset( $_default_tabs['type_url'] );
@@ -560,7 +563,7 @@ class WP_Document_Revisions_Admin {
 	}
 
 
-/**
+	/**
 	 * Registers the document settings.
 	 *
 	 * @since 0.5
