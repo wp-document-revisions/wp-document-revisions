@@ -114,7 +114,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = 3.3.0 =
 
-* NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#246) @NeilWJames
+* NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
 * NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
 * NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.

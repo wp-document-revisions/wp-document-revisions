@@ -53,9 +53,10 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
-		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
+		add_action( 'admin_print_footer_scripts', array( &$this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
+		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
@@ -259,6 +260,7 @@ class WP_Document_Revisions_Admin {
 		// remove unused meta boxes.
 		remove_meta_box( 'revisionsdiv', 'document', 'normal' );
 		remove_meta_box( 'postexcerpt', 'document', 'normal' );
+		remove_meta_box( 'slugdiv', 'document', 'normal' );
 		remove_meta_box( 'tagsdiv-workflow_state', 'document', 'side' );
 
 		// add our meta boxes.
@@ -332,7 +334,7 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Hide header (gallery, URL, library, etc.) links from media-new
+	 * Hide header (gallery, URL, library, etc.) links from media-upload
 	 * No real use case for a revision being an already uploaded file,
 	 * and javascript not compatible for that usecase as written.
 	 *
@@ -342,12 +344,10 @@ class WP_Document_Revisions_Admin {
 		global $pagenow;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'media-new.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
+		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
 			?>
 			<style>
-				#wpwrap #wpadminbar {display:none;}
-				#wpwrap #adminmenuwrap {display:none;}
-				#wpwrap #screen-meta-links {display:none;}
+				#media-upload-header {display:none;}
 			</style>
 			<?php
 		}
@@ -412,7 +412,7 @@ class WP_Document_Revisions_Admin {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<a href="media-new.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
+			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
 				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
 			</a>
 		</div>
@@ -539,11 +539,28 @@ class WP_Document_Revisions_Admin {
 
 		wp_enqueue_script( 'autosave' );
 		add_thickbox();
-		wp_enqueue_script( 'media-new' );
+		wp_enqueue_script( 'media-upload' );
 	}
 
 
-	/**
+/**
+	 * Only load documenrs from Computer.
+	 *
+	 * @since 3.3
+	 */
+	public function media_upload_tabs_computer( $_default_tabs ) {
+		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
+			// keep just load from computer for the document (but not the thumbnail).
+			unset( $_default_tabs['type_url'] );
+			unset( $_default_tabs['gallery'] );
+			unset( $_default_tabs['library'] );
+		}
+
+		return $_default_tabs;
+	}
+
+
+/**
 	 * Registers the document settings.
 	 *
 	 * @since 0.5
@@ -789,9 +806,9 @@ class WP_Document_Revisions_Admin {
 	public function bind_upload_cb() {
 		global $pagenow;
 
-		if ( 'media-new.php' === $pagenow ) :
+		if ( 'media-upload.php' === $pagenow ) :
 			?>
-		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 			<?php
 		endif;
 	}

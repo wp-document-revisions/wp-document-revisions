@@ -2070,7 +2070,7 @@ class WP_Document_Revisions {
 	public function no_title_prepend( $prepend ) {
 		global $post;
 
-		if ( ! $this->verify_post_type( $post ) ) {
+		if ( ! isset( $post->ID ) || ! $this->verify_post_type( $post ) ) {
 			return $prepend;
 		}
 
