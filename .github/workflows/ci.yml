@@ -77,9 +77,4 @@ jobs:
         mkdir -p build/logs
         script/cibuild-phpunit-coverage
         script/coveralls
-
-
-
-
-    # - name: Run test suite
-    #   run: composer run-script test
+        
