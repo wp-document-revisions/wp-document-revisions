@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      TRAVIS_BUILD_DIR: ${{ env.GITHUB_WORKSPACE }}
     strategy: 
       matrix:
         php_version: [7.4, 7.3, 7.2, 7.1, 7.0, 5.6]
@@ -77,4 +79,3 @@ jobs:
         mkdir -p build/logs
         script/cibuild-phpunit-coverage
         script/coveralls
-        
