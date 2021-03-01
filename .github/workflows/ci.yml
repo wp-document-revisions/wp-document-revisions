@@ -10,6 +10,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_DATABASE: wordpress_test
 
     steps:
     - uses: actions/checkout@v2
@@ -30,6 +37,9 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
+      
+    - name: Setup WP
+      run: script/setup
       
     - name: PHPUnit
       run: script/cibuild-phpunit
