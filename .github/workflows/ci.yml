@@ -46,6 +46,8 @@ jobs:
       
     - name: PHPUnit
       run: script/cibuild-phpunit
+      env:
+        WP_DEBUG: true
 
 
     # - name: Run test suite
