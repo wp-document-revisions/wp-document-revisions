@@ -36,6 +36,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php_version }}
+        extensions: mysqli
 
     - name: Cache Composer packages
       id: composer-cache
