@@ -57,6 +57,9 @@ jobs:
         
     - name: PHPUnit
       run: script/cibuild-phpunit
+      env:
+        WP_MULTISITE: ${{ matrix.wp_multisite }}
+
 
 
     # - name: Run test suite
