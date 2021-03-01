@@ -16,7 +16,6 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_ROOT_PASSWORD: ''
-          MYSQL_DATABASE: wordpress_test
           MYSQL_HOST: localhost
         ports:
           - 3306:3306
