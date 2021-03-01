@@ -40,6 +40,9 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
+    
+    - name: Start mysql service
+      run: sudo /etc/init.d/mysql start
       
     - name: Setup WP
       run: script/setup
