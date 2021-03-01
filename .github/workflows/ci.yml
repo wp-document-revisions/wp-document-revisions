@@ -74,6 +74,7 @@ jobs:
     - name: Coverage
       if: matrix.test == 'coverage'
       run: |
+        mkdir -p build/logs
         script/cibuild-phpunit-coverage
         script/coveralls
 
