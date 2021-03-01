@@ -4,4 +4,4 @@ vendor
 bin
 wpcs
 build/logs/clover.xml
-
+composer.lock

@@ -53,8 +53,10 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
-		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
+		add_action( 'admin_print_footer_scripts', array( &$this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
+		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
+		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
@@ -258,6 +260,7 @@ class WP_Document_Revisions_Admin {
 		// remove unused meta boxes.
 		remove_meta_box( 'revisionsdiv', 'document', 'normal' );
 		remove_meta_box( 'postexcerpt', 'document', 'normal' );
+		remove_meta_box( 'slugdiv', 'document', 'normal' );
 		remove_meta_box( 'tagsdiv-workflow_state', 'document', 'side' );
 
 		// add our meta boxes.
@@ -347,6 +350,39 @@ class WP_Document_Revisions_Admin {
 				#media-upload-header {display:none;}
 			</style>
 			<?php
+		}
+	}
+
+
+	/**
+	 * Check that those having edit_document can upload documents.
+	 *
+	 * @since 3.3
+	 */
+	public function check_upload_files() {
+		global $typenow, $pagenow;
+
+		if ( ! current_user_can( 'edit_documents' ) || 'document' !== $typenow || current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		if ( 'post.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload documents though you may be able change some attributes.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+		} elseif ( 'post-new.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload any documents.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+			// Need to switch off save capability.
 		}
 	}
 
@@ -504,6 +540,26 @@ class WP_Document_Revisions_Admin {
 		wp_enqueue_script( 'autosave' );
 		add_thickbox();
 		wp_enqueue_script( 'media-upload' );
+	}
+
+
+	/**
+	 * Only load documenrs from Computer.
+	 *
+	 * @since 3.3
+	 *
+	 * @param string[] $_default_tabs An array of media tabs.
+	 */
+	public function media_upload_tabs_computer( $_default_tabs ) {
+		// phpcs:ignore  WordPress.Security.NonceVerification.Recommended
+		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
+			// keep just load from computer for the document (but not the thumbnail).
+			unset( $_default_tabs['type_url'] );
+			unset( $_default_tabs['gallery'] );
+			unset( $_default_tabs['library'] );
+		}
+
+		return $_default_tabs;
 	}
 
 
@@ -745,39 +801,6 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Callback to inject JavaScript in page after upload is complete (pre 3.3).
-	 *
-	 * @since 0.5
-	 * @param int $id the ID of the attachment.
-	 * @return unknown
-	 */
-	public function post_upload_js( $id ) {
-		// get the post object.
-		$document = get_post( $id );
-
-		// begin output buffer so the javascript can be returned as a string, rather than output directly to the browser.
-		ob_start();
-
-		?>
-		<script>
-		var attachmentID = <?php echo (int) $id; ?>;
-		var extension = '<?php echo esc_js( $this->get_file_type( $document ) ); ?>';
-		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
-		</script>
-		<?php
-
-		// get contents of output buffer.
-		$js = ob_get_contents();
-
-		// dump output buffer.
-		ob_end_clean();
-
-		// return javascript.
-		return $js;
-	}
-
-
-	/**
 	 * Binds our post-upload javascript callback to the plupload event
 	 * Note: in footer because it has to be called after handler.js is loaded and initialized.
 	 *
@@ -788,7 +811,7 @@ class WP_Document_Revisions_Admin {
 
 		if ( 'media-upload.php' === $pagenow ) :
 			?>
-		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 			<?php
 		endif;
 	}

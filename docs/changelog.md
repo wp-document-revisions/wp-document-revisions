@@ -2,6 +2,13 @@
 
 ### 3.3.0
 
+* NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
+* NEW: Rewrite Test library to increase code coverage.
+* NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
+* NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.
+* NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
+* FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
+
 * FIX: Design conflict with Elementor (#230) @NeilWJames
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
@@ -9,7 +16,7 @@
 * FIX: Queries on post_status do not do proper permissions check
 * FIX: Remove restore option on the current document and latest revision as it makes no sense.
 * FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
-* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
+* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when deleting the document.
 * FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
   (#217) @NeilWJames
 

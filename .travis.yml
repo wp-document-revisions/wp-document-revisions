@@ -6,6 +6,8 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
+    - $TRAVIS_BUILD_DIR/composer/cache
+    - $TRAVIS_BUILD_DIR/vendor/composer/cache
 
 services:
   - mysql
@@ -19,9 +21,9 @@ matrix:
     - php: 7.2
       env: WP_VERSION=latest WP_MULTISITE=1
     - php: 7.1
-      env: WP_VERSION=4.9
-    - php: 7.0
       env: WP_VERSION=latest
+    - php: 7.0
+      env: WP_VERSION=4.9 WP_COVERAGE=coveralls
     - php: 5.6
       env: WP_VERSION=latest
     - php: 7.2
@@ -29,9 +31,6 @@ matrix:
 
 before_install:
   - export PATH="$HOME/bin:$PATH"
- 
-  # Unless we need XDebug, disable it for improved performance.
-  - phpenv config-rm xdebug.ini || return 0
  
 install:
   # Install an older version of PHPUnit if we're running old versions of WP.
@@ -48,10 +47,17 @@ before_script:
   - chmod +x script/*
   - script/setup
 
+  # disable xdebug if not coverage
+  - if [[ $WP_COVERAGE == "" ]]; then phpenv config-rm xdebug.ini; fi
+
 script:
   - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
+    if [[ ! -z "$WP_VERSION" ]] && [[ $WP_COVERAGE == "" ]]; then
       script/cibuild-phpunit
+    fi
+  - |
+    if [[ ! -z "$WP_VERSION" ]] && [[ "$WP_COVERAGE" == "coveralls" ]] ; then
+      script/cibuild-phpunit-coverage
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
@@ -59,4 +65,7 @@ script:
     fi
 
 after_success:
-  - script/coveralls
+  - |
+    if [[ "$WP_COVERAGE" == "coveralls" ]] ; then
+      script/coveralls
+    fi

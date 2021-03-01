@@ -108,13 +108,19 @@ class WP_Document_Revisions_Front_End {
 
 		// normalize args.
 		$atts = shortcode_atts( $this->shortcode_defaults, $atts, 'document' );
-		foreach ( array_keys( $this->shortcode_defaults ) as $key ) {
+		foreach ( array_keys( (array) $this->shortcode_defaults ) as $key ) {
 			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
 		}
 
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			return '';
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// Check it is a document.
+		global $wpdr;
+		if ( ! $wpdr->verify_post_type( $id ) ) {
+			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
 		// get revisions.
@@ -163,10 +169,8 @@ class WP_Document_Revisions_Front_End {
 		?>
 		</ul>
 		<?php
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
+		// grab buffer contents and remove.
+		return ob_get_clean();
 	}
 
 
@@ -188,7 +192,7 @@ class WP_Document_Revisions_Front_End {
 			}
 		}
 
-		return self::documents_shortcode_int( $atts );
+		return $this->documents_shortcode_int( $atts );
 	}
 
 
@@ -204,7 +208,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
-	public function documents_shortcode_int( $atts ) {
+	private function documents_shortcode_int( $atts ) {
 
 		$defaults = array(
 			'orderby' => 'modified',
@@ -316,7 +320,9 @@ class WP_Document_Revisions_Front_End {
 
 		$atts = array_filter( $atts );
 
-		$documents = $this->get_documents( $atts );
+		global $wpdr;
+
+		$documents = $wpdr->get_documents( $atts );
 
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
@@ -374,11 +380,8 @@ class WP_Document_Revisions_Front_End {
 		<?php } ?>
 		</ul>
 		<?php
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
-
+		// grab buffer contents and remove.
+		return ob_get_clean();
 	}
 
 	/**
@@ -654,6 +657,7 @@ class WP_Document_Revisions_Front_End {
 			$taxonomy_elements = array();
 			// Has workflow_state been mangled? Note. set here as it could be filtered out.
 			$wf_efpp = 0;
+			$tax_key = self::$parent->taxonomy_key();
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
@@ -663,9 +667,9 @@ class WP_Document_Revisions_Front_End {
 					'',  // underscore-separated slug.
 				);
 				// Look up taxonomy.
-				if ( 'workflow_state' === $taxonomy && 'workflow_state' !== self::$parent->taxonomy_key() ) {
+				if ( 'workflow_state' === $taxonomy && ! empty( $tax_key ) && 'workflow_state' !== $tax_key ) {
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax               = get_taxonomy( self::$parent->taxonomy_key() );
+					$tax               = get_taxonomy( $tax_key );
 					$tax->hierarchical = false;
 					$tax->label        = 'Post Status';
 					$wf_efpp           = 1;
@@ -725,11 +729,11 @@ class WP_Document_Revisions_Front_End {
 	 */
 	public function wpdr_documents_shortcode_display( $atts ) {
 		// get instance of global class.
-		global $wpdr, $wpdr_fe;
+		global $wpdr;
 
 		// sanity check.
-		// do not show output to users that do not have the read_documents capability.
-		if ( ! current_user_can( 'read_documents' ) ) {
+		// do not show output to users that do not have the read_documents capability and don't get it via read.
+		if ( ( ! current_user_can( 'read_documents' ) ) && ! apply_filters( 'document_read_uses_read', true ) ) {
 			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
 		}
 
@@ -839,7 +843,7 @@ class WP_Document_Revisions_Front_End {
 		if ( ! empty( $errs ) ) {
 			$errs = '<div class="notice notice-error">' . $errs . '</div>';
 		}
-		$output = $errs . $wpdr_fe->documents_shortcode_int( $atts );
+		$output = $errs . $this->documents_shortcode_int( $atts );
 		return $output;
 	}
 
@@ -869,12 +873,12 @@ class WP_Document_Revisions_Front_End {
 		// sanity check.
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
 		// Check it is a document.
 		if ( ! $wpdr->verify_post_type( $atts['id'] ) ) {
-			return esc_html__( 'This is not a valid document.', 'wp-document-revisions' );
+			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
 		$output  = '<p class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</p>';

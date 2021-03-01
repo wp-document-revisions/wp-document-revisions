@@ -10,6 +10,12 @@ In: class-wp-document-revisions-front-end.php
 
 Filters the Document taxonomies (allowing users to select the first three for the block widget.
 
+## Filter document_buffer_size
+
+In: class-wp-document-revisions.php
+
+Filter to define file writing buffer size (Default 0 = No buffering).
+
 ## Filter document_caps
 
 In: class-wp-document-revisions.php
@@ -65,6 +71,12 @@ Filters the user locking the document file.
 In: class-wp-document-revisions.php
 
 Filters the lost lock document email text.
+
+## Filter document_output_sent_is_ok
+
+In: class-wp-document-revisions.php
+
+Filter to serve file even if output already written.
 
 ## Filter document_path
 
@@ -143,6 +155,12 @@ Filters the Document rewrite rules.
 In: class-wp-document-revisions.php
 
 Filters file name of document served. (Useful if file is encrypted at rest).
+
+## Filter document_serve_use_gzip
+
+In: class-wp-document-revisions.php
+
+Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 
 ## Filter document_shortcode_atts
 

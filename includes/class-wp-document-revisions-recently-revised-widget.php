@@ -59,13 +59,14 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			'order'       => 'DESC',
 			'numberposts' => (int) $instance['numberposts'],
 			'post_status' => $statuses,
+			'perm'        => 'readable',
 		);
 
 		$documents = $wpdr->get_documents( $query );
 
 		// no documents, don't bother.
 		if ( ! $documents ) {
-			return;
+			return '';
 		}
 
 		// buffer output to return rather than echo directly.
@@ -74,7 +75,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'] . $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'] . '<ul>';
 
-		foreach ( $documents as $document ) :
+		foreach ( $documents as $document ) {
 			$link = ( current_user_can( 'edit_document', $document->ID ) ) ? add_query_arg(
 				array(
 					'post'   => $document->ID,
@@ -90,15 +91,13 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				<?php printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) ); ?>
 			</li>
 			<?php
-		endforeach;
+		}
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</ul>' . $args['after_widget'];
 
-		// grab buffer contents and clear.
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
+		// return buffer contents and remove it.
+		return ob_get_clean();
 	}
 
 	/**
@@ -232,7 +231,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						'type' => 'boolean',
 					),
 					'show_author'       => array(
-						'type' => 'boolean',
+						'type'    => 'boolean',
+						'default' => true,
 					),
 				),
 			)
@@ -262,9 +262,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance                = array();
 		$instance['title']       = ( isset( $atts['header'] ) ? $atts['header'] : '' );
 		$instance['numberposts'] = ( isset( $atts['numberposts'] ) ? (int) $atts['numberposts'] : 5 );
-		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : false );
+		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : true );
 		$instance['post_status'] = array(  // temp.
-			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : false ),
+			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : true ),
 			'private' => ( isset( $atts['post_stat_private'] ) ? (bool) $atts['post_stat_private'] : false ),
 			'draft'   => ( isset( $atts['post_stat_draft'] ) ? (bool) $atts['post_stat_draft'] : false ),
 		);

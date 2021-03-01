@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests rewrite and access functionality with trailing '/' character.
+ * Tests rewrite and access functionality without trailing '/' character.
  *
  * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
@@ -65,7 +65,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Rewrites' );
+		console_log( 'Test_Rewrites_Without' );
 
 		// don't use gzip.
 		add_filter( 'document_serve_use_gzip', '__return_false' );
@@ -108,7 +108,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 
 		// init permalink structure.
 		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%' );
 		$wp_rewrite->flush_rules();
 
 		// flush cache for good measure.
@@ -303,7 +303,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		$GLOBALS['is_wp_die'] = false;
 
 		$doc       = get_post( self::$author_public_post );
-		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc->ID ) . '/';
+		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc->ID );
 
 		self::assertEquals( $permalink, get_permalink( $doc->ID ), 'Bad permalink' );
 	}
@@ -456,7 +456,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		// non-logged on user has read so should read.
+		// non-logged on user has read so should not read.
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		// public should be denied.

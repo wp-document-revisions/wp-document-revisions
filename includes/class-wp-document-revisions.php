@@ -115,7 +115,16 @@ class WP_Document_Revisions {
 		add_action( 'init', array( &$this, 'use_read_capability' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
-		add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
+		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
+		global $wp_version;
+		$vers = strpos( $wp_version, '-' );
+		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
+		if ( version_compare( $vers, '5.7' ) >= 0 ) {
+			// core method introduced with version 5.7.
+			add_filter( 'update_post_term_count_statuses', array( &$this, 'review_count_statuses' ), 30, 2 );
+		} else {
+			add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
+		}
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
 
 		// rewrites and permalinks.
@@ -261,9 +270,12 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 */
 	public function admin_init() {
-		// only fire on admin + escape hatch to prevent fatal errors.
-		if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			return;
+
+		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
+		if ( ! class_exists( 'WP_UnitTestCase' ) ) {
+			if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
+				return;
+			}
 		}
 
 		include __DIR__ . '/class-wp-document-revisions-admin.php';
@@ -351,13 +363,16 @@ class WP_Document_Revisions {
 		 *
 		 * @since 3.3
 		 *
-		 * @param boolean true  default action to capability read for documents (not read_docuemnt).
+		 * @param boolean true  default action to capability read for documents (not read_document).
 		 */
 		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
 			// invoke logic.
 			add_filter( 'map_meta_cap', array( &$this, 'map_meta_cap' ), 10, 4 );
 			add_filter( 'user_has_cap', array( &$this, 'user_has_cap' ), 10, 4 );
-			add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+			if ( ! current_user_can( 'read_documents' ) ) {
+				// user does not have read_documents capability, so any need to be filtered out of results.
+				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+			}
 		}
 
 		// filter the queries.
@@ -412,7 +427,7 @@ class WP_Document_Revisions {
 	 * Propagates initial workflow states on plugin activation.
 	 *
 	 * @since 0.5
-	 * @return unknown
+	 * @return void
 	 */
 	public function initialize_workflow_states() {
 		$terms = get_terms(
@@ -423,7 +438,7 @@ class WP_Document_Revisions {
 		);
 
 		if ( ! empty( $terms ) ) {
-			return false;
+			return;
 		}
 
 		$states = array(
@@ -798,7 +813,7 @@ class WP_Document_Revisions {
 	public function get_revisions( $post_id ) {
 		$document = get_post( $post_id );
 
-		if ( ! $document ) {
+		if ( ! $document || 'document' !== $document->post_type ) {
 			return false;
 		}
 
@@ -817,7 +832,8 @@ class WP_Document_Revisions {
 		$get_revs = wp_get_post_revisions(
 			$post_id,
 			array(
-				'order' => 'DESC',
+				'order'            => 'DESC',
+				'suppress_filters' => true,   // try to avoid 'perm' overrides.
 			)
 		);
 
@@ -858,10 +874,14 @@ class WP_Document_Revisions {
 			$posts = array_slice( $posts, 0, 1, true );
 		}
 
-		$rev_query             = new WP_Query();
-		$rev_query->posts      = $posts;
-		$rev_query->post_count = count( $posts );
-		$rev_query->is_feed    = $feed;
+		$rev_query              = new WP_Query();
+		$rev_query->posts       = $posts;
+		$rev_query->post_count  = count( $posts );
+		$rev_query->found_posts = $rev_query->post_count;
+		$rev_query->is_404      = (bool) ( 0 === $rev_query->post_count );
+		$rev_query->post        = ( $rev_query->is_404 ? null : $posts[0] );
+		$rev_query->is_feed     = $feed;
+		$rev_query->rewind_posts();
 
 		return $rev_query;
 	}
@@ -974,7 +994,19 @@ class WP_Document_Revisions {
 
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
-			$rev_id = $this->get_latest_revision( $post->ID )->ID;
+			$revn = $this->get_latest_revision( $post->ID );
+			if ( false === $revn ) {
+				// no revision.
+				wp_die(
+					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
+					null,
+					array( 'response' => 403 )
+				);
+				// for unit testing.
+				$wp_query->is_404 = true;
+				return false;
+			}
+			$rev_id = $revn->ID;
 		} else {
 			$rev_id = $this->get_revision_id( $version, $post->ID );
 		}
@@ -1011,6 +1043,7 @@ class WP_Document_Revisions {
 			// and theme formats appropriately.
 			$wp_query->posts          = array();
 			$wp_query->queried_object = null;
+			$wp_query->is_404         = true;
 			$wp->handle_404();
 
 			// tell WP to serve the theme's standard 404 template, this is a filter after all...
@@ -1037,11 +1070,14 @@ class WP_Document_Revisions {
 					null,
 					array( 'response' => 403 )
 				);
-				return false; // for unit testing.
+				// for unit testing.
+				$wp_query->is_404 = true;
+				return false;
 			} else {
 				// not logged on, deny file existence (as above).
 				$wp_query->posts          = array();
 				$wp_query->queried_object = null;
+				$wp_query->is_404         = true;
 				$wp->handle_404();
 
 				// tell WP to serve the theme's standard 404 template, this is a filter after all...
@@ -1118,7 +1154,8 @@ class WP_Document_Revisions {
 			$headers['Content-Type'] = $mimetype;
 		}
 
-		$headers['Content-Length'] = filesize( $file );
+		$filesize                  = filesize( $file );
+		$headers['Content-Length'] = $filesize;
 
 		// modified.
 		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
@@ -1160,17 +1197,75 @@ class WP_Document_Revisions {
 			: ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) )
 		) {
 			status_header( 304 );
-			return;
+			return $template;
 		}
 
 		// in case this is a large file, remove PHP time limits.
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		@set_time_limit( 0 );
 
-		// clear output buffer to prevent other plugins from corrupting the file.
-		if ( ob_get_level() ) {
-			ob_clean();
-			flush();
+		// In normal operation, corruption can occur if ouput is written by any other process.
+		// However, when doing PHPUnit testing, this will occur, so we need to check whether we are in a test harness.
+		$under_test = class_exists( 'WP_UnitTestCase' );
+
+		if ( $under_test ) {
+			// Under test. We know that we have done an ob_start, so remove buffer,prior to open another.
+			ob_end_clean();
+		} else {
+			// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				ob_end_clean();
+			}
+
+			// If any output has been generated (by another plugin), it could cause corruption.
+			/**
+			 * Filter to serve file even if output already written.
+			 *
+			 * Note: Use `add_filter( 'document_output_sent_is_ok', '__return_true' )` to shortcircuit.
+			 *
+			 * @param bool $debug Set to false.
+			 */
+			if ( ! apply_filters( 'document_output_sent_is_ok', false ) ) {
+				// oops, at least one still there,  deleted and contains data.
+				if ( ob_get_level() > 0 && ob_get_length() > 0 ) {
+					wp_die( esc_html__( 'Sorry, Output buffer exists with data. Filewriting suppressed.', 'wp-document-revisions' ) );
+				}
+
+				// data may already have been flushed so should error.
+				if ( headers_sent() ) {
+					// normal case is to fail as can cause corrupted output.
+					wp_die( esc_html__( 'Sorry, Output has already been written, so your file cannot be downloaded.', 'wp-document-revisions' ) );
+				}
+			}
+		}
+
+		/**
+		 * Filter to define file writing buffer size (Default 0 = No buffering).
+		 *
+		 * Note: This is always subject to browser negoTiation.
+		 *
+		 * @param integer $buffsize  0 (no intermediate flushing).
+		 * @param integer $filesize  File size.
+		 */
+		$buffsize = apply_filters( 'document_buffer_size', 0, $filesize );
+
+		// Make sure that there is a buffer to be written on close.
+		/**
+		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
+		 *
+		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_false' )` to shortcircuit.
+		 *       This is always subject to browser negociation.
+		 *
+		 * @param bool    $default   true.
+		 * @param string  $mimetype  Mime type to be served.
+		 * @param integer $filesize  File size.
+		 */
+		if ( apply_filters( 'document_serve_use_gzip', true, $mimetype, $filesize ) ) {
+			// request compression.
+			ob_start( 'ob_gzhandler', $buffsize );
+		} else {
+			ob_start( null, $buffsize );
 		}
 
 		// If we made it this far, just serve the file
@@ -1187,6 +1282,16 @@ class WP_Document_Revisions {
 		 * @param integer $attach->ID  Post id of the attachment.
 		 */
 		do_action( 'document_serve_done', $file, $attach->ID );
+
+		// successful call, exit to avoid anything adding to output unless in PHPUnit test mode.
+		if ( $under_test ) {
+			return $template;
+		}
+
+		// opened buffer, so flush output.
+		ob_end_flush();
+
+		exit;
 	}
 
 	/**
@@ -1485,7 +1590,7 @@ class WP_Document_Revisions {
 
 		self::$doc_image = false;
 		// hash and replace filename, appending extension.
-		$file['name'] = md5( $file['name'] . time() ) . $this->get_extension( $file['name'] );
+		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).
@@ -1965,7 +2070,7 @@ class WP_Document_Revisions {
 	public function no_title_prepend( $prepend ) {
 		global $post;
 
-		if ( ! $this->verify_post_type( $post ) ) {
+		if ( ! isset( $post->ID ) || ! $this->verify_post_type( $post ) ) {
 			return $prepend;
 		}
 
@@ -2241,31 +2346,39 @@ class WP_Document_Revisions {
 	/**
 	 * Returns array of document objects matching supplied criteria.
 	 *
-	 * See http://codex.wordpress.org/Class_Reference/WP_Query#Parameters for more information on potential parameters
+	 * See https://developer.wordpress.org/reference/classes/wp_query/ for more information on potential parameters
 	 *
 	 * @param array   $args (optional) an array of WP_Query arguments.
-	 * @param unknown $return_attachments (optional).
+	 * @param boolean $return_attachments (optional).
 	 * @return array an array of post objects
 	 */
 	public function get_documents( $args = array(), $return_attachments = false ) {
 		$args              = (array) $args;
 		$args['post_type'] = 'document';
-		$documents         = get_posts( $args );
-		$output            = array();
+		$args['perm']      = 'readable';
+		if ( isset( $args['numberposts'] ) ) {
+			// get all of them.
+			$args['posts_per_page'] = $args['numberposts'];
+		}
+
+		$query  = new WP_Query( $args );
+		$output = array();
 
 		if ( $return_attachments ) {
 
 			// loop through each document and build an array of attachment objects
 			// this would be the same output as a query for post_type = attachment
 			// but allows querying of document metadata and returns only latest revision.
-			foreach ( $documents as $document ) {
+			foreach ( $query->posts as $document ) {
 				$document_object = $this->get_latest_revision( $document->ID );
-				$output[]        = get_post( $document_object->post_content );
+				if ( is_numeric( $document_object->post_content ) ) {
+					$output[] = get_post( $document_object->post_content );
+				}
 			}
 		} else {
 
 			// used internal get_revision function so that filter work and revision bug is offset.
-			foreach ( $documents as $document ) {
+			foreach ( $query->posts as $document ) {
 				$output[] = $this->get_latest_revision( $document->ID );
 			}
 		}
@@ -2395,6 +2508,48 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Filters the term_count post_statuses for all custom taxonomies associated with documents
+	 * Unless taxonomy already has a custom callback.
+	 *
+	 * @since 3.3.0
+	 * @param string[]    $statuses  List of post statuses to include in the count. Default is 'publish'.
+	 * @param WP_Taxonomy $taxonomy  Current taxonomy object.
+	 */
+	public function review_count_statuses( $statuses, $taxonomy ) {
+		$tax_name   = $taxonomy->name;
+		$tax_status = wp_cache_get( 'wpdr_statuses_' . $tax_name );
+		if ( false === $tax_status ) {
+			// if filtered out, don't need to look at taxonomy. N.B. Odd format for compatibility.
+			/**
+			 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
+			 *
+			 * In prior versions input parameter was an array of all affected post types.
+			 *
+			 * @param array $taxs document taxonomies .
+			 */
+			if ( ! in_array( $tax_name, apply_filters( 'document_taxonomy_term_count', array( $tax_name ) ), true ) ) {
+				$tax_status = $statuses;
+			} else {
+				// check if taxonomy has a callback defined or is not for documents.
+				if ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
+					$tax_status = $statuses;
+				} else {
+					// get the list of statuses.
+					$tax_status = get_post_stati();
+					// trash, inherit and auto-draft to be excluded.
+					unset( $tax_status['trash'] );
+					unset( $tax_status['inherit'] );
+					unset( $tax_status['auto-draft'] );
+				}
+			}
+			wp_cache_set( 'wpdr_statuses_' . $tax_name, $tax_status, '', 60 );
+		}
+
+		return $tax_status;
+	}
+
+
+	/**
 	 * Removes auto-appended trailing slash from document requests prior to serving.
 	 *
 	 * WordPress SEO rules properly dictate that all post requests should be 301 redirected with a trailing slash
@@ -2413,7 +2568,7 @@ class WP_Document_Revisions {
 		// if the URL already has an extension, then no need to remove.
 		$path = wp_parse_url( $redirect, PHP_URL_PATH );
 
-		if ( preg_match( '([^.]+)[.][A-Za-z0-9]{1,7}/?$', $path ) ) {
+		if ( preg_match( '#(^.+)\.[A-Za-z0-9]{1,7}/?$#', $path ) ) {
 			return $redirect;
 		}
 
@@ -2602,21 +2757,22 @@ class WP_Document_Revisions {
 	/**
 	 * Review WP_Query SQL results.
 	 *
-	 * Only invoked when user should not access documents via 'read'.
+	 * Only invoked when user should NOT access documents via 'read' but does not have 'read_document'. Remove any documents.
 	 *
 	 * @param WP_Post[] $results      Array of post objects.
 	 * @param WP_Query  $query_object Query object.
 	 * @return WP_Post[] Array of post objects.
 	 */
 	public function posts_results( $results, $query_object ) {
-		$no_read = ( ! current_user_can( 'read_documents' ) );
-		$match   = false;
-		foreach ( $results as $key => $result ) {
-			// confirm a document.
-			if ( $this->verify_post_type( $result ) && $no_read ) {
-				// user has no access, remove from result.
-				unset( $results[ $key ] );
-				$match = true;
+		$match = false;
+		if ( is_array( $results ) ) {
+			foreach ( $results as $key => $result ) {
+				// confirm a document.
+				if ( $this->verify_post_type( $result ) ) {
+					// user has no access, remove from result.
+					unset( $results[ $key ] );
+					$match = true;
+				}
 			}
 		}
 		// re-evaluate count.
@@ -2625,10 +2781,14 @@ class WP_Document_Revisions {
 			$results = array_values( $results );
 
 			if ( is_array( $results ) ) {
-				$query_object->found_posts = count( $results );
+				$query_object->post_count  = count( $results );
+				$query_object->found_posts = $query_object->post_count;
+				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
 			} else {
 				if ( null === $results ) {
+					$query_object->post_count  = 0;
 					$query_object->found_posts = 0;
+					$query_object->is_404      = true;
 				} else {
 					$query_object->found_posts = 1;
 				}
