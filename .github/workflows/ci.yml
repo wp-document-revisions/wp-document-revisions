@@ -21,8 +21,10 @@ jobs:
             wp_multisite: 1
           - php_version: 7.0
             wp_version: 4.9
-          - test: phpcs
-          - test: coverage
+          - php_version: 7.4
+            test: phpcs
+          - php_version: 7.4
+            test: coverage
     services:
       mysql:
         image: mysql:5.7
