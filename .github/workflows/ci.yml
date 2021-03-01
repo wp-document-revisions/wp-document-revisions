@@ -1,4 +1,4 @@
-name: PHP Composer
+name: PHPUnit Tests
 
 on:
   push:
@@ -17,7 +17,10 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_ROOT_PASSWORD: ''
           MYSQL_DATABASE: wordpress_test
-
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        
     steps:
     - uses: actions/checkout@v2
 
