@@ -72,7 +72,14 @@ jobs:
       run: |
         mkdir -p build/logs
         script/cibuild-phpunit-coverage
-        script/coveralls
+
+    - name: Codecov
+      if: matrix.test == 'coverage'
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./build/logs/clover.xml
+        directory: ${{ github.workspace }}
 
   phpcs:
     runs-on: ubuntu-latest
