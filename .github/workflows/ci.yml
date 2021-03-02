@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      TRAVIS_BUILD_DIR: ${{ env.GITHUB_WORKSPACE }}
+      TRAVIS_BUILD_DIR: ${{ github.workspace }}
     strategy: 
       matrix:
         php_version: [7.4, 7.3, 7.2, 7.1, 7.0, 5.6]
@@ -77,7 +77,7 @@ jobs:
   phpcs:
     runs-on: ubuntu-latest
     env:
-      TRAVIS_BUILD_DIR: ${{ env.GITHUB_WORKSPACE }}
+      TRAVIS_BUILD_DIR: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v2
 
