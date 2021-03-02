@@ -17,14 +17,12 @@ jobs:
         php_version: [7.4, 7.3, 7.2, 7.1, 7.0, 5.6]
         wp_version: [latest]
         wp_multisite: [0]
-        test: [phpunit]
         include:
           - php_version: 7.4
             wp_multisite: 1
           - php_version: 7.0
             wp_version: 4.9
-          - php_version: 7.4
-            test: coverage
+
     services:
       mysql:
         image: mysql:5.7
@@ -66,18 +64,15 @@ jobs:
       run: script/cibuild-phpunit
       env:
         WP_MULTISITE: ${{ matrix.wp_multisite }}
-      
-    - name: Coverage
-      if: matrix.test == 'coverage'
-      run: script/cibuild-phpunit-coverage
 
     - name: Codecov
-      if: matrix.test == 'coverage'
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: coverage.xml
         directory: ${{ github.workspace }}
+        verbose: true
+        flags: php-${{ matrix.php_version }}, wp-${{ matrix.wp_version }}, multisite-${{ matrix.wp_multisite }}
 
   phpcs:
     runs-on: ubuntu-latest
