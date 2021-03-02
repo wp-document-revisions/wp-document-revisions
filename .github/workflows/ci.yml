@@ -60,7 +60,6 @@ jobs:
         WP_MULTISITE: ${{ matrix.wp_multisite }}
         
     - name: PHPUnit
-      if: matrix.test == 'phpunit'
       run: script/cibuild-phpunit
       env:
         WP_MULTISITE: ${{ matrix.wp_multisite }}
