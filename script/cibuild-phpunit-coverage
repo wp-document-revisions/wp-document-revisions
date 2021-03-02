@@ -4,4 +4,4 @@ set -e
 
 export PATH="$TRAVIS_BUILD_DIR/vendor/bin:./bin:$PATH"
 
-phpunit -v --coverage-clover "$TRAVIS_BUILD_DIR/build/logs/clover.xml"
+phpunit --coverage-clover coverage.xml

@@ -69,16 +69,14 @@ jobs:
       
     - name: Coverage
       if: matrix.test == 'coverage'
-      run: |
-        mkdir -p build/logs
-        script/cibuild-phpunit-coverage
+      run: script/cibuild-phpunit-coverage
 
     - name: Codecov
       if: matrix.test == 'coverage'
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./build/logs/clover.xml
+        files: coverage.xml
         directory: ${{ github.workspace }}
 
   phpcs:
