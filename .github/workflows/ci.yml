@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  phpunit:
 
     runs-on: ubuntu-latest
     env:
