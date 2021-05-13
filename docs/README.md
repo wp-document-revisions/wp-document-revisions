@@ -18,7 +18,7 @@ See [**the full list of features**](./features.md) for more information.
 
 ## Documentation
 
-See [the full documentation](http://ben.balter.com/wp-document-revisions)
+See [the full documentation](https://wp-document-revisions.github.io/wp-document-revisions)
 
 ### Learn
 
