@@ -16,27 +16,27 @@ Stable tag: 3.3.0
 2. A **collaboration tool** to empower teams to collaboratively draft, edit, and refine documents
 3. A **file hosting solution** to publish and securely deliver files to a team, to clients, or to the public
 
-See [**the full list of features**](http://ben.balter.com/wp-document-revisions/./features/) for more information.
+See [**the full list of features**](https://wp-document-revisions.github.io/wp-document-revisions/features/) for more information.
 
 == Documentation ==
 
-See [the full documentation](http://ben.balter.com/wp-document-revisions)
+See [the full documentation](https://wp-document-revisions.github.io/wp-document-revisions)
 
 = Learn =
 
-* [Features and Overview](http://ben.balter.com/wp-document-revisions/./features/)
-* [Screenshots](http://ben.balter.com/wp-document-revisions/./screenshots/)
-* [Installation](http://ben.balter.com/wp-document-revisions/./installation/)
-* [Frequently Asked Questions](http://ben.balter.com/wp-document-revisions/./frequently-asked-questions/)
-* [Links](http://ben.balter.com/wp-document-revisions/./links/)
-* [Where to get Support or Report an Issue](http://ben.balter.com/wp-document-revisions/./SUPPORT/)
-* [Translations](http://ben.balter.com/wp-document-revisions/./translations/)
-* [Plugin Filters](http://ben.balter.com/wp-document-revisions/./filters/)
-* [Useful Plugins and Tools](http://ben.balter.com/wp-document-revisions/./useful-plugins-and-tools/)
+* [Features and Overview](https://wp-document-revisions.github.io/wp-document-revisions/features/)
+* [Screenshots](https://wp-document-revisions.github.io/wp-document-revisions/screenshots/)
+* [Installation](https://wp-document-revisions.github.io/wp-document-revisions/installation/)
+* [Frequently Asked Questions](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/)
+* [Links](https://wp-document-revisions.github.io/wp-document-revisions/links/)
+* [Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)
+* [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/)
+* [Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)
+* [Useful Plugins and Tools](https://wp-document-revisions.github.io/wp-document-revisions/useful-plugins-and-tools/)
 
 = Get Involved =
 
-* [How to Contribute](http://ben.balter.com/wp-document-revisions/./CONTRIBUTING/)
+* [How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 [Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
@@ -728,7 +728,7 @@ In: class-wp-document-revisions.php
 
 == Where to get help or report an issue ==
 
-* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](http://ben.balter.com/wp-document-revisions/).
+* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](https://wp-document-revisions.github.io/wp-document-revisions/).
 * For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](https://wordpress.org/support/plugin/wp-document-revisions).
 * For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
 * For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
@@ -874,7 +874,7 @@ Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) 
 
 = I want some small changes to the processing, but there are few configuration options. How do I do this? =
 
-Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](http://ben.balter.com/wp-document-revisions/./filters/). This will need some coding to be done.
+Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](https://wp-document-revisions.github.io/wp-document-revisions/filters/). This will need some coding to be done.
 
 = Can I make it so that users can only access documents assigned to them (or documents that they create)? =
 
