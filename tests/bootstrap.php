@@ -49,7 +49,7 @@ function _remove_headers( $headers, $file ) {
 /**
  * Extends the test framework's native wp_die_handler filter to filter
  * wp_die() calls for XML requests in addition to HTML requests
- * 
+ *
  * @param string $handler the default callback.
  * @return string the filtered callback.
  */
