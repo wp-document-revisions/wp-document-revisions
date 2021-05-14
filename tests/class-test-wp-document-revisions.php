@@ -44,8 +44,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Main' );
-
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -163,8 +161,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Make sure plugin is activated.
 	 */
 	public function test_class_exists() {
-		console_log( ' class_exists' );
-
 		self::assertTrue( class_exists( 'WP_Document_Revisions' ), 'Document_Revisions class not defined' );
 	}
 
@@ -172,8 +168,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Post type is properly registered.
 	 */
 	public function test_post_type_exists() {
-		console_log( ' post_type_exists' );
-
 		self::assertTrue( post_type_exists( 'document' ), 'Document post type does not exist' );
 	}
 
@@ -181,8 +175,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Workflow states exists and are initialized.
 	 */
 	public function test_workflow_states_exist() {
-		console_log( ' workflow_states_exist' );
-
 		// add terms.
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -205,8 +197,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Check capabilities are correct for Non-logged-on User.
 	 */
 	public function test_non_logged_on_caps() {
-		console_log( ' non_logged_on_caps' );
-
 		global $current_user;
 		unset( $current_user );
 		$usr = wp_set_current_user( 0 );
@@ -231,8 +221,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Check capabilities are correct subscriber User.
 	 */
 	public function test_subscriber_caps() {
-		console_log( ' subscriber_caps' );
-
 		$usr = self::factory()->user->create_and_get(
 			array(
 				'user_nicename' => 'Subscriber',
@@ -268,8 +256,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Check capabilities are correct contributor User.
 	 */
 	public function test_contributor_caps() {
-		console_log( ' contributor_caps' );
-
 		$usr = self::factory()->user->create_and_get(
 			array(
 				'user_nicename' => 'Contributor',
@@ -305,8 +291,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Check capabilities are correct for Author.
 	 */
 	public function test_author_caps() {
-		console_log( ' author_caps' );
-
 		$usr = self::factory()->user->create_and_get(
 			array(
 				'user_nicename' => 'New Author',
@@ -342,8 +326,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Check capabilities are correct for Editor.
 	 */
 	public function test_editor_caps() {
-		console_log( ' editor_caps' );
-
 		global $current_user;
 		unset( $current_user );
 		$usr = wp_set_current_user( self::$users['editor']->ID );
@@ -372,8 +354,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Validate the get_attachments function are few different ways.
 	 */
 	public function test_get_attachments() {
-		console_log( ' get_attachments' );
-
 		global $wpdr;
 
 		global $current_user;
@@ -408,8 +388,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Verify the get_file_Type function works.
 	 */
 	public function test_file_type() {
-		console_log( ' file_type' );
-
 		global $wpdr;
 
 		// grab an attachment.
@@ -424,8 +402,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Make sure get_revisions() works.
 	 */
 	public function test_get_revisions() {
-		console_log( ' get_revisions' );
-
 		global $wpdr;
 
 		self::assertEquals( 3, count( $wpdr->get_revisions( self::$editor_public_post ) ) );
@@ -436,8 +412,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Test get_revision_number().
 	 */
 	public function test_get_revision_number() {
-		console_log( ' get_revision_number' );
-
 		global $wpdr;
 
 		$revisions = $wpdr->get_revisions( self::$editor_private_post );
@@ -450,8 +424,6 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	 * Tests verify_post_type() with the various ways used throughout
 	 */
 	public function test_verify_post_type() {
-		console_log( ' verify_post_type' );
-
 		global $wpdr;
 
 		$_GET['post_type'] = 'document';

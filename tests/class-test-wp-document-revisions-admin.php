@@ -48,8 +48,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// phpcs:enable
-		console_log( 'Test_Admin' );
-
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
@@ -186,8 +184,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		console_log( ' dashboard_display 1' );
-
 		// see that one post only is seen.
 		ob_start();
 		$wpdr->admin->dashboard_display();
@@ -204,8 +200,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	public function test_dashboard_display_2() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' dashboard_display 2' );
 
 		// see that two posts are seen.
 		wp_publish_post( self::$editor_private_post );
@@ -224,8 +218,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	public function test_revision_metabox_unauth() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' revision_metabox_unauth' );
 
 		global $current_user;
 		unset( $current_user );
@@ -249,8 +241,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
 
-		console_log( ' revision_metabox_auth' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
@@ -273,8 +263,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	public function test_document_metabox() {
 		global $wpdr;
 		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' document_metabox' );
 
 		global $current_user;
 		unset( $current_user );
@@ -310,8 +298,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_make_public() {
 		global $wpdr;
-
-		console_log( ' make private' );
 
 		// create post object and assign to global.
 		$post_id = wp_insert_post(
