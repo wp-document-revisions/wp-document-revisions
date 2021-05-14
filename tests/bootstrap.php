@@ -50,8 +50,8 @@ function _remove_headers( $headers, $file ) {
  * Extends the test framework's native wp_die_handler filter to filter
  * wp_die() calls for XML requests in addition to HTML requests
  * 
- * @param string $handler the default callback
- * @return string the filtered callback
+ * @param string $handler the default callback.
+ * @return string the filtered callback.
  */
 function _wpdr_die_handler_filter( $handler ) {
 	return apply_filters( 'wp_die_handler', $handler );
