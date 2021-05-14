@@ -285,8 +285,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_archive() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		self::go_to( get_home_url( null, $wpdr->document_slug() ) );
 		self::assertTrue( is_post_type_archive( 'document' ), 'Couldn\'t access /documents/' );
 	}
@@ -296,8 +295,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_permalink() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		$doc       = get_post( self::$author_public_post );
 		$permalink = get_bloginfo( 'url' ) . '/' . $wpdr->document_slug() . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' ) . '/' . $doc->post_name . $wpdr->get_file_type( $doc->ID ) . '/';
 
@@ -309,8 +307,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_public_document_docid_read() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -329,8 +326,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_public_document_docid_docread() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -349,8 +345,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_public_document_pretty_read() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -369,8 +364,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_public_document_pretty_docread() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -389,8 +383,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_unauth_docid_read() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -410,8 +403,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_unauth_docid_docread() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -431,8 +423,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_unauth_pretty_read() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -452,8 +443,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_unauth_pretty_docread() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -473,8 +463,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_owner() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['author']->ID );
@@ -488,8 +477,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_other() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['contributor']->ID );
@@ -503,8 +491,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_private_document_as_editor() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['editor']->ID );
@@ -519,8 +506,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_del_other_private_document_as_author() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['author']->ID );
@@ -534,8 +520,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_del_own_public_document_as_author() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['author']->ID );
@@ -549,8 +534,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 	 */
 	public function test_del_other_public_document_as_author() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['author']->ID );

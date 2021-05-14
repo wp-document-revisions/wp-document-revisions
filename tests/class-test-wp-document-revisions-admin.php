@@ -182,8 +182,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_dashboard_display_1() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		// see that one post only is seen.
 		ob_start();
 		$wpdr->admin->dashboard_display();
@@ -199,8 +198,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_dashboard_display_2() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		// see that two posts are seen.
 		wp_publish_post( self::$editor_private_post );
 		ob_start();
@@ -217,8 +215,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_revision_metabox_unauth() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -239,8 +236,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_revision_metabox_auth() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
@@ -262,8 +258,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_document_metabox() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
+		
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );

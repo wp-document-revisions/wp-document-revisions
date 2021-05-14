@@ -313,7 +313,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wp_query;
 
 		self::assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
-		self::assertTrue( ( empty( $content ) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
+		self::assertTrue( ( empty( $content ) || is_404() ), "No content, not 404'd or wp_die'd ($msg)" );
 		self::assertStringNotEqualsFile( $file, $content, "File being erroneously served ($msg)" );
 	}
 
