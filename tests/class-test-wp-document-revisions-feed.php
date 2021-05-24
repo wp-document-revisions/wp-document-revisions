@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
@@ -50,8 +50,6 @@ class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-	// phpcs:enable
-		console_log( 'Test_Feed' );
 
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
@@ -216,36 +214,17 @@ class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 		}
 
 		$this->go_to( $url );
-
 		global $wpdr, $post, $wp_query;
 
-		$exception = null;
-		try {
-			$wpdr->revision_feed_auth();
-		} catch ( WPDieException $e ) {
-			_wpdr_die_handler();
-			$exception = $e;
-		}
+		$wpdr->revision_feed_auth();
 
-		if ( _wpdr_is_wp_die() || is_404() ) {
-			return '';
-		}
-
-		// normally check this first.
-		if ( ! current_user_can( 'read_document', $post->ID ) ) {
-			return '';
-		}
+//		if ( is_404() ) {
+	//		return '';
+	//	}
 
 		ob_start();
-		$exception = null;
-		try {
-			require dirname( __DIR__ ) . '/includes/revision-feed.php';
-			$content = ob_get_clean();
-		} catch ( WPDieException $e ) {
-			$content = ob_get_clean();
-			_wpdr_die_handler();
-			$exception = $e;
-		}
+		require dirname( __DIR__ ) . '/includes/revision-feed.php';
+		$content = ob_get_clean();
 
 		return $content;
 	}
@@ -265,18 +244,23 @@ class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 
 		global $wpdr;
 
-		console_log( ' feed_as_unauthenticated' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		// try to get an un auth'd feed.
-		$content = self::simulate_feed( get_permalink( self::$author_public_post ) . 'feed/' );
-
 		self::assertFalse( $wpdr->validate_feed_key(), 'not properly validating feed key' );
-		self::assertTrue( _wpdr_is_wp_die(), 'not properly denying access to feeds' );
+
+		// try to get an un auth'd feed.
+		$exception = null;
+		$content = '';
+		try {
+			$content = self::simulate_feed( get_permalink( self::$author_private_post ) . 'feed/' );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
+		self::assertNotNull( $exception, 'not properly denying access to feeds' );
 		self::assertEquals( 0, substr_count( $content, '<item>' ), 'denied feed leaking items' );
 	}
 
@@ -286,8 +270,6 @@ class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 	public function test_feed_as_authorized_auth() {
 
 		global $wpdr;
-
-		console_log( ' feed_as_authorized_auth' );
 
 		global $current_user;
 		unset( $current_user );
@@ -300,17 +282,28 @@ class Test_WP_Document_Revisions_ZFeed extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$_GET['key'] = $key;
 
+		$exception = null;
+		$content = '';
+		try {
+			$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
 		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
+		self::assertNull( $exception, 'Not properly allowing access to feeds_1' );
+		self::assertEquals( 3, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
 
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
+		$exception = null;
+		try {
+			$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
 
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_1' );
-		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_1' );
-
-		$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_private_post ) . 'feed/' ) );
-
-		self::assertFalse( _wpdr_is_wp_die(), 'Not properly allowing access to feeds_2' );
-		self::assertEquals( 1, (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
+		self::assertNull( $exception, 'Not properly allowing access to feeds_2' );
+		self::assertEquals( 2, (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
 	}
 
 }

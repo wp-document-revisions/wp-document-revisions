@@ -86,8 +86,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Front_End' );
-
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -292,8 +290,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_shortcodes_defined() {
 
-		console_log( ' shortcodes_defined' );
-
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
@@ -307,8 +303,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Verify joe public can't access a list of revisions.
 	 */
 	public function test_revisions_shortcode_unauthed() {
-
-		console_log( ' revisions_shortcode_unauthed' );
 
 		// set unauthorised user.
 		global $current_user;
@@ -331,8 +325,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Verify auth'd user can view revision shortcode and can truncate proper count.
 	 */
 	public function test_revisions_shortcode() {
-
-		console_log( ' revisions_shortcode' );
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -358,8 +350,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_revisions_block_noauth() {
 
-		console_log( ' revisions_block_noauth' );
-
 		// editor should be able to access.
 		global $current_user;
 		unset( $current_user );
@@ -384,8 +374,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Verify auth'd user can view revision block and can truncate proper count.
 	 */
 	public function test_revisions_block() {
-
-		console_log( ' revisions_block' );
 
 		// editor should be able to access.
 		global $current_user;
@@ -416,8 +404,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_document_shortcode() {
 
-		console_log( ' document_shortcode' );
-
 		// set unauthorised user.
 		global $current_user;
 		unset( $current_user );
@@ -439,8 +425,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the documents shortcode with a workflow state filter - authoe.
 	 */
 	public function test_document_shortcode_wfs_filter_auth() {
-
-		console_log( ' document_shortcode_wfs_filter_auth' );
 
 		// editor should be able to access.
 		global $current_user;
@@ -465,8 +449,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_document_shortcode_post_meta_filter() {
 
-		console_log( ' document_shortcode_post_meta_filter' );
-
 		// author should be able to access.
 		global $current_user;
 		unset( $current_user );
@@ -489,8 +471,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the documents block with and without read_document caps.
 	 */
 	public function test_document_block() {
-
-		console_log( ' document_block' );
 
 		// set unauthorised user.
 		global $current_user;
@@ -521,8 +501,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the documents block with a workflow state filter. with and without read_document caps.
 	 */
 	public function test_document_block_wfs_filter() {
-
-		console_log( ' document_block_wfs_filter' );
 
 		// set unauthorised user.
 		global $current_user;
@@ -570,8 +548,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_get_documents() {
 
-		console_log( ' get_documents' );
-
 		global $wpdr;
 
 		// set unauthorised user.
@@ -588,8 +564,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 */
 	public function test_get_documents_returns_attachments() {
 
-		console_log( ' get_documents_returns_attachments' );
-
 		global $wpdr;
 
 		$docs = $wpdr->get_documents( null, true );
@@ -602,8 +576,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests that get_documents properly filters when asked.
 	 */
 	public function test_get_documents_filter() {
-
-		console_log( ' get_documents_filter' );
 
 		// set unauthorised user.
 		global $current_user;
@@ -645,8 +617,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the get_revisions function.
 	 */
 	public function test_get_document_revisions() {
-
-		console_log( ' get_document_revisions' );
 
 		// editor should be able to access.
 		global $current_user;

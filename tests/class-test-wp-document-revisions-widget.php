@@ -51,8 +51,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 	// phpcs:enable
-		console_log( 'Test_Widget' );
-
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -194,8 +192,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_widget_publ_noauthor_nopriv() {
 
-		console_log( ' widget_publ_noauthor_nopriv' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -231,8 +227,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Public should see nothing.
 	 */
 	public function test_widget_publ_docread_noauthor_nopriv() {
-
-		console_log( ' widget_publ_docread_noauthor_nopriv' );
 
 		global $current_user;
 		unset( $current_user );
@@ -273,8 +267,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_widget_publ_noauthor_priv() {
 
-		console_log( ' widget_publ_noauthor_priv' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -311,8 +303,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Should see Author (Public) and not Editor (Private)
 	 */
 	public function test_widget_auth_noauthor_priv() {
-
-		console_log( ' widget_auth_noauthor_priv' );
 
 		global $current_user;
 		unset( $current_user );
@@ -351,8 +341,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_widget_edit_noauthor_priv() {
 
-		console_log( ' widget_edit_noauthor_priv' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$users['editor']->ID );
@@ -388,8 +376,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_widget_author_nopriv() {
 
-		console_log( ' widget_author_nopriv' );
-
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
@@ -423,8 +409,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Verify published and private post on widget (author info).
 	 */
 	public function test_widget_author_priv() {
-
-		console_log( ' widget_author_priv' );
 
 		// Create the two parameter sets.
 		$args = array(
@@ -472,8 +456,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Verify published and private post on block widget (with author info).
 	 */
 	public function test_block_widget() {
-
-		console_log( ' block_widget' );
 
 		global $current_user;
 		unset( $current_user );

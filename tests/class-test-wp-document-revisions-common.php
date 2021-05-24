@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Common class code functionality.
@@ -201,7 +202,12 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wpdr;
 		flush_rewrite_rules();
 
-		self::go_to( $url );
+		$exception = null;
+		try {
+			self::go_to( $url );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
 
 		self::assertQueryTrue( 'is_single', 'is_singular' );
 
@@ -215,7 +221,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		ob_end_clean();
 
 		self::assertFalse( is_404(), "404 ($msg)" );
-		self::assertFalse( _wpdr_is_wp_die(), "wp_died ($msg)" );
+		self::assertNull( $exception, "wp_died ($msg)" );
 		self::assertTrue( is_single(), "Not single ($msg)" );
 		if ( ! $no_file ) {
 			self::assertStringEqualsFile( $file, $content, "Contents don\'t match file ($msg)" );
@@ -308,7 +314,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wp_query;
 
 		self::assertEmpty( $wp_query->posts, "No posts returned ($msg)" );
-		self::assertTrue( ( empty( $content ) || is_404() || _wpdr_is_wp_die() ), "No content, not 404'd or wp_die'd ($msg)" );
+		self::assertTrue( ( empty( $content ) || is_404() ), "No content, not 404'd or wp_die'd ($msg)" );
 		self::assertStringNotEqualsFile( $file, $content, "File being erroneously served ($msg)" );
 	}
 
@@ -392,9 +398,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-
-		// set/reset WP_DIE detection.
-		$GLOBALS['is_wp_die'] = false;
 
 		// Try to make sure that are no extraneous headers before each test.
 		if ( ! headers_sent() ) {
