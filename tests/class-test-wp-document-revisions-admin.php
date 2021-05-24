@@ -242,11 +242,14 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		$post_obj = get_post( self::$editor_private_post );
+
 		ob_start();
-		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
+		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
 		console_log( 'Auth:' . $output );
+		console_log( get_blog_permalink( $post_obj->blog_id, $post_obj->ID ) );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
@@ -273,6 +276,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		ob_end_clean();
 		console_log( 'Metabox:' . $output );
 		console_log( get_permalink( $post_obj->ID ) );
+		console_log( get_blog_permalink( $post_obj->blog_id, $post_obj->ID ) );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink' );
