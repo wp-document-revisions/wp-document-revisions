@@ -277,7 +277,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 
 		// All posts have been assigned to term 1.
 		$term = get_term( self::$ws_term_id, 'workflow_state' );
-		self::assertEquals( 2, $term->count, 'Term count not correct' );
+		self::assertEquals( 4, $term->count, 'Term count not correct' );
 	}
 
 	/**

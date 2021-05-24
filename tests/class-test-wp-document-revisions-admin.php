@@ -254,7 +254,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// Multisite does not have a pretty permalink.
 		if ( is_multisite() ) {
 			self::assertEquals( 1, (int) substr_count( $output, 'revision=1.txt' ), 'revision count revision 1' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );		
+			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );
 		} else {
 			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
