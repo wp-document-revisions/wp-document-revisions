@@ -246,6 +246,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( 'Auth:' . $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
@@ -270,6 +271,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( 'Metabox:' . $output );
+		console_log( get_permalink( $post_obj->ID ) );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink' );

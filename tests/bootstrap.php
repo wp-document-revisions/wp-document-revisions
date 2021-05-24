@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Bootstrap the local test environment
