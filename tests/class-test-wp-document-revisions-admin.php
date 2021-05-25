@@ -48,8 +48,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// phpcs:enable
-		console_log( 'Test_Admin' );
-
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
@@ -184,9 +182,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_dashboard_display_1() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' dashboard_display 1' );
 
 		// see that one post only is seen.
 		ob_start();
@@ -203,9 +198,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_dashboard_display_2() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' dashboard_display 2' );
 
 		// see that two posts are seen.
 		wp_publish_post( self::$editor_private_post );
@@ -223,9 +215,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_revision_metabox_unauth() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' revision_metabox_unauth' );
 
 		global $current_user;
 		unset( $current_user );
@@ -247,9 +236,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_revision_metabox_auth() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' revision_metabox_auth' );
 
 		global $current_user;
 		unset( $current_user );
@@ -263,8 +249,14 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
-		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
+		// Multisite does not have a pretty permalink.
+		if ( is_multisite() ) {
+			self::assertEquals( 1, (int) substr_count( $output, 'revision=1.txt' ), 'revision count revision 1' );
+			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );
+		} else {
+			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
+		}
 	}
 
 	/**
@@ -272,9 +264,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_document_metabox() {
 		global $wpdr;
-		$GLOBALS['is_wp_die'] = false;
-
-		console_log( ' document_metabox' );
 
 		global $current_user;
 		unset( $current_user );
@@ -289,7 +278,12 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
-		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalin' );
+		// Multisite does not have a pretty permalink.
+		if ( is_multisite() ) {
+			self::assertEquals( 1, (int) substr_count( $output, 'post_type=document&#038;p=' . $post_obj->ID ), 'document metabox permalink_ms' );
+		} else {
+			self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink' );
+		}
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}
 
@@ -310,8 +304,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 */
 	public function test_make_public() {
 		global $wpdr;
-
-		console_log( ' make private' );
 
 		// create post object and assign to global.
 		$post_id = wp_insert_post(

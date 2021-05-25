@@ -46,45 +46,19 @@ function _remove_headers( $headers, $file ) {
 	return array();
 }
 
+/**
+ * Extends the test framework's native wp_die_handler filter to filter
+ * wp_die() calls for XML requests in addition to HTML requests
+ *
+ * @param string $handler the default callback.
+ * @return string the filtered callback.
+ */
+function _wpdr_die_handler_filter( $handler ) {
+	return apply_filters( 'wp_die_handler', $handler );
+}
+
 tests_add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
-
-/**
- * Whether we wp_die'd this test.
- *
- * @return bool True if wp_die() has been used. False if not.
- */
-function _wpdr_is_wp_die() {
-	if ( isset( $GLOBALS['is_wp_die'] ) ) {
-		return $GLOBALS['is_wp_die'];
-	}
-
-	return false;
-}
-
-/**
- * Acts as a custom wp_die() handler.
- *
- * This allows tests to continue, but sets a global state that
- * we can check and manipulate.
- */
-function _wpdr_die_handler() {
-	$GLOBALS['is_wp_die'] = true;
-}
-
-/**
- * Registers the handler to use for a wp_die() call.
- *
- * @return string
- */
-function _wpdr_die_handler_filter() {
-	return '_wpdr_die_handler';
-}
-
-global $wp_version;
-if ( version_compare( (float) $wp_version, '5.0' ) >= 0 ) {
-	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 5 );
-} else {
-	tests_add_filter( 'wp_die_handler', '_wpdr_die_handler_filter', 20 );
-}
+tests_add_filter( 'wp_die_xml_handler', '_wpdr_die_handler_filter' );
 
 require $_tests_dir . '/includes/bootstrap.php';
+require 'class-test-wp-document-revisions-common.php';
