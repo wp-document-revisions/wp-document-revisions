@@ -50,6 +50,7 @@ jobs:
         key: ${{ runner.os }}-php-${{ matrix.php_version }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-${{ matrix.php_version }}-
+
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
       
@@ -97,6 +98,7 @@ jobs:
           key: ${{ runner.os }}-php-${{ matrix.php_version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php_version }}-
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
       

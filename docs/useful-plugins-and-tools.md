@@ -2,7 +2,7 @@
 
 ### Permissions management
 
-* [Members – Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members ï¿½ Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
