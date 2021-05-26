@@ -79,7 +79,7 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * Integration with [Edit Flow](https://editflow.org)
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
-= Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) =
+= Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/WP-Document-Revisions-Code-Cookbook) =
 
 * **Audit Trail** - creates check in / check out audit trail for all documents
 * **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
@@ -730,7 +730,7 @@ In: class-wp-document-revisions.php
 
 * For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](https://wp-document-revisions.github.io/wp-document-revisions/).
 * For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](https://wordpress.org/support/plugin/wp-document-revisions).
-* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
+* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/wp-document-revisions/wp-document-revisions/issues).
 * For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 == Things to check before reporting an issue ==
@@ -739,7 +739,7 @@ In: class-wp-document-revisions.php
 * Are you using the latest version of the plugin?
 * Does the problem occur even when you deactivate all plugins and use the default theme?
 * Have you tried deactivating and reactivating the plugin?
-* Has your issue [already been reported](https://github.com/benbalter/WP-Document-Revisions/issues)?
+* Has your issue [already been reported](https://github.com/wp-document-revisions/wp-document-revisions/issues)?
 
 == What to include in an issue ==
 
@@ -754,18 +754,18 @@ In: class-wp-document-revisions.php
 
 \###1. A typical WP Document Revisions edit document screen.###
 
-![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/benbalter/wp-document-revisions/master/screenshot-1.png)
+![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/master/screenshot-1.png)
 
 
 == Links ==
 
-* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
+* [Source Code](https://github.com/wp-document-revisions/wp-document-revisions/) (GitHub)
 * [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
 * [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
 * [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
-* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
-* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
+* [Project Wiki](https://wp-document-revisions.github.io/wp-document-revisions/wiki)
+* [Where to get Support or Report an Issue](https://github.com/wp-document-revisions/wp-document-revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+* [How to Contribute](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute)
 
 
 == Installation ==
@@ -790,7 +790,7 @@ In: class-wp-document-revisions.php
 
 = I'm a user/developer/administrator... can I contribute? =
 
-Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute) for more information.
+Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute) for more information.
 
 = Does it work on Mac? PC? Mobile? =
 
@@ -862,15 +862,17 @@ Yes. Just follow the [standard WordPress SSL instructions](https://wordpress.org
 
 = Can I tag my documents? What about categories or some other grouping? =
 
-Yes. You can use the [Simple Taxonomy plugin](https://wordpress.org/plugins/simple-taxonomy/) to add taxonomies, or can share your existing taxonomies (e.g., the ones you use for posts) with documents.
+Yes. You can use the [Simple Taxonomy Refreshed plugin](https://wordpress.org/plugins/simple-taxonomy-refreshed/) to add taxonomies, or can share your existing taxonomies (e.g., the ones you use for posts) with documents.
 
 = Can I put my documents in folders? =
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy](https://wordpress.org/plugins/simple-taxonomy/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
 
 = What if I want even more control over my workflow? =
 
 Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if [Edit Flow](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
+
+You can also use the [PublishPress Plugin](https://wordpress.org/plugins/publishpress/) which is similar and has also been integrated with WP Document Revisions.
 
 = I want some small changes to the processing, but there are few configuration options. How do I do this? =
 
@@ -914,11 +916,11 @@ Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://githu
 
 = Can I limit access to documents based on workflow state, department, or some other custom taxonomy? =
 
-Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](http://wordpress.org/extend/plugins/members/).
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/wp-document-revisions/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/wp-document-revisions/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](http://wordpress.org/extend/plugins/members/).
 
 = Is it possible to do a bulk import of existing documents / files already on the server? =
 
-Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
+Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/wp-document-revisions/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
 
 
 == Translations ==
