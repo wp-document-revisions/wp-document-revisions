@@ -114,6 +114,10 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 
 = 3.3.0 =
 
+* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List.  (#253) @NeilWJames
+  Note that it will change the column order seen as taxonomiees are on the end.
+* NEW: Taxonomy workflow_state is set as show_in_rest.
+
 * NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
 * NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).

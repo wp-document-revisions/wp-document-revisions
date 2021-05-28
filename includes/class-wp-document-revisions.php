@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.4';
+	public $version = '3.3.0';
 
 	/**
 	 * The WP default directory cache.
@@ -428,6 +428,8 @@ class WP_Document_Revisions {
 					'show_ui'               => true,
 					'rewrite'               => false,
 					'update_count_callback' => $ucc,
+					'show_admin_column'     => true,
+					'show_in_rest'          => true,
 				)
 			)
 		);
@@ -1262,17 +1264,19 @@ class WP_Document_Revisions {
 		$buffsize = apply_filters( 'document_buffer_size', 0, $filesize );
 
 		// Make sure that there is a buffer to be written on close.
+		// Does the user accept gzip.
+		$gzip_dflt = ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && substr_count( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) ); //phpcs:ignore
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_false' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $default   true.
+		 * @param bool    $gzip_dflt Whether gzip support is expected possible.
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
-		if ( apply_filters( 'document_serve_use_gzip', true, $mimetype, $filesize ) ) {
+		if ( apply_filters( 'document_serve_use_gzip', $gzip_dflt, $mimetype, $filesize ) ) {
 			// request compression.
 			ob_start( 'ob_gzhandler', $buffsize );
 		} else {
