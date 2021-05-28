@@ -251,7 +251,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		console_log( $output );
 
 		// There will be 1 for RSS feed.
-		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
+		self::assertEquals( 1, (int) substr_count( $output, '<a href="revision' ), 'restore count' );
 		// Multisite does not have a pretty permalink.
 		if ( is_multisite() ) {
 			console_log( 'Defined WP_ALLOW_MULTISITE: ' . (int) ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE ) );
