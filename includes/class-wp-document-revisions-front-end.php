@@ -567,7 +567,7 @@ class WP_Document_Revisions_Front_End {
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
 		// Ensure taxonomies are set.
 		$taxonomies = $this->get_taxonomy_details();
-		wp_add_inline_script( 'wpdr-documents-shortcode-editor', 'const wpdr_data = ' . json_encode( $taxonomies ), 'before' );
+		wp_add_inline_script( 'wpdr-documents-shortcode-editor', 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 
 		$index_js = 'js/wpdr-revisions-shortcode' . $suffix . '.js';
 		wp_register_script(

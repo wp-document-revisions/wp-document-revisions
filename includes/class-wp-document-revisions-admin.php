@@ -493,9 +493,9 @@ class WP_Document_Revisions_Admin {
 			}
 			?>
 			<tr>
-				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php esc_html_e( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
-				<td><?php esc_html_e( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
-				<td><?php esc_html_e( $revision->post_excerpt ); ?></td>
+				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
+				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
+				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 1 ) { ?>
 					<td><a href="
 					<?php
@@ -787,7 +787,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function document_slug_cb() {
 		?>
-	<code><?php esc_html_e( home_url() ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php esc_html_e( gmdate( 'Y' ) ); ?>/<?php esc_html_e( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
+	<code><?php echo esc_html( home_url() ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 	<span class="description">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
@@ -1114,7 +1114,7 @@ class WP_Document_Revisions_Admin {
 			// output will be display name, if any.
 			$lock = $this->get_document_lock( $post_id );
 			if ( $lock ) {
-				esc_html_e( $lock );
+				echo esc_html( $lock );
 			}
 		}
 	}
@@ -1147,7 +1147,7 @@ class WP_Document_Revisions_Admin {
 				if ( $current_state ) {
 					selected( $current_state[0]->slug, $state->slug );}
 				?>
-><?php esc_html_e( $state->name ); ?></option>
+><?php echo esc_html( $state->name ); ?></option>
 			<?php } ?>
 		</select>
 		<?php
@@ -1607,7 +1607,7 @@ class WP_Document_Revisions_Admin {
 			$format_string = __( '%1$s ago by %2$s [%3$s]', 'wp-document-revisions' );
 			?>
 			<li>
-				<a href="<?php echo esc_attr( $link ); ?>"><?php esc_html_e( get_the_title( $document->ID ) ); ?></a><br />
+				<a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( get_the_title( $document->ID ) ); ?></a><br />
 				<?php
 				printf(
 					esc_html( $format_string ),
