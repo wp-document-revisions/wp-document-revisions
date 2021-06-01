@@ -132,6 +132,7 @@ class WP_Document_Revisions {
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
+		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
