@@ -254,16 +254,13 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 		global $wp_rewrite;
-		console_log( 'Defined permalink: ' . $wp_rewrite->permalink_structure );
-		// Multisite does not have a pretty permalink.
-		if ( is_multisite() ) {
-			console_log( 'Defined WP_ALLOW_MULTISITE: ' . (int) ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE ) );
-			console_log( 'Defined MULTISITE: ' . (int) ( defined( 'MULTISITE' ) && MULTISITE ) );
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1.txt' ), 'revision count revision 1' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );
+		// Different output depending if permalink defined.
+		if ( '' === $wp_rewrite->permalink_structure ) {
+			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 ugly' );
+			self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 ugly' );
 		} else {
-			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
-			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
+			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
+			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
 		}
 	}
 

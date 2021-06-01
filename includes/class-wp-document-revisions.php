@@ -686,19 +686,19 @@ class WP_Document_Revisions {
 		$rules = array_filter( $rules, array( $this, 'remove_old_rules' ), ARRAY_FILTER_USE_KEY );
 
 		$my_rules = array();
-		
+
 		// These rules will define the trailing / as optional, as will be the extension (since it not used in the sxearch).
 
-		// revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
+		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
 		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
-		// document revision feeds in the form of [doc_slug]/yyyy/mm/[slug]##.[extension]/feed/, [doc_slug]/yyyy/mm/[slug]##/feed/, etc.
+		// document revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
 		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
-		// documents in the form of [doc_slug]/yyyy/mm/[slug]##.[extension], [doc_slug]/yyyy/mm/[slug]##.[extension]/.
+		// documents in the form of [doc_slug]/yyyy/mm/[slug].[extension], [doc_slug]/yyyy/mm/[slug].[extension]/.
 		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
-		// document revision feeds in the form of [doc_slug]/[slug]##.[extension]/feed/, [doc_slug]/[slug]##/feed/, etc.
+		// document revision feeds in the form of [doc_slug]/[slug].[extension]/feed/, [doc_slug]/[slug]/feed/, etc.
 		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
 
 		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.

@@ -487,7 +487,11 @@ class WP_Document_Revisions_Admin {
 				$fn   = get_post_meta( $revision->post_content, '_wp_attached_file', true );
 				$fno  = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
-				$fn   = $info['dirname'] . '/' . $info['filename'] . '.' . $fno;
+				$fn   = $info['dirname'] . '/' . $info['filename'];
+				// Only add extension if permalink doesnt contain post id as it becomes invalid.
+				if ( ! strpos( $info['filename'], '&p=' ) ) {
+					$fn .= '.' . $fno;
+				}
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
