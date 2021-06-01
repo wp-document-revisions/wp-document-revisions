@@ -132,7 +132,6 @@ class WP_Document_Revisions {
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
-		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
@@ -665,7 +664,7 @@ class WP_Document_Revisions {
 	 */
 	private function remove_old_rules( $key ) {
 		$slug = $this->document_slug();
-		if ( 0 === strpos( $key, $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)' ) ) {
+		if ( 0 === strpos( $key, $slug . '/' ) ) {
 			return false;
 		}
 		return true;
@@ -686,15 +685,23 @@ class WP_Document_Revisions {
 		$rules = array_filter( $rules, array( $this, 'remove_old_rules' ), ARRAY_FILTER_USE_KEY );
 
 		$my_rules = array();
+		
+		// These rules will define the trailing / as optional, as will be the extension (since it not used in the sxearch).
 
-		// revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		// revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
-		// revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)([.][A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		// document revision feeds in the form of [doc_slug]/yyyy/mm/[slug]##.[extension]/feed/, [doc_slug]/yyyy/mm/[slug]##/feed/, etc.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
-		// documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		// documents in the form of [doc_slug]/yyyy/mm/[slug]##.[extension], [doc_slug]/yyyy/mm/[slug]##.[extension]/.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+
+		// document revision feeds in the form of [doc_slug]/[slug]##.[extension]/feed/, [doc_slug]/[slug]##/feed/, etc.
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
+
+		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';

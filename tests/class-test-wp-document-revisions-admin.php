@@ -256,6 +256,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		if ( is_multisite() ) {
 			console_log( 'Defined WP_ALLOW_MULTISITE: ' . (int) ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE ) );
 			console_log( 'Defined MULTISITE: ' . (int) ( defined( 'MULTISITE' ) && MULTISITE ) );
+			global $wp_rewrite;
+			console_log( 'Defined permalink: ' . $wp_rewrite->permalink_structure );
 			self::assertEquals( 1, (int) substr_count( $output, 'revision=1.txt' ), 'revision count revision 1' );
 			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );
 		} else {
