@@ -58,6 +58,11 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 			$wpdr->admin_init();
 		}
 
+		// set permalink structure to null string.
+		global $wp_rewrite, $orig;
+		$orig = $wp_rewrite->permalink_structure;
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
 		self::$editor_user_id = $factory->user->create(
@@ -167,6 +172,10 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		}
 
 		unregister_taxonomy( 'workflow_state' );
+
+		// reset permalink structure.
+		global $orig;
+		$wp_rewrite->set_permalink_structure( $orig );
 	}
 
 	/**
@@ -234,41 +243,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	/**
 	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */
-	public function test_revision_metabox_auth_no_structure() {
-		global $wpdr;
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		$post_obj = get_post( self::$editor_private_post );
-
-		// set permalink structure to null string.
-		global $wp_rewrite;
-		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure( '' );
-
-		ob_start();
-		$wpdr->admin->revision_metabox( $post_obj );
-		$output = ob_get_contents();
-		ob_end_clean();
-		console_log( $output );
-
-		// There will be 1 for RSS feed.
-		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
-
-		self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 ugly' );
-		self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 ugly' );
-
-		// reset permalink structure.
-		$wp_rewrite->set_permalink_structure( $orig );
-	}
-
-	/**
-	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
-	 */
 	public function test_revision_metabox_auth_structure() {
 		global $wpdr;
 
@@ -278,11 +252,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$post_obj = get_post( self::$editor_private_post );
-
-		// set permalink structure to null string.
-		global $wp_rewrite;
-		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
@@ -296,10 +265,8 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
-
-		// reset permalink structure.
-		$wp_rewrite->set_permalink_structure( $orig );
 	}
+
 	/**
 	 * Verify document log metabox.
 	 */
@@ -319,12 +286,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
-		// Multisite does not have a pretty permalink.
-		if ( is_multisite() ) {
-			self::assertEquals( 1, (int) substr_count( $output, 'post_type=document&#038;p=' . $post_obj->ID ), 'document metabox permalink_ms' );
-		} else {
-			self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink' );
-		}
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink pretty' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}
 
