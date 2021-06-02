@@ -9,7 +9,7 @@
 /**
  * Admin tests
  */
-class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 	/**
 	 * Editor user id
