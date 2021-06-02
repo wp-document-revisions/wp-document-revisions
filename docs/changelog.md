@@ -2,6 +2,12 @@
 
 ### 3.3.0
 
+* NEW: Rewrite rules extended to access documents without year/month and/or file extension.  (#253) @NeilWJames
+* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List.
+  Note that it will change the column order seen as taxonomiees are on the end.
+* NEW: Taxonomy workflow_state is set as show_in_rest.
+* FIX: Access to revisions when permalink structure not defined.
+
 * NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
 * NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).

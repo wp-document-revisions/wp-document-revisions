@@ -114,9 +114,11 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 
 = 3.3.0 =
 
-* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List.  (#253) @NeilWJames
+* NEW: Rewrite rules extended to access documents without year/month and/or file extension.  (#253) @NeilWJames
+* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List.
   Note that it will change the column order seen as taxonomiees are on the end.
 * NEW: Taxonomy workflow_state is set as show_in_rest.
+* FIX: Access to revisions when permalink structure not defined.
 
 * NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
