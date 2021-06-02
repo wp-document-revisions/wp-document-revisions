@@ -247,12 +247,13 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// set permalink structure to null string.
 		global $wp_rewrite;
 		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure('');
-		
+		$wp_rewrite->set_permalink_structure( '' );
+
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
@@ -260,8 +261,6 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 ugly' );
 		self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 ugly' );
-			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
-			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
 
 		// reset permalink structure.
 		$wp_rewrite->set_permalink_structure( $orig );
@@ -283,12 +282,13 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// set permalink structure to null string.
 		global $wp_rewrite;
 		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure('/%year%/%monthnum%/%postname%/');
-		
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
