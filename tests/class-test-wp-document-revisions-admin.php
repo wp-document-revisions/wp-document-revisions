@@ -247,7 +247,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// set permalink structure to null string.
 		global $wp_rewrite;
 		$orig = $wp_rewrite->permalink_structure;
-		WP_Rewrite::set_permalink_structure('');
+		$wp_rewrite->set_permalink_structure('');
 		
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
@@ -264,7 +264,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
 
 		// reset permalink structure.
-		WP_Rewrite::set_permalink_structure( $orig );
+		$wp_rewrite->set_permalink_structure( $orig );
 	}
 
 	/**
@@ -283,7 +283,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// set permalink structure to null string.
 		global $wp_rewrite;
 		$orig = $wp_rewrite->permalink_structure;
-		WP_Rewrite::set_permalink_structure('/%year%/%monthnum%/%postname%/');
+		$wp_rewrite->set_permalink_structure('/%year%/%monthnum%/%postname%/');
 		
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
@@ -298,7 +298,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
 
 		// reset permalink structure.
-		WP_Rewrite::set_permalink_structure( $orig );
+		$wp_rewrite->set_permalink_structure( $orig );
 	}
 	/**
 	 * Verify document log metabox.
