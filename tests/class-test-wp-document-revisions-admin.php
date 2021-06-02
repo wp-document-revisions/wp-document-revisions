@@ -234,7 +234,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	/**
 	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */
-	public function test_revision_metabox_auth() {
+	public function test_revision_metabox_auth_no_structure() {
 		global $wpdr;
 
 		global $current_user;
@@ -244,6 +244,11 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 
 		$post_obj = get_post( self::$editor_private_post );
 
+		// set permalink structure to null string.
+		global $wp_rewrite;
+		$orig = $wp_rewrite->permalink_structure;
+		WP_Rewrite::set_permalink_structure('');
+		
 		ob_start();
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
@@ -252,17 +257,49 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
-		global $wp_rewrite;
-		// Different output depending if permalink defined.
-		if ( '' === $wp_rewrite->permalink_structure ) {
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 ugly' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 ugly' );
-		} else {
+
+		self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 ugly' );
+		self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 ugly' );
 			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
 			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
-		}
+
+		// reset permalink structure.
+		WP_Rewrite::set_permalink_structure( $orig );
 	}
 
+	/**
+	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
+	 */
+	public function test_revision_metabox_auth_structure() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$post_obj = get_post( self::$editor_private_post );
+
+		// set permalink structure to null string.
+		global $wp_rewrite;
+		$orig = $wp_rewrite->permalink_structure;
+		WP_Rewrite::set_permalink_structure('/%year%/%monthnum%/%postname%/');
+		
+		ob_start();
+		$wpdr->admin->revision_metabox( $post_obj );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be 1 for RSS feed.
+		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
+
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
+
+		// reset permalink structure.
+		WP_Rewrite::set_permalink_structure( $orig );
+	}
 	/**
 	 * Verify document log metabox.
 	 */
