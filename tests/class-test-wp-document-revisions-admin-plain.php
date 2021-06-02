@@ -286,7 +286,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
-		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ), 'document metabox permalink_ms' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink_ms' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}
 
