@@ -174,7 +174,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		unregister_taxonomy( 'workflow_state' );
 
 		// reset permalink structure.
-		global $orig;
+		global $wp_rewrite, $orig;
 		$wp_rewrite->set_permalink_structure( $orig );
 	}
 
