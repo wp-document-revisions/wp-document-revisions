@@ -187,8 +187,6 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_structure() {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
-		console_log( 'Public : ' . get_permalink( self::$editor_public_post ) );
-		console_log( 'Private: ' . get_permalink( self::$editor_private_post ) );
 	}
 
 	/**
@@ -262,7 +260,6 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
@@ -296,8 +293,6 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( esc_url( get_permalink( $post_obj->ID ) ) );
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink_ms' );

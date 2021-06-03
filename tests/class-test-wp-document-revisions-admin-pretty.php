@@ -260,7 +260,6 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
