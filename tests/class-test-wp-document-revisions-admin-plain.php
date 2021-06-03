@@ -296,7 +296,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( esc_url( get_permalink( $post_obj->ID ) );
+		console_log( esc_url( get_permalink( $post_obj->ID ) ) );
 		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
