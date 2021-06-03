@@ -3,12 +3,12 @@
 Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 5.4.1
+Tested up to: 5.7
 Stable tag: 3.3.0
 
 == Description ==
 
-[WP Document Revisions](https://wordpress.org/plugins/wp-document-revisions/) is a [document management](https://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
+[WP Document Revisions](https://wordpress.org/plugins/wp-document-revisions/) is a [document management](https://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
 = WP Document Revisions is three things =
 
@@ -16,27 +16,29 @@ Stable tag: 3.3.0
 2. A **collaboration tool** to empower teams to collaboratively draft, edit, and refine documents
 3. A **file hosting solution** to publish and securely deliver files to a team, to clients, or to the public
 
-See [**the full list of features**](http://ben.balter.com/wp-document-revisions/./features/) for more information.
+See [**the full list of features**](https://wp-document-revisions.github.io/wp-document-revisions/features/) for more information.
 
 == Documentation ==
 
-See [the full documentation](http://ben.balter.com/wp-document-revisions)
+See [the full documentation](https://wp-document-revisions.github.io/wp-document-revisions)
 
 = Learn =
 
-* [Features and Overview](http://ben.balter.com/wp-document-revisions/./features/)
-* [Screenshots](http://ben.balter.com/wp-document-revisions/./screenshots/)
-* [Installation](http://ben.balter.com/wp-document-revisions/./installation/)
-* [Frequently Asked Questions](http://ben.balter.com/wp-document-revisions/./frequently-asked-questions/)
-* [Links](http://ben.balter.com/wp-document-revisions/./links/)
-* [Where to get Support or Report an Issue](http://ben.balter.com/wp-document-revisions/./SUPPORT/)
-* [Translations](http://ben.balter.com/wp-document-revisions/./translations/)
-* [Plugin Filters](http://ben.balter.com/wp-document-revisions/./filters/)
-* [Useful Plugins and Tools](http://ben.balter.com/wp-document-revisions/./useful-plugins-and-tools/)
+* [Features and Overview](https://wp-document-revisions.github.io/wp-document-revisions/features/)
+* [Screenshots](https://wp-document-revisions.github.io/wp-document-revisions/screenshots/)
+* [Installation](https://wp-document-revisions.github.io/wp-document-revisions/installation/)
+* [Frequently Asked Questions](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/)
+* [Links](https://wp-document-revisions.github.io/wp-document-revisions/links/)
+* [Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)
+* [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/)
+* [Plugin Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/)
+* [Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)
+* [Plugin Shortcodes and Widget](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/)
+* [Useful Plugins and Tools](https://wp-document-revisions.github.io/wp-document-revisions/useful-plugins-and-tools/)
 
 = Get Involved =
 
-* [How to Contribute](http://ben.balter.com/wp-document-revisions/./CONTRIBUTING/)
+* [How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
 [Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
@@ -48,15 +50,15 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = Overview =
 
-**Powerful Collaboration Tools** - *With great power does not have to come great complexity.* Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries — posts, attachments, revisions, taxonomies, authentication, and permalinks — to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
+**Powerful Collaboration Tools** - *With great power does not have to come great complexity.* Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries — posts, attachments, revisions, taxonomies, authentication, and permalinks — to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
 
-**Document History** - At each step of the authoring process, WP Document Revisions gives you an instant snapshot of your team's progress and the document's history. It even gives you the option to revert back to a previous revision — so don't fret if you make a mistake — or receive updates on changes to the document right in your favorite feed reader.
+**Document History** - At each step of the authoring process, WP Document Revisions gives you an instant snapshot of your team's progress and the document's history. It even gives you the option to revert back to a previous revision — so don't fret if you make a mistake — or receive updates on changes to the document right in your favorite feed reader.
 
-**Access Control** - Each document is given a persistent URL (e.g., yourcompany.com/documents/2011/08/TPS-Report.doc) which can be private (securely delivered only to members of your organization), password protected (available only to those you select such as clients or contractors), or public (published and hosted for the world to see). If you catch a typo and upload a new version, that URL will continue to point to the latest version, regardless of how many changes you make.
+**Access Control** - Each document is given a persistent URL (e.g., yourcompany.com/documents/2011/08/TPS-Report.doc) which can be private (securely delivered only to members of your organization), password protected (available only to those you select such as clients or contractors), or public (published and hosted for the world to see). If you catch a typo and upload a new version, that URL will continue to point to the latest version, regardless of how many changes you make.
 
-**Enterprise Security** - Worried about storing propriety or sensitive information? WP Document Revisions was built from the first line of code with government- and enterprise-grade security in mind. Each file is masked behind an anonymous 128-bit [MD5 hash](http://en.wikipedia.org/wiki/MD5) as soon as it touches the server, and requests for files are transparently routed through WordPress's time-tested URL rewriting, authentication, and permission systems (which can even [integrate with existing enterprise active directory](http://wordpress.org/extend/plugins/active-directory-integration/) or [LDAP servers](http://wordpress.org/extend/plugins/simple-ldap-login/)). Need more security? WP Document Revisions allows you to store documents in a folder above the `htdocs` or `public_html` [web root](http://httpd.apache.org/docs/2.0/mod/core.html#documentroot), further ensuring that only those you authorize have access to your work.
+**Enterprise Security** - Worried about storing propriety or sensitive information? WP Document Revisions was built from the first line of code with government- and enterprise-grade security in mind. Each file is masked behind an anonymous 128-bit [MD5 hash](http://en.wikipedia.org/wiki/MD5) as soon as it touches the server, and requests for files are transparently routed through WordPress's time-tested URL rewriting, authentication, and permission systems (which can even [integrate with existing enterprise active directory](http://wordpress.org/extend/plugins/active-directory-integration/) or [LDAP servers](http://wordpress.org/extend/plugins/simple-ldap-login/)). Need more security? WP Document Revisions allows you to store documents in a folder above the `htdocs` or `public_html` [web root](http://httpd.apache.org/docs/2.0/mod/core.html#documentroot), further ensuring that only those you authorize have access to your work.
 
-**Customization** - WP Document Revisions recognizes that no two teams are identical, and as a result, molds to your firm's needs, not the other way around. Need to track additional information associated with a document? Departments, editors, issues, sections, even arbitrary key-value pairs — whatever you can throw at it, it can handle. Development and customization costs are further minimized by its extensive plugin API, and the [WordPress Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/) makes it easy for even the uninitiated to add custom taxonomies to documents. Need an audit trail to track check-ins and check-outs? User-level permissions based on the document's state or another custom taxonomy? Support for third-party encryption? Check out the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) for sample code. Looking for even more advanced control of your workflow? WP Document Revisions will detect the popular workflow plugin [Edit Flow](http://editflow.org), if installed, and will automatically pull [Edit Flow’s advanced workflow management tools](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) into WP Document Revisions. Simply put, virtually every aspect of the plugin's functionality from workflow states to user-level permissions can be fully customized to your team's unique needs.
+**Customization** - WP Document Revisions recognizes that no two teams are identical, and as a result, molds to your firm's needs, not the other way around. Need to track additional information associated with a document? Departments, editors, issues, sections, even arbitrary key-value pairs — whatever you can throw at it, it can handle. Development and customization costs are further minimized by its extensive plugin API, and the [WordPress Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/) makes it easy for even the uninitiated to add custom taxonomies to documents. Need an audit trail to track check-ins and check-outs? User-level permissions based on the document's state or another custom taxonomy? Support for third-party encryption? Check out the [WP Document Revisions Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) for sample code. Looking for even more advanced control of your workflow? WP Document Revisions will detect the popular workflow plugin [Edit Flow](http://editflow.org), if installed, and will automatically pull [Edit Flow’s advanced workflow management tools](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) into WP Document Revisions. Simply put, virtually every aspect of the plugin's functionality from workflow states to user-level permissions can be fully customized to your team's unique needs.
 
 **Future Proof** - Switching costs a concern? WP Document Revisions is built with tomorrow's uncertainty in mind. Equally at home in an in-house server room as it is in the cloud, moving individual files or entire document repositories in and out of WP Document Revisions is a breeze (history and all). And since the software is open-source, you can easily add tools to automate the process of moving to or integrating with future third-party systems.
 
@@ -64,11 +66,11 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 * Support for any file type (docs, spreadsheets, images, PDFs — anything!)
 * Securely stores unlimited revisions of your business's essential files
-* Provides a full file history in the form of a revision log, accessible via RSS
+* Provides a full file history in the form of a revision log, accessible via RSS
 * Helps you track and organize documents as they move through your organization's existing workflow
 * Each file gets a permanent, authenticated URL that always points to the latest version
-* Each revision gets its own unique url (e.g.,TPS-Report-revision-3.doc) accessible only to those you deem
-* Files are intuitively checked out and locked to prevent revisions from colliding
+* Each revision gets its own unique url (e.g.,TPS-Report-revision-3.doc) accessible only to those you deem
+* Files are intuitively checked out and locked to prevent revisions from colliding
 * Toggle documents between public, private, and password protected with a single mouse click
 * Runs in-house or in the cloud
 * Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
@@ -79,7 +81,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * Integration with [Edit Flow](https://editflow.org)
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
-= Features Available via the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) =
+= Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) =
 
 * **Audit Trail** - creates check in / check out audit trail for all documents
 * **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
@@ -93,51 +95,122 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 
-== Useful plugins and tools ==
+=== Security Policy ===
 
-= Permissions management =
+To report a security vulnerability, please email [ben@balter.com](mailto:ben@balter.com).
 
-* [Members – Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-	(Previously named Members)
+== Where to get help or report an issue ==
 
-= Taxonomy management =
+* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](https://wp-document-revisions.github.io/wp-document-revisions/).
+* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](https://wordpress.org/support/plugin/wp-document-revisions).
+* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/wp-document-revisions/wp-document-revisions/issues).
+* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
-* [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+== Things to check before reporting an issue ==
 
-= Document workflow management =
+* Are you using the latest version of WordPress?
+* Are you using the latest version of the plugin?
+* Does the problem occur even when you deactivate all plugins and use the default theme?
+* Have you tried deactivating and reactivating the plugin?
+* Has your issue [already been reported](https://github.com/wp-document-revisions/wp-document-revisions/issues)?
 
-* [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-* [PublishPress](https://wordpress.org/plugins/publishpress/)
+== What to include in an issue ==
+
+* What steps can another user take to recreate the issue?
+* What is the expected outcome of that action?
+* What is the actual outcome of that action?
+* Are there any screenshots or screencasts that may be helpful to include?
+* Only include one bug per issue. If you have discovered two bugs, please file two issues.
+
+
+=== WP-Documents-Revisions Action Hooks ===
+
+This plugin makes use of many action hooks to tailor the delivered processing according to a site's needs.
+
+Most of them are named with a leading 'document-' but there are a few additional non-standard ones.
+
+== Action change_document_workflow_state ==
+
+Called when the post is saved and Workflow_State taxonomy value is changed. (Only post_ID and new value are available)
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_change_workflow_state ==
+
+Called when the post is saved and Workflow_State taxonomy value is changed. (post_ID, new and old value are available)
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_edit ==
+
+Called as part of the Workflow_State taxonomy when putting the metabox on the admin page
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_lock_notice ==
+
+Called when putting the lock notice on the admin edit screen.
+
+In: class-wp-document-revisions-admin.php
+
+== Action document_lock_override ==
+
+Called after trying to over-ride the lock and possibly a notice has been sent.
+
+In: class-wp-document-revisions.php
+
+== Action document_serve_done ==
+
+Called just after serving the file to the user.
+
+In: class-wp-document-revisions.php
+
+== Action serve_document ==
+
+Called just before serving the file to the user.
+
+In: class-wp-document-revisions.php
+
+
 
 == Changelog ==
 
 = 3.3.0 =
 
-* FIX: Design conflict with Elementor (#230) @NeilWJames
-* NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
-* NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
-* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
-* FIX: Queries on post_status do not do proper permissions check
-* FIX: Remove restore option on the current document and latest revision as it makes no sense.
-* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
-* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when trashing the document.
-* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
-  (#217) @NeilWJames
-
-* NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
+* SECURITY: Password-protected document can leak existence (by showing next/previous)
+* SECURITY: Queries on post_status do not do proper permissions check
+* SECURITY: Suppress excerpt output in feeds to stop information leakage
+* SECURITY: WP creates images when saving PDF documents (using the encoded name). These were being left when deleting the document.
+* NEW: Rewrite rules extended to access documents without year/month and/or file extension.  (#253) @NeilWJames
+* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List. Note that it will change the column order seen as taxonomiees are on the end.
+* NEW: Implement Gutenberg Blocks for Shortcodes and Widget.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
+* NEW: Taxonomy workflow_state is set as show_in_rest.
+* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
+* NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
+* NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.
+* NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
+* NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
+* NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* FIX: Access to revisions when permalink structure not defined.
+* FIX: Design conflict with Elementor (#230) @NeilWJames
+* FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
 * FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
-* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
-* FIX: Update code to WP Coding Standards 2.3 (and fix new sniff errors)
-* FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
-* FIX: Suppress excerpt output in feeds to stop information leakage
-* FIX: Password-protected document can leak information (by showing next/previous)
-* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
 * FIX: Fix error in time difference display when client and server are in different time zones
-* FIX: Document directory incorrectly test for Absolute/Relative entry on Windows implementations
-* FIX: Review documentation.
-  (#208) @NeilWJames
+* FIX: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
+* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Remove restore option on the current document and latest revision as it makes no sense.
+* FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
+* FIX: Review documentation. (#208) @NeilWJames
+* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
+* DEV: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* DEV: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
+* DEV: Rewrite Test library to increase code coverage.
+* DEV: Use GitHub Actions for CI (#251)
+* DEV: Fixed wp_die() tests ending tests prematurely (#252)
 
 = 3.2.4 =
 
@@ -150,6 +223,7 @@ See [the full documentation](http://ben.balter.com/wp-document-revisions)
 
 = 3.2.3 =
 
+* Full phpcs 2.2 standardisation, complete filter documentation (#192) @NeilWJames
 * On plugin activation, admin warning if user doesn't have edit_documents capability (#180) @NeilWJames
 * PHPCS Review (no functional changes) (#179) @NeilWJames
 * Review for WP Coding standard 2.1.1 and newer phpunit (#174) @NeilWJames
@@ -217,8 +291,8 @@ Updated documentation.
 
 = 3.0.0 =
 
-* [Dropped support for WordPress prior to version 3.3](https://github.com/benbalter/wp-document-revisions/pull/94)
-* [Dropped WebDav support](https://github.com/benbalter/wp-document-revisions/pull/95)
+* [Dropped support for WordPress prior to version 3.3](https://github.com/wp-document-revisions/wp-document-revisions/pull/94)
+* [Dropped WebDav support](https://github.com/wp-document-revisions/wp-document-revisions/pull/95)
 * Implemented [WordPress coding standards](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards)
 * Added additional nonces
 * Added additional translation strings and comments
@@ -226,20 +300,20 @@ Updated documentation.
 
 = 2.2.0 =
 
-* [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/benbalter/wp-document-revisions/pull/74)
-* [Filter documents from the grid view in Media, queried via Ajax](https://github.com/benbalter/wp-document-revisions/pull/78)
-* [Added code to preserve file exts on revision links](https://github.com/benbalter/wp-document-revisions/pull/81), and
-* [Verify a post ID has been passed before verifying post type](https://github.com/benbalter/wp-document-revisions/pull/86)
-* [Use H2 for "Feed Privacy" heading](https://github.com/benbalter/wp-document-revisions/pull/91)
+* [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/wp-document-revisions/wp-document-revisions/pull/74)
+* [Filter documents from the grid view in Media, queried via Ajax](https://github.com/wp-document-revisions/wp-document-revisions/pull/78)
+* [Added code to preserve file exts on revision links](https://github.com/wp-document-revisions/wp-document-revisions/pull/81), and
+* [Verify a post ID has been passed before verifying post type](https://github.com/wp-document-revisions/wp-document-revisions/pull/86)
+* [Use H2 for "Feed Privacy" heading](https://github.com/wp-document-revisions/wp-document-revisions/pull/91)
 
 = 2.0.0 =
 
-* Note: The project is looking for additional contributors. Please consider contributing your time: <https://github.com/benbalter/wp-document-revisions/blob/master/docs/how-to-contribute.md>
-* Added (beta) WebDAV support thanks to @linuxBozo and @poorgeek (<https://github.com/benbalter/wp-document-revisions/pull/69>)
+* Note: The project is looking for additional contributors. Please consider contributing your time: <https://github.com/wp-document-revisions/wp-document-revisions/blob/master/docs/how-to-contribute.md>
+* Added (beta) WebDAV support thanks to @linuxBozo and @poorgeek (<https://github.com/wp-document-revisions/wp-document-revisions/pull/69>)
 * Added Brazilian Portuguese translation thanks to @rafaelfunchal
 * Significantly improved automated testing via WP-CLI
 * Better guarding against binary files being corrupted by other plugins
-* Improved documentation (<https://github.com/benbalter/wp-document-revisions/tree/master/docs>)
+* Improved documentation (<https://github.com/wp-document-revisions/wp-document-revisions/tree/master/docs>)
 
 = 1.3.6 =
 
@@ -247,9 +321,9 @@ Updated documentation.
 * Added Italian translation, props @guterboit
 * Added Russian translation, props Evgeny Vlasov
 * Updated all translations
-* Workflow state saving improvements, props @cojennin ([#48](https://github.com/benbalter/WP-Document-Revisions/pull/48))
-* Fix restore revision link bug, props @cojennin ([#55](https://github.com/benbalter/WP-Document-Revisions/issues/55))
-* Welcome @cojennin to the core team. [Want to join?](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
+* Workflow state saving improvements, props @cojennin ([#48](https://github.com/wp-document-revisions/wp-document-revisions/pull/48))
+* Fix restore revision link bug, props @cojennin ([#55](https://github.com/wp-document-revisions/wp-document-revisions/issues/55))
+* Welcome @cojennin to the core team. [Want to join?](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute)
 
 = 1.3.5 =
 
@@ -268,7 +342,7 @@ Updated documentation.
 
 = 1.3.3 =
 
-* Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/benbalter/WP-Document-Revisions/issues/24)
+* Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/wp-document-revisions/wp-document-revisions/issues/24)
 * Fix for [testing framework](https://github.com/nb/wordpress-tests) not being properly included in plugin repository due to bad [deploy script](https://github.com/benbalter/Github-to-WordPress-Plugin-Directory-Deployment-Script)
 * Added German translation (de_DE), special thanks to [Konstantin Obenland](http://en.wp.obenland.it/)
 * Added Chinese translation (zh_CN), special thanks to Tim Ren
@@ -276,17 +350,17 @@ Updated documentation.
 
 = 1.3.2 =
 
-* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/benbalter/WP-Document-Revisions/wiki). Feel free to contribute!
+* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/wp-document-revisions/wp-document-revisions/wiki). Feel free to contribute!
 * Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
 * Added Norwegian translation, special thanks to Daniel Haugen
-* [Crisper menu icon](https://github.com/benbalter/WP-Document-Revisions/commit/00ffe42daabacf90091cc3638dd2658c2376f01a), special thanks to [Phil Russell](www.optionotter.com)
-* Pushpin icon [replaced with Retina document icon](https://github.com/benbalter/WP-Document-Revisions/commit/c36ee849512f77432db8e6783a0bc4389f33f0ab) on document list and document edit screen, special thanks to [Marvin Rühe](https://github.com/Marv51)
+* [Crisper menu icon](https://github.com/wp-document-revisions/wp-document-revisions/commit/00ffe42daabacf90091cc3638dd2658c2376f01a), special thanks to [Phil Russell](www.optionotter.com)
+* Pushpin icon [replaced with Retina document icon](https://github.com/wp-document-revisions/wp-document-revisions/commit/c36ee849512f77432db8e6783a0bc4389f33f0ab) on document list and document edit screen, special thanks to [Marvin Rühe](https://github.com/Marv51)
 * Unit tests now utilizes newer [wordpress-tests](https://github.com/nb/wordpress-tests) framework, as recently adopted by core
-* `serve_file` [now hooks](https://github.com/benbalter/WP-Document-Revisions/commit/57cac162e40255efb29c354754e9a0b8df05a2ef) into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
-* Fix for `document_to_private` filter [not properly passing](https://github.com/benbalter/WP-Document-Revisions/commit/04922d73eb63172e79f2f9e86e4002cee032e4ef) the pre-filtered document object, props [Marvin Rühe](https://github.com/Marv51).
-* [Better loading](https://github.com/benbalter/WP-Document-Revisions/commit/0349f8ebcf931f6b2731b42ae795b3191ce9ed45) of administrative functions
-* [Better toggling](https://github.com/benbalter/WP-Document-Revisions/commit/6947310c06a8267573835c6b4bc04e3ad1b29405) of Workflow state support for integration with Edit Flow and other plugins
-* Administrative CSS [now stored in a separate file](https://github.com/benbalter/WP-Document-Revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/benbalter/WP-Document-Revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
+* `serve_file` [now hooks](https://github.com/wp-document-revisions/wp-document-revisions/commit/57cac162e40255efb29c354754e9a0b8df05a2ef) into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
+* Fix for `document_to_private` filter [not properly passing](https://github.com/wp-document-revisions/wp-document-revisions/commit/04922d73eb63172e79f2f9e86e4002cee032e4ef) the pre-filtered document object, props [Marvin Rühe](https://github.com/Marv51).
+* [Better loading](https://github.com/wp-document-revisions/wp-document-revisions/commit/0349f8ebcf931f6b2731b42ae795b3191ce9ed45) of administrative functions
+* [Better toggling](https://github.com/wp-document-revisions/wp-document-revisions/commit/6947310c06a8267573835c6b4bc04e3ad1b29405) of Workflow state support for integration with Edit Flow and other plugins
+* Administrative CSS [now stored in a separate file](https://github.com/wp-document-revisions/wp-document-revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/wp-document-revisions/wp-document-revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
 * Administrative CSS and Javascript files now versioned based on plugin version to allow for better caching
 
 = 1.3.1 =
@@ -298,9 +372,9 @@ Updated documentation.
 
 = 1.3 =
 
-* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
+* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/wp-document-revisions/wp-document-revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative editing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
-* If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
+* If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop). Any [feedback](https://github.com/wp-document-revisions/wp-document-revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
 * Added Spanish Translation Support (es_ES — special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., <http://domain.com/documentos/2012/04/test.txt> rather than /documents/)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
@@ -327,7 +401,7 @@ Updated documentation.
 
 = 1.2.2 =
 
-* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute
+* Plugin [posted to Github](https://github.com/wp-document-revisions/wp-document-revisions) if developers would like to fork and contribute
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 — file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log
@@ -439,6 +513,12 @@ In: class-wp-document-revisions-front-end.php
 
 Filters the Document taxonomies (allowing users to select the first three for the block widget.
 
+== Filter document_buffer_size ==
+
+In: class-wp-document-revisions.php
+
+Filter to define file writing buffer size (Default 0 = No buffering).
+
 == Filter document_caps ==
 
 In: class-wp-document-revisions.php
@@ -494,6 +574,12 @@ Filters the user locking the document file.
 In: class-wp-document-revisions.php
 
 Filters the lost lock document email text.
+
+== Filter document_output_sent_is_ok ==
+
+In: class-wp-document-revisions.php
+
+Filter to serve file even if output already written.
 
 == Filter document_path ==
 
@@ -559,7 +645,7 @@ Filters the HTTP headers sent when a file is served through WP Document Revision
 
 In: class-wp-document-revisions.php
 
-Filter to switch off use of Edit_Flow capabilities.
+Filter to switch off integration with Edit_Flow/PublishPress statuses.
 
 == Filter document_rewrite_rules ==
 
@@ -572,6 +658,12 @@ Filters the Document rewrite rules.
 In: class-wp-document-revisions.php
 
 Filters file name of document served. (Useful if file is encrypted at rest).
+
+== Filter document_serve_use_gzip ==
+
+In: class-wp-document-revisions.php
+
+Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 
 == Filter document_shortcode_atts ==
 
@@ -591,7 +683,7 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
-== Filter document_taxonomy_term_count
+== Filter document_taxonomy_term_count ==
 
 In: class-wp-document-revisions.php
 
@@ -651,121 +743,12 @@ In: class-wp-document-revisions.php
 
 Filters the decision to serve the document through WP Document Revisions.
 
-=== WP-Documents-Revisions Action Hooks ===
-
-This plugin makes use of some action hooks to tailor the delivered processing according to a site's needs.
-
-Most of them are named with a leading 'document-' but there are a few additional non-standard ones.
-
-== Action change_document_workflow_state ==
-
-Called when the post is saved and Workflow_State taxonomy value is changed. (Only post_ID and new value are available)
-
-In: class-wp-document-revisions-admin.php
-
-== Action document_change_workflow_state ==
-
-Called when the post is saved and Workflow_State taxonomy value is changed. (post_ID, new and old value are available)
-
-In: class-wp-document-revisions-admin.php
-
-== Action document_edit ==
-
-Called as part of the Workflow_State taxonomy when putting the metabox on the admin page
-
-In: class-wp-document-revisions-admin.php
-
-== Action document_lock_notice ==
-
-Called when putting the lock notice on the admin edit screen.
-
-In: class-wp-document-revisions-admin.php
-
-== Action document_lock_override ==
-
-Called after trying to over-ride the lock and possibly a notice has been sent.
-
-In: class-wp-document-revisions.php
-
-== Action document_serve_done ==
-
-Called just after serving the file to the user.
-
-In: class-wp-document-revisions.php
-
-== Action serve_document ==
-
-Called just before serving the file to the user.
-
-In: class-wp-document-revisions.php
-
-
-
-== Where to get help or report an issue ==
-
-* For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](http://ben.balter.com/wp-document-revisions/).
-* For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](https://wordpress.org/support/plugin/wp-document-revisions).
-* For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/benbalter/WP-Document-Revisions/issues).
-* For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
-
-== Things to check before reporting an issue ==
-
-* Are you using the latest version of WordPress?
-* Are you using the latest version of the plugin?
-* Does the problem occur even when you deactivate all plugins and use the default theme?
-* Have you tried deactivating and reactivating the plugin?
-* Has your issue [already been reported](https://github.com/benbalter/WP-Document-Revisions/issues)?
-
-== What to include in an issue ==
-
-* What steps can another user take to recreate the issue?
-* What is the expected outcome of that action?
-* What is the actual outcome of that action?
-* Are there any screenshots or screencasts that may be helpful to include?
-* Only include one bug per issue. If you have discovered two bugs, please file two issues.
-
-
-== Screenshots ==
-
-\###1. A typical WP Document Revisions edit document screen.###
-
-![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/benbalter/wp-document-revisions/master/screenshot-1.png)
-
-
-== Links ==
-
-* [Source Code](https://github.com/benbalter/WP-Document-Revisions/) (GitHub)
-* [Development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/benbalter/WP-Document-Revisions))
-* [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook)
-* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [Project Wiki](https://github.com/benbalter/WP-Document-Revisions/wiki)
-* [Where to get Support or Report an Issue](https://github.com/benbalter/WP-Document-Revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
-* [How to Contribute](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
-
-
-== Installation ==
-
-= Automatic Install =
-
-1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](https://wordpress.org/support/article/how-to-install-wordpress/)
-2. Navigate to Plugins->Add New from the menu on the left
-3. Search for WP Document Revisions
-4. Click "Install"
-5. Click "Activate Now"
-
-= Manual Install =
-
-1. Download the plugin from the link in the top left corner
-2. Unzip the file, and upload the resulting "wp-document-revisions" folder to your "/wp-content/plugins directory" as "/wp-content/plugins/wp-document-revisions"
-3. Log into your WordPress install as an administrator, and navigate to the plugins screen from the left-hand menu
-4. Activate WP Document Revisions
-
 
 == Frequently Asked Questions ==
 
 = I'm a user/developer/administrator... can I contribute? =
 
-Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute) for more information.
+Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute) for more information.
 
 = Does it work on Mac? PC? Mobile? =
 
@@ -841,15 +824,17 @@ Yes. You can use the [Simple Taxonomy plugin](https://wordpress.org/plugins/simp
 
 = Can I put my documents in folders? =
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy](https://wordpress.org/plugins/simple-taxonomy/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
 
 = What if I want even more control over my workflow? =
 
 Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if [Edit Flow](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
 
+Equally the [PublishPress Plugin](https://publishpress.com), a fork of Edit Flow, is detected and can be used with WP Document Revisions in exactly the same manner as Edit Flow.
+
 = I want some small changes to the processing, but there are few configuration options. How do I do this? =
 
-Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](http://ben.balter.com/wp-document-revisions/./filters/). This will need some coding to be done.
+Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](https://wp-document-revisions.github.io/wp-document-revisions/filters/). This will need some coding to be done.
 
 = Can I make it so that users can only access documents assigned to them (or documents that they create)? =
 
@@ -857,19 +842,13 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 
 = How do I use the documents shortcode? =
 
-In a post or page, simply type `[documents]` to display a list of documents. The shortcode accepts *most* [Standard WP_Query parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Parameters) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`. Specifically, the shortcode accepts: `author__in`, `author__not_in`, `author_name`, `author`, `cat`, `category__and`, `category__in`, `category__not_in`, `category_name`, `date_query`, `day`, `has_password`, `hour`, `m`, `meta_compare`, `meta_key`, `meta_query`, `meta_value_num`, `meta_value`, `minute`, `monthnum`, `name`, `numberposts`, `p`, `page_id`, `pagename`, `post__in`, `post__not_in`, `post_name__in`, `post_parent__in`, `post_parent__not_in`, `post_parent`, `post_password`, `post_status`, `s`, `second`, `tag__and`, `tag__in`, `tag__not_in`, `tag_id`, `tag_slug__and`, `tag_slug__in`, `tag`, `tax_query`, `title`, `w` and `year`.
-
-It is also possible to add formatting parameters: `show_edit` that will add a button next to each documument that the user can edit to edit the document; and `new_tab` that will open the document in a new browser tab rather than in the current one. Both of these are boolean variables, but can be simply entered without a value (with default value true). 
- 
-If you're using a custom taxonomy, you can add the taxonomy name as a parameter in your shortcode. For example, if your custom taxonomy is called "document_categories", you can write insert a shortcode like this:
-
-`[documents numberposts="6" document_categories="category-name"]`
-
-(Where "category-name" is the taxonomy's slug)
+In a post or page, simply type `[documents]` to display a list of documents. 
+More information is on [this](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/) page.
 
 = How do I use the document revisions shortcode? =
 
-In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. You can find the ID in the URL of the edit document page. To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+More information is on [this](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/) page.
 
 = How do I use the recently revised documents widget? =
 
@@ -885,23 +864,152 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 = Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
 
-Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 = Can I limit access to documents based on workflow state, department, or some other custom taxonomy? =
 
-Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](http://wordpress.org/extend/plugins/members/).
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
 
 = Is it possible to do a bulk import of existing documents / files already on the server? =
 
-Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
+Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
 
+
+== Installation ==
+
+= Automatic Install =
+
+1. Login to your WordPress site as an Administrator, or if you haven't already, complete the famous [WordPress Five Minute Install](https://wordpress.org/support/article/how-to-install-wordpress/)
+2. Navigate to Plugins->Add New from the menu on the left
+3. Search for WP Document Revisions
+4. Click "Install"
+5. Click "Activate Now"
+
+= Manual Install =
+
+1. Download the plugin from the link in the top left corner
+2. Unzip the file, and upload the resulting "wp-document-revisions" folder to your "/wp-content/plugins directory" as "/wp-content/plugins/wp-document-revisions"
+3. Log into your WordPress install as an administrator, and navigate to the plugins screen from the left-hand menu
+4. Activate WP Document Revisions
+
+
+== Links ==
+
+* [Source Code](https://github.com/wp-document-revisions/wp-document-revisions/) (GitHub)
+* [Development version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/wp-document-revisions/wp-document-revisions))
+* [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
+* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
+* [Project Wiki](https://github.com/wp-document-revisions/wp-document-revisions/wiki)
+* [Where to get Support or Report an Issue](https://github.com/wp-document-revisions/wp-document-revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
+* [How to Contribute](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute)
+
+
+== Screenshots ==
+
+\###1. A typical WP Document Revisions edit document screen.###
+
+![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/master/screenshot-1.png)
+
+
+=== WP-Documents-Revisions Shortcodes and Widget ===
+
+These shortcodes and widget are available both in their historic form and as blocks.
+
+Existing shortcodes can be converted to and from their block forms.
+
+They are held in a grouping called `WP Document Revisions`.
+
+== Documents Shortcode ==
+
+In a post or page, simply type `[documents]` to display a list of documents. 
+
+= WP_Query parameters =
+
+The shortcode accepts *most* [Standard WP_Query parameters](https://developer.wordpress.org/reference/classes/wp_query/) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`. 
+
+Specifically, the shortcode accepts: `author__in`, `author__not_in`, `author_name`, `author`, `cat`, `category__and`, `category__in`, `category__not_in`, `category_name`, `date_query`, `day`, `has_password`, `hour`, `m`, `meta_compare`, `meta_key`, `meta_query`, `meta_value_num`, `meta_value`, `minute`, `monthnum`, `name`, `numberposts`, `order`, `orderby`, `p`, `page_id`, `pagename`, `post__in`, `post__not_in`, `post_name__in`, `post_parent__in`, `post_parent__not_in`, `post_parent`, `post_password`, `post_status`, `s`, `second`, `tag__and`, `tag__in`, `tag__not_in`, `tag_id`, `tag_slug__and`, `tag_slug__in`, `tag`, `tax_query`, `title`, `w` and `year`.
+
+If you're using a custom taxonomy, you can add the taxonomy name as a parameter in your shortcode. For example, if your custom taxonomy is called "document_categories", you can write insert a shortcode like this:
+
+`[documents document_categories="category-name" numberposts="6"]`
+
+(Where "category-name" is the taxonomy term's slug)
+
+Strictly it uses accepts the "query_var" parameter of the taxonomies used for documents. That is, if you have defined a taxonomy for your documents with slug "document_categories". If you have not defined the query_var parameter then you use the slug. However if you have set query_var to "doc_cat", say, then you can insert a shortcode as
+
+`[documents doc_cat="category-name" numberposts="5"]`
+
+Important parameters WP_Query will be the ordering and number of posts to display.
+
+`numberposts` (with a number parameter) will give the maximum number of posts to display.
+
+`order` (with value 'ASC' or 'DESC') gives the ordering,
+
+`orderby` (with a string value) gives the field to order the documents. Common values are "title", "date", "name", "modified" and "ID".
+
+= Display parameters =
+
+It is also possible to add formatting parameters: 
+
+`show_edit` (with a true/false parameter) that can add a link next to each document shown in the list that the user is able to edit by them. This permits the user to edit the document directly from the list. A value set here will override the default behaviour.
+
+As delivered, administrators will have the show_edit implicitly active. A filter `document_shortcode_show_edit` can be used to set this for additional user roles.
+
+`new_tab` (with a true/false parameter) that will open the document in a new browser tab rather than in the current one.
+
+Both of these boolean variables can be entered without a value (with default value true). 
+
+= Block Usage =
+
+When using the block version of the shortcode called `Document List`, some compromises have been necessary.
+
+Since queries are often selecting a single taxonomy value, the block provides the possibility to select single values from up to three taxonomies. Since there can be more than three taxomomies attached to documents, a filter `document_block_taxonomies` allows the list of taxonomies to be edited to select the taxonomies to be displayed.
+
+The parameters `numberposts`, `order`, `orderby`, `show_edit` and `new_tab` are directly supported. However, since there are many other parameters are possible, as well as differet structures, additional parameters may be entered as a text field as held in the shortcode.
+
+== Document Revisions Shortcode ==
+
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+
+You can find the ID in the URL of the edit document page. 
+
+To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
+
+= Display parameters =
+
+It is also possible to add formatting parameters:
+
+`numberposts` (with a number parameter) will give the maximum number of revisions to display.
+
+`summary` (with a true/false parameter) that will add the excerpt for the revision to the output.
+
+`new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
+Both of these boolean variables can be entered without a value (with default value true ). 
+
+= Block Usage =
+
+When using the block version of the shortcode called `Document Revisions`, a change have been necessary.
+
+`number` is a reserved word within javascript so `numberposts` is also supported even for the shortcode format. `numberposts` is used by the block.
+
+Since the block is dynamically displayed as parameters are entered, if the post number entered is not a document, then an appropriate message will be entered.
+
+== Latest Documents Widget ==
+
+Go to your theme's widgets page (if your theme supports widgets), and drag the widget to a sidebar of you choice. Once in a sidebar, you will be presented with options to customize the widget's functionality.
+
+= Block Usage =
+
+The block version of the widget called `Document Widget`can be used on pages or posts. It cannot be converted to or from a shortcode block.
+ 
 
 == Translations ==
 
 Interested in translating WP Document Revisions? You can do so [via Crowdin](https://crowdin.com/project/wordpress-document-revisions), or by submitting a pull request.
 
 * French - [Hubert CAMPAN](http://omnimaki.com/)
-* Spanish - [TradiArt](http://www.tradiart.com/) and [elarequi](http://www.labitacoradeltigre.com)
+* Spanish - [IBIDEM GROUP](https://www.ibidemgroup.com), [TradiArt](http://www.tradiart.com/), and [elarequi](http://www.labitacoradeltigre.com)
 * Norwegian - Daniel Haugen
 * German -[Konstantin Obenland](http://en.wp.obenland.it/)
 * Chinese - Tim Ren
@@ -912,6 +1020,19 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 * Dutch - @tijscruysen
 
 
-=== Security Policy ===
+== Useful plugins and tools ==
 
-To report a security vulnerability, please email [ben@balter.com](mailto:ben@balter.com).
+= Permissions management =
+
+* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+
+	(Previously called Members)
+
+= Taxonomy management =
+
+* [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+
+= Document workflow management =
+
+* [Edit Flow](https://wordpress.org/plugins/edit-flow/)
+* [PublishPress](https://wordpress.org/plugins/publishpress/)

@@ -2,6 +2,6 @@
 
 set -e
 
-export PATH="$HOME/.composer/vendor/bin:./bin:$PATH"
+export PATH="$TRAVIS_BUILD_DIR/vendor/bin:./bin:$PATH"
 
 php-coveralls -v

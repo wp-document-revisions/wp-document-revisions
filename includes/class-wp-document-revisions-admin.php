@@ -53,13 +53,13 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
-		add_action( 'admin_footer', array( &$this, 'bind_upload_cb' ) );
+		add_action( 'admin_print_footer_scripts', array( &$this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
+		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
+		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
-		add_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
-		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 		add_filter( 'manage_document_posts_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
@@ -258,6 +258,7 @@ class WP_Document_Revisions_Admin {
 		// remove unused meta boxes.
 		remove_meta_box( 'revisionsdiv', 'document', 'normal' );
 		remove_meta_box( 'postexcerpt', 'document', 'normal' );
+		remove_meta_box( 'slugdiv', 'document', 'normal' );
 		remove_meta_box( 'tagsdiv-workflow_state', 'document', 'side' );
 
 		// add our meta boxes.
@@ -347,6 +348,39 @@ class WP_Document_Revisions_Admin {
 				#media-upload-header {display:none;}
 			</style>
 			<?php
+		}
+	}
+
+
+	/**
+	 * Check that those having edit_document can upload documents.
+	 *
+	 * @since 3.3
+	 */
+	public function check_upload_files() {
+		global $typenow, $pagenow;
+
+		if ( ! current_user_can( 'edit_documents' ) || 'document' !== $typenow || current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		if ( 'post.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload documents though you may be able change some attributes.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+		} elseif ( 'post-new.php' === $pagenow ) {
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You do not have the upload_files capability!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You will not be able to upload any documents.', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
+			// Need to switch off save capability.
 		}
 	}
 
@@ -453,7 +487,11 @@ class WP_Document_Revisions_Admin {
 				$fn   = get_post_meta( $revision->post_content, '_wp_attached_file', true );
 				$fno  = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
-				$fn   = $info['dirname'] . '/' . $info['filename'] . '.' . $fno;
+				$fn   = $info['dirname'] . '/' . $info['filename'];
+				// Only add extension if permalink doesnt contain post id as it becomes invalid.
+				if ( ! strpos( $info['filename'], '&p=' ) ) {
+					$fn .= '.' . $fno;
+				}
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
@@ -462,7 +500,7 @@ class WP_Document_Revisions_Admin {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 1 ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -504,6 +542,26 @@ class WP_Document_Revisions_Admin {
 		wp_enqueue_script( 'autosave' );
 		add_thickbox();
 		wp_enqueue_script( 'media-upload' );
+	}
+
+
+	/**
+	 * Only load documenrs from Computer.
+	 *
+	 * @since 3.3
+	 *
+	 * @param string[] $_default_tabs An array of media tabs.
+	 */
+	public function media_upload_tabs_computer( $_default_tabs ) {
+		// phpcs:ignore  WordPress.Security.NonceVerification.Recommended
+		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
+			// keep just load from computer for the document (but not the thumbnail).
+			unset( $_default_tabs['type_url'] );
+			unset( $_default_tabs['gallery'] );
+			unset( $_default_tabs['library'] );
+		}
+
+		return $_default_tabs;
 	}
 
 
@@ -745,39 +803,6 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Callback to inject JavaScript in page after upload is complete (pre 3.3).
-	 *
-	 * @since 0.5
-	 * @param int $id the ID of the attachment.
-	 * @return unknown
-	 */
-	public function post_upload_js( $id ) {
-		// get the post object.
-		$document = get_post( $id );
-
-		// begin output buffer so the javascript can be returned as a string, rather than output directly to the browser.
-		ob_start();
-
-		?>
-		<script>
-		var attachmentID = <?php echo (int) $id; ?>;
-		var extension = '<?php echo esc_js( $this->get_file_type( $document ) ); ?>';
-		jQuery(document).ready(function($) { postDocumentUpload( extension, attachmentID ) });
-		</script>
-		<?php
-
-		// get contents of output buffer.
-		$js = ob_get_contents();
-
-		// dump output buffer.
-		ob_end_clean();
-
-		// return javascript.
-		return $js;
-	}
-
-
-	/**
 	 * Binds our post-upload javascript callback to the plupload event
 	 * Note: in footer because it has to be called after handler.js is loaded and initialized.
 	 *
@@ -788,7 +813,7 @@ class WP_Document_Revisions_Admin {
 
 		if ( 'media-upload.php' === $pagenow ) :
 			?>
-		<script>jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
 			<?php
 		endif;
 	}
@@ -1059,52 +1084,6 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Splices workflow state column as 2nd (3rd) column on documents page.
-	 *
-	 * @since 0.5
-	 * @param array $defaults the original columns.
-	 * @returns array our spliced columns
-	 */
-	public function add_workflow_state_column( $defaults ) {
-		// get checkbox and title.
-		$output = array_slice( $defaults, 0, 2 );
-
-		// splice in workflow state.
-		$output['workflow_state'] = __( 'Workflow State', 'wp-document-revisions' );
-
-		// get the rest of the columns.
-		$output = array_merge( $output, array_slice( $defaults, 2 ) );
-
-		return $output;
-	}
-
-
-	/**
-	 * Callback to output data for workflow state column.
-	 *
-	 * @since 0.5
-	 * @param string $column_name the name of the column being propegated.
-	 * @param int    $post_id the ID of the post being displayed.
-	 */
-	public function workflow_state_column_cb( $column_name, $post_id ) {
-		// verify column.
-		if ( 'workflow_state' === $column_name && $this->verify_post_type( $post_id ) ) {
-
-			// get terms.
-			$state = wp_get_post_terms( $post_id, 'workflow_state' );
-
-			// verify state exists.
-			if ( 0 === count( $state ) ) {
-				return;
-			}
-
-			// give the workflow state output (but with no return).
-			echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug ) ) . '">' . esc_html( $state[0]->name ) . '</a>';
-		}
-	}
-
-
-	/**
 	 * Splices in Currently Editing column to document list.
 	 *
 	 * @since 1.1
@@ -1112,8 +1091,8 @@ class WP_Document_Revisions_Admin {
 	 * @returns array our spliced columns
 	 */
 	public function add_currently_editing_column( $defaults ) {
-		// get checkbox, title, and workflow state.
-		$output = array_slice( $defaults, 0, 3 );
+		// get checkbox and title.
+		$output = array_slice( $defaults, 0, 2 );
 
 		// splice in workflow state.
 		$output['currently_editing'] = __( 'Currently Editing', 'wp-document-revisions' );
@@ -1537,8 +1516,6 @@ class WP_Document_Revisions_Admin {
 			return false;
 		}
 
-		remove_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
-		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'set_object_terms', array( &$this, 'workflow_state_save' ) );
 
 		// Have changed taxonomy key for EF/PP support, so switch off make private.

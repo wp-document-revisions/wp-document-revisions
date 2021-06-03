@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 exclude = %w[README header _config.yml CODE_OF_CONDUCT CONTRIBUTING]
-docs_url = "http://ben.balter.com/wp-document-revisions/"
+docs_url = "https://wp-document-revisions.github.io/wp-document-revisions/"
 output = File.open("./docs/header.md").read
 
 # Remove title, badge, and description from README
@@ -22,7 +22,7 @@ end
 output.gsub! /^### ?(.*?)$/im, "= \\1 ="
 output.gsub! /^## ?(.*?)$/im, "== \\1 =="
 output.gsub! /^# ?(.*?)$/im, "=== \\1 ==="
-output.gsub! /\]\((.*?)\.md/, "](#{docs_url}\\1/"
+output.gsub! /\]\(\.?\/?(.*?)\.md/, "](#{docs_url}\\1/"
 
 File.open("readme.txt", "wb") do |file|
   file << output
