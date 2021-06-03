@@ -9,7 +9,7 @@
 /**
  * Admin tests
  */
-class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 	/**
 	 * Editor user id
@@ -47,6 +47,14 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// set permalink structure to Month and name string.
+		global $wp_rewrite, $orig;
+		$orig = $wp_rewrite->permalink_structure;
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
 		// phpcs:enable
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -167,6 +175,10 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		}
 
 		unregister_taxonomy( 'workflow_state' );
+
+		// reset permalink structure.
+		global $wp_rewrite, $orig;
+		$wp_rewrite->set_permalink_structure( $orig );
 	}
 
 	/**
@@ -234,7 +246,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 	/**
 	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */
-	public function test_revision_metabox_auth() {
+	public function test_revision_metabox_auth_structure() {
 		global $wpdr;
 
 		global $current_user;
@@ -242,21 +254,19 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		$post_obj = get_post( self::$editor_private_post );
+
 		ob_start();
-		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
+		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
 
 		// There will be 1 for RSS feed.
-		self::assertEquals( 3, (int) substr_count( $output, '<a href' ), 'revision count' );
-		// Multisite does not have a pretty permalink.
-		if ( is_multisite() ) {
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1.txt' ), 'revision count revision 1' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2.txt' ), 'revision count revision 2' );
-		} else {
-			self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
-			self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2' );
-		}
+		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
+
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1 pretty' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count revision 2 pretty' );
 	}
 
 	/**
@@ -278,12 +288,7 @@ class Test_WP_Document_Revisions_Admin extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
-		// Multisite does not have a pretty permalink.
-		if ( is_multisite() ) {
-			self::assertEquals( 1, (int) substr_count( $output, 'post_type=document&#038;p=' . $post_obj->ID ), 'document metabox permalink_ms' );
-		} else {
-			self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink' );
-		}
+		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink pretty' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}
 

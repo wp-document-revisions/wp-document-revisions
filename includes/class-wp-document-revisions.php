@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.2.4';
+	public $version = '3.3.0';
 
 	/**
 	 * The WP default directory cache.
@@ -428,6 +428,8 @@ class WP_Document_Revisions {
 					'show_ui'               => true,
 					'rewrite'               => false,
 					'update_count_callback' => $ucc,
+					'show_admin_column'     => true,
+					'show_in_rest'          => true,
 				)
 			)
 		);
@@ -663,7 +665,7 @@ class WP_Document_Revisions {
 	 */
 	private function remove_old_rules( $key ) {
 		$slug = $this->document_slug();
-		if ( 0 === strpos( $key, $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)' ) ) {
+		if ( 0 === strpos( $key, $slug . '/' ) ) {
 			return false;
 		}
 		return true;
@@ -685,14 +687,22 @@ class WP_Document_Revisions {
 
 		$my_rules = array();
 
-		// revisions in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/, yyyy/mm/[slug]-revision-##/ and yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		// These rules will define the trailing / as optional, as will be the extension (since it not used in the sxearch).
 
-		// revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)([.][A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
-		// documents in the form of yyyy/mm/[slug]-revision-##.[extension], yyyy/mm/[slug]-revision-##.[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^.]+)[.][A-Za-z0-9]{1,7}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		// document revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+
+		// documents in the form of [doc_slug]/yyyy/mm/[slug].[extension], [doc_slug]/yyyy/mm/[slug].[extension]/.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+
+		// document revision feeds in the form of [doc_slug]/[slug].[extension]/feed/, [doc_slug]/[slug]/feed/, etc.
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
+
+		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
@@ -1262,17 +1272,19 @@ class WP_Document_Revisions {
 		$buffsize = apply_filters( 'document_buffer_size', 0, $filesize );
 
 		// Make sure that there is a buffer to be written on close.
+		// Does the user accept gzip.
+		$gzip_dflt = ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && substr_count( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) ); //phpcs:ignore
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_false' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $default   true.
+		 * @param bool    $gzip_dflt Whether gzip support is expected possible.
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
-		if ( apply_filters( 'document_serve_use_gzip', true, $mimetype, $filesize ) ) {
+		if ( apply_filters( 'document_serve_use_gzip', $gzip_dflt, $mimetype, $filesize ) ) {
 			// request compression.
 			ob_start( 'ob_gzhandler', $buffsize );
 		} else {

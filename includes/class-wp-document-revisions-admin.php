@@ -60,8 +60,6 @@ class WP_Document_Revisions_Admin {
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
-		add_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
-		add_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ), 10, 2 );
 		add_filter( 'manage_document_posts_columns', array( &$this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
@@ -489,7 +487,11 @@ class WP_Document_Revisions_Admin {
 				$fn   = get_post_meta( $revision->post_content, '_wp_attached_file', true );
 				$fno  = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
-				$fn   = $info['dirname'] . '/' . $info['filename'] . '.' . $fno;
+				$fn   = $info['dirname'] . '/' . $info['filename'];
+				// Only add extension if permalink doesnt contain post id as it becomes invalid.
+				if ( ! strpos( $info['filename'], '&p=' ) ) {
+					$fn .= '.' . $fno;
+				}
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
@@ -498,7 +500,7 @@ class WP_Document_Revisions_Admin {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 1 ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -1082,52 +1084,6 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Splices workflow state column as 2nd (3rd) column on documents page.
-	 *
-	 * @since 0.5
-	 * @param array $defaults the original columns.
-	 * @returns array our spliced columns
-	 */
-	public function add_workflow_state_column( $defaults ) {
-		// get checkbox and title.
-		$output = array_slice( $defaults, 0, 2 );
-
-		// splice in workflow state.
-		$output['workflow_state'] = __( 'Workflow State', 'wp-document-revisions' );
-
-		// get the rest of the columns.
-		$output = array_merge( $output, array_slice( $defaults, 2 ) );
-
-		return $output;
-	}
-
-
-	/**
-	 * Callback to output data for workflow state column.
-	 *
-	 * @since 0.5
-	 * @param string $column_name the name of the column being propegated.
-	 * @param int    $post_id the ID of the post being displayed.
-	 */
-	public function workflow_state_column_cb( $column_name, $post_id ) {
-		// verify column.
-		if ( 'workflow_state' === $column_name && $this->verify_post_type( $post_id ) ) {
-
-			// get terms.
-			$state = wp_get_post_terms( $post_id, 'workflow_state' );
-
-			// verify state exists.
-			if ( 0 === count( $state ) ) {
-				return;
-			}
-
-			// give the workflow state output (but with no return).
-			echo '<a href="' . esc_url( add_query_arg( 'workflow_state', $state[0]->slug ) ) . '">' . esc_html( $state[0]->name ) . '</a>';
-		}
-	}
-
-
-	/**
 	 * Splices in Currently Editing column to document list.
 	 *
 	 * @since 1.1
@@ -1135,8 +1091,8 @@ class WP_Document_Revisions_Admin {
 	 * @returns array our spliced columns
 	 */
 	public function add_currently_editing_column( $defaults ) {
-		// get checkbox, title, and workflow state.
-		$output = array_slice( $defaults, 0, 3 );
+		// get checkbox and title.
+		$output = array_slice( $defaults, 0, 2 );
 
 		// splice in workflow state.
 		$output['currently_editing'] = __( 'Currently Editing', 'wp-document-revisions' );
@@ -1560,8 +1516,6 @@ class WP_Document_Revisions_Admin {
 			return false;
 		}
 
-		remove_filter( 'manage_document_posts_columns', array( &$this, 'add_workflow_state_column' ) );
-		remove_action( 'manage_document_posts_custom_column', array( &$this, 'workflow_state_column_cb' ) );
 		remove_action( 'set_object_terms', array( &$this, 'workflow_state_save' ) );
 
 		// Have changed taxonomy key for EF/PP support, so switch off make private.
