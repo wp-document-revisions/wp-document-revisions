@@ -268,7 +268,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
-		if ( false === strpos( $output, '&revision=' ) ) {
+		if ( false === strpos( $output, '&#038;revision=' ) ) {
 			// Desired permalink.
 			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
 			self::assertEquals( 0, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
@@ -296,6 +296,8 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( 'test_document_metabox' );
+		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post_obj->ID ) ), 'document metabox permalink_ms' );
