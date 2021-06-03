@@ -187,6 +187,8 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_structure() {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
+		console_log( 'Public : ' . get_permalink( self::$editor_public_post ) );
+		console_log( 'Private: ' . get_permalink( self::$editor_private_post ) );
 	}
 
 	/**
@@ -266,8 +268,14 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
-		self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 plain' );
-		self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 plin' );
+		if ( false = strpos( $output, 'revision=' ) ) {
+			// Desired permalink.
+			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
+			self::assertEquals( 0, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
+		} else {
+			// Plain permalink.
+			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 plain' );
+			self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 plain' );
 	}
 
 	/**
