@@ -17,6 +17,7 @@
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: New Crowdin updates (#244, #245)
 * FIX: Access to revisions when permalink structure not defined.
 * FIX: Design conflict with Elementor (#230) @NeilWJames
 * FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
@@ -30,6 +31,7 @@
 * FIX: Review documentation. (#208) @NeilWJames
 * FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
 * FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
+* FIX: Fixing compatibility issue with double slash in Documents URL when using WPML (#218) @BobbyKarabinakis
 * DEV: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
 * DEV: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
 * DEV: Rewrite Test library to increase code coverage.
