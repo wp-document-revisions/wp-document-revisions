@@ -2,7 +2,7 @@
 
 ### I'm a user/developer/administrator... can I contribute?
 
-Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute) for more information.
+Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute) for more information.
 
 ### Does it work on Mac? PC? Mobile?
 
@@ -118,12 +118,12 @@ Simply call `get_document_revisions( 100 )` where 100 represents the ID of the d
 
 ### Can I set the upload directory on multisite installs if I don't want to network activate the plugin?
 
-Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook) to help with that. Just install and network activate.
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) to help with that. Just install and network activate.
 
 ### Can I limit access to documents based on workflow state, department, or some other custom taxonomy?
 
-Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
 
 ### Is it possible to do a bulk import of existing documents / files already on the server?
 
-Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/benbalter/WP-Document-Revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
+Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.

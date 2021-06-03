@@ -2,39 +2,39 @@
 
 ### 3.3.0
 
+* SECURITY: Password-protected document can leak existence (by showing next/previous)
+* SECURITY: Queries on post_status do not do proper permissions check
+* SECURITY: Suppress excerpt output in feeds to stop information leakage
+* SECURITY: WP creates images when saving PDF documents (using the encoded name). These were being left when deleting the document.
 * NEW: Rewrite rules extended to access documents without year/month and/or file extension.  (#253) @NeilWJames
 * NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List. Note that it will change the column order seen as taxonomiees are on the end.
+* NEW: Implement Gutenberg Blocks for Shortcodes and Widget.
+* NEW: Integrate with either Edit-flow or PublishPress plugins
 * NEW: Taxonomy workflow_state is set as show_in_rest.
-* FIX: Access to revisions when permalink structure not defined.
-* FIX: Fixed wp_die() tests ending tests prematurely (#252)
-* NEW: Use GitHub Actions for CI (#251)
-* NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
-* NEW: Rewrite Test library to increase code coverage.
+* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
 * NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
 * NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.
-* NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
-* FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
-* FIX: Design conflict with Elementor (#230) @NeilWJames
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
+* NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
-* NEW: Add action 'document_serve_done' which can be use to delete decrypted files (needed for encrypted at rest files)
-* FIX: Queries on post_status do not do proper permissions check
-* FIX: Remove restore option on the current document and latest revision as it makes no sense.
-* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
-* FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when deleting the document.
-* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
-* NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
-* NEW: Integrate with either Edit-flow or PublishPress plugins
-* FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
-* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
-* FIX: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
-* FIX: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
-* FIX: Suppress excerpt output in feeds to stop information leakage
-* FIX: Password-protected document can leak information (by showing next/previous)
-* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
-* FIX: Fix error in time difference display when client and server are in different time zones
+* FIX: Access to revisions when permalink structure not defined.
+* FIX: Design conflict with Elementor (#230) @NeilWJames
 * FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
+* FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
+* FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
+* FIX: Fix error in time difference display when client and server are in different time zones
+* FIX: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
+* FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
+* FIX: Remove restore option on the current document and latest revision as it makes no sense.
+* FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
 * FIX: Review documentation. (#208) @NeilWJames
+* FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
+* DEV: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
+* DEV: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
+* DEV: Rewrite Test library to increase code coverage.
+* DEV: Use GitHub Actions for CI (#251)
+* DEV: Fixed wp_die() tests ending tests prematurely (#252)
 
 ### 3.2.4
 
@@ -115,8 +115,8 @@ Updated documentation.
 
 ### 3.0.0
 
-* [Dropped support for WordPress prior to version 3.3](https://github.com/benbalter/wp-document-revisions/pull/94)
-* [Dropped WebDav support](https://github.com/benbalter/wp-document-revisions/pull/95)
+* [Dropped support for WordPress prior to version 3.3](https://github.com/wp-document-revisions/wp-document-revisions/pull/94)
+* [Dropped WebDav support](https://github.com/wp-document-revisions/wp-document-revisions/pull/95)
 * Implemented [WordPress coding standards](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards)
 * Added additional nonces
 * Added additional translation strings and comments
@@ -124,20 +124,20 @@ Updated documentation.
 
 ### 2.2.0
 
-* [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/benbalter/wp-document-revisions/pull/74)
-* [Filter documents from the grid view in Media, queried via Ajax](https://github.com/benbalter/wp-document-revisions/pull/78)
-* [Added code to preserve file exts on revision links](https://github.com/benbalter/wp-document-revisions/pull/81), and
-* [Verify a post ID has been passed before verifying post type](https://github.com/benbalter/wp-document-revisions/pull/86)
-* [Use H2 for "Feed Privacy" heading](https://github.com/benbalter/wp-document-revisions/pull/91)
+* [Add filter to allow opt-out of WebDAV Edit Document](https://github.com/wp-document-revisions/wp-document-revisions/pull/74)
+* [Filter documents from the grid view in Media, queried via Ajax](https://github.com/wp-document-revisions/wp-document-revisions/pull/78)
+* [Added code to preserve file exts on revision links](https://github.com/wp-document-revisions/wp-document-revisions/pull/81), and
+* [Verify a post ID has been passed before verifying post type](https://github.com/wp-document-revisions/wp-document-revisions/pull/86)
+* [Use H2 for "Feed Privacy" heading](https://github.com/wp-document-revisions/wp-document-revisions/pull/91)
 
 ### 2.0.0
 
-* Note: The project is looking for additional contributors. Please consider contributing your time: <https://github.com/benbalter/wp-document-revisions/blob/master/docs/how-to-contribute.md>
-* Added (beta) WebDAV support thanks to @linuxBozo and @poorgeek (<https://github.com/benbalter/wp-document-revisions/pull/69>)
+* Note: The project is looking for additional contributors. Please consider contributing your time: <https://github.com/wp-document-revisions/wp-document-revisions/blob/master/docs/how-to-contribute.md>
+* Added (beta) WebDAV support thanks to @linuxBozo and @poorgeek (<https://github.com/wp-document-revisions/wp-document-revisions/pull/69>)
 * Added Brazilian Portuguese translation thanks to @rafaelfunchal
 * Significantly improved automated testing via WP-CLI
 * Better guarding against binary files being corrupted by other plugins
-* Improved documentation (<https://github.com/benbalter/wp-document-revisions/tree/master/docs>)
+* Improved documentation (<https://github.com/wp-document-revisions/wp-document-revisions/tree/master/docs>)
 
 ### 1.3.6
 
@@ -145,9 +145,9 @@ Updated documentation.
 * Added Italian translation, props @guterboit
 * Added Russian translation, props Evgeny Vlasov
 * Updated all translations
-* Workflow state saving improvements, props @cojennin ([#48](https://github.com/benbalter/WP-Document-Revisions/pull/48))
-* Fix restore revision link bug, props @cojennin ([#55](https://github.com/benbalter/WP-Document-Revisions/issues/55))
-* Welcome @cojennin to the core team. [Want to join?](https://github.com/benbalter/WP-Document-Revisions/wiki/How-to-Contribute)
+* Workflow state saving improvements, props @cojennin ([#48](https://github.com/wp-document-revisions/wp-document-revisions/pull/48))
+* Fix restore revision link bug, props @cojennin ([#55](https://github.com/wp-document-revisions/wp-document-revisions/issues/55))
+* Welcome @cojennin to the core team. [Want to join?](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute)
 
 ### 1.3.5
 
@@ -166,7 +166,7 @@ Updated documentation.
 
 ### 1.3.3
 
-* Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/benbalter/WP-Document-Revisions/issues/24)
+* Fix for fatal error (undefined function) when Edit Flow custom post status were enabled, props [Leho Kraav](http://leho.kraav.com/), fixes [#24](https://github.com/wp-document-revisions/wp-document-revisions/issues/24)
 * Fix for [testing framework](https://github.com/nb/wordpress-tests) not being properly included in plugin repository due to bad [deploy script](https://github.com/benbalter/Github-to-WordPress-Plugin-Directory-Deployment-Script)
 * Added German translation (de_DE), special thanks to [Konstantin Obenland](http://en.wp.obenland.it/)
 * Added Chinese translation (zh_CN), special thanks to Tim Ren
@@ -174,17 +174,17 @@ Updated documentation.
 
 ### 1.3.2
 
-* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/benbalter/WP-Document-Revisions/wiki). Feel free to contribute!
+* Plugin documentation now maintained in [collaboratively edited wiki](https://github.com/wp-document-revisions/wp-document-revisions/wiki). Feel free to contribute!
 * Created listserv to provide a discussion forum for users of and contributors, as well as general annoucements. [Feel free to join!](https://groups.google.com/forum/#!forum/wp-document-revisions)
 * Added Norwegian translation, special thanks to Daniel Haugen
-* [Crisper menu icon](https://github.com/benbalter/WP-Document-Revisions/commit/00ffe42daabacf90091cc3638dd2658c2376f01a), special thanks to [Phil Russell](www.optionotter.com)
-* Pushpin icon [replaced with Retina document icon](https://github.com/benbalter/WP-Document-Revisions/commit/c36ee849512f77432db8e6783a0bc4389f33f0ab) on document list and document edit screen, special thanks to [Marvin Rühe](https://github.com/Marv51)
+* [Crisper menu icon](https://github.com/wp-document-revisions/wp-document-revisions/commit/00ffe42daabacf90091cc3638dd2658c2376f01a), special thanks to [Phil Russell](www.optionotter.com)
+* Pushpin icon [replaced with Retina document icon](https://github.com/wp-document-revisions/wp-document-revisions/commit/c36ee849512f77432db8e6783a0bc4389f33f0ab) on document list and document edit screen, special thanks to [Marvin Rühe](https://github.com/Marv51)
 * Unit tests now utilizes newer [wordpress-tests](https://github.com/nb/wordpress-tests) framework, as recently adopted by core
-* `serve_file` [now hooks](https://github.com/benbalter/WP-Document-Revisions/commit/57cac162e40255efb29c354754e9a0b8df05a2ef) into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
-* Fix for `document_to_private` filter [not properly passing](https://github.com/benbalter/WP-Document-Revisions/commit/04922d73eb63172e79f2f9e86e4002cee032e4ef) the pre-filtered document object, props [Marvin Rühe](https://github.com/Marv51).
-* [Better loading](https://github.com/benbalter/WP-Document-Revisions/commit/0349f8ebcf931f6b2731b42ae795b3191ce9ed45) of administrative functions
-* [Better toggling](https://github.com/benbalter/WP-Document-Revisions/commit/6947310c06a8267573835c6b4bc04e3ad1b29405) of Workflow state support for integration with Edit Flow and other plugins
-* Administrative CSS [now stored in a separate file](https://github.com/benbalter/WP-Document-Revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/benbalter/WP-Document-Revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
+* `serve_file` [now hooks](https://github.com/wp-document-revisions/wp-document-revisions/commit/57cac162e40255efb29c354754e9a0b8df05a2ef) into `template_include` filter (rather than `template_single`) to prevent potential conflict with themes/plugins hooking into subsequent filters and producing extranous output after the document is served which would result in corrupting some files
+* Fix for `document_to_private` filter [not properly passing](https://github.com/wp-document-revisions/wp-document-revisions/commit/04922d73eb63172e79f2f9e86e4002cee032e4ef) the pre-filtered document object, props [Marvin Rühe](https://github.com/Marv51).
+* [Better loading](https://github.com/wp-document-revisions/wp-document-revisions/commit/0349f8ebcf931f6b2731b42ae795b3191ce9ed45) of administrative functions
+* [Better toggling](https://github.com/wp-document-revisions/wp-document-revisions/commit/6947310c06a8267573835c6b4bc04e3ad1b29405) of Workflow state support for integration with Edit Flow and other plugins
+* Administrative CSS [now stored in a separate file](https://github.com/wp-document-revisions/wp-document-revisions/commit/f61385b674c67adf820c9e240fe3eadb4b1cf3a2) (rather than being injected directly to document head), and [loads via `enqueue_style` API](https://github.com/wp-document-revisions/wp-document-revisions/commit/11a583edfeb307a939e7686fca4712a195ac4059)
 * Administrative CSS and Javascript files now versioned based on plugin version to allow for better caching
 
 ### 1.3.1
@@ -196,9 +196,9 @@ Updated documentation.
 
 ### 1.3
 
-* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/benbalter/WP-Document-Revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
+* Plugin now includes unit tests to ensure security and stability, and [undergoes extensive testing](http://travis-ci.org/#!/wp-document-revisions/wp-document-revisions) (WordPress 3.2/3.3/Trunk, Multisite/single, PHP 5.3/5.4) via continuous integration service Travis CI prior to release.
 * Translations now curated on [collaborative editing platform GlotPress](http://translations.benbalter.com/projects/wp-document-revisions/) if any user would like to submit a translation ([no technical knowledge necessary](http://translations.benbalter.com/projects/how-to-translate))
-* If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/benbalter/WP-Document-Revisions/tree/develop). Any [feedback](https://github.com/benbalter/WP-Document-Revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
+* If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop). Any [feedback](https://github.com/wp-document-revisions/wp-document-revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
 * Added Spanish Translation Support (es_ES — special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., <http://domain.com/documentos/2012/04/test.txt> rather than /documents/)
 * Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
@@ -225,7 +225,7 @@ Updated documentation.
 
 ### 1.2.2
 
-* Plugin [posted to Github](https://github.com/benbalter/WP-Document-Revisions) if developers would like to fork and contribute
+* Plugin [posted to Github](https://github.com/wp-document-revisions/wp-document-revisions) if developers would like to fork and contribute
 * Documents shortcode now accepts additional parameters. See the FAQ for a full list.
 * Performance and scalability improvements to backend; files attached to documents are now excluded from media lists by join statements rather than subqueries
 * If plugin is unable to locate requested file on server, standard theme's 404 template is served (rather than serving "404 — file not found" via `wp_die()` previously) and E_USER_NOTICE level error is thrown. Diagnostic information will be available via debug bar (if WP_DEBUG is enabled) or in the standard PHP error log

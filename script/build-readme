@@ -22,7 +22,7 @@ end
 output.gsub! /^### ?(.*?)$/im, "= \\1 ="
 output.gsub! /^## ?(.*?)$/im, "== \\1 =="
 output.gsub! /^# ?(.*?)$/im, "=== \\1 ==="
-output.gsub! /\]\((.*?)\.md/, "](#{docs_url}\\1/"
+output.gsub! /\]\(\.?\/?(.*?)\.md/, "](#{docs_url}\\1/"
 
 File.open("readme.txt", "wb") do |file|
   file << output
