@@ -276,6 +276,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 			// Plain permalink.
 			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 plain' );
 			self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 plain' );
+		]
 	}
 
 	/**
