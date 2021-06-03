@@ -47,6 +47,14 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// set permalink structure to Month and name string.
+		global $wp_rewrite, $orig;
+		$orig = $wp_rewrite->permalink_structure;
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
 		// phpcs:enable
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -57,11 +65,6 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
 			$wpdr->admin_init();
 		}
-
-		// set permalink structure to null string.
-		global $wp_rewrite, $orig;
-		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		// create users.
 		// Note that editor can do everything admin can do. Contributors cannot actually upload files by default.
