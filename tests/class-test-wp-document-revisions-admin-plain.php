@@ -268,7 +268,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
-		if ( false = strpos( $output, 'revision=' ) ) {
+		if ( false === strpos( $output, '&revision=' ) ) {
 			// Desired permalink.
 			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
 			self::assertEquals( 0, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
