@@ -3,18 +3,17 @@
 ### 3.3.0
 
 * NEW: Rewrite rules extended to access documents without year/month and/or file extension.  (#253) @NeilWJames
-* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List.
-  Note that it will change the column order seen as taxonomiees are on the end.
+* NEW: Use standard WP process for Taxonomy workflow_state on Document Admin List. Note that it will change the column order seen as taxonomiees are on the end.
 * NEW: Taxonomy workflow_state is set as show_in_rest.
 * FIX: Access to revisions when permalink structure not defined.
-
+* FIX: Fixed wp_die() tests ending tests prematurely (#252)
+* NEW: Use GitHub Actions for CI (#251)
 * NEW: Fix WP 5.7 Breaking change (#38843) for Term Counts.  (#250) @NeilWJames
 * NEW: Rewrite Test library to increase code coverage.
 * NEW: Add filter 'document_buffer_size' to define file writing buffer size (Default 0 = No buffering).
 * NEW: Add filter 'document_output_sent_is_ok' to serve file even if output already written.
 * NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * FIX: Review document serving process to try to identify where other plugins could output text and corrupt file download
-
 * FIX: Design conflict with Elementor (#230) @NeilWJames
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
@@ -23,9 +22,7 @@
 * FIX: Remove restore option on the current document and latest revision as it makes no sense.
 * FIX: Ensure the action point to detect change in workflow_state worked (for CookBook functionality).
 * FIX: WP creates images when saving PDF documents (using the encoded name). These were being left when deleting the document.
-* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. 
-  (#217) @NeilWJames
-
+* FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
 * NEW: Implement Gutenberg Blocks for Shortcodes and Widget. Documentation added.
 * NEW: Integrate with either Edit-flow or PublishPress plugins
 * FIX: Document Taxonomies using default term counts will use same method as WORKFLOW_STATE, i.e. count all not-trashed documents 
@@ -37,8 +34,7 @@
 * FIX: Remove existing workaround for WP bug 16215 and long time fixed - and made information incorrect
 * FIX: Fix error in time difference display when client and server are in different time zones
 * FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
-* FIX: Review documentation.
-  (#208) @NeilWJames
+* FIX: Review documentation. (#208) @NeilWJames
 
 ### 3.2.4
 
