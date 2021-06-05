@@ -2,7 +2,7 @@
 
 # WP Document Revisions
 
-[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Coverage Status](https://codecov.io/gh/wp-document-revisions/wp-document-revisions/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/github/wp-document-revisions/wp-document-revisions?branch=master
+[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Coverage Status](https://codecov.io/gh/wp-document-revisions/wp-document-revisions/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/github/wp-document-revisions/wp-document-revisions?branch=master)
 
 A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
 
