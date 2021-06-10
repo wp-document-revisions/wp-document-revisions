@@ -1176,7 +1176,6 @@ class WP_Document_Revisions {
 		}
 
 		$filesize                  = filesize( $file );
-		$headers['Content-Length'] = $filesize;
 
 		// modified.
 		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
