@@ -1,5 +1,11 @@
 ## Changelog
 
+### 3.3.1
+
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
+* FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
+* FIX: Gzip process invoked for encodings gzip, x-gzip and delflate.
+
 ### 3.3.0
 
 * SECURITY: Password-protected document can leak existence (by showing next/previous)
