@@ -2,9 +2,8 @@
 
 Contributors: benbalter
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Requires at least: 4.6
 Tested up to: 5.7
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 
 == Description ==
 
@@ -173,6 +172,12 @@ In: class-wp-document-revisions.php
 
 
 == Changelog ==
+
+= 3.3.1 =
+
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
+* FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 
 = 3.3.0 =
 

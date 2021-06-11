@@ -1175,15 +1175,54 @@ class WP_Document_Revisions {
 			$headers['Content-Type'] = $mimetype;
 		}
 
-		$filesize                  = filesize( $file );
-		$headers['Content-Length'] = $filesize;
+		// uncompressed file length.
+		$filesize = filesize( $file );
 
-		// modified.
+		// Will we use gzip or deflate output? Do this early as can impact headers and these need outputting before any output.
+		// Does the user accept gzip or deflate?
+		$gzip_dflt = false;
+		if ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) ) {
+			// phpcs:ignore
+			$encoding = strtolower( $_SERVER['HTTP_ACCEPT_ENCODING'] );
+			if ( substr_count( $encoding, 'gzip' ) || substr_count( $encoding, 'x-gzip' ) ) {
+				$gzip_dflt = true;
+				$comp_type = 'gzip';
+			} elseif ( substr_count( $encoding, 'deflate' ) ) {
+				$gzip_dflt = true;
+				$comp_type = 'deflate';
+			}
+		}
+
+		/**
+		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
+		 *
+		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to shortcircuit.
+		 *       This is always subject to browser negociation.
+		 *
+		 * @param bool    $gzip_dflt Whether gzip is supported by the client.
+		 * @param string  $mimetype  Mime type to be served.
+		 * @param integer $filesize  File size.
+		 */
+		$compress = apply_filters( 'document_serve_use_gzip', $gzip_dflt, $mimetype, $filesize );
+
+		$headers['Content-Length'] = $filesize;
+		if ( $compress ) {
+			// request compression. Remove Length as likely wrong and HTTP/2 fails if length wrong.
+			// phpcs:ignore
+			if ( isset( $_SERVER['SERVER_PROTOCOL'] ) && '1' < substr( $_SERVER['SERVER_PROTOCOL'], 5, 1 ) ) {
+						unset( $headers['Content-Length'] );
+			}
+		}
+
+		// modified, cache for 3 months.
 		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
 		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
 		$headers['ETag']          = $etag;
-		$headers['Expires']       = gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT';
+		$headers['Cache-Control'] = 'max-age=8000000';
+
+		// could be compressed or not depending on browser capability.
+		$headers['Vary'] = 'Accept-Encoding';
 
 		/**
 		 * Filters the HTTP headers sent when a file is served through WP Document Revisions.
@@ -1193,13 +1232,13 @@ class WP_Document_Revisions {
 		 */
 		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
 
-		foreach ( $headers as $header => $value ) {
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			@header( $header . ': ' . $value );
-		}
-
 		// Support for Conditional GET.
 		$client_etag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( sanitize_text_field( wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) ) : false;
+
+		// if DEFLATE was used to compress output, etag is modified by adding '-gzip' to our etag.
+		if ( '-gzip"' === substr( $client_etag, -6 ) ) {
+			$client_etag = substr( $client_etag, 0, -6 ) . '"';
+		}
 
 		if ( ! isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
 			$_SERVER['HTTP_IF_MODIFIED_SINCE'] = false;
@@ -1217,6 +1256,9 @@ class WP_Document_Revisions {
 			? ( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag === $etag ) )
 			: ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) )
 		) {
+			// no content with a 304, other header needed.
+			unset( $headers['Content-Length'] );
+			self::serve_headers( $headers );
 			status_header( 304 );
 			return $template;
 		}
@@ -1261,45 +1303,54 @@ class WP_Document_Revisions {
 			}
 		}
 
-		/**
-		 * Filter to define file writing buffer size (Default 0 = No buffering).
-		 *
-		 * Note: This is always subject to browser negoTiation.
-		 *
-		 * @param integer $buffsize  0 (no intermediate flushing).
-		 * @param integer $filesize  File size.
-		 */
-		$buffsize = apply_filters( 'document_buffer_size', 0, $filesize );
+		$buffsize = 0;
+
+		if ( ! $compress ) {
+			/**
+			 * Filter to define uncompressed file writing buffer size (Default 0 = No buffering).
+			 *
+			 * Note: This is always subject to browser negotiation.
+			 *
+			 * @param integer $buffsize  0 (no intermediate flushing).
+			 * @param integer $filesize  File size.
+			 */
+			$buffsize = apply_filters( 'document_buffer_size', $buffsize, $filesize );
+		}
 
 		// Make sure that there is a buffer to be written on close.
-		// Does the user accept gzip.
-		$gzip_dflt = ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) && substr_count( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) ); //phpcs:ignore
-		/**
-		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
-		 *
-		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_false' )` to shortcircuit.
-		 *       This is always subject to browser negociation.
-		 *
-		 * @param bool    $gzip_dflt Whether gzip support is expected possible.
-		 * @param string  $mimetype  Mime type to be served.
-		 * @param integer $filesize  File size.
-		 */
-		if ( apply_filters( 'document_serve_use_gzip', $gzip_dflt, $mimetype, $filesize ) ) {
-			// request compression.
-			ob_start( 'ob_gzhandler', $buffsize );
-		} else {
-			ob_start( null, $buffsize );
-		}
+		ob_start( null, $buffsize );
 
 		// If we made it this far, just serve the file
 		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons.
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
-		readfile( $file );
+		if ( $compress ) {
+			if ( 'gzip' === $comp_type ) {
+				// phpcs:ignore  WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions
+				echo gzencode( file_get_contents( $file ), 9 );
+				$headers['Content-Encoding'] = 'gzip';
+			} else {
+				// phpcs:ignore  WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions
+				echo gzdeflate( file_get_contents( $file ), 9 );
+				$headers['Content-Encoding'] = 'deflate';
+			}
+			if ( array_key_exists( 'Content-Length', $headers ) ) {
+				// only update to the correct value.
+				$headers['Content-Length'] = ob_get_length();
+			}
+			// only know the length after writing to buffer, so only output headers now.
+			self::serve_headers( $headers );
+		} else {
+			// know the headers and buffering may cause writing, so output headers first.
+			self::serve_headers( $headers );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
+			readfile( $file );
+		}
 
 		/**
 		 * Action hook after the document is served.
 		 *
 		 * Useful to delete temporary file.
+		 *
+		 * Strictly output is not yet written, but file no longer needed.
 		 *
 		 * @param string  $file        File name that was served.
 		 * @param integer $attach->ID  Post id of the attachment.
@@ -1315,6 +1366,21 @@ class WP_Document_Revisions {
 		ob_end_flush();
 
 		exit;
+	}
+
+
+	/**
+	 * Serves response headers.
+	 *
+	 * @since 3.3.1
+	 * @param String[] $headers Headers to outout.
+	 * @return void.
+	 */
+	private function serve_headers( $headers ) {
+		foreach ( $headers as $header => $value ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@header( $header . ': ' . $value );
+		}
 	}
 
 	/**
