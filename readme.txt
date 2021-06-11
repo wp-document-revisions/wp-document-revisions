@@ -178,9 +178,9 @@ In: class-wp-document-revisions.php
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
-* FIX: MOD_DEFLATE modifies etag, so caching blocked in this case.
-* FIX: Gzip process invoked for encodings gzip, x-gzip and delflate.
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
+* FIX: Gzip process now invoked for encodings gzip, x-gzip and delflate.
 
 = 3.3.0 =
 
