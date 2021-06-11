@@ -4,6 +4,7 @@ Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
 Version: 3.3.1
+Requires at least: 4.6
 Author: Ben Balter
 Author URI: http://ben.balter.com
 License: GPL3
