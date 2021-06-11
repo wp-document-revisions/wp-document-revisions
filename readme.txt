@@ -41,8 +41,6 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * [How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
 
-[Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
-
 
 == Features ==
 

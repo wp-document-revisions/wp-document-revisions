@@ -88,6 +88,15 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 This project is governed by [the Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
+## Developing with Docker
+
+Prefer to use Docker to develop locally?
+
+1. `git clone https://github.com/wp-document-revisions/wp-document-revisions/`
+2. `cd wp-document-revisions`
+3. `docker-compose up`
+4. `open http://localhost:8088`
+
 ## Additional Resources
 
 * [Contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/)
