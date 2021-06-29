@@ -439,8 +439,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
-		// add a number of data access filters and actions.
-		$wpdr->use_read_capability();
 	}
 
 	/**
@@ -450,9 +448,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		// tear down the data access filters and actions.
-		remove_filter( 'map_meta_cap', array( $wpdr, 'map_meta_cap' ), 10, 4 );
-		remove_filter( 'user_has_cap', array( $wpdr, 'user_has_cap' ), 10, 4 );
 		if ( ! current_user_can( 'read_documents' ) ) {
 			remove_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10, 2 );
 		}
