@@ -580,6 +580,12 @@ In: class-wp-document-revisions.php
 
 Filters the lost lock document email text.
 
+== Filter document_max_age ==
+
+In: class-wp-document-revisions.php
+
+Filter to set maximum cache time.
+
 == Filter document_output_sent_is_ok ==
 
 In: class-wp-document-revisions.php

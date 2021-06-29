@@ -112,7 +112,6 @@ class WP_Document_Revisions {
 
 		// CPT/CT.
 		add_action( 'init', array( &$this, 'register_cpt' ) );
-		add_action( 'init', array( &$this, 'use_read_capability' ) );
 		add_action( 'init', array( &$this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( &$this, 'initialize_workflow_states' ) );
 		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
@@ -126,6 +125,9 @@ class WP_Document_Revisions {
 			add_action( 'admin_init', array( &$this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
 		}
 		add_filter( 'the_content', array( &$this, 'content_filter' ), 1 );
+
+		// filter the queries to ensure readable.
+		add_action( 'pre_get_posts', array( &$this, 'retrieve_documents' ) );
 
 		// rewrites and permalinks.
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
@@ -328,6 +330,26 @@ class WP_Document_Revisions {
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
 
+		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.
+		/**
+		 * Filters the users capacities to require read (or read_document) capability.
+		 *
+		 * @since 3.3
+		 *
+		 * @param boolean true  default action to capability read for documents (not read_document).
+		 */
+		// user requires read_document and not just read to read document.
+		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
+			// invoke logic to require read_document instead of default read .
+			$args['capabilities'] = array(
+				'read' => 'read_documents',
+			);
+			if ( ! current_user_can( 'read_documents' ) ) {
+				// user does not have read_documents capability, so any need to be filtered out of results.
+				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+			}
+		}
+
 		/**
 		 * Filters the delivered document type definition prior to registering it.
 		 *
@@ -349,34 +371,6 @@ class WP_Document_Revisions {
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later).
 		self::$doc_image = ( isset( $_COOKIE['doc_image'] ) ? 'true' === $_COOKIE['doc_image'] : true );
-	}
-
-	/**
-	 * Determines if read requires read_document instead of read.
-	 *
-	 * @since 3.3
-	 */
-	public function use_read_capability() {
-		// user requires read_document and not just read to read document.
-		/**
-		 * Filters the users capacities to require read (or read_document) capability.
-		 *
-		 * @since 3.3
-		 *
-		 * @param boolean true  default action to capability read for documents (not read_document).
-		 */
-		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
-			// invoke logic.
-			add_filter( 'map_meta_cap', array( &$this, 'map_meta_cap' ), 10, 4 );
-			add_filter( 'user_has_cap', array( &$this, 'user_has_cap' ), 10, 4 );
-			if ( ! current_user_can( 'read_documents' ) ) {
-				// user does not have read_documents capability, so any need to be filtered out of results.
-				add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
-			}
-		}
-
-		// filter the queries.
-		add_action( 'pre_get_posts', array( &$this, 'retrieve_documents' ) );
 	}
 
 	/**
@@ -1214,12 +1208,19 @@ class WP_Document_Revisions {
 			}
 		}
 
-		// modified, cache for 3 months.
+		// modified time - use to determine if already loaded.
 		$last_modified            = gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
 		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
 		$headers['ETag']          = $etag;
-		$headers['Cache-Control'] = 'max-age=8000000';
+
+		/**
+		 * Filter to set maximum cache time.
+		 *
+		 * @param integer 8000000    Default maximum number of seconds (3 months) to cache.
+		 * @param string  $mimetype  Mime type to be served.
+		 */
+		$headers['Cache-Control'] = 'max-age=' . apply_filters( 'document_max_age', 8000000, $mimetype );
 
 		// could be compressed or not depending on browser capability.
 		$headers['Vary'] = 'Accept-Encoding';
@@ -2787,66 +2788,9 @@ class WP_Document_Revisions {
 	}
 
 	/**
-	 * Maps caps from e.g., `read` to `read_document`
-	 *
-	 * @param array   $caps    Array of the user's required capabilities.
-	 * @param string  $cap     Capability name.
-	 * @param integer $user_id The user ID.
-	 * @param array   $args    Adds the context to the cap. Typically the object ID.
-	 * @return unknown
-	 */
-	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
-		// check that cap wanted is read_post.
-		if ( 'read_post' !== $cap ) {
-			return $caps;
-		}
-
-		// attempt to grab the post_ID.
-		// note: will default to global $post if none passed.
-		$post_ID = ( ! empty( $args ) ) ? $args[0] : null;
-
-		// kick if not related to a document.
-		if ( ! $this->verify_post_type( $post_ID ) ) {
-			return $caps;
-		}
-
-		return array( 'read_documents' );
-	}
-
-	/**
-	 * Dynamically filter a user's capabilities.
-	 *
-	 * @param bool[]   $allcaps Array of key/value pairs where keys represent a capability name and boolean values
-	 *                          represent whether the user has that capability.
-	 * @param string[] $caps    Required primitive capabilities for the requested capability.
-	 * @param array    $args {
-	 *     Arguments that accompany the requested capability check.
-	 *
-	 *     @type string    $0 Requested capability.
-	 *     @type int       $1 Concerned user ID.
-	 *     @type mixed  ...$2 Optional second and further parameters, typically object ID.
-	 * }
-	 * @param WP_User  $user    The user object.
-	 */
-	public function user_has_cap( $allcaps, $caps, $args, $user ) {
-		// Is user an administrator. If so, bail.
-		if ( in_array( 'administrator', $user->roles, true ) ) {
-			return $allcaps;
-		}
-
-		// must have a base object that is a document.
-		if ( isset( $args[2] ) && $this->verify_post_type( $args[2] ) ) {
-			// remove the read capability for this test.
-			unset( $allcaps['read'] );
-		}
-
-		return $allcaps;
-	}
-
-	/**
 	 * Review WP_Query SQL results.
 	 *
-	 * Only invoked when user should NOT access documents via 'read' but does not have 'read_document'. Remove any documents.
+	 * Only invoked when user should NOT access documents via 'read' but does not have 'read_documents'. Remove any documents.
 	 *
 	 * @param WP_Post[] $results      Array of post objects.
 	 * @param WP_Query  $query_object Query object.
