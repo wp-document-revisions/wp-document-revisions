@@ -439,6 +439,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+		if ( ! current_user_can( 'read_documents' ) ) {
+			// user does not have read_documents capability, so any need to be filtered out of results.
+			add_filter( 'posts_results', array( &$this, 'posts_results' ), 10, 2 );
+		}
 	}
 
 	/**
