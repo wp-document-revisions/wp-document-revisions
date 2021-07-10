@@ -192,7 +192,7 @@
         wp_document_revisions.postUploadNotice = convertEntities(wp_document_revisions.postUploadNotice)
       @window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn()
       if @window.jQuery('#sample-permalink').length != 0
-        return @window.jQuery('#sample-permalink').html(@window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?@$/i, wp_document_revisions.extension))
+        return @window.jQuery('#sample-permalink').html(@window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[A-Za-z0-9]{1,7})?@$/i, wp_document_revisions.extension))
       return
 
     WPDocumentRevisions

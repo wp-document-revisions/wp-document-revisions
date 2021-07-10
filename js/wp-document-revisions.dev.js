@@ -213,7 +213,7 @@
       }
       this.window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn();
       if (this.window.jQuery('#sample-permalink').length !== 0) {
-        return this.window.jQuery('#sample-permalink').html(this.window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?@$/i, wp_document_revisions.extension));
+        return this.window.jQuery('#sample-permalink').html(this.window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[A-Za-z0-9]{1,7})?@$/i, wp_document_revisions.extension));
       }
     };
 
