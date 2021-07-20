@@ -103,7 +103,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			var terms = taxo[i].terms;
 			var opts = [];
 			for ( j = 0, lenj = terms.length; j < lenj; j++) {
-				opts.push( {value:terms[j][0], label:terms[j][1] } );
+				opts.push( { label: terms[j][1], value: terms[j][0] } );
 			}
 			// Set taxonomy slug
 			if ( i == 0 ) {
@@ -111,13 +111,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[0].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[0].label,
-						selected: attributes.term_0,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_0: parseInt( val ) } );
-									}
+							selected: attributes.term_0,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_0: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -127,13 +126,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[1].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[1].label,
-						selected: attributes.term_1,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_1: parseInt( val ) } );
-									}
+							selected: attributes.term_1,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_1: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -143,13 +141,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[2].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[2].label,
-						selected: attributes.term_2,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_2: parseInt( val ) } );
-									}
+							selected: attributes.term_2,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_2: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -207,8 +204,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 									}
 								}),
 								createElement(RadioControl, {
-									type: 'string',
-								  label: __( 'Order sequence' ),
+									label: __( 'Order sequence' ),
 								  selected: attributes.order,
 								  options: [
 								  	{ label: __( 'Ascending', 'wp-document-revisions' ), value: 'ASC' },
@@ -219,8 +215,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 									},
 								}),
 								createElement(RadioControl, {
-									type: 'string',
-								  label: __( 'Show Edit link', 'wp-document-revisions' ),
+									label: __( 'Show Edit link', 'wp-document-revisions' ),
 								  help: __( 'Show Edit link allows the list to have a link to the Edit function. A choice made here will over-ride the system-configured settings. Links will only appear if the user can edit the document.', 'wp-document-revisions' ),
 								  selected: attributes.show_edit,
 								  options: [
@@ -443,7 +438,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					} else {
 						content += " new_tab=true";
 					}
-					if ( "" !== attributes.freeform  &&undefined !== attributes.freeform ) {
+					if ( "" !== attributes.freeform && undefined !== attributes.freeform ) {
 						content += ' ' + attributes.freeform;
 					}
 					content += " ]";
