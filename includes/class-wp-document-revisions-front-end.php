@@ -431,10 +431,10 @@ class WP_Document_Revisions_Front_End {
 	 * Register WP Document Revisions block category.
 	 *
 	 * @since 3.3.0
-	 * @param Array   $categories Block categories available.
-	 * @param WP_Post $post       Post for which the block is to be available.
+	 * @param Array                   $categories           Block categories available.
+	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	public function wpdr_block_categories( $categories, $post ) {
+	public function wpdr_block_categories( $categories, $block_editor_context ) {
 
 		return array_merge(
 			$categories,
@@ -460,7 +460,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// add the plugin category.
-		add_filter( 'block_categories', array( $this, 'wpdr_block_categories' ), 10, 2 );
+		add_filter( 'block_categories_all', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
 		register_block_type(
 			'wp-document-revisions/documents-shortcode',
