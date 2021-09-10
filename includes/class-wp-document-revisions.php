@@ -1694,7 +1694,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Rewrites a file URL to it's public URL.
+	 * Rewrites a file URL to its public URL.
 	 *
 	 * @since 0.5
 	 * @param array $file file object from WP.
@@ -2557,8 +2557,8 @@ class WP_Document_Revisions {
 	 * See generally, #17548
 	 *
 	 * @since 1.2.1
-	 * @param Object $query the query object.
-	 * @return String the modified query
+	 * @param string $query the query string.
+	 * @return string the modified query
 	 */
 	public function term_count_query_filter( $query ) {
 		return str_replace( "= 'publish'", "!= 'trash'", $query );

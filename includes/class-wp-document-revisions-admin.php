@@ -26,6 +26,27 @@ class WP_Document_Revisions_Admin {
 	public static $instance;
 
 	/**
+	 * The last_but_one revision
+	 *
+	 * @var $last_but_one_revn
+	 */
+	private static $last_but_one_revn = null;
+
+	/**
+	 * The last_but_one revision excerpt
+	 *
+	 * @var $last_revn_excerpt
+	 */
+	private static $last_revn_excerpt = null;
+
+	/**
+	 * The last revision
+	 *
+	 * @var $last_revn
+	 */
+	private static $last_revn = null;
+
+	/**
 	 * Register's admin hooks
 	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 *
@@ -52,6 +73,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'save_post_document', array( &$this, 'save_document' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
+		add_filter( 'wp_save_post_revision_post_has_changed', array( &$this, 'identify_last_but_one' ), 10, 3 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
 		add_action( 'admin_print_footer_scripts', array( &$this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
@@ -811,11 +833,11 @@ class WP_Document_Revisions_Admin {
 	public function bind_upload_cb() {
 		global $pagenow;
 
-		if ( 'media-upload.php' === $pagenow ) :
+		if ( 'media-upload.php' === $pagenow ) {
 			?>
-			<script type="text/javascript">jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">jQuery(document).ready(function(){alert('bind UpLoad'); bindPostDocumentUploadCB()});</script>
 			<?php
-		endif;
+		}
 	}
 
 
@@ -1253,6 +1275,7 @@ class WP_Document_Revisions_Admin {
 			);
 			$res        = $wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			wp_cache_delete( $thumb, 'posts' );
 		}
 
 		// Let's work on Workflow state, Verify nonce.
@@ -1263,6 +1286,28 @@ class WP_Document_Revisions_Admin {
 
 		// Save it.
 		wp_set_post_terms( $doc_id, array( $ws ), 'workflow_state' );
+
+		// can we merge the revisions.
+		if ( is_null( self::$last_revn ) || is_null( self::$last_but_one_revn ) ) {
+			return;
+		}
+
+		// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
+		wp_delete_post_revision( self::$last_but_one_revn );
+		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$post_table = "{$wpdb->prefix}posts";
+		$sql        = $wpdb->prepare(
+			"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
+			self::$last_revn_excerpt,
+			self::$last_revn,
+			$doc_id,
+			self::$last_revn_excerpt
+		);
+		$res        = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
+		wp_cache_delete( self::$last_revn, 'posts' );
+		wp_cache_delete( $doc_id, 'posts' );
 	}
 
 	/**
@@ -1429,18 +1474,74 @@ class WP_Document_Revisions_Admin {
 	 * Prevents initial autosave drafts from appearing as a revision after document upload.
 	 *
 	 * @since 1.0
-	 * @param int $id the post id.
+	 * @param int $revision_id the revision post id.
 	 */
-	public function revision_filter( $id ) {
+	public function revision_filter( $revision_id ) {
 		// verify post type.
-		if ( ! $this->verify_post_type( $id ) ) {
+		if ( ! $this->verify_post_type( $revision_id ) ) {
 			return;
 		}
 
-		$document = get_post( $id );
-		if ( 0 === strlen( $document->post_content ) ) {
-			wp_delete_post( $id, true );
+		$revision = get_post( $revision_id );
+		// delete revision if there is no content.
+		if ( 0 === strlen( $revision->post_content ) ) {
+			wp_delete_post_revision( $revision_id );
+			return;
 		}
+
+		// set last_revision (used in routine save_document to possibly merge revisions).
+		self::$last_revn = $revision_id;
+	}
+
+	/**
+	 * Identify the 'last but one' revision in case we will merge them.
+	 *
+	 * @param bool    $post_has_changed Whether the post has changed.
+	 * @param WP_Post $last_revision    The last revision post object.
+	 * @param WP_Post $post             The post object.
+	 * @return bool.
+	 */
+	public function identify_last_but_one( $post_has_changed, $last_revision, $post ) {
+		// only interested if post changed.
+		if ( ! $post_has_changed ) {
+			return $post_has_changed;
+		}
+
+		// verify post type.
+		if ( ! $this->verify_post_type( $post->ID ) ) {
+			return $post_has_changed;
+		}
+
+		// misuse of filter, but can use to determine whether the revisions can be merged.
+		// keep revision if content or title changed.
+		if ( $post->post_content !== $last_revision->post_content || $post->post_title !== $last_revision->post_title ) {
+			return true;
+		}
+
+		// normally only title, content and excerpt name for a revision to be created.
+		$time_diff = time() - strtotime( $last_revision->post_modified_gmt );
+
+		/**
+		 * Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+		 *
+		 * Changes to the title or content (document) will always create an additional revision.
+		 * But if there are two revisions within a user-defined time of each other and only one has excerpt text, they can be merged.
+		 *
+		 * @since 3.4
+		 *
+		 * @param int 0 number of seconds between revisions to NOT create an extra revision.
+		 */
+		if ( $time_diff < apply_filters( 'document_revisions_merge_revisions', 0 ) ) {
+			// only here as excerpt changed.
+			if ( '' === $post->post_excerpt || '' === $last_revision->post_excerpt ) {
+				// possible merge, set last_but_one_revision (used in routine save_document).
+				self::$last_but_one_revn = $last_revision->ID;
+				self::$last_revn_excerpt = ( '' === $post->post_excerpt ? $last_revision->post_excerpt : $post->post_excerpt );
+				return true;
+			}
+		}
+
+		return $post_has_changed;
 	}
 
 

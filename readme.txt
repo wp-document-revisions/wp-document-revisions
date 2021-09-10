@@ -634,6 +634,12 @@ In: class-wp-document-revisions-admin.php
 
 Filters the number of revisions to keep for documents.
 
+== Filter document_revisions_merge_revisions ==
+
+In: class-wp-document-revisions-admin.php
+
+Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+
 == Filter document_revisions_mimetype ==
 
 In: class-wp-document-revisions.php
