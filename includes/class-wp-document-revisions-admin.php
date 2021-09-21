@@ -65,7 +65,7 @@ class WP_Document_Revisions_Admin {
 
 		// help and messages.
 		add_filter( 'post_updated_messages', array( &$this, 'update_messages' ) );
-		add_action( 'admin_head', array( &$this, 'add_help_tab' ) ); // 3.3+
+		add_action( 'admin_head', array( &$this, 'add_help_tab' ) );
 
 		// edit document screen.
 		add_action( 'admin_head', array( &$this, 'make_private' ) );
@@ -522,7 +522,7 @@ class WP_Document_Revisions_Admin {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 1 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -835,7 +835,7 @@ class WP_Document_Revisions_Admin {
 
 		if ( 'media-upload.php' === $pagenow ) {
 			?>
-			<script type="text/javascript">jQuery(document).ready(function(){alert('bind UpLoad'); bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">jQuery(document).ready(function(){WPDocumentRevisions.bindPostDocumentUploadCB()});</script>
 			<?php
 		}
 	}

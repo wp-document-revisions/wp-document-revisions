@@ -141,7 +141,7 @@ class WP_Document_Revisions {
 		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
-		add_action( 'template_redirect', array( $this, 'revision_feed_auth' ) );
+		add_action( 'template_redirect', array( &$this, 'revision_feed_auth' ) );
 		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 4 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
@@ -677,11 +677,11 @@ class WP_Document_Revisions {
 		$slug = $this->document_slug();
 
 		// remove any previous versions of file matches (will be added back if same).
-		$rules = array_filter( $rules, array( $this, 'remove_old_rules' ), ARRAY_FILTER_USE_KEY );
+		$rules = array_filter( $rules, array( &$this, 'remove_old_rules' ), ARRAY_FILTER_USE_KEY );
 
 		$my_rules = array();
 
-		// These rules will define the trailing / as optional, as will be the extension (since it not used in the sxearch).
+		// These rules will define the trailing / as optional, as will be the extension (since it not used in the search).
 
 		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
 		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
