@@ -135,6 +135,25 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+
+		// Editor Public 2.
+		self::$editor_public_post_2 = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Public 2 - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_public_post_2 ), 'Failed inserting document Editor Public 2' );
+
+		// add term and two attachments.
+		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
+		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
 	}
 
 	/**
@@ -156,6 +175,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		wp_delete_post( self::$editor_private_post, true );
 		wp_delete_post( self::$editor_public_post, true );
+		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
@@ -187,6 +207,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_structure() {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
+		self::verify_structure( self::$editor_public_post_2, 2, 1 );
 	}
 
 	/**
@@ -263,17 +284,38 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
+		self::assertEquals( 0, (int) substr_count( $output, 'Restore' ), 'restore count' );
+
+		// Plain permalink.
+		self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count 1 revision 1 plain' );
+		self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count 1 revision 2 plain' );
+	}
+
+	/**
+	 * Verify revision log metabox. public_post_2 will have a revision.
+	 */
+	public function test_revision_metabox_auth_2() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$post_obj = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->revision_metabox( $post_obj );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be 1 for RSS feed.
+		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
-		if ( false === strpos( $output, 'post_type=document' ) ) {
-			// Desired permalinks.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
-		} else {
-			// Plain permalink.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 plain' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 plain' );
-		}
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count 2 revision 1 plain' );
+		self::assertEquals( 1, (int) substr_count( $output, '-revision-2.' ), 'revision count 2 revision 2 plain' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-3.' ), 'revision count 2 revision 3 plain' );
 	}
 
 	/**
