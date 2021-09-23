@@ -26,7 +26,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 	private static $ws_term_id;
 
 	/**
-	 * Author Public Post ID
+	 * Editor Public Post ID
 	 *
 	 * @var integer $editor_public_post
 	 */
@@ -38,6 +38,13 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 	 * @var integer $editor_private_post
 	 */
 	private static $editor_private_post;
+
+	/**
+	 * Editor Public Post 2 ID
+	 *
+	 * @var integer $editor_public_post_2
+	 */
+	private static $editor_public_post_2;
 
 	// phpcs:disable
 	/**
