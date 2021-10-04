@@ -1201,7 +1201,7 @@ class WP_Document_Revisions {
 
 		$headers['Content-Length'] = $filesize;
 		if ( $compress ) {
-			// request compression. Remove Length as likely wrong and HTTP/2 fails if length wrong.
+			// request compression. Remove Length as possibly wrong and HTTP/2 fails if length wrong.
 			// phpcs:ignore
 			if ( isset( $_SERVER['SERVER_PROTOCOL'] ) && '1' < substr( $_SERVER['SERVER_PROTOCOL'], 5, 1 ) ) {
 						unset( $headers['Content-Length'] );
@@ -1213,25 +1213,10 @@ class WP_Document_Revisions {
 		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
 		$headers['ETag']          = $etag;
-
-		/**
-		 * Filter to set maximum cache time.
-		 *
-		 * @param integer 8000000    Default maximum number of seconds (3 months) to cache.
-		 * @param string  $mimetype  Mime type to be served.
-		 */
-		$headers['Cache-Control'] = 'max-age=' . apply_filters( 'document_max_age', 8000000, $mimetype );
+		$headers['Cache-Control'] = 'no-cache';
 
 		// could be compressed or not depending on browser capability.
 		$headers['Vary'] = 'Accept-Encoding';
-
-		/**
-		 * Filters the HTTP headers sent when a file is served through WP Document Revisions.
-		 *
-		 * @param array  $headers The HTTP headers to be sent.
-		 * @param string $file    The file being served.
-		 */
-		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
 
 		// Support for Conditional GET.
 		$client_etag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( sanitize_text_field( wp_unslash( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) ) : false;
@@ -1259,7 +1244,7 @@ class WP_Document_Revisions {
 		) {
 			// no content with a 304, other header needed.
 			unset( $headers['Content-Length'] );
-			self::serve_headers( $headers );
+			$this->serve_headers( $headers, $file );
 			status_header( 304 );
 			return $template;
 		}
@@ -1273,7 +1258,7 @@ class WP_Document_Revisions {
 		$under_test = class_exists( 'WP_UnitTestCase' );
 
 		if ( $under_test ) {
-			// Under test. We know that we have done an ob_start, so remove buffer,prior to open another.
+			// Under test. We know that we have done an ob_start, so remove buffer prior to open another.
 			ob_end_clean();
 		} else {
 			// clear any existing output buffer(s) to prevent other plugins from corrupting the file.
@@ -1338,10 +1323,10 @@ class WP_Document_Revisions {
 				$headers['Content-Length'] = ob_get_length();
 			}
 			// only know the length after writing to buffer, so only output headers now.
-			self::serve_headers( $headers );
+			$this->serve_headers( $headers, $file );
 		} else {
 			// know the headers and buffering may cause writing, so output headers first.
-			self::serve_headers( $headers );
+			$this->serve_headers( $headers, $file );
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
 			readfile( $file );
 		}
@@ -1375,9 +1360,18 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.3.1
 	 * @param String[] $headers Headers to outout.
+	 * @param string   $file    The file being served.
 	 * @return void.
 	 */
-	private function serve_headers( $headers ) {
+	private function serve_headers( $headers, $file ) {
+		/**
+		 * Filters the HTTP headers sent when a file is served through WP Document Revisions.
+		 *
+		 * @param string[] $headers The HTTP headers to be sent.
+		 * @param string   $file    The file being served.
+		 */
+		$headers = apply_filters( 'document_revisions_serve_file_headers', $headers, $file );
+
 		foreach ( $headers as $header => $value ) {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@header( $header . ': ' . $value );
@@ -2286,6 +2280,7 @@ class WP_Document_Revisions {
 		add_filter( 'document_use_workflow_states', '__return_false' );
 	}
 
+
 	/**
 	 * Adds EditFlow support for post status to the admin table.
 	 *
@@ -2348,6 +2343,7 @@ class WP_Document_Revisions {
 		}
 	}
 
+
 	/**
 	 * Tells WP to recognize workflow_state as a query vars.
 	 *
@@ -2359,6 +2355,7 @@ class WP_Document_Revisions {
 		$vars[] = 'workflow_state';
 		return $vars;
 	}
+
 
 	/**
 	 * Provides support for publish_press_support and disables the default workflow state taxonomy.
@@ -2597,6 +2594,7 @@ class WP_Document_Revisions {
 		}
 	}
 
+
 	/**
 	 * Filters the term_count post_statuses for all custom taxonomies associated with documents
 	 * Unless taxonomy already has a custom callback.
@@ -2665,6 +2663,7 @@ class WP_Document_Revisions {
 		return untrailingslashit( $redirect );
 	}
 
+
 	/**
 	 * Provides a workaround for the attachment url filter breaking wp_get_attachment_image_src
 	 * Removes the wp_get_attachment_url filter and runs image_downsize normally
@@ -2704,6 +2703,7 @@ class WP_Document_Revisions {
 
 		return $image;
 	}
+
 
 	/**
 	 * Return an empty excerpt for documents on front end views to avoid leaking
@@ -2758,6 +2758,7 @@ class WP_Document_Revisions {
 		return $where . ' AND 1 = 0 ';
 	}
 
+
 	/**
 	 * Try to retrieve only correct documents.
 	 *
@@ -2786,6 +2787,7 @@ class WP_Document_Revisions {
 			}
 		}
 	}
+
 
 	/**
 	 * Review WP_Query SQL results.
@@ -2830,6 +2832,7 @@ class WP_Document_Revisions {
 
 		return $results;
 	}
+
 
 	/**
 	 * Remove nocache headers from document downloads on IE < 8

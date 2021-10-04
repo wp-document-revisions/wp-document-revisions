@@ -2,8 +2,8 @@
 
 ### 3.4.0
 
-* NEW: Add filter 'document_revisions_merge_revisions' to merge revisions if made within this time intervval (Default 0 = No merging).
-* NEW: Revisions can be merged if made within a user-defined interval.
+* NEW: Revisions can be merged if made within a user-defined interval using filter 'document_revisions_merge_revisions' (Default 0 = No merging).
+* FIX: Cacheing strategy reviewed to ensure updates delivered to users.
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls
 * FIX: Blocks are made visible to Editor differently with 5.8
 
