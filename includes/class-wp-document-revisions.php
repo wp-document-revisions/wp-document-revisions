@@ -7,7 +7,7 @@
  */
 
 /**
- * Main WP_Document_Revisions class.
+ * Main WP_Document_Revisions class definition.
  */
 class WP_Document_Revisions {
 
@@ -1808,6 +1808,7 @@ class WP_Document_Revisions {
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
 	}
+
 
 	/**
 	 * Callback to handle revision RSS feed.

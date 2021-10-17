@@ -214,7 +214,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_structure() {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
-		self::verify_structure( self::$editor_public_post_2, 2, 1 );
+		self::verify_structure( self::$editor_public_post_2, 2, 2 );
 	}
 
 	/**
@@ -223,14 +223,14 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_dashboard_display_1() {
 		global $wpdr;
 
-		// see that one post only is seen.
+		// see that only two (public) posts are seen.
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'display count public 1' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count public 1' );
+		self::assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
 	}
 
 	/**
@@ -239,15 +239,15 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	public function test_dashboard_display_2() {
 		global $wpdr;
 
-		// see that two posts are seen.
+		// see that three posts are seen.
 		wp_publish_post( self::$editor_private_post );
 		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count all' );
-		self::assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish all' );
+		self::assertEquals( 3, (int) substr_count( $output, '<li' ), 'display count all' );
+		self::assertEquals( 3, (int) substr_count( $output, 'Publish' ), 'display publish all' );
 	}
 
 	/**
@@ -315,6 +315,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->revision_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( $output );
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );

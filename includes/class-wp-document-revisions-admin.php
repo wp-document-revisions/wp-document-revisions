@@ -196,7 +196,7 @@ class WP_Document_Revisions_Admin {
 		$screen = get_current_screen();
 
 		// loop through each tab in the help array and add.
-		foreach ( $this->get_help_text() as $title => $content ) {
+		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(
 				array(
 					'title'   => $title,
@@ -261,10 +261,16 @@ class WP_Document_Revisions_Admin {
 			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
 		}
 
+		// convert array into string for pre-3.3 compatability, i.e. no longer used.
+		$output = '';
+		foreach ( $help[ $screen->id ] as $label => $text ) {
+			$output .= "<h4>{$label}</h4>{$text}";
+		}
+
 		/**
-		 * Filters the (UNDEFINED) help text for current screen.
+		 * Filters the string format help text for current screen.
 		 *
-		 * @param string $output UNDEFINED.
+		 * @param string $output default help text for current screen.
 		 * @param string $screen current screen name.
 		 */
 		return apply_filters( 'document_help', $output, $screen );
@@ -813,7 +819,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function document_slug_cb() {
 		?>
-	<code><?php echo esc_html( home_url() ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
+	<code><?php echo esc_html( trailingslashit( home_url() ) ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 	<span class="description">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
