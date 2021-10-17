@@ -224,7 +224,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		global $wpdr;
 
 		// see that only two (public) posts are seen.
-ob_start();
+		ob_start();
 		$wpdr->admin->dashboard_display();
 		$output = ob_get_contents();
 		ob_end_clean();
