@@ -142,6 +142,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
+		$args   = wp_parse_args( $args, self::$defaults );
 		$output = $this->widget_gen( $args, $instance );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $output;
@@ -350,7 +351,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param string $content  Optional. Block content. Default empty string.
 	 * @since 3.3.0
 	 */
-	public function wpdr_documents_widget_display( $atts, $content ) {
+	public function wpdr_documents_widget_display( $atts, $content = '' ) {
 		// Create the two parameter sets.
 		$args                    = array(
 			'before_widget' => '',
