@@ -321,8 +321,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			wp_set_script_translations( 'wpdr-documents-widget-editor', 'wp-document-revisions' );
 		}
 
-		// Find sizes for images for PDFs. (Logic from /wp-admin/includes/image.php).
-		$fallback_sizes = array(
+		// Find sizes for images for PDFs. (Logic based on /wp-admin/includes/image.php).
+		$merged_sizes = array(
 			'thumbnail',
 			'medium',
 			'large',
@@ -333,14 +333,15 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		 *
 		 * @since 4.7.0
 		 *
-		 * @param string[] $fallback_sizes An array of image size names.
-		 * @param array    $metadata       Current attachment metadata.
+		 * @param string[] $merged_sizes An array of image size names.
+		 * @param array    $metadata     Current attachment metadata.
 		 */
-		$fallback_sizes = apply_filters( 'fallback_intermediate_image_sizes', $fallback_sizes, array() );
+		$merged_sizes   = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() );
 
-		$registered_sizes = wp_get_registered_image_subsizes();
-		$merged_sizes     = array_intersect_key( $registered_sizes, array_flip( $fallback_sizes ) );
-
+		if ( function_exists( 'get_intermediate_image_sizes' ) ) {
+			$registered_sizes = get_intermediate_image_sizes();
+			$merged_sizes     = array_merge( $registered_sizes, $merged_sizes );
+		}
 	}
 
 
