@@ -79,6 +79,9 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
 		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
+		add_action( 'edit_form_after_title', array( &$this, 'prepare_editor' ) );
+		add_filter( 'wp_editor_settings', array( &$this, 'document_editor_setting' ), 10, 2 );
+		add_filter( 'tiny_mce_before_init', array( &$this, 'modify_content_class' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
@@ -227,9 +230,12 @@ class WP_Document_Revisions_Admin {
 		$help = array(
 			'document'      => array(
 				__( 'Basic Usage', 'wp-document-revisions' ) =>
-				'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p><p>' .
+				'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'When done, simply click <code>Update</code> to save your changes', 'wp-document-revisions' ) . '</p>',
+				__( 'Document Description', 'wp-document-revisions' ) =>
+				'<p>' . __( 'The document description provides a short user-oriented summary of the document.', 'wp-document-revisions' ) . '</p><p>' .
+				__( 'This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents.', 'wp-document-revisions' ) . '</p>',
 				__( 'Revision Log', 'wp-document-revisions' ) =>
 				'<p>' . __( 'The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.', 'wp-document-revisions' ) . '</p>',
@@ -316,6 +322,73 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
 
 		do_action( 'document_edit' );
+	}
+
+
+	/**
+	 * Invoke the editor for a description to be entered.
+	 *
+	 * @ since 3.4.0
+	 *
+	 * @param WP_Post $post Post object.
+	 */
+	public function prepare_editor( $post ) {
+		if ( 'document' !== $post->post_type ) {
+			return;
+		}
+
+		echo '<h2>' . esc_html__( 'Document Description', 'wp-document-revisions' ) . '</h2>';
+
+		// convert old format to new.
+		if ( is_numeric( $post->post_content ) ) {
+			$post->post_content = $this->format_doc_id( $post->post_content );
+		}
+	}
+
+
+	/**
+	 * Modify the standard Classic editor settings for a simple description to be entered.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array  $settings  Array of editor arguments.
+	 * @param string $editor_id Unique editor identifier, e.g. 'content'. Accepts 'classic-block'
+	 *                          when called from block editor's Classic block.
+	 */
+	public function document_editor_setting( $settings, $editor_id ) {
+		// only interested in content.
+		if ( 'content' !== $editor_id ) {
+			return $settings;
+		}
+
+		global $post;
+		if ( 'document' !== $post->post_type || $this->verify_post_type( $post->ID ) ) {
+			// restricted capacity for document content.
+			return array(
+				'wpautop'       => false,
+				'media_buttons' => false,
+				'textarea_name' => 'doc_descr',
+				'textarea_rows' => 8,
+				'teeny'         => false,
+				'quicktags'     => false,
+			);
+		}
+		return $settings;
+	}
+
+	/**
+	 * Modify the 'content' class for documents otherwise it indents everything in the editor.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array $settings  Array of tiny_mce arguments.
+	 */
+	public function modify_content_class( $settings ) {
+		// check on document only affects these.
+		if ( array_key_exists( 'body_class', $settings ) && 0 === strpos( $settings['body_class'], 'content post-type-document' ) ) {
+			$settings['content_css'] = $settings['content_css'] . ',' . plugins_url( '/css/wpdr-content.css', __DIR__ );
+		}
+		return $settings;
 	}
 
 
@@ -420,8 +493,13 @@ class WP_Document_Revisions_Admin {
 	 * @param object $post the post object.
 	 */
 	public function document_metabox( $post ) {
+		// convert old format to new.
+		if ( is_numeric( $post->post_content ) ) {
+			$post->post_content = $this->format_doc_id( $post->post_content );
+		}
 		?>
-		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content ); ?>" />
+		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $post->post_content ); ?>" />
+		<input type="hidden" id="curr_content" name="curr_content" value="Unset" />
 		<?php
 		$lock_holder = $this->get_document_lock( $post );
 		if ( $lock_holder ) {
@@ -511,8 +589,9 @@ class WP_Document_Revisions_Admin {
 			}
 			// preserve original file extension on revision links.
 			// this will prevent mime/ext security conflicts in IE when downloading.
-			if ( is_numeric( $revision->post_content ) ) {
-				$fn   = get_post_meta( $revision->post_content, '_wp_attached_file', true );
+			$attach = $this->get_document( $revision->ID );
+			if ( $attach ) {
+				$fn   = get_post_meta( $attach->ID, '_wp_attached_file', true );
 				$fno  = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
 				$fn   = $info['dirname'] . '/' . $info['filename'];
@@ -1407,7 +1486,7 @@ class WP_Document_Revisions_Admin {
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 
 		// enqueue CSS.
-		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', dirname( __FILE__ ) ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), null, $wpdr->version );
 	}
 
 
@@ -1569,45 +1648,42 @@ class WP_Document_Revisions_Admin {
 			return;
 		}
 
-		if ( is_numeric( $document->post_content ) ) {
-			// check that content points to an attachment post.
-			$attach = get_post( $document->post_content );
-			if ( isset( $attach->ID ) && 'attachment' === $attach->post_type ) {
+		$attach = $this->get_document( $post_id );
+		if ( $attach ) {
+			// make sure that the attachment is not refered to by another post (ignore autosave).
+			global $wpdb;
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery
+			$doc_link = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND (post_content = %d OR post_content LIKE %s ) AND post_name != %s ",
+					$document->post_parent,
+					$attach->ID,
+					$this->format_doc_id( $attach->ID ) . '%',
+					strval( $document->post_parent ) . '-autosave-v1'
+				)
+			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
-				// make sure that the attachment is not refered to by another post (ignore autosave).
-				global $wpdb;
-				// phpcs:disable WordPress.DB.DirectDatabaseQuery
-				$doc_link = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name != %s ",
-						$document->post_parent,
-						$document->post_content,
-						strval( $document->post_parent ) . '-autosave-v1'
-					)
-				);
-				// phpcs:enable WordPress.DB.DirectDatabaseQuery
+			if ( '1' === $doc_link ) {
+				// look for attachment meta (before deleting attachment).
+				$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+				$file = get_attached_file( $attach->ID );
+				wp_delete_attachment( $attach->ID, true );
 
-				if ( '1' === $doc_link ) {
-					// look for attachment meta (before deleting attachment).
-					$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+				// belt and braces in case above 'deleted' file from media and not document directory.
+				$wpdr    = self::$parent;
+				$std_dir = $wpdr::$wp_default_dir['basedir'];
+				$doc_dir = $this->document_upload_dir();
+				if ( $std_dir !== $doc_dir ) {
+					$file = str_replace( $std_dir, $doc_dir, $file );
+				}
+				wp_delete_file_from_directory( $file, $doc_dir );
 
-					$file = get_attached_file( $attach->ID );
-					wp_delete_attachment( $attach->ID, false );
-
-					// belt and braces in case above 'deleted' file from media and not document directory.
-					$std_dir = WP_Document_Revisions::$wp_default_dir['basedir'];
-					$doc_dir = $this->document_upload_dir();
-					if ( $std_dir !== $doc_dir ) {
-						$file = str_replace( $std_dir, $doc_dir, $file );
-					}
-					wp_delete_file_from_directory( $file, $doc_dir );
-
-					// delete any metadata images.
-					if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
-						$file_dir = trailingslashit( dirname( $file ) );
-						foreach ( $meta['sizes'] as $size => $sizeinfo ) {
-							wp_delete_file_from_directory( $file_dir . $sizeinfo['file'], $file_dir );
-						}
+				// delete any metadata images.
+				if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
+					$file_dir = trailingslashit( dirname( $file ) );
+					foreach ( $meta['sizes'] as $size => $sizeinfo ) {
+						wp_delete_file_from_directory( $file_dir . $sizeinfo['file'], $file_dir );
 					}
 				}
 			}
@@ -1696,7 +1772,7 @@ class WP_Document_Revisions_Admin {
 			'numberposts' => 5,
 		);
 
-		$documents = $wpdr->get_documents( $query );
+		$documents = $this->get_documents( $query );
 
 		// no documents, don't bother.
 		if ( ! $documents ) {

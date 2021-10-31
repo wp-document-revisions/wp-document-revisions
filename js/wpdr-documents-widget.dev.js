@@ -30,12 +30,50 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 			type : 'boolean',
 			default: false
 		},
+		show_thumb : {
+			type : 'boolean',
+			default: false
+		},
+		show_descr : {
+			type : 'boolean',
+			default: true
+		},
 		show_author : {
 			type : 'boolean',
 			default: true
+		},
+		new_tab : {
+			type : 'boolean',
+			default: false
+		},
+		backgroundColor: {
+			type: 'string'
+		},
+		textColor: {
+			type: 'string'
+		},
+		gradient: {
+			type: 'string'
+		},
+		fontSize: {
+			type: 'string'
+		},
+		style: {
+			type: 'object'
 		}
 	},
-	//display the post title
+	supports: {
+		color: {
+			gradients: true
+		},
+		fontSize: true,
+		lineHeight: true,
+		spacing: {
+			margin: true,
+			padding: true
+    }
+	},
+	//display the settings
 	edit( props ){
 		const attributes =  props.attributes;
 		const setAttributes =  props.setAttributes;
@@ -58,7 +96,7 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 								createElement( TextControl, {
 									type: 'string',
 									value: attributes.header,
-									label: __( 'Document List Heading', 'wp-document-revisions' ),
+									label: __( 'Latest Documents List Heading', 'wp-document-revisions' ),
 									onChange: function( val ) {
 										setAttributes( { header: val } );
 									}
@@ -105,6 +143,25 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 										}
 									}),
 								),
+								//Show featured image
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_thumb,
+									label: __( 'Show featured image?', 'wp-document-revisions' ),
+								  help: __( 'Under some conditons WordPress can generate an image for Page 1 of PDF documents. If present this will be displayed as a Featured Image.', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_thumb: val } );
+										}
+								}),
+								//Show post description
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_descr,
+									label: __( 'Show document description?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_descr: val } );
+										}
+								}),
 								//Show author name
 								createElement( ToggleControl, {
 									type: 'boolean',
@@ -113,6 +170,16 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 									onChange: function( val ) {
 											setAttributes( { show_author: val } );
 										}
+								}),
+								//Open in new tab
+								createElement(ToggleControl, {
+									type: 'boolean',
+									checked: attributes.new_tab,
+									label: __( 'Open documents in new tab?', 'wp-document-revisions' ),
+									help: __( 'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.', 'wp-document-revisions' ),
+								  onChange: function( val ) {
+										setAttributes( { new_tab: val } );
+									}
 								})
 							]
 						)

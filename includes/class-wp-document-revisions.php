@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.3.0';
+	public $version = '3.4.0';
 
 	/**
 	 * The WP default directory cache.
@@ -158,6 +158,7 @@ class WP_Document_Revisions {
 		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
+		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 10, 3 );
 
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
@@ -165,7 +166,7 @@ class WP_Document_Revisions {
 		// cache clean.
 		add_action( 'save_post_document', array( &$this, 'clear_cache' ) );
 
-		// edit flow or PublishPress.
+		// Edit Flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
 		add_action( 'pp_module_options_loaded', array( &$this, 'publishpress_support' ) );
 		// always called to determine whether user has turned off workflow_state support.
@@ -282,6 +283,9 @@ class WP_Document_Revisions {
 
 		include __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
+
+		// Although the Post Type Supports Editor, don't use block editor.
+		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 	}
 
 
@@ -326,7 +330,7 @@ class WP_Document_Revisions {
 			'hierarchical'         => false,
 			'menu_position'        => null,
 			'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
-			'supports'             => array( 'title', 'author', 'revisions', 'excerpt', 'custom-fields', 'thumbnail' ),
+			'supports'             => array( 'title', 'editor', 'author', 'revisions', 'custom-fields', 'thumbnail' ),
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
 
@@ -474,6 +478,25 @@ class WP_Document_Revisions {
 			);
 		}
 	}
+
+
+
+	/**
+	 * Use Classic Editor for Documents (as need to constrain options.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param bool    $use_block_editor Whether the post can be edited or not.
+	 * @param WP_Post $post             The post being checked.
+	 */
+	public function no_use_block_editor( $use_block_editor, $post ) {
+		// switch off for documents.
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
+			return false;
+		}
+		return $use_block_editor;
+	}
+
 
 	/**
 	 * Given a post object, returns all attached uploads.
@@ -625,11 +648,11 @@ class WP_Document_Revisions {
 				return '';
 			}
 
-				$attachment = get_post( $latest_revision->post_content );
+			$attachment = $this->get_document( $latest_revision );
 
 			// sanity check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed.
-			if ( get_post_type( $attachment ) !== 'attachment' ) {
+			if ( ! $attachment ) {
 				return '';
 			}
 		}
@@ -1027,8 +1050,19 @@ class WP_Document_Revisions {
 		}
 
 		// get the attachment (id in post_content of rev_id).
-		$attach = get_post( get_post_field( 'post_content', $rev_id ) );
-		$file   = get_attached_file( $attach->ID );
+		$attach = $this->get_document( $rev_id );
+		if ( $attach instanceof WP_Post ) {
+			$file = get_attached_file( $attach->ID );
+		} else {
+				wp_die(
+					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
+					null,
+					array( 'response' => 403 )
+				);
+				// for unit testing.
+				$wp_query->is_404 = true;
+				return false;
+		}
 
 		// Above used a cached version of std directory, so cannot change within call and may be wrong,
 		// so possibly replace it in the output.
@@ -1443,15 +1477,19 @@ class WP_Document_Revisions {
 
 		// verify that there's an upload ID in the content field
 		// if there's no upload ID for some reason, default to latest attached upload.
-		if ( ! is_numeric( $revisions[0]->post_content ) ) {
+		if ( ! $this->get_document( $revisions[0]->ID ) ) {
 			$attachments = $this->get_attachments( $post_id );
 
 			if ( empty( $attachments ) ) {
 				return false;
 			}
 
-			$latest_attachment          = reset( $attachments );
-			$revisions[0]->post_content = $latest_attachment->ID;
+			$latest_attachment = reset( $attachments );
+			if ( is_numeric( $revisions[0]->post_content ) ) {
+				$revisions[0]->post_content = $this->format_doc_id( $revisions[0]->post_content );
+			} elseif ( empty( $revisions[0]->post_content ) ) {
+				$revisions[0]->post_content = $this->format_doc_id( $latest_attachment->ID );
+			}
 		}
 
 		return $revisions[0];
@@ -1486,7 +1524,7 @@ class WP_Document_Revisions {
 
 		// temporarily remove our filter to get the true URL, not the permalink.
 		remove_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ) );
-		$url = wp_get_attachment_url( $latest->post_content );
+		$url = wp_get_attachment_url( $this->get_document( $latest->ID )->ID );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 
 		return $url;
@@ -1731,6 +1769,128 @@ class WP_Document_Revisions {
 		$file['url'] = get_permalink( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) );
 
 		return $file;
+	}
+
+
+	/**
+	 * Renames the generated attachment meta data file names to hide the attachment slug.
+	 *
+	 * If the generated images are used as images, their name would display the slug.
+	 *
+	 * @since 3.4.0.
+	 *
+	 * @param array  $metadata      An array of attachment meta data.
+	 * @param int    $attachment_id Current attachment ID.
+	 * @param string $context       Additional context. Can be 'create' when metadata was initially created for new attachment
+	 *                              or 'update' when the metadata was updated.
+	 */
+	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {
+		// check that for a document.
+		$attach = get_post( $attachment_id );
+		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+			return $metadata;
+		}
+
+		// get file for attachment.
+		$file = get_attached_file( $attachment_id );
+		// belt and braces in case above 'deleted' file from media and not document directory.
+		$std_dir = self::$wp_default_dir['basedir'];
+		$doc_dir = $this->document_upload_dir();
+		if ( $std_dir !== $doc_dir ) {
+			$file = str_replace( $std_dir, $doc_dir, $file );
+		}
+		$file_dir = trailingslashit( dirname( $file ) );
+
+		if ( array_key_exists( 'sizes', $metadata ) ) {
+			$new_name = md5( $attach->post_title );
+			// move file and update.
+			foreach ( $metadata['sizes'] as $size => $sizeinfo ) {
+				if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
+						$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+						// Use copy and unlink because rename breaks streams.
+						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							unlink( $file_dir . $sizeinfo['file'] );
+							$metadata['sizes'][ $size ]['file'] = $new_file;
+						}
+					}
+				}
+			}
+		}
+		// add indicator to note it has been changeed *o no need).
+		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+
+		return $metadata;
+	}
+
+
+	/**
+	 * Hides the generated attachment meta data file names to hide the attachment slug.
+	 *
+	 * If the generated images are used as images, their name would display the slug.
+	 *
+	 * For existing images.
+	 *
+	 * @since 3.4.0.
+	 *
+	 * @param int $attachment_id Current attachment ID.
+	 */
+	public function hide_exist_doc_attach_slug( $attachment_id ) {
+		// check that for a document.
+		$attach = get_post( $attachment_id );
+		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+			return;
+		}
+			// has it been converted.
+		if ( true === get_post_meta( $attachment_id, '_wpdr_meta_hidden', true ) ) {
+			// already processed.
+			return;
+		}
+
+		// get attachment metadata.
+		$meta = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
+		if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
+			return;
+		}
+
+		$meta_sizes = $meta['sizes'];
+		if ( ! isset( $meta_sizes[0]['file'] ) || 0 !== strpos( $meta_sizes[0]['file'], $attach->post_title ) ) {
+			// image files have a different name.
+			add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+			return;
+		}
+
+		// The metadata contains the same name as the document.
+
+		// get file for attachment (to know the directory stored).
+		$file = get_attached_file( $attachment_id );
+		// belt and braces in case file from media and not document directory.
+		$std_dir = self::$wp_default_dir['basedir'];
+		$doc_dir = $this->document_upload_dir();
+		if ( $std_dir !== $doc_dir ) {
+			$file = str_replace( $std_dir, $doc_dir, $file );
+		}
+		$file_dir = trailingslashit( dirname( $file ) );
+
+		$new_name = md5( $attach->post_title );
+		// move file and update.
+		foreach ( $meta_sizes as $size => $sizeinfo ) {
+			if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
+					$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+					// Use copy and unlink because rename breaks streams.
+					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+					if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+						unlink( $file_dir . $sizeinfo['file'] );
+						$meta_sizes[ $size ]['file'] = $new_file;
+					}
+				}
+			}
+		}
+		$meta['sizes'] = $meta_sizes;
+		update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
+		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
 	}
 
 
@@ -2431,6 +2591,47 @@ class WP_Document_Revisions {
 		remove_action( 'init', array( &$this, 'register_ct' ), 2000 );
 	}
 
+
+	/**
+	 * Returns the.document id associated with a post.
+	 *
+	 * @param id $post_id ID of a post object.
+	 * @return WP_Post||false
+	 */
+	public function get_document( $post_id ) {
+		$content = get_post_field( 'post_content', $post_id );
+		if ( is_numeric( $content ) ) {
+			$attach = get_post( $content );
+			if ( (bool) $attach && 'attachment' === $attach->post_type ) {
+				return $attach;
+			}
+		} else {
+			// find document id.
+			preg_match( '/<!-- WPDR ([(0-9]+) -->/', $content, $id );
+			if ( isset( $id[1] ) ) {
+				// if a match get the post and check an attachment.
+				$attach = get_post( (int) $id[1] );
+				if ( (bool) $attach && 'attachment' === $attach->post_type ) {
+					return $attach;
+				}
+			}
+		}
+		// not a valid attachment.
+		return false;
+	}
+
+
+	/**
+	 * Returns the.document id associated with a post in a standard format.
+	 *
+	 * @param int $post_id ID of a post object that is an attachment.
+	 * @return string
+	 */
+	public function format_doc_id( $post_id ) {
+		return '<!-- WPDR ' . (int) $post_id . ' -->';
+	}
+
+
 	/**
 	 * Returns array of document objects matching supplied criteria.
 	 *
@@ -2458,10 +2659,10 @@ class WP_Document_Revisions {
 			// this would be the same output as a query for post_type = attachment
 			// but allows querying of document metadata and returns only latest revision.
 			foreach ( $query->posts as $document ) {
-				$document_object = $this->get_latest_revision( $document->ID );
-				if ( is_numeric( $document_object->post_content ) ) {
-					$output[] = get_post( $document_object->post_content );
-				}
+				$document_object               = $this->get_latest_revision( $document->ID );
+				$attachmt_object               = $this->get_document( $document_object->ID );
+				$attachmt_object->post_content = $document_object->post_content;
+				$output[]                      = $attachmt_object;
 			}
 		} else {
 
@@ -2508,7 +2709,14 @@ class WP_Document_Revisions {
 		// we know there's a revision out there that has the document as its parent and the attachment ID as its body, find it.
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		$revision_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_parent = %d AND post_content = %d LIMIT 1", $document->post_parent, $post_id ) );
+		$revision_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM $wpdb->posts WHERE post_parent = %d AND (post_content = %d OR post_content LIKE %s ) LIMIT 1",
+				$document->post_parent,
+				$post_id,
+				$this->format_doc_id( $post_id ) . '%'
+			)
+		);
 
 		// couldn't find it, just return the true URL.
 		if ( ! $revision_id ) {
