@@ -459,7 +459,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
