@@ -332,10 +332,10 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 			self::assertEquals( 1, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
 			self::assertEquals( 0, (int) substr_count( $output, 'revision-3' ), 'revision count revision 3 pretty' );
 		} else {
-			// Plain permalink.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1' ), 'revision count revision 1 plain' );
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=2' ), 'revision count revision 2 plain' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=3' ), 'revision count revision 3 plain' );
+			// Plain permalink. Need to avoid link to rvision.php with parameter revision=nn.
+			self::assertEquals( 1, (int) substr_count( $output, 'revision=1"' ), 'revision count revision 1 plain' );
+			self::assertEquals( 1, (int) substr_count( $output, 'revision=2"' ), 'revision count revision 2 plain' );
+			self::assertEquals( 0, (int) substr_count( $output, 'revision=3"' ), 'revision count revision 3 plain' );
 		}
 	}
 
