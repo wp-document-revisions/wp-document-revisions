@@ -142,8 +142,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
-		$args   = wp_parse_args( $args, self::$defaults );
-		$output = $this->widget_gen( $args, $instance );
+		$instance = wp_parse_args( $instance, self::$defaults );
+		$output   = $this->widget_gen( $args, $instance );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $output;
 	}
@@ -336,7 +336,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		 * @param string[] $merged_sizes An array of image size names.
 		 * @param array    $metadata     Current attachment metadata.
 		 */
-		$merged_sizes   = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() );
+		$merged_sizes = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() );
 
 		if ( function_exists( 'get_intermediate_image_sizes' ) ) {
 			$registered_sizes = get_intermediate_image_sizes();
