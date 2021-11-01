@@ -12,24 +12,6 @@
 class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 
 	/**
-	 * Default widget settings
-	 *
-	 * @var $defaults
-	 */
-	private static $defaults = array(
-		'numberposts' => 5,
-		'post_status' => array(
-			'publish' => true,
-			'private' => false,
-			'draft'   => false,
-		),
-		'show_thumb'  => false,
-		'show_descr'  => true,
-		'show_author' => true,
-		'new_tab'     => false,
-	);
-
-	/**
 	 * Init widget and register.
 	 */
 	public function __construct() {
@@ -142,7 +124,20 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
-		$instance = wp_parse_args( $instance, self::$defaults );
+		$defaults = array(
+			'numberposts' => 5,
+			'post_status' => array(
+				'publish' => true,
+				'private' => false,
+				'draft'   => false,
+			),
+			'show_thumb'  => false,
+			'show_descr'  => true,
+			'show_author' => true,
+			'new_tab'     => false,
+		);
+
+		$instance = wp_parse_args( $instance, $defaults );
 		$output   = $this->widget_gen( $args, $instance );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $output;
