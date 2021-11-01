@@ -217,6 +217,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		ob_start();
 		$wpdr_widget->widget( $args, $instance );
 		$output = ob_end_clean();
+		console_log($output);
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_noauthor_1' );
@@ -297,6 +298,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		ob_start();
 		$wpdr_widget->widget( $args, $instance );
 		$output = ob_end_clean();
+		console_log($output);
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
