@@ -16,7 +16,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 *
 	 * @var $defaults
 	 */
-	private $defaults = array(
+	private static $defaults = array(
 		'numberposts' => 5,
 		'post_status' => array(
 			'publish' => true,
@@ -142,7 +142,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
-		$instance = wp_parse_args( $instance, $this->$defaults );
+		$instance = wp_parse_args( $instance, self::$defaults );
 		$output   = $this->widget_gen( $args, $instance );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $output;
