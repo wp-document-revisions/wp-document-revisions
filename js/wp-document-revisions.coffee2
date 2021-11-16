@@ -256,7 +256,7 @@
       return
 
     WPDocumentRevisions
-  jQuery(document).ready ($) ->
+  jQuery ($) ->
     window.WPDocumentRevisions = new WPDocumentRevisions($)
   return
 ).call this

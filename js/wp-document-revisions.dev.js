@@ -290,7 +290,7 @@
 
 	})();
 
-	jQuery(document).ready(function($) {
+	jQuery(function($) {
 		return window.WPDocumentRevisions = new WPDocumentRevisions($);
 	});
 
