@@ -188,6 +188,13 @@ class WP_Document_Revisions {
 
 		$wpdr_fe     = new WP_Document_Revisions_Front_End( $this );
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		// load validation code.
+		include __DIR__ . '/class-wp-document-revisions-validate-structure.php';
+		new WP_Document_Revisions_Validate_Structure( $this );
+
+		// Manage REST interface for documents (include code).
+		add_action( 'rest_api_init', array( &$this, 'manage_rest' ) );
 	}
 
 	/**
@@ -333,6 +340,19 @@ class WP_Document_Revisions {
 			'supports'             => array( 'title', 'editor', 'author', 'revisions', 'custom-fields', 'thumbnail' ),
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
+
+		// Ordinarily show_in_rest is set to false, but can turn it on.
+		/**
+		 * Filters the show_in_rest parameter.
+		 *
+		 * @since 3.4
+		 *
+		 * @param boolean false default not to be in rest.
+		 */
+		if ( apply_filters( 'document_show_in_rest', false ) ) {
+			$args['show_in_rest'] = true;
+			$args['rest_base']    = $this->document_slug();
+		}
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.
 		/**
@@ -1811,6 +1831,7 @@ class WP_Document_Revisions {
 						// Use copy and unlink because rename breaks streams.
 						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							@chmod( $file_dir . $new_file, 0664 );
 							unlink( $file_dir . $sizeinfo['file'] );
 							$metadata['sizes'][ $size ]['file'] = $new_file;
 						}
@@ -2593,9 +2614,9 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Returns the.document id associated with a post.
+	 * Returns the.document associated with a post.
 	 *
-	 * @param id $post_id ID of a post object.
+	 * @param id $post_id ID of a post object (document or revision).
 	 * @return WP_Post||false
 	 */
 	public function get_document( $post_id ) {
@@ -3040,6 +3061,21 @@ class WP_Document_Revisions {
 		}
 
 		return $results;
+	}
+
+
+	/**
+	 * Manage Rest interface for documents.
+	 * Information needs to be hidden when REST is used.
+	 */
+	public function manage_rest() {
+		$obj = get_post_type_object( 'document' );
+		if ( ! $obj->show_in_rest ) {
+			return;
+		}
+
+		include __DIR__ . '/class-wp-document-revisions-manage-rest.php';
+		new WP_Document_Revisions_Manage_Rest( $this );
 	}
 
 
