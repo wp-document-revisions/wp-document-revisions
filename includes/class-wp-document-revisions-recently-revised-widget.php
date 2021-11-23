@@ -92,11 +92,15 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						echo '<img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . $thumb_image[0] . '" alt="' . $thumb_image_alt . '"><br />';
 					} else {
 						$attach = $wpdr->get_document( $document->ID );
-						// ensure document slug hidden from attachment.
-						$wpdr->hide_exist_doc_attach_slug( $attach->ID );
-						$image = wp_get_attachment_image( $attach->ID, 'medium' ) . '<br />';
-						if ( $std_dir !== $doc_dir ) {
-							$image = str_replace( $std_dir, $doc_dir, $image );
+						if ( $attach instanceof WP_Post ) {
+							// ensure document slug hidden from attachment.
+							$wpdr->hide_exist_doc_attach_slug( $attach->ID );
+							$image = wp_get_attachment_image( $attach->ID, 'medium' ) . '<br />';
+							if ( $std_dir !== $doc_dir ) {
+								$image = str_replace( $std_dir, $doc_dir, $image );
+							}
+						} else {
+							$image = '<p>No attachment found.</p>';
 						}
 						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo $image;
