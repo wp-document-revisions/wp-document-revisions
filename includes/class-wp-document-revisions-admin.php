@@ -1598,8 +1598,11 @@ class WP_Document_Revisions_Admin {
 		}
 
 		// misuse of filter, but can use to determine whether the revisions can be merged.
-		// keep revision if content or title changed.
-		if ( $post->post_content !== $last_revision->post_content || $post->post_title !== $last_revision->post_title ) {
+		// keep revision if title or content (document linked only) changed.
+		if ( $post->post_title !== $last_revision->post_title ) {
+			return true;
+		}
+		if ( self::$parent->extract_document_id( $post->post_content ) !== self::$parent->extract_document_id( $last_revision->post_content ) ) {
 			return true;
 		}
 

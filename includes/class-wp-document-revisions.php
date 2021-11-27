@@ -343,7 +343,7 @@ class WP_Document_Revisions {
 
 		// Ordinarily show_in_rest is set to false, but can turn it on.
 		/**
-		 * Filters the show_in_rest parameter.
+		 * Filters the show_in_rest parameter from its default value of fa1se.
 		 *
 		 * @since 3.4
 		 *
@@ -1829,11 +1829,12 @@ class WP_Document_Revisions {
 					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 						$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
 						// Use copy and unlink because rename breaks streams.
-						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+						// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
 							@chmod( $file_dir . $new_file, 0664 );
 							unlink( $file_dir . $sizeinfo['file'] );
 							$metadata['sizes'][ $size ]['file'] = $new_file;
+						// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
 						}
 					}
 				}
@@ -2620,24 +2621,39 @@ class WP_Document_Revisions {
 	 * @return WP_Post||false
 	 */
 	public function get_document( $post_id ) {
-		$content = get_post_field( 'post_content', $post_id );
-		if ( is_numeric( $content ) ) {
-			$attach = get_post( $content );
+		$content   = get_post_field( 'post_content', $post_id );
+		$attach_id = $this->extract_document_id( $content );
+		if ( $attach_id ) {
+			$attach = get_post( $attach_id );
 			if ( (bool) $attach && 'attachment' === $attach->post_type ) {
 				return $attach;
 			}
-		} else {
-			// find document id.
-			preg_match( '/<!-- WPDR ([(0-9]+) -->/', $content, $id );
-			if ( isset( $id[1] ) ) {
-				// if a match get the post and check an attachment.
-				$attach = get_post( (int) $id[1] );
-				if ( (bool) $attach && 'attachment' === $attach->post_type ) {
-					return $attach;
-				}
-			}
 		}
 		// not a valid attachment.
+		return false;
+	}
+
+
+	/**
+	 * Returns the.document id associated with a post from the content.
+	 *
+	 * @param string $post_content post_content from a post object (document or revision).
+	 * @return int||false
+	 */
+	public function extract_document_id( $post_content ) {
+		if ( empty( $post_content ) ) {
+			return false;
+		} elseif ( is_numeric( $post_content ) ) {
+			return (int) $post_content;
+		} else {
+			// find document id.
+			preg_match( '/<!-- WPDR ([(0-9]+) -->/', $post_content, $id );
+			if ( isset( $id[1] ) ) {
+				// if a match return the id.
+				return (int) $id[1];
+			}
+		}
+		// no document found.
 		return false;
 	}
 

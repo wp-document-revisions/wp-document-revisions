@@ -121,13 +121,13 @@ class WP_Document_Revisions_Validate_Structure {
 			// Attachment exists but post_content does not contain it.
 			// revalidate input values.
 			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false !== self::get_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+			if ( false !== self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
 			if ( empty( $content ) || false === strpos( $content, '<' ) ) {
 				$content = (string) $parm;
 			} else {
-				$content = '<!-- WPDR ' . $parm . ' -->' . $content;
+				$content = self::$parent->format_doc_id( $parm );
 			}
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -225,7 +225,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// Attachment exists but post_content contains invalid data.
 			// revalidate input values.
 			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false === self::get_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
 			$end_id = strpos( $content, '>' );
@@ -234,7 +234,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content = (string) $parm;
 			} else {
 				// replace existing id data.
-				$content = '<!-- WPDR ' . $parm . ' -->' . substr( $content, $end_id + 1 );
+				$content = self::$parent->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
 			}
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -377,7 +377,7 @@ class WP_Document_Revisions_Validate_Structure {
 			plugins_url( '/js/wp-document-revisions-validate' . $suffix . '.js', __DIR__ ),
 			array( 'jquery', 'wp-api-request' ),
 			self::$parent->version,
-			true,
+			true
 		);
 		// phpcs:disable Squiz.Strings.DoubleQuoteUsage
 		$script =
@@ -400,7 +400,7 @@ class WP_Document_Revisions_Validate_Structure {
 	public static function validate_document( $doc_id, $post_content ) {
 		global $wpdb;
 
-		$attach_id = self::get_document_id( $post_content );
+		$attach_id = self::$parent->extract_document_id( $post_content );
 		if ( $attach_id ) {
 			$valid_att = true;
 		} else {
@@ -481,36 +481,11 @@ class WP_Document_Revisions_Validate_Structure {
 	}
 
 	/**
-	 * Returns the.document id associated with a post.
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param id $post_content post_content from a post object (document or revision).
-	 * @return int||false
-	 */
-	private static function get_document_id( $post_content ) {
-		if ( empty( $post_content ) ) {
-			return false;
-		} elseif ( is_numeric( $post_content ) ) {
-			return $post_content;
-		} else {
-			// find document id.
-			preg_match( '/<!-- WPDR ([(0-9]+) -->/', $post_content, $id );
-			if ( isset( $id[1] ) ) {
-				// if a match return the id.
-				return $id[1];
-			}
-		}
-		// not a valid attachment.
-		return false;
-	}
-
-	/**
 	 * Returns the.validation result of a document attachment object.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id $attach_id id of an attachmeent post object.
+	 * @param id $attach_id id of an attachment post object.
 	 * @return int||false
 	 */
 	private static function check_attachment( $attach_id ) {

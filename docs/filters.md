@@ -180,6 +180,12 @@ In: class-wp-document-revisions-front-end.php
 
 Filters the controlling option to display an edit option against each document.
 
+## Filter document_show_in_rest
+
+In: class-wp-document-revisions.php
+
+Filters the show_in_rest parameter from its default value of fa1se.
+
 ## Filter document_slug
 
 In: class-wp-document-revisions.php

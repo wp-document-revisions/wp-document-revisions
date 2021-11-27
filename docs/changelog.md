@@ -2,10 +2,16 @@
 
 ### 3.4.0
 
+* SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.
+* NEW: A filter 'document_show_in_rest' is provided to display document data via the REST interface using document permissions.
+* NEW: A tool is provided to validate the internal structure of all documents that the user can edit. If fixable then a button is displayed to fix it.
+* NEW: A user-oriented description may be entered for each document. This can be displayed with the Documents List shortcode and Latest Documents widget or their block equivalents.
+* NEW: These blocks can also display the featured image or generated image for PDF documents.
+* NEW: Blocks extended to support standard Colour and Fontsize attributes.
 * NEW: Revisions can be merged if made within a user-defined interval using filter 'document_revisions_merge_revisions' (Default 0 = No merging).
-* FIX: Cacheing strategy reviewed to ensure updates delivered to users.
-* FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls
-* FIX: Blocks are made visible to Editor differently with 5.8
+* FIX: Caching strategy reviewed to ensure updates delivered to users.
+* FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
+* FIX: Blocks are categorised within the Editor differently with 5.8
 
 ### 3.3.1
 
