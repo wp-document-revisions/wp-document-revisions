@@ -431,9 +431,9 @@ class WP_Document_Revisions_Validate_Structure {
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ). ' ' .
-					           // translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-					           sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ) . ' ' .
+							// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+							sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
 			);
@@ -449,8 +449,8 @@ class WP_Document_Revisions_Validate_Structure {
 					'code'  => 8,
 					'error' => 1,
 					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ) . ' ' .
-					           // translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-					           sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+						// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+						sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 					'fix'   => 1,
 					'parm'  => $last,
 				);

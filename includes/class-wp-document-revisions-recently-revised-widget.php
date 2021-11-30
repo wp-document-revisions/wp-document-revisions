@@ -315,8 +315,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						'type' => 'string',
 					),
 					'style'             => array(
-							'type' => 'object',
-					)
+						'type' => 'object',
+					),
 				),
 			)
 		);
