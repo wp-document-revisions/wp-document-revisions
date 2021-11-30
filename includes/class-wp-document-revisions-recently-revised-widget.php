@@ -296,7 +296,13 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						'type'    => 'boolean',
 						'default' => false,
 					),
+					'align'             => array(
+						'type' => 'string',
+					),
 					'backgroundColor'   => array(
+						'type' => 'string',
+					),
+					'linkColor'         => array(
 						'type' => 'string',
 					),
 					'textColor'         => array(
@@ -309,8 +315,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						'type' => 'string',
 					),
 					'style'             => array(
-						'type' => 'object',
-					),
+							'type' => 'object',
+					)
 				),
 			)
 		);

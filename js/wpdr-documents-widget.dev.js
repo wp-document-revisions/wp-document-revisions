@@ -45,8 +45,14 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 		new_tab : {
 			type : 'boolean',
 			default: false
+			},
+		align: {
+			type: 'string'
 		},
 		backgroundColor: {
+			type: 'string'
+		},
+		linkColor: {
 			type: 'string'
 		},
 		textColor: {
@@ -59,18 +65,22 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 			type: 'string'
 		},
 		style: {
-			type: 'object'
+				type: 'object'
 		}
 	},
 	supports: {
+		align: true,
 		color: {
-			gradients: true
+			gradients: true,
+			link: true
 		},
-		fontSize: true,
-		lineHeight: true,
 		spacing: {
 			margin: true,
 			padding: true
+    },
+		typography: {
+			fontSize: true,
+			lineHeight: true
     }
 	},
 	//display the settings

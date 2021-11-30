@@ -70,7 +70,13 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			type: 'string',
 			default: ''
 		},
+		align: {
+			type: 'string'
+		},
 		backgroundColor: {
+			type: 'string'
+		},
+		linkColor: {
 			type: 'string'
 		},
 		textColor: {
@@ -87,10 +93,19 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 		}
 	},
 	supports: {
+		align: true,
 		color: {
-			gradients: true
+			gradients: true,
+			link: true
 		},
-		fontSize: true
+		spacing: {
+			margin: true,
+			padding: true
+    },
+		typography: {
+			fontSize: true,
+			lineHeight: true
+    }
 	},
 	//display the settings
 	edit( props ){

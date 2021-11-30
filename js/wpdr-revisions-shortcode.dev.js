@@ -27,7 +27,13 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 			type: 'boolean',
 			default: true
 		},
+		align: {
+			type: 'string'
+		},
 		backgroundColor: {
+			type: 'string'
+		},
+		linkColor: {
 			type: 'string'
 		},
 		textColor: {
@@ -44,10 +50,19 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 		}
 	},
 	supports: {
+		align: true,
 		color: {
-			gradients: true
+			gradients: true,
+			link: true
 		},
-		fontSize: true
+		spacing: {
+			margin: true,
+			padding: true
+    },
+		typography: {
+			fontSize: true,
+			lineHeight: true
+    }
 	},
 	//display the settings
 	edit( props ){

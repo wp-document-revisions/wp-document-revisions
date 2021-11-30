@@ -574,7 +574,13 @@ class WP_Document_Revisions_Front_End {
 					'freeform'        => array(
 						'type' => 'string',
 					),
+					'align'           => array(
+						'type' => 'string',
+					),
 					'backgroundColor' => array(
+						'type' => 'string',
+					),
+					'linkColor'       => array(
 						'type' => 'string',
 					),
 					'textColor'       => array(
@@ -615,7 +621,13 @@ class WP_Document_Revisions_Front_End {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'align'           => array(
+						'type' => 'string',
+					),
 					'backgroundColor' => array(
+						'type' => 'string',
+					),
+					'linkColor'       => array(
 						'type' => 'string',
 					),
 					'textColor'       => array(

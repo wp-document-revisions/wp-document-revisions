@@ -277,7 +277,7 @@ class WP_Document_Revisions_Validate_Structure {
 		global $wpdb;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$documents = $wpdb->get_results(
-			"SELECT ID, post_title, post_content, post_date_gmt
+			"SELECT ID, post_title, post_content, post_modified_gmt
 			 FROM {$wpdb->prefix}posts 
 			 WHERE post_type = 'document'
 			 AND post_status not in ( 'auto-draft', 'trash' )
@@ -291,7 +291,7 @@ class WP_Document_Revisions_Validate_Structure {
 		foreach ( $documents as $rec => $document ) {
 			// check that user can edit the document.
 			if ( current_user_can( 'edit_document', $document['ID'] ) ) {
-				$test = self::validate_document( $document['ID'], $document['post_content'] );
+				$test = self::validate_document( $document['ID'], $document['post_content'], $document['post_modified_gmt'] );
 				if ( is_array( $test ) ) {
 					// failure.
 					$failures[] = array_merge( $document, $test );
@@ -393,11 +393,12 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id     $doc_id       ID of a post object.
-	 * @param string $post_content post content field.
+	 * @param id     $doc_id            ID of a post object.
+	 * @param string $post_content      post content field.
+	 * @param string $post_modified_gmt post modified field.
 	 * @return array||false
 	 */
-	public static function validate_document( $doc_id, $post_content ) {
+	public static function validate_document( $doc_id, $post_content, $post_modified_gmt ) {
 		global $wpdb;
 
 		$attach_id = self::$parent->extract_document_id( $post_content );
@@ -425,10 +426,14 @@ class WP_Document_Revisions_Validate_Structure {
 		// fixing the post_content structure takes precedence.
 		if ( ! $valid_att ) {
 			// there is an attachment out there, but not linked.
+				$post_date   = get_date_from_gmt( $post_modified_gmt );
+				$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
+				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ). ' ' .
+					           // translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+					           sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
 			);
@@ -438,10 +443,14 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( false !== $att_error && 2 === $att_error['code'] ) {
 			$last = self::get_last_attachment( $doc_id );
 			if ( $last ) {
+				$post_date   = get_date_from_gmt( $post_modified_gmt );
+				$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $last, 'db' ) );
 				return array(
 					'code'  => 8,
 					'error' => 1,
-					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ),
+					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ) . ' ' .
+					           // translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+					           sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 					'fix'   => 1,
 					'parm'  => $last,
 				);

@@ -920,7 +920,7 @@ class WP_Document_Revisions_Admin {
 
 		if ( 'media-upload.php' === $pagenow ) {
 			?>
-			<script type="text/javascript">jQuery(document).ready(function(){WPDocumentRevisions.bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {WPDocumentRevisions.bindPostDocumentUploadCB()});</script>
 			<?php
 		}
 	}
@@ -1598,8 +1598,8 @@ class WP_Document_Revisions_Admin {
 		}
 
 		// misuse of filter, but can use to determine whether the revisions can be merged.
-		// keep revision if title or content (document linked only) changed.
-		if ( $post->post_title !== $last_revision->post_title ) {
+		// keep revision if title or content (document linked only) changed. Also if author changed.
+		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
 			return true;
 		}
 		if ( self::$parent->extract_document_id( $post->post_content ) !== self::$parent->extract_document_id( $last_revision->post_content ) ) {

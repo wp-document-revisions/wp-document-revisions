@@ -138,9 +138,6 @@ class WP_Document_Revisions_Manage_Rest {
 			return $response;
 		}
 
-		// Remove attachments.
-		$response->remove_link( 'https://api.w.org/attachment' );
-
 		// Possibly remove revisions.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			$response->remove_link( 'version-history' );
@@ -165,9 +162,6 @@ class WP_Document_Revisions_Manage_Rest {
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
 			return $response;
 		}
-
-		// Remove attachments.
-		$response->remove_link( 'https://api.w.org/attachment' );
 
 		// Possibly remove revisions.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
