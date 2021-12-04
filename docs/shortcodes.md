@@ -6,7 +6,7 @@ Existing shortcodes can be converted to and from their block forms.
 
 They are held in a grouping called `WP Document Revisions`.
 
-Since the blocks make use of dynamically-generated cont, their contents are identical whether using a block or a shortcode/widget. 
+Since the blocks make use of dynamically-generated content, the same code is used to create this for a shortcode/widget.
 
 ## Documents Shortcode
 

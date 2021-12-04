@@ -1864,7 +1864,7 @@ class WP_Document_Revisions {
 		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
 			return;
 		}
-			// has it been converted.
+		// has it been converted.
 		if ( true === get_post_meta( $attachment_id, '_wpdr_meta_hidden', true ) ) {
 			// already processed.
 			return;

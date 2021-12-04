@@ -406,7 +406,7 @@ class WP_Document_Revisions_Front_End {
 					$thumb_image     = wp_get_attachment_image_src( $thumb, 'medium' );
 					$thumb_image_alt = get_post_meta( $thumb, '_wp_attachment_image_alt', true );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<br /><img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . $thumb_image[0] . '" alt="' . $thumb_image_alt . '"><br />';
+					echo '<br /><img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . esc_url( $thumb_image[0] ) . '" alt="' . esc_html( $thumb_image_alt ) . '"><br />';
 				} else {
 					$attach = $wpdr->get_document( $document->ID );
 					if ( $attach instanceof WP_Post ) {
@@ -417,7 +417,7 @@ class WP_Document_Revisions_Front_End {
 							$image = str_replace( $std_dir, $doc_dir, $image );
 						}
 					} else {
-						$image = '<p>No attachment found.</p>';
+						$image = '<p>' . __( 'No attachment available.', 'wp-document-revisions' ) . '</p>';
 					}
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo $image;

@@ -7,6 +7,94 @@
  */
 
 /**
+ * Design notes
+ * ============
+ *
+ * Underlying data structure
+ *
+ * This is based on a custom post type - document - that supports revisions.
+ * A document makes use of WP media upload to upload an underlying file (that is the actual document).
+ * This underlying document is held as an attachment WP post type.
+ * Each new version of the document will be uploaded as an attachment to the original document post.
+ * Therefore all attachments and document revisions will have their post_parent set to the original document post.
+ * [Note. If a featured image is loaded then it would also have its attachment post with post_parent. This is explicitly set to 0 on loading.]
+ * The attachment record contains the link to acutal data file.
+ * The actual aattachment to use is held in the post_content field.
+ * Whilst it is normal that the latest loaded attachment, it is not necessarily so if a revision is reverted.
+ * However the latest one will be used if the correct one cannot be found.
+ *
+ * So that direct file access is difficult, the actual file name is not as loaded, but is an MD5-hash of it.
+ * Measures are taken to hide this name from being seen by the user. However the attachmentr post does contain it.
+ *
+ * This code is based on the following:
+ * Every live document will have post_content that will contain the ID of an attachment that has the document as its parent.
+ * If it does not, then it will try to see if there is such an attachment.
+ * It will then try to validate that attachment record.
+ * This should be an MD5-format name (32 hexaecimal name) If not it will change the name.
+ * The file that it points to should exist there.
+ * [If the document directory is different to the media directory, it will also check that it is in the media one, and if found propose to move it.]
+ *
+ * This code uses direct SQL calls to identify the document posts and to choose a potential attachment. .
+ * This is a deliberate design decision in the analysis phase to NOT have any issues with caching and/ loading memory with data that is not foing to be used.
+ *
+ * It also does so during data correction.. Here this is to avoid creating a revision (which would have, by definition, invalid data).
+ *
+ * Error/Warning conditions detected.
+ * ===================================
+ *
+ * Note. There is no significance to the code number, Just the order that they were thought of.
+ *
+ * If the note has Fixable No, that means no automatic repair is possible.
+ * Resolution can ALWAYS be achieved by sending the document to trash or by loading a new version of the document.
+ * These options are available to those who can edit the document - which is the socpe of the tests.
+ *
+ *
+ * Code     1
+ * Type     Error
+ * Message  There is no attachment record held for document
+ * Fixable  No
+ * Cause    Post_contrent does not contain an attachment id and there is no attachment post for the document.
+ *
+ * Code     2
+ * Type     Error
+ * Message  Document links to an invalid attachment record
+ * Fixable  No
+ * Cause    Post_content contains an id but it is not an attachment post belonging the document.
+ *
+ * Code     3
+ * Type     Error
+ * Message  Document attachment exists but related file not found
+ * Fixable  No
+ * Cause    Post_content contains an attaclment post belonging to the document, but there is no file there.
+ *
+ * Code     4
+ * Type     Error
+ * Message  Attachment found for document, but not currently linked
+ * Fixable  Yes
+ * Cause    Post_content does not contain an attaclment post belonging to the document, but there is one there so we could link to it.
+ *
+ * Code     5
+ * Type     Error
+ * Message  Document links to an invalid attachment record
+ * Fixable  Yes
+ * Cause    Post_content contains an id but it is not an attachment post belonging to the document. However a valid attachment exists that can be linked to.
+ *
+ * Code     6
+ * Type     Warning
+ * Message  Document attachment does not appear to be md5 encoded
+ * Fixable  Yes
+ * Cause    Post_content contain an attaclment post belonging the document, but the attached file does not appear to have an MD5-coded name.
+ *          Can rename it to ensure that it is.
+ *
+ * Code     7
+ * Type     Error
+ * Message  Document attachment exists but related file not in document location
+ * Fixable  Yes
+ * Cause    Post_content contain an attaclment post belonging the document, but the attached file is in the media library, not the document one.
+ *          Hence moving the file will make it available.
+ */
+
+/**
  * Main WP_Document_Revisions Validate Structure class.
  */
 class WP_Document_Revisions_Validate_Structure {
@@ -143,6 +231,35 @@ class WP_Document_Revisions_Validate_Structure {
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
+		if ( 5 === $params['code'] ) {
+			// Attachment exists but post_content contains invalid data.
+			// revalidate input values.
+			$content = get_post_field( 'post_content', $id, 'db' );
+			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
+			}
+			$end_id = strpos( $content, '>' );
+			if ( false === $end_id ) {
+				// replace content.
+				$content = (string) $parm;
+			} else {
+				// replace existing id data.
+				$content = self::$parent->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
+			}
+			global $wpdb;
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			$post_table = "{$wpdb->prefix}posts";
+			$sql        = $wpdb->prepare(
+				"UPDATE `$post_table` SET `post_content` = %s WHERE `id` = %d",
+				$content,
+				$id
+			);
+			$res        = $wpdb->query( $sql );
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			wp_cache_delete( $id, 'posts' );
+			wp_cache_delete( $id, 'document_revisions' );
+		}
+
 		if ( 6 === $params['code'] ) {
 			// Attachment file name not encoded.
 			$title     = get_post_field( 'post_title', $id );
@@ -219,35 +336,6 @@ class WP_Document_Revisions_Validate_Structure {
 				}
 			}
 			// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
-		}
-
-		if ( 8 === $params['code'] ) {
-			// Attachment exists but post_content contains invalid data.
-			// revalidate input values.
-			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
-				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
-			}
-			$end_id = strpos( $content, '>' );
-			if ( false === $end_id ) {
-				// replace content.
-				$content = (string) $parm;
-			} else {
-				// replace existing id data.
-				$content = self::$parent->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
-			}
-			global $wpdb;
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
-			$sql        = $wpdb->prepare(
-				"UPDATE `$post_table` SET `post_content` = %s WHERE `id` = %d",
-				$content,
-				$id
-			);
-			$res        = $wpdb->query( $sql );
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			wp_cache_delete( $id, 'posts' );
-			wp_cache_delete( $id, 'document_revisions' );
 		}
 		$response = 'Success.';
 		return rest_ensure_response( $response );
@@ -326,6 +414,7 @@ class WP_Document_Revisions_Validate_Structure {
 						$line = esc_attr( $failure['ID'] );
 						$beg  = esc_attr( $failure['post_title'] ) . '<br/>';
 						$ref  = esc_url( get_the_permalink( $failure['ID'] ) );
+						// Create the URL to the document. This is text if erroe/not fixable; link if warning; both if error and can be fixed (display one then other).
 						if ( (bool) $failure['fix'] ) {
 							if ( (bool) $failure['error'] ) {
 								$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .
@@ -336,6 +425,7 @@ class WP_Document_Revisions_Validate_Structure {
 						} else {
 							$ref = $beg . $ref;
 						}
+						// create button if fixable.
 						if ( (bool) $failure['fix'] ) {
 							$fix = '<button onclick="wpdr_valid_fix(' . $failure['ID'] . ',' . $failure['code'] . ',' . $failure['parm'] . ')">' . esc_html__( 'Fix', 'wp-document-revisions' ) . '</button>';
 						} else {
@@ -421,7 +511,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		// attachment found, is it valid.
-		$att_error = self::check_attachment( $attach_id );
+		$att_error = self::check_attachment( $attach_id, $doc_id );
 
 		// fixing the post_content structure takes precedence.
 		if ( ! $valid_att ) {
@@ -446,7 +536,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$post_date   = get_date_from_gmt( $post_modified_gmt );
 				$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $last, 'db' ) );
 				return array(
-					'code'  => 8,
+					'code'  => 5,
 					'error' => 1,
 					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ) . ' ' .
 						// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
@@ -495,11 +585,12 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 *
 	 * @param id $attach_id id of an attachment post object.
+	 * @param id $doc_id    id of the document post object.
 	 * @return int||false
 	 */
-	private static function check_attachment( $attach_id ) {
+	private static function check_attachment( $attach_id, $doc_id ) {
 		$attach = get_post( $attach_id );
-		if ( is_null( $attach ) || 'attachment' !== $attach->post_type ) {
+		if ( is_null( $attach ) || 'attachment' !== $attach->post_type || $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
 			return array(
 				'code'  => 2,
