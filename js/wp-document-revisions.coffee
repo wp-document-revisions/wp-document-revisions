@@ -219,7 +219,7 @@ class WPDocumentRevisions
 
     #If they already have a permalink, update it with the current extension in case it changed
     if @window.jQuery('#sample-permalink').length != 0
-      @window.jQuery('#sample-permalink').html @window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{3,4})?@$/i, wp_document_revisions.extension )
+      @window.jQuery('#sample-permalink').html @window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[A-Za-z0-9]{1,7})?@$/i, wp_document_revisions.extension )
 
 jQuery(document).ready ($) ->
 

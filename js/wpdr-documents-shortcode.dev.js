@@ -11,6 +11,10 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 	category: 'wpdr-category',
 	icon: 'editor-ul',
 	attributes:  {
+		header : {
+			type: 'string',
+			default: ''
+		},
 		taxonomy_0 : {
 			type: 'string',
 			default: ''
@@ -50,6 +54,14 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			type: 'string',
 			default: ''
 		},
+		show_thumb : {
+			type : 'boolean',
+			default: false
+		},
+		show_descr : {
+			type : 'boolean',
+			default: true
+		},
 		new_tab : {
 			type: 'boolean',
 			default: true
@@ -57,7 +69,43 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 		freeform : {
 			type: 'string',
 			default: ''
+		},
+		align: {
+			type: 'string'
+		},
+		backgroundColor: {
+			type: 'string'
+		},
+		linkColor: {
+			type: 'string'
+		},
+		textColor: {
+			type: 'string'
+		},
+		gradient: {
+			type: 'string'
+		},
+		fontSize: {
+			type: 'string'
+		},
+		style: {
+			type: 'object'
 		}
+	},
+	supports: {
+		align: true,
+		color: {
+			gradients: true,
+			link: true
+		},
+		spacing: {
+			margin: true,
+			padding: true
+    },
+		typography: {
+			fontSize: true,
+			lineHeight: true
+    }
 	},
 	//display the settings
 	edit( props ){
@@ -103,7 +151,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			var terms = taxo[i].terms;
 			var opts = [];
 			for ( j = 0, lenj = terms.length; j < lenj; j++) {
-				opts.push( {value:terms[j][0], label:terms[j][1] } );
+				opts.push( { label: terms[j][1], value: terms[j][0] } );
 			}
 			// Set taxonomy slug
 			if ( i == 0 ) {
@@ -111,13 +159,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[0].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[0].label,
-						selected: attributes.term_0,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_0: parseInt( val ) } );
-									}
+							selected: attributes.term_0,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_0: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -127,13 +174,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[1].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[1].label,
-						selected: attributes.term_1,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_1: parseInt( val ) } );
-									}
+							selected: attributes.term_1,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_1: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -143,13 +189,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				return createElement( PanelBody, { title: __( 'Taxonomy: ', 'wp-document-revisions' ) + taxo[2].label, initialOpen: false },
 					[
 						createElement(RadioControl, {
-							type: 'string',
 							label: taxo[2].label,
-						selected: attributes.term_2,
-						options: opts,
-						onChange: function( val ) {
-										setAttributes( { term_2: parseInt( val ) } );
-									}
+							selected: attributes.term_2,
+							options: opts,
+							onChange: function( val ) {
+								setAttributes( { term_2: parseInt( val ) } );
+							}
 						})
 					]
 				);
@@ -183,6 +228,14 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				createElement( InspectorControls, {},
 					[
 						// Simple Taxonomy Selectors
+						createElement(TextControl, {
+							type: 'string',
+							value: attributes.header,
+							label: __( 'Block Heading', 'wp-document-revisions' ),
+							onChange: function( val ) {
+								setAttributes( { header: val } );
+							}
+						}),
 						taxonomies(),
 						createElement( PanelBody, { title: __( 'Display Settings', 'wp-document-revisions' ), initialOpen: false },
 							[
@@ -207,8 +260,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 									}
 								}),
 								createElement(RadioControl, {
-									type: 'string',
-								  label: __( 'Order sequence' ),
+									label: __( 'Order sequence' ),
 								  selected: attributes.order,
 								  options: [
 								  	{ label: __( 'Ascending', 'wp-document-revisions' ), value: 'ASC' },
@@ -219,8 +271,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 									},
 								}),
 								createElement(RadioControl, {
-									type: 'string',
-								  label: __( 'Show Edit link', 'wp-document-revisions' ),
+									label: __( 'Show Edit link', 'wp-document-revisions' ),
 								  help: __( 'Show Edit link allows the list to have a link to the Edit function. A choice made here will over-ride the system-configured settings. Links will only appear if the user can edit the document.', 'wp-document-revisions' ),
 								  selected: attributes.show_edit,
 								  options: [
@@ -232,12 +283,30 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 										setAttributes( { show_edit: val } );
 									},
 								}),
+								//Show featured image
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_thumb,
+									label: __( 'Show featured image?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_thumb: val } );
+										}
+								}),
+								//Show post description
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_descr,
+									label: __( 'Show document description?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_descr: val } );
+										}
+								}),
 								//Open in new tab
 								createElement(ToggleControl, {
 									type: 'boolean',
 									checked: attributes.new_tab,
 									label: __( 'Open documents in new tab?', 'wp-document-revisions' ),
-									help: __( 'Setting this on will open the document in a new tab. This should be set on whilst editing the page as clicking on a link whilst editing will force the current page to be left.', 'wp-document-revisions' ),
+									help: __( 'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.', 'wp-document-revisions' ),
 								  onChange: function( val ) {
 										setAttributes( { new_tab: val } );
 									}
@@ -278,6 +347,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 				transform: ({text}) => {
 
 					// defaults.
+					var sheader = "";
 					var staxonomy_0 = "";
 					var sterm_0 = 0;
 					var staxonomy_1 = "";
@@ -288,6 +358,8 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					var sorderby = "";
 					var sorder = "";
 					var sshow_edit = "";
+					var sshow_thumb = false;
+					var sshow_descr = true;
 					var snew_tab = true;
 					var sfreeform  = "";
 
@@ -320,7 +392,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 						}
 						var used = false;
 						var parm = i.split("=");
-						if ( parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0 ) {
+						if ( parm.length > 1 && ( parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0 ) ) {
 							parm[1] = parm[1].slice(1, parm[1].length-1);
 						}
 						// existing parameter may be wf_state - convert to post_status.
@@ -362,8 +434,20 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 							sshow_edit = parm[1];
 							used = true;
 						}
+						if ( parm[0] === 'show_thumb' ) {
+							if ( parm.length === 1 || parm[1] === 'true' ) {
+								sshow_thumb = true;
+							}
+							used = true;
+						}
+						if ( parm[0] === 'show_descr' ) {
+							if ( parm.length === 2 && parm[1] === 'false' ) {
+								sshow_descr = false;
+							}
+							used = true;
+						}
 						if ( parm[0] === 'new_tab' ) {
-							if ( parm[1] === 'false' ) {
+							if ( parm.length === 2 && parm[1] === 'false' ) {
 								snew_tab = false;
 							}
 							used = true;
@@ -375,6 +459,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					}
 
 					return createBlock('wp-document-revisions/documents-shortcode', {
+						header : sheader,
 						taxonomy_0 : staxonomy_0,
 						term_0 : sterm_0,
 						taxonomy_1 : staxonomy_1,
@@ -385,6 +470,8 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 						orderby : sorderby,
 						order : sorder,
 						show_edit : sshow_edit,
+						show_thumb : sshow_thumb,
+						show_descr : sshow_descr,
 						new_tab : snew_tab,
 						freeform : sfreeform.trim()
 					} );
@@ -438,12 +525,16 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					if ( "" !== attributes.show_edit ) {
 						content += ' show_edit="' + attributes.show_edit + '"';
 					}
-					if ( ! attributes.new_tab ) {
-						content += " new_tab=false";
-					} else {
-						content += " new_tab=true";
+					if ( attributes.show_thumb ) {
+						content += " show_thumb";
 					}
-					if ( "" !== attributes.freeform  &&undefined !== attributes.freeform ) {
+					if ( attributes.show_descr ) {
+						content += " show_descr";
+					}
+					if ( attributes.new_tab ) {
+						content += " new_tab";
+					}
+					if ( "" !== attributes.freeform && undefined !== attributes.freeform ) {
 						content += ' ' + attributes.freeform;
 					}
 					content += " ]";

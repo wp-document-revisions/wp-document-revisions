@@ -1,9 +1,9 @@
 === WP Document Revisions ===
 
-Contributors: benbalter
+Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Tested up to: 5.7
-Stable tag: 3.3.1
+Tested up to: 5.8
+Stable tag: 3.4.0
 
 == Description ==
 
@@ -172,6 +172,20 @@ In: class-wp-document-revisions.php
 
 
 == Changelog ==
+
+= 3.4.0 =
+
+* SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.
+* NEW: A filter 'document_show_in_rest' is provided to display document data via the REST interface using document permissions. {#258, #259)
+* NEW: A tool is provided to validate the internal structure of all documents that the user can edit. If fixable then a button is displayed to fix it. (#260)
+* NEW: A user-oriented description may be entered for each document. This can be displayed with the Documents List shortcode and Latest Documents widget or their block equivalents. (#263)
+* NEW: These blocks can also display the featured image or generated image for PDF documents. (#264)
+* NEW: Blocks extended to support standard Colour and Fontsize attributes. (#264}
+* NEW: Revisions can be merged if made within a user-defined interval using filter 'document_revisions_merge_revisions' (Default 0 = No merging). (#263)
+* FIX: jQuery ready verb usage removed. (#262}
+* FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
+* FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
+* FIX: Blocks are categorised within the Editor differently with 5.8
 
 = 3.3.1 =
 
@@ -628,6 +642,12 @@ In: class-wp-document-revisions-admin.php
 
 Filters the number of revisions to keep for documents.
 
+== Filter document_revisions_merge_revisions ==
+
+In: class-wp-document-revisions-admin.php
+
+Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+
 == Filter document_revisions_mimetype ==
 
 In: class-wp-document-revisions.php
@@ -681,6 +701,12 @@ Filters the Document shortcode attributes.
 In: class-wp-document-revisions-front-end.php
 
 Filters the controlling option to display an edit option against each document.
+
+== Filter document_show_in_rest ==
+
+In: class-wp-document-revisions.php
+
+Filters the show_in_rest parameter from its default value of fa1se.
 
 == Filter document_slug ==
 

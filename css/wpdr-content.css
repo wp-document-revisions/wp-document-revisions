@@ -1,0 +1,12 @@
+/* classic editor sets the width to be 580px - and text is indented. */
+body#tinymce.wp-editor.content {
+	font-size: 16px;
+	width: auto; 
+}
+
+body#tinymce.wp-editor.content p,
+body#tinymce.wp-editor.content ul,
+body#tinymce.wp-editor.content ol,
+body#tinymce.wp-editor.content blockquote {
+	line-height: 1.2;
+}

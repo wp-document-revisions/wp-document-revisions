@@ -120,6 +120,12 @@ In: class-wp-document-revisions-admin.php
 
 Filters the number of revisions to keep for documents.
 
+## Filter document_revisions_merge_revisions
+
+In: class-wp-document-revisions-admin.php
+
+Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+
 ## Filter document_revisions_mimetype
 
 In: class-wp-document-revisions.php
@@ -173,6 +179,12 @@ Filters the Document shortcode attributes.
 In: class-wp-document-revisions-front-end.php
 
 Filters the controlling option to display an edit option against each document.
+
+## Filter document_show_in_rest
+
+In: class-wp-document-revisions.php
+
+Filters the show_in_rest parameter from its default value of fa1se.
 
 ## Filter document_slug
 
