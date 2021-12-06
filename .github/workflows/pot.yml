@@ -1,4 +1,4 @@
-name: On Push
+name: Generate POT file
 
 on:
   push:
@@ -7,16 +7,20 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  WP_POT_Generator:
+  generate-pot:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: WordPress POT Generator
-      uses: varunsridharan/action-wp-pot-generator@2.0
-      with:
-        save_path: './languages'
-        item_slug: 'wp-document-revisions'
-        domain: 'wp-document-revisions'
-        package_name: 'WP Document Revisions'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Install WP-POT-CLI
+        run: npm install wp-pot-cli
+
+      - name: Generate POT file
+        run: script/generate-pot
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+            commit-message: "Update POT file"
+            title: "Update POT file"
