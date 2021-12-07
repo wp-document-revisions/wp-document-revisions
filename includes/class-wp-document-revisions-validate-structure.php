@@ -584,13 +584,13 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id $attach_id id of an attachment post object.
-	 * @param id $doc_id    id of the document post object.
+	 * @param id     $attach_id id of an attachment post object.
+	 * @param string $doc_id    id of the document post object.
 	 * @return int||false
 	 */
 	private static function check_attachment( $attach_id, $doc_id ) {
 		$attach = get_post( $attach_id );
-		if ( is_null( $attach ) || 'attachment' !== $attach->post_type || $doc_id !== $attach->post_parent ) {
+		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || (int) $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
 			return array(
 				'code'  => 2,
