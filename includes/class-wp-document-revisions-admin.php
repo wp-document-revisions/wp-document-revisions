@@ -362,7 +362,7 @@ class WP_Document_Revisions_Admin {
 		}
 
 		global $post;
-		if ( 'document' !== $post->post_type || $this->verify_post_type( $post->ID ) ) {
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post->ID ) ) {
 			// restricted capacity for document content.
 			return array(
 				'wpautop'       => false,
