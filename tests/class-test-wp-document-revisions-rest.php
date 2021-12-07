@@ -94,7 +94,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// set up the rest server.
 		global $wp_rest_server;
-		$wp_rest_server = new \WP_REST_Server;
+		$wp_rest_server = new WP_REST_Server();
 		do_action( 'rest_api_init' );
 
 		// create users.
@@ -251,7 +251,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		global $wp_rest_server;
 		$routes = $wp_rest_server->get_routes();
 		console_log( $routes );
-		assertArrayHasKey( $this->namespaced_route, $routes );
+		self::assertArrayHasKey( $this->namespaced_route, $routes );
 	}
 
 	/**
@@ -263,12 +263,12 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$routes    = $wp_rest_server->get_routes();
 		foreach ( $routes as $route => $route_config ) {
 			if ( 0 === strpos( $the_route, $route ) ) {
-				assertTrue( is_array( $route_config ) );
+				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
-					assertArrayHasKey( 'callback', $endpoint );
-					assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
-					assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
-					assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ) );
+					self::assertArrayHasKey( 'callback', $endpoint );
+					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
+					self::assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
+					self::assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ) );
 				}
 			}
 		}
@@ -282,7 +282,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// Two public posts.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
-		assertEquals( 200, $response->get_status() );
-		assertEquals( 2, count( $response->get_data() ) );
+		self::assertEquals( 200, $response->get_status() );
+		self::assertEquals( 2, count( $response->get_data() ) );
 	}
 }

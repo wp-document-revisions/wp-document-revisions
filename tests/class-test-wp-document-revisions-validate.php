@@ -229,26 +229,31 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 
 		// should be only one row - the header row.
-		self::assertEquals( 1, (int) substr_count( $output, '<tr' ), 'structure_ok' );
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'structure_ok' );
 	}
 
 	/**
 	 * Tests that the missing file is detected.
 	 */
 	public function test_struct_missing_file() {
-		// $editor_public_post_2 has attached file $test_file2 - move it.
-		rename( self::$test_file2, self::$test_file . '.txt' );
+		// Get file from $editor_public_post_2.
+		global $wpdr;
+		$attach = $wpdr->get_document( $editor_public_post_2 );
+		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
+		$file = get_attached_file( $attach->ID );
+		// Move $file.
+		rename( $file, $file . '.txt' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
 		console_log( $output );
 
-		// should have only two rows - the header row.
-		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file' );
+		// should have two rows - the header row.
+		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file_cnt' );
 
-		// Move $test_file2 back.
-		rename( self::$test_file2 . '.txt', self::$test_file );
+		// Move $file back.
+		rename( $file . '.txt', $file );
 	}
 
 	/**
