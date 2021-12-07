@@ -198,6 +198,10 @@ class WP_Document_Revisions_Admin {
 	public function add_help_tab() {
 		$screen = get_current_screen();
 
+		// only interested in document post_types.
+		if ( 'document' !== $screen->post_type ) {
+			return;
+		}
 		// loop through each tab in the help array and add.
 		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(
