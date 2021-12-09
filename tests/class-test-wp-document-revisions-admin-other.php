@@ -228,6 +228,9 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_admin_messages() {
 		global $wpdr;
 
+		// get a post in scope.
+		$curr_post = get_post( self::$editor_public_post, 1, 1 );
+
 		$messages = array();
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
@@ -253,11 +256,11 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
-		// There will be 1 for RSS feed.
-		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		// There will be various bits found.
+		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post .  '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post->ID ) ), 'permalink' );
 	}
 
 	/**
@@ -277,11 +280,11 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
-		// There will be 1 for RSS feed.
-		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		// There will be various bits found.
+		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post .  '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post->ID ) ), 'permalink' );
 	}
 
 	/**

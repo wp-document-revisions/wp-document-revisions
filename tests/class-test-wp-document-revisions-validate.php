@@ -316,14 +316,18 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		clean_post_cache( self::$editor_public_post_2 );
 
 		global $wpdb;
-		$sql  = $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}posts 
-			 SET post_content = ''
-			 WHERE ID = %d
-			",
-			self::$editor_public_post_2
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->query(
+			 $wpdb->prepare(	
+				"UPDATE {$wpdb->prefix}posts 
+				 SET post_content = ''
+				 WHERE ID = %d
+				",
+				self::$editor_public_post_2
+			)
 		);
-		$rows = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
 
 		ob_start();
@@ -347,15 +351,19 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
 
 		// put content back.
-		$sql  = $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}posts 
-			 SET post_content = %s
-			 WHERE ID = %d
-			",
-			$content,
-			self::$editor_public_post_2
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->query(
+			 $wpdb->prepare(	
+				"UPDATE {$wpdb->prefix}posts 
+				 SET post_content = %s
+				 WHERE ID = %d
+				",
+				$content,
+				self::$editor_public_post_2
+			)
 		);
-		$rows = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_2' );
 	}
 
