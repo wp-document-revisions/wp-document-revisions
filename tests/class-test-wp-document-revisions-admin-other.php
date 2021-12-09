@@ -228,16 +228,17 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_admin_messages() {
 		global $wpdr;
 
-		// get a post in scope.
+		// get a post in global scope (bending rule).
 		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		$messages = array();
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
 
-		self::assertArrayHasKey( 'documents', $messages, 'loaded' );
-		self::assertArrayHasKey( 10, $messages['documents'], 'tenth' );
+		self::assertArrayHasKey( 'document', $messages, 'loaded' );
+		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
 	}
 
 	/**
