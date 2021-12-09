@@ -323,8 +323,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			",
 			self::$editor_public_post_2
 		);
-		$rows = $wpdb->query( $sql ;)
-		self::assertEquals( $rows, $wpdb->num_rows, 'test_struct_missing_rows_1' );
+		$rows = $wpdb->query( $sql );
+		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -355,8 +355,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			$content,
 			self::$editor_public_post_2
 		);
-		$rows = $wpdb->query( $sql ;)
-		self::assertEquals( $rows, $wpdb->num_rows, 'test_struct_missing_rows_2' );
+		$rows = $wpdb->query( $sql );
+		self::assertEquals( 1, $rows, 'test_struct_missing_rows_2' );
 	}
 
 	/**
