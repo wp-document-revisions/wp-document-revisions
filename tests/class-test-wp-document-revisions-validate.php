@@ -345,10 +345,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		console_log( $output );
 
-		// should have no rows - the header row.
+		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'none - no edit' );
+
+		// will be a row like wpdr_valid_fix(106,4,109). - Can use it to mend document.
 
 		// put content back.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery

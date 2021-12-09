@@ -229,7 +229,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// get a post in scope.
-		$curr_post = get_post( self::$editor_public_post_2 );
+		global $post;
+		$post = get_post( self::$editor_public_post_2 );
 
 		$messages = array();
 		// add messages.
@@ -284,7 +285,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// There will be various bits found.
 		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
-		self::assertEquals( 1, (int) substr_count( $output, get_permalink( $post->IDself::$editor_public_post ) ), 'permalink' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
 	/**
