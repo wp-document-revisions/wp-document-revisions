@@ -247,7 +247,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		$curr_post = get_post( self::$editor_public_postob_start() );
+		$curr_post = get_post( self::$editor_public_post );
 
 		ob_start();
 		$wpdr->admin->document_metabox( $curr_post );
@@ -271,7 +271,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$curr_post = get_post( self::$editor_public_postob_start() );
+		$curr_post = get_post( self::$editor_public_post );
 
 		ob_start();
 		$wpdr->admin->document_metabox( $curr_post );
@@ -296,14 +296,20 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			$wpdr->admin_init();
 		}
 
+		// get attachment_id and file.
+		$attach = $wpdr->get_document( self::$editor_public_post_2 );
+		$file   = get_attached_file( $attach->ID );
+
 		// add the attachment delete process.
 		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 
-		wp_delete_post( self::$editor_private_post, true );
-		wp_delete_post( self::$editor_public_post, true );
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		// test deletion.
+		self::assertNull( get_post( $attach->ID ), 'attachment not deleted' );
+		self::assertFalse( file_exists( $file ), 'file not deleted' );
 	}
 }
