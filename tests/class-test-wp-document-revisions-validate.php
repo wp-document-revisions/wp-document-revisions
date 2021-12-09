@@ -318,7 +318,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$rows = $wpdb->query(
-			 $wpdb->prepare(	
+			$wpdb->prepare(
 				"UPDATE {$wpdb->prefix}posts 
 				 SET post_content = ''
 				 WHERE ID = %d
@@ -353,7 +353,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// put content back.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$rows = $wpdb->query(
-			 $wpdb->prepare(	
+			$wpdb->prepare(
 				"UPDATE {$wpdb->prefix}posts 
 				 SET post_content = %s
 				 WHERE ID = %d
