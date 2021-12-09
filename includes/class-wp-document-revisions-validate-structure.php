@@ -414,7 +414,7 @@ class WP_Document_Revisions_Validate_Structure {
 						$line = esc_attr( $failure['ID'] );
 						$beg  = esc_attr( $failure['post_title'] ) . '<br/>';
 						$ref  = esc_url( get_the_permalink( $failure['ID'] ) );
-						// Create the URL to the document. This is text if erroe/not fixable; link if warning; both if error and can be fixed (display one then other).
+						// Create the URL to the document. This is text if error/not fixable; link if warning; both if error and can be fixed (display one then other).
 						if ( (bool) $failure['fix'] ) {
 							if ( (bool) $failure['error'] ) {
 								$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .

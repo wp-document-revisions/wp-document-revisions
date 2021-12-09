@@ -238,7 +238,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	public function test_struct_missing_file() {
 		// Get file from $editor_public_post_2.
 		global $wpdr;
-		$attach = $wpdr->get_document( $editor_public_post_2 );
+		$attach = $wpdr->get_document( self::$editor_public_post_2 );
 		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
 		$file = get_attached_file( $attach->ID );
 		// Move $file.
@@ -268,10 +268,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$sql = $wpdb->prepare(
 			"UPDATE {$wpdb->prefix}posts 
 			 SET post_content = ''
-			 WHERE id = %d
+			 WHERE ID = %d
 			",
 			self::$editor_public_post_2
 		);
+		self::assertEquals( 1, $wpdb->num_rows, 'test_struct_missing_rows_1' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
@@ -283,15 +285,13 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$sql = $wpdb->prepare(
 			"UPDATE {$wpdb->prefix}posts 
 			 SET post_content = %s
-			 WHERE id = %d
+			 WHERE ID = %d
 			",
 			$content,
 			self::$editor_public_post_2
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-
-		// Move $test_file2 back.
-		rename( self::$test_file2 . '.txt', self::$test_file );
+		self::assertEquals( 1, $wpdb->num_rows, 'test_struct_missing_rows_2' );
 	}
 
 }
