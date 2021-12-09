@@ -270,6 +270,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 	}
+
 	/**
 	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
 	 */

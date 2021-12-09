@@ -12,13 +12,6 @@
 class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 	/**
-	 * Test REST Server
-	 *
-	 * @var WP_REST_Server
-	 */
-	protected $server;
-
-	/**
 	 * Documents are part of Standard WP.
 	 *
 	 * @var string
@@ -250,7 +243,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	public function test_register_route() {
 		global $wp_rest_server;
 		$routes = $wp_rest_server->get_routes( $this->namespaced_route );
-		self::assertNotEmpty( $routes , 'No document routes');
+		self::assertNotEmpty( $routes, 'No document routes' );
 	}
 
 	/**
@@ -258,13 +251,15 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	 */
 	public function test_endpoints() {
 		global $wp_rest_server;
-		// only want the default documents one. 
+		// only want the default documents one.
 		$the_route = $this->namespaced_route . 'documents/';
 		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
+		self::assertNotEmpty( $routes, 'No document routes' );
+
 		foreach ( $routes as $route => $route_config ) {
-			if ( 0 === strpos( $the_route, $route ) ) {
-				self::assertTrue( is_array( $route_config ) );
+			if ( 1 === strpos( $the_route, $route ) ) {
 				console_log( $route );
+				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
 					self::assertArrayHasKey( 'callback', $endpoint );
 					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );

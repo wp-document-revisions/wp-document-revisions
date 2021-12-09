@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests validate structure functionality.
+ * Tests admin functionality.
  *
  * @author Neil James <neil@familyjames.com> extended from Benjamin J. Balter <ben@balter.com>
  * @package WP_Document_Revisions
@@ -9,14 +9,7 @@
 /**
  * Admin tests
  */
-class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
-
-	/**
-	 * Package namespace.
-	 *
-	 * @var string
-	 */
-	protected $namespaced_route = 'wpdr/v1';
+class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 	/**
 	 * Editor user id
@@ -74,9 +67,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
-
 		$wpdr->register_cpt();
-		$wpdr->add_caps();
 
 		// make sure that we have the admin set up.
 		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
@@ -117,6 +108,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::$ws_term_id = (int) $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
+		add_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
+
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
 			array(
@@ -171,6 +164,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
+
+		remove_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
 	}
 
 	/**
@@ -219,7 +214,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests that the test Document structures are correct.
+	 * Tests that the test Document stuctures are correct.
 	 */
 	public function test_structure() {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
@@ -228,167 +223,87 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests that the test Document structures are valid.
+	 * Tests the admin messages.
 	 */
-	public function test_structure_OK() {
-		// test with no user, nothing found.
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( 0 );
-		wp_cache_flush();
-
-		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
-
-		// should be nothing found - as no user...
-		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - structure_ok' );
-
-		// now test with editor - should be nothing found.
-		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
-
-		// should be nothing found - as all valid...
-		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
-	}
-
-	/**
-	 * Tests that the missing file is detected.
-	 */
-	public function test_struct_missing_file() {
-		// test with no user, nothing found.
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( 0 );
-		wp_cache_flush();
-
-		// Get file from $editor_public_post_2.
+	public function test_admin_messages() {
 		global $wpdr;
-		$attach = $wpdr->get_document( self::$editor_public_post_2 );
-		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
-		$file = get_attached_file( $attach->ID );
-		// Move $file.
-		rename( $file, $file . '.txt' );
 
-		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
+		$messages = array();
+		// add messages.
+		$messages = $wpdr->admin->update_messages( $messages );
 
-		// should be nothing found - as no user...
-		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no edit' );
-
-		// now test with editor - should be invalid found.
-		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
-		console_log( $output );
-
-		// should have two rows - the header row.
-		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file_cnt' );
-
-		// Move $file back.
-		rename( $file . '.txt', $file );
+		self::assertArrayHasKey( 'documents', $messages, 'loaded' );
+		self::assertArrayHasKey( 10, $messages['documents'], 'tenth' );
 	}
 
 	/**
-	 * Tests that the missing content is detected.
+	 * Test document metabox unauth.
 	 */
-	public function test_struct_missing_content() {
-		// test with no user, nothing found.
+	public function test_document_metabox_unauth() {
+		global $wpdr;
+
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		// get the post_content from $editor_public_post_2.
-		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
-
-		// clean post cache.
-		clean_post_cache( self::$editor_public_post_2 );
-
-		global $wpdb;
-		$sql = $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}posts 
-			 SET post_content = ''
-			 WHERE ID = %d
-			",
-			self::$editor_public_post_2
-		);
-		self::assertEquals( 1, $wpdb->num_rows, 'test_struct_missing_rows_1' );
+		$curr_post = get_post( self::$editor_public_postob_start() );
 
 		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
+		$wpdr->admin->document_metabox( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+		console_log( $output );
 
-		// should be nothing found - as no user...
-		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no edit' );
+		// There will be 1 for RSS feed.
+		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+	}
 
-		// now test with editor - should be invalid found.
+	/**
+	 * Test document metabox auth.
+	 */
+	public function test_document_metabox_auth() {
+		global $wpdr;
+
+		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		$curr_post = get_post( self::$editor_public_postob_start() );
+
 		ob_start();
-		WP_Document_Revisions_Validate_Structure::page_validate();
-		$output = ob_get_clean();
+		$wpdr->admin->document_metabox( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
 		console_log( $output );
 
-		// should have no rows - the header row.
-		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
-
-		// put content back.
-		$sql = $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}posts 
-			 SET post_content = %s
-			 WHERE ID = %d
-			",
-			$content,
-			self::$editor_public_post_2
-		);
-		self::assertEquals( 1, $wpdb->num_rows, 'test_struct_missing_rows_2' );
+		// There will be 1 for RSS feed.
+		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
+		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
 	}
 
 	/**
-	 * Tests that the package routes are there.
+	 * Test document delete.
+	 *
+	 * This code is called in Teardown but codecov does not appear to include it.
 	 */
-	public function test_register_route() {
-		global $wp_rest_server;
-		$routes = $wp_rest_server->get_routes( $this->namespaced_route );
-		self::assertNotEmpty( $routes, 'No document routes' );
-	}
-
-	/**
-	 * Tests that the package endpoints.
-	 */
-	public function test_endpoints() {
-		global $wp_rest_server;
-		// only want the default documents one.
-		$the_route = $this->namespaced_route . '/';
-		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
-		self::assertNotEmpty( $routes, 'No document routes' );
-
-		foreach ( $routes as $route => $route_config ) {
-			// roules have a leading slash.
-			if ( 1 === strpos( $the_route, $route ) ) {
-				console_log( $route );
-				self::assertTrue( is_array( $route_config ) );
-				foreach ( $route_config as $i => $endpoint ) {
-					self::assertArrayHasKey( 'callback', $endpoint );
-					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
-					self::assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
-					self::assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ) );
-				}
-			}
+	public function test_document_delete() {
+		// make sure that we have the admin set up.
+		global $wpdr;
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+			$wpdr->admin_init();
 		}
-	}
 
+		// add the attachment delete process.
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		wp_delete_post( self::$editor_private_post, true );
+		wp_delete_post( self::$editor_public_post, true );
+		wp_delete_post( self::$editor_public_post_2, true );
+
+		// delete done, remove the attachment delete process.
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+	}
 }
