@@ -242,6 +242,64 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests the admin help text.
+	 */
+	public function test_admin_add_help_text() {
+		global $wpdr;
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		$screen = new WP_Screen();
+		// add help text for other screen (none).
+		$screen->id = 'other';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertEmpty( $help_text, 'other not empty' );
+
+		// add help text for document screen (Basic).
+		$screen->id = 'document';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertArrayHasKey( 0, $help_text, 'document not empty' );
+		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Basic Usage' ), 'document not found' );
+
+		// add help text for document screen (Basic).
+		$screen->id = 'edit-document';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertArrayHasKey( 0, $help_text, 'edit-document not empty' );
+		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Documents' ), 'document not found' );
+	}
+
+	/**
+	 * Tests the admin meta_cb.
+	 */
+	public function test_admin_meta_cb() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->meta_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+		console_log( $outout );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test document metabox unauth.
 	 */
 	public function test_document_metabox_unauth() {
@@ -316,5 +374,55 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// test deletion.
 		self::assertNull( get_post( $attach->ID ), 'attachment not deleted' );
 		self::assertFalse( file_exists( $file ), 'file not deleted' );
+	}
+
+	/**
+	 * Tests the posts limit..
+	 */
+	public function test_admin_check_limits() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
+		console_log( $outout );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Tests the posts enqueue.
+	 */
+	public function test_admin_enqueue() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->enqueue();
+		$output = ob_get_contents();
+		ob_end_clean();
+		console_log( $output );
+
+		self::assertTrue( true, 'run' );
 	}
 }

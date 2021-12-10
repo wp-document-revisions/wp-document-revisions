@@ -986,6 +986,7 @@ class WP_Document_Revisions_Admin {
 				</td>
 			</tr>
 		</table>
+		</div>
 		<?php
 	}
 

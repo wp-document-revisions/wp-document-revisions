@@ -312,6 +312,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// get the post_content from $editor_public_post_2.
 		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
 
+		global $wpdr;
+		$attach_id = $wpdr->extract_document_id( $content );
+
+		// expected fix text parameters.
+		$fix_parms = '(' . self::$editor_public_post_2 . ',4,' . $attach_id . ')';
+
 		// clean post cache.
 		clean_post_cache( self::$editor_public_post_2 );
 
@@ -348,9 +354,18 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'none - no edit' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'message not found' );
+		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
 
 		// will be a row like wpdr_valid_fix(106,4,109). - Can use it to mend document.
+		$request  = new WP_REST_Request(
+			'GET',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/4/parm/' . $attach_id . '/'
+		);
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		self::assertEquals( 200, $response->get_status(), 'success not returned' );
+		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
 
 		// put content back.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -390,8 +405,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		foreach ( $routes as $route => $route_config ) {
 			// roules have a leading slash.
+			console_log( $route );
 			if ( 1 === strpos( $the_route, $route ) ) {
-				console_log( $route );
 				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
 					self::assertArrayHasKey( 'callback', $endpoint );
