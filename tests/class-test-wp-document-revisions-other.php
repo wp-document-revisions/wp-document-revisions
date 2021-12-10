@@ -44,7 +44,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 	 *
 	 * @return void.
 	 */
-	public static function test_package() {
+	public function test_package() {
 	// phpcs:enable
 		// init user roles.
 		global $wpdr;
@@ -112,7 +112,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_private_post, self::$test_file );
 
-		// vrify structure.
+		// verify structure.
 		self::verify_structure( self::$editor_public_post, 2, 2 );
 		self::verify_structure( self::$editor_private_post, 1, 1 );
 

@@ -255,20 +255,20 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$screen = new WP_Screen();
 		// add help text for other screen (none).
 		$screen->id = 'other';
-		$help_text  = $wpdr->admin->get_help_text( $screen );
+		$help_text  = $wpdr->admin->add_help_tab( $screen );
 
 		self::assertEmpty( $help_text, 'other not empty' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'document';
-		$help_text  = $wpdr->admin->get_help_text( $screen );
+		$help_text  = $wpdr->admin->add_help_tab( $screen );
 
 		self::assertArrayHasKey( 0, $help_text, 'document not empty' );
 		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Basic Usage' ), 'document not found' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'edit-document';
-		$help_text  = $wpdr->admin->get_help_text( $screen );
+		$help_text  = $wpdr->admin->add_help_tab( $screen );
 
 		self::assertArrayHasKey( 0, $help_text, 'edit-document not empty' );
 		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Documents' ), 'document not found' );
@@ -294,7 +294,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->meta_cb();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $outout );
+		console_log( $output );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -396,7 +396,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->check_document_revisions_limit();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $outout );
+		console_log( $output );
 
 		self::assertTrue( true, 'run' );
 	}
