@@ -188,7 +188,7 @@ class WP_Document_Revisions_Validate_Structure {
 
 		register_rest_route(
 			'wpdr/v1',
-			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach(?P<parm>[\d]+)',
+			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach/(?P<parm>[\d]+)',
 			$args
 		);
 	}
@@ -201,7 +201,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param WP_REST_Request $request the arguments to pass to the function.
 	 * @return WP_REST_Response
 	 */
-	public function correct_document( $request ) {
+	public static function correct_document( $request ) {
 		$params = $request->get_params();
 		$id     = $params['id'];
 		$parm   = $params['parm'];
@@ -269,7 +269,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// get file name.
 			$file = get_attached_file( $attach_id );
 
-			$file = $this->check_document_folder( $file );
+			$file = self::check_document_folder( $file );
 
 			// get filename part.
 			$filename = pathinfo( $file, PATHINFO_FILENAME );
@@ -299,7 +299,7 @@ class WP_Document_Revisions_Validate_Structure {
 			$orig = get_attached_file( $attach );
 
 			// manipulate file as in serve_file process.
-			$file = $this->check_document_folder( $orig );
+			$file = self::check_document_folder( $orig );
 
 			// revalidate input (late, but before any damage is done).
 			if ( $orig === $file || ! file_exists( $orig ) || file_exists( $file ) ) {

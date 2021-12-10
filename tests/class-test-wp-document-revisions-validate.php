@@ -360,9 +360,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// will be a row like wpdr_valid_fix(106,4,109). - Can use it to mend document.
 		$request  = new WP_REST_Request(
 			'GET',
-			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/4/parm/' . $attach_id . '/'
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/4/attach/' . $attach_id
 		);
-		$response = WP_Document_Revisions_Validate_Structure->correct_document( $request );
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
 		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
