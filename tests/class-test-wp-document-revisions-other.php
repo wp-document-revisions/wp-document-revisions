@@ -57,13 +57,13 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// create users and assign role.
 		// Note that editor can do everything admin can do.
 		self::$users = array(
-			'editor' => self::factory->user->create_and_get(
+			'editor' => self::factory()->user->create_and_get(
 				array(
 					'user_nicename' => 'Editor',
 					'role'          => 'editor',
 				)
 			),
-			'author' => self::factory->user->create_and_get(
+			'author' => self::factory()->user->create_and_get(
 				array(
 					'user_nicename' => 'Author',
 					'role'          => 'author',
@@ -76,7 +76,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 
 		// create posts for scenarios.
 		// Editor Public.
-		self::$editor_public_post = self::factory->post->create(
+		self::$editor_public_post = self::factory()->post->create(
 			array(
 				'post_title'   => 'Editor Public - ' . time(),
 				'post_status'  => 'publish',
@@ -87,16 +87,16 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory, self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
-		self::add_document_attachment( self::factory, self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
 
 		// add second attachment.
-		self::add_document_attachment( self::factory, self::$editor_public_post, self::$test_file2 );
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file2 );
 
 		// Editor Private.
-		self::$editor_private_post = self::factory->post->create(
+		self::$editor_private_post = self::factory()->post->create(
 			array(
 				'post_title'   => 'Editor Private - ' . time(),
 				'post_status'  => 'private',
@@ -110,7 +110,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
 
 		// add attachment.
-		self::add_document_attachment( self::factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment( self::factory(), self::$editor_private_post, self::$test_file );
 
 		// vrify structure.
 		self::verify_structure( self::$editor_public_post, 2, 2 );
