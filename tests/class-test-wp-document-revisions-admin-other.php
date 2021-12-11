@@ -253,12 +253,13 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$post = get_post( self::$editor_public_post_2 );
 
 		// set hook_suffix in global scope (bending rule).
-		global $hook_suffix;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
-		$hook_suffix = '';
+		global $hook_suffix, $typenow;
+		// phpcs:disable  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$hook_suffix = 'post.php';
+		$typenow     = 'post';
+		// phpcs:enable  WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		set_current_screen();
-		self::go_to( '/wp-admin' );
 		$screen = get_current_screen();
 
 		// add help text for other screen (none).
