@@ -254,6 +254,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// set hook_suffix in global scope (bending rule).
 		global $hook_suffix;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$hook_suffix = '';
 
 		set_current_screen();
@@ -261,7 +262,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$screen = get_current_screen();
 
 		// add help text for other screen (none).
-		$help_text = $wpdr->admin->get_help_text( $screen );
+		$screen->id = 'other';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
 
 		self::assertEmpty( $help_text, 'other not empty' );
 

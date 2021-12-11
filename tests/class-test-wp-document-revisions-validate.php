@@ -422,6 +422,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 				self::assertTrue( is_array( $route_config ) );
 				console_log( $route );
 				foreach ( $route_config as $i => $endpoint ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 					console_log( print_r( $route, true ) );
 					self::assertArrayHasKey( 'callback', $endpoint );
 					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
