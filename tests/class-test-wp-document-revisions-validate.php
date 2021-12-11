@@ -362,10 +362,10 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			'PUT',
 			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/4/attach/' . $attach_id
 		);
-		$request::set_param( 'id', self::$editor_public_post_2 );
-		$request::set_param( 'code', 4 );
-		$request::set_param( 'parm', $attach_id_);
-		$request::set_body( '("userid":"' . self::$editor_user_id . '"}' );
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 4 );
+		$request->set_param( 'parm', $attach_id );
+		$request:->et_body( '("userid":"' . self::$editor_user_id . '"}' );
 
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 

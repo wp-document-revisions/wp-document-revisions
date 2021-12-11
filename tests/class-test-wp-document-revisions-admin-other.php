@@ -252,6 +252,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
+		set_current_screen();
 		self::go_to( '/' );
 		$screen = get_current_screen();
 
@@ -275,7 +276,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Documents' ), 'document not found' );
 
 		// add help text for current screen (none).
-		$wpdr->admin-> add_help_tab();
+		$wpdr->admin->add_help_tab();
 	}
 
 	/**
