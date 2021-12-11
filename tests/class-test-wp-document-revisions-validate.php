@@ -417,11 +417,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertNotEmpty( $routes, 'No document routes' );
 
 		foreach ( $routes as $route => $route_config ) {
-			// roules have a leading slash.
-			console_log( $route );
-			if ( 1 === strpos( $the_route, $route ) ) {
+			// routes have a leading slash.
+			if ( 1 === strpos( $route, $the_route ) ) {
 				self::assertTrue( is_array( $route_config ) );
+				console_log( $route );
 				foreach ( $route_config as $i => $endpoint ) {
+					console_log( print_r( $route, true ) );
 					self::assertArrayHasKey( 'callback', $endpoint );
 					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
 					self::assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
