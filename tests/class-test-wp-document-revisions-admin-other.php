@@ -252,28 +252,30 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
-		self::go_to( '/wp-admin/edit.php?post_type=document' );
+		self::go_to( '/' );
 		$screen = get_current_screen();
 
 		// add help text for other screen (none).
-		$screen->id = 'other';
-		$help_text  = $wpdr->admin->add_help_tab( $screen );
+		$help_text = $wpdr->admin->get_help_text( $screen );
 
 		self::assertEmpty( $help_text, 'other not empty' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'document';
-		$help_text  = $wpdr->admin->add_help_tab( $screen );
+		$help_text  = $wpdr->admin->get_help_text( $screen );
 
 		self::assertArrayHasKey( 0, $help_text, 'document not empty' );
 		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Basic Usage' ), 'document not found' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'edit-document';
-		$help_text  = $wpdr->admin->add_help_tab( $screen );
+		$help_text  = $wpdr->admin->get_help_text( $screen );
 
 		self::assertArrayHasKey( 0, $help_text, 'edit-document not empty' );
 		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Documents' ), 'document not found' );
+
+		// add help text for current screen (none).
+		$wpdr->admin-> add_help_tab();
 	}
 
 	/**

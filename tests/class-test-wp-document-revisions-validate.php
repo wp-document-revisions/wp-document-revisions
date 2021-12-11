@@ -358,10 +358,15 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
 
 		// will be a row like wpdr_valid_fix(106,4,109). - Can use it to mend document.
-		$request  = new WP_REST_Request(
+		$request = new WP_REST_Request(
 			'PUT',
 			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/4/attach/' . $attach_id
 		);
+		$request::set_param( 'id', self::$editor_public_post_2 );
+		$request::set_param( 'code', 4 );
+		$request::set_param( 'parm', $attach_id_);
+		$request::set_body( '("userid":"' . self::$editor_user_id . '"}' );
+
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
