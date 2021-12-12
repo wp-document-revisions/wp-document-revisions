@@ -420,13 +420,13 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			// routes have a leading slash.
 			if ( 1 === strpos( $route, $the_route ) ) {
 				// expect only the correct route.
-				self::assertEquals( 1, (int) substr_count( $$route, '/correct/' ), 'correct route not found' );
+				self::assertEquals( 1, (int) substr_count( $route, '/correct/' ), 'correct route not found' );
 
 				self::assertTrue( is_array( $route_config ) );
 				self::assertArrayHasKey( 0, $route_config, 'zero element' );
 				self::assertEquals( 1, array_count( $route_config ), 'route_config too many rows' );
 				$route_parms = $route_config[0];
-				
+
 				// check PUT method.
 				self::assertArrayHasKey( 'methods', $route_parms, 'methods element' );
 				self::assertTrue( is_array( $route_parms['methods'], 'no methods' ) );
