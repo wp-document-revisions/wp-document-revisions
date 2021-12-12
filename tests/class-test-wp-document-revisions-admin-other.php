@@ -254,10 +254,10 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// set hook_suffix in global scope (bending rule).
 		global $hook_suffix, $typenow;
-		// phpcs:disable  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		$hook_suffix = 'post.php';
 		$typenow     = 'post';
-		// phpcs:enable  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		set_current_screen();
 		$screen = get_current_screen();
@@ -272,15 +272,16 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$screen->id = 'document';
 		$help_text  = $wpdr->admin->get_help_text( $screen );
 
-		self::assertArrayHasKey( 0, $help_text, 'document not empty' );
-		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Basic Usage' ), 'document not found' );
+		self::assertArrayHasKey( 'Basic Usage', $help_text, 'document basic' );
+		self::assertArrayHasKey( 'Document Description', $help_text, 'document description' );
+		self::assertEquals( 5, (int) array_count( $help_text ), 'document count' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'edit-document';
 		$help_text  = $wpdr->admin->get_help_text( $screen );
 
-		self::assertArrayHasKey( 0, $help_text, 'edit-document not empty' );
-		self::assertEquals( 1, (int) substr_count( $help_text[0], 'Documents' ), 'document not found' );
+		self::assertArrayHasKey( 'Document', $help_text, 'edit-document not correct' );
+		self::assertEquals( 1, (int) array_count( $help_text ), 'document-edit count' );
 
 		// add help text for current screen (none).
 		$wpdr->admin->add_help_tab();

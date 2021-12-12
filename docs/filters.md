@@ -42,12 +42,6 @@ In: class-wp-document-revisions.php
 
 Allows the document file extension to be manipulated.
 
-## Filter document_help
-
-In: class-wp-document-revisions-admin.php
-
-Filters the (UNDEFINED) help text for current screen.
-
 ## Filter document_help_array
 
 In: class-wp-document-revisions-admin.php
