@@ -187,10 +187,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Routine to test QueryTrue (WP 5.0 comes up with is_admin).
 	 *
-	 * @param string[]  $props  properties for testing.
+	 * @param string[] ...$props properties for testing.
 	 */
 	public function query_true( ...$props ) {
-		if (version_compare(PHP_VERSION, '5.1.0') >= 0) {
+		if ( version_compare( PHP_VERSION, '5.1.0') >= 0 ) {
 			self::assertQueryTrue( ...$props );
 		} else {
 			// WP5.0 seems to have is_admin too.

@@ -307,7 +307,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->meta_cb();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -409,7 +408,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->check_document_revisions_limit();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -434,7 +432,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->enqueue();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		self::assertTrue( true, 'run' );
 	}

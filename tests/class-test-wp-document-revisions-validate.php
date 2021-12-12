@@ -393,8 +393,110 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
-		// should already been fixed but odd result found.
-		console_log( 'Rows updated: ' . $rows );
+		// should already been fixed but is a null update.
+		console_log( 'Rows updated (4): ' . $rows );
+	}
+
+	/**
+	 * Tests that wrong content is detected.
+	 */
+	public function test_struct_wrong_content() {
+		// test with no user, nothing found.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// get the post_content from $editor_public_post_2.
+		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
+
+		global $wpdr;
+		$attach_id = $wpdr->extract_document_id( $content );
+
+		// expected fix text parameters.
+		$fix_parms = '(' . self::$editor_public_post_2 . ',4,' . $attach_id . ')';
+
+		// clean post cache.
+		clean_post_cache( self::$editor_public_post_2 );
+
+		// create wrong content.
+		$wrong = '<!--  WPDR ' . self::$editor_public_post_2 . ' -->';
+
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}posts 
+				 SET post_content = %s
+				 WHERE ID = %d
+				",
+				$wrong,
+				self::$editor_public_post_2
+			)
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+
+		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as no user...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no edit' );
+
+		// now test with editor - should be invalid found.
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should have two rows - the header row.
+		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'message not found' );
+		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
+
+		// will be a row like wpdr_valid_fix(106,5,109). - Can use it to mend document.
+		$request = new WP_REST_Request(
+			'PUT',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/5/attach/' . $attach_id
+		);
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 5 );
+		$request->set_param( 'parm', $attach_id );
+		$request->set_body( '("userid":"' . self::$editor_user_id . '"}' );
+
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		self::assertEquals( 200, $response->get_status(), 'success not returned' );
+		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as fixed...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - now fixed' );
+
+		// put content back.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}posts 
+				 SET post_content = %s
+				 WHERE ID = %d
+				",
+				$content,
+				self::$editor_public_post_2
+			)
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+
+		// should already been fixed but is a null update.
+		console_log( 'Rows updated (5): ' . $rows );
 	}
 
 	/**
@@ -497,7 +599,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		set_current_screen();
 
 		// add help text for validate.
-		WP_Document_Revisions_Validate_Structure->get_help_text();
+		WP_Document_Revisions_Validate_Structure->::get_help_text();
 
 		self::assertTrue( true, 'help text called' );
 	}
