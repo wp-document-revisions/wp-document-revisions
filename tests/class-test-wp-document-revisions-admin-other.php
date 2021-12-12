@@ -280,7 +280,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$screen->id = 'edit-document';
 		$help_text  = $wpdr->admin->get_help_text( $screen );
 
-		self::assertArrayHasKey( 'Document', $help_text, 'edit-document not correct' );
+		self::assertArrayHasKey( 'Documents', $help_text, 'edit-document not correct' );
 		self::assertEquals( 1, (int) count( $help_text ), 'document-edit count' );
 
 		// add help text for current screen (none).

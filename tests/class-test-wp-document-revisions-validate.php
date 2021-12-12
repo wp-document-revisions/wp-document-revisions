@@ -429,7 +429,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 				// check PUT method.
 				self::assertArrayHasKey( 'methods', $route_parms, 'methods element' );
-				self::assertTrue( is_array( $route_parms['methods'], 'no methods' ) );
+				self::assertTrue( is_array( $route_parms['methods'] ), 'no methods' );
 				self::assertEquals( 1, count( $route_parms['methods'] ), 'methods element too many rows' );
 				self::assertArrayHasKey( 'PUT', $route_parms['methods'], 'methods PUT element' );
 
