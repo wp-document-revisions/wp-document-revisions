@@ -180,21 +180,20 @@ class WP_Document_Revisions {
 		add_filter( 'get_previous_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
 
 		// load front-end features (shortcode, widgets, etc.).
-		include __DIR__ . '/class-wp-document-revisions-front-end.php';
-		include __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
-
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
 		global $wpdr_fe, $wpdr_widget;
 
 		if ( ! $wpdr_fe ) {
+			include_once __DIR__ . '/class-wp-document-revisions-front-end.php';
 			$wpdr_fe = new WP_Document_Revisions_Front_End( $this );
 		}
 		if ( ! $wpdr_widget ) {
+			include_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 		}
 
 		// load validation code.
-		include __DIR__ . '/class-wp-document-revisions-validate-structure.php';
+		include_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
 		// Manage REST interface for documents (include code).
@@ -293,7 +292,7 @@ class WP_Document_Revisions {
 		}
 
 		if ( ! $this->admin ) {
-			include __DIR__ . '/class-wp-document-revisions-admin.php';
+			include_once __DIR__ . '/class-wp-document-revisions-admin.php';
 			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 
 			// Although the Post Type Supports Editor, don't use block editor.
@@ -3096,7 +3095,7 @@ class WP_Document_Revisions {
 			return;
 		}
 
-		include __DIR__ . '/class-wp-document-revisions-manage-rest.php';
+		include_once __DIR__ . '/class-wp-document-revisions-manage-rest.php';
 		new WP_Document_Revisions_Manage_Rest( $this );
 	}
 
