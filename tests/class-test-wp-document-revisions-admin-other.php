@@ -274,14 +274,14 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertArrayHasKey( 'Basic Usage', $help_text, 'document basic' );
 		self::assertArrayHasKey( 'Document Description', $help_text, 'document description' );
-		self::assertEquals( 5, (int) array_count( $help_text ), 'document count' );
+		self::assertEquals( 5, (int) count( $help_text ), 'document count' );
 
 		// add help text for document screen (Basic).
 		$screen->id = 'edit-document';
 		$help_text  = $wpdr->admin->get_help_text( $screen );
 
 		self::assertArrayHasKey( 'Document', $help_text, 'edit-document not correct' );
-		self::assertEquals( 1, (int) array_count( $help_text ), 'document-edit count' );
+		self::assertEquals( 1, (int) count( $help_text ), 'document-edit count' );
 
 		// add help text for current screen (none).
 		$wpdr->admin->add_help_tab();

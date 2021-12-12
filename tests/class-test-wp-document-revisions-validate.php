@@ -424,37 +424,37 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 				self::assertTrue( is_array( $route_config ) );
 				self::assertArrayHasKey( 0, $route_config, 'zero element' );
-				self::assertEquals( 1, array_count( $route_config ), 'route_config too many rows' );
+				self::assertEquals( 1, count( $route_config ), 'route_config too many rows' );
 				$route_parms = $route_config[0];
 
 				// check PUT method.
 				self::assertArrayHasKey( 'methods', $route_parms, 'methods element' );
 				self::assertTrue( is_array( $route_parms['methods'], 'no methods' ) );
-				self::assertEquals( 1, array_count( $route_parms['methods'] ), 'methods element too many rows' );
+				self::assertEquals( 1, count( $route_parms['methods'] ), 'methods element too many rows' );
 				self::assertArrayHasKey( 'PUT', $route_parms['methods'], 'methods PUT element' );
 
 				// check args properly defined.
 				self::assertArrayHasKey( 'args', $route_parms, 'arge element' );
 				self::assertTrue( is_array( $route_parms['args'] ), 'no args' );
-				self::assertEquals( 3, array_count( $route_parms['args'] ), 'args element too many rows' );
+				self::assertEquals( 3, count( $route_parms['args'] ), 'args element too many rows' );
 				// id.
 				self::assertArrayHasKey( 'id', $route_parms['args'], 'args id element' );
 				self::assertTrue( is_array( $route_parms['args']['id'] ), 'no args id' );
-				self::assertEquals( 2, array_count( $route_parms['args']['id'] ), 'args id element too many rows' );
+				self::assertEquals( 2, count( $route_parms['args']['id'] ), 'args id element too many rows' );
 				self::assertArrayHasKey( 'required', $route_parms['args']['id'], 'args id required element' );
 				self::assertArrayHasKey( 'sanitize_callback', $route_parms['args']['id'], 'args id sanitize element' );
 				self::assertEquals( 'absint', $route_parms['args']['id']['sanitize_callback'], 'args id sanitize value' );
 				// code.
 				self::assertArrayHasKey( 'code', $route_parms['args'], 'args code element' );
 				self::assertTrue( is_array( $route_parms['args']['code'] ), 'no args code' );
-				self::assertEquals( 2, array_count( $route_parms['args']['code'] ), 'args code element too many rows' );
+				self::assertEquals( 2, count( $route_parms['args']['code'] ), 'args code element too many rows' );
 				self::assertArrayHasKey( 'required', $route_parms['args']['code'], 'args code required element' );
 				self::assertArrayHasKey( 'sanitize_callback', $route_parms['args']['code'], 'args code sanitize element' );
 				self::assertEquals( 'absint', $route_parms['args']['code']['sanitize_callback'], 'args code sanitize value' );
 				// parm.
 				self::assertArrayHasKey( 'parm', $route_parms['args'], 'args parm element' );
 				self::assertTrue( is_array( $route_parms['args']['parm'] ), 'no args parm' );
-				self::assertEquals( 2, array_count( $route_parms['args']['parm'] ), 'args parm element too many rows' );
+				self::assertEquals( 2, count( $route_parms['args']['parm'] ), 'args parm element too many rows' );
 				self::assertArrayHasKey( 'required', $route_parms['args']['parm'], 'args parm required element' );
 				self::assertArrayHasKey( 'sanitize_callback', $route_parms['args']['parm'], 'args parm sanitize element' );
 				self::assertEquals( 'absint', $route_parms['args']['parm']['sanitize_callback'], 'args parm sanitize value' );
@@ -462,14 +462,14 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 				// check callback properly defined.
 				self::assertArrayHasKey( 'callback', $route_parms, 'callback element' );
 				self::assertTrue( is_array( $route_parms['callback'] ), 'no callback' );
-				self::assertEquals( 2, array_count( $route_parms['callback'] ), 'callback element too many rows' );
+				self::assertEquals( 2, count( $route_parms['callback'] ), 'callback element too many rows' );
 				self::assertArrayHasKey( 1, $route_parms['callback'], 'callback 1 element' );
 				self::assertEquals( 'correct_document', $route_parms['callback'][1], 'callback element wrong parameter' );
 
 				// check permission_callback properly defined.
 				self::assertArrayHasKey( 'permission_callback', $route_parms, 'permission_callback element' );
 				self::assertTrue( is_array( $route_parms['permission_callback'] ), 'no permission_callback' );
-				self::assertEquals( 2, array_count( $route_parms['permission_callback'] ), 'permission_callback element too many rows' );
+				self::assertEquals( 2, count( $route_parms['permission_callback'] ), 'permission_callback element too many rows' );
 				self::assertArrayHasKey( 1, $route_parms['permission_callback'], 'permission_callback 1 element' );
 				self::assertEquals( 'check_permission', $route_parms['permission_callback'][1], 'permission_callback element wrong parameter' );
 			}
