@@ -601,7 +601,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		set_current_screen();
 
 		// add help text for validate.
-		$wpdr_v = new	WP_Document_Revisions_Validate_Structure()
+		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
 		$wpdr_v->get_help_text();
 
 		self::assertTrue( true, 'help text called' );
