@@ -476,4 +476,41 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		}
 	}
 
+	/**
+	 * Tests the help text.
+	 */
+	public function test_add_help_text() {
+		global $wpdr;
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		// set hook_suffix in global scope (bending rule).
+		global $hook_suffix, $typenow;
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		$hook_suffix = 'document_page_wpdr_validate';
+		$typenow     = 'post';
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		set_current_screen();
+
+		// add help text for validate.
+		WP_Document_Revisions_Validate_Structure->get_help_text();
+
+		self::assertTrue( true, 'help text called' );
+	}
+
+	/**
+	 * Tests the enqueue_scripts routine.
+	 */
+	public function test_enqueue_scripts() {
+		global $wpdr;
+
+		// add help text for validate.
+		WP_Document_Revisions_Validate_Structure::enqueue_scripts();
+
+		self::assertTrue( true, 'enqueue_scripts called' );
+	}
 }

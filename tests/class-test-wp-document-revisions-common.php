@@ -185,6 +185,20 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Routine to test QueryTrue (WP 5.0 comes up with is_admin).
+	 *
+	 * @param string[]  $props  properties for testing.
+	 */
+	public function query_true( ...$props ) {
+		if (version_compare(PHP_VERSION, '5.1.0') >= 0) {
+			self::assertQueryTrue( ...$props );
+		} else {
+			// WP5.0 seems to have is_admin too.
+			self::assertQueryTrue( 'is_admin', ...$props );
+		}
+	}
+
+	/**
 	 * Tests that a given URL actually returns the right file.
 	 *
 	 * @param string  $url     to check.
@@ -208,7 +222,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$exception = $e;
 		}
 
-		self::assertQueryTrue( 'is_single', 'is_singular' );
+		self::query_true( 'is_single', 'is_singular' );
 
 		global $wp_query;
 		self::assertGreaterThan( 0, $wp_query->found_posts, 'Cannot find document' );
@@ -295,13 +309,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// either 404 or will be stopped later.
 		if ( is_404() ) {
 			if ( is_single() ) {
-				self::assertQueryTrue( 'is_404', 'is_single', 'is_singular' );
+				self::query_true( 'is_404', 'is_single', 'is_singular' );
 			} else {
-				self::assertQueryTrue( 'is_404' );
+				self::query_true( 'is_404' );
 			}
 			$content = '';
 		} else {
-			self::assertQueryTrue( 'is_single', 'is_singular' );
+			self::query_true( 'is_single', 'is_singular' );
 
 			// verify whether contents are actually served.
 			ob_start();
