@@ -256,7 +256,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $hook_suffix, $typenow;
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		$hook_suffix = 'post.php';
-		$typenow     = 'post';
+		$typenow     = 'document';
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		set_current_screen();
