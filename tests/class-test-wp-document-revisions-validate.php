@@ -365,10 +365,11 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$request->set_param( 'id', self::$editor_public_post_2 );
 		$request->set_param( 'code', 4 );
 		$request->set_param( 'parm', $attach_id );
-		$request->set_body( '("userid":"' . self::$editor_user_id . '"}' );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
 
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 
+		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
 		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
 
@@ -414,7 +415,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$attach_id = $wpdr->extract_document_id( $content );
 
 		// expected fix text parameters.
-		$fix_parms = '(' . self::$editor_public_post_2 . ',4,' . $attach_id . ')';
+		$fix_parms = '(' . self::$editor_public_post_2 . ',5,' . $attach_id . ')';
 
 		// clean post cache.
 		clean_post_cache( self::$editor_public_post_2 );
@@ -456,7 +457,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'message not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Document links to invalid attachment. An attachment exists and can replace link' ), 'message not found' );
 		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
 
 		// will be a row like wpdr_valid_fix(106,5,109). - Can use it to mend document.
@@ -467,10 +468,11 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$request->set_param( 'id', self::$editor_public_post_2 );
 		$request->set_param( 'code', 5 );
 		$request->set_param( 'parm', $attach_id );
-		$request->set_body( '("userid":"' . self::$editor_user_id . '"}' );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
 
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 
+		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
 		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
 
@@ -599,7 +601,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		set_current_screen();
 
 		// add help text for validate.
-		WP_Document_Revisions_Validate_Structure::get_help_text();
+		$wpdr_v = new	WP_Document_Revisions_Validate_Structure()
+		$wpdr_v->get_help_text();
 
 		self::assertTrue( true, 'help text called' );
 	}
