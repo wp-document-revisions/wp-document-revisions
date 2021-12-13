@@ -436,6 +436,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			)
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		console_log( $wpdb->last_query );
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
 
@@ -454,6 +455,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
+		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
@@ -602,7 +604,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// add help text for validate.
 		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
-		$wpdr_v->get_help_text();
+		$wpdr_v->add_help_tab();
 
 		self::assertTrue( true, 'help text called' );
 	}
