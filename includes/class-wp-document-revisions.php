@@ -291,13 +291,11 @@ class WP_Document_Revisions {
 			}
 		}
 
-		if ( ! $this->admin ) {
-			include_once __DIR__ . '/class-wp-document-revisions-admin.php';
-			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
+		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
+		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 
-			// Although the Post Type Supports Editor, don't use block editor.
-			add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
-		}
+		// Although the Post Type Supports Editor, don't use block editor.
+		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 	}
 
 
