@@ -421,7 +421,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		clean_post_cache( self::$editor_public_post_2 );
 
 		// create wrong content.
-		$wrong = '<!-- WPDR ' . self::$editor_public_post_2 . ' -->';
+		$wrong = '<!--  WPDR ' . self::$editor_public_post_2 . ' -->';
 
 		global $wpdb;
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
