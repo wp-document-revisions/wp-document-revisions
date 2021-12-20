@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
-"PO-Revision-Date: 2021-12-20 20:20\n"
+"PO-Revision-Date: 2021-12-20 21:52\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:168
@@ -123,7 +123,7 @@ msgstr ""
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr "Normalerweise sind hochgeladene Dokumente nur angemeldeten Benutzern zug&auml;nglich. Aber Dokumente k&ouml;nnen der ganzen Welt zugänglich gemacht werden in dem man die Sichtbarkeit &auml;ndernt in der \"Ver&ouml;ffentlichen\" Box in der rechten oberen Ecke. Dann kann jeder mit der entsprechenden Adresse auf das Dokument zugreifen."
 
-#: includes/class-wp-document-revisions-admin.php:251, includes/class-wp-document-revisions.php:323
+#: includes/class-wp-document-revisions-admin.php:251, includes/class-wp-document-revisions.php:321
 msgid "Documents"
 msgstr "Dokumente"
 
@@ -241,7 +241,7 @@ msgstr "Dokumenten Slug ge&auml;ndert, aber fr&uuml;her ver&ouml;ffentlichte URL
 msgid "Document Settings"
 msgstr "Dokument Einstellungen"
 
-#: includes/class-wp-document-revisions-admin.php:778, includes/class-wp-document-revisions-admin.php:808, includes/class-wp-document-revisions.php:2123
+#: includes/class-wp-document-revisions-admin.php:778, includes/class-wp-document-revisions-admin.php:808, includes/class-wp-document-revisions.php:2121
 msgid "Not authorized"
 msgstr "Nicht berechtigt"
 
@@ -665,238 +665,238 @@ msgstr "Sie verfügen nicht über die Dokumenten-Änderungsberechtigungen, was m
 msgid "Documents menu may not be displayed completely with \"All Documents\" and \"Add Document\" options missing"
 msgstr "Das Menü \"Dokumente\" wird möglicherweise nicht vollständig angezeigt, wobei die Optionen \"Alle Dokumente\" und \"Dokument hinzufügen\" fehlen"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:309
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Dokumente"
 
-#: includes/class-wp-document-revisions.php:312
+#: includes/class-wp-document-revisions.php:310
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Dokument"
 
-#: includes/class-wp-document-revisions.php:313
+#: includes/class-wp-document-revisions.php:311
 msgctxt "document"
 msgid "Add Document"
 msgstr "Dokument hinzuf&uuml;gen"
 
-#: includes/class-wp-document-revisions.php:314
+#: includes/class-wp-document-revisions.php:312
 msgid "Add New Document"
 msgstr "Neues Dokument hinzuf&uuml;gen"
 
-#: includes/class-wp-document-revisions.php:315
+#: includes/class-wp-document-revisions.php:313
 msgid "Edit Document"
 msgstr "Dokument bearbeiten"
 
-#: includes/class-wp-document-revisions.php:316
+#: includes/class-wp-document-revisions.php:314
 msgid "New Document"
 msgstr "Neues Dokument"
 
-#: includes/class-wp-document-revisions.php:317
+#: includes/class-wp-document-revisions.php:315
 msgid "View Document"
 msgstr "Dokument ansehen"
 
-#: includes/class-wp-document-revisions.php:318
+#: includes/class-wp-document-revisions.php:316
 msgid "View Documents"
 msgstr "Dokumente anzeigen"
 
-#: includes/class-wp-document-revisions.php:319
+#: includes/class-wp-document-revisions.php:317
 msgid "Search Documents"
 msgstr "Dokument suchen"
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:318
 msgid "No documents found"
 msgstr "Keine Dokumente gefunden"
 
-#: includes/class-wp-document-revisions.php:321
+#: includes/class-wp-document-revisions.php:319
 msgid "No documents found in Trash"
 msgstr "Keine Dokumente im Papierkorb gefunden."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:322
 msgid "All Documents"
 msgstr "Alle Dokumente"
 
-#: includes/class-wp-document-revisions.php:325
+#: includes/class-wp-document-revisions.php:323
 msgid "Document Image"
 msgstr "Bild-Dokument"
 
-#: includes/class-wp-document-revisions.php:326
+#: includes/class-wp-document-revisions.php:324
 msgid "Set Document Image"
 msgstr "Dokumentenbild festlegen"
 
-#: includes/class-wp-document-revisions.php:327
+#: includes/class-wp-document-revisions.php:325
 msgid "Remove Document Image"
 msgstr "Dokumentenbild entfernen"
 
-#: includes/class-wp-document-revisions.php:328
+#: includes/class-wp-document-revisions.php:326
 msgid "Use as Document Image"
 msgstr "Bild als Dokumentenbild verwenden"
 
-#: includes/class-wp-document-revisions.php:412
+#: includes/class-wp-document-revisions.php:410
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Workflow Stati"
 
-#: includes/class-wp-document-revisions.php:413
+#: includes/class-wp-document-revisions.php:411
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Workflow Status"
 
-#: includes/class-wp-document-revisions.php:414
+#: includes/class-wp-document-revisions.php:412
 msgid "Search Workflow States"
 msgstr "Workflow Stati suchen"
 
-#: includes/class-wp-document-revisions.php:415
+#: includes/class-wp-document-revisions.php:413
 msgid "All Workflow States"
 msgstr "Alle Workflow Stati"
 
-#: includes/class-wp-document-revisions.php:416
+#: includes/class-wp-document-revisions.php:414
 msgid "Parent Workflow State"
 msgstr "&Uuml;bergeordneter Workflow Status"
 
-#: includes/class-wp-document-revisions.php:417
+#: includes/class-wp-document-revisions.php:415
 msgid "Parent Workflow State:"
 msgstr "&Uuml;bergeordneter Workflow Status:"
 
-#: includes/class-wp-document-revisions.php:418
+#: includes/class-wp-document-revisions.php:416
 msgid "Edit Workflow State"
 msgstr "Workflow Status bearbeiten"
 
-#: includes/class-wp-document-revisions.php:419
+#: includes/class-wp-document-revisions.php:417
 msgid "Update Workflow State"
 msgstr "Workflow Status aktualisieren"
 
-#: includes/class-wp-document-revisions.php:420
+#: includes/class-wp-document-revisions.php:418
 msgid "Add New Workflow State"
 msgstr "Neuen Workflow Status hinzuf&uuml;gen"
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:419
 msgid "New Workflow State Name"
 msgstr "Neuer Workflow Status Name"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:420
 msgid "Workflow States"
 msgstr "Workflow Stati"
 
-#: includes/class-wp-document-revisions.php:481
+#: includes/class-wp-document-revisions.php:479
 msgid "In Progress"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:481
+#: includes/class-wp-document-revisions.php:479
 msgid "Document is in the process of being written"
 msgstr "Dokument ist gerade in der Erstellungsphase"
 
-#: includes/class-wp-document-revisions.php:482
+#: includes/class-wp-document-revisions.php:480
 msgid "Initial Draft"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:482
+#: includes/class-wp-document-revisions.php:480
 msgid "Document is being edited and refined"
 msgstr "Dokument wird &uuml;berarbeitet"
 
-#: includes/class-wp-document-revisions.php:483
+#: includes/class-wp-document-revisions.php:481
 msgid "Under Review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:483
+#: includes/class-wp-document-revisions.php:481
 msgid "Document is pending final review"
 msgstr "Doument wartet auf letzte Pr&uuml;fung"
 
-#: includes/class-wp-document-revisions.php:484
+#: includes/class-wp-document-revisions.php:482
 msgid "Final"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:484
+#: includes/class-wp-document-revisions.php:482
 msgid "Document is in its final form"
 msgstr "Dokument ist in seiner finalen Form"
 
-#: includes/class-wp-document-revisions.php:615
+#: includes/class-wp-document-revisions.php:613
 msgid "Somebody"
 msgstr "Jemand"
 
-#: includes/class-wp-document-revisions.php:802, includes/class-wp-document-revisions.php:1184
+#: includes/class-wp-document-revisions.php:800, includes/class-wp-document-revisions.php:1182
 msgid "-revision-"
 msgstr "Überarbeitung"
 
-#: includes/class-wp-document-revisions.php:1064, includes/class-wp-document-revisions.php:1083
+#: includes/class-wp-document-revisions.php:1062, includes/class-wp-document-revisions.php:1081
 msgid "No document file is attached."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1143
+#: includes/class-wp-document-revisions.php:1141
 msgid "You are not authorized to access that file."
 msgstr "Du kannst diese Datei nicht &ouml;ffnen."
 
-#: includes/class-wp-document-revisions.php:1340
+#: includes/class-wp-document-revisions.php:1338
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1346
+#: includes/class-wp-document-revisions.php:1344
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2056
+#: includes/class-wp-document-revisions.php:2054
 msgid "Sorry, this is a private feed."
 msgstr "Entschuldigung, aber dies ist ein privater Feed"
 
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
-#: includes/class-wp-document-revisions.php:2174
+#: includes/class-wp-document-revisions.php:2172
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr "%1$s: %2$s hat deine Sperrung von %3$s aufgehoben"
 
 #. translators: %s is the user's name.
-#: includes/class-wp-document-revisions.php:2184
+#: includes/class-wp-document-revisions.php:2182
 msgid "Dear %s:"
 msgstr "Lieber %s"
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
-#: includes/class-wp-document-revisions.php:2186
+#: includes/class-wp-document-revisions.php:2184
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr "%1$s (%2$s), hat deine Sperrung des Dokuments %3$s (%4$s) aufgehoben."
 
-#: includes/class-wp-document-revisions.php:2187
+#: includes/class-wp-document-revisions.php:2185
 msgid "Any changes you have made will be lost."
 msgstr "Alle &Auml;nderungen werden verloren gehen."
 
 #. translators: %s is the blog name.
-#: includes/class-wp-document-revisions.php:2189
+#: includes/class-wp-document-revisions.php:2187
 msgid "- The %s Team"
 msgstr "- Das %s Team"
 
 #. translators: %s is the document title.
-#: includes/class-wp-document-revisions.php:2379
+#: includes/class-wp-document-revisions.php:2377
 msgid "%s - Latest Revision"
 msgstr "%s - Letzte &Uuml;berarbeitung"
 
 #. translators: %1$s is the document title, %2$d is the revision ID.
-#: includes/class-wp-document-revisions.php:2400
+#: includes/class-wp-document-revisions.php:2398
 msgid "%1$s - Revision %2$d"
 msgstr "%1$s - Revision %2$d"
 
-#: includes/class-wp-document-revisions.php:2484
+#: includes/class-wp-document-revisions.php:2482
 msgid "Status"
 msgstr "Status"
 
-#: includes/class-wp-document-revisions.php:2508
+#: includes/class-wp-document-revisions.php:2506
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: includes/class-wp-document-revisions.php:2509
+#: includes/class-wp-document-revisions.php:2507
 msgid "Draft"
 msgstr "Entwurf"
 
-#: includes/class-wp-document-revisions.php:2510
+#: includes/class-wp-document-revisions.php:2508
 msgid "Scheduled"
 msgstr "Geplant"
 
-#: includes/class-wp-document-revisions.php:2511
+#: includes/class-wp-document-revisions.php:2509
 msgid "Private"
 msgstr "Privat"
 
-#: includes/class-wp-document-revisions.php:2512
+#: includes/class-wp-document-revisions.php:2510
 msgid "Pending Review"
 msgstr "Ausstehende Überprüfung"
 
-#: includes/class-wp-document-revisions.php:2513
+#: includes/class-wp-document-revisions.php:2511
 msgid "Trash"
 msgstr "Papierkorb"
 
