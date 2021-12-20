@@ -188,7 +188,7 @@ class WP_Document_Revisions_Validate_Structure {
 
 		register_rest_route(
 			'wpdr/v1',
-			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach(?P<parm>[\d]+)',
+			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach/(?P<parm>[\d]+)',
 			$args
 		);
 	}
@@ -201,7 +201,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param WP_REST_Request $request the arguments to pass to the function.
 	 * @return WP_REST_Response
 	 */
-	public function correct_document( $request ) {
+	public static function correct_document( $request ) {
 		$params = $request->get_params();
 		$id     = $params['id'];
 		$parm   = $params['parm'];
@@ -269,7 +269,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// get file name.
 			$file = get_attached_file( $attach_id );
 
-			$file = $this->check_document_folder( $file );
+			$file = self::check_document_folder( $file );
 
 			// get filename part.
 			$filename = pathinfo( $file, PATHINFO_FILENAME );
@@ -299,7 +299,7 @@ class WP_Document_Revisions_Validate_Structure {
 			$orig = get_attached_file( $attach );
 
 			// manipulate file as in serve_file process.
-			$file = $this->check_document_folder( $orig );
+			$file = self::check_document_folder( $orig );
 
 			// revalidate input (late, but before any damage is done).
 			if ( $orig === $file || ! file_exists( $orig ) || file_exists( $file ) ) {
@@ -414,7 +414,7 @@ class WP_Document_Revisions_Validate_Structure {
 						$line = esc_attr( $failure['ID'] );
 						$beg  = esc_attr( $failure['post_title'] ) . '<br/>';
 						$ref  = esc_url( get_the_permalink( $failure['ID'] ) );
-						// Create the URL to the document. This is text if erroe/not fixable; link if warning; both if error and can be fixed (display one then other).
+						// Create the URL to the document. This is text if error/not fixable; link if warning; both if error and can be fixed (display one then other).
 						if ( (bool) $failure['fix'] ) {
 							if ( (bool) $failure['error'] ) {
 								$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .
@@ -437,7 +437,7 @@ class WP_Document_Revisions_Validate_Structure {
 							<td><?php echo $line; ?></td>
 							<td><?php ( (bool) $failure['error'] ? esc_html_e( 'Error', 'wp-document-revisions' ) : esc_html_e( 'Warning', 'wp-document-revisions' ) ); ?></td>
 							<td><?php echo $ref; ?></td>
-							<td><?php echo esc_attr( $failure['msg'] ); ?></td>
+							<td><?php echo esc_attr( $failure['msg'] ) . ( isset( $failure['msg2'] ) ? '<br />' . esc_attr( $failure['msg2'] ) : '' ); ?></td>
 							<td><?php echo $fix; ?></td>
 						</tr>
 						<?php
@@ -521,9 +521,9 @@ class WP_Document_Revisions_Validate_Structure {
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ) . ' ' .
-							// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-							sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
+				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
 			);
@@ -538,9 +538,9 @@ class WP_Document_Revisions_Validate_Structure {
 				return array(
 					'code'  => 5,
 					'error' => 1,
-					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ) . ' ' .
-						// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-						sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+					'msg'   => __( 'Document links to invalid attachment. An attachment exists and can replace link', 'wp-document-revisions' ),
+					// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+					'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 					'fix'   => 1,
 					'parm'  => $last,
 				);
@@ -671,6 +671,9 @@ class WP_Document_Revisions_Validate_Structure {
 	public static function add_help_tab() {
 		$screen = get_current_screen();
 
+		if ( 'document_page_wpdr_validate' !== $screen->id ) {
+			return;
+		}
 		// parent key is the id of the current screen
 		// child key is the title of the tab
 		// value is the help text (as HTML).
@@ -713,7 +716,5 @@ class WP_Document_Revisions_Validate_Structure {
 				)
 			);
 		}
-
-		// add help sidebar.
 	}
 }

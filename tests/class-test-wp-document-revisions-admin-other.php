@@ -9,7 +9,7 @@
 /**
  * Admin tests
  */
-class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 	/**
 	 * Editor user id
@@ -54,10 +54,10 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-		// set permalink structure to Plain string.
+		// set permalink structure to Month and name string.
 		global $wp_rewrite, $orig;
 		$orig = $wp_rewrite->permalink_structure;
-		$wp_rewrite->set_permalink_structure( '' );
+		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		// flush cache for good measure.
 		wp_cache_flush();
@@ -67,6 +67,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+		$wpdr->register_cpt();
 
 		// make sure that we have the admin set up.
 		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
@@ -107,6 +108,8 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		self::$ws_term_id = (int) $ws_terms[0]->term_id;
 
 		// create posts for scenarios.
+		add_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
+
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
 			array(
@@ -161,6 +164,8 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
+
+		remove_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
 	}
 
 	/**
@@ -218,42 +223,98 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Verify dashboard display.
+	 * Tests the admin messages.
 	 */
-	public function test_dashboard_display_1() {
+	public function test_admin_messages() {
 		global $wpdr;
 
-		// see that only two (public) posts are seen.
-		ob_start();
-		$wpdr->admin->dashboard_display();
-		$output = ob_get_contents();
-		ob_end_clean();
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
 
-		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'display count public 1' );
-		self::assertEquals( 2, (int) substr_count( $output, 'Publish' ), 'display publish public 1' );
+		$messages = array();
+		// add messages.
+		$messages = $wpdr->admin->update_messages( $messages );
+
+		self::assertArrayHasKey( 'document', $messages, 'loaded' );
+		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
 	}
 
 	/**
-	 * Verify dashboard display. Publish the private one, so now two seen.
+	 * Tests the admin help text.
 	 */
-	public function test_dashboard_display_2() {
+	public function test_admin_add_help_text() {
 		global $wpdr;
 
-		// see that three posts are seen.
-		wp_publish_post( self::$editor_private_post );
-		ob_start();
-		$wpdr->admin->dashboard_display();
-		$output = ob_get_contents();
-		ob_end_clean();
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
 
-		self::assertEquals( 3, (int) substr_count( $output, '<li' ), 'display count all' );
-		self::assertEquals( 3, (int) substr_count( $output, 'Publish' ), 'display publish all' );
+		// set hook_suffix in global scope (bending rule).
+		global $hook_suffix, $typenow;
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		$hook_suffix = 'post.php';
+		$typenow     = 'document';
+		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		set_current_screen();
+		$screen = get_current_screen();
+
+		// add help text for other screen (none).
+		$screen->id = 'other';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertEmpty( $help_text, 'other not empty' );
+
+		// add help text for document screen (Basic).
+		$screen->id = 'document';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertArrayHasKey( 'Basic Usage', $help_text, 'document basic' );
+		self::assertArrayHasKey( 'Document Description', $help_text, 'document description' );
+		self::assertEquals( 5, (int) count( $help_text ), 'document count' );
+
+		// add help text for document screen (Basic).
+		$screen->id = 'edit-document';
+		$help_text  = $wpdr->admin->get_help_text( $screen );
+
+		self::assertArrayHasKey( 'Documents', $help_text, 'edit-document not correct' );
+		self::assertEquals( 1, (int) count( $help_text ), 'document-edit count' );
+
+		// add help text for current screen (none).
+		$wpdr->admin->add_help_tab();
 	}
 
 	/**
-	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
+	 * Tests the admin meta_cb.
 	 */
-	public function test_revision_metabox_unauth() {
+	public function test_admin_meta_cb() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->meta_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test document metabox unauth.
+	 */
+	public function test_document_metabox_unauth() {
 		global $wpdr;
 
 		global $current_user;
@@ -261,20 +322,23 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		$curr_post = get_post( self::$editor_public_post );
+
 		ob_start();
-		$wpdr->admin->revision_metabox( get_post( self::$editor_private_post ) );
+		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		// There will be 1 for RSS feed.
-		self::assertEquals( 1, (int) substr_count( $output, '<a href' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, '-revision-1.' ), 'revision count revision 1' );
+		// There will be various bits found.
+		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
 	/**
-	 * Verify revision log metabox. dashboard_display_2 will have created a revision.
+	 * Test document metabox auth.
 	 */
-	public function test_revision_metabox_auth() {
+	public function test_document_metabox_auth() {
 		global $wpdr;
 
 		global $current_user;
@@ -282,132 +346,93 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$post_obj = get_post( self::$editor_private_post );
+		$curr_post = get_post( self::$editor_public_post );
 
 		ob_start();
-		$wpdr->admin->revision_metabox( $post_obj );
+		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		// There will be 1 for RSS feed.
-		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, 'Restore' ), 'restore count' );
-
-		if ( false === strpos( $output, 'post_type=document' ) ) {
-			// Desired permalinks.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
-		} else {
-			// Plain permalink. Need to avoid link to rvision.php with parameter revision=nn.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1"' ), 'revision count revision 1 plain' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=2"' ), 'revision count revision 2 plain' );
-		}
+		// There will be various bits found.
+		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
 	/**
-	 * Verify revision log metabox. public_post_2 will have a revision.
-	 */
-	public function test_revision_metabox_auth_2() {
-		global $wpdr;
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		$post_obj = get_post( self::$editor_public_post_2 );
-
-		ob_start();
-		$wpdr->admin->revision_metabox( $post_obj );
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		// There will be 1 for RSS feed.
-		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
-
-		if ( false === strpos( $output, 'post_type=document' ) ) {
-			// Desired permalinks.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision-1' ), 'revision count revision 1 pretty' );
-			self::assertEquals( 1, (int) substr_count( $output, 'revision-2' ), 'revision count revision 2 pretty' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision-3' ), 'revision count revision 3 pretty' );
-		} else {
-			// Plain permalink. Need to avoid link to rvision.php with parameter revision=nn.
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=1"' ), 'revision count revision 1 plain' );
-			self::assertEquals( 1, (int) substr_count( $output, 'revision=2"' ), 'revision count revision 2 plain' );
-			self::assertEquals( 0, (int) substr_count( $output, 'revision=3"' ), 'revision count revision 3 plain' );
-		}
-	}
-
-	/**
-	 * Verify document log metabox.
-	 */
-	public function test_document_metabox() {
-		global $wpdr;
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		$post_obj = get_post( self::$editor_private_post );
-
-		ob_start();
-		$wpdr->admin->document_metabox( $post_obj );
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
-		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink_ms' );
-		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
-	}
-
-	/**
-	 * Test filter for make_private routine.
+	 * Test document delete.
 	 *
-	 * @param WP_Post $post     link to (new) global post.
-	 * @param WP_Post $post_pre link to clone of global post.
+	 * This code is called in Teardown but codecov does not appear to include it.
 	 */
-	public function make_public( $post, $post_pre ) {
-		$new_post              = clone $post;
-		$new_post->post_status = 'publish';
-		return $new_post;
+	public function test_document_delete() {
+		// make sure that we have the admin set up.
+		global $wpdr;
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+			$wpdr->admin_init();
+		}
+
+		// get attachment_id and file.
+		$attach = $wpdr->get_document( self::$editor_public_post_2 );
+		$file   = get_attached_file( $attach->ID );
+
+		// add the attachment delete process.
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		wp_delete_post( self::$editor_public_post_2, true );
+
+		// delete done, remove the attachment delete process.
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		// test deletion.
+		self::assertNull( get_post( $attach->ID ), 'attachment not deleted' );
+		self::assertFalse( file_exists( $file ), 'file not deleted' );
 	}
 
 	/**
-	 * Verify make_private routine.
+	 * Tests the posts limit..
 	 */
-	public function test_make_public() {
+	public function test_admin_check_limits() {
 		global $wpdr;
 
-		// create post object and assign to global.
-		$post_id = wp_insert_post(
-			array(
-				'post_title'   => 'Test private',
-				'post_status'  => 'draft',
-				'post_author'  => self::$editor_user_id,
-				'post_content' => '',
-				'post_type'    => 'document',
-			)
-		);
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
+		// get a post in global scope (bending rule).
 		global $post;
-
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post = get_post( $post_id );
+		$post = get_post( self::$editor_public_post_2 );
 
-		$wpdr->admin->make_private();
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
 
-		self::assertEquals( 'private', $post->post_status, 'status not changed to private' );
-
-		// add filter to make public.
-		add_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
-
-		$wpdr->admin->make_private();
-
-		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
-
-		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
+		self::assertTrue( true, 'run' );
 	}
 
+	/**
+	 * Tests the posts enqueue.
+	 */
+	public function test_admin_enqueue() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->enqueue();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertTrue( true, 'run' );
+	}
 }

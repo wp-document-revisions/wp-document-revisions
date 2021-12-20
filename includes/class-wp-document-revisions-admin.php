@@ -198,6 +198,10 @@ class WP_Document_Revisions_Admin {
 	public function add_help_tab() {
 		$screen = get_current_screen();
 
+		// only interested in document post_types.
+		if ( 'document' !== $screen->post_type ) {
+			return;
+		}
 		// loop through each tab in the help array and add.
 		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(
@@ -212,14 +216,13 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Helper function to provide help text as either an array or as a string.
+	 * Helper function to provide help text as an array.
 	 *
 	 * @since 1.1
-	 * @param object $screen (optional) the current screen.
-	 * @param bool   $return_array (optional) whether to return as an array or string.
-	 * @returns array|string the help text
+	 * @param WP_Screen $screen (optional) the current screen.
+	 * @returns array the help text
 	 */
-	public function get_help_text( $screen = null, $return_array = true ) {
+	public function get_help_text( $screen = null ) {
 		if ( is_null( $screen ) ) {
 			$screen = get_current_screen();
 		}
@@ -254,32 +257,16 @@ class WP_Document_Revisions_Admin {
 
 		// if we don't have any help text for this screen, just kick.
 		if ( ! isset( $help[ $screen->id ] ) ) {
-			return ( $return_array ) ? array() : '';
-		}
-
-		if ( $return_array ) {
-			/**
-			 * Filters the default help text for current screen.
-			 *
-			 * @param string $help   default help text for current screen.
-			 * @param string $screen current screen name.
-			 */
-			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
-		}
-
-		// convert array into string for pre-3.3 compatability, i.e. no longer used.
-		$output = '';
-		foreach ( $help[ $screen->id ] as $label => $text ) {
-			$output .= "<h4>{$label}</h4>{$text}";
+			return array();
 		}
 
 		/**
-		 * Filters the string format help text for current screen.
+		 * Filters the default help text for current screen.
 		 *
-		 * @param string $output default help text for current screen.
-		 * @param string $screen current screen name.
+		 * @param string[]  $help   default help text for current screen.
+		 * @param WP_Screen $screen current screen name.
 		 */
-		return apply_filters( 'document_help', $output, $screen );
+		return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
 	}
 
 	/**
@@ -982,6 +969,7 @@ class WP_Document_Revisions_Admin {
 				</td>
 			</tr>
 		</table>
+		</div>
 		<?php
 	}
 
