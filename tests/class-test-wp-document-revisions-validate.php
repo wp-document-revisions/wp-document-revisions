@@ -528,11 +528,11 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// change the meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
-		$nname = preg_match( '/^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})([.]{4})$/', '${1}X${2}X$3', $fname );
+		$nname = preg_replace( '/^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})([.]{4})$/', '${1}X${2}X$3', $fname );
 		console_log( $fname );
 		console_log( $nname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $nname );
-		
+
 		$nfile = str_replace( $fname, $nname, $file );
 
 		// Move $file.
