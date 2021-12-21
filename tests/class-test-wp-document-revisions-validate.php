@@ -436,7 +436,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 			)
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		console_log( $wpdb->last_query );
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
 
@@ -455,7 +454,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
@@ -525,39 +523,20 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// clean post cache.
 		clean_post_cache( self::$editor_public_post_2 );
 
-		// create wrong file name.
-		$title = get_post_field( 'post_title', $attach_id, 'db' );
-		$wrong = 'X' . $title . 'X';
-
-		global $wpdb;
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		$rows = $wpdb->query(
-			$wpdb->prepare(
-				"UPDATE {$wpdb->prefix}posts 
-				 SET post_title = %s,
-				    post_name = %s
-				 WHERE ID = %d
-				",
-				$wrong,
-				$wrong,
-				$attach_id
-			)
-		);
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		console_log( $wpdb->last_query );
-
-		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
-
 		// change file name.
 		$file = get_attached_file( $attach_id );
 
 		// change the meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
-		$nname = str_replace( $title, $wrong, $fname );
+		$nname = preg_match( '/^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})([.]{4})$/', '${1}X${2}X$3', $fname );
+		console_log( $fname );
+		console_log( $nname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $nname );
+		
+		$nfile = str_replace( $fname, $nname, $file );
 
 		// Move $file.
-		rename( $fname, $nname );
+		rename( $file, $nfile );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
