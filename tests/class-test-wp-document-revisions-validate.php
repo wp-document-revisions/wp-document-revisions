@@ -504,6 +504,144 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests that name not in md5 format is detected.
+	 */
+	public function test_struct_not_md5() {
+		// test with no user, nothing found.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// get the post_content from $editor_public_post_2.
+		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
+
+		global $wpdr;
+		$attach_id = $wpdr->extract_document_id( $content );
+
+		// expected fix text parameters.
+		$fix_parms = '(' . self::$editor_public_post_2 . ',6,' . $attach_id . ')';
+
+		// clean post cache.
+		clean_post_cache( self::$editor_public_post_2 );
+
+		// create wrong file name.
+		$title = get_post_field( 'post_title', $attach_id, 'db' );
+		$wrong = 'X' . $title . 'X';
+
+		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$rows = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->prefix}posts 
+				 SET post_title = %s,
+				    post_name = %s
+				 WHERE ID = %d
+				",
+				$wrong,
+				$wrong,
+				$attach_id
+			)
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		console_log( $wpdb->last_query );
+
+		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
+
+		// change file name.
+		$file = get_attached_file( $attach_id );
+
+		// change the meta data.
+		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
+		$nname = str_replace( $title, $wrong, $fname );
+		update_post_meta( $attach_id, '_wp_attached_file', $nname, $nname );
+
+		// Move $file.
+		rename( $fname, $nname );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as no user...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no edit' );
+
+		// now test with editor - should be invalid found.
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+		console_log( $output );
+
+		// should have two rows - the header row.
+		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment does not appear to be md5 encoded' ), 'message not found' );
+		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
+
+		// will be a row like wpdr_valid_fix(106,6,109). - Can use it to mend document.
+		$request = new WP_REST_Request(
+			'PUT',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/6/attach/' . $attach_id
+		);
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 6 );
+		$request->set_param( 'parm', $attach_id );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
+
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
+		self::assertEquals( 200, $response->get_status(), 'success not returned' );
+		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as fixed...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - now fixed' );
+	}
+
+	/**
+	 * Tests that for wrong location - test message only.
+	 */
+	public function test_struct_wrong_locn() {
+		// test with no user, nothing found.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// get the post_content from $editor_public_post_2.
+		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
+
+		global $wpdr;
+		$attach_id = $wpdr->extract_document_id( $content );
+
+		// fix text parameters to test.
+		$fix_parms = '(' . self::$editor_public_post_2 . ',7,' . $attach_id . ')';
+
+		// Will try a row like wpdr_valid_fix(106,7,109). - Can use it to mend document.
+		$request = new WP_REST_Request(
+			'PUT',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/7/attach/' . $attach_id
+		);
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 7 );
+		$request->set_param( 'parm', $attach_id );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
+
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		self::assertInstanceOf( 'WP_Error', $response, 'not a valid response' );
+		self::assertEquals( 'inconsistent_parms', $response->get_error_code(), 'error not returned' );
+		self::assertEquals( 'Inconsistent data sent to Interface', $response->get_error_message(), 'not expected response' );
+	}
+
+	/**
 	 * Tests that the package routes are there.
 	 */
 	public function test_register_route() {
