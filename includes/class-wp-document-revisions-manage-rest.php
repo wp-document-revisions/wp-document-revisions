@@ -80,11 +80,24 @@ class WP_Document_Revisions_Manage_Rest {
 		if ( ! strpos( $route . '/', $target ) ) {
 			return $response;
 		}
+
+		// Check for valid document editing.
+		if ( 'edit' === $request['context'] ) {
+			if ( isset( $params['id'] ) && current_user_can( 'edit_post', $params['id'] ) ) {
+				return $response;
+			}
+			return new WP_Error(
+				'rest_forbidden_context',
+				__( 'Sorry, you are not allowed to edit documents.', 'wp-document-revisions' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
 		// Additional validation for documents.
 		$post_type = get_post_type_object( 'document' );
 		$method    = $request->get_method();
 
-		// Only GET method is currently supported.
+		// Only GET method and POST for document editors are currently supported.
 		if ( 'GET' !== $method ) {
 			return new WP_Error(
 				'rest_cannot_modify',
@@ -107,15 +120,6 @@ class WP_Document_Revisions_Manage_Rest {
 			return new WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to read documents.', 'wp-document-revisions' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		// no editing (may be able to relax this).
-		if ( 'edit' === $request['context'] ) {
-			return new WP_Error(
-				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to edit documents.', 'wp-document-revisions' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -185,10 +189,11 @@ class WP_Document_Revisions_Manage_Rest {
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
+		if ( 0 < $parent && 'document' === get_post_type( $parent ) && ! current_user_can( 'read_post', $parent ) ) {
 			$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
 			$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
 			if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
-				// description may leak the slug as generated images would be built from he slug.
+				// description may leak the slug as generated images would be built using the slug name.
 				$response->data['description']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
 				$response->data['media_details']           = __( '<!-- protected -->', 'wp-document-revisions' );
 			}

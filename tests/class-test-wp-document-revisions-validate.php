@@ -528,9 +528,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// change the meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
-		$nname = preg_replace(  "|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|", '$1X$2X$3', $fname );
-		console_log( $fname );
-		console_log( $nname );
+		$nname = preg_replace( '|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|', '$1X$2X$3', $fname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
 
 		$nfile = str_replace( $fname, $nname, $file );
@@ -553,7 +551,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
@@ -730,11 +727,19 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	 * Tests the enqueue_scripts routine.
 	 */
 	public function test_enqueue_scripts() {
-		global $wpdr;
-
 		// add help text for validate.
 		WP_Document_Revisions_Validate_Structure::enqueue_scripts();
 
 		self::assertTrue( true, 'enqueue_scripts called' );
+	}
+
+	/**
+	 * Tests the add_menu routine.
+	 */
+	public function test_add_menu() {
+		// add menu for validate.
+		WP_Document_Revisions_Validate_Structure::add_menu();
+
+		self::assertTrue( true, 'add_menu called' );
 	}
 }
