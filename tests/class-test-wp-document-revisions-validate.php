@@ -531,7 +531,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$nname = preg_replace(  "|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|", '$1X$2X$3', $fname );
 		console_log( $fname );
 		console_log( $nname );
-		update_post_meta( $attach_id, '_wp_attached_file', $nname, $nname );
+		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
 
 		$nfile = str_replace( $fname, $nname, $file );
 
