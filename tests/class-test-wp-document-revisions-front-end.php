@@ -439,7 +439,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		$output = do_shortcode( '[documents show_thumb show_edit]' );
+		$output = do_shortcode( '[documents show_thumb show_descr show_edit new_tab ]' );
 		console_log( $output );
 
 		// read the two published ones.
@@ -662,9 +662,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
-
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
@@ -672,7 +671,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		ob_start();
-		$wpdr_fe->$wpdr_fe->documents_shortcode_blocks();
+		$wpdr_fe->documents_shortcode_blocks();
 		$output = ob_get_contents();
 		ob_end_clean();
 
