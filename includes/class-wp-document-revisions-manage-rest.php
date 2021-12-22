@@ -188,7 +188,6 @@ class WP_Document_Revisions_Manage_Rest {
 	public function doc_clean_attachment( $response, $post, $request ) {
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
-		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) && ! current_user_can( 'read_post', $parent ) ) {
 			$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
 			$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
