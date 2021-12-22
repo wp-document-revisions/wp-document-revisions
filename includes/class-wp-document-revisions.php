@@ -367,7 +367,7 @@ class WP_Document_Revisions {
 		 */
 		// user requires read_document and not just read to read document.
 		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
-			// invoke logic to require read_document instead of default read .
+			// invoke logic to require read_documents instead of default read .
 			$args['capabilities'] = array(
 				'read' => 'read_documents',
 			);
