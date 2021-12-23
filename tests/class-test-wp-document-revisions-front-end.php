@@ -466,12 +466,38 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents show_thumb show_descr=true show_edit new_tab ]' );
+
+		// read the two published and the private ones.
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 2, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 3, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+	}
+
+	/**
+	 * Tests the documents shortcode with options.
+	 *
+	 * An editor user can edit all documents.
+	 */
+	public function test_document_shortcode_opts_editor() {
+
+		// set editor user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['editor']->ID );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$output = do_shortcode( '[documents show_thumb show_descr=true show_edit new_tab ]' );
 		console_log( $output );
 
-		// read the two published ones.
-		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
-		self::assertEquals( 1, substr_count( $output, 'action=edit' ), 'document new_tab count' );
-		self::assertEquals( 2, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+		// read the two published and the private ones.
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 3, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 3, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
 	}
 
 	/**

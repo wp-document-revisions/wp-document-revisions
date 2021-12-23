@@ -475,7 +475,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$settings = array();
 
-		$npost              = new stdClass;
+		$npost              = new stdClass();
 		$npost->ID          = 0;
 		$npost->post_author = '';
 		$npost->post_type   = 'post';
@@ -485,7 +485,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// nothing in global scope.
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post( $npost );
-
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
 
