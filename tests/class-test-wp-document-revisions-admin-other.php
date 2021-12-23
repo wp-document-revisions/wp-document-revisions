@@ -237,7 +237,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
 
-		self::assertIsArray( $messages, 'still array' );
+		self::assertTrue( is_array( $messages ), 'still array' );
 		self::assertNotEmpty( $messages, 'has valuse' );
 		self::assertArrayHasKey( 'document', $messages, 'loaded' );
 		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
