@@ -719,29 +719,4 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertCount( 2, get_document_revisions( self::$editor_private_post ), 'private count' );
 		self::assertCount( 3, get_document_revisions( self::$editor_public_post ), 'public count' );
 	}
-
-
-	/**
-	 * Tests the shortcode blocks.
-	 */
-	public function test_shortcode_blocks() {
-		global $wpdr;
-
-		global $current_user;
-		unset( $current_user );
-		wp_set_current_user( self::$users['editor']->ID );
-		wp_cache_flush();
-
-		global $wpdr_fe;
-		if ( ! $wpdr_fe ) {
-			$wpdr_fe = new WP_Document_Revisions_Front_End();
-		}
-
-		ob_start();
-		$wpdr_fe->documents_shortcode_blocks();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		self::assertTrue( true, 'shortcode_blocks' );
-	}
 }
