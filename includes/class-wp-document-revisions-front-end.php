@@ -423,6 +423,7 @@ class WP_Document_Revisions_Front_End {
 					echo $image;
 				}
 			}
+			// is_numeric is old format.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . $document->post_content . '</div>' : '';
 			?>
@@ -967,7 +968,6 @@ class WP_Document_Revisions_Front_End {
 		$output .= $errs . $this->documents_shortcode_int( $atts );
 		return $output;
 	}
-
 
 	/**
 	 * Server side block to render the revisions list.

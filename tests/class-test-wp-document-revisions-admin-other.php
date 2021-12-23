@@ -237,6 +237,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
 
+		self::assertArray( $messages, 'still array' );
+		self::assertNotEmpty( $messages, 'has valuse' );
 		self::assertArrayHasKey( 'document', $messages, 'loaded' );
 		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
 	}
@@ -409,7 +411,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertTrue( true, 'run' );
+		self::assertTrue( true, 'check_limits' );
 	}
 
 	/**
@@ -433,6 +435,74 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertTrue( true, 'run' );
+		self::assertTrue( true, 'admin_enqueue' );
+	}
+
+	/**
+	 * Tests the posts prepare_editor.
+	 */
+	public function test_admin_prepare_editor() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// get a post in global scope (bending rule).
+		global $post;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->prepare_editor( $post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertTrue( true, 'prepare_editor' );
+	}
+
+	/**
+	 * Tests the document_editor_setting.
+	 */
+	public function test_admin_document_editor_setting() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$settings = array();
+		
+		global $post;
+		// nothing in global scope;
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post->post_type = 'post';
+
+		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
+
+		self::assertArray( $output, 'still array' );
+		self::assertEmpty( $output, 'empty' );
+
+		// get a post in global scope (bending rule).
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
+
+		self::assertArray( $output, 'still array' );
+		self::assertEmpty( $output, 'empty' );
+
+		$output = $wpdr->admin->document_editor_setting( $settings, 'content' );
+
+		self::assertArray( $output, 'still array' );
+		self::assertNotEmpty( $output, 'has values' );
+		self::assertArrayHasKey( 'wpautop', $output, 'setting wpautop' );
+		self::assertFalse( $output['wpautop'], 'wpautop not false' );
+		self::assertArrayHasKey( 'textarea_rows', $output, 'setting wpautop' );
+		self::assertEquals( 8,  $output['textarea_rows'], 'textarea_rows not 8' );
+
+		self::assertTrue( true, 'document_editor_setting' );
 	}
 }
