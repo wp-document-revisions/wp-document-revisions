@@ -424,9 +424,9 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Tests the documents shortcode with options.
 	 *
-	 * An unauthorised user cannot see post revisions.
+	 * An unauthorised user cannot edit documents.
 	 */
-	public function test_document_shortcode_opts() {
+	public function test_document_shortcode_opts_unauth() {
 
 		// set unauthorised user.
 		global $current_user;
@@ -440,11 +440,37 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents show_thumb show_descr=true show_edit new_tab ]' );
+
+		// read the two published ones.
+		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 0, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 2, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+	}
+
+	/**
+	 * Tests the documents shortcode with options.
+	 *
+	 * An unauthorised user cannot edit documents.
+	 */
+	public function test_document_shortcode_opts_author() {
+
+		// set author user.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$output = do_shortcode( '[documents show_thumb show_descr=true show_edit new_tab ]' );
 		console_log( $output );
 
 		// read the two published ones.
 		self::assertEquals( 2, substr_count( $output, '<li' ), 'document shortcode count' );
-		self::assertEquals( 2, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 1, substr_count( $output, 'action=edit' ), 'document new_tab count' );
 		self::assertEquals( 2, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
 	}
 
@@ -664,9 +690,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
-
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {

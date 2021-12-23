@@ -237,7 +237,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
 
-		self::assertArray( $messages, 'still array' );
+		self::assertIsArray( $messages, 'still array' );
 		self::assertNotEmpty( $messages, 'has valuse' );
 		self::assertArrayHasKey( 'document', $messages, 'loaded' );
 		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
@@ -474,15 +474,22 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$settings = array();
-		
+
+		$npost              = new stdClass;
+		$npost->ID          = 0;
+		$npost->post_author = '';
+		$npost->post_type   = 'post';
+		$npost->post_status = 'draft';
+		$npost->post_parent = 0;
 		global $post;
-		// nothing in global scope;
+		// nothing in global scope.
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post->post_type = 'post';
+		$post = new WP_Post( $npost );
+
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
 
-		self::assertArray( $output, 'still array' );
+		self::assertIsArray( $output, 'still array' );
 		self::assertEmpty( $output, 'empty' );
 
 		// get a post in global scope (bending rule).
@@ -491,17 +498,17 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
 
-		self::assertArray( $output, 'still array' );
+		self::assertIsArray( $output, 'still array' );
 		self::assertEmpty( $output, 'empty' );
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'content' );
 
-		self::assertArray( $output, 'still array' );
+		self::assertIsArray( $output, 'still array' );
 		self::assertNotEmpty( $output, 'has values' );
 		self::assertArrayHasKey( 'wpautop', $output, 'setting wpautop' );
 		self::assertFalse( $output['wpautop'], 'wpautop not false' );
 		self::assertArrayHasKey( 'textarea_rows', $output, 'setting wpautop' );
-		self::assertEquals( 8,  $output['textarea_rows'], 'textarea_rows not 8' );
+		self::assertEquals( 8, $output['textarea_rows'], 'textarea_rows not 8' );
 
 		self::assertTrue( true, 'document_editor_setting' );
 	}
