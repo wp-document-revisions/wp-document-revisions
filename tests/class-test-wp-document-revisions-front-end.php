@@ -471,6 +471,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertEquals( 3, substr_count( $output, '<li' ), 'document shortcode count' );
 		self::assertEquals( 2, substr_count( $output, 'action=edit' ), 'document new_tab count' );
 		self::assertEquals( 3, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+
+		$output = do_shortcode( '[documents show_thumb show_descr=true new_tab ]' );
+
+		// read the two published and the private ones, but no edit option.
+		self::assertEquals( 3, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 0, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 3, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
 	}
 
 	/**
@@ -492,12 +499,19 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		$output = do_shortcode( '[documents show_thumb show_descr=true show_edit new_tab ]' );
+
+		// read the two published and the two private ones.
+		self::assertEquals( 4, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 4, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 4, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+
+		$output = do_shortcode( '[documents show_thumb show_descr=true new_tab ]' );
 		console_log( $output );
 
-		// read the two published and the private ones.
-		self::assertEquals( 3, substr_count( $output, '<li' ), 'document shortcode count' );
-		self::assertEquals( 3, substr_count( $output, 'action=edit' ), 'document new_tab count' );
-		self::assertEquals( 3, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
+		// read the two published and the two private ones, but no edit option.
+		self::assertEquals( 4, substr_count( $output, '<li' ), 'document shortcode count' );
+		self::assertEquals( 0, substr_count( $output, 'action=edit' ), 'document new_tab count' );
+		self::assertEquals( 4, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
 	}
 
 	/**
