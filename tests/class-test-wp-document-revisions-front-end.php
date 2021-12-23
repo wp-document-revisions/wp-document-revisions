@@ -506,7 +506,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertEquals( 4, substr_count( $output, 'target="_blank"' ), 'document new_tab count' );
 
 		$output = do_shortcode( '[documents show_thumb show_descr=true new_tab ]' );
-		console_log( $output );
 
 		// read the two published and the two private ones, but no edit option.
 		self::assertEquals( 4, substr_count( $output, '<li' ), 'document shortcode count' );
@@ -739,7 +738,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		ob_start();
-		$wpdr_fe->$wpdr_fe->documents_shortcode_blocks();
+		$wpdr_fe->documents_shortcode_blocks();
 		$output = ob_get_contents();
 		ob_end_clean();
 
