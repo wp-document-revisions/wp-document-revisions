@@ -488,7 +488,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
 
-		self::assertIsArray( $output, 'still array' );
+		self::assertTrue( is_array( $output ), 'still array' );
 		self::assertEmpty( $output, 'empty' );
 
 		// get a post in global scope (bending rule).
@@ -497,12 +497,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
 
-		self::assertIsArray( $output, 'still array' );
+		self::assertTrue( is_array( $output ), 'still array' );
 		self::assertEmpty( $output, 'empty' );
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'content' );
 
-		self::assertIsArray( $output, 'still array' );
+		self::assertTrue( is_array( $output ), 'still array' );
 		self::assertNotEmpty( $output, 'has values' );
 		self::assertArrayHasKey( 'wpautop', $output, 'setting wpautop' );
 		self::assertFalse( $output['wpautop'], 'wpautop not false' );
