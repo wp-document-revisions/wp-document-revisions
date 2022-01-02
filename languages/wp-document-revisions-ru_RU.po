@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2022-01-02 04:55\n"
+"PO-Revision-Date: 2022-01-02 06:04\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:168
@@ -304,7 +304,7 @@ msgstr "Все статусы"
 
 #: includes/class-wp-document-revisions-admin.php:1138
 msgid "All owners"
-msgstr ""
+msgstr "Все владельцы"
 
 #: includes/class-wp-document-revisions-admin.php:1193
 msgid "Currently Editing"
@@ -465,7 +465,7 @@ msgstr "Да"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:183
 msgid "Display Document Description:"
-msgstr ""
+msgstr "Показать описание документа:"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:187
 msgid "Display Document Author:"
