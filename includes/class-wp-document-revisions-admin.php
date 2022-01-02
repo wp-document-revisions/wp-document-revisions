@@ -79,6 +79,8 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
 		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
+		// Although the Post Type Supports Editor, don't use block editor.
+		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 		add_action( 'edit_form_after_title', array( &$this, 'prepare_editor' ) );
 		add_filter( 'wp_editor_settings', array( &$this, 'document_editor_setting' ), 10, 2 );
 		add_filter( 'tiny_mce_before_init', array( &$this, 'modify_content_class' ) );
@@ -309,6 +311,23 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
 
 		do_action( 'document_edit' );
+	}
+
+
+	/**
+	 * Use Classic Editor for Documents (as need to constrain options).
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param bool    $use_block_editor Whether the post can be edited or not.
+	 * @param WP_Post $post             The post being checked.
+	 */
+	public function no_use_block_editor( $use_block_editor, $post ) {
+		// switch off for documents.
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
+			return false;
+		}
+		return $use_block_editor;
 	}
 
 

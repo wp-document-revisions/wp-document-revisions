@@ -576,7 +576,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 0 === $wpdb->num_rows ) {
 			return false;
 		}
-		return $attach['ID'];
+		return ( is_null( $attach['ID'] ) ? false : $attach['ID'] );
 	}
 
 	/**

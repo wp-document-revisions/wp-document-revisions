@@ -252,7 +252,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	public function test_endpoints() {
 		global $wp_rest_server;
 		// only want the default documents one.
-		$the_route = $this->namespaced_route . 'documents/';
+		$the_route = $this->namespaced_route . '/documents/';
 		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
 		self::assertNotEmpty( $routes, 'No document routes' );
 

@@ -74,9 +74,14 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Request                                  $request  Request used to generate the response.
 	 **/
 	public static function document_validation( $response, $handler, $request ) {
-		$route  = $request->get_route();
-		$params = $request->get_params();
-		$target = 'wp/v2/' . self::$parent->document_slug() . '/';
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$post_type = get_post_type_object( 'document' );
+		$route     = $request->get_route();
+		$params    = $request->get_params();
+		$target    = 'wp/v2/' . $post_type->rest_base . '/';
 		if ( ! strpos( $route . '/', $target ) ) {
 			return $response;
 		}
@@ -94,20 +99,9 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		// Additional validation for documents.
-		$post_type = get_post_type_object( 'document' );
-		$method    = $request->get_method();
-
-		// Only GET method and POST for document editors are currently supported.
-		if ( 'GET' !== $method ) {
-			return new WP_Error(
-				'rest_cannot_modify',
-				__( 'Sorry, you are only allowed to read documents', 'wp-document-revisions' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
 
 		// No revisions unless allowed.
-		if ( strpos( $route, '/revisions' ) && ! current_user_can( 'read_document_revisions' ) ) {
+		if ( strpos( $route, '/revisions/' ) && ! current_user_can( 'read_document_revisions' ) ) {
 			return new WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to view revisions.', 'wp-document-revisions' ),
@@ -116,10 +110,39 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		// does user require read_documents and not just read to read document.
-		if ( ! current_user_can( $post_type->cap->read ) ) {
+		if ( apply_filters( 'document_read_uses_read', true ) || current_user_can( 'read_documents' ) ) {
+			null;
+		} else {
 			return new WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to read documents.', 'wp-document-revisions' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		// Check methods.
+		$method = $request->get_method();
+		if ( 'GET' === $method ) {
+			// Only GET method always supported.
+			null;
+		} elseif ( 'PUT' === $method && apply_filters( 'document_use_block_editor', false ) ) {
+			// Editor usage needs review.
+			// Check nonce.
+			$nonce = $request->get_header( 'x-wp-nonce' );
+			if ( isset( $nonce ) && false !== wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+				// nonce OK.
+				null;
+			} else {
+				return new WP_Error(
+					'rest_cannot_modify',
+					__( 'Sorry, invalid PUT call', 'wp-document-revisions' ),
+					array( 'status' => rest_authorization_required_code() )
+				);
+			}
+		} else {
+			return new WP_Error(
+				'rest_cannot_modify',
+				__( 'Sorry, you are only allowed to use GET method', 'wp-document-revisions' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -188,13 +211,40 @@ class WP_Document_Revisions_Manage_Rest {
 	public function doc_clean_attachment( $response, $post, $request ) {
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
-		if ( 0 < $parent && 'document' === get_post_type( $parent ) && ! current_user_can( 'read_post', $parent ) ) {
-			$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
-			$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
-			if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
-				// description may leak the slug as generated images would be built using the slug name.
-				$response->data['description']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
-				$response->data['media_details']           = __( '<!-- protected -->', 'wp-document-revisions' );
+		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
+			null;
+		} else {
+			// not for us.
+			return $response;
+		}
+
+		// media always thinks that the attachments are in media directory. We may need to change it.
+		$wpdr    = self::$parent;
+		$std_dir = $wpdr::$wp_default_dir['basedir'];
+		$doc_dir = $wpdr->document_upload_dir();
+
+		// protect various fields.
+		$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
+		$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
+		if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
+			// description may leak the slug as generated images would be built using the slug name.
+			$response->data['description']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
+			$response->data['media_details']           = __( '<!-- protected -->', 'wp-document-revisions' );
+		} elseif ( $doc_dir !== $std_dir ) {
+			// need to correct link.
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			$home    = get_home_path();
+			$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
+			$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
+			if ( isset( $response->data['description']['rendered'] ) ) {
+				$response->data['description']['rendered'] = str_replace( $std_dir, $doc_dir, $response->data['description']['rendered'] );
+			}
+			if ( isset( $response->data['media_details']['sizes'] ) ) {
+				foreach ( (array) $response->data['media_details']['sizes'] as $size => $sizeinfo ) {
+					if ( isset( $sizeinfo['source_url'] ) ) {
+						$response->data['media_details']['sizes'][ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
+					}
+				}
 			}
 		}
 

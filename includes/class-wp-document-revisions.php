@@ -293,9 +293,6 @@ class WP_Document_Revisions {
 
 		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
-
-		// Although the Post Type Supports Editor, don't use block editor.
-		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 	}
 
 
@@ -500,24 +497,6 @@ class WP_Document_Revisions {
 				)
 			);
 		}
-	}
-
-
-
-	/**
-	 * Use Classic Editor for Documents (as need to constrain options.
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param bool    $use_block_editor Whether the post can be edited or not.
-	 * @param WP_Post $post             The post being checked.
-	 */
-	public function no_use_block_editor( $use_block_editor, $post ) {
-		// switch off for documents.
-		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
-			return false;
-		}
-		return $use_block_editor;
 	}
 
 
