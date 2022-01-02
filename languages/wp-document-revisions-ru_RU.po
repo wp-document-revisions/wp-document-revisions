@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2021-12-20 21:52\n"
+"PO-Revision-Date: 2022-01-02 04:55\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:168
@@ -85,7 +85,7 @@ msgstr "Когда закончите, просто нажмите <code>Обн�
 
 #: includes/class-wp-document-revisions-admin.php:239, includes/class-wp-document-revisions-admin.php:327
 msgid "Document Description"
-msgstr ""
+msgstr "Описание документа"
 
 #: includes/class-wp-document-revisions-admin.php:240
 msgid "The document description provides a short user-oriented summary of the document."
@@ -117,7 +117,7 @@ msgstr "Этапы рабочего процесса могут использо
 
 #: includes/class-wp-document-revisions-admin.php:247
 msgid "Publishing Documents"
-msgstr ""
+msgstr "Публикация документов"
 
 #: includes/class-wp-document-revisions-admin.php:248
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
@@ -174,7 +174,7 @@ msgstr "<br /> Если вы считаете, что произошла оши�
 
 #: includes/class-wp-document-revisions-admin.php:506
 msgid "Upload Document"
-msgstr ""
+msgstr "Загрузить документ"
 
 #: includes/class-wp-document-revisions-admin.php:507
 msgid "Upload New Version"
