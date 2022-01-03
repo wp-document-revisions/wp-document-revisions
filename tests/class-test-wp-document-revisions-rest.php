@@ -257,8 +257,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertNotEmpty( $routes, 'No document routes' );
 
 		foreach ( $routes as $route => $route_config ) {
+			console_log( $route );
 			if ( 1 === strpos( $the_route, $route ) ) {
-				console_log( $route );
 				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
 					self::assertArrayHasKey( 'callback', $endpoint );
@@ -280,5 +280,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 		self::assertEquals( 2, count( $response->get_data() ) );
+		console_log( $response->jsonSerialize() );
 	}
 }
