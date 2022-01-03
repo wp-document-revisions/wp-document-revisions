@@ -257,8 +257,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertNotEmpty( $routes, 'No document routes' );
 
 		foreach ( $routes as $route => $route_config ) {
-			console_log( $route );
-			if ( 1 === strpos( $the_route, $route ) ) {
+			if ( 1 === strpos( $route, $the_route ) ) {
+				console_log( $route );
 				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
 					self::assertArrayHasKey( 'callback', $endpoint );
