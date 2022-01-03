@@ -395,7 +395,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		// should already been fixed but is a null update.
-		console_log( 'Rows updated (4): ' . $rows );
+		self::assertSame( 0, $rows . 'null update did not happen.' );
 	}
 
 	/**
@@ -498,7 +498,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		// should already been fixed but is a null update.
-		console_log( 'Rows updated (5): ' . $rows );
+		self::assertSame( 1, $rows, 'null update did not happen.' );
 	}
 
 	/**

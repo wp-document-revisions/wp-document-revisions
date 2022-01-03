@@ -572,8 +572,15 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$wpdr_widget->form( $instance );
 		$output = ob_get_clean();
 
-		console_log( $output );
-		self::assertTrue( true );
+		self::assertEquals( 1, (int) substr_count( $output, '[title]" type="text" value="Recently Revised Documents"' ), 'widget_title' );
+		self::assertEquals( 1, (int) substr_count( $output, '[numberposts]" type="text" value="5"' ), 'widget_numberposts' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]" type="text"  checked=\'checked\' /' ), 'widget_publish' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]" type="text"  /' ), 'widget_private' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]" type="text"  /' ), 'widget_draft' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_thumb]"  /' ), 'widget_show_thumb"  /' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_descr]"  checked=\'checked\' /' ), 'widget_descr' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_author]"  checked=\'checked\' /' ), 'widget_author' );
+		self::assertEquals( 1, (int) substr_count( $output, '[new_tab]"  /' ), 'widget_new_tab"  /' );
 	}
 
 	/**
@@ -583,17 +590,15 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget  = new WP_Document_Revisions_Recently_Revised_Widget();
 		$new_instance = array(
-			'title'       => 'Test Title',
-			'numberposts' => 5,
-			'show_thumb'  => false,
-			'show_descr'  => true,
-			'show_author' => true,
-			'new_tab'     => false,
-			'post_status' => array(
-				'publish' => true,
-				'private' => false,
-				'draft'   => false,
-			),
+			'title'               => 'Test Title',
+			'numberposts'         => 5,
+			'show_thumb'          => false,
+			'show_descr'          => true,
+			'show_author'         => true,
+			'new_tab'             => false,
+			'post_status_publish' => true,
+			'post_status_private' => false,
+			'post_status_draft'   => false,
 		);
 		$old_instance = array();
 
@@ -608,6 +613,5 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertTrue( $instance['post_status']['publish'], 'publish' );
 		self::assertFalse( $instance['post_status']['private'], 'private' );
 		self::assertFalse( $instance['post_status']['draft'], 'draft' );
-
 	}
 }
