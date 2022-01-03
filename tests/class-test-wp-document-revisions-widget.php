@@ -561,15 +561,18 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 * Verify form routine.
 	 */
 	public function test_form_function() {
-
-		$wpdr_widget  = new WP_Document_Revisions_Recently_Revised_Widget();
+		global $wpdr_widget;
+		if ( ! $wpdr_widget ) {
+			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		}
+		register_widget( $wpdr_widget );
 		$instance = array();
 
 		ob_start();
 		$wpdr_widget->form( $instance );
 		$output = ob_get_clean();
 
-		consolelog( $output );
+		console_log( $output );
 		self::assertTrue( true );
 	}
 
@@ -585,7 +588,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			'show_thumb'  => false,
 			'show_descr'  => true,
 			'show_author' => true,
-			'new_tab'     => true,
+			'new_tab'     => false,
 			'post_status' => array(
 				'publish' => true,
 				'private' => false,
@@ -601,7 +604,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( $instance['show_thumb'], 'show_thumb' );
 		self::assertTrue( $instance['show_descr'], 'show_descr' );
 		self::assertTrue( $instance['show_author'], 'show_author' );
-		self::assertTrue( $instance['new_tab'], 'new_tab' );
+		self::assertFalse( $instance['new_tab'], 'new_tab' );
 		self::assertTrue( $instance['post_status']['publish'], 'publish' );
 		self::assertFalse( $instance['post_status']['private'], 'private' );
 		self::assertFalse( $instance['post_status']['draft'], 'draft' );

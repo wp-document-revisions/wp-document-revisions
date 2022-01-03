@@ -10,6 +10,24 @@
  * Recently revised documents widget.
  */
 class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
+	/**
+	 * The default data
+	 *
+	 * @var $defaults
+	 */
+	public $defaults = array(
+		'title'       => '',
+		'numberposts' => 5,
+		'post_status' => array(
+			'publish' => true,
+			'private' => false,
+			'draft'   => false,
+		),
+		'show_thumb'  => false,
+		'show_descr'  => true,
+		'show_author' => true,
+		'new_tab'     => false,
+	);
 
 	/**
 	 * Init widget and register.
@@ -29,7 +47,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget_gen( $args, $instance ) {
-
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
@@ -128,20 +145,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
-		$defaults = array(
-			'numberposts' => 5,
-			'post_status' => array(
-				'publish' => true,
-				'private' => false,
-				'draft'   => false,
-			),
-			'show_thumb'  => false,
-			'show_descr'  => true,
-			'show_author' => true,
-			'new_tab'     => false,
-		);
 
-		$instance = wp_parse_args( $instance, $defaults );
+		$instance = wp_parse_args( $instance, $this->defaults );
 		$output   = $this->widget_gen( $args, $instance );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $output;

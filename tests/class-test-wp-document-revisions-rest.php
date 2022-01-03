@@ -280,6 +280,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 		self::assertEquals( 2, count( $response->get_data() ) );
-		console_log( $response->jsonSerialize() );
+
+		ob_start();
+		var_dump( $response->get_data() );
+		$output = ob_get_clean();
+		console_log( $output );
 	}
 }
