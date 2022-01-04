@@ -597,8 +597,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			'show_author'         => true,
 			'new_tab'             => false,
 			'post_status_publish' => true,
-			'post_status_private' => false,
-			'post_status_draft'   => false,
+			'post_status_private' => null,  // uses isset to define true or false.
+			'post_status_draft'   => null,
 		);
 		$old_instance = array();
 

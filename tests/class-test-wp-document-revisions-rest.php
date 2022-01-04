@@ -85,6 +85,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			$wpdr->admin_init();
 		}
 
+		// make sure that we have the rest set up.
+		if ( ! class_exists( 'WP_Document_Revisions_Manage_Rest' ) ) {
+			$wpdr->manage_rest();
+		}
+
 		// set up the rest server.
 		global $wp_rest_server;
 		$wp_rest_server = new WP_REST_Server();
@@ -303,7 +308,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
-		self::assertEquals( 3, count( $response->get_data() ) );
+		self::assertEquals( 2, count( $response->get_data() ) );
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
