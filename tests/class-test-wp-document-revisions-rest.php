@@ -304,9 +304,37 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		global $wp_rest_server;
-		// Two public posts and one private post.
+		// Two public posts and one private post (not seen).
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 200, $response->get_status() );
+		self::assertEquals( 2, count( $response->get_data() ) );
+
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response->get_data() );
+		$output = ob_get_clean();
+		console_log( $output );
+	}
+
+	/**
+	 * Tests the public query with filter.
+	 */
+	public function test_get_items_editor_filtered() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		global $wp_filter;
+		console_log( 'filter set: ' . +isset( $wp_filter['rest_prepare_document'] ) );
+
+		global $wp_rest_server;
+		// Two public posts and one private post (not seen).
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
+		$response = $wp_rest_server->dispatch( $request );
+		$response = apply_filters( 'rest_prepare_document', $response, $wp_rest_server, $request );
+
 		self::assertEquals( 200, $response->get_status() );
 		self::assertEquals( 2, count( $response->get_data() ) );
 
