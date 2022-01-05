@@ -3072,8 +3072,11 @@ class WP_Document_Revisions {
 			return;
 		}
 
+		global $wpdr_mr;
 		include_once __DIR__ . '/class-wp-document-revisions-manage-rest.php';
-		new WP_Document_Revisions_Manage_Rest( $this );
+		if ( ! $wpdr_mr  ) {
+			$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $this );
+		}
 	}
 
 

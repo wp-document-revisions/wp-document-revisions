@@ -90,6 +90,9 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			$wpdr->manage_rest();
 		}
 
+		global $wpdr_mr;
+		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
+
 		// set up the rest server.
 		global $wp_rest_server;
 		$wp_rest_server = new WP_REST_Server();
@@ -309,12 +312,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 		self::assertEquals( 2, count( $response->get_data() ) );
-
-		ob_start();
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
-		$output = ob_get_clean();
-		console_log( $output );
 	}
 
 	/**
@@ -328,12 +325,16 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		global $wp_filter;
 		console_log( 'filter set: ' . +isset( $wp_filter['rest_prepare_document'] ) );
+		if ( ! isset( $wp_filter['rest_prepare_document'] ) ) {
+			global $wpdr_mr;
+			add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		}
+		console_log( 'filter set: ' . +isset( $wp_filter['rest_prepare_document'] ) );
 
 		global $wp_rest_server;
 		// Two public posts and one private post (not seen).
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
-		$response = apply_filters( 'rest_prepare_document', $response, $wp_rest_server, $request );
 
 		self::assertEquals( 200, $response->get_status() );
 		self::assertEquals( 2, count( $response->get_data() ) );
