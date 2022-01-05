@@ -3074,7 +3074,7 @@ class WP_Document_Revisions {
 
 		global $wpdr_mr;
 		include_once __DIR__ . '/class-wp-document-revisions-manage-rest.php';
-		if ( ! $wpdr_mr  ) {
+		if ( ! $wpdr_mr ) {
 			$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $this );
 		}
 	}
