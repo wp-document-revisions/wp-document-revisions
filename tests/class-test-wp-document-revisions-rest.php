@@ -334,8 +334,15 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
 
-		// should have no access.
-		//self::assertInstanceOf( 'WP_Error', $response, 'not error response' );
+		// should have no access - but may have "no route".
+		if ( is_wp_error( $response ) ) {
+			self::assertInstanceOf( 'WP_Error', $response, 'media not error response' );
+		} else {
+			$data = $response->get_data();
+			self::assertEquals( $data['code'], 'rest_no_route', 'media wrong code' );
+			self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
+			self::assertEquals( 404, $response->get_status(), 'media wrong status' );
+		}
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
@@ -350,16 +357,15 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			// try a revisions query directly.
 			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
 			$response = $wp_rest_server->dispatch( $request );
-
 		} else {
 			assertFalse( true, 'no revision found' );
 		}
-		ob_start();
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
-		$output = ob_get_clean();
-		console_log( $output );
 
+		self::assertInstanceOf( 'WP_Error', $response, 'revisions not error response' );
+		$data = $response->get_data();
+		self::assertEquals( $data['code'], 'rest_cannot_read', 'revisions wrong code' );
+		self::assertEquals( $data['message'], 'Sorry, you are not allowed to view revisions.', 'revisions wrong route' );
+		self::assertEquals( 401, $response->get_status(), 'revisions wrong status' );
 	}
 
 	/**
