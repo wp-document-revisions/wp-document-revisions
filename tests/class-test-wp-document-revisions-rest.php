@@ -278,7 +278,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests the public  query.
+	 * Tests the public query.
 	 */
 	public function test_get_items_noauth() {
 		global $current_user;
@@ -286,24 +286,80 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		global $wp_filter;
-		if ( ! isset( $wp_filter['rest_prepare_document'] ) ) {
-			global $wpdr_mr;
-			add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
-		}
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
 
 		global $wp_rest_server;
 		// Two public posts.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
-		self::assertEquals( 2, count( $response->get_data() ) );
+
+		$responses = $response->get_data();
+		self::assertEquals( 2, count( $responses ) );
+
+		// separate out which is which.
+		if ( self::$editor_public_post === $responses[1]['id'] && self::$editor_public_post_2 === $responses[0]['id'] ) {
+			// expected order (descending).
+			$p1 = $responses[1];
+			$p2 = $responses[0];
+		} elseif ( self::$editor_public_post === $responses[0]['id'] && self::$editor_public_post_2 === $responses[1]['id'] ) {
+			// alternative order.
+			$p1 = $responses[0];
+			$p2 = $responses[1];
+		} else {
+			assertFalse( true, 'Expected posts not returned' );
+		}
+
+		// validate parts.
+		self::assertSame( $p1['status'], 'publish', 'wrong status 1' );
+		self::assertSame( $p2['status'], 'publish', 'wrong status 2' );
+		self::assertSame( $p1['type'], 'document', 'wrong type 1' );
+		self::assertSame( $p2['type'], 'document', 'wrong type 2' );
+		self::assertEquals( 1, (int) substr_count( $p1['link'], $p1['slug'] ), 'slug not in link 1' );
+		self::assertEquals( 1, (int) substr_count( $p2['link'], $p2['slug'] ), 'slug not in link 2' );
+
+		// public should not see versions or attachments.
+		self::assertFalse( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
+		self::assertFalse( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
+		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
+		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
+
+		// try the attachment query directly.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+
+		// should have no access.
+		self::assertInstanceOf( 'WP_Error', $response, 'not error response' );
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response->get_data() );
 		$output = ob_get_clean();
 		console_log( $output );
+
+		// find a revision.
+		global $wpdr;
+		$revns = £wpdr->get_revisions( self::$editor_public_post );
+		if ( array_key_exists( 1, $revns ) ) {
+			// try a revisions query directly.
+			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
+			$response = $wp_rest_server->dispatch( $request );
+
+		} else {
+			assertFalse( true, 'no revision found' );
+		}
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response->get_data() );
+		$output = ob_get_clean();
+		console_log( $output );
+
 	}
 
 	/**
@@ -315,24 +371,80 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		global $wp_filter;
-		if ( ! isset( $wp_filter['rest_prepare_document'] ) ) {
-			global $wpdr_mr;
-			add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
-		}
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
 
 		global $wp_rest_server;
-		// Two public posts and one private post (not seen).
+		// Two public posts.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
-
 		self::assertEquals( 200, $response->get_status() );
-		self::assertEquals( 2, count( $response->get_data() ) );
+
+		$responses = $response->get_data();
+		self::assertEquals( 2, count( $responses ) );
+
+		// separate out which is which.
+		if ( self::$editor_public_post === $responses[1]['id'] && self::$editor_public_post_2 === $responses[0]['id'] ) {
+			// expected order (descending).
+			$p1 = $responses[1];
+			$p2 = $responses[0];
+		} elseif ( self::$editor_public_post === $responses[0]['id'] && self::$editor_public_post_2 === $responses[1]['id'] ) {
+			// alternative order.
+			$p1 = $responses[0];
+			$p2 = $responses[1];
+		} else {
+			assertFalse( true, 'Expected posts not returned' );
+		}
+
+		// validate parts.
+		self::assertSame( $p1['status'], 'publish', 'wrong status 1' );
+		self::assertSame( $p2['status'], 'publish', 'wrong status 2' );
+		self::assertSame( $p1['type'], 'document', 'wrong type 1' );
+		self::assertSame( $p2['type'], 'document', 'wrong type 2' );
+		self::assertEquals( 1, (int) substr_count( $p1['link'], $p1['slug'] ), 'slug not in link 1' );
+		self::assertEquals( 1, (int) substr_count( $p2['link'], $p2['slug'] ), 'slug not in link 2' );
+
+		// public should not see versions or attachments.
+		self::assertFalse( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
+		self::assertFalse( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
+		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
+		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
+
+		// try the attachment query directly.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+
+		// should have access.
+		self::assertEquals( 200, $response->get_status() );
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response->get_data() );
 		$output = ob_get_clean();
 		console_log( $output );
+
+		// find a revision.
+		global $wpdr;
+		$revns = £wpdr->get_revisions( self::$editor_public_post );
+		if ( array_key_exists( 1, $revns ) ) {
+			// try a revisions query directly.
+			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
+			$response = $wp_rest_server->dispatch( $request );
+
+		} else {
+			assertFalse( true, 'no revision found' );
+		}
+
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response->get_data() );
+		$output = ob_get_clean();
+		console_log( $output );
+
 	}
 }

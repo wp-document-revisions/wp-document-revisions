@@ -171,6 +171,11 @@ class WP_Document_Revisions_Manage_Rest {
 			$response->remove_link( 'predecessor-version' );
 		}
 
+		// Possibly remove attachment.
+		if ( ! current_user_can( 'edit_document', $post->ID ) ) {
+			$response->remove_link( 'https://api.w.org/attachment' );
+		}
+
 		return $response;
 	}
 
@@ -192,8 +197,11 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Possibly remove revisions.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
-			$response->remove_link( 'version-history' );
-			$response->remove_link( 'predecessor-version' );
+			return new WP_Error(
+				'rest_cannot_read',
+				__( 'Sorry, you are not allowed to view revisions.', 'wp-document-revisions' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
 		}
 
 		return $response;
@@ -212,6 +220,9 @@ class WP_Document_Revisions_Manage_Rest {
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
+			null;
+		} elseif ( current_user_can( 'edit_document', $parent ) )  {
+			// can edit, so dont hide details.
 			null;
 		} else {
 			// not for us.
