@@ -335,11 +335,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 
 		// should have no access.
-		self::assertInstanceOf( 'WP_Error', $response, 'not error response' );
+		//self::assertInstanceOf( 'WP_Error', $response, 'not error response' );
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
+		var_dump( $response );
 		$output = ob_get_clean();
 		console_log( $output );
 
@@ -409,11 +409,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $p1['link'], $p1['slug'] ), 'slug not in link 1' );
 		self::assertEquals( 1, (int) substr_count( $p2['link'], $p2['slug'] ), 'slug not in link 2' );
 
-		// public should not see versions or attachments.
-		self::assertFalse( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
-		self::assertFalse( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
-		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
-		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
+		// editor should see versions or attachments.
+		self::assertTrue( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
+		self::assertTrue( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
+		self::assertTrue( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
+		self::assertTrue( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
 		// try the attachment query directly.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
@@ -424,7 +424,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
+		var_dump( $response );
 		$output = ob_get_clean();
 		console_log( $output );
 

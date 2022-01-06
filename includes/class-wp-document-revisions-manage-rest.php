@@ -221,7 +221,7 @@ class WP_Document_Revisions_Manage_Rest {
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
 			null;
-		} elseif ( current_user_can( 'edit_document', $parent ) )  {
+		} elseif ( current_user_can( 'edit_document', $parent ) ) {
 			// can edit, so dont hide details.
 			null;
 		} else {
