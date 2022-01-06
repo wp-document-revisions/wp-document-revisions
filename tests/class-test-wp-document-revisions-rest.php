@@ -335,14 +335,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 
 		// should have no access - but may have "no route".
-		if ( is_wp_error( $response ) ) {
-			self::assertInstanceOf( 'WP_Error', $response, 'media not error response' );
-		} else {
-			$data = $response->get_data();
-			self::assertEquals( $data['code'], 'rest_no_route', 'media wrong code' );
-			self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
-			self::assertEquals( 404, $response->get_status(), 'media wrong status' );
-		}
+		$data = $response->get_data();
+		self::assertEquals( $data['code'], 'rest_no_route', 'media wrong code' );
+		self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
+		self::assertEquals( 404, $response->get_status(), 'media wrong status' );
 
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
@@ -361,7 +357,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			assertFalse( true, 'no revision found' );
 		}
 
-		self::assertInstanceOf( 'WP_Error', $response, 'revisions not error response' );
 		$data = $response->get_data();
 		self::assertEquals( $data['code'], 'rest_cannot_read', 'revisions wrong code' );
 		self::assertEquals( $data['message'], 'Sorry, you are not allowed to view revisions.', 'revisions wrong route' );
@@ -391,6 +386,12 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response );
+		$output = ob_get_clean();
+		console_log( $output );
+
 		$responses = $response->get_data();
 		self::assertEquals( 2, count( $responses ) );
 
@@ -418,7 +419,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// editor should see versions or attachments.
 		self::assertTrue( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
 		self::assertTrue( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
-		self::assertTrue( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
 		self::assertTrue( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
 		// try the attachment query directly.
