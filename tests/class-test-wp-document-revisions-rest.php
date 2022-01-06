@@ -345,7 +345,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// find a revision.
 		global $wpdr;
-		$revns = £wpdr->get_revisions( self::$editor_public_post );
+		$revns = $wpdr->get_revisions( self::$editor_public_post );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
 			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
@@ -430,7 +430,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// find a revision.
 		global $wpdr;
-		$revns = £wpdr->get_revisions( self::$editor_public_post );
+		$revns = $wpdr->get_revisions( self::$editor_public_post );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
 			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
