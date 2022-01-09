@@ -266,6 +266,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		foreach ( $routes as $route => $route_config ) {
 			if ( 1 === strpos( $route, $the_route ) ) {
+				console_log( $route );
 				self::assertTrue( is_array( $route_config ) );
 				foreach ( $route_config as $i => $endpoint ) {
 					self::assertArrayHasKey( 'callback', $endpoint );
@@ -273,6 +274,24 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 					self::assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
 					self::assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ) );
 				}
+			}
+		}
+	}
+
+	/**
+	 * Tests the document endpoints.
+	 */
+	public function test_other_endpoints() {
+		global $wp_rest_server;
+		// only want the default documents one.
+		$the_route = $this->namespaced_route . '/media';
+		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
+		self::assertNotEmpty( $routes, 'No media routes' );
+
+		foreach ( $routes as $route => $route_config ) {
+			if ( 1 === strpos( $route, $the_route ) ) {
+				console_log( $route );
+				self::assertTrue( is_array( $route_config ) );
 			}
 		}
 	}
@@ -331,7 +350,28 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
 		// try the attachment query directly.
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
+		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media?parent=%d', self::$editor_public_post ) );
+		$response = $wp_rest_server->dispatch( $request );
+
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response );
+		$output = ob_get_clean();
+		console_log( $output );
+
+		// should have no access - but may have "no route".
+		$data = $response->get_data();
+		self::assertEquals( $data['code'], 'rest_no_route', 'media wrong code' );
+		self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
+		self::assertEquals( 404, $response->get_status(), 'media wrong status' );
+
+		// try the attachment query directly.
+		global $wpdr;
+		$attach = $wpdr->get_document( self::$editor_public_post );
+		self::assertTrue( $attach instanceof WP_Post, 'not a post' );
+		self::assertSame( $attacch->post_type, 'attachment', 'not an attachment' );
+
+		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media/%d', $attach->ID ) );
 		$response = $wp_rest_server->dispatch( $request );
 
 		// should have no access - but may have "no route".
@@ -347,7 +387,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		console_log( $output );
 
 		// find a revision.
-		global $wpdr;
 		$revns = $wpdr->get_revisions( self::$editor_public_post );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
