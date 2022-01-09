@@ -353,6 +353,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media?parent=%d', self::$editor_public_post ) );
 		$response = $wp_rest_server->dispatch( $request );
 
+		console_log( 'Response from media?parent' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response );
@@ -369,7 +370,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		global $wpdr;
 		$attach = $wpdr->get_document( self::$editor_public_post );
 		self::assertTrue( $attach instanceof WP_Post, 'not a post' );
-		self::assertSame( $attacch->post_type, 'attachment', 'not an attachment' );
+		self::assertSame( $attach->post_type, 'attachment', 'not an attachment' );
 
 		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media/%d', $attach->ID ) );
 		$response = $wp_rest_server->dispatch( $request );
@@ -380,6 +381,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
 		self::assertEquals( 404, $response->get_status(), 'media wrong status' );
 
+		console_log( 'Response from media/id' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response );
@@ -390,6 +392,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$revns = $wpdr->get_revisions( self::$editor_public_post );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
+			console_log( 'Response from documents/id/revisions/xxx' );
 			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
 			$response = $wp_rest_server->dispatch( $request );
 		} else {
@@ -425,6 +428,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 
+		console_log( 'Editor /documents' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response );
@@ -458,7 +462,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// editor should see versions or attachments.
 		self::assertTrue( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
 		self::assertTrue( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
-		self::assertTrue( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
 		// try the attachment query directly.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
