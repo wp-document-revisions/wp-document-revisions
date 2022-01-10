@@ -350,10 +350,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
 		// try the attachment query directly.
-		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media?parent=%d', self::$editor_public_post ) );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/media' );
+		$request->set_param( 'parent', self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
 
-		console_log( 'Response from media?parent' );
+		console_log( 'Response from media with parent' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response );
@@ -375,12 +376,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/media/%d', $attach->ID ) );
 		$response = $wp_rest_server->dispatch( $request );
 
-		// should have no access - but may have "no route".
-		$data = $response->get_data();
-		self::assertEquals( $data['code'], 'rest_no_route', 'media wrong code' );
-		self::assertEquals( $data['message'], 'No route was found matching the URL and request method.', 'media wrong route' );
-		self::assertEquals( 404, $response->get_status(), 'media wrong status' );
-
 		console_log( 'Response from media/id' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
@@ -393,8 +388,13 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
 			console_log( 'Response from documents/id/revisions/xxx' );
-			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
+			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post, $revns[1]->ID ) );
 			$response = $wp_rest_server->dispatch( $request );
+			ob_start();
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+			var_dump( $response );
+			$output = ob_get_clean();
+			console_log( $output );
 		} else {
 			assertFalse( true, 'no revision found' );
 		}
@@ -428,10 +428,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
 
-		console_log( 'Editor /documents' );
+		console_log( 'Response from Editor /documents' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response );
+		var_dump( $response->get_data() );
 		$output = ob_get_clean();
 		console_log( $output );
 
@@ -464,12 +464,14 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertTrue( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
 
 		// try the attachment query directly.
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/media?parent=' . self::$editor_public_post );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/media' );
+		$request->set_param( 'parent', self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
 
 		// should have access.
 		self::assertEquals( 200, $response->get_status() );
 
+		console_log( 'Response from Editor media with parent' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response );
@@ -488,7 +490,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			assertFalse( true, 'no revision found' );
 		}
 
+		console_log( 'Response from Editor attachment' );
 		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $response->get_status() );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response->get_data() );
 		$output = ob_get_clean();
