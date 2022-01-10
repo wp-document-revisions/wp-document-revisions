@@ -288,12 +288,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
 		self::assertNotEmpty( $routes, 'No media routes' );
 
-		foreach ( $routes as $route => $route_config ) {
-			if ( 1 === strpos( $route, $the_route ) ) {
-				console_log( $route );
-				self::assertTrue( is_array( $route_config ) );
-			}
-		}
+		self::assertTrue( array_key_exists( '/wp/v2/media', $routes ), 'media not present' );
+		self::assertTrue( array_key_exists( '/wp/v2/media/(?P<id>[\d]+)', $routes ), 'media/id not present' );
 	}
 
 	/**
@@ -332,7 +328,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			$p1 = $responses[0];
 			$p2 = $responses[1];
 		} else {
-			assertFalse( true, 'Expected posts not returned' );
+			self::assertFalse( true, 'Expected posts not returned' );
 		}
 
 		// validate parts.
@@ -349,7 +345,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p1['_links'] ), 'p1 attachment' );
 		self::assertFalse( array_key_exists( 'https://api.w.org/attachment', $p2['_links'] ), 'p2 attachment' );
 
-		// try the attachment query directly.
+		// try the attachment query via parent.
 		$request = new WP_REST_Request( 'GET', '/wp/v2/media' );
 		$request->set_param( 'parent', self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
@@ -470,6 +466,12 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$responses = $response->get_data();
+		console_log( 'Responses data from Editor media with parent' );
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+		var_dump( $responses );
+		$output = ob_get_clean();
+		console_log( $output );
 		self::assertSame( $responses['type'], 'attachment', 'wrong type attachment' );
 
 		// try the attachment query directly.
@@ -487,10 +489,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( $responses['id'], $attach->ID, 'wrong attachment' );
 		self::assertSame( $responses['type'], 'attachment', 'wrong type attachment' );
 
-		console_log( 'Response data from Editor media with parent' );
+		console_log( 'Response data from Editor media with id' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response );
+		var_dump( $responses );
 		$output = ob_get_clean();
 		console_log( $output );
 
@@ -506,7 +508,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			assertFalse( true, 'no revision found' );
 		}
 
-		console_log( 'Response from Editor attachment' );
+		console_log( 'Response from Editor revision' );
 		ob_start();
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 		var_dump( $response->get_status() );
