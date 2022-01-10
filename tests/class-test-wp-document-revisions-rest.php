@@ -356,9 +356,9 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$responses = $response->get_data();
-		self::assertEquals( 1, count( $responses ), 'not one response' );
+		self::assertEquals( 1, count( $responses ), 'not one response 1' );
 		$response = $responses[0];
-		self::assertSame( $response['type'], 'attachment', 'wrong type attachment' );
+		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 1' );
 
 		// elements are protected.
 		self::assertSame( $response['slug'], '<!-- protected -->', 'wrong status 1' );
@@ -375,36 +375,34 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
+		$responses = $response->get_data();
 		self::assertEquals( 1, count( $responses ), 'not one response' );
 		$response = $responses[0];
-		self::assertSame( $response['type'], 'attachment', 'wrong type attachment' );
-		self::assertEquals( $responses['id'], $attach->ID, 'wrong attachment' );
-		self::assertSame( $responses['type'], 'attachment', 'wrong type attachment' );
+		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
+		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 
 		// elements are protected.
-		self::assertSame( $responses['slug'], '<!-- protected -->', 'wrong status 1' );
-		self::assertSame( $responses['title']['rendered'], '<!-- protected -->', 'wrong title 1' );
+		self::assertSame( $response['slug'], '<!-- protected -->', 'wrong status 2' );
+		self::assertSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 2' );
 
 		// find a revision.
-		$revns = $wpdr->get_revisions( self::$editor_public_post );
+		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
 			console_log( 'Response from documents/id/revisions/xxx' );
-			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post, $revns[1]->ID ) );
+			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
 			$response = $wp_rest_server->dispatch( $request );
+			console_log( 'Response data from Noauth revision' );
 			ob_start();
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-			var_dump( $response );
+			var_dump( $response->get_status() );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+			var_dump( $responses );
 			$output = ob_get_clean();
 			console_log( $output );
 		} else {
-			assertFalse( true, 'no revision found' );
+			self::assertFalse( true, 'no revision found' );
 		}
-
-		$data = $response->get_data();
-		self::assertEquals( $data['code'], 'rest_cannot_read', 'revisions wrong code' );
-		self::assertEquals( $data['message'], 'Sorry, you are not allowed to view revisions.', 'revisions wrong route' );
-		self::assertEquals( 401, $response->get_status(), 'revisions wrong status' );
 	}
 
 	/**
@@ -429,13 +427,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 200, $response->get_status() );
-
-		console_log( 'Response from Editor /documents' );
-		ob_start();
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
-		$output = ob_get_clean();
-		console_log( $output );
 
 		$responses = $response->get_data();
 		self::assertEquals( 2, count( $responses ) );
@@ -467,7 +458,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertTrue( array_key_exists( 'wp:attachment', $p1['_links'] ), 'p1 attachment' );
 		self::assertTrue( array_key_exists( 'wp:attachment', $p2['_links'] ), 'p2 attachment' );
 
-		// try the attachment query directly.
+		// try the attachment query via parent.
 		$request = new WP_REST_Request( 'GET', '/wp/v2/media' );
 		$request->set_param( 'parent', self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
@@ -475,15 +466,13 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$responses = $response->get_data();
-		self::assertEquals( 1, count( $responses ), 'not one response' );
+		self::assertEquals( 1, count( $responses ), 'not one response 1' );
 		$response = $responses[0];
-		self::assertSame( $response['type'], 'attachment', 'wrong type attachment' );
-		console_log( 'Responses data from Editor media with parent' );
-		ob_start();
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response );
-		$output = ob_get_clean();
-		console_log( $output );
+		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 1' );
+
+		// elements are not protected.
+		self::assertNotSame( $response['slug'], '<!-- protected -->', 'wrong status 1' );
+		self::assertNotSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 1' );
 
 		// try the attachment query directly.
 		global $wpdr;
@@ -495,39 +484,35 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$response = $wp_rest_server->dispatch( $request );
 
 		// can read it.
-		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
+		self::assertEquals( 200, $response->get_status(), 'cannot read attachment 2' );
 		$responses = $response->get_data();
-		self::assertEquals( 1, count( $responses ), 'not one response' );
+		self::assertEquals( 1, count( $responses ), 'not one response 2' );
 		$response = $responses[0];
-		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment' );
-		self::assertSame( $response['type'], 'attachment', 'wrong type attachment' );
+		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
+		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
+
+		// elements are not protected.
+		self::assertNotSame( $response['slug'], '<!-- protected -->', 'wrong status 2' );
+		self::assertNotSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 2' );
 
 		// find a revision.
 		global $wpdr;
-		$revns = $wpdr->get_revisions( self::$editor_public_post );
+		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
-			$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions/' . $revns[1]->ID );
-			$response = $wp_rest_server->dispatch( $request );
+			$request   = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
+			$response  = $wp_rest_server->dispatch( $request );
 			$responses = $response->get_data();
-			console_log( 'Response data from Editor media with id' );
+			console_log( 'Response data from Editor revision' );
 			ob_start();
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
+			var_dump( $response->get_status() );
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 			var_dump( $responses );
 			$output = ob_get_clean();
 			console_log( $output );
 		} else {
-			assertFalse( true, 'no revision found' );
+			self::assertFalse( true, 'no revision found' );
 		}
-
-		console_log( 'Response from Editor revision' );
-		ob_start();
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_status() );
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-		var_dump( $response->get_data() );
-		$output = ob_get_clean();
-		console_log( $output );
-
 	}
 }
