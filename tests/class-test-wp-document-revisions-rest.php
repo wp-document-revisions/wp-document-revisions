@@ -386,7 +386,20 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// find a revision. Should not be available.
 		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
-		self::assertFalse( array_key_exists( 1, $revns ), 'Revisions found' );
+		if ( array_key_exists( 1, $revns ) ) {
+			// try a revisions query.
+			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
+			$response = $wp_rest_server->dispatch( $request );
+			$revision = $response->get_data();
+			console_log( $response->get_status() );
+			ob_start();
+			// phpcs:ignore
+			var_dump( $revision );
+			$output = ob_end_clean();
+			console_log( $output );
+		} else {
+			self::assertFalse( true, 'no revision found' );
+		}
 	}
 
 	/**
@@ -482,7 +495,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		global $wpdr;
 		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
 		if ( array_key_exists( 1, $revns ) ) {
-			// try a revisions query directly.
+			// try a revisions query.
 			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
 			$response = $wp_rest_server->dispatch( $request );
 			$revision = $response->get_data();
