@@ -364,7 +364,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertSame( $response['slug'], '<!-- protected -->', 'wrong status 1' );
 		self::assertSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 1' );
 
-		// try the attachment query directly.
+		// try the attachment query directly. Note a single array returned.
 		global $wpdr;
 		$attach = $wpdr->get_document( self::$editor_public_post );
 		self::assertTrue( $attach instanceof WP_Post, 'not a post' );
@@ -375,9 +375,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
-		$responses = $response->get_data();
-		self::assertEquals( 1, count( $responses ), 'not one response' );
-		$response = $responses[0];
+		$response = $response->get_data();
+		self::assertEquals( 24, count( $responses ), 'not single response' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 
@@ -401,7 +400,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			$output = ob_get_clean();
 			console_log( $output );
 		} else {
-			self::assertFalse( true, 'no revision found' );
+			assertFalse( true, 'no revision found' );
 		}
 	}
 
@@ -441,7 +440,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			$p1 = $responses[0];
 			$p2 = $responses[1];
 		} else {
-			assertFalse( true, 'Expected posts not returned' );
+			self::assertFalse( true, 'Expected posts not returned' );
 		}
 
 		// validate parts.
@@ -474,7 +473,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertNotSame( $response['slug'], '<!-- protected -->', 'wrong status 1' );
 		self::assertNotSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 1' );
 
-		// try the attachment query directly.
+		// try the attachment query directly. Note a single array returned.
 		global $wpdr;
 		$attach = $wpdr->get_document( self::$editor_public_post );
 		self::assertTrue( $attach instanceof WP_Post, 'not a post' );
@@ -485,9 +484,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment 2' );
-		$responses = $response->get_data();
-		self::assertEquals( 1, count( $responses ), 'not one response 2' );
-		$response = $responses[0];
+		$response = $response->get_data();
+		self::assertEquals( 24, count( $response ), 'not single response 2' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 
@@ -500,7 +498,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
-			$request   = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
+			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
 			$response  = $wp_rest_server->dispatch( $request );
 			$responses = $response->get_data();
 			console_log( 'Response data from Editor revision' );
