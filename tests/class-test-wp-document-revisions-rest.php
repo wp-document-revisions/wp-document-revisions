@@ -376,7 +376,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$response = $response->get_data();
-		self::assertEquals( 24, count( $responses ), 'not single response' );
+		self::assertEquals( 24, count( $response ), 'not single response' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 
@@ -384,24 +384,9 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertSame( $response['slug'], '<!-- protected -->', 'wrong status 2' );
 		self::assertSame( $response['title']['rendered'], '<!-- protected -->', 'wrong title 2' );
 
-		// find a revision.
+		// find a revision. Should not be available.
 		$revns = $wpdr->get_revisions( self::$editor_public_post_2 );
-		if ( array_key_exists( 1, $revns ) ) {
-			// try a revisions query directly.
-			console_log( 'Response from documents/id/revisions/xxx' );
-			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
-			$response = $wp_rest_server->dispatch( $request );
-			console_log( 'Response data from Noauth revision' );
-			ob_start();
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-			var_dump( $response->get_status() );
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-			var_dump( $responses );
-			$output = ob_get_clean();
-			console_log( $output );
-		} else {
-			assertFalse( true, 'no revision found' );
-		}
+		self::assertFalse( array_key_exists( 1, $revns ), 'Revisions found' );
 	}
 
 	/**
@@ -499,16 +484,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		if ( array_key_exists( 1, $revns ) ) {
 			// try a revisions query directly.
 			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
-			$response  = $wp_rest_server->dispatch( $request );
-			$responses = $response->get_data();
-			console_log( 'Response data from Editor revision' );
-			ob_start();
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-			var_dump( $response->get_status() );
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
-			var_dump( $responses );
-			$output = ob_get_clean();
-			console_log( $output );
+			$response = $wp_rest_server->dispatch( $request );
+			$revision = $response->get_data();
+			self::assertSame( $revision['id'], $revns[1]->ID, 'not correct id' );
+			self::assertSame( $revision['parent'], self::$editor_public_post_2, 'not correct parent' );
+			self::assertSame( $revision['slug'], self::$editor_public_post_2 . '-revision-v1', 'not correct slug' );
 		} else {
 			self::assertFalse( true, 'no revision found' );
 		}
