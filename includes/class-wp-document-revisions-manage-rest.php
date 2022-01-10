@@ -220,10 +220,11 @@ class WP_Document_Revisions_Manage_Rest {
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
-			null;
-		} elseif ( current_user_can( 'edit_document', $parent ) ) {
-			// can edit, so dont hide details.
-			null;
+			// a document.
+			if ( current_user_can( 'edit_document', $parent ) ) {
+				// can edit, so dont hide details.
+				return $response;
+			}
 		} else {
 			// not for us.
 			return $response;
