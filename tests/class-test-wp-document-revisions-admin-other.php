@@ -449,8 +449,25 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		// get a post in global scope (bending rule).
+		$npost              = new stdClass();
+		$npost->ID          = 0;
+		$npost->post_author = '';
+		$npost->post_type   = 'post';
+		$npost->post_status = 'draft';
+		$npost->post_parent = 0;
 		global $post;
+		// nothing in global scope.
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = new WP_Post( $npost );
+
+		ob_start();
+		$wpdr->admin->prepare_editor( $post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEmpty( $output, 'not doc not empty' );
+
+		// get a post in global scope (bending rule).
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
@@ -459,6 +476,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
+		self::assertEquals( 1, (int) substr_count( $output, 'Document Description' ), 'Description not found' );
 		self::assertTrue( true, 'prepare_editor' );
 	}
 
@@ -491,6 +509,11 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertTrue( is_array( $output ), 'still array' );
 		self::assertEmpty( $output, 'empty' );
 
+		$output = $wpdr->admin->document_editor_setting( $settings, 'content' );
+
+		self::assertTrue( is_array( $output ), 'still array' );
+		self::assertEmpty( $output, 'empty' );
+
 		// get a post in global scope (bending rule).
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
@@ -510,5 +533,104 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 8, $output['textarea_rows'], 'textarea_rows not 8' );
 
 		self::assertTrue( true, 'document_editor_setting' );
+	}
+	/**
+	 * Tests the posts modify_content_class.
+	 */
+	public function test_admin_modify_content_class() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$settings = array();
+
+		$settings = $wpdr->admin->modify_content_class( $settings );
+
+		self::assertIsArray( $settings, 'not array' );
+		self::assertEmpty( $settings, 'not empty' );
+
+		$settings = array(
+			'body_class'  => 'content post-type-document',
+			'content_css' => 'some.css',
+		);
+
+		$settings = $wpdr->admin->modify_content_class( $settings );
+
+		self::assertNotEquals( 'some.css', $settings['content_css'], 'content_css not changed' );
+		self::assertTrue( true, 'modify_content_class' );
+	}
+
+	/**
+	 * Tests the posts hide_postcustom_metabox.
+	 */
+	public function test_admin_hide_postcustom_metabox() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$hidden     = array();
+		$screen     = new StdClass();
+		$screen->id = 'post';
+
+		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
+
+		self::assertIsArray( $hidden, 'not doc not array' );
+		self::assertEmpty( $hidden, 'not doc not empty' );
+
+		$screen->id = 'document';
+
+		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
+
+		self::assertIsArray( $hidden, 'doc not array' );
+		self::assertEmpty( $hidden, 'doc empty' );
+		self::assertArrayHasKey( 0, $hidden, 'doc not 0 row' );
+		self::assertEquals( $hidden[0], 'postcustom', 'doc wrong value' );
+
+		self::assertTrue( true, 'hide_postcustom_metabox' );
+	}
+
+	/**
+	 * Tests the admin_body_class_filter.
+	 */
+	public function test_admin_body_class_filter() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$npost              = new stdClass();
+		$npost->ID          = 0;
+		$npost->post_author = '';
+		$npost->post_type   = 'post';
+		$npost->post_status = 'draft';
+		$npost->post_parent = 0;
+		global $post;
+		// nothing in global scope.
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = new WP_Post( $npost );
+
+		$body_class = '';
+
+		$body_class = $wpdr->admin->admin_body_class_filter( $post );
+
+		self::assertEmpty( $body_class, 'not doc not empty' );
+
+		// get a post in global scope (bending rule).
+		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post_2 );
+
+		$body_class = $wpdr->admin->admin_body_class_filter( $post );
+
+		self::assertNotEmpty( $body_class, 'doc not empty' );
+		self::assertEquals( $body_class, ' document', 'doc not correct' );
+		self::assertTrue( true, 'body_class_filter' );
 	}
 }

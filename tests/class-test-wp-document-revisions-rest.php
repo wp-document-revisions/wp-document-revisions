@@ -390,13 +390,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			// try a revisions query.
 			$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
 			$response = $wp_rest_server->dispatch( $request );
+
+			self::assertEquals( 401, $response->get_status(), 'Authorization error' );
 			$revision = $response->get_data();
-			console_log( $response->get_status() );
-			ob_start();
-			// phpcs:ignore
-			var_dump( $revision );
-			$output = ob_end_clean();
-			console_log( $output );
+			self::assertEquals( 'rest_cannot_read', $revision['code'], 'revision wrong code' );
+			self::assertEquals( 'Sorry, you are not allowed to view revisions.', $revision['message'], 'revision wrong message' );
 		} else {
 			self::assertFalse( true, 'no revision found' );
 		}
