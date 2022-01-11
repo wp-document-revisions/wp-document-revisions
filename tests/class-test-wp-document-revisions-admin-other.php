@@ -549,7 +549,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$settings = $wpdr->admin->modify_content_class( $settings );
 
-		self::assertIsArray( $settings, 'not array' );
+		self::assertTrue( is_array( $settings ), 'not array' );
 		self::assertEmpty( $settings, 'not empty' );
 
 		$settings = array(
@@ -580,14 +580,14 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 
-		self::assertIsArray( $hidden, 'not doc not array' );
+		self::assertTrue( is_array( $hidden ), 'not doc not array' );
 		self::assertEmpty( $hidden, 'not doc not empty' );
 
 		$screen->id = 'document';
 
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 
-		self::assertIsArray( $hidden, 'doc not array' );
+		self::assertTrue( is_array( $hidden ), 'doc not array' );
 		self::assertNotEmpty( $hidden, 'doc empty' );
 		self::assertArrayHasKey( 0, $hidden, 'doc not 0 row' );
 		self::assertEquals( $hidden[0], 'postcustom', 'doc wrong value' );
