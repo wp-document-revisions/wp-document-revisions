@@ -619,16 +619,15 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$body_class = '';
 
-		$body_class = $wpdr->admin->admin_body_class_filter( $post );
+		$body_class = $wpdr->admin->admin_body_class_filter( $body_class );
 
-		console_log( '/' . $body_class . '/' );
 		self::assertEmpty( $body_class, 'not doc not empty' );
 
 		// get a post in global scope (bending rule).
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
-		$body_class = $wpdr->admin->admin_body_class_filter( $post );
+		$body_class = $wpdr->admin->admin_body_class_filter( $body_class );
 
 		self::assertNotEmpty( $body_class, 'doc not empty' );
 		self::assertEquals( $body_class, ' document', 'doc not correct' );
