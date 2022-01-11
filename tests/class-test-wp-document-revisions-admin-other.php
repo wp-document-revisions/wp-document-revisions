@@ -588,7 +588,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 
 		self::assertIsArray( $hidden, 'doc not array' );
-		self::assertEmpty( $hidden, 'doc empty' );
+		self::assertNotEmpty( $hidden, 'doc empty' );
 		self::assertArrayHasKey( 0, $hidden, 'doc not 0 row' );
 		self::assertEquals( $hidden[0], 'postcustom', 'doc wrong value' );
 
@@ -621,6 +621,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$body_class = $wpdr->admin->admin_body_class_filter( $post );
 
+		console_log( '/' . $body_class . '/' );
 		self::assertEmpty( $body_class, 'not doc not empty' );
 
 		// get a post in global scope (bending rule).
