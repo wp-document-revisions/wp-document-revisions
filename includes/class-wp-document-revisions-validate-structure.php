@@ -19,35 +19,36 @@
  * Therefore all attachments and document revisions will have their post_parent set to the original document post.
  * [Note. If a featured image is loaded then it would also have its attachment post with post_parent. This is explicitly set to 0 on loading.]
  * The attachment record contains the link to acutal data file.
- * The actual aattachment to use is held in the post_content field.
- * Whilst it is normal that the latest loaded attachment, it is not necessarily so if a revision is reverted.
+ * The actual attachment to use is held in the post_content field.
+ * Whilst it is normal that the latest loaded attachment, this is not necessarily so if a revision is reverted.
  * However the latest one will be used if the correct one cannot be found.
  *
  * So that direct file access is difficult, the actual file name is not as loaded, but is an MD5-hash of it.
- * Measures are taken to hide this name from being seen by the user. However the attachmentr post does contain it.
+ * Measures are taken to hide this name from being seen by the user. However the attachment post does contain it.
  *
  * This code is based on the following:
  * Every live document will have post_content that will contain the ID of an attachment that has the document as its parent.
  * If it does not, then it will try to see if there is such an attachment.
  * It will then try to validate that attachment record.
- * This should be an MD5-format name (32 hexaecimal name) If not it will change the name.
+ * This should be an MD5-format name (32 hexaecimal name). If not it will change the name.
  * The file that it points to should exist there.
  * [If the document directory is different to the media directory, it will also check that it is in the media one, and if found propose to move it.]
  *
  * This code uses direct SQL calls to identify the document posts and to choose a potential attachment. .
- * This is a deliberate design decision in the analysis phase to NOT have any issues with caching and/ loading memory with data that is not foing to be used.
+ * This is a deliberate design decision in the analysis phase to NOT have any issues with caching and/or loading memory with data that is not going to be used.
  *
- * It also does so during data correction.. Here this is to avoid creating a revision (which would have, by definition, invalid data).
+ * It also does so during data correction. Here this is to avoid creating a revision (which would have, by definition, invalid data).
  *
  * Error/Warning conditions detected.
  * ===================================
  *
- * Note. There is no significance to the code number, Just the order that they were thought of.
+ * Note. There is no significance to the code numbering, Just the order that they were thought of.
  *
  * If the note has Fixable No, that means no automatic repair is possible.
  * Resolution can ALWAYS be achieved by sending the document to trash or by loading a new version of the document.
- * These options are available to those who can edit the document - which is the socpe of the tests.
+ * These options are available to those who can edit the document - which is the scope of the tests.
  *
+ * Of course the document may have been loaded but the MD5 hash has beome "lost". It may be necessary to search within the directory using file timestamps to find the document/
  *
  * Code     1
  * Type     Error
@@ -188,7 +189,7 @@ class WP_Document_Revisions_Validate_Structure {
 
 		register_rest_route(
 			'wpdr/v1',
-			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach(?P<parm>[\d]+)',
+			'correct/(?P<id>[\d]+)/type/(?P<code>[\d]+)/attach/(?P<parm>[\d]+)',
 			$args
 		);
 	}
@@ -201,7 +202,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param WP_REST_Request $request the arguments to pass to the function.
 	 * @return WP_REST_Response
 	 */
-	public function correct_document( $request ) {
+	public static function correct_document( $request ) {
 		$params = $request->get_params();
 		$id     = $params['id'];
 		$parm   = $params['parm'];
@@ -269,7 +270,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// get file name.
 			$file = get_attached_file( $attach_id );
 
-			$file = $this->check_document_folder( $file );
+			$file = self::check_document_folder( $file );
 
 			// get filename part.
 			$filename = pathinfo( $file, PATHINFO_FILENAME );
@@ -299,7 +300,7 @@ class WP_Document_Revisions_Validate_Structure {
 			$orig = get_attached_file( $attach );
 
 			// manipulate file as in serve_file process.
-			$file = $this->check_document_folder( $orig );
+			$file = self::check_document_folder( $orig );
 
 			// revalidate input (late, but before any damage is done).
 			if ( $orig === $file || ! file_exists( $orig ) || file_exists( $file ) ) {
@@ -414,7 +415,7 @@ class WP_Document_Revisions_Validate_Structure {
 						$line = esc_attr( $failure['ID'] );
 						$beg  = esc_attr( $failure['post_title'] ) . '<br/>';
 						$ref  = esc_url( get_the_permalink( $failure['ID'] ) );
-						// Create the URL to the document. This is text if erroe/not fixable; link if warning; both if error and can be fixed (display one then other).
+						// Create the URL to the document. This is text if error/not fixable; link if warning; both if error and can be fixed (display one then other).
 						if ( (bool) $failure['fix'] ) {
 							if ( (bool) $failure['error'] ) {
 								$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .
@@ -437,7 +438,7 @@ class WP_Document_Revisions_Validate_Structure {
 							<td><?php echo $line; ?></td>
 							<td><?php ( (bool) $failure['error'] ? esc_html_e( 'Error', 'wp-document-revisions' ) : esc_html_e( 'Warning', 'wp-document-revisions' ) ); ?></td>
 							<td><?php echo $ref; ?></td>
-							<td><?php echo esc_attr( $failure['msg'] ); ?></td>
+							<td><?php echo esc_attr( $failure['msg'] ) . ( isset( $failure['msg2'] ) ? '<br />' . esc_attr( $failure['msg2'] ) : '' ); ?></td>
 							<td><?php echo $fix; ?></td>
 						</tr>
 						<?php
@@ -521,9 +522,9 @@ class WP_Document_Revisions_Validate_Structure {
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ) . ' ' .
-							// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-							sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
+				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
 			);
@@ -538,9 +539,9 @@ class WP_Document_Revisions_Validate_Structure {
 				return array(
 					'code'  => 5,
 					'error' => 1,
-					'msg'   => __( 'Document links to invalid attachment, An attachment exists and can replace link', 'wp-document-revisions' ) . ' ' .
-						// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-						sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+					'msg'   => __( 'Document links to invalid attachment. An attachment exists and can replace link', 'wp-document-revisions' ),
+					// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+					'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 					'fix'   => 1,
 					'parm'  => $last,
 				);
@@ -576,7 +577,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 0 === $wpdb->num_rows ) {
 			return false;
 		}
-		return $attach['ID'];
+		return ( is_null( $attach['ID'] ) ? false : $attach['ID'] );
 	}
 
 	/**
@@ -584,13 +585,13 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id $attach_id id of an attachment post object.
-	 * @param id $doc_id    id of the document post object.
+	 * @param id     $attach_id id of an attachment post object.
+	 * @param string $doc_id    id of the document post object.
 	 * @return int||false
 	 */
 	private static function check_attachment( $attach_id, $doc_id ) {
 		$attach = get_post( $attach_id );
-		if ( is_null( $attach ) || 'attachment' !== $attach->post_type || $doc_id !== $attach->post_parent ) {
+		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || (int) $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
 			return array(
 				'code'  => 2,
@@ -671,6 +672,9 @@ class WP_Document_Revisions_Validate_Structure {
 	public static function add_help_tab() {
 		$screen = get_current_screen();
 
+		if ( 'document_page_wpdr_validate' !== $screen->id ) {
+			return;
+		}
 		// parent key is the id of the current screen
 		// child key is the title of the tab
 		// value is the help text (as HTML).
@@ -713,7 +717,5 @@ class WP_Document_Revisions_Validate_Structure {
 				)
 			);
 		}
-
-		// add help sidebar.
 	}
 }

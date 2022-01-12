@@ -1,5 +1,5 @@
 function wpdr_valid_fix( id, code, parm ) {
-	var URL = wpApiSettings.root + 'wpdr/v1/correct/' + id + '/' + code + '/' + parm + '/';
+	var URL = wpApiSettings.root + 'wpdr/v1/correct/' + id + '/type/' + code + '/attach/' + parm;
 	jQuery.ajax({
 		type:"PUT",
 		url: URL,

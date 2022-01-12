@@ -79,6 +79,8 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
 		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
+		// Although the Post Type Supports Editor, don't use block editor.
+		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 		add_action( 'edit_form_after_title', array( &$this, 'prepare_editor' ) );
 		add_filter( 'wp_editor_settings', array( &$this, 'document_editor_setting' ), 10, 2 );
 		add_filter( 'tiny_mce_before_init', array( &$this, 'modify_content_class' ) );
@@ -198,6 +200,10 @@ class WP_Document_Revisions_Admin {
 	public function add_help_tab() {
 		$screen = get_current_screen();
 
+		// only interested in document post_types.
+		if ( 'document' !== $screen->post_type ) {
+			return;
+		}
 		// loop through each tab in the help array and add.
 		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(
@@ -212,14 +218,13 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Helper function to provide help text as either an array or as a string.
+	 * Helper function to provide help text as an array.
 	 *
 	 * @since 1.1
-	 * @param object $screen (optional) the current screen.
-	 * @param bool   $return_array (optional) whether to return as an array or string.
-	 * @returns array|string the help text
+	 * @param WP_Screen $screen (optional) the current screen.
+	 * @returns array the help text
 	 */
-	public function get_help_text( $screen = null, $return_array = true ) {
+	public function get_help_text( $screen = null ) {
 		if ( is_null( $screen ) ) {
 			$screen = get_current_screen();
 		}
@@ -254,32 +259,16 @@ class WP_Document_Revisions_Admin {
 
 		// if we don't have any help text for this screen, just kick.
 		if ( ! isset( $help[ $screen->id ] ) ) {
-			return ( $return_array ) ? array() : '';
-		}
-
-		if ( $return_array ) {
-			/**
-			 * Filters the default help text for current screen.
-			 *
-			 * @param string $help   default help text for current screen.
-			 * @param string $screen current screen name.
-			 */
-			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
-		}
-
-		// convert array into string for pre-3.3 compatability, i.e. no longer used.
-		$output = '';
-		foreach ( $help[ $screen->id ] as $label => $text ) {
-			$output .= "<h4>{$label}</h4>{$text}";
+			return array();
 		}
 
 		/**
-		 * Filters the string format help text for current screen.
+		 * Filters the default help text for current screen.
 		 *
-		 * @param string $output default help text for current screen.
-		 * @param string $screen current screen name.
+		 * @param string[]  $help   default help text for current screen.
+		 * @param WP_Screen $screen current screen name.
 		 */
-		return apply_filters( 'document_help', $output, $screen );
+		return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
 	}
 
 	/**
@@ -326,6 +315,23 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
+	 * Use Classic Editor for Documents (as need to constrain options).
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param bool    $use_block_editor Whether the post can be edited or not.
+	 * @param WP_Post $post             The post being checked.
+	 */
+	public function no_use_block_editor( $use_block_editor, $post ) {
+		// switch off for documents.
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
+			return false;
+		}
+		return $use_block_editor;
+	}
+
+
+	/**
 	 * Invoke the editor for a description to be entered.
 	 *
 	 * @ since 3.4.0
@@ -362,7 +368,7 @@ class WP_Document_Revisions_Admin {
 		}
 
 		global $post;
-		if ( 'document' !== $post->post_type || $this->verify_post_type( $post->ID ) ) {
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post->ID ) ) {
 			// restricted capacity for document content.
 			return array(
 				'wpautop'       => false,
@@ -550,7 +556,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function revision_summary_cb() {
 		?>
-		<label class="screen-reader-text" for="excerpt"><?php esc_html_e( 'Revision Summary' ); ?></label>
+		<label class="screen-reader-text" for="excerpt"><?php esc_html_e( 'Revision Summary', 'wp-document-revisions' ); ?></label>
 		<textarea rows="1" cols="40" name="excerpt" tabindex="6" id="excerpt"></textarea>
 		<p><?php esc_html_e( 'Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file.', 'wp-document-revisions' ); ?></p>
 		<?php
@@ -982,6 +988,7 @@ class WP_Document_Revisions_Admin {
 				</td>
 			</tr>
 		</table>
+		</div>
 		<?php
 	}
 

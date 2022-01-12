@@ -423,6 +423,7 @@ class WP_Document_Revisions_Front_End {
 					echo $image;
 				}
 			}
+			// is_numeric is old format.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . $document->post_content . '</div>' : '';
 			?>
@@ -919,7 +920,7 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// get likely taxonomy.
-			$taxo = ( $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
+			$taxo = ( isset( $curr_taxos[1]['query'] ) && $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
 			$term = get_term( $atts['term_1'], $taxo );
 			if ( $term instanceof WP_Term ) {
@@ -935,7 +936,7 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// get likely taxonomy.
-			$taxo = ( $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
+			$taxo = ( isset( $curr_taxos[2]['query'] ) && $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug).
 			$term = get_term( $atts['term_2'], $taxo );
 			if ( $term instanceof WP_Term ) {
@@ -967,7 +968,6 @@ class WP_Document_Revisions_Front_End {
 		$output .= $errs . $this->documents_shortcode_int( $atts );
 		return $output;
 	}
-
 
 	/**
 	 * Server side block to render the revisions list.

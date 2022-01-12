@@ -180,17 +180,20 @@ class WP_Document_Revisions {
 		add_filter( 'get_previous_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
 
 		// load front-end features (shortcode, widgets, etc.).
-		include __DIR__ . '/class-wp-document-revisions-front-end.php';
-		include __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
-
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
 		global $wpdr_fe, $wpdr_widget;
 
-		$wpdr_fe     = new WP_Document_Revisions_Front_End( $this );
-		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		if ( ! $wpdr_fe ) {
+			include_once __DIR__ . '/class-wp-document-revisions-front-end.php';
+			$wpdr_fe = new WP_Document_Revisions_Front_End( $this );
+		}
+		if ( ! $wpdr_widget ) {
+			include_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
+			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		}
 
 		// load validation code.
-		include __DIR__ . '/class-wp-document-revisions-validate-structure.php';
+		include_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
 		// Manage REST interface for documents (include code).
@@ -288,11 +291,8 @@ class WP_Document_Revisions {
 			}
 		}
 
-		include __DIR__ . '/class-wp-document-revisions-admin.php';
+		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
-
-		// Although the Post Type Supports Editor, don't use block editor.
-		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 	}
 
 
@@ -364,7 +364,7 @@ class WP_Document_Revisions {
 		 */
 		// user requires read_document and not just read to read document.
 		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
-			// invoke logic to require read_document instead of default read .
+			// invoke logic to require read_documents instead of default read .
 			$args['capabilities'] = array(
 				'read' => 'read_documents',
 			);
@@ -497,24 +497,6 @@ class WP_Document_Revisions {
 				)
 			);
 		}
-	}
-
-
-
-	/**
-	 * Use Classic Editor for Documents (as need to constrain options.
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param bool    $use_block_editor Whether the post can be edited or not.
-	 * @param WP_Post $post             The post being checked.
-	 */
-	public function no_use_block_editor( $use_block_editor, $post ) {
-		// switch off for documents.
-		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
-			return false;
-		}
-		return $use_block_editor;
 	}
 
 
@@ -3090,8 +3072,11 @@ class WP_Document_Revisions {
 			return;
 		}
 
-		include __DIR__ . '/class-wp-document-revisions-manage-rest.php';
-		new WP_Document_Revisions_Manage_Rest( $this );
+		global $wpdr_mr;
+		include_once __DIR__ . '/class-wp-document-revisions-manage-rest.php';
+		if ( ! $wpdr_mr ) {
+			$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $this );
+		}
 	}
 
 
