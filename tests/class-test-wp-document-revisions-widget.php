@@ -214,7 +214,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_noauthor_1' );
@@ -253,7 +255,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::tear_down_document_read();
 
@@ -290,7 +294,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
@@ -327,7 +333,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
@@ -364,7 +372,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_noauthor' );
 		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_noauthor_1' );
@@ -398,7 +408,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'publish_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'publish_author_1' );
@@ -434,7 +446,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
@@ -445,7 +459,62 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['editor']->ID );
 		wp_cache_flush();
 
-		$output = $wpdr_widget->widget_gen( $args, $instance );
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_author_2' );
+	}
+
+	/**
+	 * Verify published and private post on widget (author info) with thumb/des cr.
+	 */
+	public function test_widget_author_priv_thumb() {
+
+		// Create the two parameter sets.
+		$args = array(
+			'before_widget' => '',
+			'before_title'  => '',
+			'after_title'   => '',
+			'after_widget'  => '',
+		);
+
+		$instance['title']       = 'title';
+		$instance['numberposts'] = 5;
+		$instance['show_author'] = true;
+		$instance['show_thumb']  = true;
+		$instance['show_descr']  = true;
+
+		// published and private status.
+		$instance['post_status']['publish'] = true;
+		$instance['post_status']['private'] = true;
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		// run first as author. Cannot see other private posts.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
+		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
+		self::assertEquals( 0, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'pubpriv_author_2' );
+
+		// then run as editor. Cant see own and others private posts.
+		unset( $current_user );
+		wp_set_current_user( self::$users['editor']->ID );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr_widget->widget( $args, $instance );
+		$output = ob_get_clean();
 
 		self::assertEquals( 2, (int) substr_count( $output, '<li' ), 'pubpriv_author' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'pubpriv_author_1' );
@@ -487,4 +556,62 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['editor']->ID ) ), 'block_publish_auth_4' );
 	}
 
+
+	/**
+	 * Verify form routine.
+	 */
+	public function test_form_function() {
+		global $wpdr_widget;
+		if ( ! $wpdr_widget ) {
+			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		}
+		register_widget( $wpdr_widget );
+		$instance = array();
+
+		ob_start();
+		$wpdr_widget->form( $instance );
+		$output = ob_get_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '[title]" type="text" value="Recently Revised Documents"' ), 'widget_title' );
+		self::assertEquals( 1, (int) substr_count( $output, '[numberposts]" type="text" value="5"' ), 'widget_numberposts' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]" type="text"  checked=\'checked\' /' ), 'widget_publish' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]" type="text"  /' ), 'widget_private' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]" type="text"  /' ), 'widget_draft' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_thumb]"  /' ), 'widget_show_thumb"  /' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_descr]"  checked=\'checked\' /' ), 'widget_descr' );
+		self::assertEquals( 1, (int) substr_count( $output, '[show_author]"  checked=\'checked\' /' ), 'widget_author' );
+		self::assertEquals( 1, (int) substr_count( $output, '[new_tab]"  /' ), 'widget_new_tab"  /' );
+	}
+
+	/**
+	 * Verify update routine.
+	 */
+	public function test_update_function() {
+
+		$wpdr_widget  = new WP_Document_Revisions_Recently_Revised_Widget();
+		$new_instance = array(
+			'title'               => 'Test Title',
+			'numberposts'         => 5,
+			'show_thumb'          => false,
+			'show_descr'          => true,
+			'show_author'         => true,
+			'new_tab'             => false,
+			'post_status_publish' => true,
+			'post_status_private' => null,  // uses isset to define true or false.
+			'post_status_draft'   => null,
+		);
+		$old_instance = array();
+
+		$instance = $wpdr_widget->update( $new_instance, $old_instance );
+
+		self::assertSame( 'Test Title', $instance['title'], 'title' );
+		self::assertSame( 5, $instance['numberposts'], 'numberposts' );
+		self::assertFalse( $instance['show_thumb'], 'show_thumb' );
+		self::assertTrue( $instance['show_descr'], 'show_descr' );
+		self::assertTrue( $instance['show_author'], 'show_author' );
+		self::assertFalse( $instance['new_tab'], 'new_tab' );
+		self::assertTrue( $instance['post_status']['publish'], 'publish' );
+		self::assertFalse( $instance['post_status']['private'], 'private' );
+		self::assertFalse( $instance['post_status']['draft'], 'draft' );
+	}
 }

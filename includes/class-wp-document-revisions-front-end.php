@@ -33,7 +33,8 @@ class WP_Document_Revisions_Front_End {
 	public $shortcode_defaults = array(
 		'id'          => null,
 		'numberposts' => null,
-		'summary'     => false,
+		'show_thumb'  => false,
+		'show_descr'  => true,
 		'new_tab'     => true,
 	);
 
@@ -267,6 +268,8 @@ class WP_Document_Revisions_Front_End {
 			'meta_query',
 			// Presentation attributes (will be dealt with before getting documents).
 			'show_edit',
+			'show_thumb',
+			'show_descr',
 			'new_tab',
 		);
 
@@ -280,15 +283,13 @@ class WP_Document_Revisions_Front_End {
 			$defaults[ $tax['query'] ] = null;
 		}
 
-		// show_edit and new_tab may be entered without name (implies value true)
+		// show_edit, show_thumb, show_descr and new_tab may be entered without name (implies value true)
 		// convert to name value pair.
-		if ( isset( $atts[0] ) ) {
-			$atts[ $atts[0] ] = true;
-			unset( $atts[0] );
-		}
-		if ( isset( $atts[1] ) ) {
-			$atts[ $atts[1] ] = true;
-			unset( $atts[1] );
+		for ( $i = 0; $i < 4; $i++ ) {
+			if ( isset( $atts[ $i ] ) ) {
+				$atts[ $atts[ $i ] ] = true;
+				unset( $atts[ $i ] );
+			}
 		}
 
 		// Presentation attributes may be set as false, so process before array_filter and remove.
@@ -298,6 +299,20 @@ class WP_Document_Revisions_Front_End {
 		} else {
 			// Want to know if there was a shortcode as it will override.
 			$atts_show_edit = null;
+		}
+
+		if ( isset( $atts['show_thumb'] ) ) {
+			$atts_show_thumb = filter_var( $atts['show_thumb'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['show_thumb'] );
+		} else {
+			$atts_show_thumb = false;
+		}
+
+		if ( isset( $atts['show_descr'] ) ) {
+			$atts_show_descr = filter_var( $atts['show_descr'], FILTER_VALIDATE_BOOLEAN );
+			unset( $atts['show_descr'] );
+		} else {
+			$atts_show_descr = false;
 		}
 
 		if ( isset( $atts['new_tab'] ) ) {
@@ -321,6 +336,16 @@ class WP_Document_Revisions_Front_End {
 		$atts = array_filter( $atts );
 
 		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+
+		if ( $atts_show_thumb ) {
+			// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
+			// so cannot change within call and may be wrong, so possibly replace it in the output.
+			$std_dir = str_replace( ABSPATH, '', $wpdr::$wp_default_dir['basedir'] );
+			$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
+		}
 
 		$documents = $wpdr->get_documents( $atts );
 
@@ -373,8 +398,34 @@ class WP_Document_Revisions_Front_End {
 					),
 					admin_url( 'post.php' )
 				);
-				echo '&nbsp;&nbsp;<a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a>';
+				echo '&nbsp;&nbsp;<small><a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a></small><br />';
 			}
+			if ( $atts_show_thumb ) {
+				$thumb = get_post_thumbnail_id( $document->ID );
+				if ( $thumb ) {
+					$thumb_image     = wp_get_attachment_image_src( $thumb, 'medium' );
+					$thumb_image_alt = get_post_meta( $thumb, '_wp_attachment_image_alt', true );
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<br /><img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . esc_url( $thumb_image[0] ) . '" alt="' . esc_html( $thumb_image_alt ) . '"><br />';
+				} else {
+					$attach = $wpdr->get_document( $document->ID );
+					if ( $attach instanceof WP_Post ) {
+						// ensure document slug hidden from attachment.
+						$wpdr->hide_exist_doc_attach_slug( $attach->ID );
+						$image = wp_get_attachment_image( $attach->ID, 'medium' ) . '<br />';
+						if ( $std_dir !== $doc_dir ) {
+							$image = str_replace( $std_dir, $doc_dir, $image );
+						}
+					} else {
+						$image = '<p>' . __( 'No attachment available.', 'wp-document-revisions' ) . '</p>';
+					}
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $image;
+				}
+			}
+			// is_numeric is old format.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . $document->post_content . '</div>' : '';
 			?>
 			</li>
 		<?php } ?>
@@ -431,10 +482,10 @@ class WP_Document_Revisions_Front_End {
 	 * Register WP Document Revisions block category.
 	 *
 	 * @since 3.3.0
-	 * @param Array   $categories Block categories available.
-	 * @param WP_Post $post       Post for which the block is to be available.
+	 * @param Array                   $categories           Block categories available.
+	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	public function wpdr_block_categories( $categories, $post ) {
+	public function wpdr_block_categories( $categories, $block_editor_context ) {
 
 		return array_merge(
 			$categories,
@@ -460,7 +511,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// add the plugin category.
-		add_filter( 'block_categories', array( $this, 'wpdr_block_categories' ), 10, 2 );
+		add_filter( 'block_categories_all', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
 		register_block_type(
 			'wp-document-revisions/documents-shortcode',
@@ -468,49 +519,82 @@ class WP_Document_Revisions_Front_End {
 				'editor_script'   => 'wpdr-documents-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
 				'attributes'      => array(
-					'taxonomy_0'  => array(
+					'header'          => array(
 						'type'    => 'string',
 						'default' => '',
 					),
-					'term_0'      => array(
-						'type'    => 'number',
-						'default' => 0,
-					),
-					'taxonomy_1'  => array(
+					'taxonomy_0'      => array(
 						'type'    => 'string',
 						'default' => '',
 					),
-					'term_1'      => array(
+					'term_0'          => array(
 						'type'    => 'number',
 						'default' => 0,
 					),
-					'taxonomy_2'  => array(
+					'taxonomy_1'      => array(
 						'type'    => 'string',
 						'default' => '',
 					),
-					'term_2'      => array(
+					'term_1'          => array(
 						'type'    => 'number',
 						'default' => 0,
 					),
-					'numberposts' => array(
+					'taxonomy_2'      => array(
+						'type'    => 'string',
+						'default' => '',
+					),
+					'term_2'          => array(
+						'type'    => 'number',
+						'default' => 0,
+					),
+					'numberposts'     => array(
 						'type'    => 'number',
 						'default' => 5,
 					),
-					'orderby'     => array(
+					'orderby'         => array(
 						'type' => 'string',
 					),
-					'order'       => array(
+					'order'           => array(
 						'type' => 'string',
 					),
-					'show_edit'   => array(
+					'show_edit'       => array(
 						'type' => 'string',
 					),
-					'new_tab'     => array(
+					'show_thumb'      => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'show_descr'      => array(
 						'type'    => 'boolean',
 						'default' => true,
 					),
-					'freeform'    => array(
+					'new_tab'         => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'freeform'        => array(
 						'type' => 'string',
+					),
+					'align'           => array(
+						'type' => 'string',
+					),
+					'backgroundColor' => array(
+						'type' => 'string',
+					),
+					'linkColor'       => array(
+						'type' => 'string',
+					),
+					'textColor'       => array(
+						'type' => 'string',
+					),
+					'gradient'        => array(
+						'type' => 'string',
+					),
+					'fontSize'        => array(
+						'type' => 'string',
+					),
+					'style'           => array(
+						'type' => 'object',
 					),
 				),
 			)
@@ -522,21 +606,42 @@ class WP_Document_Revisions_Front_End {
 				'editor_script'   => 'wpdr-revisions-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
 				'attributes'      => array(
-					'id'          => array(
+					'id'              => array(
 						'type'    => 'number',
 						'default' => 0,
 					),
-					'numberposts' => array(
+					'numberposts'     => array(
 						'type'    => 'number',
 						'default' => 5,
 					),
-					'summary'     => array(
+					'summary'         => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'new_tab'     => array(
+					'new_tab'         => array(
 						'type'    => 'boolean',
 						'default' => true,
+					),
+					'align'           => array(
+						'type' => 'string',
+					),
+					'backgroundColor' => array(
+						'type' => 'string',
+					),
+					'linkColor'       => array(
+						'type' => 'string',
+					),
+					'textColor'       => array(
+						'type' => 'string',
+					),
+					'gradient'        => array(
+						'type' => 'string',
+					),
+					'fontSize'        => array(
+						'type' => 'string',
+					),
+					'style'           => array(
+						'type' => 'object',
 					),
 				),
 			)
@@ -736,7 +841,13 @@ class WP_Document_Revisions_Front_End {
 		// sanity check.
 		// do not show output to users that do not have the read_documents capability and don't get it via read.
 		if ( ( ! current_user_can( 'read_documents' ) ) && ! apply_filters( 'document_read_uses_read', true ) ) {
-			return esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' );
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// if header set, then output as <h2>.
+		$output = '';
+		if ( isset( $atts['header'] ) ) {
+			$output = '<h2>' . esc_html( $atts['header'] ) . '</h2>';
 		}
 
 		$atts = shortcode_atts(
@@ -751,6 +862,8 @@ class WP_Document_Revisions_Front_End {
 				'orderby'     => '',
 				'order'       => 'ASC',
 				'show_edit'   => '',
+				'show_thumb'  => false,
+				'show_descr'  => true,
 				'new_tab'     => true,
 				'freeform'    => '',
 			),
@@ -773,6 +886,12 @@ class WP_Document_Revisions_Front_End {
 		// Remove attribute if not an over-ride.
 		if ( 0 === strlen( $atts['show_edit'] ) ) {
 			unset( $atts['show_edit'] );
+		}
+		if ( 0 === strlen( $atts['show_thumb'] ) ) {
+			unset( $atts['show_thumb'] );
+		}
+		if ( 0 === strlen( $atts['show_descr'] ) ) {
+			unset( $atts['show_descr'] );
 		}
 
 		// Remove new_tab if false.
@@ -801,7 +920,7 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// get likely taxonomy.
-			$taxo = ( $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
+			$taxo = ( isset( $curr_taxos[1]['query'] ) && $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
 			$term = get_term( $atts['term_1'], $taxo );
 			if ( $term instanceof WP_Term ) {
@@ -817,7 +936,7 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// get likely taxonomy.
-			$taxo = ( $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
+			$taxo = ( isset( $curr_taxos[2]['query'] ) && $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug).
 			$term = get_term( $atts['term_2'], $taxo );
 			if ( $term instanceof WP_Term ) {
@@ -845,10 +964,10 @@ class WP_Document_Revisions_Front_End {
 		if ( ! empty( $errs ) ) {
 			$errs = '<div class="notice notice-error">' . $errs . '</div>';
 		}
-		$output = $errs . $this->documents_shortcode_int( $atts );
+
+		$output .= $errs . $this->documents_shortcode_int( $atts );
 		return $output;
 	}
-
 
 	/**
 	 * Server side block to render the revisions list.
@@ -859,7 +978,7 @@ class WP_Document_Revisions_Front_End {
 	 */
 	public function wpdr_revisions_shortcode_display( $atts ) {
 		// get instance of global class.
-		global $wpdr, $wpdr_fe;
+		global $wpdr_fe;
 
 		$atts = shortcode_atts(
 			array(
@@ -878,12 +997,12 @@ class WP_Document_Revisions_Front_End {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
-		// Check it is a document.
-		if ( ! $wpdr->verify_post_type( $atts['id'] ) ) {
+		// Check it is a document (and not its revision or attached document) so don't use verify_post_type.
+		if ( 'document' !== get_post_type( $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
-		$output  = '<p class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</p>';
+		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
 		$output .= $wpdr_fe->revisions_shortcode( $atts );
 		return $output;
 	}

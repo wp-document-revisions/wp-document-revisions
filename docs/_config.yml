@@ -4,3 +4,5 @@ include:
   - CONTRIBUTING.md
   - README.md
   - SUPPORT.md
+description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
+logo: https://user-images.githubusercontent.com/282759/120904244-3cb66300-c619-11eb-905d-00111cc2807a.png

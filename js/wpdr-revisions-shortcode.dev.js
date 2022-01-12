@@ -26,9 +26,45 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 		new_tab : {
 			type: 'boolean',
 			default: true
+		},
+		align: {
+			type: 'string'
+		},
+		backgroundColor: {
+			type: 'string'
+		},
+		linkColor: {
+			type: 'string'
+		},
+		textColor: {
+			type: 'string'
+		},
+		gradient: {
+			type: 'string'
+		},
+		fontSize: {
+			type: 'string'
+		},
+		style: {
+			type: 'object'
 		}
 	},
-	//display the post title
+	supports: {
+		align: true,
+		color: {
+			gradients: true,
+			link: true
+		},
+		spacing: {
+			margin: true,
+			padding: true
+    },
+		typography: {
+			fontSize: true,
+			lineHeight: true
+    }
+	},
+	//display the settings
 	edit( props ){
 		const attributes =  props.attributes;
 		const setAttributes =  props.setAttributes;
@@ -80,6 +116,7 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 									type: 'boolean',
 									checked: attributes.new_tab,
 									label: __( 'Open in New Tab?', 'wp-document-revisions' ),
+									help: __( 'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.', 'wp-document-revisions' ),
 									onChange: function( val ) {
 										setAttributes( { new_tab: val } )
 									}
@@ -123,7 +160,7 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 							continue;
 						}
 						var parm = i.split("=");
-						if ( parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0 ) {
+						if ( parm.length > 1 && ( parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0 ) ) {
 							parm[1] = parm[1].slice(1, parm[1].length-1);
 						}
 						if ( parm[0] === 'id' ) {
@@ -135,11 +172,15 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 						if ( parm[0] === 'numberposts' ) {
 							snumberposts = Number(parm[1]);
 						};
-						if ( parm[0] === 'summary' && parm[1] === 'true' ) {
-							ssummary = true;
+						if ( parm[0] === 'summary' ) {
+							if ( parm.length === 1 || parm[1] === 'true' ) {
+								ssummary = true;
+							}
 						};
-						if ( parm[0] === 'new_tab' && parm[1] === 'false' ) {
-							snew_tab = false;
+						if ( parm[0] === 'new_tab' ) {
+							if ( parm.length === 1 || parm[1] === 'false' ) {
+								snew_tab = false;
+							}
 						};
 					};
 
@@ -149,8 +190,8 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 						summary : ssummary,
 						new_tab : snew_tab
 					} );
-				},
-			},
+				}
+			}
 		],
 		to: [
 			{
@@ -179,8 +220,8 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 					} );
 				},
 			},
-		],
-	},
+		]
+	}
 } );
 }
 (

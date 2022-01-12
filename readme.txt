@@ -1,10 +1,9 @@
 === WP Document Revisions ===
 
-Contributors: benbalter
+Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Requires at least: 4.6
-Tested up to: 5.7
-Stable tag: 3.3.0
+Tested up to: 5.8
+Stable tag: 3.4.0
 
 == Description ==
 
@@ -40,8 +39,6 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 
 * [How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)
 * [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
-
-[Photo via antphotos](http://www.flickr.com/photos/antphotos/3903433061/)
 
 
 == Features ==
@@ -176,6 +173,26 @@ In: class-wp-document-revisions.php
 
 == Changelog ==
 
+= 3.4.0 =
+
+* SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.
+* NEW: A filter 'document_show_in_rest' is provided to display document data via the REST interface using document permissions. {#258, #259)
+* NEW: A tool is provided to validate the internal structure of all documents that the user can edit. If fixable then a button is displayed to fix it. (#260)
+* NEW: A user-oriented description may be entered for each document. This can be displayed with the Documents List shortcode and Latest Documents widget or their block equivalents. (#263)
+* NEW: These blocks can also display the featured image or generated image for PDF documents. (#264)
+* NEW: Blocks extended to support standard Colour and Fontsize attributes. (#264}
+* NEW: Revisions can be merged if made within a user-defined interval using filter 'document_revisions_merge_revisions' (Default 0 = No merging). (#263)
+* FIX: jQuery ready verb usage removed. (#262}
+* FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
+* FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
+* FIX: Blocks are categorised within the Editor differently with WP 5.8
+
+= 3.3.1 =
+
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
+* FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
+
 = 3.3.0 =
 
 * SECURITY: Password-protected document can leak existence (by showing next/previous)
@@ -193,6 +210,7 @@ In: class-wp-document-revisions.php
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: New Crowdin updates (#244, #245)
 * FIX: Access to revisions when permalink structure not defined.
 * FIX: Design conflict with Elementor (#230) @NeilWJames
 * FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
@@ -206,6 +224,7 @@ In: class-wp-document-revisions.php
 * FIX: Review documentation. (#208) @NeilWJames
 * FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
 * FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
+* FIX: Fixing compatibility issue with double slash in Documents URL when using WPML (#218) @BobbyKarabinakis
 * DEV: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
 * DEV: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
 * DEV: Rewrite Test library to increase code coverage.
@@ -545,12 +564,6 @@ In: class-wp-document-revisions.php
 
 Allows the document file extension to be manipulated.
 
-== Filter document_help ==
-
-In: class-wp-document-revisions-admin.php
-
-Filters the (UNDEFINED) help text for current screen.
-
 == Filter document_help_array ==
 
 In: class-wp-document-revisions-admin.php
@@ -623,6 +636,12 @@ In: class-wp-document-revisions-admin.php
 
 Filters the number of revisions to keep for documents.
 
+== Filter document_revisions_merge_revisions ==
+
+In: class-wp-document-revisions-admin.php
+
+Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+
 == Filter document_revisions_mimetype ==
 
 In: class-wp-document-revisions.php
@@ -676,6 +695,12 @@ Filters the Document shortcode attributes.
 In: class-wp-document-revisions-front-end.php
 
 Filters the controlling option to display an edit option against each document.
+
+== Filter document_show_in_rest ==
+
+In: class-wp-document-revisions.php
+
+Filters the show_in_rest parameter from its default value of fa1se.
 
 == Filter document_slug ==
 
@@ -919,6 +944,8 @@ Existing shortcodes can be converted to and from their block forms.
 
 They are held in a grouping called `WP Document Revisions`.
 
+Since the blocks make use of dynamically-generated content, the same code is used to create this for a shortcode/widget.
+
 == Documents Shortcode ==
 
 In a post or page, simply type `[documents]` to display a list of documents. 
@@ -935,7 +962,7 @@ If you're using a custom taxonomy, you can add the taxonomy name as a parameter 
 
 (Where "category-name" is the taxonomy term's slug)
 
-Strictly it uses accepts the "query_var" parameter of the taxonomies used for documents. That is, if you have defined a taxonomy for your documents with slug "document_categories". If you have not defined the query_var parameter then you use the slug. However if you have set query_var to "doc_cat", say, then you can insert a shortcode as
+It accepts the "query_var" parameter of the taxonomies used for documents. That is, if you have defined a taxonomy for your documents with slug "document_categories". If you have not defined the query_var parameter then you use the slug. However if you have set query_var to "doc_cat", say, then you can insert a shortcode as
 
 `[documents doc_cat="category-name" numberposts="5"]`
 
@@ -957,7 +984,11 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `new_tab` (with a true/false parameter) that will open the document in a new browser tab rather than in the current one.
 
-Both of these boolean variables can be entered without a value (with default value true). 
+`show_thumb` (with a true/false parameter) that will display a featured image (or generated one from the first page of PDF documents) if provided.
+
+`show_descr` (with a true/false parameter) that will output the entered description if provided.
+
+All these boolean variables can be entered without a value (with default value true except for `show_thumb` whose default value is false). 
 
 = Block Usage =
 
@@ -965,7 +996,15 @@ When using the block version of the shortcode called `Document List`, some compr
 
 Since queries are often selecting a single taxonomy value, the block provides the possibility to select single values from up to three taxonomies. Since there can be more than three taxomomies attached to documents, a filter `document_block_taxonomies` allows the list of taxonomies to be edited to select the taxonomies to be displayed.
 
-The parameters `numberposts`, `order`, `orderby`, `show_edit` and `new_tab` are directly supported. However, since there are many other parameters are possible, as well as differet structures, additional parameters may be entered as a text field as held in the shortcode.
+The parameters `numberposts`, `order`, `orderby`, `show_edit`,`new_tab`, `show_thumb` and `show_descr` are directly supported. However, since there are many other parameters are possible, as well as differet structures, additional parameters may be entered as a text field as held in the shortcode.
+
+= Document Taxonomy Changes =
+
+Note that this section does *not* refer to the terms used within a taxonomy are changed but to changes made when taxonomies are registereed with documents.
+
+It is possible that the taxonomies associated with documents are changed. Since the three taxonomies are chosen when the block is created, then if the taxonomies linked are subsequently changed, then a warning/error message "Taxonomy details in this block have changed." may be seen when the block is output.
+
+The resolution to this issue is to transform the block to a shortcode and then back to a block again. A side effect will be to lose any "supports" properties (see below) that have been used. 
 
 == Document Revisions Shortcode ==
 
@@ -999,10 +1038,31 @@ Since the block is dynamically displayed as parameters are entered, if the post 
 
 Go to your theme's widgets page (if your theme supports widgets), and drag the widget to a sidebar of you choice. Once in a sidebar, you will be presented with options to customize the widget's functionality.
 
+= Display parameters =
+
+It is also possible to add formatting parameters:
+
+`numberposts` (with a number parameter) will give the maximum number of revisions to display.
+
+`Post Status` allowing the selection "publish", "private" or "draft", or combination of them.
+
+`show_thumb` (with a true/false parameter) that will display a featured image (or generated one from the first page of PDF documents) if provided.
+
+`show_descr` (with a true/false parameter) that will output the entered description if provided.
+
+`show_author`(with a true/false parameter) that will identify the document author.
+
+`new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
 = Block Usage =
 
-The block version of the widget called `Document Widget`can be used on pages or posts. It cannot be converted to or from a shortcode block.
+The block version of the widget called `Latest Documents`can be used on pages or posts. It cannot be converted to or from a shortcode block.
  
+= Block supports properties =
+
+Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
+
+These attributes are align, color, spacing and typography and these attributes have been added to all blocks.
 
 == Translations ==
 

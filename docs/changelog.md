@@ -1,5 +1,25 @@
 ## Changelog
 
+### 3.4.0
+
+* SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.
+* NEW: A filter 'document_show_in_rest' is provided to display document data via the REST interface using document permissions. {#258, #259)
+* NEW: A tool is provided to validate the internal structure of all documents that the user can edit. If fixable then a button is displayed to fix it. (#260)
+* NEW: A user-oriented description may be entered for each document. This can be displayed with the Documents List shortcode and Latest Documents widget or their block equivalents. (#263)
+* NEW: These blocks can also display the featured image or generated image for PDF documents. (#264)
+* NEW: Blocks extended to support standard Colour and Fontsize attributes. (#264}
+* NEW: Revisions can be merged if made within a user-defined interval using filter 'document_revisions_merge_revisions' (Default 0 = No merging). (#263)
+* FIX: jQuery ready verb usage removed. (#262}
+* FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
+* FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
+* FIX: Blocks are categorised within the Editor differently with 5.8
+
+### 3.3.1
+
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
+* FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
+* FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
+
 ### 3.3.0
 
 * SECURITY: Password-protected document can leak existence (by showing next/previous)
@@ -17,6 +37,7 @@
 * NEW: Add filter 'document_read_uses_read' to use read_document capability (and not read) to read documents
 * NEW: Add filter 'document_serve_use_gzip' to determine if gzip should be used to serve file (subject to browser negotiation).
 * NEW: Add filter 'document_serve' to filter the file to be served (needed for encrypted at rest files)
+* NEW: New Crowdin updates (#244, #245)
 * FIX: Access to revisions when permalink structure not defined.
 * FIX: Design conflict with Elementor (#230) @NeilWJames
 * FIX: Document directory incorrect test for Absolute/Relative entry on Windows implementations
@@ -30,6 +51,7 @@
 * FIX: Review documentation. (#208) @NeilWJames
 * FIX: Review of Rewrite rules with/without trailing slash; also extend file extension length
 * FIX: Testing of blocks showed that if document taxonomies are changed, then existing blocks may not work. Some changes are now handled. (#217) @NeilWJames
+* FIX: Fixing compatibility issue with double slash in Documents URL when using WPML (#218) @BobbyKarabinakis
 * DEV: Update code to WP Coding Standards 2.2.1 (and fix new sniff errors)
 * DEV: Update coveralls to 2.2, dealerdirect/codesniffer to 0.6, phpunit/phpunit to 8.5 and wp/cli to 2.4.1
 * DEV: Rewrite Test library to increase code coverage.

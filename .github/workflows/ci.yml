@@ -52,7 +52,7 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php_version }}-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
       
     - name: Setup WP
       run: script/setup

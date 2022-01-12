@@ -26,6 +26,27 @@ class WP_Document_Revisions_Admin {
 	public static $instance;
 
 	/**
+	 * The last_but_one revision
+	 *
+	 * @var $last_but_one_revn
+	 */
+	private static $last_but_one_revn = null;
+
+	/**
+	 * The last_but_one revision excerpt
+	 *
+	 * @var $last_revn_excerpt
+	 */
+	private static $last_revn_excerpt = null;
+
+	/**
+	 * The last revision
+	 *
+	 * @var $last_revn
+	 */
+	private static $last_revn = null;
+
+	/**
 	 * Register's admin hooks
 	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 *
@@ -44,7 +65,7 @@ class WP_Document_Revisions_Admin {
 
 		// help and messages.
 		add_filter( 'post_updated_messages', array( &$this, 'update_messages' ) );
-		add_action( 'admin_head', array( &$this, 'add_help_tab' ) ); // 3.3+
+		add_action( 'admin_head', array( &$this, 'add_help_tab' ) );
 
 		// edit document screen.
 		add_action( 'admin_head', array( &$this, 'make_private' ) );
@@ -52,11 +73,17 @@ class WP_Document_Revisions_Admin {
 		add_action( 'save_post_document', array( &$this, 'save_document' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( &$this, 'revision_filter' ), 10, 1 );
+		add_filter( 'wp_save_post_revision_post_has_changed', array( &$this, 'identify_last_but_one' ), 10, 3 );
 		add_filter( 'default_hidden_meta_boxes', array( &$this, 'hide_postcustom_metabox' ), 10, 2 );
 		add_action( 'admin_print_footer_scripts', array( &$this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( &$this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( &$this, 'check_upload_files' ) );
 		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs_computer' ) );
+		// Although the Post Type Supports Editor, don't use block editor.
+		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
+		add_action( 'edit_form_after_title', array( &$this, 'prepare_editor' ) );
+		add_filter( 'wp_editor_settings', array( &$this, 'document_editor_setting' ), 10, 2 );
+		add_filter( 'tiny_mce_before_init', array( &$this, 'modify_content_class' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( &$this, 'rename_author_column' ) );
@@ -173,8 +200,12 @@ class WP_Document_Revisions_Admin {
 	public function add_help_tab() {
 		$screen = get_current_screen();
 
+		// only interested in document post_types.
+		if ( 'document' !== $screen->post_type ) {
+			return;
+		}
 		// loop through each tab in the help array and add.
-		foreach ( $this->get_help_text() as $title => $content ) {
+		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(
 				array(
 					'title'   => $title,
@@ -187,14 +218,13 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Helper function to provide help text as either an array or as a string.
+	 * Helper function to provide help text as an array.
 	 *
 	 * @since 1.1
-	 * @param object $screen (optional) the current screen.
-	 * @param bool   $return_array (optional) whether to return as an array or string.
-	 * @returns array|string the help text
+	 * @param WP_Screen $screen (optional) the current screen.
+	 * @returns array the help text
 	 */
-	public function get_help_text( $screen = null, $return_array = true ) {
+	public function get_help_text( $screen = null ) {
 		if ( is_null( $screen ) ) {
 			$screen = get_current_screen();
 		}
@@ -205,9 +235,12 @@ class WP_Document_Revisions_Admin {
 		$help = array(
 			'document'      => array(
 				__( 'Basic Usage', 'wp-document-revisions' ) =>
-				'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p><p>' .
+				'<p>' . __( 'This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'When done, simply click <code>Update</code> to save your changes', 'wp-document-revisions' ) . '</p>',
+				__( 'Document Description', 'wp-document-revisions' ) =>
+				'<p>' . __( 'The document description provides a short user-oriented summary of the document.', 'wp-document-revisions' ) . '</p><p>' .
+				__( 'This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents.', 'wp-document-revisions' ) . '</p>',
 				__( 'Revision Log', 'wp-document-revisions' ) =>
 				'<p>' . __( 'The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision.', 'wp-document-revisions' ) . '</p>',
@@ -226,26 +259,16 @@ class WP_Document_Revisions_Admin {
 
 		// if we don't have any help text for this screen, just kick.
 		if ( ! isset( $help[ $screen->id ] ) ) {
-			return ( $return_array ) ? array() : '';
-		}
-
-		if ( $return_array ) {
-			/**
-			 * Filters the default help text for current screen.
-			 *
-			 * @param string $help   default help text for current screen.
-			 * @param string $screen current screen name.
-			 */
-			return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
+			return array();
 		}
 
 		/**
-		 * Filters the (UNDEFINED) help text for current screen.
+		 * Filters the default help text for current screen.
 		 *
-		 * @param string $output UNDEFINED.
-		 * @param string $screen current screen name.
+		 * @param string[]  $help   default help text for current screen.
+		 * @param WP_Screen $screen current screen name.
 		 */
-		return apply_filters( 'document_help', $output, $screen );
+		return apply_filters( 'document_help_array', $help[ $screen->id ], $screen );
 	}
 
 	/**
@@ -288,6 +311,90 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_notices', array( &$this, 'lock_notice' ) );
 
 		do_action( 'document_edit' );
+	}
+
+
+	/**
+	 * Use Classic Editor for Documents (as need to constrain options).
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param bool    $use_block_editor Whether the post can be edited or not.
+	 * @param WP_Post $post             The post being checked.
+	 */
+	public function no_use_block_editor( $use_block_editor, $post ) {
+		// switch off for documents.
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
+			return false;
+		}
+		return $use_block_editor;
+	}
+
+
+	/**
+	 * Invoke the editor for a description to be entered.
+	 *
+	 * @ since 3.4.0
+	 *
+	 * @param WP_Post $post Post object.
+	 */
+	public function prepare_editor( $post ) {
+		if ( 'document' !== $post->post_type ) {
+			return;
+		}
+
+		echo '<h2>' . esc_html__( 'Document Description', 'wp-document-revisions' ) . '</h2>';
+
+		// convert old format to new.
+		if ( is_numeric( $post->post_content ) ) {
+			$post->post_content = $this->format_doc_id( $post->post_content );
+		}
+	}
+
+
+	/**
+	 * Modify the standard Classic editor settings for a simple description to be entered.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array  $settings  Array of editor arguments.
+	 * @param string $editor_id Unique editor identifier, e.g. 'content'. Accepts 'classic-block'
+	 *                          when called from block editor's Classic block.
+	 */
+	public function document_editor_setting( $settings, $editor_id ) {
+		// only interested in content.
+		if ( 'content' !== $editor_id ) {
+			return $settings;
+		}
+
+		global $post;
+		if ( 'document' === $post->post_type || $this->verify_post_type( $post->ID ) ) {
+			// restricted capacity for document content.
+			return array(
+				'wpautop'       => false,
+				'media_buttons' => false,
+				'textarea_name' => 'doc_descr',
+				'textarea_rows' => 8,
+				'teeny'         => false,
+				'quicktags'     => false,
+			);
+		}
+		return $settings;
+	}
+
+	/**
+	 * Modify the 'content' class for documents otherwise it indents everything in the editor.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array $settings  Array of tiny_mce arguments.
+	 */
+	public function modify_content_class( $settings ) {
+		// check on document only affects these.
+		if ( array_key_exists( 'body_class', $settings ) && 0 === strpos( $settings['body_class'], 'content post-type-document' ) ) {
+			$settings['content_css'] = $settings['content_css'] . ',' . plugins_url( '/css/wpdr-content.css', __DIR__ );
+		}
+		return $settings;
 	}
 
 
@@ -392,8 +499,13 @@ class WP_Document_Revisions_Admin {
 	 * @param object $post the post object.
 	 */
 	public function document_metabox( $post ) {
+		// convert old format to new.
+		if ( is_numeric( $post->post_content ) ) {
+			$post->post_content = $this->format_doc_id( $post->post_content );
+		}
 		?>
-		<input type="hidden" id="content" name="content" value="<?php echo esc_attr( $post->post_content ); ?>" />
+		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $post->post_content ); ?>" />
+		<input type="hidden" id="curr_content" name="curr_content" value="Unset" />
 		<?php
 		$lock_holder = $this->get_document_lock( $post );
 		if ( $lock_holder ) {
@@ -444,7 +556,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function revision_summary_cb() {
 		?>
-		<label class="screen-reader-text" for="excerpt"><?php esc_html_e( 'Revision Summary' ); ?></label>
+		<label class="screen-reader-text" for="excerpt"><?php esc_html_e( 'Revision Summary', 'wp-document-revisions' ); ?></label>
 		<textarea rows="1" cols="40" name="excerpt" tabindex="6" id="excerpt"></textarea>
 		<p><?php esc_html_e( 'Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file.', 'wp-document-revisions' ); ?></p>
 		<?php
@@ -483,8 +595,9 @@ class WP_Document_Revisions_Admin {
 			}
 			// preserve original file extension on revision links.
 			// this will prevent mime/ext security conflicts in IE when downloading.
-			if ( is_numeric( $revision->post_content ) ) {
-				$fn   = get_post_meta( $revision->post_content, '_wp_attached_file', true );
+			$attach = $this->get_document( $revision->ID );
+			if ( $attach ) {
+				$fn   = get_post_meta( $attach->ID, '_wp_attached_file', true );
 				$fno  = pathinfo( $fn, PATHINFO_EXTENSION );
 				$info = pathinfo( get_permalink( $revision->ID ) );
 				$fn   = $info['dirname'] . '/' . $info['filename'];
@@ -500,7 +613,7 @@ class WP_Document_Revisions_Admin {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 1 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -791,7 +904,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function document_slug_cb() {
 		?>
-	<code><?php echo esc_html( home_url() ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
+	<code><?php echo esc_html( trailingslashit( home_url() ) ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" />/<?php echo esc_html( gmdate( 'Y' ) ); ?>/<?php echo esc_html( gmdate( 'm' ) ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 	<span class="description">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
@@ -811,11 +924,11 @@ class WP_Document_Revisions_Admin {
 	public function bind_upload_cb() {
 		global $pagenow;
 
-		if ( 'media-upload.php' === $pagenow ) :
+		if ( 'media-upload.php' === $pagenow ) {
 			?>
-			<script type="text/javascript">jQuery(document).ready(function(){bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {WPDocumentRevisions.bindPostDocumentUploadCB()});</script>
 			<?php
-		endif;
+		}
 	}
 
 
@@ -875,6 +988,7 @@ class WP_Document_Revisions_Admin {
 				</td>
 			</tr>
 		</table>
+		</div>
 		<?php
 	}
 
@@ -1253,6 +1367,7 @@ class WP_Document_Revisions_Admin {
 			);
 			$res        = $wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			wp_cache_delete( $thumb, 'posts' );
 		}
 
 		// Let's work on Workflow state, Verify nonce.
@@ -1263,6 +1378,28 @@ class WP_Document_Revisions_Admin {
 
 		// Save it.
 		wp_set_post_terms( $doc_id, array( $ws ), 'workflow_state' );
+
+		// can we merge the revisions.
+		if ( is_null( self::$last_revn ) || is_null( self::$last_but_one_revn ) ) {
+			return;
+		}
+
+		// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
+		wp_delete_post_revision( self::$last_but_one_revn );
+		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$post_table = "{$wpdb->prefix}posts";
+		$sql        = $wpdb->prepare(
+			"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
+			self::$last_revn_excerpt,
+			self::$last_revn,
+			$doc_id,
+			self::$last_revn_excerpt
+		);
+		$res        = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
+		wp_cache_delete( self::$last_revn, 'posts' );
+		wp_cache_delete( $doc_id, 'posts' );
 	}
 
 	/**
@@ -1356,7 +1493,7 @@ class WP_Document_Revisions_Admin {
 		wp_localize_script( 'wp_document_revisions', 'wp_document_revisions', $data );
 
 		// enqueue CSS.
-		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', dirname( __FILE__ ) ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), null, $wpdr->version );
 	}
 
 
@@ -1429,18 +1566,77 @@ class WP_Document_Revisions_Admin {
 	 * Prevents initial autosave drafts from appearing as a revision after document upload.
 	 *
 	 * @since 1.0
-	 * @param int $id the post id.
+	 * @param int $revision_id the revision post id.
 	 */
-	public function revision_filter( $id ) {
+	public function revision_filter( $revision_id ) {
 		// verify post type.
-		if ( ! $this->verify_post_type( $id ) ) {
+		if ( ! $this->verify_post_type( $revision_id ) ) {
 			return;
 		}
 
-		$document = get_post( $id );
-		if ( 0 === strlen( $document->post_content ) ) {
-			wp_delete_post( $id, true );
+		$revision = get_post( $revision_id );
+		// delete revision if there is no content.
+		if ( 0 === strlen( $revision->post_content ) ) {
+			wp_delete_post_revision( $revision_id );
+			return;
 		}
+
+		// set last_revision (used in routine save_document to possibly merge revisions).
+		self::$last_revn = $revision_id;
+	}
+
+	/**
+	 * Identify the 'last but one' revision in case we will merge them.
+	 *
+	 * @param bool    $post_has_changed Whether the post has changed.
+	 * @param WP_Post $last_revision    The last revision post object.
+	 * @param WP_Post $post             The post object.
+	 * @return bool.
+	 */
+	public function identify_last_but_one( $post_has_changed, $last_revision, $post ) {
+		// only interested if post changed.
+		if ( ! $post_has_changed ) {
+			return $post_has_changed;
+		}
+
+		// verify post type.
+		if ( ! $this->verify_post_type( $post->ID ) ) {
+			return $post_has_changed;
+		}
+
+		// misuse of filter, but can use to determine whether the revisions can be merged.
+		// keep revision if title or content (document linked only) changed. Also if author changed.
+		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
+			return true;
+		}
+		if ( self::$parent->extract_document_id( $post->post_content ) !== self::$parent->extract_document_id( $last_revision->post_content ) ) {
+			return true;
+		}
+
+		// normally only title, content and excerpt name for a revision to be created.
+		$time_diff = time() - strtotime( $last_revision->post_modified_gmt );
+
+		/**
+		 * Filters whether to merge two revisions for a change in excerpt (generally where taxonomy change made late).
+		 *
+		 * Changes to the title or content (document) will always create an additional revision.
+		 * But if there are two revisions within a user-defined time of each other and only one has excerpt text, they can be merged.
+		 *
+		 * @since 3.4
+		 *
+		 * @param int 0 number of seconds between revisions to NOT create an extra revision.
+		 */
+		if ( $time_diff < apply_filters( 'document_revisions_merge_revisions', 0 ) ) {
+			// only here as excerpt changed.
+			if ( '' === $post->post_excerpt || '' === $last_revision->post_excerpt ) {
+				// possible merge, set last_but_one_revision (used in routine save_document).
+				self::$last_but_one_revn = $last_revision->ID;
+				self::$last_revn_excerpt = ( '' === $post->post_excerpt ? $last_revision->post_excerpt : $post->post_excerpt );
+				return true;
+			}
+		}
+
+		return $post_has_changed;
 	}
 
 
@@ -1462,45 +1658,42 @@ class WP_Document_Revisions_Admin {
 			return;
 		}
 
-		if ( is_numeric( $document->post_content ) ) {
-			// check that content points to an attachment post.
-			$attach = get_post( $document->post_content );
-			if ( isset( $attach->ID ) && 'attachment' === $attach->post_type ) {
+		$attach = $this->get_document( $post_id );
+		if ( $attach ) {
+			// make sure that the attachment is not refered to by another post (ignore autosave).
+			global $wpdb;
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery
+			$doc_link = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND (post_content = %d OR post_content LIKE %s ) AND post_name != %s ",
+					$document->post_parent,
+					$attach->ID,
+					$this->format_doc_id( $attach->ID ) . '%',
+					strval( $document->post_parent ) . '-autosave-v1'
+				)
+			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
-				// make sure that the attachment is not refered to by another post (ignore autosave).
-				global $wpdb;
-				// phpcs:disable WordPress.DB.DirectDatabaseQuery
-				$doc_link = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT COUNT(1) FROM $wpdb->posts WHERE %d IN (post_parent, id) AND post_content = %d AND post_name != %s ",
-						$document->post_parent,
-						$document->post_content,
-						strval( $document->post_parent ) . '-autosave-v1'
-					)
-				);
-				// phpcs:enable WordPress.DB.DirectDatabaseQuery
+			if ( '1' === $doc_link ) {
+				// look for attachment meta (before deleting attachment).
+				$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+				$file = get_attached_file( $attach->ID );
+				wp_delete_attachment( $attach->ID, true );
 
-				if ( '1' === $doc_link ) {
-					// look for attachment meta (before deleting attachment).
-					$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+				// belt and braces in case above 'deleted' file from media and not document directory.
+				$wpdr    = self::$parent;
+				$std_dir = $wpdr::$wp_default_dir['basedir'];
+				$doc_dir = $this->document_upload_dir();
+				if ( $std_dir !== $doc_dir ) {
+					$file = str_replace( $std_dir, $doc_dir, $file );
+				}
+				wp_delete_file_from_directory( $file, $doc_dir );
 
-					$file = get_attached_file( $attach->ID );
-					wp_delete_attachment( $attach->ID, false );
-
-					// belt and braces in case above 'deleted' file from media and not document directory.
-					$std_dir = WP_Document_Revisions::$wp_default_dir['basedir'];
-					$doc_dir = $this->document_upload_dir();
-					if ( $std_dir !== $doc_dir ) {
-						$file = str_replace( $std_dir, $doc_dir, $file );
-					}
-					wp_delete_file_from_directory( $file, $doc_dir );
-
-					// delete any metadata images.
-					if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
-						$file_dir = trailingslashit( dirname( $file ) );
-						foreach ( $meta['sizes'] as $size => $sizeinfo ) {
-							wp_delete_file_from_directory( $file_dir . $sizeinfo['file'], $file_dir );
-						}
+				// delete any metadata images.
+				if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
+					$file_dir = trailingslashit( dirname( $file ) );
+					foreach ( $meta['sizes'] as $size => $sizeinfo ) {
+						wp_delete_file_from_directory( $file_dir . $sizeinfo['file'], $file_dir );
 					}
 				}
 			}
@@ -1589,7 +1782,7 @@ class WP_Document_Revisions_Admin {
 			'numberposts' => 5,
 		);
 
-		$documents = $wpdr->get_documents( $query );
+		$documents = $this->get_documents( $query );
 
 		// no documents, don't bother.
 		if ( ! $documents ) {

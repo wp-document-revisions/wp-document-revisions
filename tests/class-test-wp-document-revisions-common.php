@@ -185,6 +185,20 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Routine to test QueryTrue (WP 5.0 comes up with is_admin).
+	 *
+	 * @param string[] ...$props properties for testing.
+	 */
+	public function query_true( ...$props ) {
+		if ( version_compare( $GLOBALS['wp_version'], '5.1.0' ) >= 0 ) {
+			self::assertQueryTrue( ...$props );
+		} else {
+			// WP5.0 seems to have is_admin too.
+			self::assertQueryTrue( 'is_admin', ...$props );
+		}
+	}
+
+	/**
 	 * Tests that a given URL actually returns the right file.
 	 *
 	 * @param string  $url     to check.
@@ -208,7 +222,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$exception = $e;
 		}
 
-		self::assertQueryTrue( 'is_single', 'is_singular' );
+		self::query_true( 'is_single', 'is_singular' );
 
 		global $wp_query;
 		self::assertGreaterThan( 0, $wp_query->found_posts, 'Cannot find document' );
@@ -295,13 +309,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// either 404 or will be stopped later.
 		if ( is_404() ) {
 			if ( is_single() ) {
-				self::assertQueryTrue( 'is_404', 'is_single', 'is_singular' );
+				self::query_true( 'is_404', 'is_single', 'is_singular' );
 			} else {
-				self::assertQueryTrue( 'is_404' );
+				self::query_true( 'is_404' );
 			}
 			$content = '';
 		} else {
-			self::assertQueryTrue( 'is_single', 'is_singular' );
+			self::query_true( 'is_single', 'is_singular' );
 
 			// verify whether contents are actually served.
 			ob_start();
@@ -374,7 +388,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// if this expected to work?
 		if ( ! $trash ) {
 			$post_obj = get_post( $post_id );
-			console_log( ( $post_obj instanceof WP_Post ? $post_obj->post_status : 'null' ) );
 			self::assertTrue( true, 'no delete route' );
 			// phpcs:disable  Squiz.PHP.CommentedOutCode.Found, Squiz.Commenting.InlineComment.InvalidEndChar
 			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
@@ -439,8 +452,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
-		// add a number of data access filters and actions.
-		$wpdr->use_read_capability();
+		if ( ! current_user_can( 'read_documents' ) ) {
+			// user does not have read_documents capability, so any need to be filtered out of results.
+			add_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -450,9 +465,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		// tear down the data access filters and actions.
-		remove_filter( 'map_meta_cap', array( $wpdr, 'map_meta_cap' ), 10, 4 );
-		remove_filter( 'user_has_cap', array( $wpdr, 'user_has_cap' ), 10, 4 );
 		if ( ! current_user_can( 'read_documents' ) ) {
 			remove_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10, 2 );
 		}
