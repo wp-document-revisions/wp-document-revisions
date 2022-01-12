@@ -19,35 +19,36 @@
  * Therefore all attachments and document revisions will have their post_parent set to the original document post.
  * [Note. If a featured image is loaded then it would also have its attachment post with post_parent. This is explicitly set to 0 on loading.]
  * The attachment record contains the link to acutal data file.
- * The actual aattachment to use is held in the post_content field.
- * Whilst it is normal that the latest loaded attachment, it is not necessarily so if a revision is reverted.
+ * The actual attachment to use is held in the post_content field.
+ * Whilst it is normal that the latest loaded attachment, this is not necessarily so if a revision is reverted.
  * However the latest one will be used if the correct one cannot be found.
  *
  * So that direct file access is difficult, the actual file name is not as loaded, but is an MD5-hash of it.
- * Measures are taken to hide this name from being seen by the user. However the attachmentr post does contain it.
+ * Measures are taken to hide this name from being seen by the user. However the attachment post does contain it.
  *
  * This code is based on the following:
  * Every live document will have post_content that will contain the ID of an attachment that has the document as its parent.
  * If it does not, then it will try to see if there is such an attachment.
  * It will then try to validate that attachment record.
- * This should be an MD5-format name (32 hexaecimal name) If not it will change the name.
+ * This should be an MD5-format name (32 hexaecimal name). If not it will change the name.
  * The file that it points to should exist there.
  * [If the document directory is different to the media directory, it will also check that it is in the media one, and if found propose to move it.]
  *
  * This code uses direct SQL calls to identify the document posts and to choose a potential attachment. .
- * This is a deliberate design decision in the analysis phase to NOT have any issues with caching and/ loading memory with data that is not foing to be used.
+ * This is a deliberate design decision in the analysis phase to NOT have any issues with caching and/or loading memory with data that is not going to be used.
  *
- * It also does so during data correction.. Here this is to avoid creating a revision (which would have, by definition, invalid data).
+ * It also does so during data correction. Here this is to avoid creating a revision (which would have, by definition, invalid data).
  *
  * Error/Warning conditions detected.
  * ===================================
  *
- * Note. There is no significance to the code number, Just the order that they were thought of.
+ * Note. There is no significance to the code numbering, Just the order that they were thought of.
  *
  * If the note has Fixable No, that means no automatic repair is possible.
  * Resolution can ALWAYS be achieved by sending the document to trash or by loading a new version of the document.
- * These options are available to those who can edit the document - which is the socpe of the tests.
+ * These options are available to those who can edit the document - which is the scope of the tests.
  *
+ * Of course the document may have been loaded but the MD5 hash has beome "lost". It may be necessary to search within the directory using file timestamps to find the document/
  *
  * Code     1
  * Type     Error
@@ -576,7 +577,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 0 === $wpdb->num_rows ) {
 			return false;
 		}
-		return $attach['ID'];
+		return ( is_null( $attach['ID'] ) ? false : $attach['ID'] );
 	}
 
 	/**

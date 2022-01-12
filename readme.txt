@@ -185,7 +185,7 @@ In: class-wp-document-revisions.php
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with 5.8
+* FIX: Blocks are categorised within the Editor differently with WP 5.8
 
 = 3.3.1 =
 

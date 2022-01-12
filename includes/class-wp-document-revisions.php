@@ -293,9 +293,6 @@ class WP_Document_Revisions {
 
 		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
-
-		// Although the Post Type Supports Editor, don't use block editor.
-		add_filter( 'use_block_editor_for_post', array( &$this, 'no_use_block_editor' ), 10, 2 );
 	}
 
 
@@ -367,7 +364,7 @@ class WP_Document_Revisions {
 		 */
 		// user requires read_document and not just read to read document.
 		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
-			// invoke logic to require read_document instead of default read .
+			// invoke logic to require read_documents instead of default read .
 			$args['capabilities'] = array(
 				'read' => 'read_documents',
 			);
@@ -500,24 +497,6 @@ class WP_Document_Revisions {
 				)
 			);
 		}
-	}
-
-
-
-	/**
-	 * Use Classic Editor for Documents (as need to constrain options.
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param bool    $use_block_editor Whether the post can be edited or not.
-	 * @param WP_Post $post             The post being checked.
-	 */
-	public function no_use_block_editor( $use_block_editor, $post ) {
-		// switch off for documents.
-		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
-			return false;
-		}
-		return $use_block_editor;
 	}
 
 
@@ -3093,8 +3072,11 @@ class WP_Document_Revisions {
 			return;
 		}
 
+		global $wpdr_mr;
 		include_once __DIR__ . '/class-wp-document-revisions-manage-rest.php';
-		new WP_Document_Revisions_Manage_Rest( $this );
+		if ( ! $wpdr_mr ) {
+			$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $this );
+		}
 	}
 
 
