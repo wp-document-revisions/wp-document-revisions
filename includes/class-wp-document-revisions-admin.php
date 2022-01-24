@@ -1370,6 +1370,10 @@ class WP_Document_Revisions_Admin {
 			wp_cache_delete( $thumb, 'posts' );
 		}
 
+		// find the attachment id now (as content might be cached) and we might delete the cache.
+		$content   = get_post_field( 'post_content', $doc_id );
+		$attach_id = $this->extract_document_id( $content );
+
 		// Let's work on Workflow state, Verify nonce.
 		if ( ! isset( $_POST['workflow_state_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['workflow_state_nonce'] ) ), 'wp-document-revisions' ) ) {
 			return;
@@ -1381,25 +1385,35 @@ class WP_Document_Revisions_Admin {
 
 		// can we merge the revisions.
 		if ( is_null( self::$last_revn ) || is_null( self::$last_but_one_revn ) ) {
-			return;
+			null;
+		} else {
+			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
+			wp_delete_post_revision( self::$last_but_one_revn );
+			global $wpdb;
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			$post_table = "{$wpdb->prefix}posts";
+			$sql        = $wpdb->prepare(
+				"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
+				self::$last_revn_excerpt,
+				self::$last_revn,
+				$doc_id,
+				self::$last_revn_excerpt
+			);
+			$res        = $wpdb->query( $sql );
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
+			wp_cache_delete( self::$last_revn, 'posts' );
+			wp_cache_delete( $doc_id, 'posts' );
 		}
 
-		// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
-		wp_delete_post_revision( self::$last_but_one_revn );
-		global $wpdb;
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		$post_table = "{$wpdb->prefix}posts";
-		$sql        = $wpdb->prepare(
-			"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
-			self::$last_revn_excerpt,
-			self::$last_revn,
-			$doc_id,
-			self::$last_revn_excerpt
-		);
-		$res        = $wpdb->query( $sql );
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
-		wp_cache_delete( self::$last_revn, 'posts' );
-		wp_cache_delete( $doc_id, 'posts' );
+		/**
+		 * Fires once a document has been saved and all plugin processing done.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param int $doc_id    id of Document post.
+		 * @param int $attach_id id of Attachment post.
+		 */
+		do_action( 'document_saved', $doc_id, $attach_id );
 	}
 
 	/**

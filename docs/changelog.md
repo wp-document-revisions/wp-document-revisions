@@ -3,6 +3,8 @@
 ### 3.4.0
 
 * SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.
+* NEW: An action 'document_saved' is provided for processing after a document has been saved or updated and all plugin processing complete. (#278)
+* NEW: A filter 'document_serve_attachment' is provided to review the attachment id being served. Return false to stop display. (#278)
 * NEW: A filter 'document_show_in_rest' is provided to display document data via the REST interface using document permissions. {#258, #259)
 * NEW: A tool is provided to validate the internal structure of all documents that the user can edit. If fixable then a button is displayed to fix it. (#260)
 * NEW: A user-oriented description may be entered for each document. This can be displayed with the Documents List shortcode and Latest Documents widget or their block equivalents. (#263)
