@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
-"PO-Revision-Date: 2022-01-12 17:57\n"
+"PO-Revision-Date: 2022-01-24 22:19\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:170
@@ -147,7 +147,7 @@ msgstr "Resumen de Revisiones"
 msgid "Document"
 msgstr "Documento"
 
-#: includes/class-wp-document-revisions-admin.php:304, includes/class-wp-document-revisions-admin.php:1193, includes/class-wp-document-revisions-admin.php:1414
+#: includes/class-wp-document-revisions-admin.php:304, includes/class-wp-document-revisions-admin.php:1193, includes/class-wp-document-revisions-admin.php:1428
 msgid "Owner"
 msgstr "Propietario"
 
@@ -241,7 +241,7 @@ msgstr "El \"slug\" de los documentos ha cambiado; por tanto, puede que algunas 
 msgid "Document Settings"
 msgstr "Ajustes de Documentos"
 
-#: includes/class-wp-document-revisions-admin.php:797, includes/class-wp-document-revisions-admin.php:827, includes/class-wp-document-revisions.php:2100
+#: includes/class-wp-document-revisions-admin.php:797, includes/class-wp-document-revisions-admin.php:827, includes/class-wp-document-revisions.php:2112
 msgid "Not authorized"
 msgstr "No autorizado"
 
@@ -314,67 +314,67 @@ msgstr "Actualmente Editando"
 msgid "Current State"
 msgstr "Estado Actual"
 
-#: includes/class-wp-document-revisions-admin.php:1415
+#: includes/class-wp-document-revisions-admin.php:1429
 msgid "Document Owner"
 msgstr "Propietario del Documento"
 
-#: includes/class-wp-document-revisions-admin.php:1457
+#: includes/class-wp-document-revisions-admin.php:1471
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr "Seguro que quiere restaurar la revisión? Si lo hace toda la historia se perderá y esta será copiada y establecida como la versión mas reciente."
 
-#: includes/class-wp-document-revisions-admin.php:1459
+#: includes/class-wp-document-revisions-admin.php:1473
 msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1460
+#: includes/class-wp-document-revisions-admin.php:1474
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
 msgstr "Después de guardar el documento en sofware de office, <a href=\"#\" onClick=\"location.reload();\"> actualice esta pagina</a> para ver sus cambios."
 
 #. translators: %s is the title of the document.
-#: includes/class-wp-document-revisions-admin.php:1462
+#: includes/class-wp-document-revisions-admin.php:1476
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr "Su bloqueo sobre el documento %s ha sido sobreescrito. Cualquier cambio no será guardado."
 
-#: includes/class-wp-document-revisions-admin.php:1463
+#: includes/class-wp-document-revisions-admin.php:1477
 msgid "An error has occurred, please try reloading the page."
 msgstr "Ha ocurrido un error, por favor, intente recargar la página."
 
-#: includes/class-wp-document-revisions-admin.php:1464
+#: includes/class-wp-document-revisions-admin.php:1478
 msgid "Lost Document Lock"
 msgstr "Bloqueo de documento perdido"
 
 #. translators: %d is the numeric minutes, when singular.
 #. translators: %d is the numeric minutes, when plural.
-#: includes/class-wp-document-revisions-admin.php:1467, includes/class-wp-document-revisions-admin.php:1469
+#: includes/class-wp-document-revisions-admin.php:1481, includes/class-wp-document-revisions-admin.php:1483
 msgid "%d mins"
 msgstr "%d minutos"
 
 #. translators: %d is the numeric hour, when singular.
-#: includes/class-wp-document-revisions-admin.php:1471
+#: includes/class-wp-document-revisions-admin.php:1485
 msgid "%d hour"
 msgstr "%d hora"
 
 #. translators: %d is the numeric hour, when plural.
-#: includes/class-wp-document-revisions-admin.php:1473
+#: includes/class-wp-document-revisions-admin.php:1487
 msgid "%d hours"
 msgstr "%d horas"
 
 #. translators: %d is the numeric day, when singular.
-#: includes/class-wp-document-revisions-admin.php:1475
+#: includes/class-wp-document-revisions-admin.php:1489
 msgid "%d day"
 msgstr "%d día"
 
 #. translators: %d is the numeric days, when plural.
-#: includes/class-wp-document-revisions-admin.php:1477
+#: includes/class-wp-document-revisions-admin.php:1491
 msgid "%d days"
 msgstr "%d días"
 
-#: includes/class-wp-document-revisions-admin.php:1760, includes/class-wp-document-revisions-recently-revised-widget.php:36, includes/class-wp-document-revisions-recently-revised-widget.php:39
+#: includes/class-wp-document-revisions-admin.php:1774, includes/class-wp-document-revisions-recently-revised-widget.php:36, includes/class-wp-document-revisions-recently-revised-widget.php:39
 msgid "Recently Revised Documents"
 msgstr "Documentos recientemente revisados"
 
 #. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
-#: includes/class-wp-document-revisions-admin.php:1804
+#: includes/class-wp-document-revisions-admin.php:1818
 msgid "%1$s ago by %2$s [%3$s]"
 msgstr "hace %1$s por %2$s [%3$s]"
 
@@ -818,89 +818,93 @@ msgstr "El documento se encuentra en su fase final"
 msgid "Somebody"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1161
+#: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1173
 msgid "-revision-"
 msgstr "-revisión-"
 
-#: includes/class-wp-document-revisions.php:1041, includes/class-wp-document-revisions.php:1060
+#: includes/class-wp-document-revisions.php:1041, includes/class-wp-document-revisions.php:1070
 msgid "No document file is attached."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1120
+#: includes/class-wp-document-revisions.php:1070
+msgid "Document is not available."
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1132
 msgid "You are not authorized to access that file."
 msgstr "No está autorizado a acceder a este archivo."
 
-#: includes/class-wp-document-revisions.php:1317
+#: includes/class-wp-document-revisions.php:1329
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1323
+#: includes/class-wp-document-revisions.php:1335
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2033
+#: includes/class-wp-document-revisions.php:2045
 msgid "Sorry, this is a private feed."
 msgstr "Lo sentimos, este es un feed privado."
 
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
-#: includes/class-wp-document-revisions.php:2151
+#: includes/class-wp-document-revisions.php:2163
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr "%1$s: %2$s ha sobreescrito su bloqueo el %3$s"
 
 #. translators: %s is the user's name.
-#: includes/class-wp-document-revisions.php:2161
+#: includes/class-wp-document-revisions.php:2173
 msgid "Dear %s:"
 msgstr "Estimado %s:"
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
-#: includes/class-wp-document-revisions.php:2163
+#: includes/class-wp-document-revisions.php:2175
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr "%1$s (%2$s), ha sobreescrito su bloqueo en el documento %3$s (%4$s)."
 
-#: includes/class-wp-document-revisions.php:2164
+#: includes/class-wp-document-revisions.php:2176
 msgid "Any changes you have made will be lost."
 msgstr "Cualquier cambio realizado no será guardado."
 
 #. translators: %s is the blog name.
-#: includes/class-wp-document-revisions.php:2166
+#: includes/class-wp-document-revisions.php:2178
 msgid "- The %s Team"
 msgstr "- El %s Equipo"
 
 #. translators: %s is the document title.
-#: includes/class-wp-document-revisions.php:2356
+#: includes/class-wp-document-revisions.php:2368
 msgid "%s - Latest Revision"
 msgstr "%s - Última Revisión"
 
 #. translators: %1$s is the document title, %2$d is the revision ID.
-#: includes/class-wp-document-revisions.php:2377
+#: includes/class-wp-document-revisions.php:2389
 msgid "%1$s - Revision %2$d"
 msgstr "%1$s - Revisión %2$d"
 
-#: includes/class-wp-document-revisions.php:2461
+#: includes/class-wp-document-revisions.php:2473
 msgid "Status"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2485
+#: includes/class-wp-document-revisions.php:2497
 msgid "Published"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2486
+#: includes/class-wp-document-revisions.php:2498
 msgid "Draft"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2487
+#: includes/class-wp-document-revisions.php:2499
 msgid "Scheduled"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2488
+#: includes/class-wp-document-revisions.php:2500
 msgid "Private"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2489
+#: includes/class-wp-document-revisions.php:2501
 msgid "Pending Review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2490
+#: includes/class-wp-document-revisions.php:2502
 msgid "Trash"
 msgstr ""
 
