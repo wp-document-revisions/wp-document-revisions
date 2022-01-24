@@ -34,6 +34,12 @@ Called after trying to over-ride the lock and possibly a notice has been sent.
 
 In: class-wp-document-revisions.php
 
+## Action document_saved
+
+Called when a document has been saved and all plugin processing done.
+
+In: class-wp-document-revisions-admin.php
+
 ## Action document_serve_done
 
 Called just after serving the file to the user.

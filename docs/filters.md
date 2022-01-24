@@ -156,6 +156,12 @@ In: class-wp-document-revisions.php
 
 Filters file name of document served. (Useful if file is encrypted at rest).
 
+## Filter document_serve_attachment
+
+In: class-wp-document-revisions.php
+
+Filter the attachment post to serve (Return false to stop display).
+
 ## Filter document_serve_use_gzip
 
 In: class-wp-document-revisions.php

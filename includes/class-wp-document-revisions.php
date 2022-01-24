@@ -1053,11 +1053,23 @@ class WP_Document_Revisions {
 
 		// get the attachment (id in post_content of rev_id).
 		$attach = $this->get_document( $rev_id );
+		$exists = ( $attach instanceof WP_Post );
+
+		/*
+		 * Filter the attachment post to serve.
+		 *
+		 * @param WP_Post $attach Attachment Post corresponding to document / revisions selected.
+		 * @param int     $rev_id Id of document / revision selected.
+		 */
+		$attach = apply_filters( 'document_serve_attachment', $attach, $rev_id );
+
 		if ( $attach instanceof WP_Post ) {
 			$file = get_attached_file( $attach->ID );
 		} else {
+				// create message on failure to find attachment. (More banal if one filters to false).
+				$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
 				wp_die(
-					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
+					esc_html( $msg ),
 					null,
 					array( 'response' => 403 )
 				);
