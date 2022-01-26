@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Danish\n"
 "Language: da_DK\n"
-"PO-Revision-Date: 2022-01-24 22:19\n"
+"PO-Revision-Date: 2022-01-26 10:13\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:170
@@ -672,7 +672,7 @@ msgstr ""
 #: includes/class-wp-document-revisions.php:306
 msgctxt "post type general name"
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenter"
 
 #: includes/class-wp-document-revisions.php:307
 msgctxt "post type singular name"
