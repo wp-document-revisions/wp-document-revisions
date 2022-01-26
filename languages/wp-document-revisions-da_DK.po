@@ -19,57 +19,57 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Danish\n"
 "Language: da_DK\n"
-"PO-Revision-Date: 2022-01-26 10:13\n"
+"PO-Revision-Date: 2022-01-26 11:39\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:170
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokument er opdateret. <a href=\"%s\">Download dokument</a>"
 
 #: includes/class-wp-document-revisions-admin.php:171
 msgid "Custom field updated."
-msgstr ""
+msgstr "Brugerdefineret felt opdateret."
 
 #: includes/class-wp-document-revisions-admin.php:172
 msgid "Custom field deleted."
-msgstr ""
+msgstr "Brugerdefineret felt slettet."
 
 #: includes/class-wp-document-revisions-admin.php:173
 msgid "Document updated."
-msgstr ""
+msgstr "Dokument er opdateret."
 
 #. translators: %s is the revision ID.
 #: includes/class-wp-document-revisions-admin.php:176
 msgid "Document restored to revision from %s"
-msgstr ""
+msgstr "Dokument gendannet til revision fra %s"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:179
 msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokument er publiceret. <a href=\"%s\">Download dokument</a>"
 
 #: includes/class-wp-document-revisions-admin.php:180
 msgid "Document saved."
-msgstr ""
+msgstr "Dokument er gemt."
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:182
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokument er indsendt. <a target=\"_blank\" href=\"%s\">Download dokument</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/class-wp-document-revisions-admin.php:184
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr ""
+msgstr "Dokument er planlagt til: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Forhåndsvis dokument</a>"
 
 #. translators: %s is the link to download the document.
 #: includes/class-wp-document-revisions-admin.php:186
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
+msgstr "Dokumentkladde er opdateret. <a target=\"_blank\" href=\"%s\">Download dokument</a>"
 
 #: includes/class-wp-document-revisions-admin.php:237
 msgid "Basic Usage"
-msgstr ""
+msgstr "Grundlæggende brug"
 
 #: includes/class-wp-document-revisions-admin.php:238
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer."
@@ -85,11 +85,11 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:241, includes/class-wp-document-revisions-admin.php:346
 msgid "Document Description"
-msgstr ""
+msgstr "Dokumentbeskrivelse"
 
 #: includes/class-wp-document-revisions-admin.php:242
 msgid "The document description provides a short user-oriented summary of the document."
-msgstr ""
+msgstr "Dokumentets beskrivelse giver et kort brugerorienteret sammendrag af dokumentet."
 
 #: includes/class-wp-document-revisions-admin.php:243
 msgid "This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents."
@@ -97,7 +97,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:244, includes/class-wp-document-revisions-admin.php:292
 msgid "Revision Log"
-msgstr ""
+msgstr "Revisionslog"
 
 #: includes/class-wp-document-revisions-admin.php:245
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
@@ -125,7 +125,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:253, includes/class-wp-document-revisions.php:318
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenter"
 
 #: includes/class-wp-document-revisions-admin.php:254
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
@@ -145,11 +145,11 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:289
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #: includes/class-wp-document-revisions-admin.php:304, includes/class-wp-document-revisions-admin.php:1193, includes/class-wp-document-revisions-admin.php:1428
 msgid "Owner"
-msgstr ""
+msgstr "Ejer"
 
 #: includes/class-wp-document-revisions-admin.php:485, includes/class-wp-document-revisions-admin.php:477
 msgid "You do not have the upload_files capability!"
@@ -174,19 +174,19 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:525
 msgid "Upload Document"
-msgstr ""
+msgstr "Upload dokument"
 
 #: includes/class-wp-document-revisions-admin.php:526
 msgid "Upload New Version"
-msgstr ""
+msgstr "Upload ny version"
 
 #: includes/class-wp-document-revisions-admin.php:534
 msgid "Latest Version of the Document"
-msgstr ""
+msgstr "Seneste version af dokumentet"
 
 #: includes/class-wp-document-revisions-admin.php:535
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/class-wp-document-revisions-admin.php:541
@@ -199,27 +199,27 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:579
 msgid "Modified"
-msgstr ""
+msgstr "Ændret"
 
 #: includes/class-wp-document-revisions-admin.php:580
 msgid "User"
-msgstr ""
+msgstr "Bruger"
 
 #: includes/class-wp-document-revisions-admin.php:581
 msgid "Summary"
-msgstr ""
+msgstr "Resumé"
 
 #: includes/class-wp-document-revisions-admin.php:585
 msgid "Actions"
-msgstr ""
+msgstr "Handlinger"
 
 #: includes/class-wp-document-revisions-admin.php:632
 msgid "Restore"
-msgstr ""
+msgstr "Gendan"
 
 #: includes/class-wp-document-revisions-admin.php:639
 msgid "RSS Feed"
-msgstr ""
+msgstr "RSS Feed"
 
 #: includes/class-wp-document-revisions-admin.php:689, includes/class-wp-document-revisions-admin.php:766
 msgid "Document Upload Directory"
@@ -347,36 +347,36 @@ msgstr ""
 #. translators: %d is the numeric minutes, when plural.
 #: includes/class-wp-document-revisions-admin.php:1481, includes/class-wp-document-revisions-admin.php:1483
 msgid "%d mins"
-msgstr ""
+msgstr "%d minutter"
 
 #. translators: %d is the numeric hour, when singular.
 #: includes/class-wp-document-revisions-admin.php:1485
 msgid "%d hour"
-msgstr ""
+msgstr "%d time"
 
 #. translators: %d is the numeric hour, when plural.
 #: includes/class-wp-document-revisions-admin.php:1487
 msgid "%d hours"
-msgstr ""
+msgstr "%d timer"
 
 #. translators: %d is the numeric day, when singular.
 #: includes/class-wp-document-revisions-admin.php:1489
 msgid "%d day"
-msgstr ""
+msgstr "%d dag"
 
 #. translators: %d is the numeric days, when plural.
 #: includes/class-wp-document-revisions-admin.php:1491
 msgid "%d days"
-msgstr ""
+msgstr "%d dage"
 
 #: includes/class-wp-document-revisions-admin.php:1774, includes/class-wp-document-revisions-recently-revised-widget.php:36, includes/class-wp-document-revisions-recently-revised-widget.php:39
 msgid "Recently Revised Documents"
-msgstr ""
+msgstr "Seneste ændrede dokumenter"
 
 #. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/class-wp-document-revisions-admin.php:1818
 msgid "%1$s ago by %2$s [%3$s]"
-msgstr ""
+msgstr "%1$s siden af %2$s [%3$s]"
 
 #: includes/class-wp-document-revisions-front-end.php:118, includes/class-wp-document-revisions-front-end.php:844, includes/class-wp-document-revisions-front-end.php:997
 msgid "You are not authorized to read this data"
@@ -392,15 +392,15 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:401
 msgid "Edit"
-msgstr ""
+msgstr "Rediger"
 
 #: includes/class-wp-document-revisions-front-end.php:420, includes/class-wp-document-revisions-recently-revised-widget.php:120
 msgid "No attachment available."
-msgstr ""
+msgstr "Der er ingen vedhæftning tilgængelig."
 
 #: includes/class-wp-document-revisions-front-end.php:495
 msgid "WP Document Revisions"
-msgstr ""
+msgstr "WP Document Revisions"
 
 #: includes/class-wp-document-revisions-front-end.php:773
 msgid "No selection"
@@ -677,64 +677,64 @@ msgstr "Dokumenter"
 #: includes/class-wp-document-revisions.php:307
 msgctxt "post type singular name"
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #: includes/class-wp-document-revisions.php:308
 msgctxt "document"
 msgid "Add Document"
-msgstr ""
+msgstr "Tilføj dokument"
 
 #: includes/class-wp-document-revisions.php:309
 msgid "Add New Document"
-msgstr ""
+msgstr "Tilføj nyt dokument"
 
 #: includes/class-wp-document-revisions.php:310
 msgid "Edit Document"
-msgstr ""
+msgstr "Rediger dokument"
 
 #: includes/class-wp-document-revisions.php:311
 msgid "New Document"
-msgstr ""
+msgstr "Nyt dokument"
 
 #: includes/class-wp-document-revisions.php:312
 msgid "View Document"
-msgstr ""
+msgstr "Vis dokument"
 
 #: includes/class-wp-document-revisions.php:313
 msgid "View Documents"
-msgstr ""
+msgstr "Vis dokumenter"
 
 #: includes/class-wp-document-revisions.php:314
 msgid "Search Documents"
-msgstr ""
+msgstr "Søg dokumenter"
 
 #: includes/class-wp-document-revisions.php:315
 msgid "No documents found"
-msgstr ""
+msgstr "Der blev ikke fundet nogle dokumenter"
 
 #: includes/class-wp-document-revisions.php:316
 msgid "No documents found in Trash"
-msgstr ""
+msgstr "Der blev ikke fundet nogen dokumenter i papirkurven"
 
 #: includes/class-wp-document-revisions.php:319
 msgid "All Documents"
-msgstr ""
+msgstr "Alle dokumenter"
 
 #: includes/class-wp-document-revisions.php:320
 msgid "Document Image"
-msgstr ""
+msgstr "Dokumentbillede"
 
 #: includes/class-wp-document-revisions.php:321
 msgid "Set Document Image"
-msgstr ""
+msgstr "Sæt dokumentbillede"
 
 #: includes/class-wp-document-revisions.php:322
 msgid "Remove Document Image"
-msgstr ""
+msgstr "Fjern dokumentbillede"
 
 #: includes/class-wp-document-revisions.php:323
 msgid "Use as Document Image"
-msgstr ""
+msgstr "Benyt som dokumentbillede"
 
 #: includes/class-wp-document-revisions.php:407
 msgctxt "taxonomy general name"
@@ -820,19 +820,19 @@ msgstr ""
 
 #: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1173
 msgid "-revision-"
-msgstr ""
+msgstr "-revision-"
 
 #: includes/class-wp-document-revisions.php:1041, includes/class-wp-document-revisions.php:1070
 msgid "No document file is attached."
-msgstr ""
+msgstr "Der er ingen dokument fil vedhæftet."
 
 #: includes/class-wp-document-revisions.php:1070
 msgid "Document is not available."
-msgstr ""
+msgstr "Dokumentet er ikke tilgængeligt."
 
 #: includes/class-wp-document-revisions.php:1132
 msgid "You are not authorized to access that file."
-msgstr ""
+msgstr "Du har ikke tilladelse til at tilgå denne fil."
 
 #: includes/class-wp-document-revisions.php:1329
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
