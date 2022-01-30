@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
-"PO-Revision-Date: 2022-01-24 22:19\n"
+"PO-Revision-Date: 2022-01-30 11:02\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:170
@@ -828,7 +828,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions.php:1070
 msgid "Document is not available."
-msgstr ""
+msgstr "Dokument ist nicht verfügbar."
 
 #: includes/class-wp-document-revisions.php:1132
 msgid "You are not authorized to access that file."
