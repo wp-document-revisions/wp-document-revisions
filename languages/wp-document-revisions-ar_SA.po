@@ -1,5 +1,5 @@
-# Copyright (C) 2021 WP Document Revisions 3.3.0
-# This file is distributed under the same license as the WP Document Revisions 3.3.0 package.
+# Copyright (C) 2022 WP Document Revisions 3.4.0
+# This file is distributed under the same license as the WP Document Revisions 3.4.0 package.
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
@@ -19,366 +19,366 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
-"PO-Revision-Date: 2021-12-20 21:52\n"
+"PO-Revision-Date: 2022-01-24 22:19\n"
 
 #. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:168
+#: includes/class-wp-document-revisions-admin.php:170
 msgid "Document updated. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:169
+#: includes/class-wp-document-revisions-admin.php:171
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:170
+#: includes/class-wp-document-revisions-admin.php:172
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:171
+#: includes/class-wp-document-revisions-admin.php:173
 msgid "Document updated."
 msgstr ""
 
 #. translators: %s is the revision ID.
-#: includes/class-wp-document-revisions-admin.php:174
+#: includes/class-wp-document-revisions-admin.php:176
 msgid "Document restored to revision from %s"
 msgstr ""
 
 #. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:177
+#: includes/class-wp-document-revisions-admin.php:179
 msgid "Document published. <a href=\"%s\">Download document</a>"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:178
+#: includes/class-wp-document-revisions-admin.php:180
 msgid "Document saved."
 msgstr ""
 
 #. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:180
+#: includes/class-wp-document-revisions-admin.php:182
 msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
 #. translators: %1$s is the date, %2$s is the preview link.
-#: includes/class-wp-document-revisions-admin.php:182
+#: includes/class-wp-document-revisions-admin.php:184
 msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
 msgstr ""
 
 #. translators: %s is the link to download the document.
-#: includes/class-wp-document-revisions-admin.php:184
+#: includes/class-wp-document-revisions-admin.php:186
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:235
+#: includes/class-wp-document-revisions-admin.php:237
 msgid "Basic Usage"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:236
+#: includes/class-wp-document-revisions-admin.php:238
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:237
+#: includes/class-wp-document-revisions-admin.php:239
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:238
+#: includes/class-wp-document-revisions-admin.php:240
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:239, includes/class-wp-document-revisions-admin.php:327
+#: includes/class-wp-document-revisions-admin.php:241, includes/class-wp-document-revisions-admin.php:346
 msgid "Document Description"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:240
+#: includes/class-wp-document-revisions-admin.php:242
 msgid "The document description provides a short user-oriented summary of the document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:241
+#: includes/class-wp-document-revisions-admin.php:243
 msgid "This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:242, includes/class-wp-document-revisions-admin.php:290
+#: includes/class-wp-document-revisions-admin.php:244, includes/class-wp-document-revisions-admin.php:292
 msgid "Revision Log"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:243
+#: includes/class-wp-document-revisions-admin.php:245
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:244
+#: includes/class-wp-document-revisions-admin.php:246
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:245, includes/class-wp-document-revisions-admin.php:294
+#: includes/class-wp-document-revisions-admin.php:247, includes/class-wp-document-revisions-admin.php:296
 msgid "Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:246
+#: includes/class-wp-document-revisions-admin.php:248
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:247
+#: includes/class-wp-document-revisions-admin.php:249
 msgid "Publishing Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:248
+#: includes/class-wp-document-revisions-admin.php:250
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:251, includes/class-wp-document-revisions.php:321
+#: includes/class-wp-document-revisions-admin.php:253, includes/class-wp-document-revisions.php:318
 msgid "Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:252
+#: includes/class-wp-document-revisions-admin.php:254
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:253
+#: includes/class-wp-document-revisions-admin.php:255
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:254
+#: includes/class-wp-document-revisions-admin.php:256
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:286
+#: includes/class-wp-document-revisions-admin.php:288, includes/class-wp-document-revisions-admin.php:559
 msgid "Revision Summary"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:287
+#: includes/class-wp-document-revisions-admin.php:289
 msgid "Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:302, includes/class-wp-document-revisions-admin.php:1174, includes/class-wp-document-revisions-admin.php:1395
+#: includes/class-wp-document-revisions-admin.php:304, includes/class-wp-document-revisions-admin.php:1193, includes/class-wp-document-revisions-admin.php:1428
 msgid "Owner"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:466, includes/class-wp-document-revisions-admin.php:458
+#: includes/class-wp-document-revisions-admin.php:485, includes/class-wp-document-revisions-admin.php:477
 msgid "You do not have the upload_files capability!"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:468
+#: includes/class-wp-document-revisions-admin.php:487
 msgid "You will not be able to upload any documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:460
+#: includes/class-wp-document-revisions-admin.php:479
 msgid "You will not be able to upload documents though you may be able change some attributes."
 msgstr ""
 
 #. translators: %s is the user that holds the document lock.
-#: includes/class-wp-document-revisions-admin.php:497
+#: includes/class-wp-document-revisions-admin.php:516
 msgid "%s has prevented other users from making changes."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:500
+#: includes/class-wp-document-revisions-admin.php:519
 msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:506
+#: includes/class-wp-document-revisions-admin.php:525
 msgid "Upload Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:507
+#: includes/class-wp-document-revisions-admin.php:526
 msgid "Upload New Version"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:515
+#: includes/class-wp-document-revisions-admin.php:534
 msgid "Latest Version of the Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:516
+#: includes/class-wp-document-revisions-admin.php:535
 msgid "Download"
 msgstr ""
 
 #. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-#: includes/class-wp-document-revisions-admin.php:522
+#: includes/class-wp-document-revisions-admin.php:541
 msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:542
+#: includes/class-wp-document-revisions-admin.php:561
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:560
+#: includes/class-wp-document-revisions-admin.php:579
 msgid "Modified"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:561
+#: includes/class-wp-document-revisions-admin.php:580
 msgid "User"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:562
+#: includes/class-wp-document-revisions-admin.php:581
 msgid "Summary"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:566
+#: includes/class-wp-document-revisions-admin.php:585
 msgid "Actions"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:613
+#: includes/class-wp-document-revisions-admin.php:632
 msgid "Restore"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:620
+#: includes/class-wp-document-revisions-admin.php:639
 msgid "RSS Feed"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:670, includes/class-wp-document-revisions-admin.php:747
+#: includes/class-wp-document-revisions-admin.php:689, includes/class-wp-document-revisions-admin.php:766
 msgid "Document Upload Directory"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:671, includes/class-wp-document-revisions-admin.php:754
+#: includes/class-wp-document-revisions-admin.php:690, includes/class-wp-document-revisions-admin.php:773
 msgid "Document Slug"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:702
+#: includes/class-wp-document-revisions-admin.php:721
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:731
+#: includes/class-wp-document-revisions-admin.php:750
 msgid "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:744
+#: includes/class-wp-document-revisions-admin.php:763
 msgid "Document Settings"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:778, includes/class-wp-document-revisions-admin.php:808, includes/class-wp-document-revisions.php:2121
+#: includes/class-wp-document-revisions-admin.php:797, includes/class-wp-document-revisions-admin.php:827, includes/class-wp-document-revisions.php:2112
 msgid "Not authorized"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:866
+#: includes/class-wp-document-revisions-admin.php:885
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/class-wp-document-revisions-admin.php:874
+#: includes/class-wp-document-revisions-admin.php:893
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:888
+#: includes/class-wp-document-revisions-admin.php:907
 msgid "example-document-title"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:892
+#: includes/class-wp-document-revisions-admin.php:911
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:944
+#: includes/class-wp-document-revisions-admin.php:963
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:959
+#: includes/class-wp-document-revisions-admin.php:978
 msgid "Feed Privacy"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:962
+#: includes/class-wp-document-revisions-admin.php:981
 msgid "Secret Feed Key"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:965
+#: includes/class-wp-document-revisions-admin.php:984
 msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:967
+#: includes/class-wp-document-revisions-admin.php:986
 msgid "Generate New Key"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1098
+#: includes/class-wp-document-revisions-admin.php:1117
 msgid "Maximum number of revisions reached for this document. Making changes will delete data."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1089
+#: includes/class-wp-document-revisions-admin.php:1108
 msgid "More revisions exist for this document than is permitted. Making changes will delete data."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1076
+#: includes/class-wp-document-revisions-admin.php:1095
 msgid "Maximum number of document revisions set to zero using a filter. Check your configuration."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1120
+#: includes/class-wp-document-revisions-admin.php:1139
 msgid "All workflow states"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1122
+#: includes/class-wp-document-revisions-admin.php:1141
 msgid "All statuses"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1138
+#: includes/class-wp-document-revisions-admin.php:1157
 msgid "All owners"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1193
+#: includes/class-wp-document-revisions-admin.php:1212
 msgid "Currently Editing"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1240
+#: includes/class-wp-document-revisions-admin.php:1259
 msgid "Current State"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1396
+#: includes/class-wp-document-revisions-admin.php:1429
 msgid "Document Owner"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1438
+#: includes/class-wp-document-revisions-admin.php:1471
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1440
+#: includes/class-wp-document-revisions-admin.php:1473
 msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1441
+#: includes/class-wp-document-revisions-admin.php:1474
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
 msgstr ""
 
 #. translators: %s is the title of the document.
-#: includes/class-wp-document-revisions-admin.php:1443
+#: includes/class-wp-document-revisions-admin.php:1476
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1444
+#: includes/class-wp-document-revisions-admin.php:1477
 msgid "An error has occurred, please try reloading the page."
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1445
+#: includes/class-wp-document-revisions-admin.php:1478
 msgid "Lost Document Lock"
 msgstr ""
 
 #. translators: %d is the numeric minutes, when singular.
 #. translators: %d is the numeric minutes, when plural.
-#: includes/class-wp-document-revisions-admin.php:1448, includes/class-wp-document-revisions-admin.php:1450
+#: includes/class-wp-document-revisions-admin.php:1481, includes/class-wp-document-revisions-admin.php:1483
 msgid "%d mins"
 msgstr ""
 
 #. translators: %d is the numeric hour, when singular.
-#: includes/class-wp-document-revisions-admin.php:1452
+#: includes/class-wp-document-revisions-admin.php:1485
 msgid "%d hour"
 msgstr ""
 
 #. translators: %d is the numeric hour, when plural.
-#: includes/class-wp-document-revisions-admin.php:1454
+#: includes/class-wp-document-revisions-admin.php:1487
 msgid "%d hours"
 msgstr ""
 
 #. translators: %d is the numeric day, when singular.
-#: includes/class-wp-document-revisions-admin.php:1456
+#: includes/class-wp-document-revisions-admin.php:1489
 msgid "%d day"
 msgstr ""
 
 #. translators: %d is the numeric days, when plural.
-#: includes/class-wp-document-revisions-admin.php:1458
+#: includes/class-wp-document-revisions-admin.php:1491
 msgid "%d days"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1741, includes/class-wp-document-revisions-recently-revised-widget.php:18, includes/class-wp-document-revisions-recently-revised-widget.php:21
+#: includes/class-wp-document-revisions-admin.php:1774, includes/class-wp-document-revisions-recently-revised-widget.php:36, includes/class-wp-document-revisions-recently-revised-widget.php:39
 msgid "Recently Revised Documents"
 msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
-#: includes/class-wp-document-revisions-admin.php:1785
+#: includes/class-wp-document-revisions-admin.php:1818
 msgid "%1$s ago by %2$s [%3$s]"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:118, includes/class-wp-document-revisions-front-end.php:843, includes/class-wp-document-revisions-front-end.php:997
+#: includes/class-wp-document-revisions-front-end.php:118, includes/class-wp-document-revisions-front-end.php:844, includes/class-wp-document-revisions-front-end.php:997
 msgid "You are not authorized to read this data"
 msgstr ""
 
@@ -394,266 +394,270 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:420, includes/class-wp-document-revisions-recently-revised-widget.php:103
+#: includes/class-wp-document-revisions-front-end.php:420, includes/class-wp-document-revisions-recently-revised-widget.php:120
 msgid "No attachment available."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:494
+#: includes/class-wp-document-revisions-front-end.php:495
 msgid "WP Document Revisions"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:772
+#: includes/class-wp-document-revisions-front-end.php:773
 msgid "No selection"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:881
+#: includes/class-wp-document-revisions-front-end.php:882
 msgid " Taxonomy details in this block have changed."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:912, includes/class-wp-document-revisions-front-end.php:928, includes/class-wp-document-revisions-front-end.php:944
+#: includes/class-wp-document-revisions-front-end.php:913, includes/class-wp-document-revisions-front-end.php:929, includes/class-wp-document-revisions-front-end.php:945
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:91
-msgid "Sorry, you are only allowed to read documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions-manage-rest.php:100
-msgid "Sorry, you are not allowed to view revisions."
-msgstr ""
-
-#: includes/class-wp-document-revisions-manage-rest.php:109
-msgid "Sorry, you are not allowed to read documents."
-msgstr ""
-
-#: includes/class-wp-document-revisions-manage-rest.php:118
+#: includes/class-wp-document-revisions-manage-rest.php:96
 msgid "Sorry, you are not allowed to edit documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:188, includes/class-wp-document-revisions-manage-rest.php:189, includes/class-wp-document-revisions-manage-rest.php:192, includes/class-wp-document-revisions-manage-rest.php:193
+#: includes/class-wp-document-revisions-manage-rest.php:107, includes/class-wp-document-revisions-manage-rest.php:202
+msgid "Sorry, you are not allowed to view revisions."
+msgstr ""
+
+#: includes/class-wp-document-revisions-manage-rest.php:118
+msgid "Sorry, you are not allowed to read documents."
+msgstr ""
+
+#: includes/class-wp-document-revisions-manage-rest.php:145
+msgid "Sorry, you are only allowed to use GET method"
+msgstr ""
+
+#: includes/class-wp-document-revisions-manage-rest.php:138
+msgid "Sorry, invalid PUT call"
+msgstr ""
+
+#: includes/class-wp-document-revisions-manage-rest.php:239, includes/class-wp-document-revisions-manage-rest.php:240, includes/class-wp-document-revisions-manage-rest.php:243, includes/class-wp-document-revisions-manage-rest.php:244
 msgid "<!-- protected -->"
 msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
-#: includes/class-wp-document-revisions-recently-revised-widget.php:81
+#: includes/class-wp-document-revisions-recently-revised-widget.php:98
 msgid "%1$s ago by %2$s"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:81
+#: includes/class-wp-document-revisions-recently-revised-widget.php:98
 msgid "%1$s ago"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:164
+#: includes/class-wp-document-revisions-recently-revised-widget.php:169
 msgid "Title:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:168
+#: includes/class-wp-document-revisions-recently-revised-widget.php:173
 msgid "Number of Posts:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:172
+#: includes/class-wp-document-revisions-recently-revised-widget.php:177
 msgid "Posts to Show:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:179
+#: includes/class-wp-document-revisions-recently-revised-widget.php:184
 msgid "Display Featured Image:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:180, includes/class-wp-document-revisions-recently-revised-widget.php:184, includes/class-wp-document-revisions-recently-revised-widget.php:188, includes/class-wp-document-revisions-recently-revised-widget.php:192
+#: includes/class-wp-document-revisions-recently-revised-widget.php:185, includes/class-wp-document-revisions-recently-revised-widget.php:189, includes/class-wp-document-revisions-recently-revised-widget.php:193, includes/class-wp-document-revisions-recently-revised-widget.php:197
 msgid "Yes"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:183
+#: includes/class-wp-document-revisions-recently-revised-widget.php:188
 msgid "Display Document Description:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:187
+#: includes/class-wp-document-revisions-recently-revised-widget.php:192
 msgid "Display Document Author:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:191
+#: includes/class-wp-document-revisions-recently-revised-widget.php:196
 msgid "Open documents in new tab:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:213, includes/class-wp-document-revisions-validate-structure.php:239, includes/class-wp-document-revisions-validate-structure.php:279, includes/class-wp-document-revisions-validate-structure.php:306
+#: includes/class-wp-document-revisions-validate-structure.php:214, includes/class-wp-document-revisions-validate-structure.php:240, includes/class-wp-document-revisions-validate-structure.php:280, includes/class-wp-document-revisions-validate-structure.php:307
 msgid "Inconsistent data sent to Interface"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:391, includes/class-wp-document-revisions-validate-structure.php:397
+#: includes/class-wp-document-revisions-validate-structure.php:392, includes/class-wp-document-revisions-validate-structure.php:398
 msgid "Invalid Document Internal Structures"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:392
+#: includes/class-wp-document-revisions-validate-structure.php:393
 msgid "No invalid documents found."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:403
+#: includes/class-wp-document-revisions-validate-structure.php:404
 msgid "ID"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:404
+#: includes/class-wp-document-revisions-validate-structure.php:405
 msgid "Type"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:405
+#: includes/class-wp-document-revisions-validate-structure.php:406
 msgid "Title"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:406
+#: includes/class-wp-document-revisions-validate-structure.php:407
 msgid "Message"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:407, includes/class-wp-document-revisions-validate-structure.php:430
+#: includes/class-wp-document-revisions-validate-structure.php:408, includes/class-wp-document-revisions-validate-structure.php:431
 msgid "Fix"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:438
+#: includes/class-wp-document-revisions-validate-structure.php:439
 msgid "Error"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:438
+#: includes/class-wp-document-revisions-validate-structure.php:439
 msgid "Warning"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:449
+#: includes/class-wp-document-revisions-validate-structure.php:450
 msgid "See the Help pulldown for detailed Help information"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:505
+#: includes/class-wp-document-revisions-validate-structure.php:506
 msgid "There is no attachment record held for document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:524
+#: includes/class-wp-document-revisions-validate-structure.php:525
 msgid "Attachment found for document, but not currently linked"
 msgstr ""
 
 #. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-#: includes/class-wp-document-revisions-validate-structure.php:526, includes/class-wp-document-revisions-validate-structure.php:543
+#: includes/class-wp-document-revisions-validate-structure.php:527, includes/class-wp-document-revisions-validate-structure.php:544
 msgid "[Modified Date: Document - %1$s, Attachment - %2$s]"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:541
+#: includes/class-wp-document-revisions-validate-structure.php:542
 msgid "Document links to invalid attachment. An attachment exists and can replace link"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:598
+#: includes/class-wp-document-revisions-validate-structure.php:599
 msgid "Document links to an invalid attachment record"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:616
+#: includes/class-wp-document-revisions-validate-structure.php:617
 msgid "Document attachment exists but related file not in document location"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:624
+#: includes/class-wp-document-revisions-validate-structure.php:625
 msgid "Document attachment exists but related file not found"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:636
+#: includes/class-wp-document-revisions-validate-structure.php:637
 msgid "Document attachment does not appear to be md5 encoded"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:681
+#: includes/class-wp-document-revisions-validate-structure.php:682
 msgid "Overview"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:682
+#: includes/class-wp-document-revisions-validate-structure.php:683
 msgid "This tool allows you to find errors in the internal structure of documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:683
+#: includes/class-wp-document-revisions-validate-structure.php:684
 msgid "It will review all documents that you are able to edit."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:684
+#: includes/class-wp-document-revisions-validate-structure.php:685
 msgid "This version does not address revision data."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:685
+#: includes/class-wp-document-revisions-validate-structure.php:686
 msgid "Two types of issues can be identified - Errors and Warnings."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:686
+#: includes/class-wp-document-revisions-validate-structure.php:687
 msgid "If you have an error reported here, then you will get an \"Error 404 - Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:687
+#: includes/class-wp-document-revisions-validate-structure.php:688
 msgid "Some of these can be fixed using data from within the system - and a button is available to fix the issue, but others cannot."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:688
+#: includes/class-wp-document-revisions-validate-structure.php:689
 msgid "When they cannot be fixed, the resolution is either normally to delete the document or to load a new version of the document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:689
+#: includes/class-wp-document-revisions-validate-structure.php:690
 msgid "This process will, of course, also address unfixed, but fixable, issues as well."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:690
+#: includes/class-wp-document-revisions-validate-structure.php:691
 msgid "Errors"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:691
+#: includes/class-wp-document-revisions-validate-structure.php:692
 msgid "These are issues that stop you displaying your document on the front end. Problems include:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:692
+#: includes/class-wp-document-revisions-validate-structure.php:693
 msgid "The identifier of the latest attachment (i.e. the current document) is held in the post content field."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:693
+#: includes/class-wp-document-revisions-validate-structure.php:694
 msgid "If this is missing or points to a non-existant one then the document cannot be viewed."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:694
+#: includes/class-wp-document-revisions-validate-structure.php:695
 msgid "However if there are any attachments attached to the document then we can display the latest one."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:695
+#: includes/class-wp-document-revisions-validate-structure.php:696
 msgid "This is done by updating the document record so that the content contains the attachment identifier."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:696
+#: includes/class-wp-document-revisions-validate-structure.php:697
 msgid "There is no attachment associated with the document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:697
+#: includes/class-wp-document-revisions-validate-structure.php:698
 msgid "There is an identifier in the document but either there is no attachment or it does not relate to this document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:698
+#: includes/class-wp-document-revisions-validate-structure.php:699
 msgid "There is an identifier that links to a document attachment but there is no underlying file."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:699
+#: includes/class-wp-document-revisions-validate-structure.php:700
 msgid "As a variant of this last case, you may have set up the plugin so that the document file store is one of your choosing and not the standard Media store."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:700
+#: includes/class-wp-document-revisions-validate-structure.php:701
 msgid "In this very specific case, when it has been unable to find the file in the document store, it will look for it in the Media store."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:701
+#: includes/class-wp-document-revisions-validate-structure.php:702
 msgid "If found there it will offer you a fix which is to move the file from the Media store to the document store."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:702
+#: includes/class-wp-document-revisions-validate-structure.php:703
 msgid "Warnings"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:703
+#: includes/class-wp-document-revisions-validate-structure.php:704
 msgid "The nature of the web technology used to deliver WordPress means that if you know the name of the file held on the server then you can access the file directly"
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:704
+#: includes/class-wp-document-revisions-validate-structure.php:705
 msgid "It is a design feature of this plugin that you should only be able to access a document if you go via WordPress itself."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:705
+#: includes/class-wp-document-revisions-validate-structure.php:706
 msgid "So to deliver this the plugin changes the file name to an md5-encoded file name and then hides it from you when using the application."
 msgstr ""
 
-#: includes/class-wp-document-revisions-validate-structure.php:706
+#: includes/class-wp-document-revisions-validate-structure.php:707
 msgid "The fix is therefore to md5-encode the file name."
 msgstr ""
 
@@ -665,238 +669,242 @@ msgstr ""
 msgid "Documents menu may not be displayed completely with \"All Documents\" and \"Add Document\" options missing"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:309
+#: includes/class-wp-document-revisions.php:306
 msgctxt "post type general name"
 msgid "Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:307
 msgctxt "post type singular name"
 msgid "Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:308
 msgctxt "document"
 msgid "Add Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:312
+#: includes/class-wp-document-revisions.php:309
 msgid "Add New Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:313
+#: includes/class-wp-document-revisions.php:310
 msgid "Edit Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:314
+#: includes/class-wp-document-revisions.php:311
 msgid "New Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:315
+#: includes/class-wp-document-revisions.php:312
 msgid "View Document"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:316
+#: includes/class-wp-document-revisions.php:313
 msgid "View Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:317
+#: includes/class-wp-document-revisions.php:314
 msgid "Search Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:318
+#: includes/class-wp-document-revisions.php:315
 msgid "No documents found"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:319
+#: includes/class-wp-document-revisions.php:316
 msgid "No documents found in Trash"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:322
+#: includes/class-wp-document-revisions.php:319
 msgid "All Documents"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:323
+#: includes/class-wp-document-revisions.php:320
 msgid "Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:321
 msgid "Set Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:325
+#: includes/class-wp-document-revisions.php:322
 msgid "Remove Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:326
+#: includes/class-wp-document-revisions.php:323
 msgid "Use as Document Image"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:410
+#: includes/class-wp-document-revisions.php:407
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:411
+#: includes/class-wp-document-revisions.php:408
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:412
+#: includes/class-wp-document-revisions.php:409
 msgid "Search Workflow States"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:413
+#: includes/class-wp-document-revisions.php:410
 msgid "All Workflow States"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:414
+#: includes/class-wp-document-revisions.php:411
 msgid "Parent Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:415
+#: includes/class-wp-document-revisions.php:412
 msgid "Parent Workflow State:"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:416
+#: includes/class-wp-document-revisions.php:413
 msgid "Edit Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:417
+#: includes/class-wp-document-revisions.php:414
 msgid "Update Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:418
+#: includes/class-wp-document-revisions.php:415
 msgid "Add New Workflow State"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:419
+#: includes/class-wp-document-revisions.php:416
 msgid "New Workflow State Name"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:420
+#: includes/class-wp-document-revisions.php:417
 msgid "Workflow States"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:479
+#: includes/class-wp-document-revisions.php:476
 msgid "In Progress"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:479
+#: includes/class-wp-document-revisions.php:476
 msgid "Document is in the process of being written"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:480
+#: includes/class-wp-document-revisions.php:477
 msgid "Initial Draft"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:480
+#: includes/class-wp-document-revisions.php:477
 msgid "Document is being edited and refined"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:481
+#: includes/class-wp-document-revisions.php:478
 msgid "Under Review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:481
+#: includes/class-wp-document-revisions.php:478
 msgid "Document is pending final review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:482
+#: includes/class-wp-document-revisions.php:479
 msgid "Final"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:482
+#: includes/class-wp-document-revisions.php:479
 msgid "Document is in its final form"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:613
+#: includes/class-wp-document-revisions.php:592
 msgid "Somebody"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:800, includes/class-wp-document-revisions.php:1182
+#: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1173
 msgid "-revision-"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1062, includes/class-wp-document-revisions.php:1081
+#: includes/class-wp-document-revisions.php:1041, includes/class-wp-document-revisions.php:1070
 msgid "No document file is attached."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1141
+#: includes/class-wp-document-revisions.php:1070
+msgid "Document is not available."
+msgstr ""
+
+#: includes/class-wp-document-revisions.php:1132
 msgid "You are not authorized to access that file."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1338
+#: includes/class-wp-document-revisions.php:1329
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1344
+#: includes/class-wp-document-revisions.php:1335
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2054
+#: includes/class-wp-document-revisions.php:2045
 msgid "Sorry, this is a private feed."
 msgstr ""
 
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
-#: includes/class-wp-document-revisions.php:2172
+#: includes/class-wp-document-revisions.php:2163
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr ""
 
 #. translators: %s is the user's name.
-#: includes/class-wp-document-revisions.php:2182
+#: includes/class-wp-document-revisions.php:2173
 msgid "Dear %s:"
 msgstr ""
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
-#: includes/class-wp-document-revisions.php:2184
+#: includes/class-wp-document-revisions.php:2175
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2185
+#: includes/class-wp-document-revisions.php:2176
 msgid "Any changes you have made will be lost."
 msgstr ""
 
 #. translators: %s is the blog name.
-#: includes/class-wp-document-revisions.php:2187
+#: includes/class-wp-document-revisions.php:2178
 msgid "- The %s Team"
 msgstr ""
 
 #. translators: %s is the document title.
-#: includes/class-wp-document-revisions.php:2377
+#: includes/class-wp-document-revisions.php:2368
 msgid "%s - Latest Revision"
 msgstr ""
 
 #. translators: %1$s is the document title, %2$d is the revision ID.
-#: includes/class-wp-document-revisions.php:2398
+#: includes/class-wp-document-revisions.php:2389
 msgid "%1$s - Revision %2$d"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2482
+#: includes/class-wp-document-revisions.php:2473
 msgid "Status"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2506
+#: includes/class-wp-document-revisions.php:2497
 msgid "Published"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2507
+#: includes/class-wp-document-revisions.php:2498
 msgid "Draft"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2508
+#: includes/class-wp-document-revisions.php:2499
 msgid "Scheduled"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2509
+#: includes/class-wp-document-revisions.php:2500
 msgid "Private"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2510
+#: includes/class-wp-document-revisions.php:2501
 msgid "Pending Review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2511
+#: includes/class-wp-document-revisions.php:2502
 msgid "Trash"
 msgstr ""
 
