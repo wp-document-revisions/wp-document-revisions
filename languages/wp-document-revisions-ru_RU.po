@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File-ID: 33\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"PO-Revision-Date: 2022-01-24 22:19\n"
+"PO-Revision-Date: 2022-03-13 09:35\n"
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:170
@@ -69,7 +69,7 @@ msgstr "Черновик документа обновлен. <a target=\"_blank
 
 #: includes/class-wp-document-revisions-admin.php:237
 msgid "Basic Usage"
-msgstr ""
+msgstr "Основное использование"
 
 #: includes/class-wp-document-revisions-admin.php:238
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer."
@@ -595,7 +595,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:691
 msgid "Errors"
-msgstr ""
+msgstr "Ошибки"
 
 #: includes/class-wp-document-revisions-validate-structure.php:692
 msgid "These are issues that stop you displaying your document on the front end. Problems include:"
@@ -702,7 +702,7 @@ msgstr "Просмотреть Документ"
 
 #: includes/class-wp-document-revisions.php:313
 msgid "View Documents"
-msgstr ""
+msgstr "Просмотр документов"
 
 #: includes/class-wp-document-revisions.php:314
 msgid "Search Documents"
@@ -800,7 +800,7 @@ msgstr "Документ в настоящее время редактирует
 
 #: includes/class-wp-document-revisions.php:478
 msgid "Under Review"
-msgstr ""
+msgstr "На рассмотрении"
 
 #: includes/class-wp-document-revisions.php:478
 msgid "Document is pending final review"
@@ -808,7 +808,7 @@ msgstr "Документ на окончательном рассмотрени�
 
 #: includes/class-wp-document-revisions.php:479
 msgid "Final"
-msgstr ""
+msgstr "Финальный"
 
 #: includes/class-wp-document-revisions.php:479
 msgid "Document is in its final form"
@@ -816,7 +816,7 @@ msgstr "Документ в окончательном виде"
 
 #: includes/class-wp-document-revisions.php:592
 msgid "Somebody"
-msgstr ""
+msgstr "Кто-то"
 
 #: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1173
 msgid "-revision-"
@@ -882,7 +882,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions.php:2473
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: includes/class-wp-document-revisions.php:2497
 msgid "Published"
