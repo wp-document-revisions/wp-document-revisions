@@ -2,7 +2,8 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Tested up to: 5.8
+Requires at least: 4.6
+Tested up to: 5.7
 Stable tag: 3.4.0
 
 == Description ==
@@ -193,11 +194,11 @@ In: class-wp-document-revisions.php
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with WP 5.8
+* FIX: Blocks are categorised within the Editor differently with 5.8
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
 * FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
 * FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 
@@ -1070,13 +1071,14 @@ It is also possible to add formatting parameters:
 
 = Block Usage =
 
-The block version of the widget called `Latest Documents`can be used on pages or posts. It cannot be converted to or from a shortcode block.
- 
-= Block supports properties =
+The block version of the widget called `Latest Documents` can be used on pages or posts. It cannot be converted to or from a shortcode block as there is no equivalent.
+
+== Block supports properties ==
 
 Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
 
 These attributes are align, color, spacing and typography and these attributes have been added to all blocks.
+
 
 == Translations ==
 
