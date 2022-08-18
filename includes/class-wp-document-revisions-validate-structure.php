@@ -92,7 +92,7 @@
  * Type     Error
  * Message  Document attachment exists but related file not in document location
  * Fixable  Yes
- * Cause    Post_content contain an h post belonging the document, but the attached file is in the media library, not the document one.
+ * Cause    Post_content contain an attachment post belonging the document, but the attached file is in the media library, not the document one.
  *          Hence moving the file will make it available.
  *
  * Code     8
@@ -100,7 +100,7 @@
  * Message  Document attachment file exists but is not readable
  * Fixable  Yes
  * Cause    Post_content contain an attachment post belonging the document, and the attached file exists but is not readable.
- *          Changing the permissions to the file will make it available. But this needs to be done at the OS level. 
+ *          Changing the permissions to the file will make it available. But this needs to be done at the OS level.
  */
 
 /**
