@@ -22,7 +22,7 @@
     },
     "config": {
      "bin-dir": "bin",
-     "vendor-dir": "vendor"
+     "vendor-dir": "vendor",
      "allow-plugins": {
        "dealerdirect/phpcodesniffer-composer-installer": true
      }
