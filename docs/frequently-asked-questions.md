@@ -74,11 +74,13 @@ Yes. Just follow the [standard WordPress SSL instructions](https://wordpress.org
 
 ### Can I tag my documents? What about categories or some other grouping?
 
-Yes. You can use the [Simple Taxonomy plugin](https://wordpress.org/plugins/simple-taxonomy/) to add taxonomies, or can share your existing taxonomies (e.g., the ones you use for posts) with documents.
+Yes. You can use the [Simple Taxonomy Refreshed plugin](https://wordpress.org/plugins/simple-taxonomy-refreshed/) to add taxonomies, or can share your existing taxonomies (e.g., the ones you use for posts) with documents.
 
 ### Can I put my documents in folders?
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/) plugin. Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+
+Since a document can have many categories assigned at the same time, this is logically equivalent to being in many folders simultaneously.
 
 ### What if I want even more control over my workflow?
 

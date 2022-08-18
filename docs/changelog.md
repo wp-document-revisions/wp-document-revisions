@@ -1,5 +1,10 @@
 ## Changelog
 
+### 3.4.1
+
+* FIX: Valid document may not be found.
+" FIX: Improve notification process when activation user does not have edit_documents capability.
+
 ### 3.4.0
 
 * SECURITY: WordPress can create images for PDF documents which if used would leak the hidden document name so image name changed.

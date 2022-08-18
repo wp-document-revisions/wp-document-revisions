@@ -538,7 +538,7 @@ class WP_Document_Revisions_Admin {
 			$mod_date = $latest_version->post_modified;
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $mod_date, strtotime( $mod_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
+			printf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), $mod_date, strtotime( $mod_date ), human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ), get_the_author_meta( 'display_name', $latest_version->post_author ) );
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 			</em>
@@ -575,6 +575,7 @@ class WP_Document_Revisions_Admin {
 		$key          = $this->get_feed_key();
 		?>
 		<table id="document-revisions">
+			<thead>
 			<tr class="header">
 				<th><?php esc_html_e( 'Modified', 'wp-document-revisions' ); ?></th>
 				<th><?php esc_html_e( 'User', 'wp-document-revisions' ); ?></th>
@@ -585,6 +586,8 @@ class WP_Document_Revisions_Admin {
 					<th><?php esc_html_e( 'Actions', 'wp-document-revisions' ); ?></th>
 				<?php } ?>
 			</tr>
+			</thead>
+			<tbody>
 		<?php
 
 		$i = 0;
@@ -610,7 +613,7 @@ class WP_Document_Revisions_Admin {
 			}
 			?>
 			<tr>
-				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp" id="<?php echo esc_attr( strtotime( $revision->post_modified ) ); ?>"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
+				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
@@ -635,6 +638,7 @@ class WP_Document_Revisions_Admin {
 			<?php
 		}
 		?>
+		</tbody>
 		</table>
 		<p style="padding-top: 10px;"><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
 		<?php
@@ -717,6 +721,14 @@ class WP_Document_Revisions_Admin {
 
 		// don't fire more than once.
 		if ( ! get_settings_errors( 'document_upload_directory' ) ) {
+			if ( ! is_multisite() ) {
+				// does directory exist.
+				if ( ! is_dir( $dir ) ) {
+					add_settings_error( 'document_upload_directory', 'document-upload-dir-exists', __( 'Document directory does not appear to exist. Please review value.', 'wp-document-revisions' ), 'updated' );
+				} elseif ( ! is_writable( $dir ) ) {
+					add_settings_error( 'document_upload_directory', 'document-upload-dir-write', __( 'Document directory is not writable. Please check permissions.', 'wp-document-revisions' ), 'updated' );
+				}
+			}
 			// dir changed, throw warning.
 			add_settings_error( 'document_upload_directory', 'document-upload-dir-change', __( 'Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible.', 'wp-document-revisions' ), 'updated' );
 		}

@@ -2,8 +2,8 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Tested up to: 5.8
-Stable tag: 3.4.0
+Tested up to: 6.0.1
+Stable tag: 3.4.1
 
 == Description ==
 
@@ -178,6 +178,11 @@ In: class-wp-document-revisions.php
 
 
 == Changelog ==
+
+= 3.4.1 =
+
+* FIX: Valid document may not be found.
+" FIX: Improve notification process when activation user does not have edit_documents capability.
 
 = 3.4.0 =
 
@@ -1098,7 +1103,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
