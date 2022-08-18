@@ -23,4 +23,5 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
             commit-message: "Update POT file"
+            branch: update-pull-request/pot
             title: "Update POT file"
