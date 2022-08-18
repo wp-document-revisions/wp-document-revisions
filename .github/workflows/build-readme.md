@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - docs/*.md
+      - "docs/*.md"
   workflow_dispatch: {}
 
 jobs:

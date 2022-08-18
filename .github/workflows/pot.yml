@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths: 
-      - *.php
+      - "*.php"
   workflow_dispatch: {}
 
 jobs:
