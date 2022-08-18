@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build readme:
+  build_readme:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
