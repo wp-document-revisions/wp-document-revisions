@@ -3,7 +3,9 @@ name: Generate POT file
 on:
   push:
     branches:
-      - master
+      - main
+    paths: 
+      - *.php
   workflow_dispatch: {}
 
 jobs:

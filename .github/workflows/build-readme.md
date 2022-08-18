@@ -3,11 +3,13 @@ name: Update README
 on:
   push:
     branches:
-      - master
+      - main
+    paths:
+      - docs/*.md
   workflow_dispatch: {}
 
 jobs:
-  generate-pot:
+  build readme:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
