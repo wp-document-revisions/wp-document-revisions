@@ -212,31 +212,32 @@ class WP_Document_Revisions {
 		flush_rewrite_rules();
 		if ( ! current_user_can( 'edit_documents' ) ) {
 			// Unfortunately we cannot create a message directly out of the activation process, so create transient data.
-			set_transient( 'wpdr_activation_issue', true, 15 );
+			set_transient( 'wpdr_activation_issue', get_current_user_id() );
 		}
 	}
 
 	/**
-	 * Called when the plugin is initially activated and checks whether the user has edit_documents capability.
+	 * Called after the plugin is initially activated and checks whether there was a problem with the user not having edit_documents capability.
 	 *
-	 * This can occur if the user has multiple roles with one denying access overriding the admin access.
+	 * This can occur if the (admin) user has multiple roles with one denying access overriding the admin access.
 	 *
 	 * @since 3.2.3
 	 * @return void
 	 */
 	public function activation_error_notice() {
-		if ( get_transient( 'wpdr_activation_issue' ) ) {
+		$transient = get_transient( 'wpdr_activation_issue' );
+		if ( $transient && get_current_user_id() === (int) $transient ) {
 			delete_transient( 'wpdr_activation_issue' );
 			// timing of initial permissions being set as can give message before initial activation.
-			if ( ! current_user_can( 'edit_documents' ) ) {
-				?>
-				<div class="notice notice-warning is-dismissible"><p>
-				<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
-				</p><p>
-				<?php esc_html_e( 'Documents menu may not be displayed completely with "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
-				</p></div>
-				<?php
-			}
+			?>
+			<div class="notice notice-warning is-dismissible"><p>
+			<?php esc_html_e( 'You have activated the plugin WP Document Revisions', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
+			</p><p>
+			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php
 		}
 	}
 
@@ -1056,7 +1057,7 @@ class WP_Document_Revisions {
 		$exists = ( $attach instanceof WP_Post );
 
 		/*
-		 * Filter the attachment post to serve.
+		 * Filter the attachment post to serve (Return false to stop display).
 		 *
 		 * @param WP_Post $attach Attachment Post corresponding to document / revisions selected.
 		 * @param int     $rev_id Id of document / revision selected.
@@ -2641,7 +2642,7 @@ class WP_Document_Revisions {
 			return (int) $post_content;
 		} else {
 			// find document id.
-			preg_match( '/<!-- WPDR ([(0-9]+) -->/', $post_content, $id );
+			preg_match( '/<!-- WPDR ([0-9]+) -->/', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id.
 				return (int) $id[1];

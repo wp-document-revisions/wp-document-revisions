@@ -18,7 +18,7 @@
  * Each new version of the document will be uploaded as an attachment to the original document post.
  * Therefore all attachments and document revisions will have their post_parent set to the original document post.
  * [Note. If a featured image is loaded then it would also have its attachment post with post_parent. This is explicitly set to 0 on loading.]
- * The attachment record contains the link to acutal data file.
+ * The attachment record contains the link to actual data file.
  * The actual attachment to use is held in the post_content field.
  * Whilst it is normal that the latest loaded attachment, this is not necessarily so if a revision is reverted.
  * However the latest one will be used if the correct one cannot be found.
@@ -32,6 +32,7 @@
  * It will then try to validate that attachment record.
  * This should be an MD5-format name (32 hexaecimal name). If not it will change the name.
  * The file that it points to should exist there.
+ * That file should be readable.
  * [If the document directory is different to the media directory, it will also check that it is in the media one, and if found propose to move it.]
  *
  * This code uses direct SQL calls to identify the document posts and to choose a potential attachment. .
@@ -84,15 +85,22 @@
  * Type     Warning
  * Message  Document attachment does not appear to be md5 encoded
  * Fixable  Yes
- * Cause    Post_content contain an attaclment post belonging the document, but the attached file does not appear to have an MD5-coded name.
+ * Cause    Post_content contain an attachment post belonging the document, but the attached file does not appear to have an MD5-coded name.
  *          Can rename it to ensure that it is.
  *
  * Code     7
  * Type     Error
  * Message  Document attachment exists but related file not in document location
  * Fixable  Yes
- * Cause    Post_content contain an attaclment post belonging the document, but the attached file is in the media library, not the document one.
+ * Cause    Post_content contain an attachment post belonging the document, but the attached file is in the media library, not the document one.
  *          Hence moving the file will make it available.
+ *
+ * Code     8
+ * Type     Error
+ * Message  Document attachment file exists but is not readable
+ * Fixable  Yes
+ * Cause    Post_content contain an attachment post belonging the document, and the attached file exists but is not readable.
+ *          Changing the permissions to the file will make it available. But this needs to be done at the OS level.
  */
 
 /**
@@ -623,6 +631,16 @@ class WP_Document_Revisions_Validate_Structure {
 				'code'  => 3,
 				'error' => 1,
 				'msg'   => __( 'Document attachment exists but related file not found', 'wp-document-revisions' ),
+				'fix'   => 0,
+			);
+		}
+
+		if ( ! is_readable( $file ) ) {
+			// file is not readablet.
+			return array(
+				'code'  => 8,
+				'error' => 1,
+				'msg'   => __( 'Document attachment file exists but is not readable', 'wp-document-revisions' ),
 				'fix'   => 0,
 			);
 		}
