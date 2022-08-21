@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-<<<<<<< HEAD
       - master
     paths: 
       - "*.php"
