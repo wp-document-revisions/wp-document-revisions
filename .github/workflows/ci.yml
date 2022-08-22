@@ -72,7 +72,7 @@ jobs:
         files: coverage.xml
         directory: ${{ github.workspace }}
         verbose: true
-        flags: php-${{ matrix.php_version }}, wp-${{ matrix.wp_version }}, multisite-${{ matrix.wp_multisite }}
+        flags: php-${{ matrix.php_version }},wp-${{ matrix.wp_version }},multisite-${{ matrix.wp_multisite }}
 
   phpcs:
     runs-on: ubuntu-latest
