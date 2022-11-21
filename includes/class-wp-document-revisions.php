@@ -789,7 +789,7 @@ class WP_Document_Revisions {
 			}
 		} else {
 			// build documents/yyyy/mm/slug.
-			$extension = $this->get_file_type( $document );
+			$extension  = $this->get_file_type( $document );
 			$year_month = str_replace( '-', '/', substr( $document->post_date, 0, 7 ) );
 
 			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . '/' . $year_month . '/';
