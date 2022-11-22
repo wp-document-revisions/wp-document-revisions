@@ -199,11 +199,11 @@ In: class-wp-document-revisions.php
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with 5.8
+* FIX: Blocks are categorised within the Editor differently with WP 5.8
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
 * FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
 * FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 

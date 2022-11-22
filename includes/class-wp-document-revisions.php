@@ -154,7 +154,7 @@ class WP_Document_Revisions {
 		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 2 );
 
 		// uploads.
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
@@ -1788,6 +1788,28 @@ class WP_Document_Revisions {
 
 
 	/**
+	 * Checks if the attachment is a document.
+	 *
+	 * @since 3.4.1.
+	 *
+	 * @param WP_Post $attach An attachment object.
+	 */
+	public static function check_doc_attach( $attach ) {
+		if ( 'document' !== get_post_type( $attach->post_parent ) ) {
+			return false;
+		}
+		// normal document attachment.
+		if ( $attach->post_title === $attach->post_name ) {
+			return true;
+		}
+		// duplicate name.
+		if ( 0 === strpos( $attach->post_name, $attach->post_title . '-' ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Renames the generated attachment meta data file names to hide the attachment slug.
 	 *
 	 * If the generated images are used as images, their name would display the slug.
@@ -1802,7 +1824,7 @@ class WP_Document_Revisions {
 	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {
 		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+		if ( ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
@@ -1817,12 +1839,13 @@ class WP_Document_Revisions {
 		$file_dir = trailingslashit( dirname( $file ) );
 
 		if ( array_key_exists( 'sizes', $metadata ) ) {
-			$new_name = md5( $attach->post_title );
+			$title    = $attach->post_title;
+			$new_name = md5( $title . microtime() );
 			// move file and update.
 			foreach ( $metadata['sizes'] as $size => $sizeinfo ) {
-				if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-						$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 						// Use copy and unlink because rename breaks streams.
 						// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
@@ -1854,9 +1877,8 @@ class WP_Document_Revisions {
 	 * @param int $attachment_id Current attachment ID.
 	 */
 	public function hide_exist_doc_attach_slug( $attachment_id ) {
-		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+		if ( ! self::check_doc_attach( $attach ) ) {
 			return;
 		}
 		// has it been converted.
@@ -1890,12 +1912,13 @@ class WP_Document_Revisions {
 		}
 		$file_dir = trailingslashit( dirname( $file ) );
 
-		$new_name = md5( $attach->post_title );
+		$title    = $attach->post_title;
+		$new_name = md5( $title . microtime() );
 		// move file and update.
 		foreach ( $meta_sizes as $size => $sizeinfo ) {
-			if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-					$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 					// Use copy and unlink because rename breaks streams.
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
