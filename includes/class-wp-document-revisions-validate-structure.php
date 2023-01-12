@@ -165,7 +165,8 @@ class WP_Document_Revisions_Validate_Structure {
 
 		// create or store parent instance.
 		if ( null === $instance ) {
-			self::$parent = new WP_Document_Revisions();
+			global $wpdr;
+			self::$parent = $wpdr;
 		} else {
 			self::$parent = &$instance;
 		}
@@ -313,10 +314,11 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach    = get_post( $attach_id );
 
 			// ensure not in document image mode.
-			self::$parent::$doc_image = false;
+			global $wpdr;
+			$wpdr::$doc_image = false;
 
 			// make sure we're looking at the document directory.
-			add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+			add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
 
 			// get file name.
 			$file = get_attached_file( $attach_id );
@@ -348,13 +350,14 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach_id = get_post( $attach );
 
 			// ensure not in document image mode.
-			self::$parent::$doc_image = false;
+			global $wpdr;
+			$wpdr::$doc_image = false;
 
 			// get file name using the default upload directory.
 			$orig = get_attached_file( $attach, true );
 
 			// make sure we're looking at the document directory.
-			add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+			add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
 
 			// manipulate file as in serve_file process.
 			$file = get_attached_file( $attach );

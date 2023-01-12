@@ -342,7 +342,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$doc = get_post( $post_id );
 		self::assertInstanceOf( WP_Post::class, $doc, "Post $post_id does not exist" );
 		global $wpdr;
-		$doc_id  = $wpdr->extract_document_id( $doc->post_content );
+		$doc_id = $wpdr->extract_document_id( $doc->post_content );
 		self::assertTrue( is_numeric( $doc_id ) );
 
 		// check post type.
@@ -370,7 +370,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		);
 
 		self::assertEquals( $attach, $wpdb->num_rows, "Expected attachments of $post_id not found" );
-		self::assertEquals( $doc->post_content, end( $attchs )->ID, 'Document held is not the last one' );
+		self::assertEquals( $doc_id, end( $attchs )->ID, 'Document held is not the last one' );
 	}
 
 	/**
@@ -514,7 +514,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		foreach ( $posts as $post ) {
 			$all_posts[ $post->ID ] = null;
 			// add attachment records.
-			$doc_attach = $wpdr->extract_document_id( $post->post_content );
+			$doc_attach               = $wpdr->extract_document_id( $post->post_content );
 			$all_posts[ $doc_attach ] = get_attached_file( $doc_attach );
 			self::assertFileExists( $all_posts[ $doc_attach ], 'Attachment file does not exist' );
 		}

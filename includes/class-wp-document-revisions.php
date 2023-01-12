@@ -1668,8 +1668,8 @@ class WP_Document_Revisions {
 	public function document_upload_dir_set( $dir ) {
 
 		self::$doc_image = false;
-		$doc_dir = untrailingslashit( self::$wpdr_document_dir );
-		$new_dir = array(
+		$doc_dir         = untrailingslashit( self::$wpdr_document_dir );
+		$new_dir         = array(
 			'path'    => $doc_dir . '/' . $dir['subdir'],
 			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
 			'basedir' => $doc_dir,
