@@ -101,6 +101,37 @@
  * Fixable  Yes
  * Cause    Post_content contain an attachment post belonging the document, and the attached file exists but is not readable.
  *          Changing the permissions to the file will make it available. But this needs to be done at the OS level.
+ *
+ * Code     9
+ * Type     Warning
+ * Message  The guid is not the expected "ugly" permalink
+ * Fixable  Yes
+ * Cause    The guid of a pending or draft document or when there is no permalink rewrite is expected to be able to access the document.
+ *          Changing it to be in the form "site_url/?post_type=document&p=nnnn" will make it useable.
+ *
+ * Code     10
+ * Type     Warning
+ * Message  The guid does not contain the correct date.
+ * Fixable  Yes
+ * Cause    The document permalink should contain the post_date year and month.
+ *          The guid cannot be used to successfully access the document,
+ *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *
+ * Code     11
+ * Type     Warning
+ * Message  The guid does not contain the document name.
+ * Fixable  Yes
+ * Cause    The document permalink should contain the post_date year and month.
+ *          The guid cannot be used to successfully access the document,
+ *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *
+ * Code     12
+ * Type     Warning
+ * Message  The guid does not reflect the complete document permalink
+ * Fixable  Yes
+ * Cause    The document permalink should contain the post_date year and month.
+ *          This is only a completeness check. Normally access is possible, and normally indicates that the attachment extension has been changed.
+ *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  */
 
 /**
@@ -218,13 +249,19 @@ class WP_Document_Revisions_Validate_Structure {
 			// Attachment exists but post_content does not contain it.
 			// revalidate input values.
 			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false !== self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
-			if ( empty( $content ) || false === strpos( $content, '<' ) ) {
-				$content = (string) $parm;
-			} else {
+			if ( empty( $content ) || is_numeric( $content ) ) {
 				$content = self::$parent->format_doc_id( $parm );
+			} else {
+				// find if there is a document id there.
+				preg_match( '/(<!-- WPDR [0-9]+ -->)/', $content, $id );
+				if ( isset( $id[1] ) ) {
+					// if a match return the id.
+					$content = str_replace( $id[1], '', $content );
+				}
+				$content = self::$parent->format_doc_id( $parm ) . $content;
 			}
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -275,6 +312,12 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach_id = $parm;
 			$attach    = get_post( $attach_id );
 
+			// ensure not in document image mode.
+			self::$parent::$doc_image = false;
+
+			// make sure we're looking at the document directory.
+			add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+
 			// get file name.
 			$file = get_attached_file( $attach_id );
 
@@ -304,11 +347,18 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach    = $parm;
 			$attach_id = get_post( $attach );
 
-			// get file name.
-			$orig = get_attached_file( $attach );
+			// ensure not in document image mode.
+			self::$parent::$doc_image = false;
+
+			// get file name using the default upload directory.
+			$orig = get_attached_file( $attach, true );
+
+			// make sure we're looking at the document directory.
+			add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
 
 			// manipulate file as in serve_file process.
-			$file = self::check_document_folder( $orig );
+			$file = get_attached_file( $attach );
+			$file = self::check_document_folder( $file );
 
 			// revalidate input (late, but before any damage is done).
 			if ( $orig === $file || ! file_exists( $orig ) || file_exists( $file ) ) {
@@ -346,6 +396,28 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 			// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
 		}
+
+		if ( 9 <= $params['code'] && 12 >= $params['code'] ) {
+			// guid contains invalid data.
+			// revalidate input values.
+			if ( $id !== $parm ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
+			}
+			$guid = get_the_permalink( $id );
+			global $wpdb;
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			$post_table = "{$wpdb->prefix}posts";
+			$sql        = $wpdb->prepare(
+				"UPDATE `$post_table` SET `guid` = %s WHERE `id` = %d",
+				$guid,
+				$id
+			);
+			$res        = $wpdb->query( $sql );
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			wp_cache_delete( $id, 'posts' );
+			wp_cache_delete( $id, 'document_revisions' );
+		}
+
 		$response = 'Success.';
 		return rest_ensure_response( $response );
 	}
@@ -371,10 +443,13 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 */
 	public static function page_validate() {
+		// ensure not in document image mode.
+		self::$parent::$doc_image = false;
+
 		global $wpdb;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$documents = $wpdb->get_results(
-			"SELECT ID, post_title, post_content, post_modified_gmt
+			"SELECT ID, post_title, post_content, post_date, post_name, guid, post_status, post_modified_gmt
 			 FROM {$wpdb->prefix}posts 
 			 WHERE post_type = 'document'
 			 AND post_status not in ( 'auto-draft', 'trash' )
@@ -383,20 +458,33 @@ class WP_Document_Revisions_Validate_Structure {
 			ARRAY_A
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		$num_doc  = $wpdb->num_rows;
-		$failures = array();
-		foreach ( $documents as $rec => $document ) {
+
+		// make sure we're looking at the document directory.
+		add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+
+		$num_doc = $wpdb->num_rows;
+		$fails   = array();
+		$guids   = array();
+		foreach ( $documents as $rec => $doc ) {
 			// check that user can edit the document.
-			if ( current_user_can( 'edit_document', $document['ID'] ) ) {
-				$test = self::validate_document( $document['ID'], $document['post_content'], $document['post_modified_gmt'] );
+			if ( current_user_can( 'edit_document', $doc['ID'] ) ) {
+				// get the attachment. Note may be false if none in content.
+				$attach_id = self::$parent->extract_document_id( $doc['post_content'] );
+				$test      = self::validate_document( $doc['ID'], $attach_id, $doc['post_modified_gmt'] );
 				if ( is_array( $test ) ) {
 					// failure.
-					$failures[] = array_merge( $document, $test );
+					$fails[] = array_merge( $doc, $test );
+				} else {
+					$test = self::validate_guid( $doc['ID'], $attach_id, $doc['post_status'], $doc['post_date'], $doc['post_name'], $doc['guid'] );
+					if ( is_array( $test ) ) {
+						// failure.
+						$guids[] = array_merge( $doc, $test );
+					}
 				}
 			}
 		}
 		// No errors found.
-		if ( empty( $failures ) ) {
+		if ( empty( $fails ) && empty( $guids ) ) {
 			echo '<h2 class="title">' . esc_html__( 'Invalid Document Internal Structures', 'wp-document-revisions' ) . '</h2>';
 			echo '<p>' . esc_html__( 'No invalid documents found.', 'wp-document-revisions' ) . '</p>';
 			return;
@@ -404,59 +492,112 @@ class WP_Document_Revisions_Validate_Structure {
 		?>
 		<div class="wrap">
 		<h2 class="title"><?php esc_html_e( 'Invalid Document Internal Structures', 'wp-document-revisions' ); ?></h2>
+		<div>
+		<h3><?php esc_html_e( 'Internal structure', 'wp-document-revisions' ); ?></h3>
+		<?php
+		if ( empty( $fails ) ) {
+			echo '<p>' . esc_html__( 'No invalid internal linkages found.', 'wp-document-revisions' ) . '</p>';
+		} else {
+			self::build_table( $fails );
+		}
+		?>
+		</div>
+		<div>
+		<h3><?php esc_html_e( 'Permalink / guid', 'wp-document-revisions' ); ?></h3>
+		<?php
+		if ( empty( $guids ) ) {
+			echo '<p>' . esc_html__( 'No invalid permalinks found.', 'wp-document-revisions' ) . '</p>';
+		} else {
+			// these messages are repeated below.
+			$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
+			if ( get_option( 'document_link_date' ) ) {
+				$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
+			} else {
+				$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
+			}
+			$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
+			$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
+			// phpcs:disable  WordPress.Security.EscapeOutput
+			?>
+			<p><?php esc_html_e( 'The guid field is meant to be the unique access path.', 'wp-document-revisions' ); ?></p>
+			<p><?php esc_html_e( 'It is recommended not to change it, but can be changed to a valid value.', 'wp-document-revisions' ); ?></p>
+			<p><?php esc_html_e( 'They can be displayed or hidden as wished by checking the options:', 'wp-document-revisions' ); ?></p>
+			<input id="wpdr_9" type="checkbox" checked onclick="hide_show('wpdr_9')" /><label for="wpdr_9"><?php echo $msg_09; ?></label>&nbsp;&nbsp;
+			<input id="wpdr_10" type="checkbox" checked onclick="hide_show('wpdr_10')" /><label for="wpdr_10"><?php echo $msg_10; ?></label>&nbsp;&nbsp;
+			<input id="wpdr_11" type="checkbox" checked onclick="hide_show('wpdr_11')" /><label for="wpdr_11"><?php echo $msg_11; ?></label>&nbsp;&nbsp;
+			<input id="wpdr_12" type="checkbox" checked onclick="hide_show('wpdr_12')" /><label for="wpdr_12"><?php echo $msg_12; ?></label>
+			<?php
+			self::build_table( $guids );
+			// phpcs:enable  WordPress.Security.EscapeOutput
+		}
+		?>
+		</div>
+		<p><strong><?php esc_html_e( 'See the Help pulldown for detailed Help information', 'wp-document-revisions' ); ?></strong></p>
+		</div>
+		<?php
+	}
 
-			<div id="col-container">
-				<table class="widefat" cellspacing="0">
-					<thead>
-						<tr>
-							<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'ID', 'wp-document-revisions' ); ?></th>
-							<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'Type', 'wp-document-revisions' ); ?></th>
-							<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'Title', 'wp-document-revisions' ); ?></th>
-							<th scope="col" id="name"  class="manage-column column-name"><?php esc_html_e( 'Message', 'wp-document-revisions' ); ?></th>
-							<th scope="col" id="slug"  class="manage-column column-name"><?php esc_html_e( 'Fix', 'wp-document-revisions' ); ?></th>
-						</tr>
-					</thead>
+	/**
+	 * Build table of errors.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param mixed[] $rows table of errors.
+	 * @return void
+	 */
+	private static function build_table( $rows ) {
+		?>
+		<div id="col-container">
+		<table class="widefat" cellspacing="0">
+			<thead>
+				<tr>
+					<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'ID', 'wp-document-revisions' ); ?></th>
+					<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'Type', 'wp-document-revisions' ); ?></th>
+					<th scope="col" id="label" class="manage-column column-name"><?php esc_html_e( 'Title', 'wp-document-revisions' ); ?></th>
+					<th scope="col" id="name"  class="manage-column column-name"><?php esc_html_e( 'Message', 'wp-document-revisions' ); ?></th>
+					<th scope="col" id="slug"  class="manage-column column-name"><?php esc_html_e( 'Fix', 'wp-document-revisions' ); ?></th>
+				</tr>
+			</thead>
 
-					<tbody id="the-list" class="list:failures">
-					<?php
-					foreach ( $failures as $rec => $failure ) {
-						$line = esc_attr( $failure['ID'] );
-						$beg  = esc_attr( $failure['post_title'] ) . '<br/>';
-						$ref  = esc_url( get_the_permalink( $failure['ID'] ) );
-						// Create the URL to the document. This is text if error/not fixable; link if warning; both if error and can be fixed (display one then other).
-						if ( (bool) $failure['fix'] ) {
-							if ( (bool) $failure['error'] ) {
-								$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .
-									'" style="display: none;"><a href="' . $ref . '" target="_blank">' . $ref . '</a></div>';
-							} else {
-								$ref = $beg . '<a href="' . $ref . '" target="_blank">' . $ref . '</a>';
-							}
-						} else {
-							$ref = $beg . $ref;
-						}
-						// create button if fixable.
-						if ( (bool) $failure['fix'] ) {
-							$fix = '<button onclick="wpdr_valid_fix(' . $failure['ID'] . ',' . $failure['code'] . ',' . $failure['parm'] . ')">' . esc_html__( 'Fix', 'wp-document-revisions' ) . '</button>';
-						} else {
-							$fix = '';
-						}
-						// phpcs:disable  WordPress.Security.EscapeOutput
-						?>
-						<tr id="Line<?php echo $line; ?>">
-							<td><?php echo $line; ?></td>
-							<td><?php ( (bool) $failure['error'] ? esc_html_e( 'Error', 'wp-document-revisions' ) : esc_html_e( 'Warning', 'wp-document-revisions' ) ); ?></td>
-							<td><?php echo $ref; ?></td>
-							<td><?php echo esc_attr( $failure['msg'] ) . ( isset( $failure['msg2'] ) ? '<br />' . esc_attr( $failure['msg2'] ) : '' ); ?></td>
-							<td><?php echo $fix; ?></td>
-						</tr>
-						<?php
-						// phpcs:enable  WordPress.Security.EscapeOutput
+			<tbody id="the-list" class="list:failures">
+			<?php
+			foreach ( $rows as $rec => $row ) {
+				$line = esc_attr( $row['ID'] );
+				$link = '<a href="' . admin_url( 'post.php?post=' . $line . '&action=edit' ) . '" target="_blank">' . $line . '</a>';
+				$beg  = esc_attr( $row['post_title'] ) . '<br/>';
+				$ref  = esc_url( get_the_permalink( $row['ID'] ) );
+				// Create the URL to the document. This is text if error/not fixable; link if warning; both if error and can be fixed (display one then other).
+				if ( (bool) $row['fix'] ) {
+					if ( (bool) $row['error'] ) {
+						$ref = $beg . '<div id="on_' . $line . '" style="display: block;">' . $ref . '</div><div id="off' . $line .
+							'" style="display: none;"><a href="' . $ref . '" target="_blank">' . $ref . '</a></div>';
+					} else {
+						$ref = $beg . '<a href="' . $ref . '" target="_blank">' . $ref . '</a>';
 					}
-					?>
-					</tbody>
-				</table>
-				<p><strong><?php esc_html_e( 'See the Help pulldown for detailed Help information', 'wp-document-revisions' ); ?></strong></p>
-			</div>
+				} else {
+					$ref = $beg . $ref;
+				}
+				// create button if fixable.
+				if ( (bool) $row['fix'] ) {
+					$fix = '<button onclick="wpdr_valid_fix(' . $row['ID'] . ',' . $row['code'] . ',' . $row['parm'] . ')">' . esc_html__( 'Fix', 'wp-document-revisions' ) . '</button>';
+				} else {
+					$fix = '';
+				}
+				// phpcs:disable  WordPress.Security.EscapeOutput
+				?>
+				<tr id="Line<?php echo $line; ?>" class="wpdr_<?php echo $row['code']; ?>" style="display: table-row;">
+					<td><?php echo $link; ?></td>
+					<td><?php ( (bool) $row['error'] ? esc_html_e( 'Error', 'wp-document-revisions' ) : esc_html_e( 'Warning', 'wp-document-revisions' ) ); ?></td>
+					<td><?php echo $ref; ?></td>
+					<td><?php echo esc_attr( $row['msg'] ) . ( isset( $row['msg2'] ) ? '<br />' . esc_attr( $row['msg2'] ) : '' ); ?></td>
+					<td><?php echo $fix; ?></td>
+				</tr>
+				<?php
+				// phpcs:enable  WordPress.Security.EscapeOutput
+			}
+			?>
+			</tbody>
+		</table>
 		</div>
 		<?php
 	}
@@ -470,12 +611,14 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	public static function enqueue_scripts() {
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
+		$path   = '/js/wp-document-revisions-validate' . $suffix . '.js';
+		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
 
 		wp_enqueue_script(
 			'wpdr_validate',
-			plugins_url( '/js/wp-document-revisions-validate' . $suffix . '.js', __DIR__ ),
+			plugins_url( $path, __DIR__ ),
 			array( 'jquery', 'wp-api-request' ),
-			self::$parent->version,
+			$vers,
 			true
 		);
 		// phpcs:disable Squiz.Strings.DoubleQuoteUsage
@@ -493,14 +636,13 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 *
 	 * @param id     $doc_id            ID of a post object.
-	 * @param string $post_content      post content field.
+	 * @param string $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
 	 * @return array||false
 	 */
-	public static function validate_document( $doc_id, $post_content, $post_modified_gmt ) {
+	private static function validate_document( $doc_id, $attach_id, $post_modified_gmt ) {
 		global $wpdb;
 
-		$attach_id = self::$parent->extract_document_id( $post_content );
 		if ( $attach_id ) {
 			$valid_att = true;
 		} else {
@@ -555,8 +697,102 @@ class WP_Document_Revisions_Validate_Structure {
 				);
 			}
 		}
+
 		// return any attachment found.
 		return $att_error;
+	}
+
+	/**
+	 * Validate individual permalinks.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param id     $doc_id      ID of a post object.
+	 * @param string $attach_id   attachment id from post content field.
+	 * @param string $post_status post status field.
+	 * @param string $post_date   post date field.
+	 * @param string $post_name   post name field.
+	 * @param string $guid        post guid field.
+	 * @return array||false
+	 */
+	private static function validate_guid( $doc_id, $attach_id, $post_status, $post_date, $post_name, $guid ) {
+		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
+		if ( get_option( 'document_link_date' ) ) {
+			$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
+		} else {
+			$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
+		}
+		$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
+		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
+		global $wp_rewrite;
+		$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
+		$permalink2 = str_replace( '/?', '?', $permalink1 );
+		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
+			$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
+			$permalink2 = str_replace( '/?', '?', $permalink1 );
+			if ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+				return array(
+					'code'  => 9,
+					'error' => 0,
+					'msg'   => $msg_09,
+					'fix'   => 1,
+					'parm'  => $doc_id,
+				);
+			}
+			return true;
+		}
+		// find the permalink (except extension).
+		$year_mth  = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $post_date, 0, 7 ) ) );
+		$permalink = home_url( self::$parent->document_slug() . $year_mth . '/' );
+		if ( str_contains( $guid, $permalink ) ) {
+			// now add the post name.
+			$permalink .= $post_name;
+			if ( str_contains( $guid, $permalink ) ) {
+				$p2 = $permalink . '/';
+				// post name without extension is OK.
+				if ( $guid !== $permalink && $guid !== $p2 ) {
+					// get the extension.
+					$file       = get_post_meta( $attach_id, '_wp_attached_file', true );
+					$permalink .= self::$parent->get_extension( $file );
+					$p2         = $permalink . '/';
+					if ( $guid !== $permalink && $guid !== $p2 ) {
+						// permalink .
+						return array(
+							'code'  => 12,
+							'error' => 0,
+							'msg'   => $msg_12,
+							'fix'   => 1,
+							'parm'  => $doc_id,
+						);
+					}
+				}
+			} else {
+				return array(
+					'code'  => 11,
+					'error' => 0,
+					'msg'   => $msg_11,
+					'fix'   => 1,
+					'parm'  => $doc_id,
+				);
+			}
+		} else {
+			// Ugly one is accepable as it is unique.
+			if ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+				// Not an ugly one, but guid does not contain the correct month.
+				if ( '' !== $year_mth ) {
+					$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );
+				} else {
+					$msg = __( 'The guid does not contain the sitec URL.', 'wp-document-revisions' );
+				}
+				return array(
+					'code'  => 10,
+					'error' => 0,
+					'msg'   => $msg_10,
+					'fix'   => 1,
+					'parm'  => $doc_id,
+				);
+			}
+		}
 	}
 
 	/**
@@ -608,16 +844,21 @@ class WP_Document_Revisions_Validate_Structure {
 				'fix'   => 0,
 			);
 		}
+
 		// check that there is an file.
 		$file = get_attached_file( $attach_id );
-		$orig = $file;
 
 		// manipulate file as in serve_file process.
 		$file = self::check_document_folder( $file );
-
 		if ( ! file_exists( $file ) ) {
-			// file does not exist.
-			if ( $file !== $orig && file_exists( $orig ) ) {
+			// file does not exist. Get it from the standard media location. May be another plug-in that modified it.
+			remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+			$media = get_attached_file( $attach_id );
+
+			// make sure we're looking at the document directory again.
+			add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+
+			if ( file_exists( $media ) ) {
 				// file in image folder, not document.
 				return array(
 					'code'  => 7,
@@ -636,7 +877,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		if ( ! is_readable( $file ) ) {
-			// file is not readablet.
+			// file is not readable.
 			return array(
 				'code'  => 8,
 				'error' => 1,
@@ -671,12 +912,6 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	private static function check_document_folder( $file ) {
 		// manipulate file as in serve_file process.
-		$wpdr    = self::$parent;
-		$std_dir = $wpdr::$wp_default_dir['basedir'];
-		$doc_dir = $wpdr->document_upload_dir();
-		if ( $std_dir !== $doc_dir ) {
-			$file = str_replace( $std_dir, $doc_dir, $file );
-		}
 		return apply_filters( 'document_path', $file );
 	}
 
@@ -704,8 +939,8 @@ class WP_Document_Revisions_Validate_Structure {
 				__( 'Two types of issues can be identified - Errors and Warnings.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'If you have an error reported here, then you will get an "Error 404 - Document Not Found" (or equivalent) message on trying to view the document.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'Some of these can be fixed using data from within the system - and a button is available to fix the issue, but others cannot.', 'wp-document-revisions' ) . '</p><p>' .
-				__( 'When they cannot be fixed, the resolution is either normally to delete the document or to load a new version of the document.', 'wp-document-revisions' ) . '</p><p>' .
-				__( 'This process will, of course, also address unfixed, but fixable, issues as well.', 'wp-document-revisions' ) . '</p>',
+				__( 'When they cannot be fixed, the resolution is normally either to delete the document or to load a new version of the document.', 'wp-document-revisions' ) . '</p><p>' .
+				__( 'This resolution process will, of course, also address unfixed, but fixable, issues as well.', 'wp-document-revisions' ) . '</p>',
 			__( 'Errors', 'wp-document-revisions' )   =>
 				'<p>' . __( 'These are issues that stop you displaying your document on the front end. Problems include:', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'The identifier of the latest attachment (i.e. the current document) is held in the post content field.', 'wp-document-revisions' ) . '<br/>' .

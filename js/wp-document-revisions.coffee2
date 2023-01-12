@@ -29,8 +29,9 @@
       @$(document).bind 'documentUpload', @legacyPostDocumentUpload
       @$(':button, :submit', '#submitpost').prop 'disabled', true
       @$('#misc-publishing-actions a').click @enableSubmit
-      @$('input, select').on 'change', @enableSubmit
+      @$('#sample-permalink').on 'change', @enableSubmit
       @$('input[type=text], textarea').on 'keyup', @enableSubmit
+      @$('input, select').on 'change', @enableSubmit
       @$('#content-add_media').click @cookieFalse
       @$('#postimagediv .inside').click @cookieTrue
       @$('#publishing-action').click @buildContent
@@ -225,12 +226,11 @@
         file = file.name.split('.').pop()
       if @hasUpload
         return
-      # On upload set the document identier in the new format.
+      # On upload set the document identifer in the new format.
       # This will throw away the description for an existing post - but it is in content.
       @window.jQuery('#post_content').val '<!-- WPDR ' + attachmentID + ' -->'
       @window.jQuery('#message').hide()
-      @window.jQuery('#revision-summary').show()
-      @window.jQuery(':button, :submit', '#submitpost').removeAttr 'disabled'
+      @enableSubmit()
       @hasUpload = true
       @window.tb_remove()
       @window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn()

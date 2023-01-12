@@ -144,7 +144,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_private_post, self::$test_file );
 
 		// Editor Public 2.
 		self::$editor_public_post_2 = $factory->post->create(

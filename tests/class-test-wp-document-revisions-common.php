@@ -124,6 +124,28 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
 	}
 
+	/**
+	 * Make sure a file is properly uploaded and attached.
+	 *
+	 * @param int    $post_id the ID of the parent post.
+	 * @param string $file relative url to file.
+	 * @param string $msg message to display on failure.
+	 */
+	public static function verify_attachment_matches_file_new( $post_id = null, $file = null, $msg = null ) {
+
+		if ( ! $post_id ) {
+			return;
+		}
+
+		global $wpdr;
+		$doc        = get_post( $post_id );
+		$doc_attach = $wpdr->extract_document_id( $doc->post_content );
+		$attachment = get_attached_file( $doc_attach );
+
+		self::assertTrue( is_string( $attachment ), 'Attached file not found on ' . $doc->post_content . '/' . $doc->post_title );
+		self::assertFileEquals( $file, $attachment, "Uploaded files don\'t match original ($msg)" );
+	}
+
 	// phpcs:disable
 	/**
 	 * Add test file attachment to post.
@@ -182,6 +204,67 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 		self::verify_attachment_matches_file( $post_id, $new_file, 'File Loaded' );
+	}
+
+	// phpcs:disable
+	/**
+	 * Add test file attachment to post.
+	 *
+	 * @param WP_UnitTest_Factory $factory.
+	 * @param integer $post_id  The Post ID to attach.
+	 * @param string  $filename The file name to attach.
+	 * @return void.
+	 */
+	public static function add_document_attachment_new( WP_UnitTest_Factory $factory, $post_id, $filename ) {
+		// phpcs:enable
+		self::assertNotEmpty( $filename, 'Filename for post ' . $post_id . ' must be entered' );
+
+		// check $post_id is a document.
+		global $wpdr;
+		self::assertTrue( $wpdr->verify_post_type( $post_id ), 'check document attach' );
+
+		// Check the type of file. We'll use this as the 'post_mime_type'.
+		$filetype = wp_check_filetype( basename( $filename ), null );
+
+		// Create a copy of the input file.
+		$new_file = self::create_file_copy( $post_id, $filename );
+
+		// Get upload directory.
+		$upload_dir = wp_upload_dir();
+
+		// create and store attachment ID as post content..
+		$attach_id = self::factory()->attachment->create(
+			array(
+				'guid'           => $upload_dir['url'] . '/' . basename( $filename ),
+				'post_mime_type' => $filetype['type'],
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+				'post_parent'    => $post_id,
+				'file'           => $new_file,
+			)
+		);
+
+		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
+
+		// now link the attachment, it'll create a revision.
+		$attch = $wpdr->format_doc_id( $attach_id );
+		$updt  = $factory->post->update_object(
+			$post_id,
+			array(
+				'post_content' => $attch,
+			)
+		);
+
+		self::assertGreaterThan( 0, $updt, 'Cannot update post' );
+
+		wp_cache_flush();
+
+		global $wpdr;
+
+		self::assertEquals( $attch, $wpdr->get_latest_revision( $post_id )->post_content );
+		self::verify_attachment_matches_file_new( $post_id, $filename, 'Initial Upload' );
+		self::verify_attachment_matches_file_new( $post_id, $new_file, 'File Loaded' );
 	}
 
 	/**
@@ -258,7 +341,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// confirm post is document.
 		$doc = get_post( $post_id );
 		self::assertInstanceOf( WP_Post::class, $doc, "Post $post_id does not exist" );
-		self::assertTrue( is_numeric( $doc->post_content ) );
+		global $wpdr;
+		$doc_id  = $wpdr->extract_document_id( $doc->post_content );
+		self::assertTrue( is_numeric( $doc_id ) );
 
 		// check post type.
 		self::assertEquals( get_post_type( $doc ), 'document', "Post $post_id not a document" );
@@ -357,6 +442,81 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			// add attachment records.
 			$all_posts[ $post->post_content ] = get_attached_file( $post->post_content );
 			self::assertFileExists( $all_posts[ $post->post_content ], 'Attachment file does not exist' );
+		}
+
+		// first trash the document.
+		wp_trash_post( $post_id );
+
+		// flush cache to assure result.
+		wp_cache_flush();
+
+		// check trash status. This is expected to work.
+		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
+
+		// make sure that we have the admin set up.
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+			$wpdr->admin_init();
+		}
+
+		// add the attachment delete process.
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		// delete the post.
+		$result = wp_delete_post( $post_id );
+
+		// delete done, remove the attachment delete process.
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+
+		// flush cache to assure result.
+		wp_cache_flush();
+
+		// if this expected to work?
+		if ( ! $trash ) {
+			$post_obj = get_post( $post_id );
+			self::assertTrue( true, 'no delete route' );
+			// phpcs:disable  Squiz.PHP.CommentedOutCode.Found, Squiz.Commenting.InlineComment.InvalidEndChar
+			// self::assertNotNull( get_post( $post_id ), 'Should not be able to delete post' );
+			// phpcs:enable  Squiz.PHP.CommentedOutCode.Found, Squiz.Commenting.InlineComment.InvalidEndChar
+			return;
+		}
+
+		// check nothing remains.
+		foreach ( $all_posts as $id => $file ) {
+			$test_post = get_post( $id );
+			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
+			if ( ! is_null( $file ) ) {
+				self::assertFileNotExists( $file, 'Attachment file still exists' );
+			}
+		}
+	}
+
+	/**
+	 * Tests that all elements of a post are trashed or deleted.
+	 *
+	 * @param integer $post_id Post ID.
+	 * @param boolean $trash   Expect to work (Permissions check..
+	 */
+	public function check_trash_delete_new( $post_id = null, $trash = null ) {
+
+		if ( is_null( $post_id ) || is_null( $trash ) ) {
+			self::assertTrue( false, 'Parameters not entered' );
+			return;
+		}
+
+		self::assertGreaterThan( 0, EMPTY_TRASH_DAYS, 'Empty Trash Days not set' );
+
+		global $wpdr;
+
+		// create a list of all elements (document, revisions and attachments).
+		$all_posts = array();
+		// retrieve document and revisions.
+		$posts = $wpdr->get_revisions( $post_id );
+		foreach ( $posts as $post ) {
+			$all_posts[ $post->ID ] = null;
+			// add attachment records.
+			$doc_attach = $wpdr->extract_document_id( $post->post_content );
+			$all_posts[ $doc_attach ] = get_attached_file( $doc_attach );
+			self::assertFileExists( $all_posts[ $doc_attach ], 'Attachment file does not exist' );
 		}
 
 		// first trash the document.

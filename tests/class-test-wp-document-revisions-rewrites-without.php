@@ -197,7 +197,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_private_post, self::$test_file );
 
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
@@ -216,7 +216,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_public_post, self::$test_file );
 
 		// add attachment (again).
 		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file2 );
@@ -512,7 +512,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
-		self::check_trash_delete( self::$editor_private_post, false );
+		self::check_trash_delete_new( self::$editor_private_post, false );
 	}
 
 	/**
@@ -540,7 +540,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
-		self::check_trash_delete( self::$editor_public_post, true );
+		self::check_trash_delete_new( self::$editor_public_post, true );
 	}
 
 }

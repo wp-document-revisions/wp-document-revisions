@@ -159,8 +159,8 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		// add term and two attachments.
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
-		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
+		self::add_document_attachment_new( $factory, self::$editor_public_post_2, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_public_post_2, self::$test_file2 );
 	}
 
 	/**

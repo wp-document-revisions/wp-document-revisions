@@ -108,7 +108,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		self::assertFalse( is_wp_error( self::$editor_private_post ), 'Failed inserting document Editor Private' );
 
 		// add attachment.
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_private_post, self::$test_file );
 	}
 
 	/**
