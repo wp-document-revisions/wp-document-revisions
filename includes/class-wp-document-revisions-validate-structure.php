@@ -447,7 +447,8 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	public static function page_validate() {
 		// ensure not in document image mode.
-		self::$parent::$doc_image = false;
+		global $wpdr;
+		$wpdr::$doc_image = false;
 
 		global $wpdb;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -463,7 +464,7 @@ class WP_Document_Revisions_Validate_Structure {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 
 		// make sure we're looking at the document directory.
-		add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
 
 		$num_doc = $wpdb->num_rows;
 		$fails   = array();

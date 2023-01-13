@@ -190,16 +190,16 @@ class WP_Document_Revisions {
 		global $wpdr_fe, $wpdr_widget;
 
 		if ( ! $wpdr_fe ) {
-			include_once __DIR__ . '/class-wp-document-revisions-front-end.php';
+			require_once __DIR__ . '/class-wp-document-revisions-front-end.php';
 			$wpdr_fe = new WP_Document_Revisions_Front_End( $this );
 		}
 		if ( ! $wpdr_widget ) {
-			include_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
+			require_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 		}
 
 		// load validation code.
-		include_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
+		require_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
 		// Manage REST interface for documents (include code).
@@ -270,7 +270,7 @@ class WP_Document_Revisions {
 			}
 		}
 
-		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
+		require_once __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 	}
 
