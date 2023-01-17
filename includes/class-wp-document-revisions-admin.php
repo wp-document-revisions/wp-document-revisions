@@ -1787,7 +1787,8 @@ class WP_Document_Revisions_Admin {
 			wp_delete_attachment( $attach->ID, true );
 
 			// delete any remaining metadata images.
-			$file_dir = trailingslashit( self::$parent::$wpdr_document_dir );
+			global $wpdr;
+			$file_dir = trailingslashit( $wpdr::$wpdr_document_dir );
 			if ( isset( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
 				foreach ( $meta['sizes'] as $size => $sizeinfo ) {
 					wp_delete_file_from_directory( $file_dir . $sizeinfo['file'], $file_dir );
