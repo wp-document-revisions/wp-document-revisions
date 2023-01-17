@@ -698,14 +698,14 @@ class WP_Document_Revisions_Admin {
 			array(
 				'type'              => 'boolean',
 				'sanitize_callback' => array( &$this, 'sanitize_link_date' ),
-			),
+			)
 		);
 		add_settings_field(
 			'document_link_date',
 			__( 'Document Date in Permalink', 'wp-document-revisions' ),
 			array( &$this, 'link_date_cb' ),
 			'media',
-			'uploads',
+			'uploads'
 		);
 	}
 
@@ -1708,7 +1708,8 @@ class WP_Document_Revisions_Admin {
 		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
 			return true;
 		}
-		if ( self::$parent->extract_document_id( $post->post_content ) !== self::$parent->extract_document_id( $last_revision->post_content ) ) {
+		global $wpdr;
+		if ( $wpdr->extract_document_id( $post->post_content ) !== $wpdr->extract_document_id( $last_revision->post_content ) ) {
 			return true;
 		}
 
