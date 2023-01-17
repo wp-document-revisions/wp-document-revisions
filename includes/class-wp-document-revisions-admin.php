@@ -697,7 +697,6 @@ class WP_Document_Revisions_Admin {
 			'document_link_date',
 			array(
 				'type'              => 'boolean',
-				'group'             => 'permalink',
 				'sanitize_callback' => array( &$this, 'sanitize_link_date' ),
 			),
 		);
