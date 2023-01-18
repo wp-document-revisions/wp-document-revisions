@@ -369,6 +369,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
 
+		if ( $response instanceof WP_Error ) {
+			// Should not happen, but will help debugging.
+			console_log( $response->get_error_code() );
+			console_log( $response->get_error_message() );
+		}
+
 		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
 		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );

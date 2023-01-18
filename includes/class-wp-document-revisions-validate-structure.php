@@ -243,18 +243,19 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return WP_REST_Response
 	 */
 	public static function correct_document( $request ) {
+		$wpdr   = self::$parent;
 		$params = $request->get_params();
 		$id     = $params['id'];
 		$parm   = $params['parm'];
 		if ( 4 === $params['code'] ) {
 			// Attachment exists but post_content does not contain it.
 			// revalidate input values.
-			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+			if ( $id !== get_post_field( 'post_parent', $parm, 'db' ) ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
+			$content = get_post_field( 'post_content', $id, 'db' );
 			if ( empty( $content ) || is_numeric( $content ) ) {
-				$content = self::$parent->format_doc_id( $parm );
+				$content = $wpdr->format_doc_id( $parm );
 			} else {
 				// find if there is a document id there.
 				preg_match( '/(<!-- WPDR [0-9]+ -->)/', $content, $id );
@@ -262,7 +263,7 @@ class WP_Document_Revisions_Validate_Structure {
 					// if a match return the id.
 					$content = str_replace( $id[1], '', $content );
 				}
-				$content = self::$parent->format_doc_id( $parm ) . $content;
+				$content = $wpdr->format_doc_id( $parm ) . $content;
 			}
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -282,7 +283,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// Attachment exists but post_content contains invalid data.
 			// revalidate input values.
 			$content = get_post_field( 'post_content', $id, 'db' );
-			if ( false === self::$parent->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+			if ( false === $wpdr->extract_document_id( $content ) || get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
 			$end_id = strpos( $content, '>' );
@@ -291,7 +292,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content = (string) $parm;
 			} else {
 				// replace existing id data.
-				$content = self::$parent->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
+				$content = $wpdr->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
 			}
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -314,7 +315,6 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach    = get_post( $attach_id );
 
 			// ensure not in document image mode.
-			global $wpdr;
 			$wpdr::$doc_image = false;
 
 			// make sure we're looking at the document directory.
@@ -350,7 +350,6 @@ class WP_Document_Revisions_Validate_Structure {
 			$attach_id = get_post( $attach );
 
 			// ensure not in document image mode.
-			global $wpdr;
 			$wpdr::$doc_image = false;
 
 			// get file name using the default upload directory.
@@ -447,7 +446,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	public static function page_validate() {
 		// ensure not in document image mode.
-		global $wpdr;
+		$wpdr = self::$parent;
 		$wpdr::$doc_image = false;
 
 		global $wpdb;
@@ -464,7 +463,7 @@ class WP_Document_Revisions_Validate_Structure {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 
 		// make sure we're looking at the document directory.
-		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
+		add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
 
 		$num_doc = $wpdb->num_rows;
 		$fails   = array();
@@ -473,7 +472,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// check that user can edit the document.
 			if ( current_user_can( 'edit_document', $doc['ID'] ) ) {
 				// get the attachment. Note may be false if none in content.
-				$attach_id = self::$parent->extract_document_id( $doc['post_content'] );
+				$attach_id = $wpdr->extract_document_id( $doc['post_content'] );
 				$test      = self::validate_document( $doc['ID'], $attach_id, $doc['post_modified_gmt'] );
 				if ( is_array( $test ) ) {
 					// failure.
