@@ -134,6 +134,23 @@
  *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  */
 
+
+// polyfill for str_contains.
+if ( ! function_exists( 'str_contains' ) ) {
+	/**
+	 * Provides str_contains function.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $haystack the text to be searched.
+	 * @param string $needle   the text to search.
+	 * @returns boolean.
+	 */
+	function str_contains ( string $haystack, string $needle ) {
+		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
+	}
+}
+
 /**
  * Main WP_Document_Revisions Validate Structure class.
  */
