@@ -250,7 +250,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 4 === $params['code'] ) {
 			// Attachment exists but post_content does not contain it.
 			// revalidate input values.
-			if ( $id !== get_post_field( 'post_parent', $parm, 'db' ) ) {
+			if ( get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ) );
 			}
 			$content = get_post_field( 'post_content', $id, 'db' );
@@ -446,7 +446,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	public static function page_validate() {
 		// ensure not in document image mode.
-		$wpdr = self::$parent;
+		$wpdr             = self::$parent;
 		$wpdr::$doc_image = false;
 
 		global $wpdb;
