@@ -146,7 +146,7 @@ if ( ! function_exists( 'str_contains' ) ) {
 	 * @param string $needle   the text to search.
 	 * @returns boolean.
 	 */
-	function str_contains ( string $haystack, string $needle ) {
+	function str_contains( string $haystack, string $needle ) {
 		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
 	}
 }
