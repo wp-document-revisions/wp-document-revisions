@@ -64,7 +64,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.5
 	 */
-	public static $admin = null;
+	public $admin = null;
 
 	/**
 	 * Whether processing document or image directory.
@@ -280,7 +280,7 @@ class WP_Document_Revisions {
 		}
 
 		require_once __DIR__ . '/class-wp-document-revisions-admin.php';
-		self::$admin = new WP_Document_Revisions_Admin( self::$instance );
+		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 	}
 
 
@@ -324,7 +324,7 @@ class WP_Document_Revisions {
 			'has_archive'          => true,
 			'hierarchical'         => false,
 			'menu_position'        => 42,
-			'register_meta_box_cb' => array( self::$admin, 'meta_cb' ),
+			'register_meta_box_cb' => array( $this->admin, 'meta_cb' ),
 			'supports'             => array( 'title', 'editor', 'author', 'revisions', 'custom-fields', 'thumbnail' ),
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
