@@ -64,7 +64,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.5
 	 */
-	private static $admin = null;
+	public static $admin = null;
 
 	/**
 	 * Whether processing document or image directory.
