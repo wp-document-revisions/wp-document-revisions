@@ -430,10 +430,14 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
+		$_GET['post_type'] = 'document';
+
 		ob_start();
 		$wpdr->admin->enqueue();
 		$output = ob_get_contents();
 		ob_end_clean();
+
+		unset( $_GET['post_type'] );
 
 		self::assertTrue( true, 'admin_enqueue' );
 	}
