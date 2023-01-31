@@ -254,6 +254,11 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
+		// call with no screen.
+		$help_text = $wpdr->admin->get_help_text();
+
+		self::assertEmpty( $help_text, 'empty not empty' );
+
 		// set hook_suffix in global scope (bending rule).
 		global $hook_suffix, $typenow;
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -286,7 +291,25 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) count( $help_text ), 'document-edit count' );
 
 		// add help text for current screen (none).
+		$screen->post_type = 'document';
 		$wpdr->admin->add_help_tab();
+	}
+
+	/**
+	 * Tests the admin no block editor.
+	 */
+	public function test_admin_no_block_editor() {
+		global $wpdr;
+
+		// not document.
+		$filter = $wpdr->no_use_block_editor( true, 0 );
+
+		self::assertTrue( $filter, 'Not document failed' );
+
+		// document.
+		$filter = $wpdr->no_use_block_editor( true, self::$editor_public_post_2 );
+
+		self::assertFalse( $filter, 'Document failed' );
 	}
 
 	/**
@@ -309,6 +332,41 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->meta_cb();
 		$output = ob_get_contents();
 		ob_end_clean();
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test document metabox unauth.
+	 */
+	public function test_document_metabox_unauth() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+
+		ob_start();
+		$wpdr->admin->document_metabox( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be various bits found.
+		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
+	}
+
+	/**
+	 * Tests the admin settings_fields.
+	 */
+	public function test_admin_settings_fields() {
+		global $wpdr;
+
+		$wpdr->admin->settings_fields();
 
 		self::assertTrue( true, 'run' );
 	}
