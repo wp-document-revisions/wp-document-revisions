@@ -258,7 +258,7 @@ class WP_Document_Revisions_Admin {
 		);
 
 		// if we don't have any help text for this screen, just kick.
-		if ( ! isset( $help[ $screen->id ] ) ) {
+		if ( ! $screen instanceof WP_Screen || ! isset( $help[ $screen->id ] ) ) {
 			return array();
 		}
 

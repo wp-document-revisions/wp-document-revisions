@@ -301,8 +301,9 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_admin_no_block_editor() {
 		global $wpdr;
 
-		// not document.
-		$filter = $wpdr->admin->no_use_block_editor( true, 0 );
+		// not document - use attachment instead.
+		$attach = $wpdr->get_document( self::$editor_public_post_2 );
+		$filter = $wpdr->admin->no_use_block_editor( true, $attach->ID );
 
 		self::assertTrue( $filter, 'Not document failed' );
 
