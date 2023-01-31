@@ -302,12 +302,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// not document.
-		$filter = $wpdr->no_use_block_editor( true, 0 );
+		$filter = $wpdr->admin->no_use_block_editor( true, 0 );
 
 		self::assertTrue( $filter, 'Not document failed' );
 
 		// document.
-		$filter = $wpdr->no_use_block_editor( true, self::$editor_public_post_2 );
+		$filter = $wpdr->admin->no_use_block_editor( true, self::$editor_public_post_2 );
 
 		self::assertFalse( $filter, 'Document failed' );
 	}
