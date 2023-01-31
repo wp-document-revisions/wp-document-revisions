@@ -46,6 +46,13 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	 */
 	private static $editor_public_post_2;
 
+	/**
+	 * Editor Non-document Post
+	 *
+	 * @var integer $editor_public_non_doc
+	 */
+	private static $editor_public_non_doc;
+
 	// phpcs:disable
 	/**
 	 * Set up common data before tests.
@@ -166,6 +173,20 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
 
 		remove_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
+
+		// Editor Public Non-document.
+		self::$editor_public_non_doc = $factory->post->create(
+			array(
+				'post_title'   => 'Editor Public Non-document - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => 'Not document - for negative testing',
+				'post_excerpt' => '',
+				'post_type'    => 'post',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::$editor_public_non_doc ), 'Failed inserting document Editor Public Non-doc' );
 	}
 
 	/**
@@ -207,6 +228,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		}
 
 		unregister_taxonomy( 'workflow_state' );
+
+		wp_delete_post( self::$editor_public_non_doc, true );
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -302,8 +325,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// not document - use attachment instead.
-		$attach = $wpdr->get_document( self::$editor_public_post_2 );
-		$filter = $wpdr->admin->no_use_block_editor( true, $attach );
+		$post   = get_post( self::$editor_public_non_doc );
+		$filter = $wpdr->admin->no_use_block_editor( true, $post );
 
 		self::assertTrue( $filter, 'Not document failed' );
 
