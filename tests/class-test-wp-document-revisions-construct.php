@@ -17,8 +17,12 @@ class Test_WP_Document_Revisions_Construct extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public function test_construct() {
+		// switch rest on.
+		add_filter( 'document_show_in_rest', '__return_true' );
+
 		// init classes.
 		global $wpdr;
+		$val1 = $wpdr;
 		$wpdr = new WP_Document_Revisions();
 
 		$wpdr->register_cpt();
@@ -31,16 +35,18 @@ class Test_WP_Document_Revisions_Construct extends Test_Common_WPDR {
 			$wpdr->admin_init();
 		}
 
-		// switch rest on.
-		add_filter( 'document_show_in_rest', '__return_true' );
-
 		// make sure that we have the rest set up.
 		if ( ! class_exists( 'WP_Document_Revisions_Manage_Rest' ) ) {
 			$wpdr->manage_rest();
 		}
 
 		global $wpdr_mr;
+		$val2 = $wpdr_mr;
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
+
+		// put back globals.
+		$wpdr    = $val1;
+		$wpdr_mr = $val2;
 	}
 
 }

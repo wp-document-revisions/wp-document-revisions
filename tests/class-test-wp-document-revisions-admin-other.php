@@ -430,6 +430,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$_GET['post_type'] = 'document';
 
 		ob_start();
@@ -437,6 +438,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_GET['post_type'] );
 
 		self::assertTrue( true, 'admin_enqueue' );
