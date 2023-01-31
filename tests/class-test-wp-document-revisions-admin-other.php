@@ -303,12 +303,13 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// not document - use attachment instead.
 		$attach = $wpdr->get_document( self::$editor_public_post_2 );
-		$filter = $wpdr->admin->no_use_block_editor( true, $attach->ID );
+		$filter = $wpdr->admin->no_use_block_editor( true, $attach );
 
 		self::assertTrue( $filter, 'Not document failed' );
 
 		// document.
-		$filter = $wpdr->admin->no_use_block_editor( true, self::$editor_public_post_2 );
+		$doc    = get_post( self::$editor_public_post_2 );
+		$filter = $wpdr->admin->no_use_block_editor( true, $doc );
 
 		self::assertFalse( $filter, 'Document failed' );
 	}
