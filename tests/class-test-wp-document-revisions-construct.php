@@ -43,7 +43,7 @@ class Test_WP_Document_Revisions_Construct extends Test_Common_WPDR {
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
 
 		// put back globals.
-		$wpdr    = $val1;
+		$wpdr = $val1;
 	}
 
 }
