@@ -186,6 +186,25 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Load the block widget.
+	 */
+	public function test_widget_publ_block() {
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		ob_start();
+		$wpdr_widget->wpdr_widgets_block_init();
+		$output = ob_get_clean();
+
+		self::assertTrue( true, 'widget run' );
+	}
+
+	/**
 	 * Verify published post on widget (no author info).
 	 *
 	 * Should see Author (Public) and not Editor (Private)

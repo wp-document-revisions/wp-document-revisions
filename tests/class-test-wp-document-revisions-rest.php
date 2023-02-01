@@ -401,7 +401,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests the public query.
+	 * Tests the public query using editor.
 	 */
 	public function test_get_items_editor() {
 		global $current_user;
@@ -503,5 +503,59 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		} else {
 			self::assertFalse( true, 'no revision found' );
 		}
+	}
+
+	/**
+	 * Tests the public query using editor with edit context.
+	 */
+	public function test_get_items_editor_context() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
+
+		global $wp_rest_server;
+		// Two public posts.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents?context=edit' );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 200, $response->get_status() );
+
+		$responses = $response->get_data();
+		self::assertEquals( 2, count( $responses ) );
+
+		// separate out which is which.
+		if ( self::$editor_public_post === $responses[1]['id'] && self::$editor_public_post_2 === $responses[0]['id'] ) {
+			// expected order (descending).
+			$p1 = $responses[1];
+			$p2 = $responses[0];
+		} elseif ( self::$editor_public_post === $responses[0]['id'] && self::$editor_public_post_2 === $responses[1]['id'] ) {
+			// alternative order.
+			$p1 = $responses[0];
+			$p2 = $responses[1];
+		} else {
+			self::assertFalse( true, 'Expected posts not returned' );
+		}
+
+		// validate parts.
+		self::assertSame( $p1['status'], 'publish', 'wrong status 1' );
+		self::assertSame( $p2['status'], 'publish', 'wrong status 2' );
+		self::assertSame( $p1['type'], 'document', 'wrong type 1' );
+		self::assertSame( $p2['type'], 'document', 'wrong type 2' );
+		self::assertEquals( 1, (int) substr_count( $p1['link'], $p1['slug'] ), 'slug not in link 1' );
+		self::assertEquals( 1, (int) substr_count( $p2['link'], $p2['slug'] ), 'slug not in link 2' );
+
+		// editor should see versions or attachments.
+		self::assertTrue( array_key_exists( 'version-history', $p2['_links'] ), 'version history' );
+		self::assertTrue( array_key_exists( 'predecessor-version', $p2['_links'] ), 'previous version' );
+		self::assertTrue( array_key_exists( 'wp:attachment', $p1['_links'] ), 'p1 attachment' );
+		self::assertTrue( array_key_exists( 'wp:attachment', $p2['_links'] ), 'p2 attachment' );
 	}
 }

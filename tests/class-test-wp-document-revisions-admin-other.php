@@ -386,6 +386,45 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests the admin enqueue edit scripts.
+	 */
+	public function test_enqueue_edit_scripts() {
+		global $wpdr;
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['post_id'] = self::$editor_public_post;
+
+		ob_start();
+		$wpdr->admin->enqueue_edit_scripts();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		unset( $_GET['post_id'] );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Tests the admin media upload tabs.
+	 */
+	public function test_media_upload_tabs() {
+		global $wpdr;
+
+		$default = array(
+			'computer' => 'field 1',
+			'type_url' => 'field 2',
+			'gallery'  => 'field 3',
+			'library'  => 'field 4',
+		);
+
+		$default = $wpdr->admin->media_upload_tabs_computer( $default );
+
+		self::assertEquals( 1, count( $default ), 'Values not deleted' );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Tests the admin settings_fields.
 	 */
 	public function test_admin_settings_fields() {
@@ -418,6 +457,24 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
+	}
+
+	/**
+	 * Tests the admin sanitize upload dir.
+	 */
+	public function test_sanitize_upload_dir() {
+		global $wpdr;
+
+		$orig = $wpdr::$wpdr_document_dir;
+
+		$new = $wpdr->admin->sanitize_upload_dir( '/tmp/wp' );
+
+		self::assertEquals( $new, '/tmp/wp/', 'New not set correctly' );
+
+		$new = $wpdr->admin->sanitize_upload_dir( $orig );
+
+		self::assertEquals( $new, '/tmp/wp/', 'Original not reset correctly' );
+		self::assertTrue( true, 'run' );
 	}
 
 	/**
