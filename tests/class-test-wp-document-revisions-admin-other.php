@@ -412,8 +412,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_GET['post_id'] = self::$editor_public_post;
-		$_GET['action']  = 'whatever';
+		$_GET['post']   = self::$editor_public_post;
+		$_GET['action'] = 'whatever';
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$default = array(
