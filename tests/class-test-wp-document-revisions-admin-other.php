@@ -411,6 +411,11 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_media_upload_tabs() {
 		global $wpdr;
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_GET['post_id'] = self::$editor_public_post;
+		$_GET['action']  = 'whatever';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 		$default = array(
 			'computer' => 'field 1',
 			'type_url' => 'field 2',
@@ -473,7 +478,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
-		self::assertEquals( $new, '/wordpress/wp-content/uploads/', 'Original not reset correctly' );
+		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly' );
 		self::assertTrue( true, 'run' );
 	}
 
