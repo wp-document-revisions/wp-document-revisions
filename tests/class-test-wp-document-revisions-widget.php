@@ -625,8 +625,8 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
-		// remove the generic block to avoid duplicate message.. 
-		unregister_block_type( 'unregister_block_type(' ):
+		// remove the generic block to avoid duplicate message.
+		unregister_block_type( 'wp-document-revisions/documents-widget' );
 
 		global $wpdr_widget;
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
