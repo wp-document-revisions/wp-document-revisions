@@ -195,10 +195,11 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
+		global $wpdr_widget;
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		ob_start();
-		$wpdr_widget->wpdr_widgets_block_init();
+		wpdr_widgets_block_init();
 		$output = ob_get_clean();
 
 		self::assertTrue( true, 'widget run' );

@@ -473,7 +473,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
-		self::assertEquals( $new, '/tmp/wp/', 'Original not reset correctly' );
+		self::assertEquals( $new, '/wordpress/wp-content/uploads/', 'Original not reset correctly' );
 		self::assertTrue( true, 'run' );
 	}
 
