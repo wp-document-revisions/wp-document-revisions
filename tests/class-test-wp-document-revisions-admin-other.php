@@ -477,7 +477,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
-		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 1' );
+		// $orig does not have a trailing slash.
+		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads', 'Original not reset correctly 1' );
 
 		$new = $wpdr->admin->sanitize_upload_dir( '/tmp/wp' );
 
@@ -738,14 +739,13 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		global $current_user;
 		unset( $current_user );
-		wp_set_current_user( self::$editor_user_id );
+		$usr = wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
 		// remove capability.
-		$role = get_role( 'editor' );
 		self::assertTrue( $usr->has_cap( 'upload_files' ), 'Cannot upload files 1' );
 
-		$role->add_cap( 'upload_files', false );
+		$usr->add_cap( 'upload_files', false );
 		self::assertFalse( $usr->has_cap( 'upload_files' ), 'Can upload files' );
 
 		global $typenow, $pagenow;
@@ -784,7 +784,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, '<div' ), '<div> not found once 1' );
 		self::assertEquals( 1, (int) substr_count( $output, 'do no have' ), 'not have not found once 1' );
 
-		$role->add_cap( 'upload_files', true );
+		$usr->add_cap( 'upload_files', true );
 		self::assertTrue( $usr->has_cap( 'upload_files' ), 'Cannot upload files 2' );
 	}
 
