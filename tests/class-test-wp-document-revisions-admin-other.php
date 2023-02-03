@@ -411,17 +411,20 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_media_upload_tabs() {
 		global $wpdr;
 
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_GET['post']   = self::$editor_public_post;
-		$_GET['action'] = 'whatever';
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-
 		$default = array(
 			'computer' => 'field 1',
 			'type_url' => 'field 2',
 			'gallery'  => 'field 3',
 			'library'  => 'field 4',
 		);
+
+		$def_one = $wpdr->admin->media_upload_tabs_computer( $default );
+
+		self::assertEquals( 4, count( $def_one ), 'Values deleted' );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_GET['post']   = self::$editor_public_post;
+		$_GET['action'] = 'whatever';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$default = $wpdr->admin->media_upload_tabs_computer( $default );
 
@@ -472,13 +475,17 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$orig = $wpdr::$wpdr_document_dir;
 
+		$new = $wpdr->admin->sanitize_upload_dir( $orig );
+
+		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 1' );
+
 		$new = $wpdr->admin->sanitize_upload_dir( '/tmp/wp' );
 
 		self::assertEquals( $new, '/tmp/wp/', 'New not set correctly' );
 
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
-		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly' );
+		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 2' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -661,6 +668,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertTrue( true, 'document_editor_setting' );
 	}
+
 	/**
 	 * Tests the posts modify_content_class.
 	 */
@@ -688,6 +696,96 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertNotEquals( 'some.css', $settings['content_css'], 'content_css not changed' );
 		self::assertTrue( true, 'modify_content_class' );
+	}
+
+	/**
+	 * Tests the posts hide_upload_header.
+	 */
+	public function test_hide_upload_header() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// phpcs:disable  WordPress.WP.GlobalVariablesOverride.Prohibited
+		global $pagenow;
+		$pagenow         = 'media-upload.php';
+		$_GET['post_id'] = self::$editor_public_post;
+		// phpcs:enable  WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		ob_start();
+		$wpdr->admin->hide_upload_header();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '#media-upload-header' ), 'media-upload not found' );
+	}
+
+	/**
+	 * Tests the posts check_upload_files.
+	 */
+	public function test_check_upload_files() {
+		global $wpdr;
+
+		ob_start();
+		$wpdr->admin->check_upload_files();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEmpty( $output, 'output not empty' );
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// remove capability.
+		$role = get_role( 'editor' );
+		self::assertTrue( $usr->has_cap( 'upload_files' ), 'Cannot upload files 1' );
+
+		$role->add_cap( 'upload_files', false );
+		self::assertFalse( $usr->has_cap( 'upload_files' ), 'Can upload files' );
+
+		global $typenow, $pagenow;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$typenow = 'document';
+
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$pagenow = 'edit.php';
+
+		ob_start();
+		$wpdr->admin->check_upload_files();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 0, (int) substr_count( $output, '<div' ), '<div> found' );
+
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$pagenow = 'post.php';
+
+		ob_start();
+		$wpdr->admin->check_upload_files();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '<div' ), '<div> not found once 1' );
+		self::assertEquals( 1, (int) substr_count( $output, 'do no have' ), 'not have not found once 1' );
+
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$pagenow = 'post-new.php';
+
+		ob_start();
+		$wpdr->admin->check_upload_files();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '<div' ), '<div> not found once 1' );
+		self::assertEquals( 1, (int) substr_count( $output, 'do no have' ), 'not have not found once 1' );
+
+		$role->add_cap( 'upload_files', true );
+		self::assertTrue( $usr->has_cap( 'upload_files' ), 'Cannot upload files 2' );
 	}
 
 	/**

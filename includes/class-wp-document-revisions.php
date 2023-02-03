@@ -1750,6 +1750,10 @@ class WP_Document_Revisions {
 		}
 
 		self::$doc_image = false;
+		// we are going to load the attachment into the upload directory, so invole filter.
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
+		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
+
 		// hash and replace filename, appending extension.
 		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
