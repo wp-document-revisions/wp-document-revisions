@@ -771,7 +771,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<div' ), '<div> not found once 1' );
-		self::assertEquals( 1, (int) substr_count( $output, 'do no have' ), 'not have not found once 1' );
+		self::assertEquals( 1, (int) substr_count( $output, 'do not have' ), 'not have not found once 1' );
 
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$pagenow = 'post-new.php';
@@ -782,7 +782,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, '<div' ), '<div> not found once 1' );
-		self::assertEquals( 1, (int) substr_count( $output, 'do no have' ), 'not have not found once 1' );
+		self::assertEquals( 1, (int) substr_count( $output, 'do not have' ), 'not have not found once 1' );
 
 		$usr->add_cap( 'upload_files', true );
 		self::assertTrue( $usr->has_cap( 'upload_files' ), 'Cannot upload files 2' );
