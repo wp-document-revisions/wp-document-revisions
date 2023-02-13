@@ -444,6 +444,88 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests the admin sanitize document slug.
+	 */
+	public function test_sanitize_document_slug() {
+		global $wpdr;
+
+		$slug = $wpdr->sanitize_document_slug( 'documents' );
+
+		self::assertEquals( 'documents', $slug, 'default not equal' );
+
+		$slug = $wpdr->sanitize_document_slug( 'docs' );
+
+		self::assertEquals( 'docs', $slug, 'change not made' );
+
+		$slug = $wpdr->sanitize_document_slug( 'documents' );
+
+		self::assertEquals( 'documents', $slug, 'no reset' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Tests the admin sanitize link date.
+	 */
+	public function test_sanitize_link_date() {
+		global $wpdr;
+
+		$link = $wpdr->admin->sanitize_link_date( null );
+
+		self::assertFalse( $link, 'null' );
+
+		$link = $wpdr->admin->sanitize_link_date( 0 );
+
+		self::assertFalse( $link, 'zero' );
+
+		$link = $wpdr->admin->sanitize_link_date( 1 );
+
+		self::assertTrue( $link, 'one' );
+
+		$link = $wpdr->admin->sanitize_link_date( 2 );
+
+		self::assertTrue( $link, 'two' );
+	}
+
+	/**
+	 * Test network settings cb.
+	 */
+	public function test_network_settings_cb() {
+		global $wpdr;
+
+		ob_start();
+		$wpdr->admin->network_settings_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		console_log( $output );
+
+		// There will be various bits found.
+		self::assertEquals( 1, (int) substr_count( $output, 'Document Settings' ), 'heading' );
+	}
+
+	/**
+	 * Test filter documents list.
+	 */
+	public function test_filter_documents_list() {
+		global $wpdr;
+
+		global $typenow;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$typenow = 'document';
+
+		ob_start();
+		$wpdr->admin->filter_documents_list();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		console_log( $output );
+
+		// There will be various bits found.
+		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
+	}
+
+	/**
 	 * Test document metabox auth.
 	 */
 	public function test_document_metabox_auth() {
@@ -548,6 +630,13 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	 */
 	public function test_admin_enqueue() {
 		global $wpdr;
+
+		ob_start();
+		$wpdr->admin->enqueue();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEmpty( $output, 'not doc not empty' );
 
 		global $current_user;
 		unset( $current_user );
