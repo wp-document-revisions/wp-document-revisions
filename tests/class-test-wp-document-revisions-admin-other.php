@@ -449,15 +449,15 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_sanitize_document_slug() {
 		global $wpdr;
 
-		$slug = $wpdr->sanitize_document_slug( 'documents' );
+		$slug = $wpdr->admin->sanitize_document_slug( 'documents' );
 
 		self::assertEquals( 'documents', $slug, 'default not equal' );
 
-		$slug = $wpdr->sanitize_document_slug( 'docs' );
+		$slug = $wpdr->admin->sanitize_document_slug( 'docs' );
 
 		self::assertEquals( 'docs', $slug, 'change not made' );
 
-		$slug = $wpdr->sanitize_document_slug( 'documents' );
+		$slug = $wpdr->admin->sanitize_document_slug( 'documents' );
 
 		self::assertEquals( 'documents', $slug, 'no reset' );
 
