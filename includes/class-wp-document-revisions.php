@@ -1060,16 +1060,16 @@ class WP_Document_Revisions {
 		if ( $attach instanceof WP_Post ) {
 			$file = get_attached_file( $attach->ID );
 		} else {
-				// create message on failure to find attachment. (More banal if one filters to false).
-				$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
-				wp_die(
-					esc_html( $msg ),
-					null,
-					array( 'response' => 403 )
-				);
-				// for unit testing.
-				$wp_query->is_404 = true;
-				return false;
+			// create message on failure to find attachment. (More banal if one filters to false).
+			$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
+			wp_die(
+				esc_html( $msg ),
+				null,
+				array( 'response' => 403 )
+			);
+			// for unit testing.
+			$wp_query->is_404 = true;
+			return false;
 		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line.

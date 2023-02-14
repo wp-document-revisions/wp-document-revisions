@@ -719,4 +719,34 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		self::assertCount( 2, get_document_revisions( self::$editor_private_post ), 'private count' );
 		self::assertCount( 3, get_document_revisions( self::$editor_public_post ), 'public count' );
 	}
+
+	/**
+	 * Tests the documents shortcode blocks function.
+	 */
+	public function test_documents_shortcode_blocks() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$wpdr_fe->documents_shortcode_blocks();
+
+		self::assertTrue( true, 'register blocks' );
+	}
+
+	/**
+	 * Tests the get taxonomy hierarchy function.
+	 */
+	public function test_get_taxonomy_hierarchy() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$wpdr_fe->get_taxonomy_hierarchy( 'category' );
+
+		self::assertTrue( true, 'taxonomy hierarchy' );
+	}
 }
