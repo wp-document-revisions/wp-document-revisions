@@ -23,9 +23,16 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		add_filter( 'document_show_in_rest', '__return_true' );
 
 		// init classes.
-		global $wpdr;
-		$val1 = $wpdr;
-		$wpdr = new WP_Document_Revisions();
+		global $wpdr, $wpdr_fe, $wpdr_widget;
+		$val1        = $wpdr;
+		$val2        = $wpdr_fe;
+		$val3        = $wpdr_widget;
+		$wpdr_fe     = null;
+		$wpdr_widget = null;
+		$wpdr        = new WP_Document_Revisions();
+
+		self::assertNotNull( $wpdr_fe, 'Class Front End not defined' );
+		self::assertNotNull( $wpdr_widget, 'Class Widget not defined' );
 
 		$wpdr->register_cpt();
 		$wpdr->add_caps();
@@ -45,7 +52,9 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
 
 		// put back globals.
-		$wpdr = $val1;
+		$wpdr        = $val1;
+		$wpdr_fe     = $val2;
+		$wpdr_widget = $val3;
 	}
 
 }

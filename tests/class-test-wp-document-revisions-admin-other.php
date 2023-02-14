@@ -498,10 +498,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		console_log( $output );
-
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'Document Settings' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'id="document_upload_directory"' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="/tmp/wordpress/wp-content/uploads"' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'id="document_slug"' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="documents"' ), 'heading' );
 	}
 
 	/**
@@ -519,10 +521,15 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		console_log( $output );
-
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="final">Final' ), 'final' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="in-progress">In Progress' ), 'progress' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="initial-draft">Initial Draft' ), 'draft' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="under-review">Under Review' ), 'review' );
+
+		self::assertEquals( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
+		self::assertEquals( 1, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
 	}
 
 	/**
