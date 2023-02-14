@@ -730,6 +730,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
+		// need to unregister blocks before reregister.
+		unregister_block_type( 'wp-document-revisions/documents-shortcode' );
+		unregister_block_type( 'wp-document-revisions/revisions-shortcode' );
+
 		$wpdr_fe->documents_shortcode_blocks();
 
 		self::assertTrue( true, 'register blocks' );
