@@ -750,11 +750,11 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		}
 
 		wp_cache_delete( 'wpdr_document_taxonomies' );
-		register_taxonomy_for_object_type('category', 'document' );
+		register_taxonomy_for_object_type( 'category', 'document' );
 
 		$wpdr_fe->get_taxonomy_details();
 
-		unregister_taxonomy_for_object_type('category', 'document' );
+		unregister_taxonomy_for_object_type( 'category', 'document' );
 		wp_cache_delete( 'wpdr_document_taxonomies' );
 
 		self::assertTrue( true, 'taxonomy hierarchy' );
