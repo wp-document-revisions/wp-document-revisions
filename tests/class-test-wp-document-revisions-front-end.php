@@ -749,7 +749,13 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		$wpdr_fe->get_taxonomy_hierarchy( 'category' );
+		wp_cache_delete( 'wpdr_document_taxonomies' );
+		register_taxonomy_for_object_type('category', 'document' );
+
+		$wpdr_fe->get_taxonomy_details();
+
+		unregister_taxonomy_for_object_type('category', 'document' );
+		wp_cache_delete( 'wpdr_document_taxonomies' );
 
 		self::assertTrue( true, 'taxonomy hierarchy' );
 	}
