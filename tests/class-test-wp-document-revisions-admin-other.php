@@ -392,7 +392,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['post_id'] = self::$editor_public_post;
+		$_GET['post'] = self::$editor_public_post;
 
 		ob_start();
 		$wpdr->admin->enqueue_edit_scripts();
@@ -400,7 +400,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		unset( $_GET['post_id'] );
+		unset( $_GET['post'] );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -500,10 +500,46 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'Document Settings' ), 'heading' );
-		self::assertEquals( 1, (int) substr_count( $output, 'id="document_upload_directory"' ), 'heading' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="/tmp/wordpress/wp-content/uploads"' ), 'heading' );
-		self::assertEquals( 1, (int) substr_count( $output, 'id="document_slug"' ), 'heading' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="documents"' ), 'heading' );
+		self::assertEquals( 1, (int) substr_count( $output, 'id="document_upload_directory"' ), 'directory' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="/tmp/wordpress/wp-content/uploads"' ), 'directoryv' );
+		self::assertEquals( 1, (int) substr_count( $output, 'id="document_slug"' ), 'slug' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="documents"' ), 'slugv' );
+	}
+
+	/**
+	 * Test link date cb.
+	 */
+	public function test_link_date_cb() {
+		global $wpdr;
+
+		ob_start();
+		$wpdr->admin->link_date_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be various bits found.
+		self::assertEquals( 1, (int) substr_count( $output, 'id="document_link_date"' ), 'heading' );
+	}
+
+	/**
+	 * Test network upload location save.
+	 */
+	public function test_network_upload_location_save() {
+		global $wpdr;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['document_upload_location_nonce'] = wp_create_nonce( 'network_document_upload_location' );
+		$_POST['document_upload_directory']      = $wpdr::$wpdr_document_dir;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		ob_start();
+		$wpdr->admin->network_upload_location_save();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be various bits found.
+		self::assertEmpty( $output, 'not empty' );
+		self::assertTrue( true, 'run' );
 	}
 
 	/**
@@ -576,6 +612,25 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
 		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 2' );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test bind upload cb.
+	 */
+	public function test_bind_upload_cb() {
+		global $wpdr;
+
+		global $pagenow;
+		$pagenow = 'media-upload.php';
+
+		ob_start();
+		$wpdr->admin->bind_upload_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		// There will be various bits found.
+		self::assertEquals( 1, (int) substr_count( $output, 'addEventListener' ), 'no listener' );
 		self::assertTrue( true, 'run' );
 	}
 
