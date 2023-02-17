@@ -532,13 +532,41 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$_POST['document_upload_directory']      = $wpdr::$wpdr_document_dir;
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		ob_start();
-		$wpdr->admin->network_upload_location_save();
-		$output = ob_get_contents();
-		ob_end_clean();
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
 
-		// There will be various bits found.
-		self::assertEmpty( $output, 'not empty' );
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options' );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
+		// Should not fail with exception .
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+
+		$current_user->add_cap( 'manage_network_options', false );
 		self::assertTrue( true, 'run' );
 	}
 
