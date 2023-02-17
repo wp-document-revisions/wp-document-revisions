@@ -344,7 +344,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -368,7 +367,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( 0 );
 		wp_cache_flush();
 
@@ -533,7 +531,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -603,7 +600,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -698,7 +694,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -729,7 +724,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEmpty( $output, 'not doc not empty' );
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -759,7 +753,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -801,7 +794,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -856,7 +848,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -885,7 +876,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -917,7 +907,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEmpty( $output, 'output not empty' );
 
 		global $current_user;
-		unset( $current_user );
 		$usr = wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -974,7 +963,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -1006,7 +994,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $current_user;
-		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
