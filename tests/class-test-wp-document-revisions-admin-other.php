@@ -542,6 +542,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		} catch ( WPDieException $e ) {
 			$exception = $e;
+			ob_end_clean();
 		}
 
 		// Should fail with exception.
@@ -557,6 +558,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		} catch ( WPDieException $e ) {
 			$exception = $e;
+			ob_end_clean();
 		}
 
 		// Should not fail with exception (but does).
@@ -647,6 +649,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		global $pagenow;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$pagenow = 'media-upload.php';
 
 		ob_start();
