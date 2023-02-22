@@ -1208,7 +1208,7 @@ class WP_Document_Revisions_Admin {
 					'taxonomy'        => $tax_slug,
 					'hide_empty'      => false,
 					'value_field'     => 'slug',
-					'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_STRING ),
+					'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_SPECIAL_CHARS ),
 				);
 				wp_dropdown_categories( $args );
 			}
@@ -1218,7 +1218,7 @@ class WP_Document_Revisions_Admin {
 				'name'            => 'author',
 				'show_option_all' => __( 'All owners', 'wp-document-revisions' ),
 				'value_field'     => 'slug',
-				'selected'        => filter_input( INPUT_GET, 'author', FILTER_SANITIZE_STRING ),
+				'selected'        => filter_input( INPUT_GET, 'author', FILTER_SANITIZE_SPECIAL_CHARS ),
 				'orderby'         => 'name',
 				'order'           => 'ASC',
 			);

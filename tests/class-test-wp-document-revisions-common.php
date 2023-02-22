@@ -275,7 +275,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public function query_true( ...$props ) {
 		global $wp_query;
-		if ( isset( $wp_query->is_admin ) ) {
+		if ( isset( $wp_query->is_admin ) && true === $wp_query->is_admin ) {
 			// essentially ignore is_admin.
 			self::assertQueryTrue( 'is_admin', ...$props );
 		} else {
@@ -487,7 +487,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$test_post = get_post( $id );
 			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
 			if ( ! is_null( $file ) ) {
-				self::assertFileNotExists( $file, 'Attachment file still exists' );
+				self::assertFileDoesNotExist( $file, 'Attachment file still exists' );
 			}
 		}
 	}
@@ -562,7 +562,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$test_post = get_post( $id );
 			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
 			if ( ! is_null( $file ) ) {
-				self::assertFileNotExists( $file, 'Attachment file still exists' );
+				self::assertFileDoesNotExist( $file, 'Attachment file still exists' );
 			}
 		}
 	}
