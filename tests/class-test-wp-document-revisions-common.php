@@ -275,10 +275,10 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public function query_true( ...$props ) {
 		if ( version_compare( $GLOBALS['wp_version'], '5.1.0' ) >= 0 ) {
-			self::assertQueryTrue( ...$props );
-		} else {
 			// WP5.0 seems to have is_admin too.
 			self::assertQueryTrue( 'is_admin', ...$props );
+		} else {
+			self::assertQueryTrue( ...$props );
 		}
 	}
 
