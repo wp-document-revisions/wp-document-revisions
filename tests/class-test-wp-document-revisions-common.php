@@ -419,6 +419,20 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Check that a file does not exist (needs to use the appropraiate assert).
+	 *
+	 * @param string $file    File to check.
+	 * @param string $message Message if not exists..
+	 */
+	private function check_file_deleted( $file, $message ) {
+		if ( method_exists( $this, 'assertFileDoesNotExist' ) ) {
+			self::assertFileDoesNotExist( $file, $message );
+		} else {
+			self::assertFileNotExists( $file, $message );
+		}
+	}
+
+	/**
 	 * Tests that all elements of a post are trashed or deleted.
 	 *
 	 * @param integer $post_id Post ID.
@@ -487,7 +501,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$test_post = get_post( $id );
 			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
 			if ( ! is_null( $file ) ) {
-				self::assertFileDoesNotExist( $file, 'Attachment file still exists' );
+				self::check_file_deleted( $file, 'Attachment file still exists' );
 			}
 		}
 	}
@@ -562,7 +576,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$test_post = get_post( $id );
 			self::assertFalse( $test_post instanceof WP_Post, "Post $id not deleted" );
 			if ( ! is_null( $file ) ) {
-				self::assertFileDoesNotExist( $file, 'Attachment file still exists' );
+				self::check_file_deleted( $file, 'Attachment file still exists' );
 			}
 		}
 	}
