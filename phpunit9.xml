@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite name="WPDR Tests">
+			<directory prefix="class-test-" suffix=".php">./tests</directory>
+		</testsuite>
+	</testsuites>
+	<logging>
+		<junit outputFile="clover.xml" />
+	</logging>
+	<coverage cacheDirectory="/tmp/cache"
+          includeUncoveredFiles="true"
+          processUncoveredFiles="true"
+          pathCoverage="false"
+          ignoreDeprecatedCodeUnits="true"
+          disableCodeCoverageIgnore="true">
+		<include>
+			<directory suffix=".php">./includes</directory>
+			<file>./wp-document-revisions.php</file>
+		</include>
+		<report>
+	    <clover outputFile="coverage.xml" />
+		</report>
+	</coverage>
+</phpunit>
