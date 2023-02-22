@@ -569,7 +569,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Ensure environment is as wanted.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		// Try to make sure that are no extraneous headers before each test.
