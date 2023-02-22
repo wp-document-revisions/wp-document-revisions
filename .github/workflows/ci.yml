@@ -1,4 +1,4 @@
-# Based on https://github.com/wordpress/plugin-dependencies
+# Based on https://github.com/wordpress/wp-plugin-dependencies
 name: CI
 
 on:
@@ -25,27 +25,32 @@ jobs:
         php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2']
         wp-version: [latest]
         wp-multisite: [0]
-        phpunit-versions: ['9.5.20']
+        phpunit-versions: ['9.5']
+        phpunit-config: ['phpunit9.xml']
         include:
           - php-versions: '7.1'
             wp-version: 'latest'
             wp-multisite: 0
-            phpunit-versions: '7.5.20'
+            phpunit-versions: '7.5'
+            phpunit-config: 'phpunit.xml'
             operating-system: ubuntu-latest
           - php-versions: '7.2'
             wp-version: 'latest'
             wp-multisite: 0
-            phpunit-versions: '7.5.20'
+            phpunit-versions: '7.5'
+            phpunit-config: 'phpunit.xml'
             operating-system: ubuntu-latest
           - php-versions: '7.4'
             wp-version: 'latest'
             wp-multisite: 1
-            phpunit-versions: '9.5.20'
+            phpunit-versions: '9.5'
+            phpunit-config: 'phpunit9.xml'
             operating-system: 'ubuntu-latest'
-          - php-versions: '7.4'
+          - php-versions: '7.2'
             wp-version: '5.1'
             wp-multisite: 0
-            phpunit-versions: '7.5.20'
+            phpunit-versions: '7.5'
+            phpunit-config: 'phpunit.xml'
             operating-system: 'ubuntu-latest'
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
@@ -76,7 +81,7 @@ jobs:
     - name: phpunit tests
       run: |
         echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-        /usr/local/bin/phpunit --config=phpunit.xml
+        /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
       env:
         WP_MULTISITE: ${{ matrix.wp-multisite }}
 
