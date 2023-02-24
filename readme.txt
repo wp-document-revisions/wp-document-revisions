@@ -181,6 +181,7 @@ In: class-wp-document-revisions.php
 
 = 3.5.0 =
 
+" SECURITY: Rest media interface may expose document name. 
 * NEW: Site can decide to save permalinks without year/month part.
 * NEW: Permalinks may be updated on the documents screen.
 * FIX: guid field for documents was generally incorrect. Will be stored as a valid value.
@@ -188,7 +189,6 @@ In: class-wp-document-revisions.php
 * FIX: Document permalink month can be incorrect when saved at month end. (#300).
 * FIX: Valid document may not be found.
 " FIX: Improve notification process when activation user does not have edit_documents capability.
-" FIX: Rest media interface may expose document name, 
 
 = 3.4.0 =
 
