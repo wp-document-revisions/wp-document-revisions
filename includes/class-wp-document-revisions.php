@@ -1750,7 +1750,7 @@ class WP_Document_Revisions {
 		}
 
 		self::$doc_image = false;
-		// we are going to load the attachment into the upload directory, so invole filter.
+		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
 
@@ -1793,7 +1793,7 @@ class WP_Document_Revisions {
 		global $pagenow;
 
 		if ( 'async-upload.php' === $pagenow ) {
-			// got past cookie, but may be in thumbnail code.
+			// got past cookie, but still may be in thumbnail code.
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
