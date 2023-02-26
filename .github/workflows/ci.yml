@@ -52,7 +52,7 @@ jobs:
             phpunit-versions: '7.5'
             phpunit-config: 'phpunit.xml'
             operating-system: 'ubuntu-latest'
-          - php-versions: '7.1'
+          - php-versions: '7.2'
             wp-version: '4.9'
             wp-multisite: 0
             phpunit-versions: '7.5'
