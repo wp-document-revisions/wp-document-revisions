@@ -614,4 +614,28 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( $instance['post_status']['private'], 'private' );
 		self::assertFalse( $instance['post_status']['draft'], 'draft' );
 	}
+
+	/**
+	 * Load the block widget.
+	 */
+	public function test_widget_publ_block() {
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// remove the generic block to avoid duplicate message.
+		unregister_block_type( 'wp-document-revisions/documents-widget' );
+
+		global $wpdr_widget;
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+
+		ob_start();
+		wpdr_widgets_block_init();
+		$output = ob_get_clean();
+
+		self::assertTrue( true, 'widget run' );
+	}
+
 }

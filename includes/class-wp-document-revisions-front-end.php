@@ -516,6 +516,7 @@ class WP_Document_Revisions_Front_End {
 		register_block_type(
 			'wp-document-revisions/documents-shortcode',
 			array(
+				'description'     => __( 'This block provides a list of all documents meeting the selection criteria and is functionally equivalent to the [documents] shortcode.', 'wp-document-revisions' ),
 				'editor_script'   => 'wpdr-documents-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
 				'attributes'      => array(
@@ -603,6 +604,7 @@ class WP_Document_Revisions_Front_End {
 		register_block_type(
 			'wp-document-revisions/revisions-shortcode',
 			array(
+				'description'     => __( 'This block provides a list of all the revisions of a selected document and is functionally equivalent to the [documents_revisions] shortcode.', 'wp-document-revisions' ),
 				'editor_script'   => 'wpdr-revisions-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
 				'attributes'      => array(

@@ -265,6 +265,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		register_block_type(
 			'wp-document-revisions/documents-widget',
 			array(
+				'description'     => __( 'This block provides a block of the most recently changed documentsand is functionally equivalent to the recently revised widget.', 'wp-document-revisions' ),
 				'editor_script'   => 'wpdr-documents-widget-editor',
 				'editor_style'    => 'wpdr-documents-widget-editor-style',
 				'render_callback' => array( $this, 'wpdr_documents_widget_display' ),

@@ -238,23 +238,32 @@ class WP_Document_Revisions_Manage_Rest {
 		// protect various fields.
 		$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
 		$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
-		if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
-			// description may leak the slug as generated images would be built using the slug name.
-			$response->data['description']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
-			$response->data['media_details']           = __( '<!-- protected -->', 'wp-document-revisions' );
-		} elseif ( $doc_dir !== $std_dir ) {
-			// need to correct link.
-			require_once ABSPATH . '/wp-admin/includes/file.php';
-			$home    = get_home_path();
-			$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
-			$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
-			if ( isset( $response->data['description']['rendered'] ) ) {
-				$response->data['description']['rendered'] = str_replace( $std_dir, $doc_dir, $response->data['description']['rendered'] );
-			}
-			if ( isset( $response->data['media_details']['sizes'] ) ) {
-				foreach ( (array) $response->data['media_details']['sizes'] as $size => $sizeinfo ) {
-					if ( isset( $sizeinfo['source_url'] ) ) {
-						$response->data['media_details']['sizes'][ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
+		// description may leak the slug as generated images would be built using the slug name.
+		$response->data['description']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
+
+		// deal with meta_data - media_details).
+		if ( isset( $response->data['media_details'] ) ) {
+			if ( $response->data['media_details'] instanceof stdClass ) {
+				// attachment meta data not present so cannot expose anything.
+				null;
+			} else {
+				if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
+					// cannot trust the metadate, treat as not present.
+					$response->data['media_details'] = new stdClass();
+				} elseif ( $doc_dir !== $std_dir ) {
+					// need to correct link.
+					if ( isset( $response->data['media_details']['sizes'] ) ) {
+						$block = $response->data['media_details']['sizes'];
+						require_once ABSPATH . '/wp-admin/includes/file.php';
+						$home    = get_home_path();
+						$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
+						$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
+						foreach ( $block as $size => $sizeinfo ) {
+							if ( isset( $sizeinfo['source_url'] ) ) {
+								$block[ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
+							}
+						}
+						$response->data['media_details']['sizes'] = $block;
 					}
 				}
 			}

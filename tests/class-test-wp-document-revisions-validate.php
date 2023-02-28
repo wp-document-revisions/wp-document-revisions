@@ -311,9 +311,13 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// get the post_content from $editor_public_post_2.
 		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
-
 		global $wpdr;
 		$attach_id = $wpdr->extract_document_id( $content );
+
+		if ( is_numeric( $content ) ) {
+			// if old format, it will be corrected to new format.
+			$content = $wpdr->format_doc_id( $content );
+		}
 
 		// expected fix text parameters.
 		$fix_parms = '(' . self::$editor_public_post_2 . ',4,' . $attach_id . ')';
@@ -368,6 +372,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
 
 		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		if ( $response instanceof WP_Error ) {
+			// Should not happen, but will help debugging.
+			console_log( $response->get_error_code() );
+			console_log( $response->get_error_message() );
+		}
 
 		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );

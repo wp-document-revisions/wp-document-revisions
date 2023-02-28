@@ -32,6 +32,7 @@
 			this.$('#misc-publishing-actions a').click(this.enableSubmit);
 			this.$('input, select').on('change', this.enableSubmit);
 			this.$('input[type=text], textarea').on('keyup', this.enableSubmit);
+			this.$('#sample-permalink').on('change', this.enableSubmit);
 			this.$('#content-add_media').click(this.cookieFalse);
 			this.$('#postimagediv .inside').click(this.cookieTrue);
 			this.$('#publishing-action').click(this.buildContent);
@@ -252,12 +253,11 @@
 			if (this.hasUpload) {
 				return;
 			}
-			// On upload set the document identier in the new format.
+			// On upload set the document identifer in the new format.
 			// This will throw away the description for an existing post - but it is in content.
 			this.window.jQuery('#post_content').val('<!-- WPDR '+attachmentID+' -->');
 			this.window.jQuery('#message').hide();
-			this.window.jQuery('#revision-summary').show();
-			this.window.jQuery(':button, :submit', '#submitpost').removeAttr('disabled');
+			this.enableSubmit();
 			this.hasUpload = true;
 			this.window.tb_remove();
 			this.window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn();

@@ -158,7 +158,7 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 									type: 'boolean',
 									checked: attributes.show_thumb,
 									label: __( 'Show featured image?', 'wp-document-revisions' ),
-								  help: __( 'Under some conditons WordPress can generate an image for Page 1 of PDF documents. If present this will be displayed as a Featured Image.', 'wp-document-revisions' ),
+								  help: __( 'Under certain conditons WordPress can generate an image for Page 1 of PDF documents. If created this will be used as the Featured Image.', 'wp-document-revisions' ),
 									onChange: function( val ) {
 											setAttributes( { show_thumb: val } );
 										}

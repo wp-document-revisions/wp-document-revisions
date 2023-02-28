@@ -37,10 +37,10 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.4.0';
+	public $version = '3.5.0';
 
 	/**
-	 * The WP default directory cache.
+	 * The WP default upload directory cache.
 	 *
 	 * @var Array $wp_default_dir
 	 *
@@ -49,13 +49,22 @@ class WP_Document_Revisions {
 	public static $wp_default_dir = array();
 
 	/**
-	 * The document directory cache.
+	 * The document upload directory cache.
 	 *
 	 * @var String $wpdr_document_dir
 	 *
 	 * @since 3.2
 	 */
 	public static $wpdr_document_dir = null;
+
+	/**
+	 * The document admin class.
+	 *
+	 * @var object $admin
+	 *
+	 * @since 3.5
+	 */
+	public $admin = null;
 
 	/**
 	 * Whether processing document or image directory.
@@ -105,6 +114,9 @@ class WP_Document_Revisions {
 	public function __construct() {
 		self::$instance = &$this;
 
+		// set the standard default directory - creating the cache (before applying filter).
+		self::$wp_default_dir = wp_upload_dir( null, true, true );
+
 		// admin.
 		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
 		add_action( 'plugins_loaded', array( &$this, 'i18n' ), 5 );
@@ -147,6 +159,7 @@ class WP_Document_Revisions {
 		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
 		add_filter( 'redirect_canonical', array( &$this, 'redirect_canonical_filter' ), 10, 2 );
+		add_action( 'wp_ajax_sample-permalink', array( &$this, 'update_post_slug_field' ), 0 );
 
 		// RSS.
 		add_filter( 'private_title_format', array( &$this, 'no_title_prepend' ), 20 );
@@ -154,17 +167,19 @@ class WP_Document_Revisions {
 		add_filter( 'the_title', array( &$this, 'add_revision_num_to_title' ), 20, 2 );
 
 		// uploads.
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10, 2 );
 		add_filter( 'attachment_link', array( &$this, 'attachment_link_filter' ), 10, 2 );
+		add_filter( 'get_attached_file', array( &$this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
 		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 10, 3 );
+		// initialise document directory (will itself populate cache).
+		$this->document_upload_dir();
 
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
 
 		// cache clean.
-		add_action( 'save_post_document', array( &$this, 'clear_cache' ) );
+		add_action( 'save_post_document', array( &$this, 'clear_cache' ), 20 );
 
 		// Edit Flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
@@ -184,16 +199,16 @@ class WP_Document_Revisions {
 		global $wpdr_fe, $wpdr_widget;
 
 		if ( ! $wpdr_fe ) {
-			include_once __DIR__ . '/class-wp-document-revisions-front-end.php';
+			require_once __DIR__ . '/class-wp-document-revisions-front-end.php';
 			$wpdr_fe = new WP_Document_Revisions_Front_End( $this );
 		}
 		if ( ! $wpdr_widget ) {
-			include_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
+			require_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 		}
 
 		// load validation code.
-		include_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
+		require_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
 		// Manage REST interface for documents (include code).
@@ -251,34 +266,6 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Clear document directory name cache
-	 *
-	 * Used by Admin function when changing options.
-	 *
-	 * @return void
-	 *
-	 * @since 3.2
-	 */
-	public function clear_document_dir_cache() {
-		self::$wpdr_document_dir = null;
-	}
-
-
-	/**
-	 * Set the default content directory name into cacle.
-	 *
-	 * @return void
-	 *
-	 * @since 3.2
-	 */
-	private function set_default_dir_cache() {
-		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
-		self::$wp_default_dir = wp_upload_dir();
-		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ), 10 );
-	}
-
-
-	/**
 	 * Extends class with admin functions when in admin backend.
 	 *
 	 * @since 0.5
@@ -292,7 +279,7 @@ class WP_Document_Revisions {
 			}
 		}
 
-		include_once __DIR__ . '/class-wp-document-revisions-admin.php';
+		require_once __DIR__ . '/class-wp-document-revisions-admin.php';
 		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 	}
 
@@ -336,8 +323,8 @@ class WP_Document_Revisions {
 			'map_meta_cap'         => true,
 			'has_archive'          => true,
 			'hierarchical'         => false,
-			'menu_position'        => null,
-			'register_meta_box_cb' => array( &$this->admin, 'meta_cb' ),
+			'menu_position'        => 42,
+			'register_meta_box_cb' => array( $this->admin, 'meta_cb' ),
 			'supports'             => array( 'title', 'editor', 'author', 'revisions', 'custom-fields', 'thumbnail' ),
 			'menu_icon'            => plugins_url( '../img/menu-icon.png', __FILE__ ),
 		);
@@ -387,11 +374,6 @@ class WP_Document_Revisions {
 		// Ensure that there is a post-thumbnail size set - could/should be set by theme - copy from thumbnail.
 		if ( ! array_key_exists( 'post-thumbnail', wp_get_additional_image_sizes() ) ) {
 			add_image_size( 'post-thumbnail', get_option( 'thumbnail_size_w' ), get_option( 'thumbnail_size_h' ), false );
-		}
-
-		if ( empty( self::$wp_default_dir ) ) {
-			// Set the default upload directory cache.
-			$this->set_default_dir_cache();
 		}
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later).
@@ -660,8 +642,7 @@ class WP_Document_Revisions {
 			}
 		}
 
-		// although get_attached_file uses the standard directory,
-		// not used, so doesn't matter so no correction needed.
+		// no need to get the correct directory as we just want the extension.
 		return $this->get_extension( get_attached_file( $attachment->ID ) );
 	}
 
@@ -710,19 +691,28 @@ class WP_Document_Revisions {
 		// These rules will define the trailing / as optional, as will be the extension (since it not used in the search).
 
 		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		// document revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		// documents in the form of [doc_slug]/yyyy/mm/[slug].[extension], [doc_slug]/yyyy/mm/[slug].[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+
+		// documents in the form of [doc_slug]/yyyy/mm/.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2}){0,1}/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]';
+
+		// and their pages.
+		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]';
+
+		// document revisions in the form of [doc_slug]/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
+		$my_rules[ $slug . '/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]&revision=$matches[2]';
 
 		// document revision feeds in the form of [doc_slug]/[slug].[extension]/feed/, [doc_slug]/[slug]/feed/, etc.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
 
 		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
@@ -782,17 +772,17 @@ class WP_Document_Revisions {
 		}
 
 		// if no permastruct.
-		if ( '' === $wp_rewrite->permalink_structure || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
+		if ( '' === $wp_rewrite->permalink_structure || empty( $document->post_name ) || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
 			$link = site_url( '?post_type=document&p=' . $document->ID );
 			if ( $revision_num ) {
 				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 		} else {
-			// build documents/yyyy/mm/slug.
+			// build documents(/yyyy/mm)/slug.
 			$extension  = $this->get_file_type( $document );
-			$year_month = str_replace( '-', '/', substr( $document->post_date, 0, 7 ) );
+			$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
 
-			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . '/' . $year_month . '/';
+			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . $year_month . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
 			// add trailing slash if user has set it as their permalink.
@@ -879,9 +869,9 @@ class WP_Document_Revisions {
 		);
 
 		$revs     = array();
-		$post_rev = $post_id . '-autosave';
+		$post_rev = $post_id . '-autosave-v1';
 		foreach ( $get_revs as $id => &$get_rev ) {
-			if ( false === strpos( $get_rev->post_name, $post_rev ) ) {
+			if ( $get_rev->post_name !== $post_rev ) {
 				// not an autosave.
 				$revs[ $id ] = $get_rev;
 			}
@@ -952,9 +942,9 @@ class WP_Document_Revisions {
 
 		// ignore autosaves keeping only real revisions.
 		$output   = array();
-		$post_rev = $post_id . '-autosave';
+		$post_rev = $post_id . '-autosave-v1';
 		foreach ( $revs as $rev ) {
-			if ( false === strpos( $rev->post_name, $post_rev ) ) {
+			if ( $rev->post_name !== $post_rev ) {
 				// not an autosave.
 				$output[ $i++ ] = $rev->ID;
 			}
@@ -1052,6 +1042,9 @@ class WP_Document_Revisions {
 			$rev_id = $this->get_revision_id( $version, $post->ID );
 		}
 
+		// ensure we use the document upload directory.
+		self::$doc_image = false;
+
 		// get the attachment (id in post_content of rev_id).
 		$attach = $this->get_document( $rev_id );
 		$exists = ( $attach instanceof WP_Post );
@@ -1067,28 +1060,16 @@ class WP_Document_Revisions {
 		if ( $attach instanceof WP_Post ) {
 			$file = get_attached_file( $attach->ID );
 		} else {
-				// create message on failure to find attachment. (More banal if one filters to false).
-				$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
-				wp_die(
-					esc_html( $msg ),
-					null,
-					array( 'response' => 403 )
-				);
-				// for unit testing.
-				$wp_query->is_404 = true;
-				return false;
-		}
-
-		// Above used a cached version of std directory, so cannot change within call and may be wrong,
-		// so possibly replace it in the output.
-		if ( empty( self::$wp_default_dir ) ) {
-			// Set the default upload directory cache.
-			$this->set_default_dir_cache();
-		}
-		$std_dir = self::$wp_default_dir['basedir'];
-		$doc_dir = $this->document_upload_dir();
-		if ( $std_dir !== $doc_dir ) {
-			$file = str_replace( $std_dir, $doc_dir, $file );
+			// create message on failure to find attachment. (More banal if one filters to false).
+			$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
+			wp_die(
+				esc_html( $msg ),
+				null,
+				array( 'response' => 403 )
+			);
+			// for unit testing.
+			$wp_query->is_404 = true;
+			return false;
 		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line.
@@ -1553,8 +1534,6 @@ class WP_Document_Revisions {
 	 * @return string path to document
 	 */
 	public function document_upload_dir() {
-		global $wpdb;
-
 		if ( ! is_null( self::$wpdr_document_dir ) ) {
 			return self::$wpdr_document_dir;
 		}
@@ -1562,10 +1541,6 @@ class WP_Document_Revisions {
 		// If no options set, default to normal upload dir.
 		$dir = get_site_option( 'document_upload_directory' );
 		if ( ! ( $dir ) ) {
-			if ( empty( self::$wp_default_dir ) ) {
-				// Set the default upload directory cache.
-				$this->set_default_dir_cache();
-			}
 			self::$wpdr_document_dir = self::$wp_default_dir['basedir'];
 			return self::$wpdr_document_dir;
 		}
@@ -1581,11 +1556,37 @@ class WP_Document_Revisions {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
+			global $wpdb;
 			$dir                     = str_replace( '%site_id%', $wpdb->blogid, $dir );
 			self::$wpdr_document_dir = $dir;
 		}
 
 		return $dir;
+	}
+
+
+	/**
+	 * Filter the attached file for documents to obviate  use of cached upload directory.
+	 *
+	 * @since 3.5.0
+	 * @param string/false $file          The file path to where the attached file should be.
+	 * @param int          $attachment_id Attachment Id.
+	 * @return string path to document
+	 */
+	public function get_attached_file_filter( $file, $attachment_id ) {
+		// returned false.
+		if ( ! $file ) {
+			return $file;
+		}
+
+		// only for a document.
+		if ( ! $this->verify_post_type( $attachment_id ) ) {
+			return $file;
+		}
+
+		// need to rebuild file name.
+		$file = get_post_meta( $attachment_id, '_wp_attached_file', true );
+		return trailingslashit( self::$wpdr_document_dir ) . $file;
 	}
 
 
@@ -1625,8 +1626,10 @@ class WP_Document_Revisions {
 			return $dir;
 		}
 
-		// Ignore if dealing with thumbnail on document page.
-		if ( self::$doc_image ) {
+		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
+			self::$doc_image = true;
 			return $dir;
 		}
 
@@ -1650,21 +1653,40 @@ class WP_Document_Revisions {
 				'_wp_post_thumbnail_html',
 				'post_thumbnail_meta_box',
 			);
-			foreach ( $trace as $traceline ) :
+			foreach ( $trace as $traceline ) {
 				if ( in_array( $traceline['function'], $functions, true ) ) {
 					self::$doc_image = true;
 					return $dir;
 				}
-			endforeach;
+			}
 		}
 
-		self::$doc_image = false;
-		$dir['path']     = $this->document_upload_dir() . $dir['subdir'];
-		$dir['url']      = home_url( '/' . $this->document_slug() ) . $dir['subdir'];
-		$dir['basedir']  = $this->document_upload_dir();
-		$dir['baseurl']  = home_url( '/' . $this->document_slug() );
+		// set the document directory.
+		return $this->document_upload_dir_set( $dir );
+	}
 
-		return $dir;
+
+	/**
+	 * Return the document upload file information.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $dir defaults passed from WP.
+	 * @return array $dir document directory
+	 */
+	public function document_upload_dir_set( $dir ) {
+
+		self::$doc_image = false;
+		$doc_dir         = untrailingslashit( self::$wpdr_document_dir );
+		$new_dir         = array(
+			'path'    => $doc_dir . '/' . $dir['subdir'],
+			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
+			'basedir' => $doc_dir,
+			'baseurl' => home_url( '/' . $this->document_slug() ),
+			'error'   => false,
+		);
+
+		return $new_dir;
 	}
 
 
@@ -1701,8 +1723,10 @@ class WP_Document_Revisions {
 			return $file;
 		}
 
-		// Ignore if dealing with thumbnail on document page.
-		if ( self::$doc_image ) {
+		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
+			self::$doc_image = true;
 			return $file;
 		}
 
@@ -1717,15 +1741,19 @@ class WP_Document_Revisions {
 				'_wp_post_thumbnail_html',
 				'post_thumbnail_meta_box',
 			);
-			foreach ( $trace as $traceline ) :
+			foreach ( $trace as $traceline ) {
 				if ( in_array( $traceline['function'], $functions, true ) ) {
 					self::$doc_image = true;
 					return $file;
 				}
-			endforeach;
+			}
 		}
 
 		self::$doc_image = false;
+		// we are going to load the attachment into the upload directory, so invoke filter.
+		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
+		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
+
 		// hash and replace filename, appending extension.
 		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
@@ -1756,14 +1784,16 @@ class WP_Document_Revisions {
 		}
 
 		// Ignore if dealing with thumbnail on document page.
-		if ( self::$doc_image ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
+			self::$doc_image = true;
 			return $file;
 		}
 
 		global $pagenow;
 
 		if ( 'async-upload.php' === $pagenow ) {
-			// got past cookie, but may be in thumbnail code.
+			// got past cookie, but still may be in thumbnail code.
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
 			$functions = array(
@@ -1771,12 +1801,12 @@ class WP_Document_Revisions {
 				'_wp_post_thumbnail_html',
 				'post_thumbnail_meta_box',
 			);
-			foreach ( $trace as $traceline ) :
+			foreach ( $trace as $traceline ) {
 				if ( in_array( $traceline['function'], $functions, true ) ) {
 					self::$doc_image = true;
 					return $file;
 				}
-			endforeach;
+			}
 		}
 
 		self::$doc_image = false;
@@ -1786,6 +1816,28 @@ class WP_Document_Revisions {
 		return $file;
 	}
 
+
+	/**
+	 * Checks if the attachment is a document.
+	 *
+	 * @since 3.5.0.
+	 *
+	 * @param WP_Post $attach An attachment object.
+	 */
+	public static function check_doc_attach( $attach ) {
+		if ( 'document' !== get_post_type( $attach->post_parent ) ) {
+			return false;
+		}
+		// normal document attachment.
+		if ( $attach->post_title === $attach->post_name ) {
+			return true;
+		}
+		// duplicate name.
+		if ( 0 === strpos( $attach->post_name, $attach->post_title . '-' ) ) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Renames the generated attachment meta data file names to hide the attachment slug.
@@ -1802,27 +1854,25 @@ class WP_Document_Revisions {
 	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {
 		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+		if ( ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
-		// get file for attachment.
-		$file = get_attached_file( $attachment_id );
-		// belt and braces in case above 'deleted' file from media and not document directory.
-		$std_dir = self::$wp_default_dir['basedir'];
-		$doc_dir = $this->document_upload_dir();
-		if ( $std_dir !== $doc_dir ) {
-			$file = str_replace( $std_dir, $doc_dir, $file );
-		}
-		$file_dir = trailingslashit( dirname( $file ) );
+		// ensure we use the document upload directory.
+		self::$doc_image = false;
 
 		if ( array_key_exists( 'sizes', $metadata ) ) {
-			$new_name = md5( $attach->post_title );
+			// get file directory of attachment.
+			$file     = get_attached_file( $attach->ID );
+			$file_dir = trailingslashit( dirname( $file ) );
+
+			$title    = $attach->post_title;
+			$new_name = md5( $title . microtime() );
 			// move file and update.
 			foreach ( $metadata['sizes'] as $size => $sizeinfo ) {
-				if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-						$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 						// Use copy and unlink because rename breaks streams.
 						// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
@@ -1837,6 +1887,9 @@ class WP_Document_Revisions {
 		}
 		// add indicator to note it has been changeed *o no need).
 		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+
+		// have finished loading the attachment into the upload directory, so remove it.
+		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 
 		return $metadata;
 	}
@@ -1854,9 +1907,8 @@ class WP_Document_Revisions {
 	 * @param int $attachment_id Current attachment ID.
 	 */
 	public function hide_exist_doc_attach_slug( $attachment_id ) {
-		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( $attach->post_title !== $attach->post_name || 'document' !== get_post_type( $attach->post_parent ) ) {
+		if ( ! self::check_doc_attach( $attach ) ) {
 			return;
 		}
 		// has it been converted.
@@ -1880,22 +1932,20 @@ class WP_Document_Revisions {
 
 		// The metadata contains the same name as the document.
 
+		// ensure we use the document upload directory.
+		self::$doc_image = false;
+
 		// get file for attachment (to know the directory stored).
-		$file = get_attached_file( $attachment_id );
-		// belt and braces in case file from media and not document directory.
-		$std_dir = self::$wp_default_dir['basedir'];
-		$doc_dir = $this->document_upload_dir();
-		if ( $std_dir !== $doc_dir ) {
-			$file = str_replace( $std_dir, $doc_dir, $file );
-		}
+		$file     = get_attached_file( $attachment_id );
 		$file_dir = trailingslashit( dirname( $file ) );
 
-		$new_name = md5( $attach->post_title );
+		$title    = $attach->post_title;
+		$new_name = md5( $title . microtime() );
 		// move file and update.
 		foreach ( $meta_sizes as $size => $sizeinfo ) {
-			if ( 0 === strpos( $sizeinfo['file'], $attach->post_title ) ) {
+			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-					$new_file = str_replace( $attach->post_title, $new_name, $sizeinfo['file'] );
+					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 					// Use copy and unlink because rename breaks streams.
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 					if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
@@ -1984,6 +2034,7 @@ class WP_Document_Revisions {
 	public function clear_cache( $post_id ) {
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
+		clean_post_cache( $post_id );
 	}
 
 
@@ -2610,7 +2661,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Returns the.document associated with a post.
+	 * Returns the.document attachment associated with a post.
 	 *
 	 * @param id $post_id ID of a post object (document or revision).
 	 * @return WP_Post||false
@@ -2660,7 +2711,7 @@ class WP_Document_Revisions {
 	 * @return string
 	 */
 	public function format_doc_id( $post_id ) {
-		return '<!-- WPDR ' . (int) $post_id . ' -->';
+		return '<!-- WPDR ' . (string) $post_id . ' -->';
 	}
 
 
@@ -2733,8 +2784,8 @@ class WP_Document_Revisions {
 			return $url;
 		}
 
-		// user can't read revisions anyways, so just give them the URL of the latest revision.
-		if ( ! current_user_can( 'read_document_revisions' ) ) {
+		// user can't read revisions anyways, so just give them the URL of the latest document.
+		if ( $document->post_parent > 0 && ! current_user_can( 'read_document_revisions' ) ) {
 			return get_permalink( $document->post_parent );
 		}
 
@@ -2743,8 +2794,11 @@ class WP_Document_Revisions {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$revision_id = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT ID FROM $wpdb->posts WHERE post_parent = %d AND (post_content = %d OR post_content LIKE %s ) LIMIT 1",
+				"SELECT ID FROM $wpdb->posts WHERE post_parent = %d " .
+				'AND post_name <> %s ' .
+				'AND (post_content = %d OR post_content LIKE %s ) LIMIT 1',
 				$document->post_parent,
+				$document->post_parent . '-autosave-v1',
 				$post_id,
 				$this->format_doc_id( $post_id ) . '%'
 			)
@@ -2902,6 +2956,48 @@ class WP_Document_Revisions {
 		}
 
 		return untrailingslashit( $redirect );
+	}
+
+
+	/**
+	 * Allows the post slug to be updated.
+	 *
+	 * Replaces the WordPress supplied one.
+	 *
+	 * @since 3.5.0
+	 */
+	public function update_post_slug_field() {
+		check_ajax_referer( 'samplepermalink', 'samplepermalinknonce' );
+		$post_id = isset( $_POST['post_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : 0;
+		$title   = isset( $_POST['new_title'] ) ? sanitize_text_field( wp_unslash( $_POST['new_title'] ) ) : '';
+		$slug    = isset( $_POST['new_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['new_slug'] ) ) : null;
+
+		if ( ! $this->verify_post_type( $post_id ) ) {
+			// not a document so do nothing. If another function linked, then exit otherwise do as sample.
+			return;
+		}
+
+		// update the post name with the slug and then the guid - direct in the database.
+		$doc            = get_post( $post_id );
+		$slug           = wp_unique_post_slug( $slug, $post_id, $doc->post_status, 'document', 0 );
+		$doc->post_name = $slug;
+		$guid           = $this->permalink( $doc->guid, $doc, false, '' );
+
+		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$post_table = "{$wpdb->prefix}posts";
+		$sql        = $wpdb->prepare(
+			"UPDATE `$post_table` SET `post_name` = %s, guid = %s WHERE `id` = %d ",
+			$slug,
+			$guid,
+			$post_id
+		);
+		$res        = $wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$this->clear_cache( $post_id );
+
+		// phpcs:ignore  WordPress.Security.EscapeOutput
+		wp_die( get_sample_permalink_html( $post_id, $title, $slug ) );
 	}
 
 
