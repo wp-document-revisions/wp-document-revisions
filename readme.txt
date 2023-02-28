@@ -2,6 +2,7 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
+Requires at least: 4.6
 Tested up to: 6.1.1
 Stable tag: 3.5.0
 
@@ -204,11 +205,11 @@ In: class-wp-document-revisions.php
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with WP 5.8
+* FIX: Blocks are categorised within the Editor differently with 5.8
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
 * FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
 * FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 
@@ -874,7 +875,9 @@ Yes. You can use the [Simple Taxonomy Refreshed plugin](https://wordpress.org/pl
 
 = Can I put my documents in folders? =
 
-WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/). Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/) plugin. Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+
+Since a document can have many categories assigned at the same time, this is logically equivalent to being in many folders simultaneously.
 
 = What if I want even more control over my workflow? =
 
@@ -1081,13 +1084,14 @@ It is also possible to add formatting parameters:
 
 = Block Usage =
 
-The block version of the widget called `Latest Documents`can be used on pages or posts. It cannot be converted to or from a shortcode block.
- 
-= Block supports properties =
+The block version of the widget called `Latest Documents` can be used on pages or posts. It cannot be converted to or from a shortcode block as there is no equivalent.
+
+== Block supports properties ==
 
 Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
 
 These attributes are align, color, spacing and typography and these attributes have been added to all blocks.
+
 
 == Translations ==
 
@@ -1109,7 +1113,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
