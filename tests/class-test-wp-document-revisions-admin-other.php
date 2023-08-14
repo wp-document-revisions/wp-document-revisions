@@ -576,6 +576,9 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_filter_documents_list() {
 		global $wpdr;
 
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+
 		global $typenow;
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$typenow = 'document';
@@ -586,7 +589,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		console_log( $output );
-		console_log( wp_get_current_user()->name );
+		console_log( $current_user->name );
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
@@ -597,7 +600,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
 		self::assertEquals( 0, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
-		self::assertEquals( 1, (int) substr_count( $output, wp_get_current_user()->name ), 'editor' );
+		self::assertEquals( 1, (int) substr_count( $output, $current_user->name ), 'editor' );
 	}
 
 	/**
