@@ -176,17 +176,17 @@
 		};
 
 		WPDocumentRevisions.prototype.cookieFalse = function() {
-			wpCookies.set( 'doc_image', 'false', 24 * 60 * 60, false, false, this.secure );
+			wpCookies.set( 'doc_image', 'false', 60 * 60, '/wp-admin', false, this.secure );
 		};
 
 		WPDocumentRevisions.prototype.cookieTrue = function() {
-			wpCookies.set( 'doc_image', 'true', 24 * 60 * 60, false, false, this.secure );
+			wpCookies.set( 'doc_image', 'true', 60 * 60, '/wp-admin', false, this.secure );
 			this.$(':button, :submit', '#submitpost').removeAttr('disabled');
 			// Propagation will be stopped in postimagediv to stop document event setting cookie false.
 		};
 
 		WPDocumentRevisions.prototype.cookieDelete = function() {
-			wpCookies.set( 'doc_image', 'true', -1, false, false, this.secure );
+			wpCookies.set( 'doc_image', 'true', -60, '/wp-admin', false, this.secure );
 		};
 
 		WPDocumentRevisions.prototype.updateTimestamps = function() {
@@ -233,9 +233,11 @@
 			} else if ( /^\d+$/.test(content) ) {
 				attach = ['<!-- WPDR ' + content + ' -->'];
 			} else {
+				// match returns array, so ensu
 				attach = content.match('<!-- WPDR [0-9]+ -->');
 			}
-			newtext = newtext.replace(/<!-- WPDR [0-9]+ -->/, '');
+			// might have an extra space incldes in the id provided.
+			newtext = newtext.replace(/<!-- WPDR \s*[0-9]+ -->/, '');
 			newtext = attach[0] + newtext;
 			// set the desired text eeverywhere.
 			this.window.jQuery('#curr_content').val(newtext);
@@ -253,14 +255,15 @@
 			if (this.hasUpload) {
 				return;
 			}
-			// On upload set the document identifer in the new format.
+			// On upload set the document identifier in the new format.
+			var docID = /\d+$/.exec(attachmentID);
 			// This will throw away the description for an existing post - but it is in content.
-			this.window.jQuery('#post_content').val('<!-- WPDR '+attachmentID+' -->');
+			this.window.jQuery('#post_content').val('<!-- WPDR '+docID+' -->');
 			this.window.jQuery('#message').hide();
-			this.enableSubmit();
 			this.hasUpload = true;
 			this.window.tb_remove();
 			this.window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn();
+			this.enableSubmit();
 			if (this.window.jQuery('#sample-permalink').length !== 0) {
 				return this.window.jQuery('#sample-permalink').html(this.window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{1,7})?@$/i, wp_document_revisions.extension));
 			}

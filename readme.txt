@@ -2,9 +2,8 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Requires at least: 4.6
-Tested up to: 6.1.1
-Stable tag: 3.5.0
+Tested up to: 6.3.0
+Stable tag: 3.6.0
 
 == Description ==
 
@@ -89,7 +88,6 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * **Bulk Import** - how to batch import a directory (or other list) of files as documents
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
-* **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 
@@ -180,9 +178,18 @@ In: class-wp-document-revisions.php
 
 == Changelog ==
 
+= 3.6.0 =
+
+* NEW: JS scripts will be called with Defer in WP 6.3 onwards.
+* NEW: User pulldowns will show only relevant users.
+* NEW: Filter document_revisions_owner withdrawn as parameter acted on deprecated.
+* NEW: If role already has "read_documents" capability, do not touch on plugin reactivation.
+* NEW: Optionally stop direct access to document files to force access via WordPress.
+* NEW: Filter to switch off attachment MD5 format validation.
+* NEW: Filter document_internal_filename for updating internal file name additionally passed the original name.
+
 = 3.5.0 =
 
-" SECURITY: Rest media interface may expose document name. 
 * NEW: Site can decide to save permalinks without year/month part.
 * NEW: Permalinks may be updated on the documents screen.
 * FIX: guid field for documents was generally incorrect. Will be stored as a valid value.
@@ -190,6 +197,7 @@ In: class-wp-document-revisions.php
 * FIX: Document permalink month can be incorrect when saved at month end. (#300).
 * FIX: Valid document may not be found.
 " FIX: Improve notification process when activation user does not have edit_documents capability.
+" FIX: Rest media interface may expose document name, 
 
 = 3.4.0 =
 
@@ -205,11 +213,11 @@ In: class-wp-document-revisions.php
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with 5.8
+* FIX: Blocks are categorised within the Editor differently with WP 5.8
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
 * FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
 * FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 
@@ -668,12 +676,6 @@ In: class-wp-document-revisions.php
 
 Filters the MIME type for a file before it is processed by WP Document Revisions.
 
-== Filter document_revisions_owners ==
-
-In: class-wp-document-revisions-admin.php
-
-Filters the author metabox query for document owners.
-
 == Filter document_revisions_serve_file_headers ==
 
 In: class-wp-document-revisions.php
@@ -734,6 +736,18 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
+== Filter document_stop_direct_file_access
+
+In: class-wp-document-revisions.php
+
+Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
+
+== Filter document_stop_direct_file_access
+
+In: class-wp-document-revisions.php
+
+Filter to add a directory component to the .htaccess rule to stop direct file access to documents.
+
 == Filter document_taxonomy_term_count ==
 
 In: class-wp-document-revisions.php
@@ -757,6 +771,12 @@ Filters setting the new document status to private.
 In: class-wp-document-revisions.php
 
 Filter to switch off use of standard Workflow States taxonomy. For internal use.
+
+== Filter document_validate_md5 ==
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filter to switch off md5 format attachment validation.
 
 == Filter document_verify_feed_key ==
 
@@ -1084,14 +1104,13 @@ It is also possible to add formatting parameters:
 
 = Block Usage =
 
-The block version of the widget called `Latest Documents` can be used on pages or posts. It cannot be converted to or from a shortcode block as there is no equivalent.
-
-== Block supports properties ==
+The block version of the widget called `Latest Documents`can be used on pages or posts. It cannot be converted to or from a shortcode block.
+ 
+= Block supports properties =
 
 Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
 
 These attributes are align, color, spacing and typography and these attributes have been added to all blocks.
-
 
 == Translations ==
 
@@ -1113,13 +1132,17 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
 = Taxonomy management =
 
 * [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+
+= Email notification and distribution =
+
+* [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
 
 = Document workflow management =
 

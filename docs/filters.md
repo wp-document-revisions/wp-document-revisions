@@ -126,12 +126,6 @@ In: class-wp-document-revisions.php
 
 Filters the MIME type for a file before it is processed by WP Document Revisions.
 
-## Filter document_revisions_owners
-
-In: class-wp-document-revisions-admin.php
-
-Filters the author metabox query for document owners.
-
 ## Filter document_revisions_serve_file_headers
 
 In: class-wp-document-revisions.php
@@ -192,6 +186,12 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
+## Filter document_stop_direct_file_access
+
+In: class-wp-document-revisions.php
+
+Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
+
 ## Filter document_taxonomy_term_count
 
 In: class-wp-document-revisions.php
@@ -215,6 +215,12 @@ Filters setting the new document status to private.
 In: class-wp-document-revisions.php
 
 Filter to switch off use of standard Workflow States taxonomy. For internal use.
+
+## Filter document_validate_md5
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filter to switch off md5 format attachment validation.
 
 ## Filter document_verify_feed_key
 

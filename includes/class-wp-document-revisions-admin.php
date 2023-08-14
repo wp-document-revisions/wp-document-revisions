@@ -91,6 +91,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'manage_document_posts_custom_column', array( &$this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( &$this, 'filter_documents_list' ) );
 		add_filter( 'parse_query', array( &$this, 'convert_workflow_state_to_post_status' ) );
+		add_filter( 'wp_dropdown_users_args', array( $this, 'filter_user_dropdown' ), 10, 2 );
 
 		// settings.
 		add_action( 'admin_init', array( &$this, 'settings_fields' ) );
@@ -324,7 +325,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function no_use_block_editor( $use_block_editor, $post ) {
 		// switch off for documents.
-		if ( 'document' === $post->post_type || $this->verify_post_type( $post ) ) {
+		if ( $this->verify_post_type( $post ) ) {
 			return false;
 		}
 		return $use_block_editor;
@@ -988,7 +989,9 @@ class WP_Document_Revisions_Admin {
 
 		if ( 'media-upload.php' === $pagenow ) {
 			?>
-			<script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {WPDocumentRevisions.bindPostDocumentUploadCB()});</script>
+			<script type="text/javascript">
+				document.addEventListener('DOMContentLoaded', function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});
+			</script>
 			<?php
 		}
 	}
@@ -1185,7 +1188,6 @@ class WP_Document_Revisions_Admin {
 		}
 	}
 
-
 	/**
 	 * Allow some filtering of the All Documents list.
 	 */
@@ -1213,17 +1215,53 @@ class WP_Document_Revisions_Admin {
 				wp_dropdown_categories( $args );
 			}
 
+			// Add (and later remove) the action to get only document authors.
+			if ( current_user_can( 'read_private_documents' ) ) {
+				add_action( 'pre_user_query', array( $this, 'pre_user_query' ) );
+			}
 			// author/owner filtering.
 			$args = array(
-				'name'            => 'author',
-				'show_option_all' => __( 'All owners', 'wp-document-revisions' ),
-				'value_field'     => 'slug',
-				'selected'        => filter_input( INPUT_GET, 'author', FILTER_SANITIZE_SPECIAL_CHARS ),
-				'orderby'         => 'name',
-				'order'           => 'ASC',
+				'name'                => 'author',
+				'show_option_all'     => __( 'All owners', 'wp-document-revisions' ),
+				'value_field'         => 'slug',
+				'selected'            => filter_input( INPUT_GET, 'author', FILTER_SANITIZE_SPECIAL_CHARS ),
+				'orderby'             => 'name',
+				'order'               => 'ASC',
+				'wpdr_added'          => 'list',
+				'has_published_posts' => array( 'document' ),
 			);
 			wp_dropdown_users( $args );
+			remove_action( 'pre_user_query', array( $this, 'pre_user_query' ) );
 		}
+	}
+
+	/**
+	 * Filter the user downdown args to add additional arguments that are normally filtered out. .
+	 *
+	 * @since 3.6
+	 * @param array $query_args  The query arguments for get_users().
+	 * @param array $parsed_args The arguments passed to wp_dropdown_users() combined with the defaults.
+	 */
+	public function filter_user_dropdown( $query_args, $parsed_args ) {
+		if ( array_key_exists( 'wpdr_added', $parsed_args ) ) {
+			if ( 'list' === $parsed_args['wpdr_added'] ) {
+				$query_args['has_published_posts'] = $parsed_args['has_published_posts'];
+			}
+		}
+		return $query_args;
+	}
+
+	/**
+	 * If the user can read Private documents, then include private in the selection.
+	 *
+	 * @since 3.6
+	 * @param Object $query the WP_Query object.
+	 */
+	public function pre_user_query( $query ) {
+		if ( current_user_can( 'read_private_documents' ) ) {
+			$query->query_where = str_replace( "= 'publish'", "IN ('publish', 'private')", $query->query_where );
+		}
+		write_log( $query );
 	}
 
 	/**
@@ -1511,21 +1549,12 @@ class WP_Document_Revisions_Admin {
 		<label class="screen-reader-text" for="post_author_override"><?php esc_html_e( 'Owner', 'wp-document-revisions' ); ?></label>
 		<?php esc_html_e( 'Document Owner', 'wp-document-revisions' ); ?>:
 		<?php
-		/**
-		 * Filters the author metabox query for document owners.
-		 *
-		 * By default is all users, but may be set to 'authors'
-		 *
-		 * @since 0.5
-		 *
-		 * @param string null (all users).
-		 */
 		wp_dropdown_users(
 			array(
-				'who'              => apply_filters( 'document_revisions_owners', '' ),
 				'name'             => 'post_author_override',
 				'selected'         => empty( $post->ID ) ? $user_id : $post->post_author,
 				'include_selected' => true,
+				'capability'       => 'edit_documents',
 			)
 		);
 	}
@@ -1842,8 +1871,8 @@ class WP_Document_Revisions_Admin {
 		 *
 		 * @since 0.5
 		 *
-		 * @param WP_Post link to (new) global post.
-		 * @param WP_Post link to clone of global post.
+		 * @param WP_Post $post     link to (new) global post.
+		 * @param WP_Post $post_pre link to clone of global post.
 		 */
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = apply_filters( 'document_to_private', $post, $post_pre );

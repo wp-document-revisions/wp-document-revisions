@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.5.0';
+	public $version = '3.6.0';
 
 	/**
 	 * The WP default upload directory cache.
@@ -142,6 +142,28 @@ class WP_Document_Revisions {
 		add_action( 'pre_get_posts', array( &$this, 'retrieve_documents' ) );
 
 		// rewrites and permalinks.
+		/**
+		 * Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
+		 *
+		 * By default, documents can be accessed directly using a URL to the document file.
+		 *
+		 * To stop this, add an element to specify all or part of the URL to access the document.
+		 *
+		 * If you have a separate document library and you specify the access path to the library
+		 * then it is safe to use.
+		 *
+		 * You should not use this if your document library contains files using MD5-encoded names 
+		 * that are not documents and that could be read directly since it creates a pattern-based rule
+		 * to block access.
+		 *
+		 * @since 3.6
+		 *
+		 * @param string ''  helps define a more specific sub-directory for no direct file access.
+		 */
+		if ( '' !== apply_filters( 'document_stop_file_access_pattern', '' ) ) {
+			add_action( 'generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ) );
+			add_filter( 'mod_rewrite_rules', array( &$this, 'mod_rewrite_rules' ) );	
+		}
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
@@ -232,6 +254,39 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Callback called when the plugin is rewrite rules are flushed (including activation).
+	 *
+	 * @since 3.6
+	 *
+	 * @return void
+	 */
+	public function generate_rewrite_rules() {
+		global $wp_rewrite;
+		// forbid access to documents directly. Use a placeholder.
+		$wp_rewrite->add_external_rule( 'WPDR', '-' );
+	}
+
+	/**
+	 * Called when the htaccess rules have been created to stop document access (403 error).
+	 *
+	 * @since 3.6
+	 *
+   * @param string $rules mod_rewrite Rewrite rules formatted for .htaccess.
+	 */
+	public function mod_rewrite_rules( $rules ) {
+		// forbid access to documents directly.
+		/**
+		 * Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory).
+		 *
+		 * See above for definition.
+		 */
+		$path_to = trailingslashit( apply_filters( 'document_stop_file_access_pattern', '' ) );
+		// check that the URL points to a file with an MD5 format name. If so, return Forbidden.
+		$rules = preg_replace( '|RewriteRule \^WPDR /- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [R=403,L]", $rules );
+		return $rules;
+	}
+
+	/**
 	 * Called after the plugin is initially activated and checks whether there was a problem with the user not having edit_documents capability.
 	 *
 	 * This can occur if the (admin) user has multiple roles with one denying access overriding the admin access.
@@ -251,6 +306,8 @@ class WP_Document_Revisions {
 			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php esc_html_e( 'You should first check whether you have multiple roles and that each has edit_documents capability.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
 		}
@@ -691,32 +748,32 @@ class WP_Document_Revisions {
 		// These rules will define the trailing / as optional, as will be the extension (since it not used in the search).
 
 		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-(\d+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		// document revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		// documents in the form of [doc_slug]/yyyy/mm/[slug].[extension], [doc_slug]/yyyy/mm/[slug].[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// documents in the form of [doc_slug]/yyyy/mm/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2}){0,1}/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})?/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]';
 
 		// and their pages.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/page/?(\d{1,})/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]';
 
 		// document revisions in the form of [doc_slug]/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]&revision=$matches[2]';
+		$my_rules[ $slug . '/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-(\d+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]&revision=$matches[2]';
 
 		// document revision feeds in the form of [doc_slug]/[slug].[extension]/feed/, [doc_slug]/[slug]/feed/, etc.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
 
 		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
 		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
-		$my_rules[ $slug . '/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
+		$my_rules[ $slug . '/page/?(\d{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
 
 		/**
 		 * Filters the Document rewrite rules.
@@ -1566,7 +1623,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Filter the attached file for documents to obviate  use of cached upload directory.
+	 * Filter the attached file for documents to obviate use of cached upload directory.
 	 *
 	 * @since 3.5.0
 	 * @param string/false $file          The file path to where the attached file should be.
@@ -1626,7 +1683,7 @@ class WP_Document_Revisions {
 			return $dir;
 		}
 
-		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
+		// Ignore if dealing with thumbnail on document page (Document upload has type set as 'file').
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
 			self::$doc_image = true;
@@ -1754,15 +1811,19 @@ class WP_Document_Revisions {
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
 
+		// store original file name.
+		$orig_filename = $file['name'];
+
 		// hash and replace filename, appending extension.
 		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).
 		 *
-		 * @param array $file encoded file name.
+		 * @param array  $file          file structure with encoded file name.
+		 * @param string $orig_filename original file name.
 		 */
-		$file = apply_filters( 'document_internal_filename', $file );
+		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
 
 		return $file;
 	}
@@ -1783,7 +1844,7 @@ class WP_Document_Revisions {
 			return $file;
 		}
 
-		// Ignore if dealing with thumbnail on document page.
+		// Ignore if dealing with thumbnail on document page. (Document has $_POST['type'] = 'file').
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
 			self::$doc_image = true;
@@ -2198,7 +2259,7 @@ class WP_Document_Revisions {
 	 * @param int $post_id id of document lock being overridden.
 	 * @param int $owner_id id of current document owner.
 	 * @param int $current_user_id id of user overriding lock.
-	 * @return bool true on sucess, false on fail
+	 * @return bool true on success, false on fail
 	 */
 	public function send_override_notice( $post_id, $owner_id, $current_user_id ) {
 		// get lock owner's details.
@@ -2362,7 +2423,11 @@ class WP_Document_Revisions {
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
 			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
-			// loop through capacities for role.
+			// if the '' capability exists for the role, then assume others are as required.
+			if ( array_key_exists( 'read_documents', $role_caps ) ) {
+				continue;
+			}
+			// loop  through capacities for role.
 			foreach ( $caps as $cap => $grant ) {
 				// add only missing capabilities.
 				if ( ! array_key_exists( $cap, $role_caps ) ) {
@@ -2692,8 +2757,8 @@ class WP_Document_Revisions {
 		} elseif ( is_numeric( $post_content ) ) {
 			return (int) $post_content;
 		} else {
-			// find document id.
-			preg_match( '/<!-- WPDR ([0-9]+) -->/', $post_content, $id );
+			// find document id. Might have white space from the screen upload process.
+			preg_match( '/<!-- WPDR \s*(\d+) -->/', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id.
 				return (int) $id[1];

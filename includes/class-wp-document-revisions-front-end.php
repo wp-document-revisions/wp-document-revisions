@@ -667,7 +667,10 @@ class WP_Document_Revisions_Front_End {
 				'wp-i18n',
 			),
 			filemtime( "$dir/$index_js" ),
-			true
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			),
 		);
 
 		// Add supplementary script for additional information.
@@ -691,7 +694,10 @@ class WP_Document_Revisions_Front_End {
 				'wp-i18n',
 			),
 			filemtime( "$dir/$index_js" ),
-			true
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			),
 		);
 
 		// set translations.
