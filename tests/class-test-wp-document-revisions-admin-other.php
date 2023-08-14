@@ -584,6 +584,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->filter_documents_list();
 		$output = ob_get_contents();
 		ob_end_clean();
+		
+		console_log( $output );
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
