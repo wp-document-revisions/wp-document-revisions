@@ -588,10 +588,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		console_log( $output );
-		console_log( $current_user->display_name );
-		console_log( $current_user->user_login );
-
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
 		self::assertEquals( 1, (int) substr_count( $output, 'value="final">Final' ), 'final' );
