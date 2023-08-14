@@ -1261,6 +1261,7 @@ class WP_Document_Revisions_Admin {
 		if ( current_user_can( 'read_private_documents' ) ) {
 			$query->query_where = str_replace( "= 'publish'", "IN ('publish', 'private')", $query->query_where );
 		}
+		write_log( $query );
 	}
 
 	/**
