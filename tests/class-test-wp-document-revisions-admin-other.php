@@ -584,8 +584,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->filter_documents_list();
 		$output = ob_get_contents();
 		ob_end_clean();
-		
-		console_log( $output );
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
@@ -596,7 +594,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
 		self::assertEquals( 0, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
-		self::assertEquals( 1, (int) substr_count( $output, "value='1'>Editor" ), 'editor' );
+		self::assertEquals( 1, (int) substr_count( $output, "value='2'>User" ), 'editor' );
 	}
 
 	/**
