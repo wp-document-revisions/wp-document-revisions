@@ -254,7 +254,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			),
+			)
 		);
 
 		$index_css = 'css/wpdr-widget-editor-style.css';

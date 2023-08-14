@@ -670,7 +670,7 @@ class WP_Document_Revisions_Front_End {
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			),
+			)
 		);
 
 		// Add supplementary script for additional information.
@@ -697,7 +697,7 @@ class WP_Document_Revisions_Front_End {
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			),
+			)
 		);
 
 		// set translations.

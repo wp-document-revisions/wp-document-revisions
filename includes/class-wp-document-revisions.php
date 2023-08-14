@@ -152,7 +152,7 @@ class WP_Document_Revisions {
 		 * If you have a separate document library and you specify the access path to the library
 		 * then it is safe to use.
 		 *
-		 * You should not use this if your document library contains files using MD5-encoded names 
+		 * You should not use this if your document library contains files using MD5-encoded names
 		 * that are not documents and that could be read directly since it creates a pattern-based rule
 		 * to block access.
 		 *
@@ -162,7 +162,7 @@ class WP_Document_Revisions {
 		 */
 		if ( '' !== apply_filters( 'document_stop_file_access_pattern', '' ) ) {
 			add_action( 'generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ) );
-			add_filter( 'mod_rewrite_rules', array( &$this, 'mod_rewrite_rules' ) );	
+			add_filter( 'mod_rewrite_rules', array( &$this, 'mod_rewrite_rules' ) );
 		}
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
@@ -271,7 +271,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.6
 	 *
-   * @param string $rules mod_rewrite Rewrite rules formatted for .htaccess.
+	 * @param string $rules Mod_rewrite rewrite rules formatted for .htaccess.
 	 */
 	public function mod_rewrite_rules( $rules ) {
 		// forbid access to documents directly.
@@ -772,7 +772,7 @@ class WP_Document_Revisions {
 		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
-		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
+		$my_rules[ $slug . '/?$' ]                = 'index.php?post_type=document';
 		$my_rules[ $slug . '/page/?(\d{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
 
 		/**
