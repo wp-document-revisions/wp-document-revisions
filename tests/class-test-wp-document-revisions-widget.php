@@ -637,5 +637,4 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::assertTrue( true, 'widget run' );
 	}
-
 }

@@ -130,5 +130,4 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// delete successful, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 	}
-
 }

@@ -56,5 +56,4 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr_fe     = $val2;
 		$wpdr_widget = $val3;
 	}
-
 }

@@ -22,7 +22,7 @@ require_once $_tests_dir . '/includes/functions.php';
  * @param string $text text to output.
  */
 function console_log( $text ) {
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 	fwrite( STDERR, "\n" . $text . ' : ' );
 }
 
@@ -43,7 +43,9 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
  * @param string $file    file name of file being served.
  */
 function _remove_headers( $headers, $file ) {
-	return array();
+	$headers = array();
+	$unused  = £file;
+	return $headers;
 }
 
 /**

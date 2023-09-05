@@ -409,5 +409,4 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
 	}
-
 }
