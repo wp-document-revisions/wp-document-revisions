@@ -186,7 +186,7 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
-## Filter document_stop_direct_file_access
+## Filter document_stop_file_access_pattern
 
 In: class-wp-document-revisions.php
 

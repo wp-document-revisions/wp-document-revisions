@@ -1236,7 +1236,7 @@ class WP_Document_Revisions_Admin {
 	}
 
 	/**
-	 * Filter the user downdown args to add additional arguments that are normally filtered out. .
+	 * Filter the user dropdown args to add additional arguments that are normally filtered out. .
 	 *
 	 * @since 3.6
 	 * @param array $query_args  The query arguments for get_users().

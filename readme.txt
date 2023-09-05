@@ -182,9 +182,9 @@ In: class-wp-document-revisions.php
 
 * NEW: JS scripts will be called with Defer in WP 6.3 onwards.
 * NEW: User pulldowns will show only relevant users.
-* NEW: Filter document_revisions_owner withdrawn as parameter acted on deprecated.
-* NEW: If role already has "read_documents" capability, do not touch on plugin reactivation.
-* NEW: Optionally stop direct access to document files to force access via WordPress.
+* NEW: Filter document_revisions_owner withdrawn as parameter acted on (who) deprecated in WP 5.9.
+* NEW: If role already has "read_documents" capability, do not touch capabilities on plugin reactivation.
+* NEW: Optionally stop direct web access to document files to force access via WordPress.
 * NEW: Filter to switch off attachment MD5 format validation.
 * NEW: Filter document_internal_filename for updating internal file name additionally passed the original name.
 

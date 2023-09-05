@@ -2423,7 +2423,7 @@ class WP_Document_Revisions {
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
 			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
-			// if the '' capability exists for the role, then assume others are as required.
+			// if the 'read_documents' capability exists for the role, then assume others are as required.
 			if ( array_key_exists( 'read_documents', $role_caps ) ) {
 				continue;
 			}
