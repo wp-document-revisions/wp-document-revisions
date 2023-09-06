@@ -736,17 +736,11 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
-== Filter document_stop_direct_file_access
+== Filter document_stop_file_access_pattern
 
 In: class-wp-document-revisions.php
 
 Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
-
-== Filter document_stop_direct_file_access
-
-In: class-wp-document-revisions.php
-
-Filter to add a directory component to the .htaccess rule to stop direct file access to documents.
 
 == Filter document_taxonomy_term_count ==
 

@@ -7,7 +7,6 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="wp-document-revisions"/>
-				<element value="tgmpa"/>
 			</property>
 		</properties>
 	</rule>
@@ -15,6 +14,9 @@
 	<rule ref="WordPress.WP.Capabilities">
 		<properties>
 			<property name="custom_capabilities" type="array">
+				<element value="edit_document"/>
+				<element value="read_document"/>
+				<element value="delete_document"/>
 				<element value="edit_documents"/>
 				<element value="edit_others_documents"/>
 				<element value="edit_private_documents"/>

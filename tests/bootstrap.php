@@ -44,7 +44,7 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
  */
 function _remove_headers( $headers, $file ) {
 	$headers = array();
-	$unused  = £file;
+	$unused  = $file;
 	return $headers;
 }
 

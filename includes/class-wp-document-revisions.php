@@ -502,8 +502,8 @@ class WP_Document_Revisions {
 	 */
 	public function initialize_workflow_states() {
 		$terms = get_terms(
-			'workflow_state',
 			array(
+				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
 			)
 		);
@@ -855,6 +855,7 @@ class WP_Document_Revisions {
 		$link = apply_filters( 'document_permalink', $link, $document );
 
 		return $link;
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -1047,7 +1048,6 @@ class WP_Document_Revisions {
 		$index = $this->get_revision_indices( $post_id );
 
 		return ( isset( $index[ $revision_num ] ) ) ? $index[ $revision_num ] : false;
-
 	}
 
 
@@ -1468,12 +1468,12 @@ class WP_Document_Revisions {
 	/**
 	 * Filter to authenticate document delivery.
 	 *
-	 * @param bool     $default true unless overridden by prior filter.
-	 * @param obj      $post the post object.
+	 * @param bool     $deflt   true unless overridden by prior filter.
+	 * @param obj      $post    the post object.
 	 * @param bool|int $version version of the document being served, if any.
 	 * @return unknown
 	 */
-	public function serve_document_auth( $default, $post, $version ) {
+	public function serve_document_auth( $deflt, $post, $version ) {
 		$user     = wp_get_current_user();
 		$ret_null = ( 0 === $user->ID && ! apply_filters( 'document_read_uses_read', true ) );
 		// public file, not a revision, no need to go any further
@@ -1481,7 +1481,7 @@ class WP_Document_Revisions {
 		if ( ! $version && 'publish' === $post->post_status ) {
 			if ( 0 === $user->ID && apply_filters( 'document_read_uses_read', true ) ) {
 				// Not logged on. But only default read capability.
-				return $default;
+				return $deflt;
 			}
 		}
 
@@ -1496,7 +1496,7 @@ class WP_Document_Revisions {
 			return ( $ret_null ? null : false );
 		}
 
-		return $default;
+		return $deflt;
 	}
 
 	/**
@@ -1953,6 +1953,7 @@ class WP_Document_Revisions {
 		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 
 		return $metadata;
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -2123,14 +2124,14 @@ class WP_Document_Revisions {
 	 * Note: Use `add_filter( 'document_custom_feed', '__return_false' )` to shortcircuit.
 	 *
 	 * @since 0.5
-	 * @param string $default the original feed.
+	 * @param string $deflt the original feed.
 	 * @return string the slug for our feed
 	 */
-	public function hijack_feed( $default ) {
+	public function hijack_feed( $deflt ) {
 		global $post;
 
 		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || ! apply_filters( 'document_custom_feed', true ) ) {
-			return $default;
+			return $deflt;
 		}
 
 		return 'revision_log';
@@ -2977,18 +2978,16 @@ class WP_Document_Revisions {
 			 */
 			if ( ! in_array( $tax_name, apply_filters( 'document_taxonomy_term_count', array( $tax_name ) ), true ) ) {
 				$tax_status = $statuses;
-			} else {
+			} elseif ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
 				// check if taxonomy has a callback defined or is not for documents.
-				if ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
-					$tax_status = $statuses;
-				} else {
-					// get the list of statuses.
-					$tax_status = get_post_stati();
-					// trash, inherit and auto-draft to be excluded.
-					unset( $tax_status['trash'] );
-					unset( $tax_status['inherit'] );
-					unset( $tax_status['auto-draft'] );
-				}
+				$tax_status = $statuses;
+			} else {
+				// get the list of statuses.
+				$tax_status = get_post_stati();
+				// trash, inherit and auto-draft to be excluded.
+				unset( $tax_status['trash'] );
+				unset( $tax_status['inherit'] );
+				unset( $tax_status['auto-draft'] );
 			}
 			wp_cache_set( 'wpdr_statuses_' . $tax_name, $tax_status, '', 60 );
 		}
@@ -3005,7 +3004,7 @@ class WP_Document_Revisions {
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working.
 	 *
 	 * @param String $redirect the redirect URL.
-	 * @param Object $request the request object.
+	 * @param Object $request  the request object.
 	 * @return String the redirect URL without the trailing slash
 	 */
 	public function redirect_canonical_filter( $redirect, $request ) {
@@ -3021,6 +3020,7 @@ class WP_Document_Revisions {
 		}
 
 		return untrailingslashit( $redirect );
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -3221,14 +3221,12 @@ class WP_Document_Revisions {
 				$query_object->post_count  = count( $results );
 				$query_object->found_posts = $query_object->post_count;
 				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
+			} elseif ( null === $results ) {
+				$query_object->post_count  = 0;
+				$query_object->found_posts = 0;
+				$query_object->is_404      = true;
 			} else {
-				if ( null === $results ) {
-					$query_object->post_count  = 0;
-					$query_object->found_posts = 0;
-					$query_object->is_404      = true;
-				} else {
-					$query_object->found_posts = 1;
-				}
+				$query_object->found_posts = 1;
 			}
 		}
 
@@ -3282,5 +3280,4 @@ class WP_Document_Revisions {
 
 		return $wp;
 	}
-
 }

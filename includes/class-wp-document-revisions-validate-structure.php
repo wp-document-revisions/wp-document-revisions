@@ -199,12 +199,12 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function.
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 	/**
@@ -214,7 +214,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 **/
 	public static function add_menu() {
 		$slug = 'wpdr_validate';
-		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp_document_revisions' ), __( 'Validate Structure', 'wp_document_revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
+		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
 
 		// help text.
 		add_action( 'load-document_page_' . $slug, array( __CLASS__, 'add_help_tab' ) );
@@ -667,7 +667,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$script =
 			"var nonce = '" . wp_create_nonce( 'wp_rest' ) . "';" . PHP_EOL .
 			"var user  = '" . get_current_user_id() . "';" . PHP_EOL .
-			"var processed = '" . esc_html__( 'Processed successfully.', 'wp_document_revisions' ) . "';";
+			"var processed = '" . esc_html__( 'Processed successfully.', 'wp-document-revisions' ) . "';";
 		// phpcs:enable Squiz.Strings.DoubleQuoteUsage
 		wp_add_inline_script( 'wpdr_validate', $script, 'before' );
 	}
@@ -817,23 +817,22 @@ class WP_Document_Revisions_Validate_Structure {
 					'parm'  => $doc_id,
 				);
 			}
-		} else {
+		} elseif ( $guid !== $permalink1 && $guid !== $permalink2 ) {
 			// Ugly one is accepable as it is unique.
-			if ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+			
+			if ( '' !== $year_mth ) {
 				// Not an ugly one, but guid does not contain the correct month.
-				if ( '' !== $year_mth ) {
-					$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );
-				} else {
-					$msg = __( 'The guid does not contain the sitec URL.', 'wp-document-revisions' );
-				}
-				return array(
-					'code'  => 10,
-					'error' => 0,
-					'msg'   => $msg_10,
-					'fix'   => 1,
-					'parm'  => $doc_id,
-				);
+				$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );
+			} else {
+				$msg = __( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 			}
+			return array(
+				'code'  => 10,
+				'error' => 0,
+				'msg'   => $msg_10,
+				'fix'   => 1,
+				'parm'  => $doc_id,
+			);
 		}
 	}
 
