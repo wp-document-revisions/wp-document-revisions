@@ -819,7 +819,7 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 		} elseif ( $guid !== $permalink1 && $guid !== $permalink2 ) {
 			// Ugly one is accepable as it is unique.
-			
+
 			if ( '' !== $year_mth ) {
 				// Not an ugly one, but guid does not contain the correct month.
 				$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );

@@ -127,7 +127,6 @@ class WP_Document_Revisions_Admin {
 
 		// admin dashboard.
 		add_action( 'wp_dashboard_setup', array( &$this, 'setup_dashboard' ) );
-
 	}
 
 
@@ -135,12 +134,12 @@ class WP_Document_Revisions_Admin {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.0
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function.
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 
@@ -593,7 +592,7 @@ class WP_Document_Revisions_Admin {
 
 		$i = 0;
 		foreach ( $revisions as $revision ) {
-			$i++;
+			++$i;
 			if ( ! current_user_can( 'read_document', $revision->ID ) ) {
 				continue;
 			}
@@ -1351,8 +1350,10 @@ class WP_Document_Revisions_Admin {
 			'workflow_state'
 		);
 		$states        = get_terms(
-			'workflow_state',
-			array( 'hide_empty' => false )
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false
+			)
 		);
 		?>
 		<label for="workflow_state"><?php esc_html_e( 'Current State', 'wp-document-revisions' ); ?>:</label>
@@ -1580,6 +1581,7 @@ class WP_Document_Revisions_Admin {
 		// translation strings.
 		$data = array(
 			'restoreConfirmation' => __( 'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp-document-revisions' ),
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain
 			'lockNeedle'          => __( 'is currently editing this' ), // purposely left out text domain.
 			'postUploadNotice'    => '<div id="message" class="updated" style="display:none"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
 			'postDesktopNotice'   => '<div id="message" class="update-nag" style="display:none"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',

@@ -71,12 +71,12 @@ class WP_Document_Revisions_Front_End {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 
@@ -446,7 +446,6 @@ class WP_Document_Revisions_Front_End {
 
 		// enqueue CSS for shortcode.
 		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), null, $wpdr->version );
-
 	}
 
 
@@ -485,6 +484,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param Array                   $categories           Block categories available.
 	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	public function wpdr_block_categories( $categories, $block_editor_context ) {
 
 		return array_merge(
@@ -719,17 +719,17 @@ class WP_Document_Revisions_Front_End {
 	 * Get taxonomy structure.
 	 *
 	 * @param String  $taxonomy Taxonomy name.
-	 * @param Integer $parent   parent term.
+	 * @param Integer $par_term parent term.
 	 * @param Integer $level    level in hierarchy.
 	 * @since 3.3.0
 	 */
-	private function get_taxonomy_hierarchy( $taxonomy, $parent = 0, $level = 0 ) {
+	private function get_taxonomy_hierarchy( $taxonomy, $par_term = 0, $level = 0 ) {
 		// get all direct descendants of the $parent.
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
 				'hide_empty' => false,
-				'parent'     => $parent,
+				'parent'     => $par_term,
 			)
 		);
 		// go through all the direct descendants of $parent, and recurse their children.
@@ -883,13 +883,13 @@ class WP_Document_Revisions_Front_End {
 		$curr_tax_max     = $taxonomy_details['stmax'];
 		$curr_taxos       = $taxonomy_details['taxos'];
 		$errs             = '';
-		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, Universal.WhiteSpace.PrecisionAlignment
 		if ( ( $curr_tax_max >= 1 && ( ! empty( $atts['taxonomy_0'] ) ) && $atts['taxonomy_0'] !== $curr_taxos[0]['query'] ) ||
 		     ( $curr_tax_max >= 2 && ( ! empty( $atts['taxonomy_1'] ) ) && $atts['taxonomy_1'] !== $curr_taxos[1]['query'] ) ||
 		     ( $curr_tax_max >= 3 && ( ! empty( $atts['taxonomy_2'] ) ) && $atts['taxonomy_2'] !== $curr_taxos[2]['query'] ) ) {
 			$errs .= '<p>' . esc_html__( ' Taxonomy details in this block have changed.', 'wp-document-revisions' ) . '</p>';
 		}
-		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, Universal.WhiteSpace.PrecisionAlignment
 
 		// Remove attribute if not an over-ride.
 		if ( 0 === strlen( $atts['show_edit'] ) ) {
