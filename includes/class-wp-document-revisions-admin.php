@@ -740,7 +740,7 @@ class WP_Document_Revisions_Admin {
 				// does directory exist.
 				if ( ! is_dir( $dir ) ) {
 					add_settings_error( 'document_upload_directory', 'document-upload-dir-exists', __( 'Document directory does not appear to exist. Please review value.', 'wp-document-revisions' ), 'updated' );
-				} elseif ( ! is_writable( $dir ) ) {
+				} elseif ( ! wp_is_writable( $dir ) ) {
 					add_settings_error( 'document_upload_directory', 'document-upload-dir-write', __( 'Document directory is not writable. Please check permissions.', 'wp-document-revisions' ), 'updated' );
 				}
 			}
@@ -1352,7 +1352,7 @@ class WP_Document_Revisions_Admin {
 		$states        = get_terms(
 			array(
 				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false
+				'hide_empty' => false,
 			)
 		);
 		?>

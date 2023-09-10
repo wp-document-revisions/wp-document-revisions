@@ -134,23 +134,6 @@
  *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  */
 
-
-// polyfill for str_contains.
-if ( ! function_exists( 'str_contains' ) ) {
-	/**
-	 * Provides str_contains function.
-	 *
-	 * @since 3.5.0
-	 *
-	 * @param string $haystack the text to be searched.
-	 * @param string $needle   the text to search.
-	 * @returns boolean.
-	 */
-	function str_contains( string $haystack, string $needle ) {
-		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
-	}
-}
-
 /**
  * Main WP_Document_Revisions Validate Structure class.
  */
@@ -357,7 +340,7 @@ class WP_Document_Revisions_Validate_Structure {
 			if ( @copy( $file, $new_file ) ) {
 				$name = get_post_meta( $attach_id, '_wp_attached_file', true );
 				update_post_meta( $attach_id, '_wp_attached_file', str_replace( $filename, $new_name, $name ), $name );
-				unlink( $file );
+				wp_delete_file( $file );
 			}
 
 			// rename attachment post (if no clash).
@@ -413,8 +396,9 @@ class WP_Document_Revisions_Validate_Structure {
 				wp_mkdir_p( $file_dir );
 			}
 			if ( @copy( $orig, $file ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 				chmod( $file, 0664 );
-				unlink( $orig );
+				wp_delete_file( $orig );
 				// get attachment metadata.
 				$meta = get_post_meta( $attach, '_wp_attachment_metadata', true );
 				if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
@@ -428,8 +412,9 @@ class WP_Document_Revisions_Validate_Structure {
 						if ( file_exists( $orig_dir . $sizeinfo['file'] ) ) {
 							// Use copy and unlink because rename breaks streams.
 							if ( @copy( $orig_dir . $sizeinfo['file'], $file_dir . $sizeinfo['file'] ) ) {
+								// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 								@chmod( $file_dir . $sizeinfo['file'], 0664 );
-								unlink( $orig_dir . $sizeinfo['file'] );
+								wp_delete_file( $orig_dir . $sizeinfo['file'] );
 							}
 						}
 					}

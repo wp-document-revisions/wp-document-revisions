@@ -180,13 +180,15 @@ In: class-wp-document-revisions.php
 
 = 3.6.0 =
 
-* NEW: JS scripts will be called with Defer in WP 6.3 onwards.
 * NEW: User pulldowns will show only relevant users.
-* NEW: Filter document_revisions_owner withdrawn as parameter acted on (who) deprecated in WP 5.9.
-* NEW: If role already has "read_documents" capability, do not touch capabilities on plugin reactivation.
+* NEW: Filter 'document_use_wp_filesystem' used to serve document (or PHP readfile). Irrelevant of compressed on output.
+* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name.
 * NEW: Optionally stop direct web access to document files to force access via WordPress.
 * NEW: Filter to switch off attachment MD5 format validation.
-* NEW: Filter document_internal_filename for updating internal file name additionally passed the original name.
+* FIX: Filter document_revisions_owner withdrawn as parameter acted on (who) deprecated in WP 5.9.
+* FIX: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation.
+* DEV: JS scripts will be called with Defer in WP 6.3 onwards.
+* DEV: Review for WP Coding standard 3.0
 
 = 3.5.0 =
 
@@ -765,6 +767,12 @@ Filters setting the new document status to private.
 In: class-wp-document-revisions.php
 
 Filter to switch off use of standard Workflow States taxonomy. For internal use.
+
+== Filter document_use_wp_filesystem ==
+
+In: class-wp-document-revisions.php
+
+Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
 
 == Filter document_validate_md5 ==
 

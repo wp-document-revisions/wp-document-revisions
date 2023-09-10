@@ -15,7 +15,10 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "phpcsstandards/phpcsutils": "^1.0",
     "phpcsstandards/phpcsextra": "^1.1.0",
-    "yoast/phpunit-polyfills": "*"
+     "yoast/phpunit-polyfills": "*",
+     "phpcompatibility/phpcompatibility": "*",
+     "phpcompatibility/phpcompatibility-paragonie": "*",
+     "phpcompatibility/phpcompatibility-wp": "*"
   },
   "config": {
    "bin-dir": "bin",

@@ -216,6 +216,12 @@ In: class-wp-document-revisions.php
 
 Filter to switch off use of standard Workflow States taxonomy. For internal use.
 
+## Filter document_use_wp_filesystem
+
+In: class-wp-document-revisions.php
+
+Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
+
 ## Filter document_validate_md5
 
 In: class-wp-document-revisions-validate-structure.php

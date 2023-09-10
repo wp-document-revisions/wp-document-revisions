@@ -63,7 +63,6 @@ class WP_Document_Revisions_Front_End {
 
 		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_front' ), 50 );
-
 	}
 
 
@@ -484,8 +483,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param Array                   $categories           Block categories available.
 	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	public function wpdr_block_categories( $categories, $block_editor_context ) {
+	public function wpdr_block_categories( $categories, $block_editor_context ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		return array_merge(
 			$categories,

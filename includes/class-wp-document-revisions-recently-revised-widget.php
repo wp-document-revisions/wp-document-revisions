@@ -396,29 +396,24 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$output = $this->widget_gen( $args, $instance );
 		return $output;
 	}
+
+	/**
+	 * Callback to register the recently revised widget.
+	 */
+	public function wpdr_widgets_init() {
+		global $wpdr_widget;
+
+		register_widget( $wpdr_widget );
+	}
+
+	/**
+	 * Callback to register the recently revised widget block.
+	 *
+	 * Call with low priority to let taxonomies be registered.
+	 */
+	public function wpdr_widgets_block_init() {
+		global $wpdr_widget;
+
+		$wpdr_widget->documents_widget_block();
+	}
 }
-
-
-/**
- * Callback to register the recently revised widget.
- */
-function wpdr_widgets_init() {
-	global $wpdr_widget;
-
-	register_widget( $wpdr_widget );
-}
-
-add_action( 'widgets_init', 'wpdr_widgets_init' );
-
-/**
- * Callback to register the recently revised widget block.
- *
- * Call with low priority to let taxonomies be registered.
- */
-function wpdr_widgets_block_init() {
-	global $wpdr_widget;
-
-	$wpdr_widget->documents_widget_block();
-}
-
-add_action( 'init', 'wpdr_widgets_block_init', 99 );

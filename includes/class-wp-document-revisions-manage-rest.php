@@ -159,7 +159,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_document( $response, $post, $request ) {
+	public function doc_clean_document( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document.
 		if ( 'document' !== get_post_type( $post->ID ) ) {
 			return $response;
@@ -177,7 +177,6 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		return $response;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 	/**
@@ -189,7 +188,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_revision( $response, $post, $request ) {
+	public function doc_clean_revision( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document revision.
 		$parent = $post->post_parent;
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
@@ -206,7 +205,6 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		return $response;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 	/**
@@ -218,7 +216,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_attachment( $response, $post, $request ) {
+	public function doc_clean_attachment( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
@@ -270,7 +268,5 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		return $response;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
-
 }

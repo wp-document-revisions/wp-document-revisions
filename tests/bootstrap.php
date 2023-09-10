@@ -62,5 +62,4 @@ function _wpdr_die_handler_filter( $handler ) {
 tests_add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
 tests_add_filter( 'wp_die_xml_handler', '_wpdr_die_handler_filter' );
 
-require $_tests_dir . '/includes/bootstrap.php';
 require 'class-test-wp-document-revisions-common.php';

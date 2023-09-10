@@ -227,6 +227,8 @@ class WP_Document_Revisions {
 		if ( ! $wpdr_widget ) {
 			require_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+			add_action( 'widgets_init', array( $wpdr_widget, 'wpdr_widgets_init' ) );
+			add_action( 'init', array( $wpdr_widget, 'wpdr_widgets_block_init' ), 99 );
 		}
 
 		// load validation code.
@@ -811,7 +813,7 @@ class WP_Document_Revisions {
 	 * @param String $sample (optional) not used.
 	 * @return string the real permalink
 	 */
-	public function permalink( $link, $document, $leavename, $sample = '' ) {
+	public function permalink( $link, $document, $leavename, $sample = '' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		global $wp_rewrite;
 		$revision_num = false;
 
@@ -1414,7 +1416,45 @@ class WP_Document_Revisions {
 		} else {
 			// know the headers and buffering may cause writing, so output headers first.
 			$this->serve_headers( $headers, $file );
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
+			// see if PHP readfile could be used.
+			/**
+			 * Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant of compressed on output.
+			 *
+			 * Note: Use `add_filter( 'document_use_wp_filesystem', '__return_true' )` to shortcircuit.
+			 *
+			 * @param bool    $default    false unless overridden by prior filter.
+			 * @param string  $file       File name to be served.
+			 * @param integer $post->ID   Post id of the document.
+			 * @param integer $attach->ID Post id of the attachment.
+			 */
+			if ( apply_filters( 'document_use_wp_filesystem', false, $file, $post->ID, $attach->ID ) ) {
+				// try WP_filesystem for $doc_dir.
+				// file code may not be already loaded.
+				if ( ! function_exists( 'get_filesystem_method' ) ) {
+					include ABSPATH . 'wp-admin/includes/file.php';
+				}
+				$method = get_filesystem_method( array(), dirname( $file ), false );
+
+				if ( 'direct' === $method ) {
+					// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+					$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, dirname( $file ), array(), false );
+
+					// initialize the API.
+					if ( WP_Filesystem( $creds ) ) {
+						// all good so far.
+						global $wp_filesystem;
+
+						// downloading a file, not normally WP text so don't sanitize.
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $wp_filesystem->get_contents( $file );
+						return;
+					}
+				}
+			}
+			// If we marrive here, serve the file via readfile.
+			// Note: We use defsault readfile, and not WP_Filesystem for memory/performance reasons.
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 			readfile( $file );
 		}
 
@@ -1912,7 +1952,7 @@ class WP_Document_Revisions {
 	 * @param string $context       Additional context. Can be 'create' when metadata was initially created for new attachment
 	 *                              or 'update' when the metadata was updated.
 	 */
-	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {
+	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// check that for a document.
 		$attach = get_post( $attachment_id );
 		if ( ! self::check_doc_attach( $attach ) ) {
@@ -1927,6 +1967,26 @@ class WP_Document_Revisions {
 			$file     = get_attached_file( $attach->ID );
 			$file_dir = trailingslashit( dirname( $file ) );
 
+			// prepare to use WP_Filesystem if we can.
+			$use_wp_filesystem = false;
+			// file code may not be already loaded.
+			if ( ! function_exists( 'get_filesystem_method' ) ) {
+				include ABSPATH . 'wp-admin/includes/file.php';
+			}
+			$method = get_filesystem_method( array(), $file_dir, false );
+
+			if ( 'direct' === $method ) {
+				// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+				$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
+
+				// initialize the API.
+				if ( WP_Filesystem( $creds ) ) {
+					// all good so far.
+					global $wp_filesystem;
+					$use_wp_filesystem = true;
+				}
+			}
+
 			$title    = $attach->post_title;
 			$new_name = md5( $title . microtime() );
 			// move file and update.
@@ -1934,13 +1994,19 @@ class WP_Document_Revisions {
 				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-						// Use copy and unlink because rename breaks streams.
-						// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
-						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							@chmod( $file_dir . $new_file, 0664 );
-							unlink( $file_dir . $sizeinfo['file'] );
-							$metadata['sizes'][ $size ]['file'] = $new_file;
-						// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
+						if ( $use_wp_filesystem ) {
+							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
+							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+						} else {
+							$dummy = null;
+							// Use copy and unlink because rename breaks streams.
+							// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+							if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+								@chmod( $file_dir . $new_file, 0664 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+								wp_delete_file( $file_dir . $sizeinfo['file'] );
+								$metadata['sizes'][ $size ]['file'] = $new_file;
+							}
+							// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
 						}
 					}
 				}
@@ -2001,6 +2067,26 @@ class WP_Document_Revisions {
 		$file     = get_attached_file( $attachment_id );
 		$file_dir = trailingslashit( dirname( $file ) );
 
+		// prepare to use WP_Filesystem if we can.
+		$use_wp_filesystem = false;
+		// file code may not be already loaded.
+		if ( ! function_exists( 'get_filesystem_method' ) ) {
+			include ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		$method = get_filesystem_method( array(), $file_dir, false );
+		if ( 'direct' === $method ) {
+			// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
+
+			// initialize the API.
+			if ( WP_Filesystem( $creds ) ) {
+				// all good so far.
+				global $wp_filesystem;
+				$use_wp_filesystem = true;
+			}
+		}
+
 		$title    = $attach->post_title;
 		$new_name = md5( $title . microtime() );
 		// move file and update.
@@ -2008,11 +2094,17 @@ class WP_Document_Revisions {
 			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-					// Use copy and unlink because rename breaks streams.
-					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-						unlink( $file_dir . $sizeinfo['file'] );
-						$meta_sizes[ $size ]['file'] = $new_file;
+					if ( $use_wp_filesystem ) {
+						$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
+						$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+					} else {
+						$dummy = null;
+						// Use copy and unlink because rename breaks streams.
+						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							wp_delete_file( $file_dir . $sizeinfo['file'] );
+							$meta_sizes[ $size ]['file'] = $new_file;
+						}
 					}
 				}
 			}
@@ -3007,7 +3099,7 @@ class WP_Document_Revisions {
 	 * @param Object $request  the request object.
 	 * @return String the redirect URL without the trailing slash
 	 */
-	public function redirect_canonical_filter( $redirect, $request ) {
+	public function redirect_canonical_filter( $redirect, $request ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! $this->verify_post_type() ) {
 			return $redirect;
 		}
