@@ -206,7 +206,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		</p>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'show_pdf' ) ); ?>"><?php esc_html_e( 'Display PDF File Indication:', 'wp-document-revisions' ); ?></label><br />
-			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_pdf' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_pdf'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
+			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_pdf' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_pdf' ) ); ?>" <?php checked( $instance['show_pdf'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'new_tab' ) ); ?>"><?php esc_html_e( 'Open documents in new tab:', 'wp-document-revisions' ); ?></label><br />
