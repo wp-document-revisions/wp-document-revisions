@@ -137,6 +137,15 @@ class WP_Document_Revisions_Front_End {
 			$atts_summary = false;
 		}
 
+		if ( isset( $atts['show_pdf'] ) ) {
+			$attach   = $wpdr->get_document( $document->ID );
+			$file     = get_attached_file( $attach->ID );
+			$mimetype = $wpdr->get_doc_mimetype( $file );
+			$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
+		} else {
+			$atts_show_pdf = '';
+		}
+
 		if ( isset( $atts['new_tab'] ) ) {
 			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
 		} else {
@@ -157,7 +166,7 @@ class WP_Document_Revisions_Front_End {
 				// html - string not to be translated.
 				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( strtotime( $revision->post_modified ) ) );
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
-				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) );
+				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
 				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
 				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
@@ -266,10 +275,6 @@ class WP_Document_Revisions_Front_End {
 			'meta_compare',
 			'meta_query',
 			// Presentation attributes (will be dealt with before getting documents).
-			'show_edit',
-			'show_thumb',
-			'show_descr',
-			'new_tab',
 		);
 
 		foreach ( $keys as $key ) {
@@ -282,9 +287,9 @@ class WP_Document_Revisions_Front_End {
 			$defaults[ $tax['query'] ] = null;
 		}
 
-		// show_edit, show_thumb, show_descr and new_tab may be entered without name (implies value true)
+		// show_edit, show_thumb, show_descr, show_pdf and new_tab may be entered without name (implies value true)
 		// convert to name value pair.
-		for ( $i = 0; $i < 4; $i++ ) {
+		for ( $i = 0; $i < 5; $i++ ) {
 			if ( isset( $atts[ $i ] ) ) {
 				$atts[ $atts[ $i ] ] = true;
 				unset( $atts[ $i ] );
@@ -312,6 +317,13 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['show_descr'] );
 		} else {
 			$atts_show_descr = false;
+		}
+
+		if ( isset( $atts['show_pdf'] ) ) {
+			$atts_show_pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
+			unset( $atts['show_pdf'] );
+		} else {
+			$atts_show_pdf = '';
 		}
 
 		if ( isset( $atts['new_tab'] ) ) {
@@ -382,6 +394,14 @@ class WP_Document_Revisions_Front_End {
 		<?php
 		// loop through found documents.
 		foreach ( $documents as $document ) {
+			if ( empty( $atts_show_pdf ) ) {
+				$show_pdf = '';
+			} else {
+				$attach   = $wpdr->get_document( $document->ID );
+				$file     = get_attached_file( $attach->ID );
+				$mimetype = $wpdr->get_doc_mimetype( $file );
+				$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
+			}
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
 			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
@@ -567,6 +587,10 @@ class WP_Document_Revisions_Front_End {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'show_pdf'        => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'new_tab'         => array(
 						'type'    => 'boolean',
 						'default' => true,
@@ -615,6 +639,10 @@ class WP_Document_Revisions_Front_End {
 						'default' => 5,
 					),
 					'summary'         => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'show_pdf'        => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
@@ -870,6 +898,7 @@ class WP_Document_Revisions_Front_End {
 				'show_edit'   => '',
 				'show_thumb'  => false,
 				'show_descr'  => true,
+				'show_pdf'    => false,
 				'new_tab'     => true,
 				'freeform'    => '',
 			),
@@ -898,6 +927,11 @@ class WP_Document_Revisions_Front_End {
 		}
 		if ( 0 === strlen( $atts['show_descr'] ) ) {
 			unset( $atts['show_descr'] );
+		}
+
+		// Remove show_pdf if false.
+		if ( ! $atts['show_pdf'] ) {
+			unset( $atts['show_pdf'] );
 		}
 
 		// Remove new_tab if false.
@@ -991,6 +1025,7 @@ class WP_Document_Revisions_Front_End {
 				'id'          => 0,
 				'numberposts' => 5,
 				'summary'     => false,
+				'show_pdf'    => false,
 				'new_tab'     => true,
 			),
 			$atts,
@@ -1006,6 +1041,11 @@ class WP_Document_Revisions_Front_End {
 		// Check it is a document (and not its revision or attached document) so don't use verify_post_type.
 		if ( 'document' !== get_post_type( $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// Remove show_pdf if false.
+		if ( ! $atts['show_pdf'] ) {
+			unset( $atts['show_pdf'] );
 		}
 
 		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';

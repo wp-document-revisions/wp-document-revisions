@@ -180,13 +180,15 @@ In: class-wp-document-revisions.php
 
 = 3.6.0 =
 
+* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. 
 * NEW: User pulldowns will show only relevant users.
-* NEW: Filter 'document_use_wp_filesystem' used to serve document (or PHP readfile). Irrelevant of compressed on output.
+* NEW: Filter 'document_use_wp_filesystem' used to serve document (or PHP readfile). Irrelevant if the file is compressed on output.
 * NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name.
-* NEW: Optionally stop direct web access to document files to force access via WordPress.
-* NEW: Filter to switch off attachment MD5 format validation.
-* FIX: Filter document_revisions_owner withdrawn as parameter acted on (who) deprecated in WP 5.9.
-* FIX: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation.
+* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation.
+* NEW: Optionally stop direct web access to document files to force access only via WordPress.
+* NEW: If a role already has "read_documents" capability, do not reset capabilities on plugin reactivation.
+* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9.
+* FIX: Updates to document description do not enable the Submit button.
 * DEV: JS scripts will be called with Defer in WP 6.3 onwards.
 * DEV: Review for WP Coding standard 3.0
 

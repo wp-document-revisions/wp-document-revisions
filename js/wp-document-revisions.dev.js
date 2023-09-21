@@ -46,7 +46,7 @@
 			this.hijackAutosave();
 			this.checkUpdate();
 			setInterval(this.updateTimestamps, 60000);
-			setInterval(this.checkUpdate, 1500);
+			setInterval(this.checkUpdate, 1000);
 		}
 
 		WPDocumentRevisions.prototype.hijackAutosave = function() {
@@ -233,12 +233,15 @@
 			} else if ( /^\d+$/.test(content) ) {
 				attach = ['<!-- WPDR ' + content + ' -->'];
 			} else {
-				// match returns array, so ensu
-				attach = content.match('<!-- WPDR [0-9]+ -->');
+				// match returns array, so ensure all return array.
+				attach = content.match(/<!-- WPDR \s*\d+ -->/);
 			}
-			// might have an extra space incldes in the id provided.
-			newtext = newtext.replace(/<!-- WPDR \s*[0-9]+ -->/, '');
+			// might have an extra space includes in the id provided.
+			newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '');
 			newtext = attach[0] + newtext;
+			if ( content !== newtext ) {
+				this.enableSubmit();
+			}
 			// set the desired text eeverywhere.
 			this.window.jQuery('#curr_content').val(newtext);
 			this.window.jQuery('#post_content').val(newtext);

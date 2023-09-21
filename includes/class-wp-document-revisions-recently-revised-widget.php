@@ -26,6 +26,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		'show_thumb'  => false,
 		'show_descr'  => true,
 		'show_author' => true,
+		'show_pdf'    => true,
 		'new_tab'     => false,
 	);
 
@@ -72,6 +73,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		}
 		// when getting the images, we may get generated images - getting them will use a cached version of std directory.
 
+		$h_n = ( empty( $instance['title'] ) ? 2 : 3 );
 		// buffer output to return rather than echo directly.
 		ob_start();
 
@@ -96,9 +98,19 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$target = ( $instance['new_tab'] ? ' target="_blank"' : '' );
 			// translators: %1$s is the time ago in words, %2$s is the author.
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
+			// do we need to highlight PDFs.
+			$pdf = '';
+			if ( $instance['show_pdf'] ) {
+				// find mimetype.
+				$doc_attach = $wpdr->get_document( $document->ID );
+				$mimetype   = $wpdr->get_doc_mimetype( get_attached_file( $doc_attach->ID ) );
+				if ( 'application/pdf' === strtolower( $mimetype ) ) {
+					$pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
+				}
+			}
 			?>
 			<li>
-				<h3 class="wp-block-post-title"><a href="<?php echo esc_attr( $link ) . '"' . esc_attr( $target ) . '>' . esc_html( get_the_title( $document->ID ) ); ?></a></h3>
+				<h<?php echo esc_attr( $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_attr( $link ) . '"' . esc_attr( $target ) . '>' . esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( $h_n ); ?>>
 				<?php
 				if ( (bool) $instance['show_thumb'] ) {
 					$thumb = get_post_thumbnail_id( $document->ID );
@@ -193,6 +205,10 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_author'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
 		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_pdf' ) ); ?>"><?php esc_html_e( 'Display PDF File Indication:', 'wp-document-revisions' ); ?></label><br />
+			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_pdf' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $instance['show_pdf'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
+		</p>
+		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'new_tab' ) ); ?>"><?php esc_html_e( 'Open documents in new tab:', 'wp-document-revisions' ); ?></label><br />
 			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'new_tab' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'new_tab' ) ); ?>" <?php checked( $instance['new_tab'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
@@ -214,6 +230,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance['show_thumb']  = (bool) $new_instance['show_thumb'];
 		$instance['show_descr']  = (bool) $new_instance['show_descr'];
 		$instance['show_author'] = (bool) $new_instance['show_author'];
+		$instance['show_pdf']    = (bool) $new_instance['show_pdf'];
 		$instance['new_tab']     = (bool) $new_instance['new_tab'];
 
 		// merge post statuses into an array.
@@ -301,6 +318,10 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'show_pdf'          => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'new_tab'           => array(
 						'type'    => 'boolean',
 						'default' => false,
@@ -380,6 +401,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance['show_thumb']  = ( isset( $atts['show_thumb'] ) ? (bool) $atts['show_thumb'] : false );
 		$instance['show_descr']  = ( isset( $atts['show_descr'] ) ? (bool) $atts['show_descr'] : true );
 		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : true );
+		$instance['show_pdf']    = ( isset( $atts['show_pdf'] ) ? (bool) $atts['show_pdf'] : false );
 		$instance['new_tab']     = ( isset( $atts['new_tab'] ) ? (bool) $atts['new_tab'] : true );
 		$instance['post_status'] = array(  // temp.
 			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : true ),

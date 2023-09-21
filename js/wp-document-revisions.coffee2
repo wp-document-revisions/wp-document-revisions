@@ -45,7 +45,7 @@
       @hijackAutosave()
       @checkUpdate()
       setInterval @updateTimestamps, 60000
-      setInterval @checkUpdate, 1500
+      setInterval @checkUpdate, 1000
       return
 
     WPDocumentRevisions::hasUpload = false
@@ -211,10 +211,12 @@
         attach = [ '<!-- WPDR ' + content + ' -->' ]
       else
         # match returns array, so ensure structure.
-        attach = content.match('<!-- WPDR [0-9]+ -->')
+        attach = content.match(/!-- WPDR \s*\d+ -->/)
       # might have an extra space incldes in the id provided.
-      newtext = newtext.replace(/<!-- \s*WPDR [0-9]+ -->/, '')
+      newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '')
       newtext = attach[0] + newtext
+      if content != newtext
+      	@enableSubmit()
       # set the desired text eeverywhere.
       @window.jQuery('#curr_content').val newtext
       @window.jQuery('#post_content').val newtext
