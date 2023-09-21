@@ -571,7 +571,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		ob_start();
 		$wpdr_widget->form( $instance );
 		$output = ob_get_clean();
-		
 
 		self::assertEquals( 1, (int) substr_count( $output, '[title]" type="text" value="Recently Revised Documents"' ), 'widget_title' );
 		self::assertEquals( 1, (int) substr_count( $output, '[numberposts]" type="text" value="5"' ), 'widget_numberposts' );
