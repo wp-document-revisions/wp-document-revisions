@@ -178,19 +178,21 @@ In: class-wp-document-revisions.php
 
 == Changelog ==
 
+Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
 = 3.6.0 =
 
-* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. 
-* NEW: User pulldowns will show only relevant users.
-* NEW: Filter 'document_use_wp_filesystem' used to serve document (or PHP readfile). Irrelevant if the file is compressed on output.
-* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name.
-* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation.
-* NEW: Optionally stop direct web access to document files to force access only via WordPress.
-* NEW: If a role already has "read_documents" capability, do not reset capabilities on plugin reactivation.
-* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9.
-* FIX: Updates to document description do not enable the Submit button.
-* DEV: JS scripts will be called with Defer in WP 6.3 onwards.
-* DEV: Review for WP Coding standard 3.0
+* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
+* NEW: User pulldowns will show only relevant users. (#321)
+* NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
+* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name. (#319)
+* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
+* NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
+* NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
+* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
+* FIX: Updates to document description do not enable the Submit button
+* DEV: JS scripts will be called with Defer in WP 6.3 onwards. (#314)
+* DEV: Review for WP Coding standard 3.0 (#313)
 
 = 3.5.0 =
 
@@ -1036,6 +1038,8 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `new_tab` (with a true/false parameter) that will open the document in a new browser tab rather than in the current one.
 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
 `show_thumb` (with a true/false parameter) that will display a featured image (or generated one from the first page of PDF documents) if provided.
 
 `show_descr` (with a true/false parameter) that will output the entered description if provided.
@@ -1074,9 +1078,11 @@ It is also possible to add formatting parameters:
 
 `summary` (with a true/false parameter) that will add the excerpt for the revision to the output.
 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
 
-Both of these boolean variables can be entered without a value (with default value true ). 
+These boolean variables can be entered without a value (with default value true ). 
 
 = Block Usage =
 
@@ -1105,6 +1111,8 @@ It is also possible to add formatting parameters:
 `show_author`(with a true/false parameter) that will identify the document author.
 
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
 
 = Block Usage =
 

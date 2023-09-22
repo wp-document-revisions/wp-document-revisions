@@ -37,7 +37,7 @@ Domain Path: /languages
  *
  *  @copyright 2011-2023
  *  @license GPL v3
- *  @version 3.5.0
+ *  @version 3.6.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */

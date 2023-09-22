@@ -10,6 +10,10 @@
 
 * [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
 
+### Email notification and distribution
+
+* [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
+
 ### Document workflow management
 
 * [Edit Flow](https://wordpress.org/plugins/edit-flow/)
