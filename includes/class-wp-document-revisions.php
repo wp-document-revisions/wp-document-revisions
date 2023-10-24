@@ -2009,6 +2009,7 @@ class WP_Document_Revisions {
 						if ( $use_wp_filesystem ) {
 							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
 							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+							$metadata['sizes'][ $size ]['file'] = $new_file;
 						} else {
 							$dummy = null;
 							// Use copy and unlink because rename breaks streams.
@@ -2024,7 +2025,7 @@ class WP_Document_Revisions {
 				}
 			}
 		}
-		// add indicator to note it has been changeed *o no need).
+		// add indicator to note it has been changeed (so no need to reprocess).
 		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
 
 		// have finished loading the attachment into the upload directory, so remove it.
@@ -2109,6 +2110,7 @@ class WP_Document_Revisions {
 					if ( $use_wp_filesystem ) {
 						$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
 						$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+						$meta_sizes[ $size ]['file'] = $new_file;
 					} else {
 						$dummy = null;
 						// Use copy and unlink because rename breaks streams.

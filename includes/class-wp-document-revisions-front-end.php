@@ -406,7 +406,7 @@ class WP_Document_Revisions_Front_End {
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
 			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
 				<?php echo ( $atts_new_tab ? ' target="_blank"' : '' ); ?>>
-				<?php echo esc_html( get_the_title( $document->ID ) ); ?>
+				<?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $show_pdf ); ?>
 			</a>
 			<?php
 			if ( $show_edit && current_user_can( 'edit_document', $document->ID ) ) {
