@@ -2,7 +2,8 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Tested up to: 6.3.0
+Requires at least: 4.6
+Tested up to: 6.3.1
 Stable tag: 3.6.0
 
 == Description ==
@@ -196,6 +197,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 = 3.5.0 =
 
+* SECURITY: Rest media interface may expose document name. 
 * NEW: Site can decide to save permalinks without year/month part.
 * NEW: Permalinks may be updated on the documents screen.
 * FIX: guid field for documents was generally incorrect. Will be stored as a valid value.
@@ -203,7 +205,6 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * FIX: Document permalink month can be incorrect when saved at month end. (#300).
 * FIX: Valid document may not be found.
 " FIX: Improve notification process when activation user does not have edit_documents capability.
-" FIX: Rest media interface may expose document name, 
 
 = 3.4.0 =
 
@@ -219,11 +220,11 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * FIX: jQuery ready verb usage removed. (#262}
 * FIX: Caching strategy reviewed to ensure updates delivered to users. (#261}
 * FIX: Blocks used incorrect, but previously tolerated, parameter for RadioControls rendering them difficult to use.
-* FIX: Blocks are categorised within the Editor differently with WP 5.8
+* FIX: Blocks are categorised within the Editor differently with 5.8
 
 = 3.3.1 =
 
-* FIX: Content-Length header suppressed for HTTP/2 File Serve. (#254)
+* FIX: Content-Length header suppressed for HTTP/2 File Serve. {#254)
 * FIX: MOD_DEFLATE modifies etag, so no caching occurred in this case.
 * FIX: Gzip process invoked for encodings gzip, x-gzip and deflate.
 
@@ -742,7 +743,7 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
-== Filter document_stop_file_access_pattern
+== Filter document_stop_file_access_pattern ==
 
 In: class-wp-document-revisions.php
 
@@ -857,7 +858,7 @@ Yes and no. It will track who uploaded each version of the file, and will provid
 
 = How do permissions work? =
 
-There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_permissions</code> filter.
+There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_caps</code> filter.
 
 = What types of documents can my team collaborate on? =
 
@@ -1078,9 +1079,9 @@ It is also possible to add formatting parameters:
 
 `summary` (with a true/false parameter) that will add the excerpt for the revision to the output.
 
-`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
-
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
 
 These boolean variables can be entered without a value (with default value true ). 
 
@@ -1116,13 +1117,14 @@ It is also possible to add formatting parameters:
 
 = Block Usage =
 
-The block version of the widget called `Latest Documents`can be used on pages or posts. It cannot be converted to or from a shortcode block.
- 
-= Block supports properties =
+The block version of the widget called `Latest Documents` can be used on pages or posts. It cannot be converted to or from a shortcode block as there is no equivalent.
+
+== Block supports properties ==
 
 Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
 
 These attributes are align, color, spacing and typography and these attributes have been added to all blocks.
+
 
 == Translations ==
 
@@ -1144,7 +1146,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
