@@ -3,7 +3,42 @@
 
 	<extensions>*/php</extensions>
 
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="wp-document-revisions"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="edit_document"/>
+				<element value="read_document"/>
+				<element value="delete_document"/>
+				<element value="edit_documents"/>
+				<element value="edit_others_documents"/>
+				<element value="edit_private_documents"/>
+				<element value="edit_published_documents"/>
+				<element value="read_documents"/>
+				<element value="read_document_revisions"/>
+				<element value="read_private_documents"/>
+				<element value="delete_documents"/>
+				<element value="delete_others_documents"/>
+				<element value="delete_private_documents"/>
+				<element value="delete_published_documents"/>
+				<element value="publish_documents"/>
+				<element value="override_document_lock"/>
+			</property>
+		</properties>
+	</rule>
+
 	<rule ref="WordPress"/>
+
+	<config name="testVersion" value="7.1-"/>
+
+	<rule ref="PHPCompatibilityWP"/>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>

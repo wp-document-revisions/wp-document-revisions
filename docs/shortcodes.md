@@ -46,6 +46,8 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `new_tab` (with a true/false parameter) that will open the document in a new browser tab rather than in the current one.
 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
 `show_thumb` (with a true/false parameter) that will display a featured image (or generated one from the first page of PDF documents) if provided.
 
 `show_descr` (with a true/false parameter) that will output the entered description if provided.
@@ -86,7 +88,9 @@ It is also possible to add formatting parameters:
 
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
 
-Both of these boolean variables can be entered without a value (with default value true ). 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
+These boolean variables can be entered without a value (with default value true ). 
 
 ### Block Usage
 
@@ -115,6 +119,8 @@ It is also possible to add formatting parameters:
 `show_author`(with a true/false parameter) that will identify the document author.
 
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
 
 ### Block Usage
 

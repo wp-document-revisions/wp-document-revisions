@@ -63,7 +63,6 @@ class WP_Document_Revisions_Front_End {
 
 		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_front' ), 50 );
-
 	}
 
 
@@ -71,12 +70,12 @@ class WP_Document_Revisions_Front_End {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 
@@ -138,6 +137,15 @@ class WP_Document_Revisions_Front_End {
 			$atts_summary = false;
 		}
 
+		if ( isset( $atts['show_pdf'] ) ) {
+			$attach   = $wpdr->get_document( $document->ID );
+			$file     = get_attached_file( $attach->ID );
+			$mimetype = $wpdr->get_doc_mimetype( $file );
+			$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
+		} else {
+			$atts_show_pdf = '';
+		}
+
 		if ( isset( $atts['new_tab'] ) ) {
 			$atts_new_tab = filter_var( $atts['new_tab'], FILTER_VALIDATE_BOOLEAN );
 		} else {
@@ -158,7 +166,7 @@ class WP_Document_Revisions_Front_End {
 				// html - string not to be translated.
 				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( strtotime( $revision->post_modified ) ) );
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
-				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) );
+				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
 				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
 				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
@@ -267,10 +275,6 @@ class WP_Document_Revisions_Front_End {
 			'meta_compare',
 			'meta_query',
 			// Presentation attributes (will be dealt with before getting documents).
-			'show_edit',
-			'show_thumb',
-			'show_descr',
-			'new_tab',
 		);
 
 		foreach ( $keys as $key ) {
@@ -283,9 +287,9 @@ class WP_Document_Revisions_Front_End {
 			$defaults[ $tax['query'] ] = null;
 		}
 
-		// show_edit, show_thumb, show_descr and new_tab may be entered without name (implies value true)
+		// show_edit, show_thumb, show_descr, show_pdf and new_tab may be entered without name (implies value true)
 		// convert to name value pair.
-		for ( $i = 0; $i < 4; $i++ ) {
+		for ( $i = 0; $i < 5; $i++ ) {
 			if ( isset( $atts[ $i ] ) ) {
 				$atts[ $atts[ $i ] ] = true;
 				unset( $atts[ $i ] );
@@ -313,6 +317,13 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['show_descr'] );
 		} else {
 			$atts_show_descr = false;
+		}
+
+		if ( isset( $atts['show_pdf'] ) ) {
+			$atts_show_pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
+			unset( $atts['show_pdf'] );
+		} else {
+			$atts_show_pdf = '';
 		}
 
 		if ( isset( $atts['new_tab'] ) ) {
@@ -383,6 +394,14 @@ class WP_Document_Revisions_Front_End {
 		<?php
 		// loop through found documents.
 		foreach ( $documents as $document ) {
+			if ( empty( $atts_show_pdf ) ) {
+				$show_pdf = '';
+			} else {
+				$attach   = $wpdr->get_document( $document->ID );
+				$file     = get_attached_file( $attach->ID );
+				$mimetype = $wpdr->get_doc_mimetype( $file );
+				$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
+			}
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
 			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
@@ -446,7 +465,6 @@ class WP_Document_Revisions_Front_End {
 
 		// enqueue CSS for shortcode.
 		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), null, $wpdr->version );
-
 	}
 
 
@@ -485,7 +503,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param Array                   $categories           Block categories available.
 	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	public function wpdr_block_categories( $categories, $block_editor_context ) {
+	public function wpdr_block_categories( $categories, $block_editor_context ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		return array_merge(
 			$categories,
@@ -569,6 +587,10 @@ class WP_Document_Revisions_Front_End {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'show_pdf'        => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'new_tab'         => array(
 						'type'    => 'boolean',
 						'default' => true,
@@ -620,6 +642,10 @@ class WP_Document_Revisions_Front_End {
 						'type'    => 'boolean',
 						'default' => false,
 					),
+					'show_pdf'        => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'new_tab'         => array(
 						'type'    => 'boolean',
 						'default' => true,
@@ -667,7 +693,10 @@ class WP_Document_Revisions_Front_End {
 				'wp-i18n',
 			),
 			filemtime( "$dir/$index_js" ),
-			true
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
 		);
 
 		// Add supplementary script for additional information.
@@ -691,7 +720,10 @@ class WP_Document_Revisions_Front_End {
 				'wp-i18n',
 			),
 			filemtime( "$dir/$index_js" ),
-			true
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
 		);
 
 		// set translations.
@@ -713,17 +745,17 @@ class WP_Document_Revisions_Front_End {
 	 * Get taxonomy structure.
 	 *
 	 * @param String  $taxonomy Taxonomy name.
-	 * @param Integer $parent   parent term.
+	 * @param Integer $par_term parent term.
 	 * @param Integer $level    level in hierarchy.
 	 * @since 3.3.0
 	 */
-	private function get_taxonomy_hierarchy( $taxonomy, $parent = 0, $level = 0 ) {
+	private function get_taxonomy_hierarchy( $taxonomy, $par_term = 0, $level = 0 ) {
 		// get all direct descendants of the $parent.
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
 				'hide_empty' => false,
-				'parent'     => $parent,
+				'parent'     => $par_term,
 			)
 		);
 		// go through all the direct descendants of $parent, and recurse their children.
@@ -866,6 +898,7 @@ class WP_Document_Revisions_Front_End {
 				'show_edit'   => '',
 				'show_thumb'  => false,
 				'show_descr'  => true,
+				'show_pdf'    => false,
 				'new_tab'     => true,
 				'freeform'    => '',
 			),
@@ -877,13 +910,13 @@ class WP_Document_Revisions_Front_End {
 		$curr_tax_max     = $taxonomy_details['stmax'];
 		$curr_taxos       = $taxonomy_details['taxos'];
 		$errs             = '';
-		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent, Universal.WhiteSpace.PrecisionAlignment
 		if ( ( $curr_tax_max >= 1 && ( ! empty( $atts['taxonomy_0'] ) ) && $atts['taxonomy_0'] !== $curr_taxos[0]['query'] ) ||
 		     ( $curr_tax_max >= 2 && ( ! empty( $atts['taxonomy_1'] ) ) && $atts['taxonomy_1'] !== $curr_taxos[1]['query'] ) ||
 		     ( $curr_tax_max >= 3 && ( ! empty( $atts['taxonomy_2'] ) ) && $atts['taxonomy_2'] !== $curr_taxos[2]['query'] ) ) {
 			$errs .= '<p>' . esc_html__( ' Taxonomy details in this block have changed.', 'wp-document-revisions' ) . '</p>';
 		}
-		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, WordPress.WhiteSpace.PrecisionAlignment
+		// phpcs:enable Generic.WhiteSpace.DisallowSpaceIndent, Universal.WhiteSpace.PrecisionAlignment
 
 		// Remove attribute if not an over-ride.
 		if ( 0 === strlen( $atts['show_edit'] ) ) {
@@ -894,6 +927,11 @@ class WP_Document_Revisions_Front_End {
 		}
 		if ( 0 === strlen( $atts['show_descr'] ) ) {
 			unset( $atts['show_descr'] );
+		}
+
+		// Remove show_pdf if false.
+		if ( ! $atts['show_pdf'] ) {
+			unset( $atts['show_pdf'] );
 		}
 
 		// Remove new_tab if false.
@@ -987,6 +1025,7 @@ class WP_Document_Revisions_Front_End {
 				'id'          => 0,
 				'numberposts' => 5,
 				'summary'     => false,
+				'show_pdf'    => false,
 				'new_tab'     => true,
 			),
 			$atts,
@@ -1002,6 +1041,11 @@ class WP_Document_Revisions_Front_End {
 		// Check it is a document (and not its revision or attached document) so don't use verify_post_type.
 		if ( 'document' !== get_post_type( $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// Remove show_pdf if false.
+		if ( ! $atts['show_pdf'] ) {
+			unset( $atts['show_pdf'] );
 		}
 
 		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';

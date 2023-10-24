@@ -62,6 +62,10 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 			type : 'boolean',
 			default: true
 		},
+		show_pdf : {
+			type : 'boolean',
+			default: false
+		},
 		new_tab : {
 			type: 'boolean',
 			default: true
@@ -301,6 +305,15 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 											setAttributes( { show_descr: val } );
 										}
 								}),
+								//Show PDF Indication
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_pdf,
+									label: __( 'Show PDF File indication?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_pdf: val } );
+										}
+								}),
 								//Open in new tab
 								createElement(ToggleControl, {
 									type: 'boolean',
@@ -360,6 +373,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					var sshow_edit = "";
 					var sshow_thumb = false;
 					var sshow_descr = true;
+					var sshow_pdf = false;
 					var snew_tab = true;
 					var sfreeform  = "";
 
@@ -446,6 +460,12 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 							}
 							used = true;
 						}
+						if ( parm[0] === 'show_pdf' ) {
+							if ( parm.length === 1 || parm[1] === 'true' ) {
+								sshow_pdf = true;
+							}
+							used = true;
+						}
 						if ( parm[0] === 'new_tab' ) {
 							if ( parm.length === 2 && parm[1] === 'false' ) {
 								snew_tab = false;
@@ -472,6 +492,7 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 						show_edit : sshow_edit,
 						show_thumb : sshow_thumb,
 						show_descr : sshow_descr,
+						show_pdf : sshow_pdf,
 						new_tab : snew_tab,
 						freeform : sfreeform.trim()
 					} );
@@ -530,6 +551,9 @@ registerBlockType( 'wp-document-revisions/documents-shortcode', {
 					}
 					if ( attributes.show_descr ) {
 						content += " show_descr";
+					}
+					if ( attributes.show_pdf ) {
+						content += " show_pdf";
 					}
 					if ( attributes.new_tab ) {
 						content += " new_tab";

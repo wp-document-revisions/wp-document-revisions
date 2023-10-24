@@ -273,6 +273,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
 		$file = get_attached_file( $attach->ID );
 		// Move $file.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $file . '.txt' );
 
 		ob_start();
@@ -296,6 +297,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment exists but related file not found' ), 'test_struct_missing_file_msg' );
 
 		// Move $file back.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file . '.txt', $file );
 	}
 
@@ -544,6 +546,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$nfile = str_replace( $fname, $nname, $file );
 
 		// Move $file.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $nfile );
 
 		ob_start();

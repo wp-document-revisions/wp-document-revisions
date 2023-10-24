@@ -542,5 +542,4 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 
 		self::check_trash_delete( self::$editor_public_post, true );
 	}
-
 }

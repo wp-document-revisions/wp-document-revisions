@@ -45,7 +45,7 @@
       @hijackAutosave()
       @checkUpdate()
       setInterval @updateTimestamps, 60000
-      setInterval @checkUpdate, 1500
+      setInterval @checkUpdate, 1000
       return
 
     WPDocumentRevisions::hasUpload = false
@@ -159,17 +159,17 @@
       )(this)
 
     WPDocumentRevisions::cookieFalse = ->
-      wpCookies.set 'doc_image', 'false', 24 * 60 * 60, false, false, @secure
+      wpCookies.set 'doc_image', 'false', 60 * 60, '/wp-admin', false, @secure
       return
 
     WPDocumentRevisions::cookieTrue = ->
-      wpCookies.set 'doc_image', 'true', 24 * 60 * 60, false, false, @secure
+      wpCookies.set 'doc_image', 'true', 60 * 60, '/wp-admin', false, @secure
       @$(':button, :submit', '#submitpost').removeAttr 'disabled'
       # Propagation will be stopped in postimagediv to stop document event setting cookie false.
       return
 
     WPDocumentRevisions::cookieDelete = ->
-      wpCookies.set 'doc_image', 'true', -1, false, false, @secure
+      wpCookies.set 'doc_image', 'true', -60, '/wp-admin', false, @secure
       return
 
     WPDocumentRevisions::updateTimestamps = ->
@@ -210,9 +210,13 @@
       else if /^\d+$/.test(content)
         attach = [ '<!-- WPDR ' + content + ' -->' ]
       else
-        attach = content.match('<!-- WPDR [0-9]+ -->')
-      newtext = newtext.replace(/<!-- WPDR [0-9]+ -->/, '')
+        # match returns array, so ensure structure.
+        attach = content.match(/!-- WPDR \s*\d+ -->/)
+      # might have an extra space incldes in the id provided.
+      newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '')
       newtext = attach[0] + newtext
+      if content != newtext
+      	@enableSubmit()
       # set the desired text eeverywhere.
       @window.jQuery('#curr_content').val newtext
       @window.jQuery('#post_content').val newtext
@@ -226,14 +230,15 @@
         file = file.name.split('.').pop()
       if @hasUpload
         return
-      # On upload set the document identifer in the new format.
+      # On upload set the document identifier in the new format.
+      docID = /\d+$/.exec(attachmentID)
       # This will throw away the description for an existing post - but it is in content.
-      @window.jQuery('#post_content').val '<!-- WPDR ' + attachmentID + ' -->'
+      @window.jQuery('#post_content').val '<!-- WPDR ' + docID + ' -->'
       @window.jQuery('#message').hide()
-      @enableSubmit()
       @hasUpload = true
       @window.tb_remove()
       @window.jQuery('#post').before(wp_document_revisions.postUploadNotice).prev().fadeIn().fadeOut().fadeIn()
+      @enableSubmit()
       if @window.jQuery('#sample-permalink').length != 0
         return @window.jQuery('#sample-permalink').html(@window.jQuery('#sample-permalink').html().replace(/\<\/span>(\.[a-z0-9]{1,7})?@$/i, wp_document_revisions.extension))
       return

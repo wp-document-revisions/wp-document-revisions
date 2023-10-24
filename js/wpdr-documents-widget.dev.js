@@ -42,6 +42,10 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 			type : 'boolean',
 			default: true
 		},
+		show_pdf : {
+			type : 'boolean',
+			default: false
+		},
 		new_tab : {
 			type : 'boolean',
 			default: false
@@ -179,6 +183,15 @@ registerBlockType( 'wp-document-revisions/documents-widget', {
 									label: __( 'Show author name?', 'wp-document-revisions' ),
 									onChange: function( val ) {
 											setAttributes( { show_author: val } );
+										}
+								}),
+								//Show PDF Indication
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_pdf,
+									label: __( 'Show PDF File indication?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_pdf: val } );
 										}
 								}),
 								//Open in new tab
