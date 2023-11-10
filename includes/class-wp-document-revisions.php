@@ -2025,14 +2025,13 @@ class WP_Document_Revisions {
 				}
 			}
 		}
-		// add indicator to note it has been changeed (so no need to reprocess).
-		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+		// add indicator to note it has been changed (so no need to reprocess).
+		$metadata['wpdr_hidden'] = 1;
 
 		// have finished loading the attachment into the upload directory, so remove it.
 		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 
 		return $metadata;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -2052,22 +2051,18 @@ class WP_Document_Revisions {
 		if ( ! self::check_doc_attach( $attach ) ) {
 			return;
 		}
-		// has it been converted.
-		if ( true === get_post_meta( $attachment_id, '_wpdr_meta_hidden', true ) ) {
-			// already processed.
-			return;
-		}
 
 		// get attachment metadata.
 		$meta = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
-		if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
+		if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) || isset( $meta['wpdr_hidden'] ) ) {
 			return;
 		}
 
 		$meta_sizes = $meta['sizes'];
-		if ( ! isset( $meta_sizes[0]['file'] ) || 0 !== strpos( $meta_sizes[0]['file'], $attach->post_title ) ) {
-			// image files have a different name.
-			add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+		if ( ! isset( $meta_sizes[0]['file'] ) || false === strpos( $meta_sizes[0]['file'], substr( $attach->post_title, 0, 32 ) ) ) {
+			// image files have a different name, nothing to do.
+			$meta['wpdr_hidden'] = 1;
+			update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
 			return;
 		}
 
@@ -2108,9 +2103,10 @@ class WP_Document_Revisions {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 					if ( $use_wp_filesystem ) {
-						$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
-						$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
-						$meta_sizes[ $size ]['file'] = $new_file;
+						if ( $wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+							$meta_sizes[ $size ]['file'] = $new_file;
+						}
 					} else {
 						$dummy = null;
 						// Use copy and unlink because rename breaks streams.
@@ -2123,9 +2119,11 @@ class WP_Document_Revisions {
 				}
 			}
 		}
-		$meta['sizes'] = $meta_sizes;
+		// update the metadata.
+		$meta['sizes']       = $meta_sizes;
+		$meta['wpdr_hidden'] = 1;
+
 		update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
-		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
 	}
 
 
