@@ -23,6 +23,10 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 			type: 'boolean',
 			default: false
 		},
+		show_pdf : {
+			type : 'boolean',
+			default: false
+		},
 		new_tab : {
 			type: 'boolean',
 			default: true
@@ -111,6 +115,15 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 										setAttributes( { summary: val } )
 									}
 								} ),
+								//Show PDF Indication
+								createElement( ToggleControl, {
+									type: 'boolean',
+									checked: attributes.show_pdf,
+									label: __( 'Show PDF File indication?', 'wp-document-revisions' ),
+									onChange: function( val ) {
+											setAttributes( { show_pdf: val } );
+										}
+								}),
 								//Open in new tab
 								createElement( ToggleControl, {
 									type: 'boolean',
@@ -153,6 +166,7 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 					var sid = 1;
 					var snumberposts = 5;
 					var ssummary = false;
+					var sshow_pdf = false;
 					var snew_tab = true;
 					var i;
 					for (i of args) {
@@ -177,6 +191,12 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 								ssummary = true;
 							}
 						};
+						if ( parm[0] === 'show_pdf' ) {
+							if ( parm.length === 1 || parm[1] === 'true' ) {
+								sshow_pdf = true;
+							}
+							used = true;
+						}
 						if ( parm[0] === 'new_tab' ) {
 							if ( parm.length === 1 || parm[1] === 'false' ) {
 								snew_tab = false;
@@ -188,6 +208,7 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 						id : sid,
 						numberposts : snumberposts,
 						summary : ssummary,
+						show_pdf : sshow_pdf,
 						new_tab : snew_tab
 					} );
 				}
@@ -209,6 +230,9 @@ registerBlockType( 'wp-document-revisions/revisions-shortcode', {
 						content += " summary=false";
 					} else {
 						content += " summary=true";
+					}
+					if ( attributes.show_pdf ) {
+						content += " show_pdf";
 					}
 					if ( ! attributes.new_tab ) {
 						content += " new_tab=false ]";

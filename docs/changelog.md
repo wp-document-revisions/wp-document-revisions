@@ -1,8 +1,24 @@
 ## Changelog
 
+Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+### 3.6.0
+
+* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
+* NEW: User pulldowns will show only relevant users. (#321)
+* NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
+* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name. (#319)
+* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
+* NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
+* NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
+* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
+* FIX: Updates to document description do not enable the Submit button
+* DEV: JS scripts will be called with Defer in WP 6.3 onwards. (#314)
+* DEV: Review for WP Coding standard 3.0 (#313)
+
 ### 3.5.0
 
-" SECURITY: Rest media interface may expose document name. 
+* SECURITY: Rest media interface may expose document name. 
 * NEW: Site can decide to save permalinks without year/month part.
 * NEW: Permalinks may be updated on the documents screen.
 * FIX: guid field for documents was generally incorrect. Will be stored as a valid value.

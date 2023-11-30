@@ -3,8 +3,8 @@
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 6.1.1
-Stable tag: 3.5.0
+Tested up to: 6.3.1
+Stable tag: 3.6.0
 
 == Description ==
 
@@ -89,7 +89,6 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * **Bulk Import** - how to batch import a directory (or other list) of files as documents
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
-* **Remove Workflow States** - Completely removes Workflow state taxonomy backend and UI
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 
 
@@ -180,9 +179,25 @@ In: class-wp-document-revisions.php
 
 == Changelog ==
 
+Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+= 3.6.0 =
+
+* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
+* NEW: User pulldowns will show only relevant users. (#321)
+* NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
+* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name. (#319)
+* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
+* NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
+* NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
+* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
+* FIX: Updates to document description do not enable the Submit button
+* DEV: JS scripts will be called with Defer in WP 6.3 onwards. (#314)
+* DEV: Review for WP Coding standard 3.0 (#313)
+
 = 3.5.0 =
 
-" SECURITY: Rest media interface may expose document name. 
+* SECURITY: Rest media interface may expose document name. 
 * NEW: Site can decide to save permalinks without year/month part.
 * NEW: Permalinks may be updated on the documents screen.
 * FIX: guid field for documents was generally incorrect. Will be stored as a valid value.
@@ -668,12 +683,6 @@ In: class-wp-document-revisions.php
 
 Filters the MIME type for a file before it is processed by WP Document Revisions.
 
-== Filter document_revisions_owners ==
-
-In: class-wp-document-revisions-admin.php
-
-Filters the author metabox query for document owners.
-
 == Filter document_revisions_serve_file_headers ==
 
 In: class-wp-document-revisions.php
@@ -734,6 +743,12 @@ In: class-wp-document-revisions.php
 
 Filters the document slug.
 
+== Filter document_stop_file_access_pattern ==
+
+In: class-wp-document-revisions.php
+
+Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
+
 == Filter document_taxonomy_term_count ==
 
 In: class-wp-document-revisions.php
@@ -757,6 +772,18 @@ Filters setting the new document status to private.
 In: class-wp-document-revisions.php
 
 Filter to switch off use of standard Workflow States taxonomy. For internal use.
+
+== Filter document_use_wp_filesystem ==
+
+In: class-wp-document-revisions.php
+
+Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
+
+== Filter document_validate_md5 ==
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filter to switch off md5 format attachment validation.
 
 == Filter document_verify_feed_key ==
 
@@ -831,7 +858,7 @@ Yes and no. It will track who uploaded each version of the file, and will provid
 
 = How do permissions work? =
 
-There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_permissions</code> filter.
+There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_caps</code> filter.
 
 = What types of documents can my team collaborate on? =
 
@@ -1012,6 +1039,8 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `new_tab` (with a true/false parameter) that will open the document in a new browser tab rather than in the current one.
 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
 `show_thumb` (with a true/false parameter) that will display a featured image (or generated one from the first page of PDF documents) if provided.
 
 `show_descr` (with a true/false parameter) that will output the entered description if provided.
@@ -1052,7 +1081,9 @@ It is also possible to add formatting parameters:
 
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
 
-Both of these boolean variables can be entered without a value (with default value true ). 
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
+
+These boolean variables can be entered without a value (with default value true ). 
 
 = Block Usage =
 
@@ -1081,6 +1112,8 @@ It is also possible to add formatting parameters:
 `show_author`(with a true/false parameter) that will identify the document author.
 
 `new_tab` (with a true/false parameter) that will open the revision in a new browser tab rather than in the current one.
+
+`show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
 
 = Block Usage =
 
@@ -1120,6 +1153,10 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 = Taxonomy management =
 
 * [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+
+= Email notification and distribution =
+
+* [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
 
 = Document workflow management =
 

@@ -34,7 +34,7 @@ Yes and no. It will track who uploaded each version of the file, and will provid
 
 ### How do permissions work?
 
-There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_permissions</code> filter.
+There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_caps</code> filter.
 
 ### What types of documents can my team collaborate on?
 

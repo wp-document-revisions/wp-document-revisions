@@ -56,12 +56,12 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function.
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_document( $response, $post, $request ) {
+	public function doc_clean_document( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document.
 		if ( 'document' !== get_post_type( $post->ID ) ) {
 			return $response;
@@ -188,7 +188,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_revision( $response, $post, $request ) {
+	public function doc_clean_revision( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document revision.
 		$parent = $post->post_parent;
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
@@ -216,7 +216,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_attachment( $response, $post, $request ) {
+	public function doc_clean_attachment( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
@@ -246,30 +246,27 @@ class WP_Document_Revisions_Manage_Rest {
 			if ( $response->data['media_details'] instanceof stdClass ) {
 				// attachment meta data not present so cannot expose anything.
 				null;
-			} else {
-				if ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
-					// cannot trust the metadate, treat as not present.
-					$response->data['media_details'] = new stdClass();
-				} elseif ( $doc_dir !== $std_dir ) {
-					// need to correct link.
-					if ( isset( $response->data['media_details']['sizes'] ) ) {
-						$block = $response->data['media_details']['sizes'];
-						require_once ABSPATH . '/wp-admin/includes/file.php';
-						$home    = get_home_path();
-						$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
-						$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
-						foreach ( $block as $size => $sizeinfo ) {
-							if ( isset( $sizeinfo['source_url'] ) ) {
-								$block[ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
-							}
+			} elseif ( false === get_post_meta( $parent, '_wpdr_meta_hidden', true ) ) {
+				// cannot trust the metadate, treat as not present.
+				$response->data['media_details'] = new stdClass();
+			} elseif ( $doc_dir !== $std_dir ) {
+				// need to correct link.
+				if ( isset( $response->data['media_details']['sizes'] ) ) {
+					$block = $response->data['media_details']['sizes'];
+					require_once ABSPATH . '/wp-admin/includes/file.php';
+					$home    = get_home_path();
+					$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
+					$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
+					foreach ( $block as $size => $sizeinfo ) {
+						if ( isset( $sizeinfo['source_url'] ) ) {
+							$block[ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
 						}
-						$response->data['media_details']['sizes'] = $block;
 					}
+					$response->data['media_details']['sizes'] = $block;
 				}
 			}
 		}
 
 		return $response;
 	}
-
 }

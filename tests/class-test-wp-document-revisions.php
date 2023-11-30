@@ -236,6 +236,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// Keep track of users we create.
 		self::flush_roles();
 
+		// phpcs:ignore WordPress.WP.Capabilities.RoleFound
 		self::assertTrue( current_user_can( 'subscriber' ), 'Not subscriber role' );
 		self::assertFalse( self::role_has_cap( 'subscriber', 'edit_documents' ), 'Can edit_documents' );
 		self::assertFalse( self::role_has_cap( 'subscriber', 'edit_others_documents' ), 'Can edit_others_documents' );
@@ -271,6 +272,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// Keep track of users we create.
 		self::flush_roles();
 
+		// phpcs:ignore WordPress.WP.Capabilities.RoleFound
 		self::assertTrue( current_user_can( 'contributor' ), 'Not contributor role' );
 		self::assertTrue( self::role_has_cap( 'contributor', 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertFalse( self::role_has_cap( 'contributor', 'edit_others_documents' ), 'Can edit_others_documents' );
@@ -306,6 +308,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// Keep track of users we create.
 		self::flush_roles();
 
+		// phpcs:ignore WordPress.WP.Capabilities.RoleFound
 		self::assertTrue( current_user_can( 'author' ), 'Not author role' );
 		self::assertTrue( self::role_has_cap( 'author', 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertFalse( self::role_has_cap( 'author', 'edit_others_documents' ), 'Can edit_others_documents' );
@@ -334,6 +337,7 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 		// Keep track of users we create.
 		self::flush_roles();
 
+		// phpcs:ignore WordPress.WP.Capabilities.RoleFound
 		self::assertTrue( current_user_can( 'editor' ), 'Not editor role' );
 		self::assertTrue( self::role_has_cap( 'editor', 'edit_documents' ), 'Cannot edit_documents' );
 		self::assertTrue( self::role_has_cap( 'editor', 'edit_others_documents' ), 'Cannot edit_others_documents' );
@@ -451,5 +455,4 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		self::assertTrue( $wpdr->verify_post_type( self::$editor_public_post ) );
 	}
-
 }

@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var String $version
 	 */
-	public $version = '3.5.0';
+	public $version = '3.6.0';
 
 	/**
 	 * The WP default upload directory cache.
@@ -142,6 +142,28 @@ class WP_Document_Revisions {
 		add_action( 'pre_get_posts', array( &$this, 'retrieve_documents' ) );
 
 		// rewrites and permalinks.
+		/**
+		 * Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory.
+		 *
+		 * By default, documents can be accessed directly using a URL to the document file.
+		 *
+		 * To stop this, add an element to specify all or part of the URL to access the document.
+		 *
+		 * If you have a separate document library and you specify the access path to the library
+		 * then it is safe to use.
+		 *
+		 * You should not use this if your document library contains files using MD5-encoded names
+		 * that are not documents and that could be read directly since it creates a pattern-based rule
+		 * to block access.
+		 *
+		 * @since 3.6
+		 *
+		 * @param string ''  helps define a more specific sub-directory for no direct file access.
+		 */
+		if ( '' !== apply_filters( 'document_stop_file_access_pattern', '' ) ) {
+			add_action( 'generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ) );
+			add_filter( 'mod_rewrite_rules', array( &$this, 'mod_rewrite_rules' ) );
+		}
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
@@ -205,6 +227,8 @@ class WP_Document_Revisions {
 		if ( ! $wpdr_widget ) {
 			require_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+			add_action( 'widgets_init', array( $wpdr_widget, 'wpdr_widgets_init' ) );
+			add_action( 'init', array( $wpdr_widget, 'wpdr_widgets_block_init' ), 99 );
 		}
 
 		// load validation code.
@@ -232,6 +256,39 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Callback called when the plugin is rewrite rules are flushed (including activation).
+	 *
+	 * @since 3.6
+	 *
+	 * @return void
+	 */
+	public function generate_rewrite_rules() {
+		global $wp_rewrite;
+		// forbid access to documents directly. Use a placeholder.
+		$wp_rewrite->add_external_rule( 'WPDR', '-' );
+	}
+
+	/**
+	 * Called when the htaccess rules have been created to stop document access (403 error).
+	 *
+	 * @since 3.6
+	 *
+	 * @param string $rules Mod_rewrite rewrite rules formatted for .htaccess.
+	 */
+	public function mod_rewrite_rules( $rules ) {
+		// forbid access to documents directly.
+		/**
+		 * Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory).
+		 *
+		 * See above for definition.
+		 */
+		$path_to = trailingslashit( apply_filters( 'document_stop_file_access_pattern', '' ) );
+		// check that the URL points to a file with an MD5 format name. If so, return Forbidden.
+		$rules = preg_replace( '|RewriteRule \^WPDR /- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [R=403,L]", $rules );
+		return $rules;
+	}
+
+	/**
 	 * Called after the plugin is initially activated and checks whether there was a problem with the user not having edit_documents capability.
 	 *
 	 * This can occur if the (admin) user has multiple roles with one denying access overriding the admin access.
@@ -251,6 +308,8 @@ class WP_Document_Revisions {
 			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
+			</p></div>
+			<?php esc_html_e( 'You should first check whether you have multiple roles and that each has edit_documents capability.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
 		}
@@ -445,8 +504,8 @@ class WP_Document_Revisions {
 	 */
 	public function initialize_workflow_states() {
 		$terms = get_terms(
-			'workflow_state',
 			array(
+				'taxonomy'   => 'workflow_state',
 				'hide_empty' => false,
 			)
 		);
@@ -691,32 +750,32 @@ class WP_Document_Revisions {
 		// These rules will define the trailing / as optional, as will be the extension (since it not used in the search).
 
 		// document revisions in the form of [doc_slug]/yyyy/mm/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-(\d+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&revision=$matches[4]';
 
 		// document revision feeds in the form of yyyy/mm/[slug]-revision-##.[extension]/feed/, yyyy/mm/[slug]-revision-##/feed/, etc.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]&feed=feed';
 
 		// documents in the form of [doc_slug]/yyyy/mm/[slug].[extension], [doc_slug]/yyyy/mm/[slug].[extension]/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?year=$matches[1]&monthnum=$matches[2]&document=$matches[3]';
 
 		// documents in the form of [doc_slug]/yyyy/mm/.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2}){0,1}/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})?/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]';
 
 		// and their pages.
-		$my_rules[ $slug . '/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]';
+		$my_rules[ $slug . '/(\d{4})/(\d{1,2})/page/?(\d{1,})/?$' ] = 'index.php?post_type=document&year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]';
 
 		// document revisions in the form of [doc_slug]/[slug]-revision-##.[extension], [doc_slug]/yyyy/mm/[slug]-revision-##.[extension]/, [doc_slug]/yyyy/mm/[slug]-revision-##/ and [doc_slug]/yyyy/mm/[slug]-revision-##.
-		$my_rules[ $slug . '/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-([0-9]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]&revision=$matches[2]';
+		$my_rules[ $slug . '/([^./]+)-' . __( 'revision', 'wp-document-revisions' ) . '-(\d+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]&revision=$matches[2]';
 
 		// document revision feeds in the form of [doc_slug]/[slug].[extension]/feed/, [doc_slug]/[slug]/feed/, etc.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/feed/?$' ] = 'index.php?document=$matches[1]&feed=feed';
 
 		// documents in the form of [doc_slug]/[slug]##.[extension], [doc_slug]/[slug]##.[extension]/.
-		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7}){0,1}/?$' ] = 'index.php?document=$matches[1]';
+		$my_rules[ $slug . '/([^./]+)(\.[A-Za-z0-9]{1,7})?/?$' ] = 'index.php?document=$matches[1]';
 
 		// site.com/documents/ should list all documents that user has access to (private, public).
-		$my_rules[ $slug . '/?$' ]                   = 'index.php?post_type=document';
-		$my_rules[ $slug . '/page/?([0-9]{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
+		$my_rules[ $slug . '/?$' ]                = 'index.php?post_type=document';
+		$my_rules[ $slug . '/page/?(\d{1,})/?$' ] = 'index.php?post_type=document&paged=$matches[1]';
 
 		/**
 		 * Filters the Document rewrite rules.
@@ -754,7 +813,7 @@ class WP_Document_Revisions {
 	 * @param String $sample (optional) not used.
 	 * @return string the real permalink
 	 */
-	public function permalink( $link, $document, $leavename, $sample = '' ) {
+	public function permalink( $link, $document, $leavename, $sample = '' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		global $wp_rewrite;
 		$revision_num = false;
 
@@ -798,6 +857,7 @@ class WP_Document_Revisions {
 		$link = apply_filters( 'document_permalink', $link, $document );
 
 		return $link;
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -990,7 +1050,6 @@ class WP_Document_Revisions {
 		$index = $this->get_revision_indices( $post_id );
 
 		return ( isset( $index[ $revision_num ] ) ) ? $index[ $revision_num ] : false;
-
 	}
 
 
@@ -1168,31 +1227,8 @@ class WP_Document_Revisions {
 
 		$headers['Content-Disposition'] = $disposition . '; filename="' . $filename . '"';
 
-		/**
-		 * Filters the MIME type for a file before it is processed by WP Document Revisions.
-		 *
-		 * If filtered to `false`, no `Content-Type` header will be set by the plugin.
-		 *
-		 * If filtered to a string, that value will be set for the `Content-Type` header.
-		 *
-		 * @param null|bool|string $mimetype The MIME type for a given file.
-		 * @param string           $file     The file being served.
-		 */
-		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file );
-
-		if ( is_null( $mimetype ) ) {
-			// inspired by wp-includes/ms-files.php.
-			$mime = wp_check_filetype( $file );
-			if ( false === $mime['type'] && function_exists( 'mime_content_type' ) ) {
-				$mime['type'] = mime_content_type( $file );
-			}
-
-			if ( $mime['type'] ) {
-				$mimetype = $mime['type'];
-			} else {
-				$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
-			}
-		}
+		// get the mime type.
+		$mimetype = $this->get_doc_mimetype( $file );
 
 		// Set the Content-Type header if a mimetype has been detected or provided.
 		if ( is_string( $mimetype ) ) {
@@ -1357,7 +1393,45 @@ class WP_Document_Revisions {
 		} else {
 			// know the headers and buffering may cause writing, so output headers first.
 			$this->serve_headers( $headers, $file );
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
+			// see if PHP readfile could be used.
+			/**
+			 * Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant of compressed on output.
+			 *
+			 * Note: Use `add_filter( 'document_use_wp_filesystem', '__return_true' )` to shortcircuit.
+			 *
+			 * @param bool    $default    false unless overridden by prior filter.
+			 * @param string  $file       File name to be served.
+			 * @param integer $post->ID   Post id of the document.
+			 * @param integer $attach->ID Post id of the attachment.
+			 */
+			if ( apply_filters( 'document_use_wp_filesystem', false, $file, $post->ID, $attach->ID ) ) {
+				// try WP_filesystem for $doc_dir.
+				// file code may not be already loaded.
+				if ( ! function_exists( 'get_filesystem_method' ) ) {
+					include ABSPATH . 'wp-admin/includes/file.php';
+				}
+				$method = get_filesystem_method( array(), dirname( $file ), false );
+
+				if ( 'direct' === $method ) {
+					// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+					$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, dirname( $file ), array(), false );
+
+					// initialize the API.
+					if ( WP_Filesystem( $creds ) ) {
+						// all good so far.
+						global $wp_filesystem;
+
+						// downloading a file, not normally WP text so don't sanitize.
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $wp_filesystem->get_contents( $file );
+						return;
+					}
+				}
+			}
+			// If we marrive here, serve the file via readfile.
+			// Note: We use defsault readfile, and not WP_Filesystem for memory/performance reasons.
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 			readfile( $file );
 		}
 
@@ -1411,12 +1485,12 @@ class WP_Document_Revisions {
 	/**
 	 * Filter to authenticate document delivery.
 	 *
-	 * @param bool     $default true unless overridden by prior filter.
-	 * @param obj      $post the post object.
+	 * @param bool     $deflt   true unless overridden by prior filter.
+	 * @param obj      $post    the post object.
 	 * @param bool|int $version version of the document being served, if any.
 	 * @return unknown
 	 */
-	public function serve_document_auth( $default, $post, $version ) {
+	public function serve_document_auth( $deflt, $post, $version ) {
 		$user     = wp_get_current_user();
 		$ret_null = ( 0 === $user->ID && ! apply_filters( 'document_read_uses_read', true ) );
 		// public file, not a revision, no need to go any further
@@ -1424,7 +1498,7 @@ class WP_Document_Revisions {
 		if ( ! $version && 'publish' === $post->post_status ) {
 			if ( 0 === $user->ID && apply_filters( 'document_read_uses_read', true ) ) {
 				// Not logged on. But only default read capability.
-				return $default;
+				return $deflt;
 			}
 		}
 
@@ -1439,7 +1513,42 @@ class WP_Document_Revisions {
 			return ( $ret_null ? null : false );
 		}
 
-		return $default;
+		return $deflt;
+	}
+
+	/**
+	 * Find the mimetype.
+	 *
+	 * @param string $file  file name..
+	 * @return string
+	 */
+	public function get_doc_mimetype( $file ) {
+		/**
+		 * Filters the MIME type for a file before it is processed by WP Document Revisions.
+		 *
+		 * If filtered to `false`, no `Content-Type` header will be set by the plugin.
+		 *
+		 * If filtered to a string, that value will be set for the `Content-Type` header.
+		 *
+		 * @param null|bool|string $mimetype The MIME type for a given file.
+		 * @param string           $file     The file being served.
+		 */
+		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file );
+
+		if ( is_null( $mimetype ) ) {
+			// inspired by wp-includes/ms-files.php.
+			$mime = wp_check_filetype( $file );
+			if ( false === $mime['type'] && function_exists( 'mime_content_type' ) ) {
+				$mime['type'] = mime_content_type( $file );
+			}
+
+			if ( $mime['type'] ) {
+				$mimetype = $mime['type'];
+			} else {
+				$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
+			}
+		}
+		return $mimetype;
 	}
 
 	/**
@@ -1566,7 +1675,7 @@ class WP_Document_Revisions {
 
 
 	/**
-	 * Filter the attached file for documents to obviate  use of cached upload directory.
+	 * Filter the attached file for documents to obviate use of cached upload directory.
 	 *
 	 * @since 3.5.0
 	 * @param string/false $file          The file path to where the attached file should be.
@@ -1626,7 +1735,7 @@ class WP_Document_Revisions {
 			return $dir;
 		}
 
-		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
+		// Ignore if dealing with thumbnail on document page (Document upload has type set as 'file').
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
 			self::$doc_image = true;
@@ -1754,15 +1863,19 @@ class WP_Document_Revisions {
 		add_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
 
+		// store original file name.
+		$orig_filename = $file['name'];
+
 		// hash and replace filename, appending extension.
 		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).
 		 *
-		 * @param array $file encoded file name.
+		 * @param array  $file          file structure with encoded file name.
+		 * @param string $orig_filename original file name.
 		 */
-		$file = apply_filters( 'document_internal_filename', $file );
+		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
 
 		return $file;
 	}
@@ -1783,7 +1896,7 @@ class WP_Document_Revisions {
 			return $file;
 		}
 
-		// Ignore if dealing with thumbnail on document page.
+		// Ignore if dealing with thumbnail on document page. (Document has $_POST['type'] = 'file').
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
 			self::$doc_image = true;
@@ -1851,7 +1964,7 @@ class WP_Document_Revisions {
 	 * @param string $context       Additional context. Can be 'create' when metadata was initially created for new attachment
 	 *                              or 'update' when the metadata was updated.
 	 */
-	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {
+	public function hide_doc_attach_slug( $metadata, $attachment_id, $context ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// check that for a document.
 		$attach = get_post( $attachment_id );
 		if ( ! self::check_doc_attach( $attach ) ) {
@@ -1866,6 +1979,26 @@ class WP_Document_Revisions {
 			$file     = get_attached_file( $attach->ID );
 			$file_dir = trailingslashit( dirname( $file ) );
 
+			// prepare to use WP_Filesystem if we can.
+			$use_wp_filesystem = false;
+			// file code may not be already loaded.
+			if ( ! function_exists( 'get_filesystem_method' ) ) {
+				include ABSPATH . 'wp-admin/includes/file.php';
+			}
+			$method = get_filesystem_method( array(), $file_dir, false );
+
+			if ( 'direct' === $method ) {
+				// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+				$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
+
+				// initialize the API.
+				if ( WP_Filesystem( $creds ) ) {
+					// all good so far.
+					global $wp_filesystem;
+					$use_wp_filesystem = true;
+				}
+			}
+
 			$title    = $attach->post_title;
 			$new_name = md5( $title . microtime() );
 			// move file and update.
@@ -1873,13 +2006,19 @@ class WP_Document_Revisions {
 				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-						// Use copy and unlink because rename breaks streams.
-						// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
-						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							@chmod( $file_dir . $new_file, 0664 );
-							unlink( $file_dir . $sizeinfo['file'] );
-							$metadata['sizes'][ $size ]['file'] = $new_file;
-						// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
+						if ( $use_wp_filesystem ) {
+							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
+							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+						} else {
+							$dummy = null;
+							// Use copy and unlink because rename breaks streams.
+							// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+							if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+								@chmod( $file_dir . $new_file, 0664 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+								wp_delete_file( $file_dir . $sizeinfo['file'] );
+								$metadata['sizes'][ $size ]['file'] = $new_file;
+							}
+							// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
 						}
 					}
 				}
@@ -1892,6 +2031,7 @@ class WP_Document_Revisions {
 		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 
 		return $metadata;
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -1939,6 +2079,26 @@ class WP_Document_Revisions {
 		$file     = get_attached_file( $attachment_id );
 		$file_dir = trailingslashit( dirname( $file ) );
 
+		// prepare to use WP_Filesystem if we can.
+		$use_wp_filesystem = false;
+		// file code may not be already loaded.
+		if ( ! function_exists( 'get_filesystem_method' ) ) {
+			include ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		$method = get_filesystem_method( array(), $file_dir, false );
+		if ( 'direct' === $method ) {
+			// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
+
+			// initialize the API.
+			if ( WP_Filesystem( $creds ) ) {
+				// all good so far.
+				global $wp_filesystem;
+				$use_wp_filesystem = true;
+			}
+		}
+
 		$title    = $attach->post_title;
 		$new_name = md5( $title . microtime() );
 		// move file and update.
@@ -1946,11 +2106,17 @@ class WP_Document_Revisions {
 			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-					// Use copy and unlink because rename breaks streams.
-					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-						unlink( $file_dir . $sizeinfo['file'] );
-						$meta_sizes[ $size ]['file'] = $new_file;
+					if ( $use_wp_filesystem ) {
+						$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
+						$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+					} else {
+						$dummy = null;
+						// Use copy and unlink because rename breaks streams.
+						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							wp_delete_file( $file_dir . $sizeinfo['file'] );
+							$meta_sizes[ $size ]['file'] = $new_file;
+						}
 					}
 				}
 			}
@@ -2062,14 +2228,14 @@ class WP_Document_Revisions {
 	 * Note: Use `add_filter( 'document_custom_feed', '__return_false' )` to shortcircuit.
 	 *
 	 * @since 0.5
-	 * @param string $default the original feed.
+	 * @param string $deflt the original feed.
 	 * @return string the slug for our feed
 	 */
-	public function hijack_feed( $default ) {
+	public function hijack_feed( $deflt ) {
 		global $post;
 
 		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || ! apply_filters( 'document_custom_feed', true ) ) {
-			return $default;
+			return $deflt;
 		}
 
 		return 'revision_log';
@@ -2198,7 +2364,7 @@ class WP_Document_Revisions {
 	 * @param int $post_id id of document lock being overridden.
 	 * @param int $owner_id id of current document owner.
 	 * @param int $current_user_id id of user overriding lock.
-	 * @return bool true on sucess, false on fail
+	 * @return bool true on success, false on fail
 	 */
 	public function send_override_notice( $post_id, $owner_id, $current_user_id ) {
 		// get lock owner's details.
@@ -2362,7 +2528,11 @@ class WP_Document_Revisions {
 			$caps = apply_filters( 'document_caps', $caps, $role );
 
 			$role_caps = $wp_roles->roles[ $role ]['capabilities'];
-			// loop through capacities for role.
+			// if the 'read_documents' capability exists for the role, then assume others are as required.
+			if ( array_key_exists( 'read_documents', $role_caps ) ) {
+				continue;
+			}
+			// loop  through capacities for role.
 			foreach ( $caps as $cap => $grant ) {
 				// add only missing capabilities.
 				if ( ! array_key_exists( $cap, $role_caps ) ) {
@@ -2692,8 +2862,8 @@ class WP_Document_Revisions {
 		} elseif ( is_numeric( $post_content ) ) {
 			return (int) $post_content;
 		} else {
-			// find document id.
-			preg_match( '/<!-- WPDR ([0-9]+) -->/', $post_content, $id );
+			// find document id. Might have white space from the screen upload process.
+			preg_match( '/<!-- WPDR \s*(\d+) -->/', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id.
 				return (int) $id[1];
@@ -2912,18 +3082,16 @@ class WP_Document_Revisions {
 			 */
 			if ( ! in_array( $tax_name, apply_filters( 'document_taxonomy_term_count', array( $tax_name ) ), true ) ) {
 				$tax_status = $statuses;
-			} else {
+			} elseif ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
 				// check if taxonomy has a callback defined or is not for documents.
-				if ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
-					$tax_status = $statuses;
-				} else {
-					// get the list of statuses.
-					$tax_status = get_post_stati();
-					// trash, inherit and auto-draft to be excluded.
-					unset( $tax_status['trash'] );
-					unset( $tax_status['inherit'] );
-					unset( $tax_status['auto-draft'] );
-				}
+				$tax_status = $statuses;
+			} else {
+				// get the list of statuses.
+				$tax_status = get_post_stati();
+				// trash, inherit and auto-draft to be excluded.
+				unset( $tax_status['trash'] );
+				unset( $tax_status['inherit'] );
+				unset( $tax_status['auto-draft'] );
 			}
 			wp_cache_set( 'wpdr_statuses_' . $tax_name, $tax_status, '', 60 );
 		}
@@ -2940,10 +3108,10 @@ class WP_Document_Revisions {
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working.
 	 *
 	 * @param String $redirect the redirect URL.
-	 * @param Object $request the request object.
+	 * @param Object $request  the request object.
 	 * @return String the redirect URL without the trailing slash
 	 */
-	public function redirect_canonical_filter( $redirect, $request ) {
+	public function redirect_canonical_filter( $redirect, $request ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! $this->verify_post_type() ) {
 			return $redirect;
 		}
@@ -2956,6 +3124,7 @@ class WP_Document_Revisions {
 		}
 
 		return untrailingslashit( $redirect );
+		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -3156,14 +3325,12 @@ class WP_Document_Revisions {
 				$query_object->post_count  = count( $results );
 				$query_object->found_posts = $query_object->post_count;
 				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
+			} elseif ( null === $results ) {
+				$query_object->post_count  = 0;
+				$query_object->found_posts = 0;
+				$query_object->is_404      = true;
 			} else {
-				if ( null === $results ) {
-					$query_object->post_count  = 0;
-					$query_object->found_posts = 0;
-					$query_object->is_404      = true;
-				} else {
-					$query_object->found_posts = 1;
-				}
+				$query_object->found_posts = 1;
 			}
 		}
 
@@ -3217,5 +3384,4 @@ class WP_Document_Revisions {
 
 		return $wp;
 	}
-
 }

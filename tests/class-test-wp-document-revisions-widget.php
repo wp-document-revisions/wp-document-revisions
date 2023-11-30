@@ -595,6 +595,7 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 			'show_thumb'          => false,
 			'show_descr'          => true,
 			'show_author'         => true,
+			'show_pdf'            => false,
 			'new_tab'             => false,
 			'post_status_publish' => true,
 			'post_status_private' => null,  // uses isset to define true or false.
@@ -632,10 +633,9 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 
 		ob_start();
-		wpdr_widgets_block_init();
+		$wpdr_widget->wpdr_widgets_block_init();
 		$output = ob_get_clean();
 
 		self::assertTrue( true, 'widget run' );
 	}
-
 }

@@ -134,23 +134,6 @@
  *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  */
 
-
-// polyfill for str_contains.
-if ( ! function_exists( 'str_contains' ) ) {
-	/**
-	 * Provides str_contains function.
-	 *
-	 * @since 3.5.0
-	 *
-	 * @param string $haystack the text to be searched.
-	 * @param string $needle   the text to search.
-	 * @returns boolean.
-	 */
-	function str_contains( string $haystack, string $needle ) {
-		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
-	}
-}
-
 /**
  * Main WP_Document_Revisions Validate Structure class.
  */
@@ -199,12 +182,12 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param function $function the function to call.
-	 * @param array    $args the arguments to pass to the function.
+	 * @param function $funct the function to call.
+	 * @param array    $args  the arguments to pass to the function.
 	 * @returns mixed the result of the function.
 	 */
-	public function __call( $function, $args ) {
-		return call_user_func_array( array( &self::$parent, $function ), $args );
+	public function __call( $funct, $args ) {
+		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
 	/**
@@ -214,7 +197,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 **/
 	public static function add_menu() {
 		$slug = 'wpdr_validate';
-		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp_document_revisions' ), __( 'Validate Structure', 'wp_document_revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
+		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
 
 		// help text.
 		add_action( 'load-document_page_' . $slug, array( __CLASS__, 'add_help_tab' ) );
@@ -258,8 +241,11 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @param WP_REST_Request $request the arguments to pass to the function.
 	 * @return WP_REST_Response
+	 *
+	 * @global $wpdb Database object.
 	 */
 	public static function correct_document( $request ) {
+		global $wpdb;
 		$wpdr   = self::$parent;
 		$params = $request->get_params();
 		$id     = $params['id'];
@@ -282,7 +268,6 @@ class WP_Document_Revisions_Validate_Structure {
 				}
 				$content = $wpdr->format_doc_id( $parm ) . $content;
 			}
-			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			$post_table = "{$wpdb->prefix}posts";
 			$sql        = $wpdb->prepare(
@@ -311,7 +296,6 @@ class WP_Document_Revisions_Validate_Structure {
 				// replace existing id data.
 				$content = $wpdr->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
 			}
-			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			$post_table = "{$wpdb->prefix}posts";
 			$sql        = $wpdb->prepare(
@@ -356,7 +340,28 @@ class WP_Document_Revisions_Validate_Structure {
 			if ( @copy( $file, $new_file ) ) {
 				$name = get_post_meta( $attach_id, '_wp_attached_file', true );
 				update_post_meta( $attach_id, '_wp_attached_file', str_replace( $filename, $new_name, $name ), $name );
-				unlink( $file );
+				wp_delete_file( $file );
+			}
+
+			// rename attachment post (if no clash).
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			$post_table = "{$wpdb->prefix}posts";
+			$sql        = $wpdb->prepare(
+				"SELECT COUNT(1) FROM `$post_table` WHERE `post_name` = %s",
+				$new_name
+			);
+			$res        = $wpdb->get_var( $sql );
+			if ( 0 === $res ) {
+				$sql = $wpdb->prepare(
+					"UPDATE `$post_table` SET `post_name` = %s, `post_title` = %s WHERE `id` = %d",
+					$new_name,
+					$new_name,
+					$attach_id
+				);
+				$res = $wpdb->query( $sql );
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+				wp_cache_delete( $id, 'posts' );
+				wp_cache_delete( $id, 'document_revisions' );
 			}
 		}
 
@@ -391,8 +396,9 @@ class WP_Document_Revisions_Validate_Structure {
 				wp_mkdir_p( $file_dir );
 			}
 			if ( @copy( $orig, $file ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 				chmod( $file, 0664 );
-				unlink( $orig );
+				wp_delete_file( $orig );
 				// get attachment metadata.
 				$meta = get_post_meta( $attach, '_wp_attachment_metadata', true );
 				if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
@@ -406,8 +412,9 @@ class WP_Document_Revisions_Validate_Structure {
 						if ( file_exists( $orig_dir . $sizeinfo['file'] ) ) {
 							// Use copy and unlink because rename breaks streams.
 							if ( @copy( $orig_dir . $sizeinfo['file'], $file_dir . $sizeinfo['file'] ) ) {
+								// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
 								@chmod( $file_dir . $sizeinfo['file'], 0664 );
-								unlink( $orig_dir . $sizeinfo['file'] );
+								wp_delete_file( $orig_dir . $sizeinfo['file'] );
 							}
 						}
 					}
@@ -645,7 +652,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$script =
 			"var nonce = '" . wp_create_nonce( 'wp_rest' ) . "';" . PHP_EOL .
 			"var user  = '" . get_current_user_id() . "';" . PHP_EOL .
-			"var processed = '" . esc_html__( 'Processed successfully.', 'wp_document_revisions' ) . "';";
+			"var processed = '" . esc_html__( 'Processed successfully.', 'wp-document-revisions' ) . "';";
 		// phpcs:enable Squiz.Strings.DoubleQuoteUsage
 		wp_add_inline_script( 'wpdr_validate', $script, 'before' );
 	}
@@ -795,23 +802,22 @@ class WP_Document_Revisions_Validate_Structure {
 					'parm'  => $doc_id,
 				);
 			}
-		} else {
+		} elseif ( $guid !== $permalink1 && $guid !== $permalink2 ) {
 			// Ugly one is accepable as it is unique.
-			if ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+
+			if ( '' !== $year_mth ) {
 				// Not an ugly one, but guid does not contain the correct month.
-				if ( '' !== $year_mth ) {
-					$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );
-				} else {
-					$msg = __( 'The guid does not contain the sitec URL.', 'wp-document-revisions' );
-				}
-				return array(
-					'code'  => 10,
-					'error' => 0,
-					'msg'   => $msg_10,
-					'fix'   => 1,
-					'parm'  => $doc_id,
-				);
+				$msg = __( 'The guid does not contain the correct date.', 'wp-document-revisions' );
+			} else {
+				$msg = __( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 			}
+			return array(
+				'code'  => 10,
+				'error' => 0,
+				'msg'   => $msg_10,
+				'fix'   => 1,
+				'parm'  => $doc_id,
+			);
 		}
 	}
 
@@ -906,17 +912,25 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 		}
 
-		// check post_title (warning only).
-		$filename = pathinfo( $file, PATHINFO_FILENAME );
-		if ( ! preg_match( '/^[a-f0-9]{32}$/', $filename ) ) {
-			// file does not appear to be md5 encoded.
-			return array(
-				'code'  => 6,
-				'error' => 0,
-				'msg'   => __( 'Document attachment does not appear to be md5 encoded', 'wp-document-revisions' ),
-				'fix'   => 1,
-				'parm'  => $attach_id,
-			);
+		/**
+		 * Filter to Switch off md5 format attachment validation.
+		 *
+		 * @since 3.6
+		 * @param boolean true.
+		 */
+		if ( apply_filters( 'document_validate_md5', true ) ) {
+			// check post_title (warning only).
+			$filename = pathinfo( $file, PATHINFO_FILENAME );
+			if ( ! preg_match( '/^[a-f0-9]{32}$/', $filename ) ) {
+				// file does not appear to be md5 encoded.
+				return array(
+					'code'  => 6,
+					'error' => 0,
+					'msg'   => __( 'Document attachment does not appear to be md5 encoded', 'wp-document-revisions' ),
+					'fix'   => 1,
+					'parm'  => $attach_id,
+				);
+			}
 		}
 
 		return false;
