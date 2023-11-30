@@ -193,7 +193,8 @@ class WP_Document_Revisions {
 		add_filter( 'get_attached_file', array( &$this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
-		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 10, 3 );
+		// Hide slug by changing metadata name - do early in case of WPML.
+		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 5, 3 );
 		// initialise document directory (will itself populate cache).
 		$this->document_upload_dir();
 
@@ -837,11 +838,19 @@ class WP_Document_Revisions {
 				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 		} else {
+			/**
+			 * Filters the home_url() for WPML and translated documents.
+			 *
+			 * @param string  $home_url generated permalink.
+			 * @param WP_Post $document document object.
+			 */
+			$home_url = apply_filters( 'document_home_url', home_url(), $document );
+
 			// build documents(/yyyy/mm)/slug.
 			$extension  = $this->get_file_type( $document );
 			$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
 
-			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . $year_month . '/';
+			$link  = trailingslashit( $home_url ) . $this->document_slug() . $year_month . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
 			// add trailing slash if user has set it as their permalink.
@@ -2059,6 +2068,7 @@ class WP_Document_Revisions {
 		}
 
 		$meta_sizes = $meta['sizes'];
+		// WPML can create duplicate attachment records (updating array will ensure this copied too).
 		if ( ! isset( $meta_sizes[0]['file'] ) || false === strpos( $meta_sizes[0]['file'], substr( $attach->post_title, 0, 32 ) ) ) {
 			// image files have a different name, nothing to do.
 			$meta['wpdr_hidden'] = 1;
