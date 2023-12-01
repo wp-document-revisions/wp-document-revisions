@@ -12,6 +12,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
 * NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
 * NEW: Filter 'document_home_url' to allow changes to be made to it (used with WPML). (#329)
+* FIX: Use with plugin EditFlow gives PHP 8.0 error. (#331)
 * FIX: Typo in description of default upload location. (#328)	
 * FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
 * FIX: Updates to document description do not enable the Submit button

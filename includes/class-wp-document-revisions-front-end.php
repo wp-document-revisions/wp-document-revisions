@@ -810,10 +810,14 @@ class WP_Document_Revisions_Front_End {
 				// Look up taxonomy.
 				if ( 'workflow_state' === $taxonomy && ! empty( $tax_key ) && 'workflow_state' !== $tax_key ) {
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax               = get_taxonomy( $tax_key );
-					$tax->hierarchical = false;
-					$tax->label        = 'Post Status';
-					$wf_efpp           = 1;
+					$tax_arr                 = (array) get_taxonomy( $tax_key );
+					$tax_arr['hierarchical'] = false;
+					$tax_arr['label']        = 'Post Status';
+					$object_type             = $tax_arr['object_type'];
+					unset( $tax_arr['name'] );
+					unset( $tax_arr['object_type'] );
+					$tax     = new WP_Taxonomy( $tax_key, $object_type, $tax_arr );
+					$wf_efpp = 1;
 				} else {
 					$tax = get_taxonomy( $taxonomy );
 				}
