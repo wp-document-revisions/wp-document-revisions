@@ -261,7 +261,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content = $wpdr->format_doc_id( $parm );
 			} else {
 				// find if there is a document id there.
-				preg_match( '/(<!-- WPDR [0-9]+ -->)/', $content, $id );
+				preg_match( '/(<!-- WPDR \s*\d+ -->)/', $content, $id );
 				if ( isset( $id[1] ) ) {
 					// if a match return the id.
 					$content = str_replace( $id[1], '', $content );

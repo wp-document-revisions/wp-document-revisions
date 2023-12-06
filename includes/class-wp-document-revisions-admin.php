@@ -663,7 +663,7 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Only load documenrs from Computer.
+	 * Only load documents from Computer.
 	 *
 	 * @since 3.3
 	 *
@@ -943,7 +943,7 @@ class WP_Document_Revisions_Admin {
 		<span class="description">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
-		_e( 'Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' );
+		_e( 'Directory in which to store uploaded documents. The default is in your <code>wp-content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security.', 'wp-document-revisions' );
 		?>
 		</span>
 		<?php if ( is_multisite() ) : ?>

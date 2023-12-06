@@ -193,7 +193,8 @@ class WP_Document_Revisions {
 		add_filter( 'get_attached_file', array( &$this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( &$this, 'rewrite_file_url' ), 10, 2 );
-		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 10, 3 );
+		// Hide slug by changing metadata name - do early in case of WPML.
+		add_filter( 'wp_generate_attachment_metadata', array( &$this, 'hide_doc_attach_slug' ), 5, 3 );
 		// initialise document directory (will itself populate cache).
 		$this->document_upload_dir();
 
@@ -837,11 +838,19 @@ class WP_Document_Revisions {
 				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 		} else {
+			/**
+			 * Filters the home_url() for WPML and translated documents.
+			 *
+			 * @param string  $home_url generated permalink.
+			 * @param WP_Post $document document object.
+			 */
+			$home_url = apply_filters( 'document_home_url', home_url(), $document );
+
 			// build documents(/yyyy/mm)/slug.
 			$extension  = $this->get_file_type( $document );
 			$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
 
-			$link  = untrailingslashit( home_url() ) . '/' . $this->document_slug() . $year_month . '/';
+			$link  = trailingslashit( $home_url ) . $this->document_slug() . $year_month . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;
 			$link .= $extension;
 			// add trailing slash if user has set it as their permalink.
@@ -2009,6 +2018,7 @@ class WP_Document_Revisions {
 						if ( $use_wp_filesystem ) {
 							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
 							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+							$metadata['sizes'][ $size ]['file'] = $new_file;
 						} else {
 							$dummy = null;
 							// Use copy and unlink because rename breaks streams.
@@ -2024,14 +2034,13 @@ class WP_Document_Revisions {
 				}
 			}
 		}
-		// add indicator to note it has been changeed *o no need).
-		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+		// add indicator to note it has been changed (so no need to reprocess).
+		$metadata['wpdr_hidden'] = 1;
 
 		// have finished loading the attachment into the upload directory, so remove it.
 		remove_filter( 'upload_dir', array( &$this, 'document_upload_dir_filter' ) );
 
 		return $metadata;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -2051,22 +2060,19 @@ class WP_Document_Revisions {
 		if ( ! self::check_doc_attach( $attach ) ) {
 			return;
 		}
-		// has it been converted.
-		if ( true === get_post_meta( $attachment_id, '_wpdr_meta_hidden', true ) ) {
-			// already processed.
-			return;
-		}
 
 		// get attachment metadata.
 		$meta = get_post_meta( $attachment_id, '_wp_attachment_metadata', true );
-		if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
+		if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) || isset( $meta['wpdr_hidden'] ) ) {
 			return;
 		}
 
 		$meta_sizes = $meta['sizes'];
-		if ( ! isset( $meta_sizes[0]['file'] ) || 0 !== strpos( $meta_sizes[0]['file'], $attach->post_title ) ) {
-			// image files have a different name.
-			add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
+		// WPML can create duplicate attachment records (updating array will ensure this copied too).
+		if ( ! isset( $meta_sizes[0]['file'] ) || false === strpos( $meta_sizes[0]['file'], substr( $attach->post_title, 0, 32 ) ) ) {
+			// image files have a different name, nothing to do.
+			$meta['wpdr_hidden'] = 1;
+			update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
 			return;
 		}
 
@@ -2107,8 +2113,10 @@ class WP_Document_Revisions {
 				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
 					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
 					if ( $use_wp_filesystem ) {
-						$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
-						$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+						if ( $wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
+							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
+							$meta_sizes[ $size ]['file'] = $new_file;
+						}
 					} else {
 						$dummy = null;
 						// Use copy and unlink because rename breaks streams.
@@ -2121,9 +2129,11 @@ class WP_Document_Revisions {
 				}
 			}
 		}
-		$meta['sizes'] = $meta_sizes;
+		// update the metadata.
+		$meta['sizes']       = $meta_sizes;
+		$meta['wpdr_hidden'] = 1;
+
 		update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
-		add_post_meta( $attachment_id, '_wpdr_meta_hidden', true, true );
 	}
 
 

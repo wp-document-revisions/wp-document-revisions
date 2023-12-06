@@ -3,7 +3,7 @@
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 6.3.1
+Tested up to: 6.4.1
 Stable tag: 3.6.0
 
 == Description ==
@@ -190,6 +190,9 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
 * NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
 * NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
+* NEW: Filter 'document_home_url' to allow changes to be made to it (used with WPML). (#329)
+* FIX: Use with plugin EditFlow gives PHP 8.0 error. (#331)
+* FIX: Typo in description of default upload location. (#328)	
 * FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
 * FIX: Updates to document description do not enable the Submit button
 * DEV: JS scripts will be called with Defer in WP 6.3 onwards. (#314)
@@ -604,6 +607,12 @@ Allows the document file extension to be manipulated.
 In: class-wp-document-revisions-admin.php
 
 Filters the default help text for current screen.
+
+== Filter document_home_url ==
+
+In: class-wp-document-revisions.php
+
+Filters the home_url() for WPML and translated documents.
 
 == Filter document_internal_filename ==
 
@@ -1146,7 +1155,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
