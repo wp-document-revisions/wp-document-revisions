@@ -48,6 +48,12 @@ In: class-wp-document-revisions-admin.php
 
 Filters the default help text for current screen.
 
+## Filter document_home_url
+
+In: class-wp-document-revisions.php
+
+Filters the home_url() for WPML and translated documents.
+
 ## Filter document_internal_filename
 
 In: class-wp-document-revisions.php
