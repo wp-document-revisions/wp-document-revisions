@@ -4,6 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 3.6.0
 
+* NEW: Integrate with PublishPress Statuses plugin for custom statuses. (#335)
 * NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
 * NEW: User pulldowns will show only relevant users. (#321)
 * NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)

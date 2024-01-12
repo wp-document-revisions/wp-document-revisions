@@ -3,7 +3,7 @@
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.6
-Tested up to: 6.4.1
+Tested up to: 6.4.2
 Stable tag: 3.6.0
 
 == Description ==
@@ -183,6 +183,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 = 3.6.0 =
 
+* NEW: Integrate with PublishPress Statuses plugin for custom statuses. (#335)
 * NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
 * NEW: User pulldowns will show only relevant users. (#321)
 * NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
@@ -1237,7 +1238,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
@@ -1252,4 +1253,8 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 = Document workflow management =
 
 * [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-* [PublishPress](https://wordpress.org/plugins/publishpress/)
+* [PublishPress Planner](https://wordpress.org/plugins/publishpress/)
+
+	(Previously called PublishPress)
+* [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
+
