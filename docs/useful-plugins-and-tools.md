@@ -17,4 +17,7 @@
 ### Document workflow management
 
 * [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-* [PublishPress](https://wordpress.org/plugins/publishpress/)
+* [PublishPress Planner](https://wordpress.org/plugins/publishpress/)
+
+	(Previously called PublishPress)
+* [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)

@@ -207,6 +207,7 @@ class WP_Document_Revisions {
 		// Edit Flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
 		add_action( 'pp_module_options_loaded', array( &$this, 'publishpress_support' ) );
+		add_action( 'pp_statuses_init', array( &$this, 'publishpress_statuses_support' ), 20 );
 		// always called to determine whether user has turned off workflow_state support.
 		add_action( 'init', array( &$this, 'disable_workflow_states' ), 1900 );
 
@@ -2684,35 +2685,44 @@ class WP_Document_Revisions {
 		// workflow_state will be used as a query_var, but is not one.
 		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
 
-		// we are going to use Edit_Flow processes if installed and active.
+		// we are going to use Edit_Flow / Publish Press processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
 	}
 
 
 	/**
-	 * Adds EditFlow support for post status to the admin table.
+	 * Adds EditFlow / PublishPress Status support for post status to the admin table.
 	 *
 	 * @since 3.3.0
 	 * @param array $defaults the column chosen of the all documents list.
 	 * @return array the updated column list.
 	 */
 	public function add_post_status_column( $defaults ) {
+		// find place to slice (after author).
+		$author_col = 0;
+		foreach ( $defaults as $key => $dflt ) {
+			++$author_col;
+			if ( 'author' === $key ) {
+				break;
+			}
+		}
+
 		// get checkbox and title.
-		$output = array_slice( $defaults, 0, 2 );
+		$output = array_slice( $defaults, 0, $author_col );
 
 		// splice in workflow state.
 		$output['status'] = __( 'Status', 'wp-document-revisions' );
 
 		// get the rest of the columns.
-		$output = array_merge( $output, array_slice( $defaults, 2 ) );
+		$output = array_merge( $output, array_slice( $defaults, $author_col ) );
 
 		return $output;
 	}
 
 
 	/**
-	 * Adds EditFlow support for post status to the admin table (when using EF Custom statuses).
+	 * Adds EditFlow / PublishPress Status support for post status to the admin table (when using Custom statuses).
 	 *
 	 * @since 3.3.0
 	 * @param string $column_name the column name of the all documents list to be populated.
@@ -2803,6 +2813,47 @@ class WP_Document_Revisions {
 		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
 
 		// we are going to use PP processes if installed and active.
+		// make sure use_workflow_states returns false.
+		add_filter( 'document_use_workflow_states', '__return_false' );
+	}
+
+	/**
+	 * Provides support for PublishPress Status and disables the default workflow state taxonomy.
+	 *
+	 * @since 3.2.3
+	 */
+	public function publishpress_statuses_support() {
+		// verify publishpress is enabled.
+		/**
+		 * Filter to switch off integration with PublishPress statuses.
+		 *
+		 * @param boolean true default value to use PublishPress Statuses processes if installed and active.
+		 */
+		if ( ! class_exists( 'PublishPress_Statuses' ) || ! apply_filters( 'document_revisions_use_edit_flow', true ) ) {
+			return;
+		}
+
+		// prevent errors if options aren't init'd yet.
+		if ( ! isset( PublishPress_Statuses::instance()->options->post_types['document'] ) ) {
+			return;
+		}
+
+		// check if enabled for documents.
+		if ( 'off' === PublishPress_Statuses::instance()->options->enabled ) {
+			return;
+		}
+
+		// update the taxonomy key.
+		self::$taxonomy_key_val = 'post_status';
+
+		// PPS doesn't add Status to Document view so need to add it.
+		add_filter( 'manage_document_posts_columns', array( &$this, 'add_post_status_column' ) );
+		add_action( 'manage_document_posts_custom_column', array( &$this, 'post_status_column_cb' ), 10, 2 );
+
+		// workflow_state will be used as a query_var, but is not one.
+		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
+
+		// we are going to use PPS processes if installed and active.
 		// make sure use_workflow_states returns false.
 		add_filter( 'document_use_workflow_states', '__return_false' );
 	}
