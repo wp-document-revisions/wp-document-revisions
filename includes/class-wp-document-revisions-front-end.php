@@ -422,7 +422,7 @@ class WP_Document_Revisions_Front_End {
 			if ( $atts_show_thumb ) {
 				$thumb = get_post_thumbnail_id( $document->ID );
 				if ( $thumb ) {
-					$thumb_image     = wp_get_attachment_image_src( $thumb, 'medium' );
+					$thumb_image     = wp_get_attachment_image_src( $thumb, 'post-thumbnail' );
 					$thumb_image_alt = get_post_meta( $thumb, '_wp_attachment_image_alt', true );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<br /><img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . esc_url( $thumb_image[0] ) . '" alt="' . esc_html( $thumb_image_alt ) . '"><br />';
@@ -431,7 +431,7 @@ class WP_Document_Revisions_Front_End {
 					if ( $attach instanceof WP_Post ) {
 						// ensure document slug hidden from attachment.
 						$wpdr->hide_exist_doc_attach_slug( $attach->ID );
-						$image = wp_get_attachment_image( $attach->ID, 'medium' ) . '<br />';
+						$image = wp_get_attachment_image( $attach->ID, 'post-thumbnail' ) . '<br />';
 						if ( $std_dir !== $doc_dir ) {
 							$image = str_replace( $std_dir, $doc_dir, $image );
 						}

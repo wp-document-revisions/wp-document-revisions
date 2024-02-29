@@ -90,6 +90,12 @@ In: class-wp-document-revisions.php
 
 Filters the Document permalink.
 
+## Filter document_post_thumbnail
+
+In: class-wp-document-revisions.php
+
+Filters the post-thumbnail size parameters (used only if this image size has not been set).
+
 ## Filter document_read_uses_read
 
 In: class-wp-document-revisions.php

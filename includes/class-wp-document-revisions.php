@@ -432,9 +432,22 @@ class WP_Document_Revisions {
 		 */
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
 
-		// Ensure that there is a post-thumbnail size set - could/should be set by theme - copy from thumbnail.
+		// Ensure that there is a post-thumbnail size set - could/should be set by theme - default copy from thumbnail.
 		if ( ! array_key_exists( 'post-thumbnail', wp_get_additional_image_sizes() ) ) {
-			add_image_size( 'post-thumbnail', get_option( 'thumbnail_size_w' ), get_option( 'thumbnail_size_h' ), false );
+			$sizing = array(
+				get_option( 'thumbnail_size_w' ),
+				get_option( 'thumbnail_size_h' ),
+				false,
+			);
+			/**
+			 * Filters the post-thumbnail size parameters (used only if this image size has not been set).
+			 *
+			 * @since 3.6
+			 *
+			 * @param mixed[] $sizes default values for the image size.
+			 */
+			$sizing = apply_filters( 'document_post_thumbnail', $sizing );
+			add_image_size( 'post-thumbnail', ...$sizing );
 		}
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later).
@@ -2926,7 +2939,7 @@ class WP_Document_Revisions {
 			// find document id. Might have white space from the screen upload process.
 			preg_match( '/<!-- WPDR \s*(\d+) -->/', $post_content, $id );
 			if ( isset( $id[1] ) ) {
-				// if a match return the id.
+				// if a match return the id (Zero will be no document attached - WPML scenario).
 				return (int) $id[1];
 			}
 		}
