@@ -1801,6 +1801,7 @@ class WP_Document_Revisions {
 			'path'    => $doc_dir . '/' . $dir['subdir'],
 			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
 			'basedir' => $doc_dir,
+			'subdir'  => '',
 			'baseurl' => home_url( '/' . $this->document_slug() ),
 			'error'   => false,
 		);
