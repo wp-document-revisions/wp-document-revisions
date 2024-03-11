@@ -1813,8 +1813,8 @@ class WP_Document_Revisions {
 		$new_dir         = array(
 			'path'    => $doc_dir . '/' . $dir['subdir'],
 			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
+			'subdtr'  => $dir['subdir'],
 			'basedir' => $doc_dir,
-			'subdir'  => '',
 			'baseurl' => home_url( '/' . $this->document_slug() ),
 			'error'   => false,
 		);
