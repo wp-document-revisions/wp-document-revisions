@@ -186,12 +186,14 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * NEW: Integrate with PublishPress Statuses plugin for custom statuses. (#335)
 * NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
 * NEW: User pulldowns will show only relevant users. (#321)
+* NEW: Filter 'document_post_thumbnail' used to define the post-thumbnail image size (if not set by theme). (#339)
 * NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
 * NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name. (#319)
 * NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
 * NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
 * NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
 * NEW: Filter 'document_home_url' to allow changes to be made to it (used with WPML). (#329)
+* FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
 * FIX: Use with plugin EditFlow gives PHP 8.0 error. (#331)
 * FIX: Typo in description of default upload location. (#328)	
 * FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
@@ -732,6 +734,12 @@ Filters the file name for WAMP settings (filter routine provided by plugin).
 In: class-wp-document-revisions.php
 
 Filters the Document permalink.
+
+== Filter document_post_thumbnail ==
+
+In: class-wp-document-revisions.php
+
+Filters the post-thumbnail size parameters (used only if this image size has not been set).
 
 == Filter document_read_uses_read ==
 

@@ -1670,7 +1670,7 @@ class WP_Document_Revisions_Admin {
 			return;
 		}
 
-		// note: hook late so that unnattached filter can hook in, if necessary.
+		// note: hook late so that unattached filter can hook in, if necessary.
 		add_filter( 'posts_join_paged', array( &$this, 'filter_media_join' ) );
 		add_filter( 'posts_where_paged', array( &$this, 'filter_media_where' ), 20 );
 	}
@@ -1683,7 +1683,7 @@ class WP_Document_Revisions_Admin {
 	 * @return mixed
 	 */
 	public function filter_from_media_grid( $query ) {
-		// note: hook late so that unnattached filter can hook in, if necessary.
+		// note: hook late so that unattached filter can hook in, if necessary.
 		add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
 		add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
 

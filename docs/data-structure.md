@@ -43,10 +43,10 @@ The records held in the database will be:
 
 1. Document Record
 
-- post_content contains the id of the latest Document file attachment.
+- post_content contains the id of the latest Document file attachment record.
 	- When a Document file is loaded on editing this Document record, the post_content will be modified to contain the ID of the Attachment record created.
 	- In plugin versions prior to 3.4, this would simply be the numeric ID.
-	- Subsequent versions hold this in the form of an HTML comment "<!-- WPDR nnn -->" where nnn is the ID of the attachment. It can also contain a text Document description.
+	- Subsequent versions hold this in the form of an HTML comment "&lt;!-- WPDR nnn --&gt;" where nnn is the ID of an attachment post. It can also contain a text Document description.
 	- When editing the post, this field is decomposed into its two parts of ID and description with program management of the former and user management of the latter, recombined automatically when changes are made.
 
 - post_excerpt will contain any comment entered when the document record is updated.
@@ -65,11 +65,11 @@ There can be multiple Attachment records, one for each Document file loaded.
 
 - When a PDF Document file is loaded, then standard WP processing will attempt to make a JPEG image of the first page as a thumbnail (using all sizes). These will be held in the same directory as the Document file.
 	- However if the file name is MD5Hash.pdf, then these images will be called MD5Hash-pdf.jpg.
-	- If used, this would expose the name of the file to the user.
-	- To avoid this, there is a process to transform this name to another (essentially random) MD5 and rename these files.
-	- Once done, a postmeta record is created with these new file names (and another postmeta record denoting this process has been done).
+	- If used on a page, this would expose the name of the file to the user.
+	- To avoid this, there is a process to transform this name to another (essentially random) MD5 and rename these image files.
+	- Once done, a postmeta record is created with these new file names (and a field denoting this process has been done).
 
-- If a Featured Image is loaded whilst editing the Document record, this would also have the same post_parent set, so in this case, the post_parent is set to 0.
+- If a Featured Image is loaded whilst editing the Document record, this would also have the same post_parent set, so in this case, the post_parent is set to 0 leaving the functional postmeta link to denote the presence of the featured image.
 
 3. Revision Record(s)
 
@@ -77,4 +77,4 @@ When saving a Document Record, standard WP processing will be invoked to detect 
 
 There can be multiple Revision records held, one for each saving event where a change in these fields are detected.
 
-Because the content contains the Attachment ID, an upload of a new Document file will create a new Revision.
+Because the document content contains the latest Attachment ID, an upload of a revised Document file will create a new document Revision record.
