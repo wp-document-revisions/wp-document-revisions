@@ -376,7 +376,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$response = $response->get_data();
-		self::assertEquals( 24, count( $response ), 'not single response' );
+
+		// Additional items in newer rest.
+		self::assertGreaterThanOrEqual( 24, count( $response ), 'not single response 1 >=' );
+		self::assertLessThanOrEqual( 26, count( $response ), 'not single response 1 <=' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 
@@ -481,7 +484,9 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// can read it.
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment 2' );
 		$response = $response->get_data();
-		self::assertEquals( 24, count( $response ), 'not single response 2' );
+
+		self::assertGreaterThanOrEqual( 24, count( $response ), 'not single response 2 >=' );
+		self::assertLessThanOrEqual( 26, count( $response ), 'not single response 2 <=' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 
