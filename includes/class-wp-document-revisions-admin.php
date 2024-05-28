@@ -989,7 +989,13 @@ class WP_Document_Revisions_Admin {
 		if ( 'media-upload.php' === $pagenow ) {
 			?>
 			<script type="text/javascript">
-				document.addEventListener('DOMContentLoaded', function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});
+				document.addEventListener('DOMContentLoaded', function() {
+					if(window.WPDocumentRevisions) {
+						window.WPDocumentRevisions.bindPostDocumentUploadCB();
+					} else {
+						jQuery(function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});
+					}
+				});
 			</script>
 			<?php
 		}
