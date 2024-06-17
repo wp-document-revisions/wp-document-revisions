@@ -2,6 +2,11 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.6.1
+
+* FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
+* FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
+
 ### 3.6.0
 
 * NEW: Integrate with PublishPress Statuses plugin for custom statuses. (#335)

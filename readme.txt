@@ -76,7 +76,7 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
 * French and Spanish language support (easily translated to your language)
-* Integration with [Edit Flow](https://editflow.org)
+* Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
 = Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) =
@@ -90,6 +90,7 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+* **WPML Support** - Integration with WPML
 
 
 === Security Policy ===
@@ -180,6 +181,11 @@ In: class-wp-document-revisions.php
 == Changelog ==
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+= 3.6.1 =
+
+* FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
+* FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
 
 = 3.6.0 =
 
@@ -1246,7 +1252,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
