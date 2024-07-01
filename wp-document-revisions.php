@@ -20,7 +20,7 @@ Domain Path: /languages
  *  A document management and version control plugin for WordPress that allows
  *  teams of any size to collaboratively edit files and manage their workflow.
  *
- *  Copyright (C) 2011-2023 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
+ *  Copyright (C) 2011-2024 Ben Balter  ( ben@balter.com -- http://ben.balter.com )
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ Domain Path: /languages
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @copyright 2011-2023
+ *  @copyright 2011-2024
  *  @license GPL v3
  *  @version 3.6.1
  *  @package WP_Document_Revisions
