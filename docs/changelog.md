@@ -4,6 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 3.6.1
 
+* FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
 * FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
 * FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
 
