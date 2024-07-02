@@ -10,16 +10,6 @@ on:
 jobs:
   phpunit:
     runs-on: ${{ matrix.operating-system }}
-    services:
-      mydb:
-        image: mysql:8.0
-        command: '--default-authentication-plugin=mysql_native_password'
-        env:
-          MYSQL_DATABASE: wordpress_test
-          MYSQL_ROOT_PASSWORD: 'root'
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     strategy:
       fail-fast: true
       matrix:
@@ -44,6 +34,9 @@ jobs:
             operating-system: 'ubuntu-latest'
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
+    - name: Start DB
+      run: sudo systemctl start mysql
+
     - name: Checkout
       uses: actions/checkout@v4
 
