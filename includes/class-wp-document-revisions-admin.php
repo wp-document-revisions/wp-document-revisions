@@ -1899,8 +1899,9 @@ class WP_Document_Revisions_Admin {
 	 * @param string $file Path to the file to delete.
 	 */
 	public function wp_delete_file( $file ) {
-		$std_dir = self::$parent->wp_default_dir['basedir'];
-		$doc_dir = self::$parent->wpdr_document_dir;
+		global $wpdr;
+		$std_dir = $wpdr::$wp_default_dir['basedir'];
+		$doc_dir = $wpdr::$wpdr_document_dir;
 		if ( $doc_dir !== $std_dir ) {
 			$file = str_ireplace( $std_dir, $doc_dir, $file );
 		}
