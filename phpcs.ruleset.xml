@@ -36,7 +36,7 @@
 
 	<rule ref="WordPress"/>
 
-	<config name="testVersion" value="7.1-"/>
+	<config name="testVersion" value="7.3-"/>
 
 	<rule ref="PHPCompatibilityWP"/>
 
