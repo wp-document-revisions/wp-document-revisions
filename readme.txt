@@ -2,8 +2,8 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Requires at least: 4.6
-Tested up to: 6.5.5
+Requires at least: 4.9
+Tested up to: 6.6.1
 Stable tag: 3.6.1
 
 == Description ==
@@ -184,6 +184,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 = 3.6.1 =
 
+* NEW: Filter 'document_validate' to bypass structure validation for a specific document.
 * FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
 * FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
 * FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
@@ -885,6 +886,12 @@ Filter to switch off use of standard Workflow States taxonomy. For internal use.
 In: class-wp-document-revisions.php
 
 Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
+
+== Filter document_validate ==
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters whether to validate the document structure for a document.
 
 == Filter document_validate_md5 ==
 

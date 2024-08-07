@@ -234,6 +234,12 @@ In: class-wp-document-revisions.php
 
 Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
 
+## Filter document_validate
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filter whether to validate the document structure for a documrnt.
+
 ## Filter document_validate_md5
 
 In: class-wp-document-revisions-validate-structure.php
