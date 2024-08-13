@@ -79,7 +79,7 @@ jobs:
 
   phpunit6:
     # Cloned version to use MySQL 5.7 instead of supplied 8.0 version.
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
     services:
       mydb:
         image: mysql:5.7
@@ -91,11 +91,13 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        wp-version: '4.9'
-        wp-multisite: 0
-        phpunit-config: 'phpunit.xml'
-        operating-system: 'ubuntu-latest'
-    name: PHP 7.2 Test WP 4.9 MS 0 ubuntu-latest
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.2']
+        wp-version: [4.9]
+        wp-multisite: [0]
+        phpunit-versions: ['6.5']
+        phpunit-config: ['phpunit.xml']
+    name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -103,10 +105,10 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.2
+        php-version: ${{ matrix.php-versions }}
         extensions: mysqli
         coverage: xdebug
-        tools: wp-cli, phpunit-polyfills, phpunit:6.5
+        tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
       env:
         COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -117,16 +119,16 @@ jobs:
       run: composer install --optimize-autoloader --prefer-dist
 
     - name: Install WP Tests
-      run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 4.9
+      run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
       env:
-        WP_MULTISITE: 0
+        WP_MULTISITE: ${{ matrix.wp-multisite }}
 
     - name: phpunit tests
       run: |
         echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-        /usr/local/bin/phpunit --config=phpunit.xml
+        /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
       env:
-        WP_MULTISITE: 0
+        WP_MULTISITE: ${{ matrix.wp-multisite }}
 
     - name: Codecov
       uses: codecov/codecov-action@v4
@@ -135,7 +137,7 @@ jobs:
         files: coverage.xml
         directory: ${{ github.workspace }}
         verbose: true
-        flags: php-7.2,wp-4.9,multisite-0
+        flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
   phpcs:
     runs-on: ubuntu-latest
