@@ -32,12 +32,6 @@ jobs:
             phpunit-versions: '9.5'
             phpunit-config: 'phpunit9.xml'
             operating-system: 'ubuntu-latest'
-          - php-versions: '7.2'
-            wp-version: '4.9'
-            wp-multisite: 0
-            phpunit-versions: '6.5'
-            phpunit-config: 'phpunit.xml'
-            operating-system: 'ubuntu-latest'
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
     - name: Start DB
@@ -82,6 +76,66 @@ jobs:
         directory: ${{ github.workspace }}
         verbose: true
         flags: php-${{ matrix.php_version }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+
+  phpunit6:
+    # Cloned version to use MySQL 5.7 instead of supplied 8.0 version.
+    runs-on: ubuntu-latest
+    services:
+      mydb:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 'root'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+    strategy:
+      fail-fast: true
+      matrix:
+        wp-version: '4.9'
+        wp-multisite: 0
+        phpunit-config: 'phpunit.xml'
+        operating-system: 'ubuntu-latest'
+    name: PHP 7.2 Test WP 4.9 MS 0 ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.2
+        extensions: mysqli
+        coverage: xdebug
+        tools: wp-cli, phpunit-polyfills, phpunit:6.5
+      env:
+        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check PHP Version
+      run: php -v
+
+    - name: Composer install
+      run: composer install --optimize-autoloader --prefer-dist
+
+    - name: Install WP Tests
+      run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 4.9
+      env:
+        WP_MULTISITE: 0
+
+    - name: phpunit tests
+      run: |
+        echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
+        /usr/local/bin/phpunit --config=phpunit.xml
+      env:
+        WP_MULTISITE: 0
+
+    - name: Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
+        directory: ${{ github.workspace }}
+        verbose: true
+        flags: php-7.2,wp-4.9,multisite-0
 
   phpcs:
     runs-on: ubuntu-latest
