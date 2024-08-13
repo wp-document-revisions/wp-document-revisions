@@ -32,11 +32,11 @@ jobs:
             phpunit-versions: '9.5'
             phpunit-config: 'phpunit9.xml'
             operating-system: 'ubuntu-latest'
-          - php-versions: '7.4'
+          - php-versions: '7.2'
             wp-version: '4.9'
             wp-multisite: 0
-            phpunit-versions: '9.5'
-            phpunit-config: 'phpunit9.xml'
+            phpunit-versions: '7.5.20'
+            phpunit-config: 'phpunit.xml'
             operating-system: 'ubuntu-latest'
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
