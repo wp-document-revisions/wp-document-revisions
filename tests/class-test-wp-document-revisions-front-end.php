@@ -245,8 +245,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// make sure that we have the admin set up.
 		global $wpdr;
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			$wpdr->admin_init();
+		if ( is_null( $wpdr->admin ) ) {
+			if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+				$wpdr->admin_init();
+			}
 		}
 
 		// add the attachment delete process.
