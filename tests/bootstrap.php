@@ -11,7 +11,7 @@ $err_level = error_reporting();
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
-	$_tests_dir = __DIR__;
+	$_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
 require_once $_tests_dir . '/includes/functions.php';
@@ -62,4 +62,5 @@ function _wpdr_die_handler_filter( $handler ) {
 tests_add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10, 2 );
 tests_add_filter( 'wp_die_xml_handler', '_wpdr_die_handler_filter' );
 
-require $_tests_dir . 'class-test-wp-document-revisions-common.php';
+require $_tests_dir . '/includes/bootstrap.php';
+require __DIR__ . '/class-test-wp-document-revisions-common.php';
