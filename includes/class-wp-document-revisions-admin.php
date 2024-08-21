@@ -996,7 +996,7 @@ class WP_Document_Revisions_Admin {
 		global $pagenow;
 
 		if ( 'media-upload.php' === $pagenow ) {
-			// Change event to load to let all js get loaded.
+			// Change event to load to let all js get loaded/initialised.
 			?>
 			<script type="text/javascript">
 				document.addEventListener('load', function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});

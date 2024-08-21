@@ -470,7 +470,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
 		// make sure that we have the admin set up.
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+		if ( is_null( $wpdr->admin ) ) {
 			$wpdr->admin_init();
 		}
 
@@ -545,7 +545,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
 		// make sure that we have the admin set up.
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+		if ( is_null( $wpdr->admin ) ) {
 			$wpdr->admin_init();
 		}
 

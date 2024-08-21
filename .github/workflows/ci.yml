@@ -78,7 +78,7 @@ jobs:
         flags: php-${{ matrix.php_version }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
   phpunit6:
-    # Cloned version to use MySQL 5.7 instead of supplied 8.0 version.
+    # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
     runs-on: ${{ matrix.operating-system }}
     services:
       mydb:
@@ -92,7 +92,7 @@ jobs:
       fail-fast: true
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.2']
+        php-versions: ['7.1']
         wp-version: [4.9]
         wp-multisite: [0]
         phpunit-versions: ['6.5']
