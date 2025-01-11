@@ -1,10 +1,11 @@
 === WP Document Revisions ===
 
 Contributors: benbalter, nwjames
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
+Tags: documents, uploads, attachments, document management, revisions
 Requires at least: 4.9
-Tested up to: 6.6.1
+Tested up to: 6.7.1
 Stable tag: 3.6.1
+License: GPL3
 
 == Description ==
 
@@ -185,6 +186,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 = 3.6.1 =
 
 * NEW: Filter 'document_validate' to bypass structure validation for a specific document.
+* FIX: Translations need to be called on 'init', not 'plugins_loaded'.
 * FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
 * FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
 * FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)

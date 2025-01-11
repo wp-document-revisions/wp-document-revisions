@@ -117,9 +117,9 @@ class WP_Document_Revisions {
 		// set the standard default directory - creating the cache (before applying filter).
 		self::$wp_default_dir = wp_upload_dir( null, true, true );
 
-		// admin.
+		// admin. translations need to be called on init, not plugins_loaded.
 		add_action( 'plugins_loaded', array( &$this, 'admin_init' ) );
-		add_action( 'plugins_loaded', array( &$this, 'i18n' ), 5 );
+		add_action( 'init', array( &$this, 'i18n' ), 5 );
 		add_action( 'admin_notices', array( &$this, 'activation_error_notice' ) );
 
 		// CPT/CT.
