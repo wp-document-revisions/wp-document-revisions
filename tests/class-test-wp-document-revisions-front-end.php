@@ -231,6 +231,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// clear cache.
 		wp_cache_flush();
+
+		// Initialise admin (will be needed in TearDown).
+		$wpdr->admin_init( true );
+
 	}
 
 	/**
@@ -246,7 +250,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// make sure that we have the admin set up.
 		global $wpdr;
 		if ( is_null( $wpdr->admin ) ) {
-			$wpdr->admin_init();
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.

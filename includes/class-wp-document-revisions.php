@@ -330,11 +330,12 @@ class WP_Document_Revisions {
 	 * Extends class with admin functions when in admin backend.
 	 *
 	 * @since 0.5
+	 * @param bool $test whether to force the test scenario.
 	 */
-	public function admin_init() {
+	public function admin_init( $test = false ) {
 
 		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
-		if ( ! class_exists( 'WP_UnitTestCase' ) ) {
+		if ( ! class_exists( 'WP_UnitTestCase' ) || ! $test ) {
 			if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
 				return;
 			}

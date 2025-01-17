@@ -471,7 +471,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// make sure that we have the admin set up.
 		if ( is_null( $wpdr->admin ) ) {
-			$wpdr->admin_init();
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.
@@ -546,7 +546,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// make sure that we have the admin set up.
 		if ( is_null( $wpdr->admin ) ) {
-			$wpdr->admin_init();
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.
