@@ -108,7 +108,7 @@ install_test_suite() {
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
 		rm -rf $WP_TESTS_DIR/{includes,data}
-		wget -P $WP_TESTS_DIR -nH --cut-dirs=4 -m https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/
+		wget -P $WP_TESTS_DIR -nH --cut-dirs=4 -m -q https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/
 		wget -P $WP_TESTS_DIR -nH --cut-dirs=4 -m -q https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/
 	fi
 

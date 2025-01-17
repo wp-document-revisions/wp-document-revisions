@@ -79,6 +79,7 @@ jobs:
 
   phpunit6:
     # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
+    # magic_quotes_gpc = off since 4.9 contains lots of references
     runs-on: ${{ matrix.operating-system }}
     services:
       mydb:
@@ -106,6 +107,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
+        ini-values: magic_quotes_gpc=off
         extensions: mysqli
         coverage: xdebug
         tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
