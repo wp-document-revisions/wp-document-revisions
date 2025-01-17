@@ -335,7 +335,7 @@ class WP_Document_Revisions {
 	public function admin_init( $test = false ) {
 
 		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
-		if ( { ! class_exists( 'WP_UnitTestCase' ) ) || ( ! $test ) ) {
+		if ( ( ! class_exists( 'WP_UnitTestCase' ) ) || ( ! $test ) ) {
 			if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
 				return;
 			}
