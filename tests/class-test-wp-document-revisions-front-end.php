@@ -91,6 +91,10 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+
+		// Initialise admin (will be needed in TearDown).
+		$wpdr->admin_init( true );
+
 		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
@@ -231,10 +235,6 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// clear cache.
 		wp_cache_flush();
-
-		// Initialise admin (will be needed in TearDown).
-		$wpdr->admin_init( true );
-
 	}
 
 	/**
