@@ -202,7 +202,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_ajax_override_lock', array( &$this, 'override_lock' ) );
 
 		// cache clean.
-		add_action( 'save_post_document', array( &$this, 'clear_cache' ), 20 );
+		add_action( 'save_post_document', array( &$this, 'clear_cache' ), 20, 3 );
 
 		// Edit Flow or PublishPress.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
@@ -334,15 +334,16 @@ class WP_Document_Revisions {
 	 */
 	public function admin_init( $test = false ) {
 
-		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
-		if ( ( ! class_exists( 'WP_UnitTestCase' ) ) || ( ! $test ) ) {
-			if ( ! is_admin() || class_exists( 'WP_Document_Revisions_Admin' ) ) {
-				return;
-			}
+		// check not already defined.
+		if ( ! is_null( $this->admin ) ) {
+			return;
 		}
 
-		require_once __DIR__ . '/class-wp-document-revisions-admin.php';
-		$this->admin = new WP_Document_Revisions_Admin( self::$instance );
+		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
+		if ( is_admin() || class_exists( 'WP_UnitTestCase' ) || $test ) {
+			require_once __DIR__ . '/class-wp-document-revisions-admin.php';
+			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
+		}
 	}
 
 
@@ -2221,9 +2222,11 @@ class WP_Document_Revisions {
 	/**
 	 * Clears cache on post_save_document.
 	 *
-	 * @param int $post_id the post ID.
+	 * @param int     $post_id the post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated.
 	 */
-	public function clear_cache( $post_id ) {
+	public function clear_cache( $post_id, $post, $update ) {
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
 		clean_post_cache( $post_id );
@@ -3239,7 +3242,7 @@ class WP_Document_Revisions {
 		);
 		$res        = $wpdb->query( $sql );
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		$this->clear_cache( $post_id );
+		$this->clear_cache( $post_id, $doc, true );
 
 		// phpcs:ignore  WordPress.Security.EscapeOutput
 		wp_die( get_sample_permalink_html( $post_id, $title, $slug ) );
