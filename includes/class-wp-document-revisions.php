@@ -341,7 +341,9 @@ class WP_Document_Revisions {
 
 		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
 		if ( is_admin() || class_exists( 'WP_UnitTestCase' ) || $test ) {
-			require_once __DIR__ . '/class-wp-document-revisions-admin.php';
+			if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+				include __DIR__ . '/class-wp-document-revisions-admin.php';
+			}
 			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 		}
 	}
@@ -2226,7 +2228,7 @@ class WP_Document_Revisions {
 	 * @param WP_Post $post    Post object.
 	 * @param bool    $update  Whether this is an existing post being updated.
 	 */
-	public function clear_cache( $post_id, $post, $update ) {
+	public function clear_cache( $post_id, $post, $update ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		wp_cache_delete( $post_id, 'document_revision_indices' );
 		wp_cache_delete( $post_id, 'document_revisions' );
 		clean_post_cache( $post_id );
