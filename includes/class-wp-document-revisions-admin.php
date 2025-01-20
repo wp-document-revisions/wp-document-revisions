@@ -1798,7 +1798,7 @@ class WP_Document_Revisions_Admin {
 				"SELECT ID FROM {$wpdb->prefix}posts WHERE post_parent = %d AND post_type = 'attachment'",
 				$post_id
 			),
-			ARRAY_A,
+			ARRAY_A
 		);
 		self::$attachmts = wp_list_pluck( $attachmts, 'ID', 'ID' );
 	}
