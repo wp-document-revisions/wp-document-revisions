@@ -621,6 +621,12 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 	 */
 	public function test_widget_publ_block() {
 
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active, e.g. Old WP version installed.
+			self::assertTrue( true, 'widget run' );
+			return;
+		}
+
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( 0 );

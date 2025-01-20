@@ -728,13 +728,18 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the documents shortcode blocks function.
 	 */
 	public function test_documents_shortcode_blocks() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active, e.g. Old WP version installed.
+			self::assertTrue( true, 'register blocks' );
+			return;
+		}
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		// need to unregister blocks before reregister.
+		// need to unregister blocks before reregister (if Block Editor onstalled).
 		unregister_block_type( 'wp-document-revisions/documents-shortcode' );
 		unregister_block_type( 'wp-document-revisions/revisions-shortcode' );
 
