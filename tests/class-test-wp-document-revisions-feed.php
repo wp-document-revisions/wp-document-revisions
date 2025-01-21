@@ -283,11 +283,10 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$_GET['key'] = $key;
 
 		// display key.
-		$output = '';
 		ob_start();
 		$wpdr->admin->rss_key_display();
 		$content = ob_get_clean();
-		self::assertEquals( 1, (int) substr_count( $output, '"' . esc_attr( $key ) . '"' ), 'display_key' );
+		self::assertEquals( 1, (int) substr_count( $content, '"' . esc_attr( $key ) . '"' ), 'display_key' );
 
 		$exception = null;
 		$content = '';
