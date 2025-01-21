@@ -1183,7 +1183,7 @@ class WP_Document_Revisions_Admin {
 				</p></div>
 				<?php
 
-			} elseif ( $num === $revisions ) {
+			} elseif ( $num <= $revisions ) {
 				?>
 				<div class="notice notice-error"><p>
 				<?php

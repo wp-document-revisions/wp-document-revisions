@@ -1175,6 +1175,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_setup_dashboard() {
 		global $wpdr;
 
+		include_once ABSPATH . '/wp-admin/includes/dashboard.php';
 		$wpdr->admin->setup_dashboard();
 
 		self::assertTrue( true, 'run' );
