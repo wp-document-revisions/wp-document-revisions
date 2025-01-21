@@ -36,9 +36,9 @@
 
 	<rule ref="WordPress"/>
 
-	<config name="testVersion" value="7.3-"/>
-
-	<rule ref="PHPCompatibilityWP"/>
+	<rule ref="PHPCompatibilityWP">
+		<config name="testVersion" value="7.2-"/>
+	</rule>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>

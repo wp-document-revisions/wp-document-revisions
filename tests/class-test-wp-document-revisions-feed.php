@@ -218,7 +218,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		$wpdr->revision_feed_auth();
 
-//		if ( is_404() ) {
+	//		if ( is_404() ) {
 	//		return '';
 	//	}
 
@@ -281,6 +281,13 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$key = $wpdr->admin->get_feed_key( self::$users['author']->ID );
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$_GET['key'] = $key;
+
+		// display key.
+		$output = '';
+		ob_start();
+		$wpdr->admin->rss_key_display();
+		$content = ob_get_clean();
+		self::assertEquals( 1, (int) substr_count( $output, '"' . esc_attr( $key ) . '"', 'display_key' ) );
 
 		$exception = null;
 		$content = '';

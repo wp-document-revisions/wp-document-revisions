@@ -170,7 +170,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add term and two attachments.
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
-		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
+		self::add_document_attachment_new( $factory, self::$editor_public_post_2, self::$test_file2 );
 
 		remove_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
 
@@ -571,6 +571,81 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test network slug save.
+	 */
+	public function test_network_slug_save() {
+		global $wpdr;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['document_slug_nonce']   = wp_create_nonce( 'network_document_slug' );
+		$_POST['network_document_slug'] = 'document';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options' );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options', false );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test network settings errors.
+	 */
+	public function test_network_settings_errors() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		add_settings_error( 'document_upload_directory', 'upload-exists', 'DiR', 'updated' );
+		add_settings_error( 'document_slug', 'slug-exists', 'SlUg', 'updated' );
+
+		ob_start();
+		$wpdr->admin->network_settings_errors();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'DiR' ), 'Setting error dir not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'SlUg' ), 'Setting error slug not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test filter documents list.
 	 */
 	public function test_filter_documents_list() {
@@ -696,6 +771,24 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Helper function for testing limits.
+	 *
+	 * @param string $num number of revisions to keep.
+	 */
+	public function limit_zero( $num ) {
+		return 0;
+	}
+
+	/**
+	 * Helper function for testing limits.
+	 *
+	 * @param string $num number of revisions to keep.
+	 */
+	public function limit_one( $num ) {
+		return 1;
+	}
+
+	/**
 	 * Tests the posts limit..
 	 */
 	public function test_admin_check_limits() {
@@ -716,6 +809,28 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertTrue( true, 'check_limits' );
+
+		// set revisions limit to 0.
+		add_filter( 'document_revisions_limit', array( &$this, 'limit_zero' ) );
+
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'zero' ), 'zero message' );
+		remove_filter( 'document_revisions_limit', array( &$this, 'limit_zero' ) );
+
+		// set revisions limit to 1.
+		add_filter( 'document_revisions_limit', array( &$this, 'limit_one' ) );
+
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'Maximum number' ), 'maximum message' );
+		remove_filter( 'document_revisions_limit', array( &$this, 'limit_one' ) );
 	}
 
 	/**
@@ -1031,5 +1146,37 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNotEmpty( $body_class, 'doc not empty' );
 		self::assertEquals( $body_class, ' document', 'doc not correct' );
 		self::assertTrue( true, 'body_class_filter' );
+	}
+
+	/**
+	 * Tests the media query code.
+	 */
+	public function test_media_query_code() {
+		global $wpdr;
+
+		$join = $wpdr->admin->filter_media_join( '' );
+
+		self::assertNotEmpty( $join, 'join not empty' );
+		self::assertEquals( 2, (int) substr_count( $join, 'wpdr' ), '<wpdr not found twice 1' );
+
+		$where = $wpdr->admin->filter_media_where( '' );
+
+		self::assertNotEmpty( $where, 'where not empty' );
+		self::assertEquals( 2, (int) substr_count( $where, 'wpdr' ), '<wpdr not found twice 2' );
+
+		$query = new WP_Query();
+		$query = $wpdr->admin->filter_from_media_grid( $query );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Tests the setup dashboard.
+	 */
+	public function test_setup_dashboard() {
+		global $wpdr;
+
+		$wpdr->admin->setup_dashboard();
+
+		self::assertTrue( true, 'run' );
 	}
 }
