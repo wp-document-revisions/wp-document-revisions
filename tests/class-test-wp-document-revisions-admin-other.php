@@ -817,7 +817,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->check_document_revisions_limit();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'zero' ), 'zero message' );
 		remove_filter( 'document_revisions_limit', array( &$this, 'limit_zero' ) );
@@ -829,9 +828,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->check_document_revisions_limit();
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( $output );
 
-		self::assertEquals( 1, (int) substr_count( $output, 'Maximum number' ), 'maximum message' );
+		self::assertEquals( 1, (int) substr_count( $output, 'More revisions' ), 'More revisions' );
 		remove_filter( 'document_revisions_limit', array( &$this, 'limit_one' ) );
 	}
 
