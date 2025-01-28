@@ -14,21 +14,21 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * The Parent WP_Document_Revisions instance.
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The Singleton instance.
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 
 	/**
 	 * Array of accepted shortcode keys and default values.
 	 *
-	 * @var $shortcode_defaults
+	 * @var array
 	 */
 	public $shortcode_defaults = array(
 		'id'          => null,

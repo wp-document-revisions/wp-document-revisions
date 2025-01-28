@@ -13,7 +13,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
-	 * @var WP_User[] $users
+	 * @var WP_User[]
 	 */
 	protected static $users = array(
 		'editor'      => null,
@@ -24,35 +24,35 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	/**
 	 * Workflow_state term id
 	 *
-	 * @var integer $ws_term_id
+	 * @var integer
 	 */
 	private static $ws_term_id;
 
 	/**
 	 * Author Public Post ID
 	 *
-	 * @var integer $author_public_post
+	 * @var integer
 	 */
 	private static $author_public_post;
 
 	/**
 	 * Author Private Post ID
 	 *
-	 * @var integer $author_private_post
+	 * @var integer
 	 */
 	private static $author_private_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post ID (contains revision)
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
@@ -64,7 +64,7 @@ class Test_WP_Document_Revisions_Rewrites_Without extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-	// phpcs:enable
+		// phpcs:enable
 		// don't use gzip.
 		add_filter( 'document_serve_use_gzip', '__return_false' );
 

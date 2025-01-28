@@ -14,42 +14,42 @@ class WP_Document_Revisions_Admin {
 	/**
 	 * The parent WP Document Revisions instance
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The singelton instance
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 
 	/**
 	 * The last_but_one revision
 	 *
-	 * @var $last_but_one_revn
+	 * @var int | null
 	 */
 	private static $last_but_one_revn = null;
 
 	/**
 	 * The last_but_one revision excerpt
 	 *
-	 * @var $last_revn_excerpt
+	 * @var string | null
 	 */
 	private static $last_revn_excerpt = null;
 
 	/**
 	 * The last revision
 	 *
-	 * @var $last_revn
+	 * @var int | null
 	 */
 	private static $last_revn = null;
 
 	/**
 	 * List of document attachments (used to ensure all deleted on document deletion.
 	 *
-	 * @var $attachmts
+	 * @var int[] | null
 	 */
 	private static $attachmts = null;
 

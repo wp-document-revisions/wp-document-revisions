@@ -14,14 +14,14 @@ class WP_Document_Revisions_Manage_Rest {
 	/**
 	 * The parent WP Document Revisions instance
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The singelton instance
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 

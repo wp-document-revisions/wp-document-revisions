@@ -13,7 +13,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * The default data
 	 *
-	 * @var $defaults
+	 * @var array
 	 */
 	public $defaults = array(
 		'title'       => '',

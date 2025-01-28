@@ -14,35 +14,35 @@ class WP_Document_Revisions {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var Object $instance
+	 * @var object
 	 */
 	public static $instance;
 
 	/**
 	 * Length of feed key.
 	 *
-	 * @var Int $key_length
+	 * @var int
 	 */
 	public static $key_length = 32;
 
 	/**
 	 * User meta key used auth feeds.
 	 *
-	 * @var String $meta_key
+	 * @var string
 	 */
 	public static $meta_key = 'document_revisions_feed_key';
 
 	/**
 	 * The plugin version.
 	 *
-	 * @var String $version
+	 * @var string
 	 */
 	public $version = '3.6.1';
 
 	/**
 	 * The WP default upload directory cache.
 	 *
-	 * @var Array $wp_default_dir
+	 * @var array
 	 *
 	 * @since 3.2
 	 */
@@ -51,7 +51,7 @@ class WP_Document_Revisions {
 	/**
 	 * The document upload directory cache.
 	 *
-	 * @var String $wpdr_document_dir
+	 * @var string | null
 	 *
 	 * @since 3.2
 	 */
@@ -60,7 +60,7 @@ class WP_Document_Revisions {
 	/**
 	 * The document admin class.
 	 *
-	 * @var object $admin
+	 * @var object | null
 	 *
 	 * @since 3.5
 	 */
@@ -69,7 +69,7 @@ class WP_Document_Revisions {
 	/**
 	 * Whether processing document or image directory.
 	 *
-	 * @var Boolean $doc_image
+	 * @var bool
 	 *
 	 * @since 3.2
 	 */
@@ -78,7 +78,7 @@ class WP_Document_Revisions {
 	/**
 	 * Identify if processing document or image directory.
 	 *
-	 * @return Boolean $doc_image
+	 * @return bool
 	 *
 	 * @since 3.2
 	 */
@@ -89,7 +89,7 @@ class WP_Document_Revisions {
 	/**
 	 * Taxonomy key - Workflow state or EditFlow or PublishPress statuses to use.
 	 *
-	 * @var String $taxonomy_key_val
+	 * @var string
 	 *
 	 * @since 3.3.0
 	 */
@@ -98,7 +98,7 @@ class WP_Document_Revisions {
 	/**
 	 * Function to return Taxonomy key.
 	 *
-	 * @return String $taxonomy_key
+	 * @return string
 	 *
 	 * @since 3.3.0
 	 */

@@ -16,14 +16,14 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Path to test file
 	 *
-	 * @var $test_file
+	 * @var string
 	 */
 	public static $test_file = __DIR__ . '/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
-	 * @var $test-file2
+	 * @var string
 	 */
 	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 

@@ -14,7 +14,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
-	 * @var WP_User[] $users
+	 * @var WP_User[]
 	 */
 	protected static $users = array(
 		'editor' => null,
@@ -24,56 +24,56 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Workflow_state term id 0
 	 *
-	 * @var integer $ws_term_id_0
+	 * @var integer
 	 */
 	private static $ws_term_id_0;
 
 	/**
 	 * Workflow_state slug 0
 	 *
-	 * @var string $ws_slug_0
+	 * @var string
 	 */
 	private static $ws_slug_0;
 
 	/**
 	 * Workflow_state term id 1
 	 *
-	 * @var integer $ws_term_id 1
+	 * @var integer
 	 */
 	private static $ws_term_id_1;
 
 	/**
 	 * Workflow_state slug 1
 	 *
-	 * @var string $ws_slug_1
+	 * @var string
 	 */
 	private static $ws_slug_1;
 
 	/**
 	 * Author Public Post ID
 	 *
-	 * @var integer $author_public_post
+	 * @var integer
 	 */
 	private static $author_public_post;
 
 	/**
 	 * Author Private Post ID
 	 *
-	 * @var integer $author_private_post
+	 * @var integer
 	 */
 	private static $author_private_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post ID (contains revision)
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
@@ -85,7 +85,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-	// phpcs:enable
+		// phpcs:enable
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {

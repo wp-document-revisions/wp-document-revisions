@@ -17,7 +17,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
-	 * @var WP_User[] $users
+	 * @var WP_User[]
 	 */
 	protected static $users = array(
 		'editor' => null,
@@ -27,25 +27,23 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 	/**
 	 * Author Public Post ID
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
-	// phpcs:disable
 	/**
 	 * Set up common data.
 	 *
-	 * @return void.
+	 * @return void
 	 */
 	public function test_package() {
-	// phpcs:enable
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {

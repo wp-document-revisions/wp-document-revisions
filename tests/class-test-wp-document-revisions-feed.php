@@ -50,7 +50,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-
+		// phpcs:enable
 		// don't use gzip.
 		add_filter( 'document_use_gzip', '__return_false' );
 
@@ -157,7 +157,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$author_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
 		self::add_document_attachment( $factory, self::$author_private_post, self::$test_file );
-
 	}
 
 	/**
@@ -218,10 +217,6 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		$wpdr->revision_feed_auth();
 
-	//		if ( is_404() ) {
-	//		return '';
-	//	}
-
 		ob_start();
 		require dirname( __DIR__ ) . '/includes/revision-feed.php';
 		$content = ob_get_clean();
@@ -253,7 +248,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		// try to get an un auth'd feed.
 		$exception = null;
-		$content = '';
+		$content   = '';
 		try {
 			$content = self::simulate_feed( get_permalink( self::$author_private_post ) . 'feed/' );
 		} catch ( WPDieException $e ) {
@@ -289,7 +284,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $content, '"' . esc_attr( $key ) . '"' ), 'display_key' );
 
 		$exception = null;
-		$content = '';
+		$content   = '';
 		try {
 			$content = self::simulate_feed( add_query_arg( 'key', $key, get_permalink( self::$author_public_post ) . 'feed/' ) );
 		} catch ( WPDieException $e ) {
@@ -311,5 +306,4 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		self::assertNull( $exception, 'Not properly allowing access to feeds_2' );
 		self::assertEquals( 2, (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
 	}
-
 }
