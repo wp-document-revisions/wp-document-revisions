@@ -656,9 +656,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$locn = $wpdr->admin->network_settings_redirect( 'site?nothing' );
+		self::assertSame( $locn, 'site?nothing', 'settings-updated not found' );
 
+		$locn = add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) );
+		$locn = $wpdr->admin->network_settings_redirect( $locn );
 		console_log( $locn );
-		self::assertEquals( 1, (int) substr_count( $locn, 'settings-updated' ), 'settings-updated not found' );
+		self::assertSame( 1, (int) substr_count( $locn, 'settings-updated' ), 'settings-updated not found' );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -678,7 +681,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 1, (int) substr_count( $output, 'document_upload_directory' ), 'upload_directory not found' );
+		self::assertEquals( 2, (int) substr_count( $output, 'document_upload_directory' ), 'upload_directory not found' );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -694,7 +697,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$curr_post = get_post( self::$editor_public_post );
-		$attach_id = $wpdr->extract_doc_id( $curr_post->post_content );
+		$attach_id = $wpdr->extract_document_id( $curr_post->post_content );
 		$attach    = $wpdr->admin->get_latest_attachment( $curr_post->ID );
 
 		self::assertEquals( $curr_post->ID, $attach->post_parent, 'Wrong parent' );
@@ -714,6 +717,9 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $post;
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['post'] = self::$editor_public_post;
 
 		ob_start();
 		$wpdr->admin->lock_notice();
@@ -768,7 +774,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new = $wpdr->admin->rename_author_column( $cols );
 
 		// There will be various bits found.
-		self::assertArrayHasKey( $cols, 'author', 'array key' );
+		self::assertArrayHasKey( 'author', $cols, 'array key' );
 		self::assertSame( $cols['author'], 'Owner', 'Not set to Owner' );
 	}
 
@@ -788,7 +794,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new = $wpdr->admin->add_currently_editing_column( $cols );
 
 		// There will be various bits found.
-		self::assertArrayHasKey( $cols, 'currently_editing', 'array key' );
+		self::assertArrayHasKey( 'currently_editing', $cols, 'array key' );
 		self::assertSame( $cols['currently_editing'], 'Currently Editing', 'Not set' );
 	}
 
@@ -829,7 +835,46 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		console_log( $output );
+		self::assertEquals( 2, (int) substr_count( $output, 'workflow_state_nonce' ), 'ws nonce not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'selected=' ), 'selected not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test post author metabox.
+	 */
+	public function test_post_author_meta_box() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+
+		ob_start();
+		$wpdr->admin->post_author_meta_box( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'Owner' ), 'Owner not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test save document.
+	 */
+	public function test_save_document() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$wpdr->admin->save_document( self::$editor_public_post );
+
 		self::assertTrue( true, 'run' );
 	}
 
