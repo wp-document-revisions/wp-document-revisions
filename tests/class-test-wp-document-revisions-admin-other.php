@@ -660,7 +660,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$locn = add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) );
 		$locn = $wpdr->admin->network_settings_redirect( $locn );
-		console_log( $locn );
+		console_log( 'locn =' . $locn );
 		self::assertSame( 1, (int) substr_count( $locn, 'settings-updated' ), 'settings-updated not found' );
 
 		self::assertTrue( true, 'run' );
@@ -771,11 +771,15 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			'author' => 'Author',
 		);
 
+		// There will be various bits found.
+		self::assertArrayHasKey( 'author', $cols, 'array key' );
+		self::assertSame( $cols['author'], 'Author', 'Not set to Owner' );
+
 		$new = $wpdr->admin->rename_author_column( $cols );
 
 		// There will be various bits found.
-		self::assertArrayHasKey( 'author', $cols, 'array key' );
-		self::assertSame( $cols['author'], 'Owner', 'Not set to Owner' );
+		self::assertArrayHasKey( 'author', $new, 'array key' );
+		self::assertSame( $new['author'], 'Owner', 'Not set to Owner' );
 	}
 
 	/**
@@ -791,11 +795,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			'col_3' => 'col_3',
 		);
 
+		self::assertArrayNotHasKey( 'currently_editing', $cols, 'array key' );
+
 		$new = $wpdr->admin->add_currently_editing_column( $cols );
 
-		// There will be various bits found.
-		self::assertArrayHasKey( 'currently_editing', $cols, 'array key' );
-		self::assertSame( $cols['currently_editing'], 'Currently Editing', 'Not set' );
+		self::assertArrayHasKey( 'currently_editing', $new, 'array key' );
+		self::assertSame( $new['currently_editing'], 'Currently Editing', 'Not set' );
 	}
 
 	/**
@@ -858,7 +863,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 1, (int) substr_count( $output, 'Owner' ), 'Owner not found' );
+		self::assertEquals( 2, (int) substr_count( $output, 'Owner' ), 'Owner not found' );
 
 		self::assertTrue( true, 'run' );
 	}
