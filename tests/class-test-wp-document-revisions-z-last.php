@@ -53,7 +53,7 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
 
 		// Test rules.
-		$rules = '^RewriteRule WPDR - [QSA,L]';
+		$rules = '^RewriteRule ^WPDR - [QSA,L]';
 		$rules = $wpdr->mod_rewrite_rules( $rules );
 		self::assertStringNotContainsString( 'WPDR', $rules, 'mod_rewrite_rules' );
 
