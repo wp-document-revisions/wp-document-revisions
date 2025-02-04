@@ -1042,6 +1042,19 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests workflow state save (indirectly)..
+	 */
+	public function test_workflow_state_save() {
+		// remove term.
+		$terms = wp_set_post_terms( self::$editor_public_post_2, array(), 'workflow_state' );
+
+		// re-add term.
+		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
+
+		self::assertTrue( true, 'workflow_state_save' );
+	}
+
+	/**
 	 * Tests the posts enqueue.
 	 */
 	public function test_admin_enqueue() {

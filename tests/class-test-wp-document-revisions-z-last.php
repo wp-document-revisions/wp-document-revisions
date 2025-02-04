@@ -38,6 +38,7 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr->add_caps();
 		$wpdr->register_ct();
 		$wpdr->initialize_workflow_states();
+		$wpdr->activation_hook();
 
 		// make sure that we have the admin set up.
 		include_once dirname( __DIR__ ) . '/includes/class-wp-document-revisions-admin.php';
@@ -50,6 +51,23 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $wpdr::$instance );
 
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
+
+		// Test rules.
+		$rules = '^RewriteRule WPDR - [QSA,L]';
+		$rules = $wpdr->mod_rewrite_rules( $rules );
+		self::assertStringNotContainsString( 'WPDR', $rules, 'mod_rewrite_rules' );
+
+		// test notice.
+		set_transient( 'wpdr_activation_issue', get_current_user_id() );
+		$wpdr->activation_error_notice();
+
+		// test admin init.
+		$wpdr->admin_init();
+
+		// test document_dir.
+		$doc_dir                  = $wpdr->document_upload_dir();
+		$wpdr::$wpdr_document_dir = null;
+		self::assertEquals( $wpdr->document_upload_dir(), $doc_dir, 'Doc Dir' );
 
 		// put back globals.
 		$wpdr        = $val1;
