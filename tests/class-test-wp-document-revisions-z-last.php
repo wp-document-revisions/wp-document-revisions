@@ -62,7 +62,7 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 
 		$rules = '^RewriteRule ^WPDR ' . $home_root . '- [QSA,L]';
 		$rules = $wpdr->mod_rewrite_rules( $rules );
-		self::assertStringNotContainsString( 'WPDR', $rules, 'mod_rewrite_rules' );
+		self::assertFalse( strpos( $rules, 'WPDR' ), 'mod_rewrite_rules' );
 
 		// test notice.
 		set_transient( 'wpdr_activation_issue', get_current_user_id() );
@@ -72,9 +72,30 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr->admin_init();
 
 		// test document_dir.
-		$doc_dir                  = $wpdr->document_upload_dir();
+		$doc_dir                  = trailingslashit( $wpdr->document_upload_dir() );
 		$wpdr::$wpdr_document_dir = null;
-		self::assertEquals( $wpdr->document_upload_dir(), $doc_dir, 'Doc Dir' );
+		self::assertEquals( $doc_dir, trailingslashit( $wpdr->document_upload_dir() ), 'Doc Dir' );
+
+		// test add_qv_workflow_state.
+		$vars = array();
+		$vars = $wpdr->add_qv_workflow_state( $vars );
+		self::assertNotEmpty( $vars, 'QV empty' );
+
+		// test use_workflow_states.
+		$wpdr->use_workflow_states();
+		self::assertTrue( true, 'use_workflow_states' );
+
+		// test disable_workflow_states.
+		$wpdr->disable_workflow_states();
+		self::assertTrue( true, 'disable_workflow_states' );
+
+		// test register_term_count_cb.
+		$wpdr->register_term_count_cb();
+		self::assertTrue( true, 'register_term_count_cb' );
+
+		// test manage_rest.
+		$wpdr->manage_rest();
+		self::assertTrue( true, 'manage_rest' );
 
 		// put back globals.
 		$wpdr        = $val1;
