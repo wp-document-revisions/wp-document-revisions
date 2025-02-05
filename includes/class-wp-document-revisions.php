@@ -279,14 +279,22 @@ class WP_Document_Revisions {
 	 */
 	public function mod_rewrite_rules( $rules ) {
 		// forbid access to documents directly.
+		// Find the path.
+		$home_root = wp_parse_url( home_url() );
+		if ( isset( $home_root['path'] ) ) {
+			$home_root = trailingslashit( $home_root['path'] );
+		} else {
+			$home_root = '/';
+		}
+
 		/**
 		 * Filter to stop direct file access to documents (specify the URL element (or trailing part) to traverse to the document directory).
 		 *
 		 * See above for definition.
 		 */
-		$path_to = trailingslashit( apply_filters( 'document_stop_file_access_pattern', '' ) );
+		$path_to = trailingslashit( $home_root . apply_filters( 'document_stop_file_access_pattern', '' ) );
 		// check that the URL points to a file with an MD5 format name. If so, return Forbidden.
-		$rules = preg_replace( '|RewriteRule \^WPDR /- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [R=403,L]", $rules );
+		$rules = preg_replace( '|RewriteRule \^WPDR ' . $home_root . '- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [R=403,L]", $rules );
 		return $rules;
 	}
 

@@ -53,7 +53,14 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		self::assertNotNull( $wpdr_mr, 'Class Manage_Rest not defined' );
 
 		// Test rules.
-		$rules = '^RewriteRule ^WPDR - [QSA,L]';
+		$home_root = wp_parse_url( home_url() );
+		if ( isset( $home_root['path'] ) ) {
+			$home_root = trailingslashit( $home_root['path'] );
+		} else {
+			$home_root = '/';
+		}
+
+		$rules = '^RewriteRule ^WPDR ' . $home_root . '- [QSA,L]';
 		$rules = $wpdr->mod_rewrite_rules( $rules );
 		self::assertStringNotContainsString( 'WPDR', $rules, 'mod_rewrite_rules' );
 
