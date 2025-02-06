@@ -305,5 +305,10 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		self::assertTrue( $wpdr->validate_feed_key(), 'not properly validating feed key' );
 		self::assertNull( $exception, 'Not properly allowing access to feeds_2' );
 		self::assertEquals( 2, (int) substr_count( $content, '<item>' ), 'improper feed item count_2' );
+
+		// check invalid key.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = srtrev( $key );
+		self::assertFalse( $wpdr->validate_feed_key(), 'not properly validating wrong feed key' );
 	}
 }

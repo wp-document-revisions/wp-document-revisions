@@ -308,7 +308,7 @@ class WP_Document_Revisions {
 	 */
 	public function activation_error_notice() {
 		$transient = get_transient( 'wpdr_activation_issue' );
-		if ( $transient && get_current_user_id() === (int) $transient ) {
+		if ( false !== $transient && get_current_user_id() === (int) $transient ) {
 			delete_transient( 'wpdr_activation_issue' );
 			// timing of initial permissions being set as can give message before initial activation.
 			?>

@@ -75,7 +75,7 @@ jobs:
         files: coverage.xml
         directory: ${{ github.workspace }}
         verbose: true
-        flags: php-${{ matrix.php_version }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+        flags: php-${{ matrix.php_versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
   phpunit6:
     # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
