@@ -660,7 +660,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$locn = add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) );
 		$locn = $wpdr->admin->network_settings_redirect( $locn );
-		console_log( 'locn =' . $locn );
 		self::assertSame( 1, (int) substr_count( $locn, 'settings-updated' ), 'settings-updated not found' );
 
 		self::assertTrue( true, 'run' );
