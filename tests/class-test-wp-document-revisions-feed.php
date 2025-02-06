@@ -308,7 +308,7 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 
 		// check invalid key.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['key'] = srtrev( $key );
+		$_GET['key'] = strrev( $key );
 		self::assertFalse( $wpdr->validate_feed_key(), 'not properly validating wrong feed key' );
 	}
 }
