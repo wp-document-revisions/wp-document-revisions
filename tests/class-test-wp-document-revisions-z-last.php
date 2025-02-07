@@ -66,7 +66,9 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 
 		// test notice.
 		set_transient( 'wpdr_activation_issue', get_current_user_id() );
+		ob_start();
 		$wpdr->activation_error_notice();
+		$output = ob_get_clean();
 		self::assertTrue( true, 'activation_error_notice' );
 
 		// test is_doc_image.
