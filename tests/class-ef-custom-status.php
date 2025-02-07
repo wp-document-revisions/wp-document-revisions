@@ -13,6 +13,13 @@
  */
 class EF_Custom_Status {
 	/**
+	 * Create a sub-object.
+	 *
+	 * @var $custom_status object (class)
+	 */
+	public $custom_status = null;
+
+	/**
 	 * Taxonomy slug used by EF.
 	 *
 	 * @var $taxonomy_key string
@@ -24,12 +31,10 @@ class EF_Custom_Status {
 	 *
 	 * @var $custom_status mixed[]
 	 */
-	public $custom_status = array(
-		'module' => array(
-			'options' => array(
-				'post_types' => array(
-					'document' => 'on',
-				),
+	public $module = array(
+		'options' => array(
+			'post_types' => array(
+				'document' => 'on',
 			),
 		),
 	);
@@ -50,8 +55,8 @@ class EF_Custom_Status {
 	 * @return bool
 	 * @since 3.6.1
 	 */
-	public function module_enabled( $funct ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		// fn is enabled.
+	public function module_enabled( $funct ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		// funct is enabled.
 		return true;
 	}
 }

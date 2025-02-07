@@ -138,7 +138,8 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// ensure EF present.
 		include __DIR__ . '/class-ef-custom-status.php';
 		global $edit_flow;
-		$edit_flow = new EF_Custom_Status();
+		$edit_flow                = new EF_Custom_Status();
+		$edit_flow->custom_status = new EF_Custom_Status();
 
 		// init user roles.
 		global $wpdr;
