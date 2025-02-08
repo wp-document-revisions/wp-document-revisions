@@ -24,7 +24,7 @@ class EF_Custom_Status {
 	 *
 	 * @var $taxonomy_key string
 	 */
-	public $taxonomy_key = 'post_status';
+	public static $taxonomy_key = 'post_status';
 
 	/**
 	 * EF Parameter setup.
