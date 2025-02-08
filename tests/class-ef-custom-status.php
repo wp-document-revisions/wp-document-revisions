@@ -19,12 +19,8 @@ class EF_Custom_Status {
 	 */
 	public $custom_status = null;
 
-	/**
-	 * Taxonomy slug used by EF.
-	 *
-	 * @var $taxonomy_key string
-	 */
-	public static $taxonomy_key = 'post_status';
+	// phpcs:ignore
+	const taxonomy_key = 'post_status';
 
 	/**
 	 * EF Parameter setup.
