@@ -29,15 +29,9 @@ class EF_Custom_Status {
 	/**
 	 * EF Parameter setup.
 	 *
-	 * @var $custom_status mixed[]
+	 * @var $module object
 	 */
-	public $module = array(
-		'options' => array(
-			'post_types' => array(
-				'document' => 'on',
-			),
-		),
-	);
+	public $module = null;
 
 	/**
 	 * Initiates an instance of the class and adds hooks.
@@ -45,7 +39,12 @@ class EF_Custom_Status {
 	 * @since 3.6.1
 	 */
 	public function __construct() {
-		null;
+		$options               = new StdClass();
+		$options->post_types   = array(
+			'document' => 'on',
+		);
+		$this->module          = new StdClass();
+		$this->module->options = $options;
 	}
 
 	/**
