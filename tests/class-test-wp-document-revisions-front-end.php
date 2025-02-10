@@ -768,4 +768,35 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		self::assertTrue( true, 'taxonomy hierarchy' );
 	}
+
+	/**
+	 * Tests the get taxonomy hierarchy function.
+	 */
+	public function test_wpdr_block_categories() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$categories = array();
+		$new_categs = $wpdr_fe->wpdr_block_categories( $categories, null );
+
+		self::assertNotEmpty( $new_categs, 'wpdr_block_categories' );
+	}
+
+	/**
+	 * Tests the enqueue_front function.
+	 */
+	public function test_enqueue_front() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$wpdr_fe->enqueue_front();
+
+		self::assertTrue( true, 'enqueue_front' );
+	}
 }
