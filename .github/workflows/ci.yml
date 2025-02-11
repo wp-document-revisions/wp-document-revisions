@@ -44,7 +44,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: mysqli
+        extensions: fileinfo, imagick, mysqli, xml, zip, zlib
         coverage: xdebug
         tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
       env:
@@ -108,7 +108,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         ini-values: magic_quotes_gpc=off
-        extensions: mysqli
+        extensions: fileinfo, imagick, mysqli, xml, zip, zlib
         coverage: xdebug
         tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
       env:
