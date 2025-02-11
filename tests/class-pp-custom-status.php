@@ -36,16 +36,4 @@ class PP_Custom_Status {
 		$this->modules->custom_class          = new StdClass();
 		$this->modules->custom_class->options = $options;
 	}
-
-	/**
-	 * Identifies if the function is enabled.
-	 *
-	 * @param string $funct function to be called.
-	 * @return bool
-	 * @since 3.6.1
-	 */
-	public function module_enabled( $funct ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		// funct is enabled.
-		return true;
-	}
 }

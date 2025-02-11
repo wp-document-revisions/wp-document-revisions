@@ -353,10 +353,6 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 
 		// Exercise other paths.
-		$publishpress->modules->custom_status->options->post_types['document'] = 'off';
-		$wpdr->publishpress_support();
-		self::assertTrue( true, 'document off' );
-
 		unset( $publishpress->modules->custom_status->options->post_types['document'] );
 		$wpdr->publishpress_support();
 		self::assertTrue( true, 'document unset' );

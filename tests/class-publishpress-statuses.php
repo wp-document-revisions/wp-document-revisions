@@ -17,7 +17,7 @@ class PublishPress_Statuses {
 	 *
 	 * @var $instance object (class)
 	 */
-	public static $instance = null;
+	private static $instance = null;
 
 	/**
 	 * Create a sub-object.
@@ -35,7 +35,7 @@ class PublishPress_Statuses {
 	 * @since 3.6.1
 	 */
 	public function __construct() {
-		self::$instance = &$this;
+		self::$instance      = &$this;
 		$options             = new StdClass();
 		$options->enabled    = 'on';
 		$options->post_types = array(
@@ -45,14 +45,13 @@ class PublishPress_Statuses {
 	}
 
 	/**
-	 * Identifies if the function is enabled.
+	 * Identifies the instance.
 	 *
-	 * @param string $funct function to be called.
-	 * @return bool
+	 * @return object
 	 * @since 3.6.1
 	 */
-	public function module_enabled( $funct ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public static function instance() {
 		// funct is enabled.
-		return true;
+		return self::$instance;
 	}
 }
