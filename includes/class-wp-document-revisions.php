@@ -204,9 +204,8 @@ class WP_Document_Revisions {
 		// cache clean.
 		add_action( 'save_post_document', array( &$this, 'clear_cache' ), 20, 3 );
 
-		// Edit Flow or PublishPress.
+		// Edit Flow or PublishPress Statuses.
 		add_action( 'ef_module_options_loaded', array( &$this, 'edit_flow_support' ) );
-		add_action( 'pp_module_options_loaded', array( &$this, 'publishpress_support' ) );
 		add_action( 'pp_statuses_init', array( &$this, 'publishpress_statuses_support' ), 20 );
 		// always called to determine whether user has turned off workflow_state support.
 		add_action( 'init', array( &$this, 'disable_workflow_states' ), 1900 );
@@ -2803,50 +2802,8 @@ class WP_Document_Revisions {
 		return $vars;
 	}
 
-
 	/**
-	 * Provides support for publish_press_support and disables the default workflow state taxonomy.
-	 *
-	 * @since 3.2.3
-	 */
-	public function publishpress_support() {
-		// verify publishpress is enabled.
-		/**
-		 * Filter to switch off integration with PublishPress statuses.
-		 *
-		 * @param boolean true default value to use PublishPress processes if installed and active.
-		 */
-		if ( ! class_exists( 'PP_Custom_Status' ) || ! apply_filters( 'document_revisions_use_edit_flow', true ) ) {
-			return;
-		}
-
-		global $publishpress;
-
-		// prevent errors if options aren't init'd yet.
-		if ( ! isset( $publishpress->modules->custom_status->options->post_types['document'] ) ) {
-			return;
-		}
-
-		// check if enabled for documents.
-		if ( 'off' === $publishpress->modules->custom_status->options->post_types['document'] ) {
-			return;
-		}
-
-		// update the taxonomy key.
-		self::$taxonomy_key_val = PP_Custom_Status::taxonomy_key;
-
-		// PP adds the Post Status column so nothing to do.
-
-		// workflow_state will be used as a query_var, but is not one.
-		add_filter( 'query_vars', array( &$this, 'add_qv_workflow_state' ), 10 );
-
-		// we are going to use PP processes if installed and active.
-		// make sure use_workflow_states returns false.
-		add_filter( 'document_use_workflow_states', '__return_false' );
-	}
-
-	/**
-	 * Provides support for PublishPress Status and disables the default workflow state taxonomy.
+	 * Provides support for PublishPress Statuses and disables the default workflow state taxonomy.
 	 *
 	 * @since 3.2.3
 	 */

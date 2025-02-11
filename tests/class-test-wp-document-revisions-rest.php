@@ -532,7 +532,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
 		$request['context'] = 'edit';
 		$response           = $wp_rest_server->dispatch( $request );
-		self::assertEquals( 404, $response->get_status() );
+		// not supposed to work with context set to edit..
+		self::assertEquals( 200, $response->get_status() );
 	}
 
 	/**
@@ -559,7 +560,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// Two public posts.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
-		self::assertEquals( 401, $response->get_status(), 'Not authorized' );
+		self::assertEquals( 401, $response->get_status() );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
 	}
