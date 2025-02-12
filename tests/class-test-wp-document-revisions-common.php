@@ -27,6 +27,13 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	 */
 	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
 
+	/**
+	 * Path to PDF test file
+	 *
+	 * @var string
+	 */
+	public static $pdf_file = __DIR__ . '/documents/Document1.pdf';
+
 	// phpcs:disable
 	/**
 	 * Create shadow terms...
