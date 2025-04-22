@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var string
 	 */
-	public $version = '3.6.1';
+	public $version = '3.7.0';
 
 	/**
 	 * The WP default upload directory cache.
@@ -293,7 +293,7 @@ class WP_Document_Revisions {
 		 */
 		$path_to = trailingslashit( $home_root . apply_filters( 'document_stop_file_access_pattern', '' ) );
 		// check that the URL points to a file with an MD5 format name. If so, return Forbidden.
-		$rules = preg_replace( '|RewriteRule \^WPDR ' . $home_root . '- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [R=403,L]", $rules );
+		$rules = preg_replace( '|RewriteRule \^WPDR ' . $home_root . '- \[QSA,L\]|', "RewriteCond %{REQUEST_FILENAME} -f\nRewriteRule $path_to(\d{4}/\d{2}/)?[a-f0-9]{32}(\.\w{1,7})?/?$ /- [F]", $rules );
 		return $rules;
 	}
 
@@ -443,22 +443,14 @@ class WP_Document_Revisions {
 		 */
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
 
-		// Ensure that there is a post-thumbnail size set - could/should be set by theme - default copy from thumbnail.
-		if ( ! array_key_exists( 'post-thumbnail', wp_get_additional_image_sizes() ) ) {
-			$sizing = array(
-				get_option( 'thumbnail_size_w' ),
-				get_option( 'thumbnail_size_h' ),
-				false,
-			);
-			/**
-			 * Filters the post-thumbnail size parameters (used only if this image size has not been set).
-			 *
-			 * @since 3.6
-			 *
-			 * @param mixed[] $sizes default values for the image size.
-			 */
-			$sizing = apply_filters( 'document_post_thumbnail', $sizing );
-			add_image_size( 'post-thumbnail', ...$sizing );
+		// Although default is to support thumbnails on document, this could be filtered away.
+		if ( post_type_supports( 'document', 'thumbnail' ) && current_theme_supports( 'post-thumbnails', 'document' ) ) {
+			// Thumbnails are supported.
+			// Ensure that there is a post-thumbnail size set - could/should be set by theme - default copy from thumbnail.
+			if ( ! array_key_exists( 'post-thumbnail', wp_get_additional_image_sizes() ) ) {
+				// get sizing dynamically.
+				add_filter( 'post_thumbnail_size', array( &$this, 'document_featured_image_size' ), 10, 2 );
+			}
 		}
 
 		// Set Global for Document Image from Cookie doc_image (may be updated later).
@@ -565,6 +557,36 @@ class WP_Document_Revisions {
 				)
 			);
 		}
+	}
+
+
+	/**
+	 * Dynamically sets the Featured Image Size for Documents when not set by theme.
+	 *
+	 * @since 3.7
+	 * @param string|int[] $size    Requested image size. Can be any registered image size name, or
+	 *                              an array of width and height values in pixels (in that order).
+	 * @param int          $post_id The post ID.
+	 */
+	public function document_featured_image_size( $size, $post_id ) {
+		if ( 'post-thumbnail' !== $size || ! $this->verify_post_type( $post_id ) ) {
+			return $size;
+		}
+
+		$size = array(
+			get_option( 'thumbnail_size_w' ),
+			get_option( 'thumbnail_size_h' ),
+			false,
+		);
+
+		/**
+		 * Filters the post-thumbnail size parameters (used only if this image size has not been set).
+		 *
+		 * @since 3.6
+		 *
+		 * @param mixed[] $size default values for the image size.
+		 */
+		return apply_filters( 'document_post_thumbnail', $size );
 	}
 
 
