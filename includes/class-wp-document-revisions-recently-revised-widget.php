@@ -93,7 +93,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			 * @param string $size Requested image size. Can be any registered image size name.
 			 */
 			$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
-			write_log( $thumb_size );
 		}
 
 		foreach ( $documents as $document ) {
@@ -105,7 +104,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				),
 				admin_url( 'post.php' )
 			) : $permalink;
-			$target = ( $instance['new_tab'] ? ' target="_blank"' : '' );
+			$target    = ( $instance['new_tab'] ? ' target="_blank"' : '' );
 			// translators: %1$s is the time ago in words, %2$s is the author.
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 			// do we need to highlight PDFs.
@@ -136,12 +135,12 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 							$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
 							if ( is_array( $meta ) && array_key_exists( 'sizes', $meta ) ) {
 								$sizes = $meta['sizes'];
-								if ( array_key_exists( $thumb_size, $sizes ) )  {
+								if ( array_key_exists( $thumb_size, $sizes ) ) {
 									$doc_thumb = $sizes[ $thumb_size ];
 									// find the location of the attachment image.
 									// The document permalink will contain the slug plus the correct sub_dir (if used).
 									$url   = untrailingslashit( $permalink );
-									$url   = substr( $url, 0, strrpos( $url, '/' )+1 ) . $doc_thumb['file'];
+									$url   = substr( $url, 0, strrpos( $url, '/' ) + 1 ) . $doc_thumb['file'];
 									$url   = str_replace( '/' . $wpdr->document_slug() . '/', '/' . $doc_dir . '/', $url );
 									$image = '<img width="' . esc_attr( $doc_thumb['width'] ) . '" height="' . esc_attr( $doc_thumb['height'] ) . '" src="' . esc_url( $url ) . '" class="attachment-' . esc_attr( $thumb_size ) . ' size-' . esc_attr( $thumb_size ) . '" alt="' . esc_html( get_the_title( $document->ID ) ) . '"  decoding="async" loading="lazy" >';
 								}
