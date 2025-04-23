@@ -251,7 +251,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 	 * @return void
 	 */
 	public function test_ps_support() {
-		// ensure EF present.
+		// ensure PS present.
 		include __DIR__ . '/class-publishpress-statuses.php';
 		new PublishPress_Statuses();
 
@@ -263,7 +263,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
-		// call EF support.
+		// call PS support.
 		$wpdr->publishpress_statuses_support();
 
 		// create users and assign role.
@@ -357,5 +357,125 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		unset( PublishPress_Statuses::instance()->options->post_types['document'] );
 		$wpdr->publishpress_statuses_support();
 		self::assertTrue( true, 'document unset' );
+	}
+
+	/**
+	 * Test Featured Image size.
+	 *
+	 * @return void
+	 */
+	public function test_featured_image_size() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->register_cpt();
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+		);
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = self::factory()->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$users['editor']->ID,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// add attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
+
+		// add second attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file2 );
+
+		// test routine.
+		$size = $wpdr->document_featured_image_size( 'thumbnail', self::$editor_public_post );
+		self::assertSame( 'thumbnail', $size, 'thumbnail' );
+
+		$size = $wpdr->document_featured_image_size( 'post-thumbnail', self::$editor_public_post );
+		$comp = array(
+			get_option( 'thumbnail_size_w' ),
+			get_option( 'thumbnail_size_h' ),
+		);
+
+		self::assertSame( $comp, $size, 'post-thumbnail' );
+	}
+
+	/**
+	 * Test sample permalink.
+	 *
+	 * @return void
+	 */
+	public function test_sample_permalink() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->register_cpt();
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+		);
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = self::factory()->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$users['editor']->ID,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// test routine before attachment.
+		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post );
+		self::assertEmpty( $html, 'pre attach' );
+
+		// add attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
+
+		// add second attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file2 );
+
+		// test routine.
+		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post );
+		self::assertSame( 'initial', $html, 'post-thumbnail' );
 	}
 }

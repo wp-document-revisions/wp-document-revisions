@@ -576,7 +576,6 @@ class WP_Document_Revisions {
 		$size = array(
 			get_option( 'thumbnail_size_w' ),
 			get_option( 'thumbnail_size_h' ),
-			false,
 		);
 
 		/**
@@ -1028,11 +1027,11 @@ class WP_Document_Revisions {
 		$rev_query->is_404      = (bool) ( 0 === $rev_query->post_count );
 		$rev_query->post        = ( $rev_query->is_404 ? null : $posts[0] );
 		$rev_query->is_feed     = $feed;
-		$rev_query->rewind_posts();
 		$rev_query->query_vars  = array(
 			'cache_results' => false,
 			'fields'        => 'all',
 		);
+		$rev_query->rewind_posts();
 
 		return $rev_query;
 	}
