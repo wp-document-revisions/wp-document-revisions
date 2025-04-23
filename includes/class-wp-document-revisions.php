@@ -1029,6 +1029,10 @@ class WP_Document_Revisions {
 		$rev_query->post        = ( $rev_query->is_404 ? null : $posts[0] );
 		$rev_query->is_feed     = $feed;
 		$rev_query->rewind_posts();
+		$rev_query->query_vars  = array(
+			'cache_results' => false,
+			'fields'        => 'all',
+		);
 
 		return $rev_query;
 	}
