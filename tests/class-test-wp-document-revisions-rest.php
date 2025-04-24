@@ -148,7 +148,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$pdf_file );
 
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
@@ -508,6 +508,18 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		} else {
 			self::assertFalse( true, 'no revision found' );
 		}
+
+		// remove read revisions capability.
+		$role = get_role( 'editor' );
+		$role->remove_cap( 'read_document_revisions' );
+
+		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
+		$response = $wp_rest_server->dispatch( $request );
+		$revision = $response->get_data();
+		self::assertTrue( true, 'Revision test' );
+		console_log( $response->get_status() );
+
+		$role->add_cap( 'read_document_revisions' );
 	}
 
 	/**
@@ -532,7 +544,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
 		$request['context'] = 'edit';
 		$response           = $wp_rest_server->dispatch( $request );
-		// not supposed to work with context set to edit..
+		// not supposed to work with context set to edit.
 		self::assertEquals( 200, $response->get_status() );
 	}
 
@@ -563,6 +575,11 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 401, $response->get_status() );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
+
+		// try a PUT - error.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 401, $response->get_status() );
 	}
 
 	/**
