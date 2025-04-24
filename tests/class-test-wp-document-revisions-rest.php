@@ -516,8 +516,8 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
 		$response = $wp_rest_server->dispatch( $request );
 		$revision = $response->get_data();
+		self::assertEquals( 200, $response->get_status() );
 		self::assertTrue( true, 'Revision test' );
-		console_log( $response->get_status() );
 
 		$role->add_cap( 'read_document_revisions' );
 	}
@@ -577,7 +577,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		remove_filter( 'document_read_uses_read', '__return_false' );
 
 		// try a PUT - error.
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
+		$request  = new WP_REST_Request( 'PUT', '/wp/v2/documents/' . self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 401, $response->get_status() );
 	}
