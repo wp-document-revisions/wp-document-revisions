@@ -395,7 +395,15 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 		// logically remove attachment.
 		add_filter( 'document_serve_attachment', '__return_false' );
 
-		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		$exception = null;
+		try {
+			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
 
 		remove_filter( 'document_serve_attachment', '__return_false' );
 		remove_filter( 'document_read_uses_read', '__return_true' );
@@ -419,7 +427,15 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 		// logically remove attachment.
 		add_filter( 'serve_document_auth', '__return_false' );
 
-		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		$exception = null;
+		try {
+			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
 
 		remove_filter( 'serve_document_auth', '__return_false' );
 		remove_filter( 'document_read_uses_read', '__return_true' );
