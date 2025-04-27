@@ -580,6 +580,16 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request  = new WP_REST_Request( 'PUT', '/wp/v2/documents/' . self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
 		self::assertEquals( 401, $response->get_status() );
+
+		// use document_use_block_editor.
+		add_filter( 'document_use_block_editor', '__return_true' );
+
+		// try a PUT - error.
+		$request  = new WP_REST_Request( 'PUT', '/wp/v2/documents/' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 401, $response->get_status() );
+
+		remove_filter( 'document_use_block_editor', '__return_true' );
 	}
 
 	/**

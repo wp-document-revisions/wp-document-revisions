@@ -379,6 +379,76 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Can the public access a public file with attachment off? (no).
+	 */
+	public function test_public_document_no_attach() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'document_serve_attachment', '__return_false' );
+
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+
+		remove_filter( 'document_serve_attachment', '__return_false' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+
+	/**
+	 * Can the public access a public file with auth false? (no).
+	 */
+	public function test_public_document_auth_false() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'serve_document_auth', '__return_false' );
+
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+
+		remove_filter( 'serve_document_auth', '__return_false' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+	/**
+	 * Can the public access a public file with auth false? (no).
+	 */
+	public function test_public_document_auth_null() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'serve_document_auth', '__return_null' );
+
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+
+		remove_filter( 'serve_document_auth', '__return_null' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+	/**
 	 * Can the public access a private file - doc_id using read? (no).
 	 */
 	public function test_private_document_as_unauth_docid_read() {
