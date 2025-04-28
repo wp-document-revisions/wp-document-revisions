@@ -423,6 +423,7 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 		try {
 			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
 		} catch ( WPDieException $e ) {
+			ob_end_clean();
 			$exception = $e;
 		}
 
@@ -455,6 +456,7 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 		try {
 			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
 		} catch ( WPDieException $e ) {
+			ob_end_clean();
 			$exception = $e;
 		}
 

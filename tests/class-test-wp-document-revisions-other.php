@@ -537,21 +537,24 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 
 		// straight return.
 		$wpdr->rewrite_file_url( $file );
+		$wpdr->rewrite_file( $file );
 
 		$_POST['post_id'] = self::$editor_public_post;
 
 		// possibly image.
 		$_POST['type'] = 'file';
 		$wpdr->rewrite_file_url( $file );
+		$wpdr->rewrite_file( $file );
 
 		// set pagenow.
 		global $pagenow;
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$pagenow = 'async-upload.php';
-		$wpdr->rewrite_file_url( $file );
+		$file    = $wpdr->rewrite_file_url( $file );
 		if ( isset( $file['url'] ) ) {
 			console_log( $file['url'] );
 		}
+		$file = $wpdr->rewrite_file( $file );
 
 		self::assertTrue( true, 'file_rewrite' );
 	}
