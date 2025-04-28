@@ -537,14 +537,14 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 
 		// straight return.
 		$wpdr->rewrite_file_url( $file );
-		$wpdr->rewrite_file( $file );
+		$wpdr->filename_rewrite( $file );
 
 		$_POST['post_id'] = self::$editor_public_post;
 
 		// possibly image.
 		$_POST['type'] = 'file';
 		$wpdr->rewrite_file_url( $file );
-		$wpdr->rewrite_file( $file );
+		$wpdr->filename_rewrite( $file );
 
 		// set pagenow.
 		global $pagenow;
@@ -554,7 +554,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		if ( isset( $file['url'] ) ) {
 			console_log( $file['url'] );
 		}
-		$file = $wpdr->rewrite_file( $file );
+		$file = $wpdr->filename_rewrite( $file );
 
 		self::assertTrue( true, 'file_rewrite' );
 	}
