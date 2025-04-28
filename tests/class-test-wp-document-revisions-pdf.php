@@ -360,6 +360,30 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Can the public access a public file - permalink using read with wp? (yes).
+	 */
+	public function test_public_document_using_wp() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// use filesystem.
+		add_filter( 'document_use_wp_filesystem', '__return_true' );
+
+		self::verify_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink Read WP' );
+
+		remove_filter( 'document_use_wp_filesystem', '__return_true' );
+
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+	/**
 	 * Can the public access a public file - permalink using read_document? (no).
 	 */
 	public function test_public_document_pretty_docread() {

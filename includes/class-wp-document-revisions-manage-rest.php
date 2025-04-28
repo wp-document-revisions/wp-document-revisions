@@ -246,7 +246,7 @@ class WP_Document_Revisions_Manage_Rest {
 			if ( $response->data['media_details'] instanceof stdClass ) {
 				// attachment meta data not present so cannot expose anything.
 				null;
-			} elseif ( false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) && ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) ) {
+			} elseif ( ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) && false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) ) {
 				// cannot trust the metadata, treat as not present.
 				$response->data['media_details'] = new stdClass();
 			} elseif ( $doc_dir !== $std_dir ) {

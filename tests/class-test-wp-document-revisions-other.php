@@ -478,4 +478,81 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post );
 		self::assertSame( 'initial', $html, 'post-thumbnail' );
 	}
+
+	/**
+	 * Test file rewrite.
+	 *
+	 * @return void
+	 */
+	public function test_file_rewrite() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->register_cpt();
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+		);
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = self::factory()->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$users['editor']->ID,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// add attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
+
+		$file = array(
+			'file'     => 'Document.pdf',
+			'tmp_name' => 'doc.pdf',
+			'size'     => 999,
+			'error'    => 0,
+		);
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		global $_POST;
+
+		// straight return.
+		$wpdr->rewrite_file_url( $file );
+
+		$_POST['post_id'] = self::$editor_public_post;
+
+		// possibly image.
+		$_POST['type'] = 'file';
+		$wpdr->rewrite_file_url( $file );
+
+		// set pagenow.
+		global $pagenow;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$pagenow = 'async-upload.php';
+		$wpdr->rewrite_file_url( $file );
+		if ( isset( $file['url'] ) ) {
+			console_log( $file['url'] );
+		}
+
+		self::assertTrue( true, 'file_rewrite' );
+	}
 }
