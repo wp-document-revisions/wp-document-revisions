@@ -526,7 +526,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
 
 		$file = array(
-			'file'     => 'Document.pdf',
+			'name'     => 'Document.pdf',
 			'tmp_name' => 'doc.pdf',
 			'size'     => 999,
 			'error'    => 0,
