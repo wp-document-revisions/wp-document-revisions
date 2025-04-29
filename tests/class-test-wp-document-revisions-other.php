@@ -548,8 +548,8 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$pagenow = 'async-upload.php';
 		$file    = $wpdr->rewrite_file_url( $file );
-		self::assertStringContainsString( 'editor-public', $file['url'], 'post title' );
-		self::assertStringContainsString( '.txt', $file['url'], 'file type' );
+		self::assertTrue( str_contains( $file['url'], 'editor-public' ), 'post title' );
+		self::assertTrue( str_contains( $file['url'], '.txt' ), 'file type' );
 
 		$file = $wpdr->filename_rewrite( $file );
 
@@ -678,6 +678,12 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 
 		// verify structure.
 		self::verify_structure( self::$editor_public_post, 1, 1 );
+
+		// cannot test with 4.9 as filter not available.
+		global $wp_version;
+		if ( version_compare( $wp_version, '5.7' ) < 0 ) {
+			return;
+		}
 
 		// make sure we switch off mailing.
 		add_filter( 'pre_wp_mail', '__return_false', 10, 3 );

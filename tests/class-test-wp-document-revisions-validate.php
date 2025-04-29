@@ -773,13 +773,15 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 	/**
 	 * Tests an explicit endpoint registration.
+	 *
+	 * @expectedIncorrectUsage register_rest_route
 	 */
 	public function test_registration() {
 		// will be messages that routine called in unexpected location.
 		ob_start();
 		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
 		$wpdr_v->wpdr_register_route();
-		$out = ob_end_clean();
+		$out = ob_get_clean();
 
 		self::assertTrue( true, 'test_registration' );
 	}
