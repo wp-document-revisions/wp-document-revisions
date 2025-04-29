@@ -627,14 +627,18 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 		$doc = get_post( self::$author_public_post );
 
 		// deprecated code first, then current.
+		ob_start();
 		$reto = $wpdr->get_latest_version( $doc );
 		$reti = $wpdr->get_latest_revision( $doc->ID );
-		self::assertSame( $reto, $reti, 'same revision' );
+		$out  = ob_end_clean();
+		self::assertStringContainsString( 'get_latest_version is deprecated', $out, 'revision' );
 
 		// deprecated code first, then current.
+		ob_start();
 		$reto = $wpdr->get_latest_version_url( $doc->ID );
 		$reti = $wpdr->get_latest_revision_url( $doc->ID );
-		self::assertSame( $reto, $reti, 'same revision url' );
+		$out  = ob_end_clean();
+		self::assertStringContainsString( 'get_latest_version_url is deprecated', $out, 'revision url' );
 	}
 
 	/**

@@ -585,7 +585,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request['context'] = 'edit';
 		$response           = $wp_rest_server->dispatch( $request );
 		// Author cannot work with context set to edit.
-		self::assertEquals( 401, $response->get_status() );
+		self::assertEquals( 403, $response->get_status() );
 	}
 
 	/**

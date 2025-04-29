@@ -775,15 +775,13 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	 * Tests an explicit endpoint registration.
 	 */
 	public function test_registration() {
-		global $wp_rest_server;
-		// only want the default documents one and not the namespace one.
-		$the_route = $this->namespaced_route . '/';
-		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
-		self::assertNotEmpty( $routes, 'No document routes' );
-
+		// will be messages that routine called in unexpected location.
+		ob_start();
 		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
 		$wpdr_v->wpdr_register_route();
+		$out = ob_end_clean();
 
+		self::assertStringContainsString( 'REST API must be registered', $out, 'message' );
 		self::assertTrue( true, 'test_registration' );
 	}
 

@@ -680,9 +680,11 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		self::verify_structure( self::$editor_public_post, 1, 1 );
 
 		// make sure we switch off mailing.
-		add_filter( 'pre_wp_mail', '__return_false' );
+		add_filter( 'pre_wp_mail', '__return_false', 10, 3 );
 
 		$ret = $wpdr->send_override_notice( self::$editor_public_post, self::$users['editor']->ID, self::$users['author']->ID );
 
+		remove_filter( 'pre_wp_mail', '__return_false', 10, 3 );
+		self::assertFalse( $ret, 'lock message' );
 	}
 }
