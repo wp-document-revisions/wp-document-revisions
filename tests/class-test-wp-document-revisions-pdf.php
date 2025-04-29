@@ -614,6 +614,30 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test latest revisions code.
+	 */
+	public function test_revisions_code() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		$doc = get_post( self::$author_public_post );
+
+		// deprecated code first, then current.
+		$reto = $wpdr->get_latest_version( $doc );
+		$reti = $wpdr->get_latest_revision( $doc->ID );
+		self::assertSame( $reto, $reti, 'same revision' );
+
+		// deprecated code first, then current.
+		$reto = $wpdr->get_latest_version_url( $doc->ID );
+		$reti = $wpdr->get_latest_revision_url( $doc->ID );
+		self::assertSame( $reto, $reti, 'same revision url' );
+	}
+
+	/**
 	 * Can an author delete another's private file? (no).
 	 */
 	public function test_del_other_private_document_as_author() {

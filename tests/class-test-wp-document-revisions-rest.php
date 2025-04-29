@@ -26,6 +26,13 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	private static $editor_user_id;
 
 	/**
+	 * Author user id
+	 *
+	 * @var integer
+	 */
+	private static $author_user_id;
+
+	/**
 	 * Workflow_state term id
 	 *
 	 * @var integer
@@ -104,6 +111,13 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			array(
 				'user_nicename' => 'Editor',
 				'role'          => 'editor',
+			)
+		);
+
+		self::$author_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Author',
+				'role'          => 'author',
 			)
 		);
 
@@ -525,7 +539,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	/**
 	 * Tests the public query using editor with edit context.
 	 */
-	public function test_get_items_editor_context() {
+	public function test_get_items_editor_context_1() {
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
@@ -544,8 +558,34 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
 		$request['context'] = 'edit';
 		$response           = $wp_rest_server->dispatch( $request );
-		// not supposed to work with context set to edit.
+		// Editor can work with context set to edit.
 		self::assertEquals( 200, $response->get_status() );
+	}
+
+	/**
+	 * Tests the public query using author with edit context.
+	 */
+	public function test_get_items_editor_context_2() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
+
+		global $wp_rest_server;
+		// Add in context.
+		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_private_post );
+		$request['context'] = 'edit';
+		$response           = $wp_rest_server->dispatch( $request );
+		// Author cannot work with context set to edit.
+		self::assertEquals( 401, $response->get_status() );
 	}
 
 	/**

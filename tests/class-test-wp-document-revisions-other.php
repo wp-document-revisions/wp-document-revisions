@@ -532,9 +532,6 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			'error'    => 0,
 		);
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		global $_POST;
-
 		// straight return.
 		$wpdr->rewrite_file_url( $file );
 		$wpdr->filename_rewrite( $file );
@@ -551,11 +548,141 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$pagenow = 'async-upload.php';
 		$file    = $wpdr->rewrite_file_url( $file );
-		if ( isset( $file['url'] ) ) {
-			console_log( $file['url'] );
-		}
+		self::assertStringContainsString( 'editor-public', $file['url'], 'post title' );
+		self::assertStringContainsString( '.txt', $file['url'], 'file type' );
+
 		$file = $wpdr->filename_rewrite( $file );
 
 		self::assertTrue( true, 'file_rewrite' );
+	}
+
+	/**
+	 * Test directory filter.
+	 *
+	 * @return void
+	 */
+	public function test_directory_filter() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->register_cpt();
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+		);
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = self::factory()->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$users['editor']->ID,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// add attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
+
+		// get the default directory.
+		$dir = $wpdr::$wp_default_dir;
+
+		$_POST['post_id'] = self::$editor_public_post;
+
+		// straight return.
+		$res = $wpdr->document_upload_dir_filter( $dir );
+
+		// possibly image.
+		$_POST['type'] = 'file';
+		$res           = $wpdr->document_upload_dir_filter( $dir );
+
+		// set pagenow.
+		global $pagenow;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$pagenow = 'async-upload.php';
+		$res     = $wpdr->document_upload_dir_filter( $dir );
+		self::assertSame( $dir, $res, 'directory' );
+
+		self::assertTrue( true, 'directory_filter' );
+	}
+
+	/**
+	 * Test sending email.
+	 *
+	 * @return void
+	 */
+	public function test_send_override_mail() {
+		// init user roles.
+		global $wpdr;
+		if ( ! $wpdr ) {
+			$wpdr = new WP_Document_Revisions();
+		}
+		$wpdr->register_cpt();
+		$wpdr->add_caps();
+
+		// create users and assign role.
+		// Note that editor can do everything admin can do.
+		self::$users = array(
+			'editor' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Editor',
+					'role'          => 'editor',
+				)
+			),
+			'author' => self::factory()->user->create_and_get(
+				array(
+					'user_nicename' => 'Author',
+					'role'          => 'author',
+				)
+			),
+		);
+
+		// flush cache for good measure.
+		wp_cache_flush();
+
+		// create posts for scenarios.
+		// Editor Public.
+		self::$editor_public_post = self::factory()->post->create(
+			array(
+				'post_title'   => 'Editor Public - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$users['editor']->ID,
+				'post_content' => '',
+				'post_excerpt' => 'Test Upload',
+				'post_type'    => 'document',
+			)
+		);
+
+		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+
+		// add attachment.
+		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
+
+		// verify structure.
+		self::verify_structure( self::$editor_public_post, 1, 1 );
+
+		// make sure we switch off mailing.
+		add_filter( 'pre_wp_mail', '__return_false' );
+
+		$ret = $wpdr->send_override_notice( self::$editor_public_post, self::$users['editor']->ID, self::$users['author']->ID );
+
 	}
 }

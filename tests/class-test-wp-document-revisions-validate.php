@@ -631,6 +631,68 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests the permalink reset.
+	 */
+	public function test_update_guid() {
+		// test with editor.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		// expected fix text parameters.
+		$fix_parms = '(' . self::$editor_public_post_2 . ',10,' . self::$editor_public_post_2 . ')';
+
+		// will be a row like wpdr_valid_fix(106,10,109). - Can use it to mend document.
+		$request = new WP_REST_Request(
+			'PUT',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/10/attach/' . self::$editor_public_post_2
+		);
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 10 );
+		$request->set_param( 'parm', self::$editor_public_post_2 );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
+
+		$response = WP_Document_Revisions_Validate_Structure::correct_document( $request );
+
+		self::assertInstanceOf( 'WP_Rest_Response', $response, 'not a valid response' );
+		self::assertEquals( 200, $response->get_status(), 'success not returned' );
+		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
+	}
+
+	/**
+	 * Tests check permissions.
+	 */
+	public function test_check_permission() {
+		// test with no user, nothing found.
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// get the post_content from $editor_public_post_2.
+		$content = get_post_field( 'post_content', self::$editor_public_post_2, 'db' );
+
+		global $wpdr;
+		$attach_id = $wpdr->extract_document_id( $content );
+
+		// Will try a row like wpdr_valid_fix(106,7,109). - Can use it to mend document.
+		$request = new WP_REST_Request(
+			'PUT',
+			'/wpdr/v1/correct/' . self::$editor_public_post_2 . '/type/7/attach/' . $attach_id
+		);
+		$request->set_param( 'id', self::$editor_public_post_2 );
+		$request->set_param( 'code', 7 );
+		$request->set_param( 'parm', $attach_id );
+		$request->set_body( '{"userid":"' . self::$editor_user_id . '"}' );
+
+		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
+		$wpdr_v->check_permission( $request );
+
+		self::assertTrue( true, 'check_permission' );
+	}
+
+	/**
 	 * Tests that the package routes are there.
 	 */
 	public function test_register_route() {
@@ -710,11 +772,25 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests an explicit endpoint registration.
+	 */
+	public function test_registration() {
+		global $wp_rest_server;
+		// only want the default documents one and not the namespace one.
+		$the_route = $this->namespaced_route . '/';
+		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
+		self::assertNotEmpty( $routes, 'No document routes' );
+
+		$wpdr_v = new WP_Document_Revisions_Validate_Structure();
+		$wpdr_v->wpdr_register_route();
+
+		self::assertTrue( true, 'test_registration' );
+	}
+
+	/**
 	 * Tests the help text.
 	 */
 	public function test_add_help_text() {
-		global $wpdr;
-
 		// get a post in global scope (bending rule).
 		global $post;
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
