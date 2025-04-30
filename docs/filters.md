@@ -210,6 +210,12 @@ In: class-wp-document-revisions.php
 
 Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
+## Filter document_thumbnail
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+
 ## Filter document_title
 
 In: class-wp-document-revisions.php

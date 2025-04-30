@@ -86,7 +86,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
 
 			/**
-			 * Filters the post thumbnail size - default thumbnail.
+			 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
 			 *
 			 * @since 3.7.0
 			 *

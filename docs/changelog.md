@@ -2,9 +2,12 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
-### 3.6.1
+### 3.7.0
 
+* NEW: PublishPress support withdrawn as replaced by PublishPress Statuses.
 * NEW: Filter 'document_validate' to bypass structure validation for a specific document.
+* NEW: Filter 'document_thumbnail' used to override the thumbnail image size on document lists.
+* NEW: Image size post_thumbnail no longer created when theme does not create it; instead equivalent used on rendering. (#356)
 * FIX: Translations need to be called on 'init', not 'plugins_loaded'.
 * FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
 * FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
