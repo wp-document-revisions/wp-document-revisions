@@ -772,8 +772,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests an explicit endpoint registration.
+	 * Tests an explicit endpoint registration - not run with 4.9.
 	 *
+	 * @requires PHP > 7.3
 	 * @expectedIncorrectUsage register_rest_route
 	 */
 	public function test_registration() {
