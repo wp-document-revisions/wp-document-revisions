@@ -16,16 +16,23 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	/**
 	 * Path to test file
 	 *
-	 * @var $test_file
+	 * @var string
 	 */
 	public static $test_file = __DIR__ . '/documents/test-file.txt';
 
 	/**
 	 * Path to another test file
 	 *
-	 * @var $test-file2
+	 * @var string
 	 */
 	public static $test_file2 = __DIR__ . '/documents/test-file-2.txt';
+
+	/**
+	 * Path to PDF test file
+	 *
+	 * @var string
+	 */
+	public static $pdf_file = __DIR__ . '/documents/Document1.pdf';
 
 	// phpcs:disable
 	/**
@@ -470,8 +477,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
 		// make sure that we have the admin set up.
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			$wpdr->admin_init();
+		if ( is_null( $wpdr->admin ) ) {
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.
@@ -545,8 +552,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertEquals( get_post_status( $post_id ), 'trash', "Post $post_id not set to trash" );
 
 		// make sure that we have the admin set up.
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			$wpdr->admin_init();
+		if ( is_null( $wpdr->admin ) ) {
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.

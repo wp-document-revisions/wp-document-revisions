@@ -14,35 +14,35 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 	/**
 	 * Editor user id
 	 *
-	 * @var integer $editor_user_id
+	 * @var integer
 	 */
 	private static $editor_user_id;
 
 	/**
 	 * Workflow_state term id
 	 *
-	 * @var integer $ws_term_id
+	 * @var integer
 	 */
 	private static $ws_term_id;
 
 	/**
 	 * Editor Public Post ID
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post 2 ID
 	 *
-	 * @var integer $editor_public_post_2
+	 * @var integer
 	 */
 	private static $editor_public_post_2;
 
@@ -54,6 +54,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// phpcs:enable
 		// set permalink structure to Month and name string.
 		global $wp_rewrite, $orig;
 		$orig = $wp_rewrite->permalink_structure;
@@ -62,7 +63,6 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		// flush cache for good measure.
 		wp_cache_flush();
 
-		// phpcs:enable
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();

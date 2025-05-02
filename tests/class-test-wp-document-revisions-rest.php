@@ -21,35 +21,42 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	/**
 	 * Editor user id
 	 *
-	 * @var integer $editor_user_id
+	 * @var integer
 	 */
 	private static $editor_user_id;
 
 	/**
+	 * Author user id
+	 *
+	 * @var integer
+	 */
+	private static $author_user_id;
+
+	/**
 	 * Workflow_state term id
 	 *
-	 * @var integer $ws_term_id
+	 * @var integer
 	 */
 	private static $ws_term_id;
 
 	/**
 	 * Editor Public Post ID
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post 2 ID
 	 *
-	 * @var integer $editor_public_post_2
+	 * @var integer
 	 */
 	private static $editor_public_post_2;
 
@@ -61,6 +68,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// phpcs:enable
 		// set permalink structure to Month and name string.
 		global $wp_rewrite, $orig;
 		$orig = $wp_rewrite->permalink_structure;
@@ -69,7 +77,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// flush cache for good measure.
 		wp_cache_flush();
 
-		// phpcs:enable
 		// switch rest on.
 		add_filter( 'document_show_in_rest', '__return_true' );
 
@@ -104,6 +111,13 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 			array(
 				'user_nicename' => 'Editor',
 				'role'          => 'editor',
+			)
+		);
+
+		self::$author_user_id = $factory->user->create(
+			array(
+				'user_nicename' => 'Author',
+				'role'          => 'author',
 			)
 		);
 
@@ -148,7 +162,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$pdf_file );
 
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
@@ -508,12 +522,24 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		} else {
 			self::assertFalse( true, 'no revision found' );
 		}
+
+		// remove read revisions capability.
+		$role = get_role( 'editor' );
+		$role->remove_cap( 'read_document_revisions' );
+
+		$request  = new WP_REST_Request( 'GET', sprintf( '/wp/v2/documents/%d/revisions/%d', self::$editor_public_post_2, $revns[1]->ID ) );
+		$response = $wp_rest_server->dispatch( $request );
+		$revision = $response->get_data();
+		self::assertEquals( 200, $response->get_status() );
+		self::assertTrue( true, 'Revision test' );
+
+		$role->add_cap( 'read_document_revisions' );
 	}
 
 	/**
 	 * Tests the public query using editor with edit context.
 	 */
-	public function test_get_items_editor_context() {
+	public function test_get_items_editor_context_1() {
 		global $current_user;
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
@@ -528,9 +554,108 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
 
 		global $wp_rest_server;
+		// Add in context.
+		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
+		$request['context'] = 'edit';
+		$response           = $wp_rest_server->dispatch( $request );
+		// Editor can work with context set to edit.
+		self::assertEquals( 200, $response->get_status() );
+	}
+
+	/**
+	 * Tests the public query using author with edit context.
+	 */
+	public function test_get_items_editor_context_2() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$author_user_id );
+		wp_cache_flush();
+
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
+
+		global $wp_rest_server;
+		// Add in context.
+		$request            = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_private_post );
+		$request['context'] = 'edit';
+		$response           = $wp_rest_server->dispatch( $request );
+		// Author cannot work with context set to edit.
+		self::assertEquals( 403, $response->get_status() );
+	}
+
+	/**
+	 * Tests the public query using editor needing document_read.
+	 */
+	public function test_get_items_editor_noauth() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
+
+		// needs document_read access.
+		add_filter( 'document_read_uses_read', '__return_false' );
+
+		global $wp_rest_server;
 		// Two public posts.
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '?context=edit' );
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post );
 		$response = $wp_rest_server->dispatch( $request );
-		self::assertEquals( 404, $response->get_status() );
+		self::assertEquals( 401, $response->get_status() );
+
+		remove_filter( 'document_read_uses_read', '__return_false' );
+
+		// try a PUT - error.
+		$request  = new WP_REST_Request( 'PUT', '/wp/v2/documents/' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 401, $response->get_status() );
+
+		// use document_use_block_editor.
+		add_filter( 'document_use_block_editor', '__return_true' );
+
+		// try a PUT - error.
+		$request  = new WP_REST_Request( 'PUT', '/wp/v2/documents/' . self::$editor_public_post );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 401, $response->get_status() );
+
+		remove_filter( 'document_use_block_editor', '__return_true' );
+	}
+
+	/**
+	 * Tests the public query using revisions.
+	 */
+	public function test_get_items_revisions_noauth() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// make sure rest functions are explicitly defined.
+		global $wpdr_mr;
+		add_filter( 'rest_request_before_callbacks', array( $wpdr_mr, 'document_validation' ), 10, 3 );
+
+		add_filter( 'rest_prepare_document', array( $wpdr_mr, 'doc_clean_document' ), 10, 3 );
+		add_filter( 'rest_prepare_revision', array( $wpdr_mr, 'doc_clean_revision' ), 10, 3 );
+		add_filter( 'rest_prepare_attachment', array( $wpdr_mr, 'doc_clean_attachment' ), 10, 3 );
+
+		global $wp_rest_server;
+		// Two public posts.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents/' . self::$editor_public_post . '/revisions' );
+		$response = $wp_rest_server->dispatch( $request );
+		self::assertEquals( 401, $response->get_status(), 'Authorization error' );
+		$revision = $response->get_data();
+		self::assertEquals( 'rest_cannot_read', $revision['code'], 'revision wrong code' );
+		self::assertEquals( 'Sorry, you are not allowed to view revisions of this post.', $revision['message'], 'revision wrong message' );
 	}
 }

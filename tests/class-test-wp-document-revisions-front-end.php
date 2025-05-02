@@ -14,7 +14,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
-	 * @var WP_User[] $users
+	 * @var WP_User[]
 	 */
 	protected static $users = array(
 		'editor' => null,
@@ -24,56 +24,56 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	/**
 	 * Workflow_state term id 0
 	 *
-	 * @var integer $ws_term_id_0
+	 * @var integer
 	 */
 	private static $ws_term_id_0;
 
 	/**
 	 * Workflow_state slug 0
 	 *
-	 * @var string $ws_slug_0
+	 * @var string
 	 */
 	private static $ws_slug_0;
 
 	/**
 	 * Workflow_state term id 1
 	 *
-	 * @var integer $ws_term_id 1
+	 * @var integer
 	 */
 	private static $ws_term_id_1;
 
 	/**
 	 * Workflow_state slug 1
 	 *
-	 * @var string $ws_slug_1
+	 * @var string
 	 */
 	private static $ws_slug_1;
 
 	/**
 	 * Author Public Post ID
 	 *
-	 * @var integer $author_public_post
+	 * @var integer
 	 */
 	private static $author_public_post;
 
 	/**
 	 * Author Private Post ID
 	 *
-	 * @var integer $author_private_post
+	 * @var integer
 	 */
 	private static $author_private_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post ID (contains revision)
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
@@ -85,12 +85,16 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
-	// phpcs:enable
+		// phpcs:enable
 		// init user roles.
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
 		}
+
+		// Initialise admin (will be needed in TearDown).
+		$wpdr->admin_init( true );
+
 		$wpdr->register_cpt();
 		$wpdr->add_caps();
 
@@ -245,8 +249,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 
 		// make sure that we have the admin set up.
 		global $wpdr;
-		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
-			$wpdr->admin_init();
+		if ( is_null( $wpdr->admin ) ) {
+			$wpdr->admin_init( true );
 		}
 
 		// add the attachment delete process.
@@ -724,13 +728,18 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	 * Tests the documents shortcode blocks function.
 	 */
 	public function test_documents_shortcode_blocks() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active, e.g. Old WP version installed.
+			self::assertTrue( true, 'register blocks' );
+			return;
+		}
 
 		global $wpdr_fe;
 		if ( ! $wpdr_fe ) {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		// need to unregister blocks before reregister.
+		// need to unregister blocks before reregister (if Block Editor onstalled).
 		unregister_block_type( 'wp-document-revisions/documents-shortcode' );
 		unregister_block_type( 'wp-document-revisions/revisions-shortcode' );
 
@@ -758,5 +767,36 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		wp_cache_delete( 'wpdr_document_taxonomies' );
 
 		self::assertTrue( true, 'taxonomy hierarchy' );
+	}
+
+	/**
+	 * Tests the get taxonomy hierarchy function.
+	 */
+	public function test_wpdr_block_categories() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$categories = array();
+		$new_categs = $wpdr_fe->wpdr_block_categories( $categories, null );
+
+		self::assertNotEmpty( $new_categs, 'wpdr_block_categories' );
+	}
+
+	/**
+	 * Tests the enqueue_front function.
+	 */
+	public function test_enqueue_front() {
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$wpdr_fe->enqueue_front();
+
+		self::assertTrue( true, 'enqueue_front' );
 	}
 }

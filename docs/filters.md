@@ -210,6 +210,12 @@ In: class-wp-document-revisions.php
 
 Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
+## Filter document_thumbnail
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+
 ## Filter document_title
 
 In: class-wp-document-revisions.php
@@ -233,6 +239,12 @@ Filter to switch off use of standard Workflow States taxonomy. For internal use.
 In: class-wp-document-revisions.php
 
 Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevant if file compressed on output.
+
+## Filter document_validate
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filter whether to validate the document structure for a documrnt.
 
 ## Filter document_validate_md5
 

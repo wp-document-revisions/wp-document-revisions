@@ -64,7 +64,7 @@ install_wp() {
 	if [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
 		mkdir -p $TMPDIR/wordpress-trunk
 		rm -rf $TMPDIR/wordpress-trunk/*
-		svn export --quiet https://core.svn.wordpress.org/trunk $TMPDIR/wordpress-trunk/wordpress
+		wget -P $TMPDIR/wordpress-trunk/wordpress -nH --cut-dirs=1 -m -q https://core.svn.wordpress.org/trunk
 		mv $TMPDIR/wordpress-trunk/wordpress/* $WP_CORE_DIR
 	else
 		if [ $WP_VERSION == 'latest' ]; then
@@ -108,8 +108,8 @@ install_test_suite() {
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
 		rm -rf $WP_TESTS_DIR/{includes,data}
-		svn export --quiet --ignore-externals https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn export --quiet --ignore-externals https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		wget -P $WP_TESTS_DIR -nH --cut-dirs=4 -m -q https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/
+		wget -P $WP_TESTS_DIR -nH --cut-dirs=4 -m -q https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/
 	fi
 
 	if [ ! -f wp-tests-config.php ]; then

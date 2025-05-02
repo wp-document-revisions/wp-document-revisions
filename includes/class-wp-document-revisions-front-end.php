@@ -14,21 +14,21 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * The Parent WP_Document_Revisions instance.
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The Singleton instance.
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 
 	/**
 	 * Array of accepted shortcode keys and default values.
 	 *
-	 * @var $shortcode_defaults
+	 * @var array
 	 */
 	public $shortcode_defaults = array(
 		'id'          => null,
@@ -137,13 +137,14 @@ class WP_Document_Revisions_Front_End {
 			$atts_summary = false;
 		}
 
+		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
-			$attach   = $wpdr->get_document( $document->ID );
-			$file     = get_attached_file( $attach->ID );
-			$mimetype = $wpdr->get_doc_mimetype( $file );
-			$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
-		} else {
-			$atts_show_pdf = '';
+			$attach = $wpdr->get_document( $document->ID );
+			$file   = get_attached_file( $attach->ID );
+			if ( $file ) {
+				$mimetype      = $wpdr->get_doc_mimetype( $file );
+				$atts_show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
+			}
 		}
 
 		if ( isset( $atts['new_tab'] ) ) {
@@ -354,8 +355,16 @@ class WP_Document_Revisions_Front_End {
 		if ( $atts_show_thumb ) {
 			// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
 			// so cannot change within call and may be wrong, so possibly replace it in the output.
-			$std_dir = str_replace( ABSPATH, '', $wpdr::$wp_default_dir['basedir'] );
 			$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
+
+			/**
+			 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+			 *
+			 * @since 3.7.0
+			 *
+			 * @param string $size Requested image size. Can be any registered image size name.
+			 */
+			$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
 		}
 
 		$documents = $wpdr->get_documents( $atts );
@@ -394,17 +403,23 @@ class WP_Document_Revisions_Front_End {
 		<?php
 		// loop through found documents.
 		foreach ( $documents as $document ) {
+			$permalink = get_permalink( $document->ID );
 			if ( empty( $atts_show_pdf ) ) {
 				$show_pdf = '';
 			} else {
-				$attach   = $wpdr->get_document( $document->ID );
-				$file     = get_attached_file( $attach->ID );
-				$mimetype = $wpdr->get_doc_mimetype( $file );
-				$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
+				$attach = $wpdr->get_document( $document->ID );
+				$file   = get_attached_file( $attach->ID );
+				if ( $file ) {
+					$mimetype = $wpdr->get_doc_mimetype( $file );
+					$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
+				} else {
+					// cant find attached file.
+					$show_pdf = '';
+				}
 			}
 			?>
 			<li class="document document-<?php echo esc_attr( $document->ID ); ?>">
-			<a href="<?php echo esc_url( get_permalink( $document->ID ) ); ?>"
+			<a href="<?php echo esc_url( $permalink ); ?>"
 				<?php echo ( $atts_new_tab ? ' target="_blank"' : '' ); ?>>
 				<?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $show_pdf ); ?>
 			</a>
@@ -420,31 +435,38 @@ class WP_Document_Revisions_Front_End {
 				echo '&nbsp;&nbsp;<small><a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a></small><br />';
 			}
 			if ( $atts_show_thumb ) {
+				$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
 				$thumb = get_post_thumbnail_id( $document->ID );
 				if ( $thumb ) {
-					$thumb_image     = wp_get_attachment_image_src( $thumb, 'post-thumbnail' );
-					$thumb_image_alt = get_post_meta( $thumb, '_wp_attachment_image_alt', true );
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<br /><img class="attachment-post-thumbnail size-post-thumbnail wp-post-image" src="' . esc_url( $thumb_image[0] ) . '" alt="' . esc_html( $thumb_image_alt ) . '"><br />';
+					$image = wp_get_attachment_image( $thumb, $thumb_size );
 				} else {
 					$attach = $wpdr->get_document( $document->ID );
 					if ( $attach instanceof WP_Post ) {
 						// ensure document slug hidden from attachment.
 						$wpdr->hide_exist_doc_attach_slug( $attach->ID );
-						$image = wp_get_attachment_image( $attach->ID, 'post-thumbnail' ) . '<br />';
-						if ( $std_dir !== $doc_dir ) {
-							$image = str_replace( $std_dir, $doc_dir, $image );
+						// find the image (if there).
+						$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+						if ( is_array( $meta ) && array_key_exists( 'sizes', $meta ) ) {
+							$sizes = $meta['sizes'];
+							if ( array_key_exists( $thumb_size, $sizes ) ) {
+								$doc_thumb = $sizes[ $thumb_size ];
+								// find the location of the attachment image.
+								// The document permalink will contain the slug plus the correct sub_dir (if used).
+								// Replace 'file name' and then the slug for directory.
+								$url   = untrailingslashit( $permalink );
+								$url   = substr( $url, 0, strrpos( $url, '/' ) + 1 ) . $doc_thumb['file'];
+								$url   = str_replace( '/' . $wpdr->document_slug() . '/', '/' . $doc_dir . '/', $url );
+								$image = '<img width="' . esc_attr( $doc_thumb['width'] ) . '" height="' . esc_attr( $doc_thumb['height'] ) . '" src="' . esc_url( $url ) . '" class="attachment-' . esc_attr( $thumb_size ) . ' size-' . esc_attr( $thumb_size ) . '" alt="' . esc_html( get_the_title( $document->ID ) ) . '"  decoding="async" loading="lazy" >';
+							}
 						}
-					} else {
-						$image = '<p>' . __( 'No attachment available.', 'wp-document-revisions' ) . '</p>';
 					}
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $image;
 				}
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $image . '<br />';
 			}
 			// is_numeric is old format.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . $document->post_content . '</div>' : '';
+			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( preg_replace( '/<!--\s*WPDR \s*\d+ -->/', '', $document->post_content ) ) . '</div>' : '';
 			?>
 			</li>
 		<?php } ?>
@@ -744,9 +766,9 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Get taxonomy structure.
 	 *
-	 * @param String  $taxonomy Taxonomy name.
-	 * @param Integer $par_term parent term.
-	 * @param Integer $level    level in hierarchy.
+	 * @param string $taxonomy Taxonomy name.
+	 * @param int    $par_term parent term.
+	 * @param int    $level    level in hierarchy.
 	 * @since 3.3.0
 	 */
 	private function get_taxonomy_hierarchy( $taxonomy, $par_term = 0, $level = 0 ) {

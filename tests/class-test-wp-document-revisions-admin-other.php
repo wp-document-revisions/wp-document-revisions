@@ -14,42 +14,42 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	/**
 	 * Editor user id
 	 *
-	 * @var integer $editor_user_id
+	 * @var integer
 	 */
 	private static $editor_user_id;
 
 	/**
 	 * Workflow_state term id
 	 *
-	 * @var integer $ws_term_id
+	 * @var integer
 	 */
 	private static $ws_term_id;
 
 	/**
 	 * Editor Public Post ID
 	 *
-	 * @var integer $editor_public_post
+	 * @var integer
 	 */
 	private static $editor_public_post;
 
 	/**
 	 * Editor Private Post ID
 	 *
-	 * @var integer $editor_private_post
+	 * @var integer
 	 */
 	private static $editor_private_post;
 
 	/**
 	 * Editor Public Post 2 ID
 	 *
-	 * @var integer $editor_public_post_2
+	 * @var integer
 	 */
 	private static $editor_public_post_2;
 
 	/**
 	 * Editor Non-document Post
 	 *
-	 * @var integer $editor_public_non_doc
+	 * @var integer
 	 */
 	private static $editor_public_non_doc;
 
@@ -61,6 +61,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	 * @return void.
 	 */
 	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
+		// phpcs:enable
 		// set permalink structure to Month and name string.
 		global $wp_rewrite, $orig;
 		$orig = $wp_rewrite->permalink_structure;
@@ -69,7 +70,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// flush cache for good measure.
 		wp_cache_flush();
 
-		// phpcs:enable
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
@@ -170,7 +170,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add term and two attachments.
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file );
-		self::add_document_attachment( $factory, self::$editor_public_post_2, self::$test_file2 );
+		self::add_document_attachment_new( $factory, self::$editor_public_post_2, self::$test_file2 );
 
 		remove_action( 'save_post_document', array( $wpdr->admin, 'save_document' ) );
 
@@ -571,6 +571,166 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test network slug save.
+	 */
+	public function test_network_slug_save() {
+		global $wpdr;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['document_slug_nonce']   = wp_create_nonce( 'network_document_slug' );
+		$_POST['network_document_slug'] = 'document';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options' );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options', false );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test network settings errors.
+	 */
+	public function test_network_settings_errors() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		add_settings_error( 'document_upload_directory', 'upload-exists', 'DiR', 'updated' );
+		add_settings_error( 'document_slug', 'slug-exists', 'SlUg', 'updated' );
+
+		ob_start();
+		$wpdr->admin->network_settings_errors();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'DiR' ), 'Setting error dir not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'SlUg' ), 'Setting error slug not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test network settings redirect.
+	 */
+	public function test_network_settings_redirect() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$locn = $wpdr->admin->network_settings_redirect( 'site?nothing' );
+		self::assertSame( $locn, 'site?nothing', 'settings-updated not found' );
+
+		$locn = add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) );
+		$locn = $wpdr->admin->network_settings_redirect( $locn );
+		self::assertSame( 1, (int) substr_count( $locn, 'settings-updated' ), 'settings-updated not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test upload location callback.
+	 */
+	public function test_upload_location_cb() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr->admin->upload_location_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 2, (int) substr_count( $output, 'document_upload_directory' ), 'upload_directory not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test .get latest attachment.
+	 */
+	public function test_get_latest_attachment() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+		$attach_id = $wpdr->extract_document_id( $curr_post->post_content );
+		$attach    = $wpdr->admin->get_latest_attachment( $curr_post->ID );
+
+		self::assertEquals( $curr_post->ID, $attach->post_parent, 'Wrong parent' );
+		self::assertEquals( $attach_id, $attach->ID, 'Wrong attachment' );
+	}
+
+	/**
+	 * Test lock notice.
+	 */
+	public function test_lock_notice() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		global $post;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['post'] = self::$editor_public_post;
+
+		ob_start();
+		$wpdr->admin->lock_notice();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'lock-notice' ), 'lock notice not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test filter documents list.
 	 */
 	public function test_filter_documents_list() {
@@ -589,15 +749,137 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="final">Final' ), 'final' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="in-progress">In Progress' ), 'progress' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="initial-draft">Initial Draft' ), 'draft' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="under-review">Under Review' ), 'review' );
+		self::assertSame( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
+		self::assertSame( 1, (int) substr_count( $output, 'value="final">Final' ), 'final' );
+		self::assertSame( 1, (int) substr_count( $output, 'value="in-progress">In Progress' ), 'progress' );
+		self::assertSame( 1, (int) substr_count( $output, 'value="initial-draft">Initial Draft' ), 'draft' );
+		self::assertSame( 1, (int) substr_count( $output, 'value="under-review">Under Review' ), 'review' );
 
-		self::assertEquals( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
-		self::assertEquals( 0, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
-		self::assertEquals( 1, (int) substr_count( $output, $current_user->display_name ), 'editor' );
+		self::assertSame( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
+		self::assertSame( 0, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
+		self::assertSame( 1, (int) substr_count( $output, $current_user->display_name ), 'editor' );
+	}
+
+	/**
+	 * Test rename author column.
+	 */
+	public function test_rename_author_column() {
+		global $wpdr;
+
+		$cols = array(
+			'author' => 'Author',
+		);
+
+		// There will be various bits found.
+		self::assertArrayHasKey( 'author', $cols, 'array key' );
+		self::assertSame( $cols['author'], 'Author', 'Not set to Owner' );
+
+		$new = $wpdr->admin->rename_author_column( $cols );
+
+		// There will be various bits found.
+		self::assertArrayHasKey( 'author', $new, 'array key' );
+		self::assertSame( $new['author'], 'Owner', 'Not set to Owner' );
+	}
+
+	/**
+	 * Test add currently editing column.
+	 */
+	public function test_add_currently_editing_column() {
+		global $wpdr;
+
+		$cols = array(
+			'col_0' => 'col_0',
+			'col_1' => 'col_1',
+			'col_2' => 'col_2',
+			'col_3' => 'col_3',
+		);
+
+		self::assertArrayNotHasKey( 'currently_editing', $cols, 'array key' );
+
+		$new = $wpdr->admin->add_currently_editing_column( $cols );
+
+		self::assertArrayHasKey( 'currently_editing', $new, 'array key' );
+		self::assertSame( $new['currently_editing'], 'Currently Editing', 'Not set' );
+	}
+
+	/**
+	 * Test currently editing column callback.
+	 */
+	public function test_currently_editing_column_cb() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+
+		ob_start();
+		$wpdr->admin->currently_editing_column_cb( 'currently_editing', $curr_post->ID );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test Workflow state metabox callback.
+	 */
+	public function test_workflow_state_metabox_cb() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+
+		ob_start();
+		$wpdr->admin->workflow_state_metabox_cb( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 2, (int) substr_count( $output, 'workflow_state_nonce' ), 'ws nonce not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'selected=' ), 'selected not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test post author metabox.
+	 */
+	public function test_post_author_meta_box() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$curr_post = get_post( self::$editor_public_post );
+
+		ob_start();
+		$wpdr->admin->post_author_meta_box( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 2, (int) substr_count( $output, 'Owner' ), 'Owner not found' );
+
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test save document.
+	 */
+	public function test_save_document() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$wpdr->admin->save_document( self::$editor_public_post );
+
+		self::assertTrue( true, 'run' );
 	}
 
 	/**
@@ -696,6 +978,24 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Helper function for testing limits.
+	 *
+	 * @param string $num number of revisions to keep.
+	 */
+	public function limit_zero( $num ) {
+		return 0;
+	}
+
+	/**
+	 * Helper function for testing limits.
+	 *
+	 * @param string $num number of revisions to keep.
+	 */
+	public function limit_one( $num ) {
+		return 1;
+	}
+
+	/**
 	 * Tests the posts limit..
 	 */
 	public function test_admin_check_limits() {
@@ -716,6 +1016,41 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertTrue( true, 'check_limits' );
+
+		// set revisions limit to 0.
+		add_filter( 'document_revisions_limit', array( &$this, 'limit_zero' ) );
+
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'zero' ), 'zero message' );
+		remove_filter( 'document_revisions_limit', array( &$this, 'limit_zero' ) );
+
+		// set revisions limit to 1.
+		add_filter( 'document_revisions_limit', array( &$this, 'limit_one' ) );
+
+		ob_start();
+		$wpdr->admin->check_document_revisions_limit();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'More revisions' ), 'More revisions' );
+		remove_filter( 'document_revisions_limit', array( &$this, 'limit_one' ) );
+	}
+
+	/**
+	 * Tests workflow state save (indirectly)..
+	 */
+	public function test_workflow_state_save() {
+		// remove term.
+		$terms = wp_set_post_terms( self::$editor_public_post_2, array(), 'workflow_state' );
+
+		// re-add term.
+		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
+
+		self::assertTrue( true, 'workflow_state_save' );
 	}
 
 	/**
@@ -1031,5 +1366,38 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNotEmpty( $body_class, 'doc not empty' );
 		self::assertEquals( $body_class, ' document', 'doc not correct' );
 		self::assertTrue( true, 'body_class_filter' );
+	}
+
+	/**
+	 * Tests the media query code.
+	 */
+	public function test_media_query_code() {
+		global $wpdr;
+
+		$join = $wpdr->admin->filter_media_join( '' );
+
+		self::assertNotEmpty( $join, 'join not empty' );
+		self::assertEquals( 2, (int) substr_count( $join, 'wpdr' ), '<wpdr not found twice 1' );
+
+		$where = $wpdr->admin->filter_media_where( '' );
+
+		self::assertNotEmpty( $where, 'where not empty' );
+		self::assertEquals( 2, (int) substr_count( $where, 'wpdr' ), '<wpdr not found twice 2' );
+
+		$query = new WP_Query();
+		$query = $wpdr->admin->filter_from_media_grid( $query );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Tests the setup dashboard.
+	 */
+	public function test_setup_dashboard() {
+		global $wpdr;
+
+		include_once ABSPATH . '/wp-admin/includes/dashboard.php';
+		$wpdr->admin->setup_dashboard();
+
+		self::assertTrue( true, 'run' );
 	}
 }

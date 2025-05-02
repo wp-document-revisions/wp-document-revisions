@@ -31,8 +31,8 @@
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
-* French and Spanish language support (easily translated to your language)
-* Integration with [Edit Flow](https://editflow.org)
+* Multiple language support including French, Spanish and German (easily translated to your language)
+* Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
 ### Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
@@ -46,3 +46,4 @@
 * **Filetype Taxonomy** - Adds support to filter by filetype
 * **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 * **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+* **WPML Support** - Integration with WPML

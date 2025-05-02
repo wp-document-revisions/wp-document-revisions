@@ -9,7 +9,7 @@
 /**
  * Access tests
  */
-class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	/**
 	 * List of users being tested.
 	 *
@@ -159,7 +159,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$author_public_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment_new( $factory, self::$author_public_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$author_public_post, self::$pdf_file );
 
 		// Author Private.
 		self::$author_private_post = $factory->post->create(
@@ -178,7 +178,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// add terms and attachment.
 		$terms = wp_set_post_terms( self::$author_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment_new( $factory, self::$author_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$author_private_post, self::$pdf_file );
 
 		// Editor Private.
 		self::$editor_private_post = $factory->post->create(
@@ -197,7 +197,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_private_post, self::$pdf_file );
 
 		// Editor Public.
 		self::$editor_public_post = $factory->post->create(
@@ -216,10 +216,10 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_public_post, array( self::$ws_term_id ), 'workflow_state' );
 		self::assertTrue( is_array( $terms ), 'Cannot assign workflow state to document' );
-		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$pdf_file );
 
 		// add attachment (again).
-		self::add_document_attachment( $factory, self::$editor_public_post, self::$test_file2 );
+		self::add_document_attachment( $factory, self::$editor_public_post, self::$pdf_file );
 	}
 
 	/**
@@ -316,7 +316,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// non-logged on user has read so should read.
 		add_filter( 'document_read_uses_read', '__return_true' );
 
-		self::verify_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink Read' );
+		self::verify_download( '?p=' . self::$author_public_post . '&post_type=document', self::$pdf_file, 'Public Ugly Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 	}
@@ -335,7 +335,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// non-logged on user does not has read_document so should not read.
 		self::set_up_document_read();
 
-		self::verify_cant_download( '?p=' . self::$author_public_post . '&post_type=document', self::$test_file, 'Public Ugly Permalink DocRead' );
+		self::verify_cant_download( '?p=' . self::$author_public_post . '&post_type=document', self::$pdf_file, 'Public Ugly Permalink DocRead' );
 
 		self::tear_down_document_read();
 	}
@@ -354,7 +354,31 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// non-logged on user has read so should read.
 		add_filter( 'document_read_uses_read', '__return_true' );
 
-		self::verify_download( get_permalink( self::$author_public_post ), self::$test_file, 'Public Pretty Permalink Read' );
+		self::verify_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink Read' );
+
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+	/**
+	 * Can the public access a public file - permalink using read with wp? (yes).
+	 */
+	public function test_public_document_using_wp() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// use filesystem.
+		add_filter( 'document_use_wp_filesystem', '__return_true' );
+
+		self::verify_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink Read WP' );
+
+		remove_filter( 'document_use_wp_filesystem', '__return_true' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 	}
@@ -373,9 +397,97 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		// non-logged on user has read so should read.
 		self::set_up_document_read();
 
-		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$test_file, 'Public Pretty Permalink DocRead' );
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
 
 		self::tear_down_document_read();
+	}
+
+	/**
+	 * Can the public access a public file with attachment off? (no).
+	 */
+	public function test_public_document_no_attach() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'document_serve_attachment', '__return_false' );
+
+		$exception = null;
+		try {
+			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		} catch ( WPDieException $e ) {
+			ob_end_clean();
+			$exception = $e;
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		remove_filter( 'document_serve_attachment', '__return_false' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+
+	/**
+	 * Can the public access a public file with auth false? (no).
+	 */
+	public function test_public_document_auth_false() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'serve_document_auth', '__return_false' );
+
+		$exception = null;
+		try {
+			self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+		} catch ( WPDieException $e ) {
+			ob_end_clean();
+			$exception = $e;
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		remove_filter( 'serve_document_auth', '__return_false' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
+	}
+
+	/**
+	 * Can the public access a public file with auth false? (no).
+	 */
+	public function test_public_document_auth_null() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+
+		// non-logged on user has read so should read.
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		// logically remove attachment.
+		add_filter( 'serve_document_auth', '__return_null' );
+
+		self::verify_cant_download( get_permalink( self::$author_public_post ), self::$pdf_file, 'Public Pretty Permalink DocRead' );
+
+		remove_filter( 'serve_document_auth', '__return_null' );
+		remove_filter( 'document_read_uses_read', '__return_true' );
 	}
 
 	/**
@@ -393,7 +505,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		// public should be denied.
-		self::verify_cant_download( '?p=' . self::$author_private_post . '&post_type=document', self::$test_file, 'Private, Unauthenticated Ugly Permalink Read' );
+		self::verify_cant_download( '?p=' . self::$author_private_post . '&post_type=document', self::$pdf_file, 'Private, Unauthenticated Ugly Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 	}
@@ -413,7 +525,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		self::set_up_document_read();
 
 		// public should be denied.
-		self::verify_cant_download( '?p=' . self::$author_private_post . '&post_type=document', self::$test_file, 'Private, Unauthenticated Ugly Permalink DocRead' );
+		self::verify_cant_download( '?p=' . self::$author_private_post . '&post_type=document', self::$pdf_file, 'Private, Unauthenticated Ugly Permalink DocRead' );
 
 		self::tear_down_document_read();
 	}
@@ -433,7 +545,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		add_filter( 'document_read_uses_read', '__return_true' );
 
 		// public should be denied.
-		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private, Unauthenticated Pretty Permalink Read' );
+		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$pdf_file, 'Private, Unauthenticated Pretty Permalink Read' );
 
 		remove_filter( 'document_read_uses_read', '__return_true' );
 	}
@@ -453,7 +565,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		self::set_up_document_read();
 
 		// public should be denied.
-		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private, Unauthenticated Pretty Permalink DocRead' );
+		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$pdf_file, 'Private, Unauthenticated Pretty Permalink DocRead' );
 
 		self::tear_down_document_read();
 	}
@@ -469,7 +581,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['author']->ID );
 		wp_cache_flush();
 
-		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Owner' );
+		self::verify_download( get_permalink( self::$author_private_post ), self::$pdf_file, 'Private Owner' );
 	}
 
 	/**
@@ -483,7 +595,7 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_set_current_user( self::$users['contributor']->ID );
 		wp_cache_flush();
 
-		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Other' );
+		self::verify_cant_download( get_permalink( self::$author_private_post ), self::$pdf_file, 'Private Other' );
 	}
 
 	/**
@@ -498,7 +610,38 @@ class Test_WP_Document_Revisions_Rewrites extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		// Note that Author cannot upload files so no access possible.
-		self::verify_download( get_permalink( self::$author_private_post ), self::$test_file, 'Private Editor', true );
+		self::verify_download( get_permalink( self::$author_private_post ), self::$pdf_file, 'Private Editor', true );
+	}
+
+	/**
+	 * Test latest revisions code.
+	 *
+	 * @expectedDeprecated get_latest_version
+	 * @expectedDeprecated get_latest_version_url
+	 */
+	public function test_revisions_code() {
+		global $wpdr;
+
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['author']->ID );
+		wp_cache_flush();
+
+		$doc = get_post( self::$author_public_post );
+
+		// deprecated code first, then current.
+		ob_start();
+		$reto = $wpdr->get_latest_version( $doc );
+		$reti = $wpdr->get_latest_revision( $doc->ID );
+		$out  = ob_get_clean();
+		self::assertTrue( true, 'revision' );
+
+		// deprecated code first, then current.
+		ob_start();
+		$reto = $wpdr->get_latest_version_url( $doc->ID );
+		$reti = $wpdr->get_latest_revision_url( $doc->ID );
+		$out  = ob_get_clean();
+		self::assertTrue( true, 'revision url' );
 	}
 
 	/**

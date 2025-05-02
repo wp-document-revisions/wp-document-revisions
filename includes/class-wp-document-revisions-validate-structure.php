@@ -142,14 +142,14 @@ class WP_Document_Revisions_Validate_Structure {
 	/**
 	 * The parent WP Document Revisions instance
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The singelton instance
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 
@@ -493,6 +493,16 @@ class WP_Document_Revisions_Validate_Structure {
 		$fails   = array();
 		$guids   = array();
 		foreach ( $documents as $rec => $doc ) {
+			/**
+			 * Filters whether to validate the document structure for a documrnt.
+			 *
+			 * @param int    $doc_id  Document post ID.
+			 * @param string $content Document post content.
+			 */
+			if ( ! apply_filters( 'document_validate', true, $doc['ID'], $doc['post_content'] ) ) {
+				continue;
+			}
+
 			// check that user can edit the document.
 			if ( current_user_can( 'edit_document', $doc['ID'] ) ) {
 				// get the attachment. Note may be false if none in content.

@@ -14,14 +14,14 @@ class WP_Document_Revisions_Manage_Rest {
 	/**
 	 * The parent WP Document Revisions instance
 	 *
-	 * @var $parent
+	 * @var object
 	 */
 	public static $parent;
 
 	/**
 	 * The singelton instance
 	 *
-	 * @var $instance
+	 * @var object
 	 */
 	public static $instance;
 
@@ -231,10 +231,6 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		// media always thinks that the attachments are in media directory. We may need to change it.
-		$wpdr    = self::$parent;
-		$std_dir = $wpdr::$wp_default_dir['basedir'];
-		$doc_dir = $wpdr->document_upload_dir();
-
 		// protect various fields.
 		$response->data['slug']              = __( '<!-- protected -->', 'wp-document-revisions' );
 		$response->data['title']['rendered'] = __( '<!-- protected -->', 'wp-document-revisions' );
@@ -243,11 +239,15 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// deal with meta_data - media_details).
 		if ( isset( $response->data['media_details'] ) ) {
+			$wpdr    = self::$parent;
+			$std_dir = $wpdr::$wp_default_dir['basedir'];
+			$doc_dir = $wpdr->document_upload_dir();
+
 			if ( $response->data['media_details'] instanceof stdClass ) {
 				// attachment meta data not present so cannot expose anything.
 				null;
-			} elseif ( false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) && ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) ) {
-				// cannot trust the metadate, treat as not present.
+			} elseif ( ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) && false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) ) {
+				// cannot trust the metadata, treat as not present.
 				$response->data['media_details'] = new stdClass();
 			} elseif ( $doc_dir !== $std_dir ) {
 				// need to correct link.
