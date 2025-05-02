@@ -1,11 +1,10 @@
 === WP Document Revisions ===
 
 Contributors: benbalter, nwjames
-Tags: documents, uploads, attachments, document management, revisions
-Requires at least: 4.9
-Tested up to: 6.8
-Stable tag: 3.7.0
-License: GPL3
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
+Requires at least: 4.6
+Tested up to: 6.5.1
+Stable tag: 3.6.1
 
 == Description ==
 
@@ -55,7 +54,7 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 
 **Access Control** - Each document is given a persistent URL (e.g., yourcompany.com/documents/2011/08/TPS-Report.doc) which can be private (securely delivered only to members of your organization), password protected (available only to those you select such as clients or contractors), or public (published and hosted for the world to see). If you catch a typo and upload a new version, that URL will continue to point to the latest version, regardless of how many changes you make.
 
-**Enterprise Security** - Worried about storing propriety or sensitive information? WP Document Revisions was built from the first line of code with government- and enterprise-grade security in mind. Each file is masked behind an anonymous 128-bit [MD5 hash](http://en.wikipedia.org/wiki/MD5) as soon as it touches the server, and requests for files are transparently routed through WordPress's time-tested URL rewriting, authentication, and permission systems (which can integrate with existing [LDAP servers](http://wordpress.org/plugins/simple-ldap-login/)). Need more security? WP Document Revisions allows you to store documents in a folder above the `htdocs` or `public_html` [web root](http://httpd.apache.org/docs/2.0/mod/core.html#documentroot), further ensuring that only those you authorize have access to your work.
+**Enterprise Security** - Worried about storing propriety or sensitive information? WP Document Revisions was built from the first line of code with government- and enterprise-grade security in mind. Each file is masked behind an anonymous 128-bit [MD5 hash](http://en.wikipedia.org/wiki/MD5) as soon as it touches the server, and requests for files are transparently routed through WordPress's time-tested URL rewriting, authentication, and permission systems (which can even [integrate with existing enterprise active directory](http://wordpress.org/extend/plugins/active-directory-integration/) or [LDAP servers](http://wordpress.org/extend/plugins/simple-ldap-login/)). Need more security? WP Document Revisions allows you to store documents in a folder above the `htdocs` or `public_html` [web root](http://httpd.apache.org/docs/2.0/mod/core.html#documentroot), further ensuring that only those you authorize have access to your work.
 
 **Customization** - WP Document Revisions recognizes that no two teams are identical, and as a result, molds to your firm's needs, not the other way around. Need to track additional information associated with a document? Departments, editors, issues, sections, even arbitrary key-value pairs — whatever you can throw at it, it can handle. Development and customization costs are further minimized by its extensive plugin API, and the [WordPress Custom Taxonomy Generator](http://themergency.com/generators/wordpress-custom-taxonomy/) makes it easy for even the uninitiated to add custom taxonomies to documents. Need an audit trail to track check-ins and check-outs? User-level permissions based on the document's state or another custom taxonomy? Support for third-party encryption? Check out the [WP Document Revisions Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) for sample code. Looking for even more advanced control of your workflow? WP Document Revisions will detect the popular workflow plugin [Edit Flow](http://editflow.org), if installed, and will automatically pull [Edit Flow’s advanced workflow management tools](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) into WP Document Revisions. Simply put, virtually every aspect of the plugin's functionality from workflow states to user-level permissions can be fully customized to your team's unique needs.
 
@@ -76,8 +75,8 @@ See [the full documentation](https://wp-document-revisions.github.io/wp-document
 * Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 * Documents and Revisions shortcodes, Recently Revised Documents widget
 * Multisite and Windows (XAMPP) support
-* French and Spanish language support (easily translated to your language)
-* Integration with [Edit Flow](https://editflow.org), PublishPress or [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/).
+* Multiple language support including French, Spanish and German (easily translated to your language)
+* Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 * Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
 = Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) =
@@ -513,7 +512,7 @@ Updated documentation.
 
 = 1.1 =
 
-* Added support for the [Edit Flow Plugin](http://wordpress.org/plugins/edit-flow/) if installed
+* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed
 * Added "Currently Editing" column to documents list to display document's lock holder, if any
 * Added support for new help tabs in WordPress versions 3.3 and greater
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
@@ -868,6 +867,12 @@ In: class-wp-document-revisions.php
 
 Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
+== Filter document_thumbnail ==
+
+In: class-wp-document-revisions-front-end.php
+
+Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+
 == Filter document_title ==
 
 In: class-wp-document-revisions.php
@@ -896,7 +901,7 @@ Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevan
 
 In: class-wp-document-revisions-validate-structure.php
 
-Filters whether to validate the document structure for a document.
+Filter whether to validate the document structure for a documrnt.
 
 == Filter document_validate_md5 ==
 
@@ -1265,7 +1270,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
@@ -1280,7 +1285,4 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 = Document workflow management =
 
 * [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-* [PublishPress Planner](https://wordpress.org/plugins/publishpress/)
-
-	(Previously called PublishPress)
 * [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
