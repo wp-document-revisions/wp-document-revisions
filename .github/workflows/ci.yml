@@ -40,7 +40,9 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
-    
+      ports:
+        - 3306:3306
+        
     steps:
 
     - name: Checkout
