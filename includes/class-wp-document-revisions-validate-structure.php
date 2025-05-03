@@ -494,7 +494,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$guids   = array();
 		foreach ( $documents as $rec => $doc ) {
 			/**
-			 * Filters whether to validate the document structure for a documrnt.
+			 * Filters whether to validate the document structure for a document.
 			 *
 			 * @param int    $doc_id  Document post ID.
 			 * @param string $content Document post content.
