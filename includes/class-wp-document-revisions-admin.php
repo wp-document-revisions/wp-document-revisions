@@ -999,7 +999,7 @@ class WP_Document_Revisions_Admin {
 			// Change event to load to let all js get loaded/initialised.
 			?>
 			<script type="text/javascript">
-				document.addEventListener('load', function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});
+				window.addEventListener('load', function() {window.WPDocumentRevisions.bindPostDocumentUploadCB()});
 			</script>
 			<?php
 		}
