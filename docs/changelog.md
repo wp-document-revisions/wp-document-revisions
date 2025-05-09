@@ -332,7 +332,7 @@ Updated documentation.
 
 ### 1.1
 
-* Added support for the [Edit Flow Plugin](http://wordpress.org/extend/plugins/edit-flow/) if installed
+* Added support for the [Edit Flow Plugin](http://wordpress.org/plugins/edit-flow/) if installed
 * Added "Currently Editing" column to documents list to display document's lock holder, if any
 * Added support for new help tabs in WordPress versions 3.3 and greater
 * Fixed bug where media library would trigger an SQL error when no documents had been uploaded
