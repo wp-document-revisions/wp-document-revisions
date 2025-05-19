@@ -2,9 +2,9 @@
 
 Contributors: benbalter, nwjames
 Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
-Requires at least: 4.6
-Tested up to: 6.5.1
-Stable tag: 3.6.1
+Requires at least: 4.9
+Tested up to: 6.8
+Stable tag: 3.7.0
 
 == Description ==
 
@@ -1270,7 +1270,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
