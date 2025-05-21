@@ -34,10 +34,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * Init widget and register.
 	 */
 	public function __construct() {
-		parent::__construct( 'WP_Document_Revisions_Recently_Revised_Widget', __( 'Recently Revised Documents', 'wp-document-revisions' ) );
-
-		// can't i18n outside of a function.
-		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
+		// Do translation stuff in widgets_init.
+		parent::__construct( 'WP_Document_Revisions_Recently_Revised_Widget', 'Recently Revised Documents' );
+		null;
 	}
 
 
@@ -438,6 +437,11 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * Callback to register the recently revised widget.
 	 */
 	public function wpdr_widgets_init() {
+		$this->name = __( 'Recently Revised Documents', 'wp-document-revisions' );
+
+		// can't i18n outside of a function.
+		$this->defaults['title'] = __( 'Recently Revised Documents', 'wp-document-revisions' );
+
 		global $wpdr_widget;
 
 		register_widget( $wpdr_widget );
