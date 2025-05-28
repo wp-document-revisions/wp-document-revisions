@@ -107,6 +107,15 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * List of document revisions to keep (used to keep them if other processes would delete them).
+	 *
+	 * @var int[][]
+	 *
+	 * @since 3.7.0
+	 */
+	private static $revns = array();
+
+	/**
 	 * Initiates an instance of the class and adds hooks.
 	 *
 	 * @since 0.5
@@ -216,6 +225,9 @@ class WP_Document_Revisions {
 		// no next/previous navigation links (would appear on password entry page).
 		add_filter( 'get_next_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
 		add_filter( 'get_previous_post_where', array( &$this, 'suppress_adjacent_doc' ), 10, 5 );
+
+		// block external processes from deleting revisions.
+		add_filter( 'pre_delete_post', array( $this, 'possibly_delete_revision' ), 9999, 3 );
 
 		// load front-end features (shortcode, widgets, etc.).
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
@@ -349,10 +361,75 @@ class WP_Document_Revisions {
 		// Unless under test, only fire on admin + escape hatch to prevent fatal errors.
 		if ( is_admin() || class_exists( 'WP_UnitTestCase' ) || $test ) {
 			if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
-				include __DIR__ . '/class-wp-document-revisions-admin.php';
+				include_once __DIR__ . '/class-wp-document-revisions-admin.php';
 			}
 			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 		}
+	}
+
+	/**
+	 * Check whether we can delete a document revision (to block external functionality).
+	 *
+	 * @since 3.7
+	 * @param WP_Post|false|null $delete       Whether to go forward with deletion.
+	 * @param WP_Post            $post         Post object.
+	 * @param bool               $force_delete Whether to bypass the Trash.
+	 */
+	public function possibly_delete_revision( $delete, $post, $force_delete ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// bail if not a revision, or already decided not to delete.
+		if ( 'revision' !== $post->post_type || ! is_null( $delete ) ) {
+			// only process revisions.
+			return $delete;
+		}
+
+		// is it for a document.
+		$doc = $post->post_parent;
+		if ( 0 === $doc || ! $this->verify_post_type( $doc ) ) {
+			// not a document.
+			return $delete;
+		}
+
+		// Have we loaded our admin.
+		// If not, we need to continue as it is external functionality trying to delete our revision.
+		if ( is_null( $this->admin ) ) {
+			$this->admin_init( true );
+		}
+		// are we in the scope of deleting a document so OK to delete.
+		// we can delete a revision if we started with a document or is beyond limit.
+		if ( $this->admin->is_deleting() ) {
+			return $delete;
+		}
+
+		// have we processed the document (so have the keep list).
+		if ( array_key_exists( $doc, self::$revns ) ) {
+			return ( in_array( $post->ID, self::$revns[ $doc ], true ) ? false : $delete );
+		}
+
+		// do we keep all document revisions.
+		$keep = wp_revisions_to_keep( get_post( $doc ) );
+		if ( -1 === $keep ) {
+			// keep all.
+			return false;
+		}
+
+		// or none. (But we won't respect that for documents).
+		if ( 0 === $keep ) {
+			return false;
+		}
+
+		// have we created the keep list of revisions.
+		if ( ! array_key_exists( $doc, self::$revns ) ) {
+			global $wpdr;
+			$all_revns           = $wpdr->get_revisions( $doc );
+			self::$revns[ $doc ] = array_slice( $all_revns, 0, $keep );
+		}
+
+		if ( in_array( $post->ID, self::$revns[ $doc ], true ) ) {
+			// in the keep list, do not delete.
+			return false;
+		}
+
+		return $delete;
 	}
 
 
