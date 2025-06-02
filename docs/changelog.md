@@ -4,6 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 3.7.0
 
+* NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)  
 * NEW: PublishPress support withdrawn as replaced by PublishPress Statuses.
 * NEW: Filter 'document_validate' to bypass structure validation for a specific document.
 * NEW: Filter 'document_thumbnail' used to override the thumbnail image size on document lists.

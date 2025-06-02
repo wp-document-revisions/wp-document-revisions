@@ -1778,7 +1778,6 @@ class WP_Document_Revisions_Admin {
 		return $post_has_changed;
 	}
 
-
 	/**
 	 * Creates a list of all document attachments. Some may not be attached to a document or revision.
 	 *
@@ -1884,7 +1883,20 @@ class WP_Document_Revisions_Admin {
 				remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 				remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 			}
+			// set the attachmts to null, so that being null means we are not deleting a document.
+			self::$attachmts = null;
+
 		}
+	}
+
+	/**
+	 * Are we in the process of deleting documents or their revisions.
+	 *
+	 * @since 3.7
+	 * @return bool
+	 */
+	public function is_deleting() {
+		return ( ! is_null( self::$attachmts ) );
 	}
 
 	/**
