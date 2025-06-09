@@ -1,7 +1,7 @@
 === WP Document Revisions ===
 
 Contributors: benbalter, nwjames
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, intranet, digital asset management
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
 Requires at least: 4.9
 Tested up to: 6.8
 Stable tag: 3.7.0
@@ -663,6 +663,13 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
+== Filter document_allow_revision_deletion
+
+In: class-wp-document-revisions.php
+
+Filter to allow revision deletion. Set to true to bypass protection.
+Note that this should be used when deleting revisions with "trusted" plugins e.g. PublishPress Revisions.
+
 == Filter document_block_taxonomies ==
 
 In: class-wp-document-revisions-front-end.php
@@ -1272,7 +1279,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members � Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 

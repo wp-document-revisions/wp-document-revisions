@@ -376,8 +376,8 @@ class WP_Document_Revisions {
 	 * @param bool               $force_delete Whether to bypass the Trash.
 	 */
 	public function possibly_delete_revision( $delete, $post, $force_delete ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		// bail if not a revision, or already decided not to delete.
-		if ( 'revision' !== $post->post_type || ! is_null( $delete ) ) {
+		// bail if not a revision, an autosave or already decided not to delete.
+		if ( 'revision' !== $post->post_type || str_contains( $post->post_name, '-autosave-v1' ) || ! is_null( $delete ) ) {
 			// only process revisions.
 			return $delete;
 		}
@@ -386,6 +386,19 @@ class WP_Document_Revisions {
 		$doc = $post->post_parent;
 		if ( 0 === $doc || ! $this->verify_post_type( $doc ) ) {
 			// not a document.
+			return $delete;
+		}
+
+		// do we want to allow deletion by known processes (eg PublishPress Revisions).
+		/**
+		 * Filter to allow revision deletion. Set to true to bypass protection.
+		 *
+		 * @since 3.7
+		 *
+		 * @param boolean false  default to not allow deletion.
+		 * @param WP_Post $post  Post object.
+		 */
+		if ( apply_filters( 'document_allow_revision_deletion', false, $post ) ) {
 			return $delete;
 		}
 
