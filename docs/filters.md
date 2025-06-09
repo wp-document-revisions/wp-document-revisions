@@ -4,6 +4,13 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
+## Filter document_allow_revision_deletion
+
+In: class-wp-document-revisions.php
+
+Filter to allow revision deletion. Set to true to bypass protection.
+Note that this should be used when deleting revisions by trusted plugins e.g. PublishPress Revisions.
+
 ## Filter document_block_taxonomies
 
 In: class-wp-document-revisions-front-end.php
