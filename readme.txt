@@ -1,7 +1,7 @@
 === WP Document Revisions ===
 
 Contributors: benbalter, nwjames
-Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, document management, intranet, digital asset management
+Tags: documents, uploads, attachments, document management, enterprise, version control, revisions, collaboration, journalism, government, files, revision log, intranet, digital asset management
 Requires at least: 4.9
 Tested up to: 6.8
 Stable tag: 3.7.0
@@ -185,7 +185,8 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 = 3.7.0 =
 
-* NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)  
+* NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)
+* NEW: Filter 'document_allow_revision_deletion' to allow revision deletion by trusted plugins,e.g. PublishPress Revisions. (#364)
 * NEW: PublishPress support withdrawn as replaced by PublishPress Statuses.
 * NEW: Filter 'document_validate' to bypass structure validation for a specific document.
 * NEW: Filter 'document_thumbnail' used to override the thumbnail image size on document lists.
@@ -451,7 +452,7 @@ Updated documentation.
 * If you would like to help out by testing early releases, please try the continuously updated [development version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop). Any [feedback](https://github.com/wp-document-revisions/wp-document-revisions/issues?direction=desc&sort=created&state=open), technical or prose is helpful.
 * Added Spanish Translation Support (es_ES — special thanks to [TradiArt](http://www.tradiart.com/))
 * Document URL slug (used for archive and prefixing all documents) now customizable via settings page and translatable. (e.g., <http://domain.com/documentos/2012/04/test.txt> rather than /documents/)
-* Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/extend/plugins/members/).
+* Subscribers and unauthenticated users no longer have the ability to read revisions by default (you can override this setting using the [Members plugin](http://wordpress.org/plugins/members/).
 * Attempts to access unauthorized files now properly respond with HTTP code 403 (rather than 500 previously). Note: attempting to access private documents will continue to result in 404s.
 * Enhanced authentication prior to serving files now provides developers more granular control of permissions via `serve_document_auth` filter.
 * Better Edit Flow support (can now toggle document support on and off using native Edit Flow user interface). Note: You may need to manually toggle on custom status support for documents after upgrading.
@@ -499,7 +500,7 @@ Updated documentation.
 * Menu item now reads "All Documents" (rather than simply "Documents") for clarity
 * Fix for E_WARNING level error on edit-tags.php with custom taxonomies
 * Taxonomy counts (e.g., workflow states) now reflects non-published documents
-* Better translation support (see the [FAQ](http://wordpress.org/extend/plugins/wp-document-revisions/faq/) if you are interested in translating the plugin into your language)
+* Better translation support (see the [FAQ](http://wordpress.org/plugins/wp-document-revisions/faq/) if you are interested in translating the plugin into your language)
 * Compatibility fix for WordPress SEO's "Clean Permalinks" mode
 
 = 1.2 =
@@ -663,12 +664,12 @@ This plugin makes use of many filters to tailor the delivered processing accordi
 
 Most of them are named with a leading 'document-' but there are a few additional non-standard ones shown at the bottom.
 
-== Filter document_allow_revision_deletion
+== Filter document_allow_revision_deletion ==
 
 In: class-wp-document-revisions.php
 
 Filter to allow revision deletion. Set to true to bypass protection.
-Note that this should be used when deleting revisions with "trusted" plugins e.g. PublishPress Revisions.
+Note that this should be used when deleting revisions by trusted plugins e.g. PublishPress Revisions.
 
 == Filter document_block_taxonomies ==
 
@@ -1279,7 +1280,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 = Permissions management =
 
-* [Members   Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+* [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
 	(Previously called Members)
 
@@ -1295,3 +1296,4 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 * [Edit Flow](https://wordpress.org/plugins/edit-flow/)
 * [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
+* [PublishPress Revisions](https://wordpress.org/plugins/publishpress-revisions/)
