@@ -230,7 +230,7 @@ class WP_Document_Revisions {
 		add_filter( 'pre_delete_post', array( $this, 'possibly_delete_revision' ), 9999, 3 );
 
 		// revisions management.
-		add_filter( 'wp_revisions_to_keep', array( $this, 'manage_document_revisions_limit' ), 10, 2 );
+		add_filter( 'wp_revisions_to_keep', array( $this, 'manage_document_revisions_limit' ), 999, 2 );
 
 		// load front-end features (shortcode, widgets, etc.).
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
