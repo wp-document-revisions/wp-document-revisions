@@ -1,4 +1,18 @@
 #!/bin/sh
 
-coffee --compile --print js/wp-document-revisions.coffee > js/wp-document-revisions.dev.js
-uglifyjs js/wp-document-revisions.dev.js --output js/wp-document-revisions.js
+# Modern ES6+ JavaScript is the source, no compilation needed
+# Use the modern JavaScript file as the development version
+cp js/wp-document-revisions.modern.js js/wp-document-revisions.dev.js
+
+# Minify the modern version for production
+if [ -f "/tmp/node_modules/.bin/terser" ]; then
+    /tmp/node_modules/.bin/terser js/wp-document-revisions.modern.js --compress --mangle --output js/wp-document-revisions.js
+elif command -v terser >/dev/null 2>&1; then
+    terser js/wp-document-revisions.modern.js --compress --mangle --output js/wp-document-revisions.js
+elif command -v uglifyjs >/dev/null 2>&1; then
+    uglifyjs js/wp-document-revisions.modern.js --compress --mangle --output js/wp-document-revisions.js
+else
+    echo "Warning: No JavaScript minifier found. Using unminified version."
+    # Fallback: copy unminified version if no minifier is available
+    cp js/wp-document-revisions.modern.js js/wp-document-revisions.js
+fi
