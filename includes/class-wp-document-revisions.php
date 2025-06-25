@@ -229,6 +229,9 @@ class WP_Document_Revisions {
 		// block external processes from deleting revisions.
 		add_filter( 'pre_delete_post', array( $this, 'possibly_delete_revision' ), 9999, 3 );
 
+		// revisions management.
+		add_filter( 'wp_revisions_to_keep', array( $this, 'manage_document_revisions_limit' ), 10, 2 );
+
 		// load front-end features (shortcode, widgets, etc.).
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
 		global $wpdr_fe, $wpdr_widget;
@@ -443,6 +446,38 @@ class WP_Document_Revisions {
 		}
 
 		return $delete;
+	}
+
+
+	/**
+	 * Ensures that any system limit on revisions does not apply to documents.
+	 *
+	 * @since 3.2.2
+	 *
+	 * @param int     $num  default value for the number of revisions for the post_type.
+	 * @param WP_Post $post current post.
+	 */
+	public function manage_document_revisions_limit( $num, $post ) {
+		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
+			return $num;
+		}
+
+		// Set default number as unlimited.
+		$num = -1;
+		/**
+		 * Filters the number of revisions to keep for documents.
+		 *
+		 * This should normally be unlimited and setting it can make attachments unaccessible.
+		 *
+		 * Note particularly that Autosaves are revisions, so count towards the total.
+		 *
+		 * @since 3.2.2
+		 *
+		 * @param int -1 (unlimited).
+		 */
+		$num = apply_filters( 'document_revisions_limit', $num );
+
+		return $num;
 	}
 
 
