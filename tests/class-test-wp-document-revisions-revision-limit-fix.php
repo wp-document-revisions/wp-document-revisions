@@ -22,12 +22,12 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 
 	/**
 	 * Set up test fixtures.
+	 *
+	 * @param WP_UnitTest_Factory $factory Test factory.
 	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-
+	public static function wpSetUpBeforeClass( WP_UnitTest_Factory $factory ) {
 		// Create a test document.
-		self::$document_id = wp_insert_post(
+		self::$document_id = $factory->post->create(
 			array(
 				'post_title'   => 'Test Document for Revision Limits',
 				'post_content' => 'Test content',
@@ -37,7 +37,7 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 		);
 
 		// Create a regular post.
-		self::$post_id = wp_insert_post(
+		self::$post_id = $factory->post->create(
 			array(
 				'post_title'   => 'Regular Post',
 				'post_content' => 'Test content',
@@ -149,9 +149,8 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 	/**
 	 * Clean up test fixtures.
 	 */
-	public static function tearDownAfterClass() {
+	public static function wpTearDownAfterClass() {
 		wp_delete_post( self::$document_id, true );
 		wp_delete_post( self::$post_id, true );
-		parent::tearDownAfterClass();
 	}
 }
