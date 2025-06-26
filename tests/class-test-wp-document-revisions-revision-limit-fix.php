@@ -70,9 +70,24 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 		$this->assertNotEmpty( $post, 'Test post should exist' );
 		$this->assertEquals( 'post', $post->post_type, 'Post should be a regular post' );
 
-		// For regular posts, the revision limit should not be -1 (not unlimited).
+		// Add a filter to set regular post revisions to a specific limit
+		add_filter( 'wp_revisions_to_keep', function( $num, $post ) {
+			if ( isset( $post->post_type ) && 'post' === $post->post_type ) {
+				return 5; // Set regular posts to 5 revisions
+			}
+			return $num;
+		}, 5, 2 ); // Lower priority than document filter
+
+		// For regular posts, the revision limit should be 5 (from our filter above)
 		$revision_limit = wp_revisions_to_keep( $post );
-		$this->assertNotEquals( -1, $revision_limit, 'Regular posts should not have unlimited revisions' );
+		$this->assertEquals( 5, $revision_limit, 'Regular posts should have the limit set by the test filter (5)' );
+
+		// Remove the test filter
+		remove_all_filters( 'wp_revisions_to_keep' );
+		
+		// Re-add the document filter that was removed by remove_all_filters
+		global $wpdr;
+		add_filter( 'wp_revisions_to_keep', array( $wpdr, 'manage_document_revisions_limit' ), 999, 2 );
 	}
 
 	/**
