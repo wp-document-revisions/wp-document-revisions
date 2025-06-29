@@ -108,9 +108,6 @@ class WP_Document_Revisions_Admin {
 		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
 
-		// revisions management.
-		add_filter( 'wp_revisions_to_keep', array( &$this, 'manage_document_revisions_limit' ), 10, 2 );
-
 		// profile.
 		add_action( 'show_user_profile', array( $this, 'rss_key_display' ) );
 		add_action( 'personal_options_update', array( &$this, 'profile_update_cb' ) );
@@ -1112,37 +1109,6 @@ class WP_Document_Revisions_Admin {
 		if ( isset( $_POST['generate-new-feed-key'] ) && isset( $_POST['_document_revisions_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_document_revisions_nonce'] ) ), 'generate-new-feed-key' ) ) {
 			$this->generate_new_feed_key();
 		}
-	}
-
-	/**
-	 * Ensures that any system limit on revisions does not apply to documents.
-	 *
-	 * @since 3.2.2
-	 *
-	 * @param int     $num  default value for the number of revisions for the post_type.
-	 * @param WP_Post $post current post.
-	 */
-	public function manage_document_revisions_limit( $num, $post ) {
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
-			return $num;
-		}
-
-		// Set default number as unlimited.
-		$num = -1;
-		/**
-		 * Filters the number of revisions to keep for documents.
-		 *
-		 * This should normally be unlimited and setting it can make attachments unaccessible.
-		 *
-		 * Note particularly that Autosaves are revisions, so count towards the total.
-		 *
-		 * @since 3.2.2
-		 *
-		 * @param int -1 (unlimited).
-		 */
-		$num = apply_filters( 'document_revisions_limit', $num );
-
-		return $num;
 	}
 
 
