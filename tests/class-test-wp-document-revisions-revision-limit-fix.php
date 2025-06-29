@@ -1,9 +1,15 @@
 <?php
 /**
+ * Tests Revisions Limits.
+ *
+ * @author Copilot.
+ * @package WP_Document_Revisions
+ */
+
+/**
  * Test case to ensure the manage_document_revisions_limit method works correctly
  * in the main class and handles different scenarios properly.
  */
-
 class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 
 	/**
@@ -70,22 +76,24 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 		$this->assertNotEmpty( $post, 'Test post should exist' );
 		$this->assertEquals( 'post', $post->post_type, 'Post should be a regular post' );
 
-		// Add a filter to set regular post revisions to a specific limit
-		add_filter( 'wp_revisions_to_keep', function( $num, $post ) {
+		// Add a filter to set regular post revisions to a specific limit.
+		add_filter( 'wp_revisions_to_keep', function( $num, $post ) { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			if ( isset( $post->post_type ) && 'post' === $post->post_type ) {
 				return 5; // Set regular posts to 5 revisions
 			}
 			return $num;
-		}, 5, 2 ); // Lower priority than document filter
+		}, 
+		5,
+		2 ); // Lower priority than document filter.
 
-		// For regular posts, the revision limit should be 5 (from our filter above)
+		// For regular posts, the revision limit should be 5 (from our filter above).
 		$revision_limit = wp_revisions_to_keep( $post );
 		$this->assertEquals( 5, $revision_limit, 'Regular posts should have the limit set by the test filter (5)' );
 
-		// Remove the test filter
+		// Remove the test filter.
 		remove_all_filters( 'wp_revisions_to_keep' );
-		
-		// Re-add the document filter that was removed by remove_all_filters
+
+		// Re-add the document filter that was removed by remove_all_filters.
 		global $wpdr;
 		add_filter( 'wp_revisions_to_keep', array( $wpdr, 'manage_document_revisions_limit' ), 999, 2 );
 	}
@@ -99,7 +107,7 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 		// Add a filter to customize document revision limits.
 		add_filter(
 			'document_revisions_limit',
-			function ( $num ) {
+			function ( $num ) { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				return 5; // Custom limit.
 			}
 		);
