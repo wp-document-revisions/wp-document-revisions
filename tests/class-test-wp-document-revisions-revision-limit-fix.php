@@ -78,18 +78,19 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 
 		// Add a filter to set regular post revisions to a specific limit.
 		add_filter(
-			'wp_revisions_to_keep', 
-			function(
+			'wp_revisions_to_keep',
+			function (
 				$num,
 				$post
 			) { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				if ( isset( $post->post_type ) && 'post' === $post->post_type ) {
-					return 5; // Set regular posts to 5 revisions
+					return 5; // Set regular posts to 5 revisions.
 				}
 				return $num;
-			}, 
+			},
 			5,
-			2 ); // Lower priority than document filter.
+			2
+		); // Lower priority than document filter.
 
 		// For regular posts, the revision limit should be 5 (from our filter above).
 		$revision_limit = wp_revisions_to_keep( $post );
