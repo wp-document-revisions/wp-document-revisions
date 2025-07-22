@@ -394,7 +394,7 @@ class WP_Document_Revisions {
 
 		// do we want to allow deletion by known processes (eg PublishPress Revisions).
 		/**
-		 * Filter to allow revision deletion. Set to true to bypass protection.
+		 * Filter to allow revision deletion. Set to true to bypass these tests and allow delete.
 		 *
 		 * @since 3.7
 		 *
