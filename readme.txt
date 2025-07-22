@@ -668,7 +668,7 @@ Most of them are named with a leading 'document-' but there are a few additional
 
 In: class-wp-document-revisions.php
 
-Filter to allow revision deletion. Set to true to bypass protection.
+Filter to allow revision deletion. Set to true to bypass these tests and allow delete.
 Note that this should be used when deleting revisions by trusted plugins e.g. PublishPress Revisions.
 
 == Filter document_block_taxonomies ==
@@ -789,7 +789,7 @@ Filters the default structure and label values of the workflow_state taxonomy on
 
 == Filter document_revisions_limit ==
 
-In: class-wp-document-revisions-admin.php
+In: class-wp-document-revisions.php
 
 Filters the number of revisions to keep for documents.
 

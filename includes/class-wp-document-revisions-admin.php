@@ -1482,7 +1482,12 @@ class WP_Document_Revisions_Admin {
 			null;
 		} else {
 			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
+			// Remove our filter so that we can delete the revision.
+			global $wpdr;
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 			wp_delete_post_revision( self::$last_but_one_revn );
+			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
+
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			$post_table = "{$wpdb->prefix}posts";
@@ -1681,7 +1686,10 @@ class WP_Document_Revisions_Admin {
 		$revision = get_post( $revision_id );
 		// delete revision if there is no content.
 		if ( 0 === strlen( $revision->post_content ) ) {
+			global $wpdr;
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 			wp_delete_post_revision( $revision_id );
+			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 			return;
 		}
 
@@ -1851,7 +1859,6 @@ class WP_Document_Revisions_Admin {
 			}
 			// set the attachmts to null, so that being null means we are not deleting a document.
 			self::$attachmts = null;
-
 		}
 	}
 
