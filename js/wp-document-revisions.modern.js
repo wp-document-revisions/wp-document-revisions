@@ -9,7 +9,7 @@ class WPDocumentRevisions {
         this.$ = $;
         this.hasUpload = false;
         this.secure = window.location.protocol === 'https:';
-        this.window = window.dialogArguments || opener || parent || top;
+        this.window = window.dialogArguments || opener || parent || top || window;
 
         // Bind methods to maintain proper context
         this.restoreRevision = this.restoreRevision.bind(this);
@@ -105,17 +105,17 @@ class WPDocumentRevisions {
     }
 
     requestPermission() {
-      if (!('Notification' in window)) {
-        console.warn('This browser does not support notifications.');
-        return;
-      }
+        if (!('Notification' in window)) {
+            console.warn('This browser does not support notifications.');
+            return;
+        }
 
-      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        Notification.requestPermission();
-      }
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
     }
 
-    lockOverrideNotice = (notice) => {
+    lockOverrideNotice(notice) {
       const { lostLockNoticeTitle, lostLockNoticeLogo } = wp_document_revisions;
 
       // Check if the browser supports Notifications
@@ -140,7 +140,7 @@ class WPDocumentRevisions {
           }
         });
       }
-    };
+    }
 
     postAutosaveCallback() {
         if (this.$('#autosave-alert').length > 0 && 
@@ -149,11 +149,11 @@ class WPDocumentRevisions {
             
             wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace(
                 '%s', 
-                this.window.document.$('#title').val()
+                this.$('#title').val()
             );
             
             if ('Notification' in window && Notification.permission === 'granted') {
-                lock_override_notice(wp_document_revisions.lostLockNotice);
+                this.lockOverrideNotice(wp_document_revisions.lostLockNotice);
             } else {
                 alert(wp_document_revisions.lostLockNotice);
             }

@@ -9,7 +9,7 @@ class WPDocumentRevisions {
         this.$ = $;
         this.hasUpload = false;
         this.secure = window.location.protocol === 'https:';
-        this.window = window.dialogArguments || opener || parent || top;
+        this.window = window.dialogArguments || opener || parent || top || window;
 
         // Bind methods to maintain proper context
         this.restoreRevision = this.restoreRevision.bind(this);
@@ -105,21 +105,41 @@ class WPDocumentRevisions {
     }
 
     requestPermission() {
-        if (window.webkitNotifications != null) {
-            return window.webkitNotifications.requestPermission();
+        if (!('Notification' in window)) {
+            console.warn('This browser does not support notifications.');
+            return;
+        }
+
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
         }
     }
 
     lockOverrideNotice(notice) {
-        if (window.webkitNotifications.checkPermission() > 0) {
-            window.webkitNotifications.RequestPermission(lock_override_notice);
-        } else {
-            window.webkitNotifications.createNotification(
-                wp_document_revisions.lostLockNoticeLogo, 
-                wp_document_revisions.lostLockNoticeTitle, 
-                notice
-            ).show();
-        }
+      const { lostLockNoticeTitle, lostLockNoticeLogo } = wp_document_revisions;
+
+      // Check if the browser supports Notifications
+      if (!('Notification' in window)) {
+        console.warn('This browser does not support desktop notification');
+        return;
+      }
+
+      // Request permission if needed
+      if (Notification.permission === 'granted') {
+        new Notification(lostLockNoticeTitle, {
+          body: notice,
+          icon: lostLockNoticeLogo,
+        });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification(lostLockNoticeTitle, {
+              body: notice,
+              icon: lostLockNoticeLogo,
+            });
+          }
+        });
+      }
     }
 
     postAutosaveCallback() {
@@ -129,15 +149,15 @@ class WPDocumentRevisions {
             
             wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace(
                 '%s', 
-                this.window.document.$('#title').val()
+                this.$('#title').val()
             );
             
-            if (window.webkitNotifications) {
-                lock_override_notice(wp_document_revisions.lostLockNotice);
+            if ('Notification' in window && Notification.permission === 'granted') {
+                this.lockOverrideNotice(wp_document_revisions.lostLockNotice);
             } else {
                 alert(wp_document_revisions.lostLockNotice);
             }
-            
+
             location.reload(true);
         }
     }
@@ -199,17 +219,17 @@ class WPDocumentRevisions {
     }
 
     cookieFalse() {
-        wpCookies.set('doc_image', 'false', 60 * 60, '/wp-admin', false, this.secure);
+        wpCookies.set('doc_image', 'false', 60 * 60, '/wp-admin; SameSite=Strict', false, this.secure);
     }
 
     cookieTrue() {
-        wpCookies.set('doc_image', 'true', 60 * 60, '/wp-admin', false, this.secure);
+        wpCookies.set('doc_image', 'true', 60 * 60, '/wp-admin; SameSite=Strict', false, this.secure);
         this.$(':button, :submit', '#submitpost').removeAttr('disabled');
         // Propagation will be stopped in postimagediv to stop document event setting cookie false.
     }
 
     cookieDelete() {
-        wpCookies.set('doc_image', 'true', -60, '/wp-admin', false, this.secure);
+        wpCookies.set('doc_image', 'true', -60, '/wp-admin; SameSite=Strict', false, this.secure);
     }
 
     updateTimestamps() {
