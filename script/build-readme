@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-exclude = %w[README header _config.yml CODE_OF_CONDUCT CONTRIBUTING]
+exclude = %w[README header _config.yml CODE_OF_CONDUCT CONTRIBUTING data-structure actions filters shortcodes changelog frequently-asked-questions]
 docs_url = "https://wp-document-revisions.github.io/wp-document-revisions/"
 output = File.open("./docs/header.md").read
 
@@ -17,6 +17,31 @@ docs.each do |file|
   next if exclude.include?(File.basename(file,".md"))
   output << "\n\n"
   output << File.open(file).read
+end
+
+# Add truncated changelog (only recent versions)
+changelog_content = File.open("./docs/changelog.md").read
+changelog_lines = changelog_content.split("\n")
+output << "\n\n"
+
+# Find first version line and include only first 5 versions
+version_count = 0
+in_changelog = false
+changelog_lines.each do |line|
+  if line.match(/^## Changelog/)
+    in_changelog = true
+  end
+  
+  if in_changelog
+    output << line + "\n"
+    if line.match(/^### \d+\.\d+/)
+      version_count += 1
+      if version_count >= 3
+        output << "\nFor complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)\n"
+        break
+      end
+    end
+  end
 end
 
 output.gsub! /^### ?(.*?)$/im, "= \\1 ="
