@@ -7,40 +7,43 @@ Tested up to: 7.0
 Stable tag: 3.7.0
 License: GPL3
 
-== Description ==
+== What is WP Document Revisions? ==
 
 [WP Document Revisions](https://wordpress.org/plugins/wp-document-revisions/) is a [document management](https://en.wikipedia.org/wiki/Document_management_system) and [version control](http://en.wikipedia.org/wiki/Revision_control) plugin. Built for time-sensitive and mission-critical projects, teams can collaboratively edit files of any format -- text documents, spreadsheets, images, sheet music... anything -- all the while, seamlessly tracking the document's progress as it moves through your organization's existing workflow.
 
 = WP Document Revisions is three things =
 
-1. A **document management system** (DMS), to track, store, and organize files of any format
-2. A **collaboration tool** to empower teams to collaboratively draft, edit, and refine documents
-3. A **file hosting solution** to publish and securely deliver files to a team, to clients, or to the public
+1. **📁 Document Management System (DMS)** - Track, store, and organize files of any format
+2. **👥 Collaboration Tool** - Empower teams to collaboratively draft, edit, and refine documents
+3. **🔒 File Hosting Solution** - Publish and securely deliver files to teams, clients, or the public
 
 See [**the full list of features**](https://wp-document-revisions.github.io/wp-document-revisions/features/) for more information.
 
-== Documentation ==
+== 📚 Documentation ==
 
-See [the full documentation](https://wp-document-revisions.github.io/wp-document-revisions)
+**[Complete Documentation Site](https://wp-document-revisions.github.io/wp-document-revisions)** - Your one-stop resource for everything about WP Document Revisions.
 
-= Learn =
+= 🎯 Quick Start Guides =
 
-* [Features and Overview](https://wp-document-revisions.github.io/wp-document-revisions/features/)
-* [Screenshots](https://wp-document-revisions.github.io/wp-document-revisions/screenshots/)
-* [Installation](https://wp-document-revisions.github.io/wp-document-revisions/installation/)
-* [Frequently Asked Questions](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/)
-* [Links](https://wp-document-revisions.github.io/wp-document-revisions/links/)
-* [Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)
-* [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/)
-* [Plugin Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/)
-* [Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)
-* [Plugin Shortcodes and Widget](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/)
-* [Useful Plugins and Tools](https://wp-document-revisions.github.io/wp-document-revisions/useful-plugins-and-tools/)
+* **[Installation](https://wp-document-revisions.github.io/wp-document-revisions/installation/)** - Get up and running in minutes
+* **[Features and Overview](https://wp-document-revisions.github.io/wp-document-revisions/features/)** - Discover what WP Document Revisions can do
+* **[Screenshots](https://wp-document-revisions.github.io/wp-document-revisions/screenshots/)** - See the plugin in action
 
-= Get Involved =
+= 📖 User Documentation   =
 
-* [How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)
-* [Join the List Serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
+* **[Frequently Asked Questions](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/)** - Common questions answered
+* **[Plugin Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/)** - Available WordPress actions  
+* **[Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)** - Available WordPress filters
+* **[Plugin Shortcodes and Widget](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/)** - Display documents on your site
+* **[Useful Plugins and Tools](https://wp-document-revisions.github.io/wp-document-revisions/useful-plugins-and-tools/)** - Extend functionality
+* **[Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/)** - Multi-language support
+* **[Links](https://wp-document-revisions.github.io/wp-document-revisions/links/)** - Additional resources
+
+= 🆘 Support & Community =
+
+* **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
+* **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
+* **[Join the Mailing List](https://groups.google.com/forum/#!forum/wp-document-revisions)** - Stay updated
 
 
 == Features ==
@@ -1109,13 +1112,14 @@ Yes. It will need to be slightly customized to meet your needs, but take a look 
 
 == Links ==
 
-* [Source Code](https://github.com/wp-document-revisions/wp-document-revisions/) (GitHub)
-* [Development version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop) ([Build Status](http://travis-ci.org/#!/wp-document-revisions/wp-document-revisions))
-* [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
-* [Translations](http://translations.benbalter.com/projects/wp-document-revisions/) (GlotPres)
-* [Project Wiki](https://github.com/wp-document-revisions/wp-document-revisions/wiki)
-* [Where to get Support or Report an Issue](https://github.com/wp-document-revisions/wp-document-revisions/wiki/Where-to-get-Support-or-Report-an-Issue)
-* [How to Contribute](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute)
+* **[Source Code](https://github.com/wp-document-revisions/wp-document-revisions/)** (GitHub)
+* **[Latest Release](https://github.com/wp-document-revisions/wp-document-revisions/releases/latest)** - Download the newest version
+* **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
+* **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
+* **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
+* **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
+* **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
+* **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
 
 
 == Screenshots ==
