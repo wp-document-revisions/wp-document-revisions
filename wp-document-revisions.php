@@ -7,7 +7,7 @@ Version: 3.7.0
 Requires at least: 4.9
 Author: Ben Balter
 Author URI: http://ben.balter.com
-License: GPL3
+License: GPLv2 or later
 Text Domain: wp-document-revisions
 Domain Path: /languages
  *
