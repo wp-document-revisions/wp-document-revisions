@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var string
 	 */
-	public $version = '3.7.0';
+	public $version = '3.7.2';
 
 	/**
 	 * The WP default upload directory cache.
@@ -3335,7 +3335,7 @@ class WP_Document_Revisions {
 		check_ajax_referer( 'samplepermalink', 'samplepermalinknonce' );
 		$post_id = isset( $_POST['post_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : 0;
 		$title   = isset( $_POST['new_title'] ) ? sanitize_text_field( wp_unslash( $_POST['new_title'] ) ) : '';
-		$slug    = isset( $_POST['new_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['new_slug'] ) ) : null;
+		$slug    = isset( $_POST['new_slug'] ) ? sanitize_title( wp_unslash( $_POST['new_slug'] ) ) : null;
 
 		if ( ! $this->verify_post_type( $post_id ) ) {
 			// not a document so do nothing. If another function linked, then exit otherwise do as sample.

@@ -2,6 +2,14 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.7.2
+
+Correct plugin metadata (no code chages).
+
+### 3.7.1
+
+Correct tested up to version (no code chages).
+
 ### 3.7.0
 
 * NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)
@@ -10,10 +18,15 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * NEW: Filter 'document_validate' to bypass structure validation for a specific document.
 * NEW: Filter 'document_thumbnail' used to override the thumbnail image size on document lists.
 * NEW: Image size post_thumbnail no longer created when theme does not create it; instead equivalent used on rendering. (#356)
+* FIX: Document revision limits not working in non-admin contexts (e.g. with PublishPress Revisions plugin). (#366)
+* FIX: Additional edge cases for revision deletion protection by plugin-managed operations. (#368)
+* FIX: Document slug sanitization to prevent invalid characters like whitespace in URLs. (#369)
 * FIX: Translations need to be called on 'init', not 'plugins_loaded'.
 * FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
 * FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
 * FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
+* DEV: Improved test coverage and compatibility testing for PHP 7.4-8.3 and WordPress 4.9+.
+* DEV: Updated REST API tests for compatibility with latest WordPress versions. (#347)
 
 ### 3.6.0
 
