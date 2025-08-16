@@ -2,6 +2,14 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.7.2
+
+Correct plugin metadata (no code chages).
+
+### 3.7.1
+
+Correct tested up to version (no code chages).
+
 ### 3.7.0
 
 * NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)
