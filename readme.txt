@@ -234,44 +234,14 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 3.7.2 =
+
+Correct plugin metadata (no code chages).
+
+= 3.7.1 =
+
+Correct tested up to version (no code chages).
+
 = 3.7.0 =
-
-* NEW: Protect document revision deletion by Database cleaners that use WordPress API to delete them. (#364)
-* NEW: Filter 'document_allow_revision_deletion' to allow revision deletion by trusted plugins,e.g. PublishPress Revisions. (#364)
-* NEW: PublishPress support withdrawn as replaced by PublishPress Statuses.
-* NEW: Filter 'document_validate' to bypass structure validation for a specific document.
-* NEW: Filter 'document_thumbnail' used to override the thumbnail image size on document lists.
-* NEW: Image size post_thumbnail no longer created when theme does not create it; instead equivalent used on rendering. (#356)
-* FIX: Document revision limits not working in non-admin contexts (e.g. with PublishPress Revisions plugin). (#366)
-* FIX: Additional edge cases for revision deletion protection by plugin-managed operations. (#368)
-* FIX: Document slug sanitization to prevent invalid characters like whitespace in URLs. (#369)
-* FIX: Translations need to be called on 'init', not 'plugins_loaded'.
-* FIX: Uploading twice between document saves creates orphan attachment on deletion (#353)
-* FIX: TypeError: window.WPDocumentRevisions is undefined (#348)
-* FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
-* DEV: Improved test coverage and compatibility testing for PHP 7.4-8.3 and WordPress 4.9+.
-* DEV: Updated REST API tests for compatibility with latest WordPress versions. (#347)
-
-= 3.6.0 =
-
-* NEW: Integrate with PublishPress Statuses plugin for custom statuses. (#335)
-* NEW: Accessibility rules states that links to PDF documents should have visible references. Blocks have an explicit switch. (#322)
-* NEW: User pulldowns will show only relevant users. (#321)
-* NEW: Filter 'document_post_thumbnail' used to define the post-thumbnail image size (if not set by theme). (#339)
-* NEW: Filter 'document_use_wp_filesystem' used to serve document (instead of PHP readfile). Irrelevant if the file is compressed on output. (#320)
-* NEW: Filter 'document_internal_filename' for updating internal file name additionally passed the original name. (#319)
-* NEW: Filter 'document_validate_md5' to switch off attachment MD5 format validation. (#318)
-* NEW: Optionally stop direct web access to document files to force access only via WordPress. (#317)
-* NEW: If a role already has "read_documents" capability, do not touch capabilities on plugin reactivation. (#315)
-* NEW: Filter 'document_home_url' to allow changes to be made to it (used with WPML). (#329)
-* FIX: Ensure File descriptor of Document Upload includes subdir component. (#342)
-* FIX: Use with plugin EditFlow gives PHP 8.0 error. (#331)
-* FIX: Typo in description of default upload location. (#328)	
-* FIX: Filter 'document_revisions_owner' withdrawn as parameter acted on (who) deprecated in WP 5.9. (#316)
-* FIX: Updates to document description do not enable the Submit button
-* DEV: JS scripts will be called with Defer in WP 6.3 onwards. (#314)
-* DEV: Review for WP Coding standard 3.0 (#313)
-
-= 3.5.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
