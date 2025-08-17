@@ -171,3 +171,28 @@ jobs:
 
       - name: phpcs
         run: script/cibuild-phpcs
+
+  frontend-lint:
+    name: Frontend Lint & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci || npm install
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier Format Check
+        run: npm run format:check
+
+      - name: Type Check
+        run: npm run type-check
