@@ -75,11 +75,47 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 ## Bootstrapping your local development environment
 
-`script/bootstrap`
+Run the bootstrap script to prepare both PHP and Node environments:
+
+```bash
+script/bootstrap          # installs composer dependencies & sets up test scaffolding
+npm install               # installs JS/TS dependencies (blocks, testing, build)
+```
+
+Key generated / expected directories:
+
+- `vendor/` (PHP tooling + deps)
+- `node_modules/` (JS tooling + deps)
+- `/tmp/wordpress-tests-lib` (created when running the WP test install script)
 
 ## Running tests
 
-`script/cibuild`
+Full cross‑stack build & test (PHP + JS linters):
+
+```bash
+script/cibuild            # legacy convenience script (PHP focus)
+```
+
+Modern JS/TS test commands:
+
+```bash
+npm test                  # Jest unit/integration tests
+npm run type-check        # TypeScript project type check
+npm run lint              # ESLint (TypeScript + WordPress rules + Prettier)
+```
+
+Run everything (JS path):
+
+```bash
+npm run all               # lint → format (write) → type-check → test → build
+```
+
+Then run PHP specific quality gates:
+
+```bash
+./vendor/bin/phpunit --config=phpunit9.xml   # Primary suite
+./vendor/bin/phpcs                           # Coding standards
+```
 
 ## Code of conduct
 
@@ -93,6 +129,15 @@ Prefer to use Docker to develop locally?
 2. `cd wp-document-revisions`
 3. `docker-compose up`
 4. `open http://localhost:8088`
+
+Inside the container you can still run:
+
+```bash
+npm install
+npm run dev
+```
+
+If you add or alter block code, remember to rebuild assets (`npm run build`) before packaging a release.
 
 ## Additional Resources
 

@@ -62,24 +62,111 @@ composer install --no-dev
 
 ## 🛠️ Development
 
-### Running Tests
+WP Document Revisions now has both a traditional WordPress/PHP surface and a modern TypeScript/webpack build for block/editor functionality. This section describes how to work productively with both.
+
+### 1. Environment
+
+| Area      | Requirement                              |
+| --------- | ---------------------------------------- |
+| PHP       | 7.4+ (test matrix runs 7.2–8.3)          |
+| WordPress | 4.9+ (tests run against legacy & latest) |
+| Node.js   | 20.x (what CI uses)                      |
+| Composer  | 2.x                                      |
+
+### 2. One‑time Setup (Development)
 
 ```bash
-composer install
-./vendor/bin/phpunit
+git clone https://github.com/wp-document-revisions/wp-document-revisions.git
+cd wp-document-revisions
+composer install        # installs dev tools: PHPUnit, PHPCS, WPCS
+npm install             # installs JS/TS toolchain
 ```
 
-### Code Standards
+### 3. Everyday Commands
+
+PHP / WordPress side:
 
 ```bash
-./vendor/bin/phpcs
+./vendor/bin/phpcs                 # Coding standards (PHPCS / WPCS)
+./vendor/bin/phpcbf                # Auto-fix coding standards where possible
+./vendor/bin/phpunit --config=phpunit9.xml   # Main PHPUnit suite (modern WP)
+./vendor/bin/phpunit --config=phpunit.xml    # Legacy (WP 4.9) config
 ```
 
-### Building Documentation
+JavaScript / TypeScript side:
+
+```bash
+npm run lint            # ESLint (with WordPress + TypeScript + Prettier)
+npm run lint:fix        # ESLint with auto-fix
+npm run format:check    # Prettier (non‑mutating) check (tabs per WP standard)
+npm run format          # Prettier write
+npm run type-check      # TypeScript noEmit project check
+npm test                # Jest test suite
+npm run build           # Production webpack build (outputs to dist/)
+npm run dev             # Development build (unminified)
+npm run watch           # Rebuild on file changes
+npm run all             # lint → format (write) → type-check → test → build
+```
+
+### 4. Recommended Local Workflow
+
+1. Create a feature branch.
+2. Write/update code & tests.
+3. Run `npm run all` for quick JS assurance (OR run the granular tasks you changed).
+4. Run `./vendor/bin/phpunit` (and optionally the legacy config if touching backward‑compat areas).
+5. Run `./vendor/bin/phpcs` / `npm run format:check` to ensure no drift.
+6. Commit & push; CI mirrors these checks (tests + build now included).
+
+### 5. Pre-commit Checklist
+
+- [ ] PHP unit tests pass (modern + legacy if relevant)
+- [ ] JS Jest tests pass
+- [ ] `npm run lint` clean (only expected warnings, if any)
+- [ ] `npm run format:check` no changes
+- [ ] `./vendor/bin/phpcs` reports zero errors
+- [ ] Built assets (webpack) still generate without warnings
+
+### 6. Editor / Formatting Notes
+
+Prettier is configured to use **tabs (width 4)** to align with WordPress coding standards. Avoid overriding local editor settings that convert tabs to spaces in `src/` or you will see large diffs.
+
+### 7. Building Documentation
 
 ```bash
 ruby script/build-readme
 ```
+
+### 8. Full Quality Gate (Single Command)
+
+If you want an approximate local replica of what CI enforces for JS, run:
+
+```bash
+npm run all
+```
+
+Then separately run PHPCS & PHPUnit (since those are PHP-specific):
+
+```bash
+./vendor/bin/phpcs && ./vendor/bin/phpunit --config=phpunit9.xml
+```
+
+### 9. Updating Dependencies
+
+Use `composer update` / `npm update` sparingly and prefer focused upgrades. After upgrading:
+
+1. Re-run all tests.
+2. Rebuild blocks (`npm run build`).
+3. Note any deprecations in the CHANGELOG / PR.
+
+### 10. Troubleshooting (JS)
+
+| Symptom                                   | Likely Cause                  | Fix                                                                         |
+| ----------------------------------------- | ----------------------------- | --------------------------------------------------------------------------- |
+| Massive Prettier tab errors               | Editor saved with spaces      | Re-run `npm run format` and reconfigure editor                              |
+| TS version warning in ESLint              | Newer TS than parser supports | Pin TypeScript to supported range or update `@typescript-eslint/*` packages |
+| Failing Jest tests referencing WP globals | Missing mocks                 | Add/update mocks in `tests/mocks/wordpress/`                                |
+
+For deeper platform details see `.github/copilot-instructions.md` inside the repo.
 
 ## 🤝 Contributing
 
