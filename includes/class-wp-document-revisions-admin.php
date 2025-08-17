@@ -1588,9 +1588,8 @@ class WP_Document_Revisions_Admin {
 
 		$wpdr = self::$parent;
 
-		// Enqueue JS.
-		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		$path   = '/js/wp-document-revisions' . $suffix . '.js';
+		// Enqueue JS (modernized TypeScript build).
+		$path   = '/dist/wp-document-revisions.js';
 		$vers   = ( WP_DEBUG ) ? filemtime( dirname( __DIR__ ) . $path ) : $wpdr->version;
 		wp_enqueue_script(
 			'wp_document_revisions',

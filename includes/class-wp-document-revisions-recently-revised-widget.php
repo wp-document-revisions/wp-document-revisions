@@ -268,8 +268,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		}
 
 		$dir      = dirname( __DIR__ );
-		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
-		$index_js = 'js/wpdr-documents-widget' . $suffix . '.js';
+		$index_js = 'dist/wpdr-documents-widget.js';
 		wp_register_script(
 			'wpdr-documents-widget-editor',
 			plugins_url( $index_js, __DIR__ ),

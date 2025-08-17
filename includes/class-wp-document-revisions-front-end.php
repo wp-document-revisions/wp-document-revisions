@@ -697,10 +697,9 @@ class WP_Document_Revisions_Front_End {
 			)
 		);
 
-		// register scripts.
+		// register scripts (modernized TypeScript build).
 		$dir      = dirname( __DIR__ );
-		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
-		$index_js = 'js/wpdr-documents-shortcode' . $suffix . '.js';
+		$index_js = 'dist/wpdr-documents-shortcode.js';
 		wp_register_script(
 			'wpdr-documents-shortcode-editor',
 			plugins_url( $index_js, __DIR__ ),
@@ -727,7 +726,7 @@ class WP_Document_Revisions_Front_End {
 		$taxonomies = $this->get_taxonomy_details();
 		wp_add_inline_script( 'wpdr-documents-shortcode-editor', 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 
-		$index_js = 'js/wpdr-revisions-shortcode' . $suffix . '.js';
+		$index_js = 'dist/wpdr-revisions-shortcode.js';
 		wp_register_script(
 			'wpdr-revisions-shortcode-editor',
 			plugins_url( $index_js, __DIR__ ),

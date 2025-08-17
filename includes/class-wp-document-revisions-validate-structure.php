@@ -647,8 +647,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return void
 	 */
 	public static function enqueue_scripts() {
-		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		$path   = '/js/wp-document-revisions-validate' . $suffix . '.js';
+		$path   = '/dist/wp-document-revisions-validate.js';
 		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
 
 		wp_enqueue_script(
