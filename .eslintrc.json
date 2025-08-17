@@ -1,53 +1,53 @@
 {
-  "extends": [
-    "plugin:@wordpress/eslint-plugin/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "parserOptions": {
-    "ecmaVersion": 2020,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "jquery": true
-  },
-  "globals": {
-    "wp": "readonly",
-    "wpApiSettings": "readonly",
-    "ajaxurl": "readonly",
-    "wp_document_revisions": "readonly",
-    "wpCookies": "readonly",
-    "autosave": "readonly",
-    "convertEntities": "readonly",
-    "uploader": "readonly",
-    "nonce": "readonly",
-    "user": "readonly",
-    "processed": "readonly"
-  },
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-console": "off",
-    "prefer-const": "error",
-    "camelcase": "off",
-    "no-alert": "off"
-  },
-  "overrides": [
-    {
-      "files": ["*.tsx"],
-      "rules": {
-        "@typescript-eslint/no-unused-vars": "off"
-      }
-    }
-  ]
+	"extends": [
+		"plugin:@wordpress/eslint-plugin/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
+	"parserOptions": {
+		"ecmaVersion": 2020,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"env": {
+		"browser": true,
+		"es6": true,
+		"node": true,
+		"jquery": true
+	},
+	"globals": {
+		"wp": "readonly",
+		"wpApiSettings": "readonly",
+		"ajaxurl": "readonly",
+		"wp_document_revisions": "readonly",
+		"wpCookies": "readonly",
+		"autosave": "readonly",
+		"convertEntities": "readonly",
+		"uploader": "readonly",
+		"nonce": "readonly",
+		"user": "readonly",
+		"processed": "readonly"
+	},
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"no-console": "off",
+		"prefer-const": "error",
+		"camelcase": "off",
+		"no-alert": "off"
+	},
+	"overrides": [
+		{
+			"files": ["*.tsx"],
+			"rules": {
+				"@typescript-eslint/no-unused-vars": "off"
+			}
+		}
+	]
 }

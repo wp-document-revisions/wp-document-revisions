@@ -28,16 +28,16 @@
 #### 3. **Admin Functionality** (`tests/admin/`)
 
 - ✅ **Simple Tests** (5/5 tests) - `wp-document-revisions-simple.test.ts`
-  - Class importability
-  - WordPress globals availability
-  - jQuery integration
-  - Modern API availability
+    - Class importability
+    - WordPress globals availability
+    - jQuery integration
+    - Modern API availability
 
 - ✅ **Working Tests** (9/9 tests) - `wp-document-revisions-working.test.ts`
-  - Class structure validation
-  - Security features (Notification API, SameSite cookies)
-  - WordPress integration
-  - No deprecated webkit usage
+    - Class structure validation
+    - Security features (Notification API, SameSite cookies)
+    - WordPress integration
+    - No deprecated webkit usage
 
 #### 4. **Integration Testing** (`tests/integration/integration-simple.test.ts`)
 

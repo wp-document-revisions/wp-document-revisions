@@ -1,61 +1,61 @@
 /* Document icon */
 .icon32-posts-document {
-  background-position: 0 0 !important;
-  background-image: url('../img/icon32.png') !important;
+	background-position: 0 0 !important;
+	background-image: url('../img/icon32.png') !important;
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-  only screen and (-o-min-device-pixel-ratio: 3/2),
-  only screen and (min-moz-device-pixel-ratio: 1.5),
-  only screen and (min-device-pixel-ratio: 1.5) {
-  .icon32-posts-document {
-    background-image: url('../img/icon64.png') !important;
-    background-size: 32px 32px !important;
-  }
+	only screen and (-o-min-device-pixel-ratio: 3/2),
+	only screen and (min-moz-device-pixel-ratio: 1.5),
+	only screen and (min-device-pixel-ratio: 1.5) {
+	.icon32-posts-document {
+		background-image: url('../img/icon64.png') !important;
+		background-size: 32px 32px !important;
+	}
 }
 
 /* General document edit styling */
 #postdiv {
-  display: none;
+	display: none;
 }
 
 #lock-notice {
-  background-color: #d4e8ba;
-  border-color: #92d43b;
+	background-color: #d4e8ba;
+	border-color: #92d43b;
 }
 
 #document-revisions {
-  width: 100%;
-  text-align: left;
+	width: 100%;
+	text-align: left;
 }
 
 #document-revisions td {
-  padding: 5px 0 0;
+	padding: 5px 0 0;
 }
 
 #workflow-state select,
 #authordiv select {
-  float: right;
-  margin-top: -2px;
+	float: right;
+	margin-top: -2px;
 }
 
 #lock_override {
-  float: right;
-  text-align: right;
-  margin-top: 10px;
-  padding-bottom: 5px;
+	float: right;
+	text-align: right;
+	margin-top: 10px;
+	padding-bottom: 5px;
 }
 
 #revision-summary {
-  display: none;
+	display: none;
 }
 
 #autosave-alert {
-  display: none;
+	display: none;
 }
 /* When documents are locked, hide notices and publish button, etc. */
 .document-locked #lock-notice,
 .document-locked #publish,
 .document-locked .add_media {
-  display: none;
+	display: none;
 }

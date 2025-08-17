@@ -10,36 +10,36 @@ The `npm run type-check` command was failing due to missing TypeScript declarati
 
 - **Problem**: `tsconfig.json` was empty
 - **Solution**: Created comprehensive TypeScript configuration with:
-  - Target: ES2020 for modern JavaScript support
-  - Disabled strict mode for WordPress compatibility
-  - Added jQuery types support
-  - Configured proper module resolution
+    - Target: ES2020 for modern JavaScript support
+    - Disabled strict mode for WordPress compatibility
+    - Added jQuery types support
+    - Configured proper module resolution
 
 ### 2. **WordPress Package Type Declarations**
 
 - **Problem**: WordPress packages (`@wordpress/blocks`, `@wordpress/components`, etc.) don't have official TypeScript declarations
 - **Solution**: Created `src/types/wordpress.d.ts` with type stubs for:
-  - `@wordpress/i18n` - Internationalization functions
-  - `@wordpress/blocks` - Block registration
-  - `@wordpress/element` - React-like components
-  - `@wordpress/block-editor` - Block editor components
-  - `@wordpress/components` - UI components (including missing `RadioControl`)
-  - `@wordpress/server-side-render` - Server-side rendering
+    - `@wordpress/i18n` - Internationalization functions
+    - `@wordpress/blocks` - Block registration
+    - `@wordpress/element` - React-like components
+    - `@wordpress/block-editor` - Block editor components
+    - `@wordpress/components` - UI components (including missing `RadioControl`)
+    - `@wordpress/server-side-render` - Server-side rendering
 
 ### 3. **jQuery Type Support**
 
 - **Problem**: jQuery types not properly configured
 - **Solution**:
-  - Added `jquery` to types array in tsconfig.json
-  - Leveraged existing `@types/jquery` package
+    - Added `jquery` to types array in tsconfig.json
+    - Leveraged existing `@types/jquery` package
 
 ### 4. **Module Resolution**
 
 - **Problem**: TypeScript couldn't find WordPress modules
 - **Solution**:
-  - Added `typeRoots` configuration
-  - Included all `.d.ts` files in compilation
-  - Used wildcard module declaration for WordPress packages
+    - Added `typeRoots` configuration
+    - Included all `.d.ts` files in compilation
+    - Used wildcard module declaration for WordPress packages
 
 ## **Files Modified:**
 
@@ -47,16 +47,16 @@ The `npm run type-check` command was failing due to missing TypeScript declarati
 
 ```json
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "strict": false,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "types": ["node", "jquery"],
-    "typeRoots": ["./node_modules/@types", "./src/types"]
-  }
+	"compilerOptions": {
+		"target": "ES2020",
+		"strict": false,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"moduleResolution": "node",
+		"types": ["node", "jquery"],
+		"typeRoots": ["./node_modules/@types", "./src/types"]
+	}
 }
 ```
 

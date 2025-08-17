@@ -69,16 +69,16 @@ npm run build
 ### What Was Converted
 
 1. **CoffeeScript → TypeScript**
-   - `js/wp-document-revisions.coffee` → `src/admin/wp-document-revisions.ts`
-   - `js/wp-document-revisions.coffee2` → `src/admin/wp-document-revisions.ts`
+    - `js/wp-document-revisions.coffee` → `src/admin/wp-document-revisions.ts`
+    - `js/wp-document-revisions.coffee2` → `src/admin/wp-document-revisions.ts`
 
 2. **Legacy JavaScript → Modern TypeScript**
-   - `js/wp-document-revisions-validate.dev.js` → `src/admin/wp-document-revisions-validate.ts`
+    - `js/wp-document-revisions-validate.dev.js` → `src/admin/wp-document-revisions-validate.ts`
 
 3. **Gutenberg Blocks → Modern TypeScript/React**
-   - `js/wpdr-documents-shortcode.dev.js` → `src/blocks/wpdr-documents-shortcode.tsx`
-   - `js/wpdr-documents-widget.dev.js` → `src/blocks/wpdr-documents-widget.tsx`
-   - `js/wpdr-revisions-shortcode.dev.js` → `src/blocks/wpdr-revisions-shortcode.tsx`
+    - `js/wpdr-documents-shortcode.dev.js` → `src/blocks/wpdr-documents-shortcode.tsx`
+    - `js/wpdr-documents-widget.dev.js` → `src/blocks/wpdr-documents-widget.tsx`
+    - `js/wpdr-revisions-shortcode.dev.js` → `src/blocks/wpdr-revisions-shortcode.tsx`
 
 ### Key Improvements
 

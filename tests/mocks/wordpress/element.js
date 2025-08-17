@@ -10,14 +10,14 @@ const useMemo = jest.fn();
 const useCallback = jest.fn();
 
 module.exports = {
-  createElement,
-  Fragment,
-  Component,
-  PureComponent,
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useMemo,
-  useCallback,
+	createElement,
+	Fragment,
+	Component,
+	PureComponent,
+	useState,
+	useEffect,
+	useContext,
+	useRef,
+	useMemo,
+	useCallback,
 };

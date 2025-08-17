@@ -7,11 +7,11 @@ const isReusableBlock = jest.fn();
 const isTemplatePart = jest.fn();
 
 module.exports = {
-  registerBlockType,
-  createBlock,
-  getBlockType,
-  getBlockTypes,
-  hasBlockSupport,
-  isReusableBlock,
-  isTemplatePart,
+	registerBlockType,
+	createBlock,
+	getBlockType,
+	getBlockTypes,
+	hasBlockSupport,
+	isReusableBlock,
+	isTemplatePart,
 };

@@ -6,10 +6,10 @@ const createReduxStore = jest.fn();
 const register = jest.fn();
 
 module.exports = {
-  useSelect,
-  useDispatch,
-  select,
-  dispatch,
-  createReduxStore,
-  register,
+	useSelect,
+	useDispatch,
+	select,
+	dispatch,
+	createReduxStore,
+	register,
 };

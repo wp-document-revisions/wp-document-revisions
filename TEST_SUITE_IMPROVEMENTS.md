@@ -68,10 +68,10 @@ Successfully analyzed and improved the failing test suite for the WordPress Docu
 
 ```json
 {
-  "test": "jest [working tests only]",
-  "test:working": "jest [working tests only]",
-  "test:all": "jest",
-  "test:problematic": "jest [problematic tests only]"
+	"test": "jest [working tests only]",
+	"test:working": "jest [working tests only]",
+	"test:all": "jest",
+	"test:problematic": "jest [problematic tests only]"
 }
 ```
 

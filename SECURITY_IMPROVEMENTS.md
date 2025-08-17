@@ -28,18 +28,18 @@ I've successfully implemented the two security and modernization improvements yo
 
 ```typescript
 if (window.webkitNotifications) {
-  if (window.webkitNotifications.checkPermission() > 0) {
-    window.webkitNotifications.requestPermission(() => {
-      this.lockOverrideNotice(notice);
-    });
-  } else {
-    const notification = window.webkitNotifications.createNotification(
-      window.wp_document_revisions.lostLockNoticeLogo,
-      window.wp_document_revisions.lostLockNoticeTitle,
-      notice
-    );
-    notification.show();
-  }
+	if (window.webkitNotifications.checkPermission() > 0) {
+		window.webkitNotifications.requestPermission(() => {
+			this.lockOverrideNotice(notice);
+		});
+	} else {
+		const notification = window.webkitNotifications.createNotification(
+			window.wp_document_revisions.lostLockNoticeLogo,
+			window.wp_document_revisions.lostLockNoticeTitle,
+			notice
+		);
+		notification.show();
+	}
 }
 ```
 
@@ -47,20 +47,20 @@ if (window.webkitNotifications) {
 
 ```typescript
 if ('Notification' in window) {
-  if (Notification.permission === 'default') {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        this.lockOverrideNotice(notice);
-      } else {
-        alert(notice);
-      }
-    });
-  } else if (Notification.permission === 'granted') {
-    new Notification(window.wp_document_revisions.lostLockNoticeTitle, {
-      body: notice,
-      icon: window.wp_document_revisions.lostLockNoticeLogo,
-    });
-  }
+	if (Notification.permission === 'default') {
+		Notification.requestPermission().then((permission) => {
+			if (permission === 'granted') {
+				this.lockOverrideNotice(notice);
+			} else {
+				alert(notice);
+			}
+		});
+	} else if (Notification.permission === 'granted') {
+		new Notification(window.wp_document_revisions.lostLockNoticeTitle, {
+			body: notice,
+			icon: window.wp_document_revisions.lostLockNoticeLogo,
+		});
+	}
 }
 ```
 
@@ -131,14 +131,14 @@ Both features have excellent browser support and are considered modern web stand
 ## Testing Recommendations
 
 1. **Notification Testing:**
-   - Test notification permission requests in different browsers
-   - Verify fallback to alert() works when notifications are blocked
-   - Test the document lock override notification flow
+    - Test notification permission requests in different browsers
+    - Verify fallback to alert() works when notifications are blocked
+    - Test the document lock override notification flow
 
 2. **Cookie Testing:**
-   - Verify cookies are set with SameSite=strict attribute
-   - Test document/image context switching in WordPress media library
-   - Confirm no cross-site cookie leakage
+    - Verify cookies are set with SameSite=strict attribute
+    - Test document/image context switching in WordPress media library
+    - Confirm no cross-site cookie leakage
 
 ## Next Steps
 

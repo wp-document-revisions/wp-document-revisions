@@ -8,18 +8,18 @@ declare module '@wordpress/i18n';
 declare var wp: any;
 
 declare interface Window {
-  jQuery: JQueryStatic;
-  Plupload: any;
-  uploader?: any;
-  processed?: string;
-  user?: string;
-  nonce?: string;
+	jQuery: JQueryStatic;
+	Plupload: any;
+	uploader?: any;
+	processed?: string;
+	user?: string;
+	nonce?: string;
 }
 
 declare type PluploadFile = {
-  id: string;
-  name: string;
-  size: number;
-  percent: number;
-  status: number;
+	id: string;
+	name: string;
+	size: number;
+	percent: number;
+	status: number;
 };

@@ -94,10 +94,10 @@ tests/
 
 ```json
 {
-  "preset": "ts-jest",
-  "testEnvironment": "jsdom",
-  "setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"],
-  "collectCoverageFrom": ["src/**/*.{ts,tsx}"]
+	"preset": "ts-jest",
+	"testEnvironment": "jsdom",
+	"setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"],
+	"collectCoverageFrom": ["src/**/*.{ts,tsx}"]
 }
 ```
 
@@ -174,11 +174,11 @@ npm test -- --verbose
 ```typescript
 // Global wp object with all required APIs
 global.wp = {
-  i18n: { __: (text) => text },
-  blocks: { registerBlockType: jest.fn() },
-  element: { createElement: jest.fn() },
-  blockEditor: { InspectorControls: jest.fn() },
-  components: { PanelBody: jest.fn() },
+	i18n: { __: (text) => text },
+	blocks: { registerBlockType: jest.fn() },
+	element: { createElement: jest.fn() },
+	blockEditor: { InspectorControls: jest.fn() },
+	components: { PanelBody: jest.fn() },
 };
 ```
 
@@ -187,12 +187,12 @@ global.wp = {
 ```typescript
 // Comprehensive jQuery mock
 global.$ = jest.fn(() => ({
-  on: jest.fn(),
-  off: jest.fn(),
-  click: jest.fn(),
-  val: jest.fn(),
-  hide: jest.fn(),
-  show: jest.fn(),
+	on: jest.fn(),
+	off: jest.fn(),
+	click: jest.fn(),
+	val: jest.fn(),
+	hide: jest.fn(),
+	show: jest.fn(),
 }));
 ```
 
@@ -201,8 +201,8 @@ global.$ = jest.fn(() => ({
 ```typescript
 // Modern Notification API
 global.Notification = class MockNotification {
-  static permission = 'granted';
-  static requestPermission = jest.fn();
+	static permission = 'granted';
+	static requestPermission = jest.fn();
 };
 ```
 

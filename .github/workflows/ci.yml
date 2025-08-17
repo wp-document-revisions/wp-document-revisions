@@ -2,197 +2,197 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  phpunit:
-    runs-on: ${{ matrix.operating-system }}
-    strategy:
-      fail-fast: true
-      matrix:
-        operating-system: [ubuntu-latest]
-        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3']
-        wp-version: [latest]
-        wp-multisite: [0]
-        phpunit-versions: ['9.5']
-        phpunit-config: ['phpunit9.xml']
-        include:
-          - php-versions: '7.4'
-            wp-version: 'latest'
-            wp-multisite: 1
-            phpunit-versions: '9.5'
-            phpunit-config: 'phpunit9.xml'
-            operating-system: 'ubuntu-latest'
-          - php-versions: '8.1'
-            wp-version: 'latest'
-            wp-multisite: 1
-            phpunit-versions: '9.5'
-            phpunit-config: 'phpunit9.xml'
-            operating-system: 'ubuntu-latest'
-    name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
-    steps:
-      - name: Start DB
-        run: sudo systemctl start mysql
+    phpunit:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            fail-fast: true
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3']
+                wp-version: [latest]
+                wp-multisite: [0]
+                phpunit-versions: ['9.5']
+                phpunit-config: ['phpunit9.xml']
+                include:
+                    - php-versions: '7.4'
+                      wp-version: 'latest'
+                      wp-multisite: 1
+                      phpunit-versions: '9.5'
+                      phpunit-config: 'phpunit9.xml'
+                      operating-system: 'ubuntu-latest'
+                    - php-versions: '8.1'
+                      wp-version: 'latest'
+                      wp-multisite: 1
+                      phpunit-versions: '9.5'
+                      phpunit-config: 'phpunit9.xml'
+                      operating-system: 'ubuntu-latest'
+        name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
+        steps:
+            - name: Start DB
+              run: sudo systemctl start mysql
 
-      - name: Checkout
-        uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: fileinfo, imagick, mysqli, xml, zip, zlib
-          coverage: xdebug
-          tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: fileinfo, imagick, mysqli, xml, zip, zlib
+                  coverage: xdebug
+                  tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Check PHP Version
+              run: php -v
+
+            - name: Composer install
+              run: composer install --optimize-autoloader --prefer-dist
+
+            - name: Install WP Tests
+              run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
+              env:
+                  WP_MULTISITE: ${{ matrix.wp-multisite }}
+
+            - name: phpunit tests
+              run: |
+                  echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
+                  /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
+              env:
+                  WP_MULTISITE: ${{ matrix.wp-multisite }}
+
+            - name: Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: coverage.xml
+                  directory: ${{ github.workspace }}
+                  verbose: true
+                  flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+
+    phpunit6:
+        # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
+        # magic_quotes_gpc = off since 4.9 contains lots of references
+        runs-on: ${{ matrix.operating-system }}
+        services:
+            mydb:
+                image: mysql:5.7
+                env:
+                    MYSQL_ROOT_PASSWORD: 'root'
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+        strategy:
+            fail-fast: true
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['7.2']
+                wp-version: [4.9]
+                wp-multisite: [0]
+                phpunit-versions: ['6.5']
+                phpunit-config: ['phpunit.xml']
+        name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  ini-values: magic_quotes_gpc=off
+                  extensions: fileinfo, imagick, mysqli, xml, zip, zlib
+                  coverage: xdebug
+                  tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Check PHP Version
+              run: php -v
+
+            - name: Composer install
+              run: composer install --optimize-autoloader --prefer-dist
+
+            - name: Install WP Tests
+              run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
+              env:
+                  WP_MULTISITE: ${{ matrix.wp-multisite }}
+
+            - name: phpunit tests
+              run: |
+                  echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
+                  /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
+              env:
+                  WP_MULTISITE: ${{ matrix.wp-multisite }}
+
+            - name: Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: coverage.xml
+                  directory: ${{ github.workspace }}
+                  verbose: true
+                  flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+
+    phpcs:
+        runs-on: ubuntu-latest
         env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            TRAVIS_BUILD_DIR: ${{ github.workspace }}
+        strategy:
+            matrix:
+                php_version: [8.2]
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Check PHP Version
-        run: php -v
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php_version }}
+                  extensions: mysqli
 
-      - name: Composer install
-        run: composer install --optimize-autoloader --prefer-dist
+            - name: Cache Composer packages
+              id: composer-cache
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ matrix.php_version }}-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-${{ matrix.php_version }}-
 
-      - name: Install WP Tests
-        run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
-        env:
-          WP_MULTISITE: ${{ matrix.wp-multisite }}
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: phpunit tests
-        run: |
-          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-          /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
-        env:
-          WP_MULTISITE: ${{ matrix.wp-multisite }}
+            - name: phpcs
+              run: script/cibuild-phpcs
 
-      - name: Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
-          directory: ${{ github.workspace }}
-          verbose: true
-          flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+    frontend-lint:
+        name: Frontend Lint & Format Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-  phpunit6:
-    # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
-    # magic_quotes_gpc = off since 4.9 contains lots of references
-    runs-on: ${{ matrix.operating-system }}
-    services:
-      mydb:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: 'root'
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-    strategy:
-      fail-fast: true
-      matrix:
-        operating-system: [ubuntu-latest]
-        php-versions: ['7.2']
-        wp-version: [4.9]
-        wp-multisite: [0]
-        phpunit-versions: ['6.5']
-        phpunit-config: ['phpunit.xml']
-    name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          ini-values: magic_quotes_gpc=off
-          extensions: fileinfo, imagick, mysqli, xml, zip, zlib
-          coverage: xdebug
-          tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Install Node dependencies
+              run: npm ci || npm install
 
-      - name: Check PHP Version
-        run: php -v
+            - name: ESLint
+              run: npm run lint
 
-      - name: Composer install
-        run: composer install --optimize-autoloader --prefer-dist
+            - name: Prettier Format Check
+              run: npm run format:check
 
-      - name: Install WP Tests
-        run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
-        env:
-          WP_MULTISITE: ${{ matrix.wp-multisite }}
-
-      - name: phpunit tests
-        run: |
-          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-          /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
-        env:
-          WP_MULTISITE: ${{ matrix.wp-multisite }}
-
-      - name: Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
-          directory: ${{ github.workspace }}
-          verbose: true
-          flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
-
-  phpcs:
-    runs-on: ubuntu-latest
-    env:
-      TRAVIS_BUILD_DIR: ${{ github.workspace }}
-    strategy:
-      matrix:
-        php_version: [8.2]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php_version }}
-          extensions: mysqli
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php_version }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php_version }}-
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: phpcs
-        run: script/cibuild-phpcs
-
-  frontend-lint:
-    name: Frontend Lint & Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Node dependencies
-        run: npm ci || npm install
-
-      - name: ESLint
-        run: npm run lint
-
-      - name: Prettier Format Check
-        run: npm run format:check
-
-      - name: Type Check
-        run: npm run type-check
+            - name: Type Check
+              run: npm run type-check
