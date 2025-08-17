@@ -172,10 +172,10 @@ jobs:
             - name: phpcs
               run: script/cibuild-phpcs
 
-    frontend-lint:
-        name: Frontend Lint & Format Check
-        runs-on: ubuntu-latest
-        steps:
+  frontend-lint:
+    name: Frontend Lint, Type, Test & Build
+    runs-on: ubuntu-latest
+    steps:
             - name: Checkout
               uses: actions/checkout@v4
 
@@ -196,3 +196,17 @@ jobs:
 
             - name: Type Check
               run: npm run type-check
+
+            - name: Jest Tests
+              run: npm test
+
+            - name: Build (Production)
+              run: npm run build
+
+            # Optional: Upload built assets for later inspection or deployment steps
+      - name: Upload Build Artifacts
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: frontend-build
+                  path: dist/**
