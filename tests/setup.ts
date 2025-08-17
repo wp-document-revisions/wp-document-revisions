@@ -64,16 +64,17 @@ const createMockElement = (): any => ({
 	change: jest.fn().mockReturnThis(),
 	submit: jest.fn().mockReturnThis(),
 	ready: jest.fn((callback?: any): any => {
-		// Execute callback immediately in tests
+		// Execute callback immediately in tests, providing the jQuery function as the $ parameter
 		if (typeof callback === 'function') {
-			callback(mockJQuery);
+			// Pass the mock jQuery function so code using function ( $ ) { ... } works
+			callback.call(createMockElement(), mockJQuery);
 		}
 		return createMockElement();
 	}),
 	length: 0,
 });
 
-const mockJQuery: any = jest.fn((selector?: any, context?: any) => {
+const mockJQuery: any = jest.fn((_selector?: any, _context?: any) => {
 	return createMockElement();
 });
 
@@ -118,10 +119,6 @@ Object.assign(global.window, {
 global.Notification = class MockNotification {
 	static permission = 'granted';
 	static requestPermission = jest.fn(() => Promise.resolve('granted'));
-
-	constructor(title: string, options?: NotificationOptions) {
-		// Mock notification constructor
-	}
 } as any;
 
 // Mock console methods to reduce noise in tests

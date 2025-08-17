@@ -325,12 +325,13 @@ export class WPDocumentRevisions {
 		}
 
 		// Convert file object to extension for backwards compatibility
-		// Derive extension (legacy behavior retained but value no longer separately stored)
+		// (Legacy) Extension extraction previously populated a now-removed instance
+		// property. We intentionally keep the logic (as a no-op) to document parity
+		// with historical behavior and to simplify future diffs if resurrected.
 		if (typeof fileName === 'object' && fileName.name) {
-			// Access extension via fileName.name if needed for future logic
-			void fileName.name.split('.').pop();
+			// (Legacy no-op) fileName.name.split('.').pop();
 		} else if (typeof fileName === 'string') {
-			void fileName.split('.').pop();
+			// (Legacy no-op) fileName.split('.').pop();
 		}
 
 		if (this.hasUpload) {

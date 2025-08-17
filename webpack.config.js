@@ -55,6 +55,9 @@ module.exports = (env, argv) => {
 				: []),
 		],
 		devtool: isProduction ? 'source-map' : 'eval-source-map',
+		// These externals map to WordPress provided globals (window.wp.* or window.jQuery)
+		// so they are not bundled. This keeps bundle size small and respects WP's script
+		// dependency management (registered via wp_enqueue_script).
 		externals: {
 			jquery: 'jQuery',
 			'@wordpress/blocks': ['wp', 'blocks'],

@@ -123,9 +123,10 @@ function hideShow(id: string): void {
 		// Mark processed to prevent duplicate calls
 		w.processed = 'true';
 
+		// Provide a fallback Ajax URL constant for non-WP contexts (tests, storybook, etc.)
+		const FALLBACK_AJAX_URL = 'https://example.com/wp-admin/admin-ajax.php';
 		if (typeof (window as any).ajaxurl === 'undefined') {
-			// Provide a fallback ajaxurl (mainly for tests)
-			(window as any).ajaxurl = 'https://example.com/wp-admin/admin-ajax.php';
+			(window as any).ajaxurl = FALLBACK_AJAX_URL;
 		}
 
 		// Only proceed if jQuery.ajax is available

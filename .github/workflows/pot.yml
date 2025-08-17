@@ -9,6 +9,9 @@ on:
             - '*.php'
     workflow_dispatch: {}
 
+permissions:
+    contents: read
+
 jobs:
     generate-pot:
         runs-on: ubuntu-latest
