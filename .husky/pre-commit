@@ -1,5 +1,3 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Run JS + TS quality gate without mutating files
+# Husky v9+ simple hook (deprecated shim removed) – run JS/TS quality gate
 npm run precommit
