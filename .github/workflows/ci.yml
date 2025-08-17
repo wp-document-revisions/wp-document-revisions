@@ -179,6 +179,8 @@ jobs:
 
     frontend-lint:
         name: Frontend Lint, Type, Test & Build
+        permissions:
+            contents: read
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
