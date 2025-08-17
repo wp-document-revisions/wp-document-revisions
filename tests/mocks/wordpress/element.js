@@ -19,5 +19,5 @@ module.exports = {
   useContext,
   useRef,
   useMemo,
-  useCallback
+  useCallback,
 };

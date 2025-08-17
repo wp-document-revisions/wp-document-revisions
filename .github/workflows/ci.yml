@@ -3,9 +3,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   phpunit:
@@ -34,48 +34,48 @@ jobs:
             operating-system: 'ubuntu-latest'
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
-    - name: Start DB
-      run: sudo systemctl start mysql
+      - name: Start DB
+        run: sudo systemctl start mysql
 
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        extensions: fileinfo, imagick, mysqli, xml, zip, zlib
-        coverage: xdebug
-        tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
-      env:
-        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: fileinfo, imagick, mysqli, xml, zip, zlib
+          coverage: xdebug
+          tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check PHP Version
-      run: php -v
+      - name: Check PHP Version
+        run: php -v
 
-    - name: Composer install
-      run: composer install --optimize-autoloader --prefer-dist
+      - name: Composer install
+        run: composer install --optimize-autoloader --prefer-dist
 
-    - name: Install WP Tests
-      run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
-      env:
-        WP_MULTISITE: ${{ matrix.wp-multisite }}
+      - name: Install WP Tests
+        run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
+        env:
+          WP_MULTISITE: ${{ matrix.wp-multisite }}
 
-    - name: phpunit tests
-      run: |
-        echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-        /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
-      env:
-        WP_MULTISITE: ${{ matrix.wp-multisite }}
+      - name: phpunit tests
+        run: |
+          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
+          /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
+        env:
+          WP_MULTISITE: ${{ matrix.wp-multisite }}
 
-    - name: Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: coverage.xml
-        directory: ${{ github.workspace }}
-        verbose: true
-        flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+      - name: Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          directory: ${{ github.workspace }}
+          verbose: true
+          flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
   phpunit6:
     # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
@@ -100,52 +100,52 @@ jobs:
         phpunit-config: ['phpunit.xml']
     name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        ini-values: magic_quotes_gpc=off
-        extensions: fileinfo, imagick, mysqli, xml, zip, zlib
-        coverage: xdebug
-        tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
-      env:
-        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          ini-values: magic_quotes_gpc=off
+          extensions: fileinfo, imagick, mysqli, xml, zip, zlib
+          coverage: xdebug
+          tools: wp-cli, phpunit-polyfills, phpunit:${{ matrix.phpunit-versions }}
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check PHP Version
-      run: php -v
+      - name: Check PHP Version
+        run: php -v
 
-    - name: Composer install
-      run: composer install --optimize-autoloader --prefer-dist
+      - name: Composer install
+        run: composer install --optimize-autoloader --prefer-dist
 
-    - name: Install WP Tests
-      run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
-      env:
-        WP_MULTISITE: ${{ matrix.wp-multisite }}
+      - name: Install WP Tests
+        run: bash script/install-wp-tests wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
+        env:
+          WP_MULTISITE: ${{ matrix.wp-multisite }}
 
-    - name: phpunit tests
-      run: |
-        echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
-        /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
-      env:
-        WP_MULTISITE: ${{ matrix.wp-multisite }}
+      - name: phpunit tests
+        run: |
+          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
+          /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
+        env:
+          WP_MULTISITE: ${{ matrix.wp-multisite }}
 
-    - name: Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: coverage.xml
-        directory: ${{ github.workspace }}
-        verbose: true
-        flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
+      - name: Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          directory: ${{ github.workspace }}
+          verbose: true
+          flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
   phpcs:
     runs-on: ubuntu-latest
     env:
       TRAVIS_BUILD_DIR: ${{ github.workspace }}
-    strategy: 
+    strategy:
       matrix:
         php_version: [8.2]
     steps:
@@ -168,6 +168,6 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
-      
+
       - name: phpcs
         run: script/cibuild-phpcs

@@ -18,10 +18,10 @@ declare global {
 // These provide just enough typing to satisfy TypeScript without conflicting
 
 declare module '@wordpress/i18n' {
-  function __( text: string, domain?: string ): string;
-  function _x( text: string, context: string, domain?: string ): string;
-  function _n( single: string, plural: string, number: number, domain?: string ): string;
-  function sprintf( format: string, ...args: any[] ): string;
+  function __(text: string, domain?: string): string;
+  function _x(text: string, context: string, domain?: string): string;
+  function _n(single: string, plural: string, number: number, domain?: string): string;
+  function sprintf(format: string, ...args: any[]): string;
 }
 
 declare module '@wordpress/blocks' {
@@ -36,8 +36,8 @@ declare module '@wordpress/blocks' {
     edit: any;
     save: any;
   }
-  
-  function registerBlockType( name: string, settings: BlockConfiguration ): void;
+
+  function registerBlockType(name: string, settings: BlockConfiguration): void;
 }
 
 declare module '@wordpress/element' {

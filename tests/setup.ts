@@ -5,19 +5,19 @@ global.wp = {
   i18n: {
     __: (text: string) => text,
     _x: (text: string) => text,
-    _n: (single: string, plural: string, number: number) => number === 1 ? single : plural,
-    sprintf: (format: string, ...args: any[]) => format
+    _n: (single: string, plural: string, number: number) => (number === 1 ? single : plural),
+    sprintf: (format: string, ...args: any[]) => format,
   },
   blocks: {
-    registerBlockType: jest.fn()
+    registerBlockType: jest.fn(),
   },
   element: {
-    createElement: jest.fn()
+    createElement: jest.fn(),
   },
   blockEditor: {
     InspectorControls: jest.fn(),
     BlockControls: jest.fn(),
-    useBlockProps: jest.fn(() => ({}))
+    useBlockProps: jest.fn(() => ({})),
   },
   components: {
     PanelBody: jest.fn(),
@@ -29,9 +29,9 @@ global.wp = {
     RadioControl: jest.fn(),
     Button: jest.fn(),
     Panel: jest.fn(),
-    Placeholder: jest.fn()
+    Placeholder: jest.fn(),
   },
-  serverSideRender: jest.fn()
+  serverSideRender: jest.fn(),
 };
 
 // Mock jQuery with ready method
@@ -70,7 +70,7 @@ const createMockElement = (): any => ({
     }
     return createMockElement();
   }),
-  length: 0
+  length: 0,
 });
 
 const mockJQuery: any = jest.fn((selector?: any, context?: any) => {
@@ -94,31 +94,31 @@ Object.assign(global.window, {
     lostLockNoticeLogo: '/logo.png',
     lostLockNoticeTitle: 'Lock Lost',
     postUploadNotice: 'Upload complete',
-    extension: 'pdf'
+    extension: 'pdf',
   },
   wpApiSettings: {
     root: 'https://example.com/wp-json/',
-    nonce: 'api-nonce'
+    nonce: 'api-nonce',
   },
   ajaxurl: 'https://example.com/wp-admin/admin-ajax.php',
   wpCookies: {
-    set: jest.fn()
+    set: jest.fn(),
   },
   autosave: jest.fn(),
   convertEntities: jest.fn((text: string) => text),
   uploader: {
     bind: jest.fn(),
     unbind: jest.fn(),
-    trigger: jest.fn()
+    trigger: jest.fn(),
   },
-  tb_remove: jest.fn()
+  tb_remove: jest.fn(),
 });
 
 // Mock Notification API
 global.Notification = class MockNotification {
   static permission = 'granted';
   static requestPermission = jest.fn(() => Promise.resolve('granted'));
-  
+
   constructor(title: string, options?: NotificationOptions) {
     // Mock notification constructor
   }
@@ -128,5 +128,5 @@ global.Notification = class MockNotification {
 global.console = {
   ...console,
   warn: jest.fn(),
-  error: jest.fn()
+  error: jest.fn(),
 };

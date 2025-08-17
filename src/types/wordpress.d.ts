@@ -8,10 +8,10 @@ declare module '@wordpress/*' {
 
 // Specific module declarations for better type safety
 declare module '@wordpress/i18n' {
-  export function __( text: string, domain?: string ): string;
-  export function _x( text: string, context: string, domain?: string ): string;
-  export function _n( single: string, plural: string, number: number, domain?: string ): string;
-  export function sprintf( format: string, ...args: any[] ): string;
+  export function __(text: string, domain?: string): string;
+  export function _x(text: string, context: string, domain?: string): string;
+  export function _n(single: string, plural: string, number: number, domain?: string): string;
+  export function sprintf(format: string, ...args: any[]): string;
 }
 
 declare module '@wordpress/blocks' {
@@ -26,8 +26,8 @@ declare module '@wordpress/blocks' {
     edit: any;
     save: any;
   }
-  
-  export function registerBlockType( name: string, settings: BlockConfiguration ): void;
+
+  export function registerBlockType(name: string, settings: BlockConfiguration): void;
 }
 
 declare module '@wordpress/element' {

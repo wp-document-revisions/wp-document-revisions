@@ -7,21 +7,25 @@ I've successfully implemented the two security and modernization improvements yo
 ## ✅ 1. Replaced WebKit Notifications with Modern Notifications API
 
 **What was changed:**
+
 - Removed deprecated `window.webkitNotifications` usage
 - Implemented modern `Notification` API (supported by all major browsers for 10+ years)
 - Updated TypeScript types to remove webkit notification interfaces
 
 **Files modified:**
+
 - `src/admin/wp-document-revisions.ts` - Updated notification methods
 - `src/types/globals.ts` - Removed webkit notification type definitions
 
 **Benefits:**
+
 - ✅ Modern, standardized API
 - ✅ Better browser compatibility
 - ✅ Future-proof code
 - ✅ Cleaner, more maintainable implementation
 
 **Before (deprecated webkit):**
+
 ```typescript
 if (window.webkitNotifications) {
   if (window.webkitNotifications.checkPermission() > 0) {
@@ -40,6 +44,7 @@ if (window.webkitNotifications) {
 ```
 
 **After (modern API):**
+
 ```typescript
 if ('Notification' in window) {
   if (Notification.permission === 'default') {
@@ -53,7 +58,7 @@ if ('Notification' in window) {
   } else if (Notification.permission === 'granted') {
     new Notification(window.wp_document_revisions.lostLockNoticeTitle, {
       body: notice,
-      icon: window.wp_document_revisions.lostLockNoticeLogo
+      icon: window.wp_document_revisions.lostLockNoticeLogo,
     });
   }
 }
@@ -62,26 +67,31 @@ if ('Notification' in window) {
 ## ✅ 2. Added SameSite=strict Cookie Security
 
 **What was changed:**
+
 - Extended `WPCookies` interface to support `sameSite` parameter
 - Updated all cookie setting calls to use `SameSite=strict`
 - Improved cross-site scripting (XSS) protection
 
 **Files modified:**
+
 - `src/types/globals.ts` - Extended WPCookies interface
 - `src/admin/wp-document-revisions.ts` - Added SameSite=strict to all cookie calls
 
 **Benefits:**
+
 - ✅ Enhanced security against CSRF attacks
 - ✅ Reduced cross-site script surface
 - ✅ Modern cookie security best practices
 - ✅ Better protection for sensitive document context data
 
 **Before:**
+
 ```typescript
 window.wpCookies.set('doc_image', 'false', 24 * 60 * 60, false, false, this.secure);
 ```
 
 **After:**
+
 ```typescript
 window.wpCookies.set('doc_image', 'false', 24 * 60 * 60, false, false, this.secure, 'strict');
 ```
@@ -89,11 +99,13 @@ window.wpCookies.set('doc_image', 'false', 24 * 60 * 60, false, false, this.secu
 ## Security Impact
 
 ### Notifications API
+
 - **Modern Standard**: Uses the current web standard instead of deprecated webkit-specific API
 - **Better Permission Handling**: Proper promise-based permission flow
 - **Fallback Protection**: Graceful degradation to alert() if notifications not supported
 
 ### SameSite Cookies
+
 - **CSRF Protection**: `SameSite=strict` prevents cookies from being sent in cross-site requests
 - **XSS Mitigation**: Reduces the attack surface for cross-site scripting
 - **Document Context Security**: Protects the `doc_image` cookie used for WordPress media library context
@@ -101,12 +113,14 @@ window.wpCookies.set('doc_image', 'false', 24 * 60 * 60, false, false, this.secu
 ## Browser Compatibility
 
 ### Notifications API
+
 - ✅ Chrome 22+ (2012)
-- ✅ Firefox 22+ (2013) 
+- ✅ Firefox 22+ (2013)
 - ✅ Safari 6+ (2012)
 - ✅ Edge 14+ (2016)
 
 ### SameSite Cookies
+
 - ✅ Chrome 51+ (2016)
 - ✅ Firefox 60+ (2018)
 - ✅ Safari 12+ (2018)

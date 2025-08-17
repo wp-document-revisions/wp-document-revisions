@@ -5,6 +5,7 @@ This document explains the modern TypeScript/JavaScript build system that has be
 ## Overview
 
 The plugin has been modernized with:
+
 - **TypeScript** for type safety and better development experience
 - **Webpack** for bundling and optimization
 - **ESLint** for code quality and consistency
@@ -29,17 +30,20 @@ src/
 ## Build Scripts
 
 ### Development
+
 ```bash
 npm run dev      # Build for development
 npm run watch    # Build and watch for changes
 ```
 
 ### Production
+
 ```bash
 npm run build    # Build optimized for production
 ```
 
 ### Code Quality
+
 ```bash
 npm run lint         # Run ESLint
 npm run lint:fix     # Run ESLint with auto-fix
@@ -49,11 +53,13 @@ npm run type-check   # Run TypeScript type checking
 ## Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Build the assets:
+
 ```bash
 npm run build
 ```

@@ -12,13 +12,13 @@ WP Document Revisions should work on just about any system with a browser. You c
 
 Each document can have one of three "visibilities":
 
-* Private - visible only to logged in users (this can be further refined either based on users or based on the document's status)
-* Password Protected - Non-logged in users can view files, but they will require a document-specific password
-* Public - Anyone with the document's URL can download and view the file
+- Private - visible only to logged in users (this can be further refined either based on users or based on the document's status)
+- Password Protected - Non-logged in users can view files, but they will require a document-specific password
+- Public - Anyone with the document's URL can download and view the file
 
 ### How many people can access a document at a time?
 
-A virtually unlimited number of people can *view* a document at the same time, but only one user can *edit* a document at a time.
+A virtually unlimited number of people can _view_ a document at the same time, but only one user can _edit_ a document at a time.
 
 ### While a file is "checked out" can others view it? What about a previous versions?
 
@@ -98,12 +98,12 @@ Yes. Each document has an "owner" which can be changed from a dialog on the edit
 
 ### How do I use the documents shortcode?
 
-In a post or page, simply type `[documents]` to display a list of documents. 
+In a post or page, simply type `[documents]` to display a list of documents.
 More information is on [this](./shortcodes.md) page.
 
 ### How do I use the document revisions shortcode?
 
-In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions.
 More information is on [this](./shortcodes.md) page.
 
 ### How do I use the recently revised documents widget?

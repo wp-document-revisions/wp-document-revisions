@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   wordpress:
     image: wordpress
     restart: always
@@ -29,15 +28,15 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    links: 
-        - db:db
+    links:
+      - db:db
     ports:
-        - 8089:80
+      - 8089:80
     environment:
-        MYSQL_USER: exampleuser
-        MYSQL_PASSWORD: examplepass
-        MYSQL_ROOT_PASSWORD: '1'
-      
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_ROOT_PASSWORD: '1'
+
 volumes:
   wordpress:
   db:

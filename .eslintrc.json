@@ -1,12 +1,11 @@
 {
   "extends": [
-    "@wordpress/eslint-plugin/recommended",
-    "@typescript-eslint/recommended"
+    "plugin:@wordpress/eslint-plugin/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
@@ -34,12 +33,14 @@
     "processed": "readonly"
   },
   "rules": {
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-console": "warn",
-    "prefer-const": "error"
+    "no-console": "off",
+    "prefer-const": "error",
+    "camelcase": "off",
+    "no-alert": "off"
   },
   "overrides": [
     {

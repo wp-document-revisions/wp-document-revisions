@@ -11,5 +11,5 @@ module.exports = {
   select,
   dispatch,
   createReduxStore,
-  register
+  register,
 };

@@ -5,7 +5,7 @@ const jestFn = require('jest').fn;
 const createMockElement = () => ({
   prop: jestFn().mockReturnThis(),
   show: jestFn().mockReturnThis(),
-  hide: jestFn().mockReturnThis()
+  hide: jestFn().mockReturnThis(),
 });
 
 const mockJQuery = jestFn((selector, context) => {
@@ -20,7 +20,7 @@ try {
   const result = mockJQuery(':button, :submit', '#submitpost');
   console.log('Result:', result);
   console.log('Result has prop?', typeof result.prop);
-  
+
   // Try calling prop
   const propResult = result.prop('disabled', true);
   console.log('Prop call result:', propResult);

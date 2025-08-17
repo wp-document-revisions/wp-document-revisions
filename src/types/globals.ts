@@ -29,11 +29,22 @@ export interface PluploadResponse {
 }
 
 export interface PluploadUploader {
-  bind(event: string, callback: (uploader: PluploadUploader, file: PluploadFile, response: PluploadResponse) => void): void;
+  bind(
+    event: string,
+    callback: (uploader: PluploadUploader, file: PluploadFile, response: PluploadResponse) => void
+  ): void;
 }
 
 export interface WPCookies {
-  set(name: string, value: string, expires: number, path: boolean | string, domain: boolean | string, secure: boolean, sameSite?: 'strict' | 'lax' | 'none'): void;
+  set(
+    name: string,
+    value: string,
+    expires: number,
+    path: boolean | string,
+    domain: boolean | string,
+    secure: boolean,
+    sameSite?: 'strict' | 'lax' | 'none'
+  ): void;
 }
 
 // Extend the global Window interface
@@ -45,7 +56,7 @@ declare global {
     wpCookies: WPCookies;
     autosave: () => void;
     convertEntities?: (text: string) => string;
-  uploader?: any;
+    uploader?: any;
     dialogArguments?: Window;
     tb_remove?: () => void;
     wp?: {

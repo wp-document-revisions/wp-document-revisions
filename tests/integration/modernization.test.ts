@@ -6,15 +6,15 @@ describe('Integration Tests', () => {
   beforeEach(() => {
     // Reset DOM
     document.body.innerHTML = '';
-    
+
     // Reset global mocks
     jest.clearAllMocks();
-    
+
     // Set up WordPress environment
     (global as any).wp = {
       i18n: { __: (text: string) => text },
       blocks: { registerBlockType: jest.fn() },
-      element: { createElement: jest.fn() }
+      element: { createElement: jest.fn() },
     };
   });
 
@@ -36,9 +36,9 @@ describe('Integration Tests', () => {
       const blocks = [
         require('../../src/blocks/wpdr-revisions-shortcode'),
         require('../../src/blocks/wpdr-documents-shortcode'),
-        require('../../src/blocks/wpdr-documents-widget')
+        require('../../src/blocks/wpdr-documents-widget'),
       ];
-      
+
       expect(wpdr).toBeDefined();
       expect(validate).toBeDefined();
       expect(blocks.length).toBe(3);
@@ -47,19 +47,19 @@ describe('Integration Tests', () => {
 
   describe('WordPress Integration', () => {
     it('should register all blocks with WordPress', () => {
-  jest.resetModules();
-  // Fresh mock for blocks module
-  jest.doMock('@wordpress/blocks', () => ({ registerBlockType: jest.fn() }));
+      jest.resetModules();
+      // Fresh mock for blocks module
+      jest.doMock('@wordpress/blocks', () => ({ registerBlockType: jest.fn() }));
       const { registerBlockType } = require('@wordpress/blocks');
-      
+
       // Import all block modules
       require('../../src/blocks/wpdr-revisions-shortcode');
       require('../../src/blocks/wpdr-documents-shortcode');
       require('../../src/blocks/wpdr-documents-widget');
-      
+
       // Should have registered 3 blocks
       expect(registerBlockType).toHaveBeenCalledTimes(3);
-      
+
       // Check specific block registrations
       expect(registerBlockType).toHaveBeenCalledWith(
         'wp-document-revisions/revisions-shortcode',
@@ -76,17 +76,17 @@ describe('Integration Tests', () => {
     });
 
     it('should maintain consistent block category', () => {
-  jest.resetModules();
-  jest.doMock('@wordpress/blocks', () => ({ registerBlockType: jest.fn() }));
+      jest.resetModules();
+      jest.doMock('@wordpress/blocks', () => ({ registerBlockType: jest.fn() }));
       const { registerBlockType } = require('@wordpress/blocks');
-      
+
       require('../../src/blocks/wpdr-revisions-shortcode');
       require('../../src/blocks/wpdr-documents-shortcode');
       require('../../src/blocks/wpdr-documents-widget');
-      
+
       // All blocks should use the same category
       const calls = registerBlockType.mock.calls;
-  calls.forEach((call: any) => {
+      calls.forEach((call: any) => {
         expect(call[1].category).toBe('wpdr-category');
       });
     });
@@ -95,7 +95,7 @@ describe('Integration Tests', () => {
   describe('Security Features Integration', () => {
     it('should use modern security standards throughout', () => {
       const { WPDocumentRevisions } = require('../../src/admin/wp-document-revisions');
-      
+
       if (!(global as any).Notification || !(global as any).Notification.mock) {
         const MockNotification: any = jest.fn();
         MockNotification.permission = 'granted';
@@ -116,17 +116,17 @@ describe('Integration Tests', () => {
           removeAttr: jest.fn(() => obj),
           is: jest.fn(() => true),
           attr: jest.fn(() => ''),
-          length: 0
+          length: 0,
         };
         return obj;
       });
-      
+
       const wpdr = new WPDocumentRevisions(mockJQuery);
-      
+
       // Test cookie security
       const cookieSetSpy = jest.spyOn(window.wpCookies, 'set');
       (wpdr as any).cookieFalse();
-      
+
       // Should use SameSite=strict
       expect(cookieSetSpy).toHaveBeenCalledWith(
         expect.any(String),
@@ -141,7 +141,7 @@ describe('Integration Tests', () => {
 
     it('should use modern Notification API', () => {
       const { WPDocumentRevisions } = require('../../src/admin/wp-document-revisions');
-      
+
       if (!(global as any).Notification || !(global as any).Notification.mock) {
         const MockNotification: any = jest.fn();
         MockNotification.permission = 'granted';
@@ -163,7 +163,7 @@ describe('Integration Tests', () => {
         expect.any(String),
         expect.objectContaining({
           body: 'Test message',
-          icon: expect.any(String)
+          icon: expect.any(String),
         })
       );
     });
@@ -173,7 +173,7 @@ describe('Integration Tests', () => {
     it('should handle missing dependencies gracefully', () => {
       // Test with missing WordPress globals
       delete (global as any).wp;
-      
+
       expect(() => {
         require('../../src/blocks/wpdr-revisions-shortcode');
       }).not.toThrow();
@@ -182,15 +182,15 @@ describe('Integration Tests', () => {
     it('should provide fallbacks for missing APIs', () => {
       // Test notification fallback
       delete (global as any).Notification;
-      
+
       const { WPDocumentRevisions } = require('../../src/admin/wp-document-revisions');
       const mockJQuery = jest.fn(() => ({ on: jest.fn() }));
       const wpdr = new WPDocumentRevisions(mockJQuery);
-      
+
       const alertSpy = jest.spyOn(global, 'alert');
-      
+
       (wpdr as any).lockOverrideNotice('Test');
-      
+
       expect(alertSpy).toHaveBeenCalledWith('Test');
     });
   });
@@ -200,7 +200,7 @@ describe('Integration Tests', () => {
       // Import type definitions
       const globals = require('../../src/types/globals');
       const blocks = require('../../src/types/blocks');
-      
+
       // Should be able to import without TypeScript compilation errors
       expect(globals).toBeDefined();
       expect(blocks).toBeDefined();
@@ -217,35 +217,35 @@ describe('Integration Tests', () => {
     it('should successfully replace all legacy JavaScript', () => {
       // Verify no legacy webkit or old jQuery patterns
       const adminCode = require('../../src/admin/wp-document-revisions');
-      
+
       // Should not contain webkit references
       expect(String(adminCode)).not.toMatch(/webkit/i);
-      
+
       // Should use modern patterns
       expect(typeof Notification).toBeDefined();
     });
 
     it('should provide enhanced functionality', () => {
       const { registerBlockType } = require('@wordpress/blocks');
-      
+
       // Import all blocks
       require('../../src/blocks/wpdr-revisions-shortcode');
       require('../../src/blocks/wpdr-documents-shortcode');
       require('../../src/blocks/wpdr-documents-widget');
-      
+
       // All blocks should support modern WordPress features
       const calls = registerBlockType.mock.calls;
-  calls.forEach((call: any) => {
+      calls.forEach((call: any) => {
         const config = call[1];
-        
+
         // Should support color customization
         expect(config.supports.color).toBeDefined();
         expect(config.supports.color.background).toBe(true);
         expect(config.supports.color.text).toBe(true);
-        
+
         // Should support typography
         expect(config.supports.typography).toBeDefined();
-        
+
         // Should support spacing
         expect(config.supports.spacing).toBeDefined();
       });

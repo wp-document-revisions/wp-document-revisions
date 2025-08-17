@@ -29,9 +29,9 @@ module.exports = (env, argv) => {
             options: {
               transpileOnly: true,
               compilerOptions: {
-                noEmitOnError: false
-              }
-            }
+                noEmitOnError: false,
+              },
+            },
           },
           exclude: /node_modules/,
         },

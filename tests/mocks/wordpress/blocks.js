@@ -13,5 +13,5 @@ module.exports = {
   getBlockTypes,
   hasBlockSupport,
   isReusableBlock,
-  isTemplatePart
+  isTemplatePart,
 };

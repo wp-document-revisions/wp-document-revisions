@@ -3,38 +3,33 @@
  * Modern TypeScript conversion with proper typing
  */
 
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { createElement } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
-import { 
-  PanelBody, 
-  RangeControl, 
-  TextControl, 
-  ToggleControl 
-} from '@wordpress/components';
+import { PanelBody, RangeControl, TextControl, ToggleControl } from '@wordpress/components';
 
 import { RevisionsShortcodeAttributes, WPDRBlockProps } from '../types/blocks';
 
 // Mock server-side render for TypeScript
-const ServerSideRender = (window as any).wp?.serverSideRender || (() => createElement('div', {}, 'Server-side rendering...'));
+const ServerSideRender =
+  (window as any).wp?.serverSideRender ||
+  (() => createElement('div', {}, 'Server-side rendering...'));
 
 interface RevisionsShortcodeBlockProps extends WPDRBlockProps<RevisionsShortcodeAttributes> {}
 
 const RevisionsShortcodeEdit = ({ attributes, setAttributes }: RevisionsShortcodeBlockProps) => {
-  const {
-    id,
-    numberposts,
-    summary,
-    show_pdf,
-    new_tab
-  } = attributes;
+  const { id, numberposts, summary, show_pdf, new_tab } = attributes;
 
-  const inspectorControls = createElement(InspectorControls, {},
-    createElement(PanelBody, {
-      title: __('Revisions Settings', 'wp-document-revisions'),
-      initialOpen: true
-    },
+  const inspectorControls = createElement(
+    InspectorControls,
+    {},
+    createElement(
+      PanelBody,
+      {
+        title: __('Revisions Settings', 'wp-document-revisions'),
+        initialOpen: true,
+      },
       createElement(TextControl, {
         label: __('Document ID', 'wp-document-revisions'),
         type: 'number',
@@ -45,7 +40,7 @@ const RevisionsShortcodeEdit = ({ attributes, setAttributes }: RevisionsShortcod
             setAttributes({ id: numValue });
           }
         },
-        help: __('The ID of the document to show revisions for', 'wp-document-revisions')
+        help: __('The ID of the document to show revisions for', 'wp-document-revisions'),
       }),
       createElement(RangeControl, {
         label: __('Number of Revisions', 'wp-document-revisions'),
@@ -53,60 +48,71 @@ const RevisionsShortcodeEdit = ({ attributes, setAttributes }: RevisionsShortcod
         onChange: (value?: number) => setAttributes({ numberposts: value ?? 1 }),
         min: 1,
         max: 50,
-        help: __('How many revisions to display', 'wp-document-revisions')
+        help: __('How many revisions to display', 'wp-document-revisions'),
       })
     ),
-    createElement(PanelBody, {
-      title: __('Display Options', 'wp-document-revisions'),
-      initialOpen: false
-    },
+    createElement(
+      PanelBody,
+      {
+        title: __('Display Options', 'wp-document-revisions'),
+        initialOpen: false,
+      },
       createElement(ToggleControl, {
         label: __('Show Summary', 'wp-document-revisions'),
         checked: summary,
         onChange: (value: boolean) => setAttributes({ summary: value }),
-        help: __('Display revision summaries/comments', 'wp-document-revisions')
+        help: __('Display revision summaries/comments', 'wp-document-revisions'),
       }),
       createElement(ToggleControl, {
         label: __('Show PDF Link', 'wp-document-revisions'),
         checked: show_pdf,
         onChange: (value: boolean) => setAttributes({ show_pdf: value }),
-        help: __('Show direct PDF download link if available', 'wp-document-revisions')
+        help: __('Show direct PDF download link if available', 'wp-document-revisions'),
       }),
       createElement(ToggleControl, {
         label: __('Open in New Tab', 'wp-document-revisions'),
         checked: new_tab,
         onChange: (value: boolean) => setAttributes({ new_tab: value }),
-        help: __('Open revision links in a new tab/window', 'wp-document-revisions')
+        help: __('Open revision links in a new tab/window', 'wp-document-revisions'),
       })
     )
   );
 
-  const blockContent = createElement('div', {
-    style: {
-      padding: '20px',
-      border: '1px dashed #ccc',
-      borderRadius: '4px',
-      backgroundColor: '#f9f9f9'
-    }
-  },
-    createElement('h4', { style: { margin: '0 0 10px 0' } }, 
+  const blockContent = createElement(
+    'div',
+    {
+      style: {
+        padding: '20px',
+        border: '1px dashed #ccc',
+        borderRadius: '4px',
+        backgroundColor: '#f9f9f9',
+      },
+    },
+    createElement(
+      'h4',
+      { style: { margin: '0 0 10px 0' } },
       __('Document Revisions', 'wp-document-revisions')
     ),
-    createElement('p', { style: { margin: '0', color: '#666' } },
-      id > 0 
-        ? __(`Showing ${numberposts} revisions for document #${id}`, 'wp-document-revisions')
+    createElement(
+      'p',
+      { style: { margin: '0', color: '#666' } },
+      id > 0
+        ? sprintf(
+            /* translators: 1: number of revisions, 2: document id */
+            __('Showing %1$s revisions for document #%2$s', 'wp-document-revisions'),
+            numberposts,
+            id
+          )
         : __('Please enter a valid document ID', 'wp-document-revisions')
     ),
-    id > 0 && createElement(ServerSideRender, {
-      block: 'wp-document-revisions/revisions-shortcode',
-      attributes
-    })
+    id > 0 &&
+      createElement(ServerSideRender, {
+        block: 'wp-document-revisions/revisions-shortcode',
+        attributes,
+      })
   );
 
-  return createElement('div', {},
-    inspectorControls,
-    blockContent
-  );
+  return createElement('div', {}, inspectorControls, blockContent);
 };
 
 registerBlockType('wp-document-revisions/revisions-shortcode', {
@@ -118,50 +124,50 @@ registerBlockType('wp-document-revisions/revisions-shortcode', {
     __('revisions', 'wp-document-revisions'),
     __('history', 'wp-document-revisions'),
     __('versions', 'wp-document-revisions'),
-    __('document', 'wp-document-revisions')
+    __('document', 'wp-document-revisions'),
   ],
   attributes: {
     id: {
       type: 'number',
-      default: 1
+      default: 1,
     },
     numberposts: {
       type: 'number',
-      default: 5
+      default: 5,
     },
     summary: {
       type: 'boolean',
-      default: false
+      default: false,
     },
     show_pdf: {
       type: 'boolean',
-      default: false
+      default: false,
     },
     new_tab: {
       type: 'boolean',
-      default: true
+      default: true,
     },
     align: {
-      type: 'string'
+      type: 'string',
     },
     backgroundColor: {
-      type: 'string'
+      type: 'string',
     },
     linkColor: {
-      type: 'string'
+      type: 'string',
     },
     textColor: {
-      type: 'string'
+      type: 'string',
     },
     gradient: {
-      type: 'string'
+      type: 'string',
     },
     fontSize: {
-      type: 'string'
+      type: 'string',
     },
     style: {
-      type: 'object'
-    }
+      type: 'object',
+    },
   },
   supports: {
     align: true,
@@ -169,16 +175,16 @@ registerBlockType('wp-document-revisions/revisions-shortcode', {
       background: true,
       text: true,
       link: true,
-      gradients: true
+      gradients: true,
     },
     typography: {
-      fontSize: true
+      fontSize: true,
     },
     spacing: {
       padding: true,
-      margin: true
-    }
+      margin: true,
+    },
   },
   edit: RevisionsShortcodeEdit,
-  save: () => null // Server-side rendered
+  save: () => null, // Server-side rendered
 });

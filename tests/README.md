@@ -27,6 +27,7 @@ tests/
 ### 🔧 **Admin Functionality Tests** (`admin/`)
 
 #### **WPDocumentRevisions Class** (`wp-document-revisions.test.ts`)
+
 - ✅ **Initialization**: Constructor, jQuery integration, event binding
 - ✅ **Notification System**: Modern Notification API, permission handling, fallbacks
 - ✅ **Cookie Management**: SameSite=strict security, context tracking
@@ -36,6 +37,7 @@ tests/
 - ✅ **Security Features**: Modern web standards, deprecated API removal
 
 #### **Validation Module** (`wp-document-revisions-validate.test.ts`)
+
 - ✅ **AJAX Requests**: Proper payload, security headers, error handling
 - ✅ **Response Handling**: Success/error callbacks, logging
 - ✅ **Security**: Nonce validation, request protection
@@ -44,6 +46,7 @@ tests/
 ### 🧩 **Gutenberg Blocks Tests** (`blocks/`)
 
 #### **Revisions Shortcode Block** (`wpdr-revisions-shortcode.test.tsx`)
+
 - ✅ **Block Registration**: WordPress block API integration
 - ✅ **Attributes**: Document ID, number of posts, display options
 - ✅ **Inspector Controls**: Settings panels, user interface
@@ -51,6 +54,7 @@ tests/
 - ✅ **Block Supports**: Alignment, colors, typography, spacing
 
 #### **Documents Shortcode Block** (`wpdr-documents-shortcode.test.tsx`)
+
 - ✅ **Complex Attributes**: Multiple taxonomies, filtering options
 - ✅ **Display Customization**: Thumbnails, descriptions, PDF links
 - ✅ **Sorting Options**: Order by date, title, etc.
@@ -58,6 +62,7 @@ tests/
 - ✅ **Block Configuration**: Icons, keywords, category
 
 #### **Documents Widget Block** (`wpdr-documents-widget.test.tsx`)
+
 - ✅ **Widget Functionality**: Recent documents display
 - ✅ **Post Status Filtering**: Published, private, draft posts
 - ✅ **Display Options**: Author, thumbnails, descriptions
@@ -66,6 +71,7 @@ tests/
 ### 📝 **Type Safety Tests** (`types/`)
 
 #### **Type Definitions** (`type-definitions.test.ts`)
+
 - ✅ **Global Interfaces**: WordPress API, Document Revisions globals
 - ✅ **Block Attributes**: All block configuration types
 - ✅ **Security Types**: SameSite cookie support
@@ -75,6 +81,7 @@ tests/
 ### 🔗 **Integration Tests** (`integration/`)
 
 #### **Modernization Success** (`modernization.test.ts`)
+
 - ✅ **Build System**: Module imports, TypeScript compilation
 - ✅ **WordPress Integration**: Block registration, API compatibility
 - ✅ **Security Standards**: Modern cookie security, notification API
@@ -84,6 +91,7 @@ tests/
 ## Test Configuration
 
 ### **Jest Setup** (`jest.config.json`)
+
 ```json
 {
   "preset": "ts-jest",
@@ -94,6 +102,7 @@ tests/
 ```
 
 ### **Test Environment** (`tests/setup.ts`)
+
 - 🏗️ **WordPress Mocks**: Complete wp global object simulation
 - 🔧 **jQuery Mocks**: DOM manipulation function stubs
 - 🍪 **Cookie API**: WordPress cookie management mocks
@@ -103,6 +112,7 @@ tests/
 ## Running Tests
 
 ### **Available Commands**
+
 ```bash
 # Run all tests
 npm test
@@ -121,6 +131,7 @@ npm test -- --verbose
 ```
 
 ### **Coverage Targets**
+
 - **Lines**: > 90%
 - **Functions**: > 90%
 - **Branches**: > 85%
@@ -129,24 +140,28 @@ npm test -- --verbose
 ## Test Categories
 
 ### **🛡️ Security Tests**
+
 - SameSite cookie attribute usage
 - Modern Notification API (no webkit)
 - CSRF token validation
 - XSS prevention measures
 
 ### **🔄 Compatibility Tests**
+
 - WordPress block editor integration
 - jQuery global compatibility
 - PHP enqueue integration
 - Browser API fallbacks
 
 ### **⚡ Performance Tests**
+
 - Module loading efficiency
 - Memory leak prevention
 - Event listener management
 - AJAX request optimization
 
 ### **🎨 UI/UX Tests**
+
 - Block editor controls
 - Inspector panel functionality
 - User notification systems
@@ -155,6 +170,7 @@ npm test -- --verbose
 ## Mock Strategy
 
 ### **WordPress APIs**
+
 ```typescript
 // Global wp object with all required APIs
 global.wp = {
@@ -162,11 +178,12 @@ global.wp = {
   blocks: { registerBlockType: jest.fn() },
   element: { createElement: jest.fn() },
   blockEditor: { InspectorControls: jest.fn() },
-  components: { PanelBody: jest.fn() }
+  components: { PanelBody: jest.fn() },
 };
 ```
 
 ### **jQuery Simulation**
+
 ```typescript
 // Comprehensive jQuery mock
 global.$ = jest.fn(() => ({
@@ -175,11 +192,12 @@ global.$ = jest.fn(() => ({
   click: jest.fn(),
   val: jest.fn(),
   hide: jest.fn(),
-  show: jest.fn()
+  show: jest.fn(),
 }));
 ```
 
 ### **Browser APIs**
+
 ```typescript
 // Modern Notification API
 global.Notification = class MockNotification {
@@ -191,18 +209,21 @@ global.Notification = class MockNotification {
 ## Quality Assurance
 
 ### **Test Quality Metrics**
+
 - **Comprehensive Coverage**: All public methods tested
 - **Edge Case Handling**: Error conditions, missing data
 - **Integration Scenarios**: Multi-component interactions
 - **Security Validation**: Modern security standard compliance
 
 ### **Continuous Integration**
+
 - Tests run on every commit
 - Coverage reports generated
 - Type checking validation
 - Linting compliance
 
 ### **Test Data Management**
+
 - Realistic mock data
 - Edge case scenarios
 - Error condition simulation
@@ -211,7 +232,7 @@ global.Notification = class MockNotification {
 ## Benefits Achieved
 
 - ✅ **Quality Assurance**: Comprehensive test coverage ensures reliability
-- ✅ **Regression Prevention**: Automated testing prevents feature breakage  
+- ✅ **Regression Prevention**: Automated testing prevents feature breakage
 - ✅ **Documentation**: Tests serve as living documentation
 - ✅ **Refactoring Safety**: Tests enable confident code changes
 - ✅ **Security Validation**: Tests verify modern security implementations
