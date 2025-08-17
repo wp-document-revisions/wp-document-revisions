@@ -130,6 +130,24 @@ npm run all             # lint → format (write) → type-check → test → bu
 
 Prettier is configured to use **tabs (width 4)** to align with WordPress coding standards. Avoid overriding local editor settings that convert tabs to spaces in `src/` or you will see large diffs.
 
+### 6a. Git Hooks / Pre-commit
+
+Husky installs a `pre-commit` hook that runs:
+
+```
+npm run precommit   # lint, prettier check (non-mutating), type-check, jest (bail on first failure)
+```
+
+If you only changed a few files and want a faster local iteration loop, you can run targeted checks manually (e.g. `eslint <file>` or `npm test -- <pattern>`). To bypass the hook in an emergency (not recommended):
+
+```
+git commit -m "msg" --no-verify
+```
+
+### 6b. EditorConfig
+
+An `.editorconfig` is provided to help editors enforce tabs for code, spaces for YAML/JSON/Markdown, LF endings, and trimming trailing whitespace.
+
 ### 7. Building Documentation
 
 ```bash
@@ -150,6 +168,12 @@ Then separately run PHPCS & PHPUnit (since those are PHP-specific):
 ./vendor/bin/phpcs && ./vendor/bin/phpunit --config=phpunit9.xml
 ```
 
+You can also run a combined cross‑stack QA script (JS + PHP) with coverage:
+
+```bash
+script/qa
+```
+
 ### 9. Updating Dependencies
 
 Use `composer update` / `npm update` sparingly and prefer focused upgrades. After upgrading:
@@ -165,6 +189,11 @@ Use `composer update` / `npm update` sparingly and prefer focused upgrades. Afte
 | Massive Prettier tab errors               | Editor saved with spaces      | Re-run `npm run format` and reconfigure editor                              |
 | TS version warning in ESLint              | Newer TS than parser supports | Pin TypeScript to supported range or update `@typescript-eslint/*` packages |
 | Failing Jest tests referencing WP globals | Missing mocks                 | Add/update mocks in `tests/mocks/wordpress/`                                |
+| Pre-commit hook is slow                   | Runs full suite               | Add lint-staged or run granular commands manually                           |
+
+### 11. Node Version
+
+CI currently uses Node `20.x`. The dev container shows Node `v22` installed; tooling is tested against Node 20. Use an `.nvmrc` (to be added) or `nvm use 20` for parity if you see unexpected differences.
 
 For deeper platform details see `.github/copilot-instructions.md` inside the repo.
 

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[QA] Running JS/TS gates (lint, format:check, type-check, tests w/ coverage, build)"
+npm run qa
+
+echo "[QA] Running PHP gates (phpcs, phpunit)"
+./vendor/bin/phpcs
+./vendor/bin/phpunit --config=phpunit9.xml
+
+echo "[QA] Done."

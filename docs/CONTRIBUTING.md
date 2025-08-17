@@ -115,7 +115,20 @@ Then run PHP specific quality gates:
 ```bash
 ./vendor/bin/phpunit --config=phpunit9.xml   # Primary suite
 ./vendor/bin/phpcs                           # Coding standards
+
 ```
+
+Or run the combined helper:
+
+```bash
+script/qa   # JS lint/format check/type/test(build) + PHP phpcs/phpunit
+```
+
+### Git Hooks
+
+We use a Husky `pre-commit` hook that runs `npm run precommit`. If necessary you can skip with `--no-verify`, but prefer fixing failures so CI stays green.
+
+````
 
 ## Code of conduct
 
@@ -135,7 +148,7 @@ Inside the container you can still run:
 ```bash
 npm install
 npm run dev
-```
+````
 
 If you add or alter block code, remember to rebuild assets (`npm run build`) before packaging a release.
 
