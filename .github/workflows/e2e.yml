@@ -1,0 +1,56 @@
+name: E2E
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    playwright:
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: |
+                  npm ci
+                  npx playwright install --with-deps
+
+            - name: Start WordPress (docker compose)
+              run: |
+                  docker compose up -d
+                  sleep 10
+                  docker compose ps
+
+            - name: Bootstrap WordPress + Plugin
+              env:
+                  WP_BASE_URL: http://localhost:8088
+                  WP_ADMIN_USER: admin
+                  WP_ADMIN_PASS: password
+                  WP_ADMIN_EMAIL: admin@example.com
+              run: |
+                  node script/wp-bootstrap.js
+
+            - name: Run Playwright tests
+              env:
+                  WP_BASE_URL: http://localhost:8088
+                  WP_ADMIN_USER: admin
+                  WP_ADMIN_PASS: password
+              run: |
+                  npm run e2e:test
+
+            - name: Upload Playwright report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report
+                  retention-days: 7

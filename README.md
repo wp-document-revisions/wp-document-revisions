@@ -197,6 +197,66 @@ CI currently uses Node `20.x`. The dev container shows Node `v22` installed; too
 
 For deeper platform details see `.github/copilot-instructions.md` inside the repo.
 
+## 🌐 End-to-End (Playwright) Tests
+
+Browser-level tests validate critical workflows (admin login, creating Documents, revision UI) using [Playwright](https://playwright.dev/) plus the Gutenberg `@wordpress/e2e-test-utils-playwright` helpers (available for future extension).
+
+### Prerequisites
+
+- Docker + docker compose
+- Node.js 20.x (what CI uses)
+
+### One-Time Setup
+
+```bash
+npm ci
+npx playwright install
+cp .env.example .env   # adjust values if needed
+```
+
+### Running Locally
+
+```bash
+npm run e2e:bootstrap   # starts docker compose & installs WP if needed
+npm run e2e:test        # headless cross-browser tests
+```
+
+Headed / interactive mode:
+
+```bash
+npm run e2e:test:headed
+```
+
+Show last HTML report:
+
+```bash
+npm run e2e:report
+```
+
+### Environment Variables
+
+Set in `.env` (see `.env.example`):
+
+| Var              | Default                 | Purpose                        |
+| ---------------- | ----------------------- | ------------------------------ |
+| `WP_BASE_URL`    | `http://localhost:8088` | URL where docker WP is exposed |
+| `WP_ADMIN_USER`  | `admin`                 | Admin user for tests           |
+| `WP_ADMIN_PASS`  | `password`              | Admin password                 |
+| `WP_ADMIN_EMAIL` | `admin@example.com`     | Admin email during install     |
+| `WP_SITE_TITLE`  | `WPDR E2E`              | Site title on first install    |
+
+### CI
+
+GitHub Actions workflow `.github/workflows/e2e.yml` runs the Playwright suite on pushes & PRs to `main`, provisioning WordPress via docker compose, activating the plugin, then executing tests across Chromium / Firefox / WebKit. Artifacts include an HTML report (and traces on retry/failure in CI).
+
+### Extending Tests
+
+- Add new specs under `tests/e2e/*.spec.ts`
+- Reuse or expand helpers in `tests/e2e/helpers/wp-utils.ts`
+- Consider leveraging `@wordpress/e2e-test-utils-playwright` for editor interactions
+
+If you add flows involving media uploads or alternative roles (e.g., author, editor) update the bootstrap script to create those users.
+
 ## 🤝 Contributing
 
 We welcome contributions! Here's how you can help:
