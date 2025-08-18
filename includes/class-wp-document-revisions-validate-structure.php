@@ -647,8 +647,14 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return void
 	 */
 	public static function enqueue_scripts() {
-		$path   = '/dist/wp-document-revisions-validate.js';
-		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
+		$path      = '/dist/wp-document-revisions-validate.js';
+		$full_path = dirname( __DIR__ ) . $path; // Absolute path to built asset.
+		$debug = ( defined( 'WP_DEBUG' ) && constant( 'WP_DEBUG' ) );
+		if ( $debug && file_exists( $full_path ) ) {
+			$vers = filemtime( $full_path );
+		} else {
+			$vers = self::$parent->version; // fall back if dist file missing (e.g. in test env).
+		}
 
 		wp_enqueue_script(
 			'wpdr_validate',

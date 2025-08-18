@@ -1589,8 +1589,25 @@ class WP_Document_Revisions_Admin {
 		$wpdr = self::$parent;
 
 		// Enqueue JS (modernized TypeScript build).
-		$path   = '/dist/wp-document-revisions.js';
-		$vers   = ( WP_DEBUG ) ? filemtime( dirname( __DIR__ ) . $path ) : $wpdr->version;
+		$debug      = ( defined( 'WP_DEBUG' ) && constant( 'WP_DEBUG' ) );
+		$path       = '/dist/wp-document-revisions.js';
+		$full_path  = dirname( __DIR__ ) . $path; // Absolute path to preferred built asset.
+		// If dist asset not present (e.g. in unit test or source-only install), optionally fall back to legacy js/ build if it exists.
+		if ( ! file_exists( $full_path ) ) {
+			$alt_path  = '/js/wp-document-revisions.js';
+			$alt_full  = dirname( __DIR__ ) . $alt_path;
+			if ( file_exists( $alt_full ) ) {
+				$path      = $alt_path;
+				$full_path = $alt_full;
+			}
+		}
+		if ( $debug && file_exists( $full_path ) ) {
+			// Use file modification time for cache busting only when the file actually exists.
+			$vers = filemtime( $full_path );
+		} else {
+			// Fall back to plugin version (prevents filemtime warnings if file missing in CI/tests).
+			$vers = $wpdr->version;
+		}
 		wp_enqueue_script(
 			'wp_document_revisions',
 			plugins_url( $path, __DIR__ ),
