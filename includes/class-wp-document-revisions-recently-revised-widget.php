@@ -267,8 +267,10 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		$dir      = dirname( __DIR__ );
-		$index_js = 'dist/wpdr-documents-widget.js';
+		$dir         = dirname( __DIR__ );
+		$index_js    = 'dist/wpdr-documents-widget.js';
+		$script_path = "$dir/$index_js";
+		$version     = file_exists( $script_path ) ? filemtime( $script_path ) : time(); // Fallback if build artifact missing.
 		wp_register_script(
 			'wpdr-documents-widget-editor',
 			plugins_url( $index_js, __DIR__ ),
@@ -280,7 +282,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				'wp-server-side-render',
 				'wp-i18n',
 			),
-			filemtime( "$dir/$index_js" ),
+			$version,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',

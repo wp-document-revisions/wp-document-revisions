@@ -3,6 +3,9 @@
 
 	<extensions>*/php</extensions>
 
+	<!-- Provide testVersion globally to avoid PHPCompatibility Sniff calling trim() on null under PHP 8.1+. -->
+	<config name="testVersion" value="7.2-"/>
+
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
@@ -36,9 +39,7 @@
 
 	<rule ref="WordPress"/>
 
-	<rule ref="PHPCompatibilityWP">
-		<config name="testVersion" value="7.2-"/>
-	</rule>
+	<rule ref="PHPCompatibilityWP"/>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>

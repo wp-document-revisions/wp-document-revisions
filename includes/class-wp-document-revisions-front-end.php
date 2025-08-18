@@ -698,8 +698,10 @@ class WP_Document_Revisions_Front_End {
 		);
 
 		// register scripts (modernized TypeScript build).
-		$dir      = dirname( __DIR__ );
-		$index_js = 'dist/wpdr-documents-shortcode.js';
+		$dir         = dirname( __DIR__ );
+		$index_js    = 'dist/wpdr-documents-shortcode.js';
+		$script_path = "$dir/$index_js";
+		$version     = file_exists( $script_path ) ? filemtime( $script_path ) : time(); // Fallback if build artifact missing.
 		wp_register_script(
 			'wpdr-documents-shortcode-editor',
 			plugins_url( $index_js, __DIR__ ),
@@ -713,7 +715,7 @@ class WP_Document_Revisions_Front_End {
 				'wp-server-side-render',
 				'wp-i18n',
 			),
-			filemtime( "$dir/$index_js" ),
+			$version,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
@@ -726,7 +728,9 @@ class WP_Document_Revisions_Front_End {
 		$taxonomies = $this->get_taxonomy_details();
 		wp_add_inline_script( 'wpdr-documents-shortcode-editor', 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 
-		$index_js = 'dist/wpdr-revisions-shortcode.js';
+		$index_js    = 'dist/wpdr-revisions-shortcode.js';
+		$script_path = "$dir/$index_js";
+		$version     = file_exists( $script_path ) ? filemtime( $script_path ) : time(); // Fallback if build artifact missing.
 		wp_register_script(
 			'wpdr-revisions-shortcode-editor',
 			plugins_url( $index_js, __DIR__ ),
@@ -740,7 +744,7 @@ class WP_Document_Revisions_Front_End {
 				'wp-server-side-render',
 				'wp-i18n',
 			),
-			filemtime( "$dir/$index_js" ),
+			$version,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',

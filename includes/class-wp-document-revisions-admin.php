@@ -1589,13 +1589,13 @@ class WP_Document_Revisions_Admin {
 		$wpdr = self::$parent;
 
 		// Enqueue JS (modernized TypeScript build).
-		$debug      = ( defined( 'WP_DEBUG' ) && constant( 'WP_DEBUG' ) );
-		$path       = '/dist/wp-document-revisions.js';
-		$full_path  = dirname( __DIR__ ) . $path; // Absolute path to preferred built asset.
+		$debug     = ( defined( 'WP_DEBUG' ) && constant( 'WP_DEBUG' ) );
+		$path      = '/dist/wp-document-revisions.js';
+		$full_path = dirname( __DIR__ ) . $path; // Absolute path to preferred built asset.
 		// If dist asset not present (e.g. in unit test or source-only install), optionally fall back to legacy js/ build if it exists.
 		if ( ! file_exists( $full_path ) ) {
-			$alt_path  = '/js/wp-document-revisions.js';
-			$alt_full  = dirname( __DIR__ ) . $alt_path;
+			$alt_path = '/js/wp-document-revisions.js';
+			$alt_full = dirname( __DIR__ ) . $alt_path;
 			if ( file_exists( $alt_full ) ) {
 				$path      = $alt_path;
 				$full_path = $alt_full;
