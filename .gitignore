@@ -15,10 +15,6 @@ dist/
 build/
 *.tsbuildinfo
 
-# Package manager lock files
-package-lock.json
-yarn.lock
-
 # Environment files
 .env
 .env.local
