@@ -1,12 +1,46 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+# Generate the translation POT file using WP-CLI i18n command (maintained approach).
+# Requires: composer install (wp-cli/wp-cli-bundle + wp-cli/i18n-command) OR a globally available wp command.
 
-VERSION=$(grep -i "Stable tag:" docs/header.md | awk -F' ' '{print $NF}' | tr -d '\r')
+set -euo pipefail
 
-wp-pot \
-  --domain wp-document-revisions \
-  --dest-file languages/wp-document-revisions.pot \
-  --src "includes/**.php" \
-  --package "WP Document Revisions $VERSION" --relative-to "." \
-  --comment-keyword "translators:"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+# Derive version: prefer plugin header, fallback to docs/header.md stable tag.
+VERSION="$(grep -i "Stable tag:" readme.txt | awk '{print $NF}' | tr -d '\r' || true)"
+if [ -z "$VERSION" ]; then
+  VERSION="$(grep -i "Stable tag:" docs/header.md | awk '{print $NF}' | tr -d '\r' || true)"
+fi
+VERSION="${VERSION:-dev}"
+
+OUT_FILE="languages/wp-document-revisions.pot"
+
+echo "==> Generating POT file ($OUT_FILE) using WP-CLI (version context: $VERSION)"
+
+# Ensure output dir exists
+mkdir -p languages
+
+WP_BIN="$(command -v wp 2>/dev/null || true)"
+# Fallback to vendor path (Composer bin-dir is configured as ./bin, so no vendor/bin symlink)
+if [ -z "$WP_BIN" ] && [ -x vendor/wp-cli/wp-cli/bin/wp ]; then
+  WP_BIN="vendor/wp-cli/wp-cli/bin/wp"
+fi
+
+if [ -z "$WP_BIN" ]; then
+  echo "Error: wp command not found. Did you run composer install?" >&2
+  exit 1
+fi
+
+# Build include paths (PHP sources). Adjust as needed.
+INCLUDE_PATHS=(includes/*.php includes/**/*.php wp-document-revisions.php)
+
+"$WP_BIN" i18n make-pot . "$OUT_FILE" \
+  --slug=wp-document-revisions \
+  --domain=wp-document-revisions \
+  --headers="Project-Id-Version: WP Document Revisions $VERSION" \
+  --exclude="vendor,tests,node_modules" \
+  --skip-js || { echo "Error: POT generation failed" >&2; exit 1; }
+
+echo "==> POT generation complete: $OUT_FILE"

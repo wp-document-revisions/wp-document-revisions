@@ -1,15 +1,60 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-set -e
+# Bootstrap development environment for WP Document Revisions
+# This replaces the old Travis-centric script with a portable local setup.
 
-composer install --dev --no-interaction
+set -euo pipefail
 
-export PATH="$TRAVIS_BUILD_DIR/vendor/bin:./bin:$PATH"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-composer global require "phpunit/phpunit=5.7.*"
-composer global require "squizlabs/php_codesniffer=*"
-composer global require wp-coding-standards/wpcs
+echo "==> Bootstrapping WP Document Revisions in $ROOT_DIR"
 
-phpcs --config-set installed_paths "$TRAVIS_BUILD_DIR/vendor/wp-coding-standards/wpcs"
+if ! command -v composer >/dev/null 2>&1; then
+	echo "Error: composer not found in PATH" >&2
+	exit 1
+fi
 
-npm install --global wp-pot-cli
+echo "==> Installing PHP dependencies (composer install)"
+composer install --optimize-autoloader --prefer-dist --no-interaction
+
+# Ensure local vendor and bundled bin directory are on PATH for this session
+export PATH="$ROOT_DIR/vendor/bin:$ROOT_DIR/bin:$PATH"
+
+# Configure PHPCS to know about WordPress Coding Standards if present
+if command -v phpcs >/dev/null 2>&1; then
+	echo "==> Configuring PHPCS installed_paths"
+	PATHS=()
+	for p in \
+		vendor/wp-coding-standards/wpcs \
+		vendor/phpcsstandards/phpcsextra \
+		vendor/phpcsstandards/phpcsutils \
+		vendor/phpcompatibility/php-compatibility \
+		vendor/phpcompatibility/phpcompatibility-wp \
+		vendor/phpcompatibility/phpcompatibility-paragonie \
+		; do
+		[ -d "$ROOT_DIR/$p" ] && PATHS+=("$p") || true
+	done
+	if [ ${#PATHS[@]} -gt 0 ]; then
+		phpcs --config-set installed_paths "$(IFS=,; echo "${PATHS[*]}")" >/dev/null || true
+	fi
+else
+	echo "Warning: phpcs not on PATH after composer install" >&2
+fi
+
+# Install Node dependencies if package.json exists
+if [ -f "$ROOT_DIR/package.json" ]; then
+	if command -v npm >/dev/null 2>&1; then
+		echo "==> Installing Node dependencies (npm install)"
+		(cd "$ROOT_DIR" && npm install --no-audit --no-fund)
+	else
+		echo "Warning: npm not available; skipping JS dependency install" >&2
+	fi
+fi
+
+echo "==> i18n: Use 'script/generate-pot' after composer install (WP-CLI based)"
+
+echo "==> Bootstrap complete"
+echo "PHP tools: $(command -v php || echo missing), $(command -v phpcs >/dev/null && echo phpcs OK || echo phpcs missing)"
+echo "JS tools: $(command -v node >/dev/null && node -v || echo node missing), $(command -v npm >/dev/null && npm -v || echo npm missing)"
+echo "You can now run: bin/phpcs ... | bin/phpunit --config=phpunit9.xml"

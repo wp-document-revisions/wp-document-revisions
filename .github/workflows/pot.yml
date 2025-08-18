@@ -19,11 +19,18 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Install WP-POT-CLI
-              run: npm install --global wp-pot-cli
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: composer
+                  coverage: none
+
+            - name: Install Composer dependencies
+              run: composer install --no-interaction --prefer-dist
 
             - name: Generate POT file
-              run: script/generate-pot
+              run: bash script/generate-pot
 
             - name: Create Pull Request
               uses: peter-evans/create-pull-request@v7

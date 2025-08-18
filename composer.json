@@ -17,7 +17,9 @@
 		"yoast/phpunit-polyfills": "*",
 		"phpcompatibility/php-compatibility": "*",
 		"phpcompatibility/phpcompatibility-paragonie": "*",
-		"phpcompatibility/phpcompatibility-wp": "*"
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"wp-cli/wp-cli-bundle": "^2.11",
+		"wp-cli/i18n-command": "^2.6"
 	},
 	"config": {
 		"bin-dir": "bin",
