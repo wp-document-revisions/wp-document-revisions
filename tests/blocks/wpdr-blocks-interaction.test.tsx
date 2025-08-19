@@ -156,9 +156,7 @@ describe('Block Edit Component Interactions', () => {
 		// Toggle show thumbnails
 		const thumbToggle = screen.getByTestId('toggle-show-thumbnails');
 		fireEvent.click(thumbToggle);
-		expect(setAttributes).toHaveBeenCalledWith(
-			expect.objectContaining({ show_thumb: true })
-		);
+		expect(setAttributes).toHaveBeenCalledWith(expect.objectContaining({ show_thumb: true }));
 
 		// Change order by using a radio option (simulate clicking second button if exists)
 		const radioGroup = screen.getByTestId('radio-order-by');
@@ -195,15 +193,11 @@ describe('Block Edit Component Interactions', () => {
 		// Range change (increase value)
 		const range = screen.getByTestId('range-number-of-revisions');
 		fireEvent.change(range, { target: { value: '7' } });
-		expect(setAttributes).toHaveBeenCalledWith(
-			expect.objectContaining({ numberposts: 7 })
-		);
+		expect(setAttributes).toHaveBeenCalledWith(expect.objectContaining({ numberposts: 7 }));
 
 		// Toggle summary
 		const summaryToggle = screen.getByTestId('toggle-show-summary');
 		fireEvent.click(summaryToggle);
-		expect(setAttributes).toHaveBeenCalledWith(
-			expect.objectContaining({ summary: true })
-		);
+		expect(setAttributes).toHaveBeenCalledWith(expect.objectContaining({ summary: true }));
 	});
 });

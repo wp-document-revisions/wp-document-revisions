@@ -7,7 +7,10 @@ test.describe('Document Revisions', () => {
 		await loginAsAdmin(page);
 	});
 
-	test('adds a new revision to existing document and sees it in history', async ({ page, browserName }) => {
+	test('adds a new revision to existing document and sees it in history', async ({
+		page,
+		browserName,
+	}) => {
 		const baseTitle = 'Revision Test ' + Date.now();
 		const firstContent = 'Initial content ' + Math.random();
 		let postId = await createDocument(page, baseTitle, firstContent);
@@ -87,7 +90,10 @@ test.describe('Document Revisions', () => {
 		// Poll for revision count increase (classic editor: revisions stored in wp.data may not be available; use DOM fallback).
 		async function getApproxRevisionCount() {
 			// Try querying DOM rows first.
-			const rows = await page.locator('#document-revisions tbody tr').count().catch(() => 0);
+			const rows = await page
+				.locator('#document-revisions tbody tr')
+				.count()
+				.catch(() => 0);
 			if (rows > 0) return rows;
 			// Attempt wp.data if present (block editor edge cases or future changes).
 			try {
@@ -97,7 +103,9 @@ test.describe('Document Revisions', () => {
 					if (Array.isArray(r)) return r.length;
 					return 0;
 				});
-			} catch { return 0; }
+			} catch {
+				return 0;
+			}
 		}
 
 		// Wait up to 12s for at least 2 revisions (original + new) but tolerate if only 1 visible and timestamp updated.
@@ -122,7 +130,10 @@ test.describe('Document Revisions', () => {
 		// Fallback strategy: reload edit screen if revision table not yet visible (Firefox can lag).
 		if (postId) {
 			for (let i = 0; i < 2; i++) {
-				const tableExists = await page.locator('#document-revisions').isVisible().catch(() => false);
+				const tableExists = await page
+					.locator('#document-revisions')
+					.isVisible()
+					.catch(() => false);
 				if (tableExists) break;
 				await page.waitForTimeout(1000);
 				await page.goto(`/wp-admin/post.php?post=${postId}&action=edit`);
@@ -155,11 +166,15 @@ test.describe('Document Revisions', () => {
 		expect(cliRevisionCount).toBeGreaterThanOrEqual(2);
 
 		// Soft UI verification (non-blocking): attempt to locate any revision-related UI.
-		const possibleRow = page.locator('#document-revisions tbody tr, a.timestamp, .revisions-meta, a:has-text("Download")');
+		const possibleRow = page.locator(
+			'#document-revisions tbody tr, a.timestamp, .revisions-meta, a:has-text("Download")'
+		);
 		try {
 			await possibleRow.first().waitFor({ state: 'visible', timeout: 8000 });
 		} catch {
-			console.warn('Revision UI elements not visible, but CLI indicates revisions exist. Skipping UI assertion.');
+			console.warn(
+				'Revision UI elements not visible, but CLI indicates revisions exist. Skipping UI assertion.'
+			);
 		}
 
 		// Optional: log counts for diagnostics.

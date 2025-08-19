@@ -30,13 +30,19 @@ test.describe('Document Upload', () => {
 		// Wait for iframe to appear.
 		let found = false;
 		for (let i = 0; i < 20; i++) {
-			const frame = page.frames().find(f => /media-upload\.php/.test(f.url()));
-			if (frame) { found = true; break; }
+			const frame = page.frames().find((f) => /media-upload\.php/.test(f.url()));
+			if (frame) {
+				found = true;
+				break;
+			}
 			await page.waitForTimeout(250);
 		}
 		expect(found).toBeTruthy();
 		// Basic plupload UI elements.
 		const frameHandle = page.frameLocator('iframe#TB_iframeContent');
-		await frameHandle.locator('#plupload-upload-ui, form#image-form, form#file-form').first().waitFor({ state: 'visible', timeout: 10000 });
+		await frameHandle
+			.locator('#plupload-upload-ui, form#image-form, form#file-form')
+			.first()
+			.waitFor({ state: 'visible', timeout: 10000 });
 	});
 });
