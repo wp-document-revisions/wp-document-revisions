@@ -13,7 +13,7 @@ A powerful document management and version control plugin for WordPress that all
 WP Document Revisions transforms WordPress into a complete document management system. It's three powerful tools in one:
 
 1. **📁 Document Management System (DMS)** - Track, store, and organize files of any format
-2. **👥 Collaboration Tool** - Enable teams to collaboratively draft, edit, and refine documents  
+2. **👥 Collaboration Tool** - Enable teams to collaboratively draft, edit, and refine documents
 3. **🔒 Secure File Hosting** - Publish and securely deliver files to teams, clients, or the public
 
 ## 🎯 Key Features
@@ -28,7 +28,7 @@ WP Document Revisions transforms WordPress into a complete document management s
 ## 📋 Requirements
 
 - **WordPress:** 4.9 or higher
-- **PHP:** 7.4 or higher  
+- **PHP:** 7.4 or higher
 - **Tested up to:** WordPress 7.0
 
 ## 🔧 Installation
