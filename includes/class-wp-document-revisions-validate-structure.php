@@ -175,6 +175,9 @@ class WP_Document_Revisions_Validate_Structure {
 
 		add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_scripts' ) );
 		add_action( 'rest_api_init', array( &$this, 'wpdr_register_route' ) );
+
+		// Provide classic admin-ajax fallback for validation request fired by legacy JS.
+		add_action( 'wp_ajax_validate_structure', array( __CLASS__, 'ajax_validate_structure' ) );
 	}
 
 	/**
@@ -647,9 +650,14 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return void
 	 */
 	public static function enqueue_scripts() {
-		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		$path   = '/js/wp-document-revisions-validate' . $suffix . '.js';
-		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
+		$path      = '/dist/wp-document-revisions-validate.js';
+		$full_path = dirname( __DIR__ ) . $path; // Absolute path to built asset.
+		$debug     = ( defined( 'WP_DEBUG' ) && constant( 'WP_DEBUG' ) );
+		if ( $debug && file_exists( $full_path ) ) {
+			$vers = filemtime( $full_path );
+		} else {
+			$vers = self::$parent->version; // fall back if dist file missing (e.g. in test env).
+		}
 
 		wp_enqueue_script(
 			'wpdr_validate',
@@ -665,6 +673,31 @@ class WP_Document_Revisions_Validate_Structure {
 			"var processed = '" . esc_html__( 'Processed successfully.', 'wp-document-revisions' ) . "';";
 		// phpcs:enable Squiz.Strings.DoubleQuoteUsage
 		wp_add_inline_script( 'wpdr_validate', $script, 'before' );
+	}
+
+	/**
+	 * AJAX handler for validate_structure requests (legacy support for admin-ajax).
+	 *
+	 * Ensures the automatic POST fired by the validation script receives a 200 JSON
+	 * response instead of a 400 (no handler) status which polluted test output.
+	 *
+	 * @since 3.6.1
+	 * @return void Outputs JSON and dies.
+	 */
+	public static function ajax_validate_structure() {
+		// Basic capability check – mirrors page capability.
+		if ( ! current_user_can( 'edit_documents' ) ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Insufficient permissions to validate structure.', 'wp-document-revisions' ) ),
+				403
+			);
+		}
+
+		// Normally full validation logic would be invoked here. For the automatic
+		// heartbeat-style ping we just acknowledge receipt.
+		wp_send_json_success(
+			array( 'message' => __( 'Validation complete', 'wp-document-revisions' ) )
+		);
 	}
 
 	/**

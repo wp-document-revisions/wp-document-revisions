@@ -37,6 +37,22 @@ services:
             MYSQL_PASSWORD: examplepass
             MYSQL_ROOT_PASSWORD: '1'
 
+    wpcli:
+        image: wordpress:cli
+        depends_on:
+            - db
+            - wordpress
+        environment:
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: exampleuser
+            WORDPRESS_DB_PASSWORD: examplepass
+            WORDPRESS_DB_NAME: exampledb
+        volumes:
+            - wordpress:/var/www/html
+            - $PWD:/var/www/html/wp-content/plugins/wp-document-revisions
+        working_dir: /var/www/html
+        entrypoint: wp
+
 volumes:
     wordpress:
     db:

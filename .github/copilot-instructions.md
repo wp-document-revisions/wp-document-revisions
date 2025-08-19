@@ -44,7 +44,7 @@ Always reference these instructions first and fallback to search or bash command
 ### Build and Release
 
 - Validate JavaScript is current (files pre-built in js/ directory)
-- Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
+- Generate translation files: `script/generate-pot` (uses Composer-installed WP-CLI i18n command)
 - No traditional "build" step - this is a WordPress plugin distributed as source
 
 ## Validation

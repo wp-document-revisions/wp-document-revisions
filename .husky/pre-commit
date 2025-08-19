@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Husky v9+ simple hook (deprecated shim removed) – run JS/TS quality gate
+npm run precommit

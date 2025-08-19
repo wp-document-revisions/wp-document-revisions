@@ -8,6 +8,9 @@ on:
             - 'docs/*.md'
     workflow_dispatch: {}
 
+permissions:
+    contents: read
+
 jobs:
     build_readme:
         runs-on: ubuntu-latest

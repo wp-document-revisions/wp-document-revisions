@@ -45,3 +45,21 @@ See [**the full list of features**](./features.md) for more information.
 - **[Where to get Support or Report an Issue](./SUPPORT.md)** - Get help when you need it
 - **[How to Contribute](./CONTRIBUTING.md)** - Join our community
 - **[Join the Mailing List](https://groups.google.com/forum/#!forum/wp-document-revisions)** - Stay updated
+
+### 🧪 Continuous Integration Overview
+
+The GitHub Actions workflow (`.github/workflows/ci.yml`) automatically runs:
+
+| Job                | What it covers                                                                |
+| ------------------ | ----------------------------------------------------------------------------- |
+| phpunit / phpunit6 | PHP unit tests across multiple PHP & WordPress versions (modern & legacy)     |
+| phpcs              | WordPress/PHP coding standards (PHPCS)                                        |
+| frontend-lint      | ESLint, Prettier (check), TypeScript type-check, Jest tests, production build |
+
+For local parity you can run:
+
+```bash
+npm run all          # JS lint, format, type-check, tests, build
+./vendor/bin/phpunit --config=phpunit9.xml
+./vendor/bin/phpcs
+```
