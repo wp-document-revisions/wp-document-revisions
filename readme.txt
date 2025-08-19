@@ -213,7 +213,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 - [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-  (Previously called Members)
+    (Previously called Members)
 
 = Taxonomy management =
 
