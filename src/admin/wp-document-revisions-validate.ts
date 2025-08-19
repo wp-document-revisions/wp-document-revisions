@@ -124,9 +124,10 @@ function hideShow(id: string): void {
 		w.processed = 'true';
 
 		// Provide a fallback Ajax URL constant for non-WP contexts (tests, storybook, etc.)
-		const FALLBACK_AJAX_URL = 'https://example.com/wp-admin/admin-ajax.php';
+		// Use current origin instead of example.com to avoid cross-origin 400 errors in e2e.
 		if (typeof (window as any).ajaxurl === 'undefined') {
-			(window as any).ajaxurl = FALLBACK_AJAX_URL;
+			const origin = window.location?.origin || '';
+			(window as any).ajaxurl = origin + '/wp-admin/admin-ajax.php';
 		}
 
 		// Only proceed if jQuery.ajax is available

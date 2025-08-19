@@ -13,7 +13,8 @@
 	"forwardPorts": [8080, 3306],
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/schlich/devcontainer-features/playwright:0": {}
 	}
 
 	// Use 'postCreateCommand' to run commands after the container is created.

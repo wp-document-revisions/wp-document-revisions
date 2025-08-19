@@ -3,7 +3,13 @@ import type { Page } from 'playwright';
 import { loginAsAdmin, createDocument } from './helpers/wp-utils';
 
 test.describe('Document CRUD', () => {
+	const errors: string[] = [];
 	test.beforeEach(async ({ page }: { page: Page }) => {
+		page.on('console', (msg) => {
+			if (msg.type() === 'error') {
+				errors.push(msg.text());
+			}
+		});
 		await loginAsAdmin(page);
 	});
 
@@ -11,13 +17,11 @@ test.describe('Document CRUD', () => {
 		const title = 'E2E Test Document ' + Date.now();
 		const postId = await createDocument(page, title, 'E2E body content for revision 1.');
 
-		// Confirm title value present (classic vs block title field)
 		const possibleTitle = page
 			.locator('#title, #post-title-0, textarea.editor-post-title__input')
 			.first();
 		await expect(possibleTitle).toHaveValue(title);
 
-		// Basic sanity: hidden post_ID field exists & matches digits if available
 		const idField = page.locator('#post_ID');
 		if (await idField.isVisible().catch(() => false)) {
 			await expect(idField).toHaveValue(/\d+/);
@@ -25,5 +29,8 @@ test.describe('Document CRUD', () => {
 		if (postId) {
 			await expect(postId).toMatch(/\d+/);
 		}
+
+		const validationErrors = errors.filter((e) => e.includes('Validation request failed'));
+		expect(validationErrors).toHaveLength(0);
 	});
 });

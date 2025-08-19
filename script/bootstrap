@@ -47,6 +47,7 @@ if [ -f "$ROOT_DIR/package.json" ]; then
 	if command -v npm >/dev/null 2>&1; then
 		echo "==> Installing Node dependencies (npm install)"
 		(cd "$ROOT_DIR" && npm install --no-audit --no-fund)
+		npx playwright install
 	else
 		echo "Warning: npm not available; skipping JS dependency install" >&2
 	fi
