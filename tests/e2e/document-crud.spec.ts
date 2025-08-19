@@ -13,7 +13,13 @@ test.describe('Document CRUD', () => {
 		await loginAsAdmin(page);
 	});
 
-	test('creates a new document and lands on edit screen', async ({ page, browserName }: { page: Page, browserName: string }) => {
+	test('creates a new document and lands on edit screen', async ({
+		page,
+		browserName,
+	}: {
+		page: Page;
+		browserName: string;
+	}) => {
 		const title = 'E2E Test Document ' + Date.now();
 		const postId = await createDocument(page, title, 'E2E body content for revision 1.');
 
