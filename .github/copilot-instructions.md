@@ -9,36 +9,36 @@ Always reference these instructions first and fallback to search or bash command
 ### Bootstrap and Dependencies
 
 - Install dependencies: `composer install --optimize-autoloader --prefer-dist`
-  - Downloads and installs all PHP development dependencies
-  - Creates vendor directory with PHPUnit, PHPCS, and WordPress Coding Standards
-  - Takes 2-4 minutes depending on network speed. NEVER CANCEL - Set timeout to 5+ minutes.
+    - Downloads and installs all PHP development dependencies
+    - Creates vendor directory with PHPUnit, PHPCS, and WordPress Coding Standards
+    - Takes 2-4 minutes depending on network speed. NEVER CANCEL - Set timeout to 5+ minutes.
 
 ### Code Quality and Standards
 
 - Run PHPCS linting: `bin/phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php -v`
-  - Checks all PHP files against WordPress Coding Standards
-  - Takes approximately 10 seconds. NEVER CANCEL - Set timeout to 2+ minutes.
-  - Zero errors and warnings expected for successful builds
+    - Checks all PHP files against WordPress Coding Standards
+    - Takes approximately 10 seconds. NEVER CANCEL - Set timeout to 2+ minutes.
+    - Zero errors and warnings expected for successful builds
 - Fix code style automatically: `bin/phpcbf --standard=phpcs.ruleset.xml *.php */**.php`
-  - Auto-fixes WordPress coding standard violations
-  - Takes approximately 10 seconds. NEVER CANCEL - Set timeout to 2+ minutes.
+    - Auto-fixes WordPress coding standard violations
+    - Takes approximately 10 seconds. NEVER CANCEL - Set timeout to 2+ minutes.
 
 ### Testing Requirements
 
 - WordPress test environment setup required: `bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest`
-  - Downloads WordPress core and test framework to /tmp/wordpress-tests-lib
-  - Requires MySQL database and internet connection to WordPress.org APIs
-  - Takes 1-3 minutes. NEVER CANCEL - Set timeout to 5+ minutes.
-  - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"`
+    - Downloads WordPress core and test framework to /tmp/wordpress-tests-lib
+    - Requires MySQL database and internet connection to WordPress.org APIs
+    - Takes 1-3 minutes. NEVER CANCEL - Set timeout to 5+ minutes.
+    - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"`
 - Run PHPUnit tests: `bin/phpunit --config=phpunit9.xml` (after WordPress test setup)
-  - Executes comprehensive test suite covering all plugin functionality
-  - Takes 2-5 minutes. NEVER CANCEL - Set timeout to 10+ minutes.
+    - Executes comprehensive test suite covering all plugin functionality
+    - Takes 2-5 minutes. NEVER CANCEL - Set timeout to 10+ minutes.
 
 ### Development Environment Options
 
 - **Option 1 - Docker**: Use `docker-compose up` and access WordPress at http://localhost:8088
-  - Includes MySQL, PHPMyAdmin (port 8089), and WordPress with plugin mounted
-  - Takes 2-3 minutes to start. NEVER CANCEL - Set timeout to 5+ minutes.
+    - Includes MySQL, PHPMyAdmin (port 8089), and WordPress with plugin mounted
+    - Takes 2-3 minutes to start. NEVER CANCEL - Set timeout to 5+ minutes.
 - **Option 2 - Local**: Install WordPress manually and symlink plugin directory
 
 ### Build and Release
