@@ -26,7 +26,7 @@ class Test_WP_Document_Revisions_Ajax extends Test_Common_WPDR {
 
 		// Ensure validate structure component loaded (constructor adds ajax action).
 		if ( ! class_exists( 'WP_Document_Revisions_Validate_Structure', false ) ) {
-			require_once dirname( __FILE__, 2 ) . '/includes/class-wp-document-revisions-validate-structure.php';
+			require_once dirname( __DIR__, 1 ) . '/includes/class-wp-document-revisions-validate-structure.php';
 		}
 		new WP_Document_Revisions_Validate_Structure( $wpdr );
 	}
@@ -65,7 +65,7 @@ class Test_WP_Document_Revisions_Ajax extends Test_Common_WPDR {
 
 		ob_start();
 		do_action( 'wp_ajax_validate_structure' );
-		$raw = ob_get_clean();
+		$raw  = ob_get_clean();
 		$data = json_decode( $raw, true );
 
 		// WordPress sends success false + data for errors.

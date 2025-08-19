@@ -8,7 +8,6 @@
 			"email": "ben@balter.com"
 		}
 	],
-	"require": {},
 	"require-dev": {
 		"phpcsstandards/phpcsutils": "^1.0",
 		"phpcsstandards/phpcsextra": "^1.2.1",
@@ -19,7 +18,8 @@
 		"phpcompatibility/phpcompatibility-paragonie": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"wp-cli/wp-cli-bundle": "^2.11",
-		"wp-cli/i18n-command": "^2.6"
+		"wp-cli/i18n-command": "^2.6",
+		"squizlabs/php_codesniffer": "^3.13"
 	},
 	"config": {
 		"bin-dir": "bin",

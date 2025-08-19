@@ -1,3 +1,38 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-phpcbf --standard=phpcs.ruleset.xml *.php */**.php
+set -euo pipefail
+
+# Always run from project root (script is in script/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${SCRIPT_DIR%/script}"
+cd "$PROJECT_ROOT"
+
+detect_phpcbf() {
+	if [ -x "$PROJECT_ROOT/bin/phpcbf" ]; then
+		echo "$PROJECT_ROOT/bin/phpcbf"
+		return 0
+	fi
+	if [ -x "$PROJECT_ROOT/vendor/bin/phpcbf" ]; then
+		echo "$PROJECT_ROOT/vendor/bin/phpcbf"
+		return 0
+	fi
+	if command -v phpcbf >/dev/null 2>&1; then
+		command -v phpcbf
+		return 0
+	fi
+	return 1
+}
+
+PHPCBF_PATH=$(detect_phpcbf || true)
+
+if [ -z "${PHPCBF_PATH:-}" ]; then
+	echo "Error: phpcbf not found." >&2
+	echo "Run 'composer install --optimize-autoloader --prefer-dist' to install development dependencies." >&2
+	exit 127
+fi
+
+echo "Using phpcbf at: $PHPCBF_PATH" >&2
+
+"$PHPCBF_PATH" --standard=phpcs.ruleset.xml *.php */**.php
+
+echo "Code style fixes applied (if any)." >&2
