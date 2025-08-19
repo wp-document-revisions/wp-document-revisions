@@ -92,7 +92,7 @@ jobs:
             fail-fast: true
             matrix:
                 operating-system: [ubuntu-latest]
-                php-versions: ['7.2']
+                php-versions: ['8.4']
                 wp-version: [4.9]
                 wp-multisite: [0]
                 phpunit-versions: ['6.5']
