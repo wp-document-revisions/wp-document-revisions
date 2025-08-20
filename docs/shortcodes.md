@@ -10,11 +10,11 @@ Since the blocks make use of dynamically-generated content, the same code is use
 
 ## Documents Shortcode
 
-In a post or page, simply type `[documents]` to display a list of documents. 
+In a post or page, simply type `[documents]` to display a list of documents.
 
 ### WP_Query parameters
 
-The shortcode accepts *most* [Standard WP_Query parameters](https://developer.wordpress.org/reference/classes/wp_query/) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`. 
+The shortcode accepts _most_ [Standard WP_Query parameters](https://developer.wordpress.org/reference/classes/wp_query/) which should allow you to fine tune the output. Parameters are passed in the form of, for example, `[documents numberposts="5"]`.
 
 Specifically, the shortcode accepts: `author__in`, `author__not_in`, `author_name`, `author`, `cat`, `category__and`, `category__in`, `category__not_in`, `category_name`, `date_query`, `day`, `has_password`, `hour`, `m`, `meta_compare`, `meta_key`, `meta_query`, `meta_value_num`, `meta_value`, `minute`, `monthnum`, `name`, `numberposts`, `order`, `orderby`, `p`, `page_id`, `pagename`, `post__in`, `post__not_in`, `post_name__in`, `post_parent__in`, `post_parent__not_in`, `post_parent`, `post_password`, `post_status`, `s`, `second`, `tag__and`, `tag__in`, `tag__not_in`, `tag_id`, `tag_slug__and`, `tag_slug__in`, `tag`, `tax_query`, `title`, `w` and `year`.
 
@@ -38,7 +38,7 @@ Important parameters WP_Query will be the ordering and number of posts to displa
 
 ### Display parameters
 
-It is also possible to add formatting parameters: 
+It is also possible to add formatting parameters:
 
 `show_edit` (with a true/false parameter) that can add a link next to each document shown in the list that the user is able to edit by them. This permits the user to edit the document directly from the list. A value set here will override the default behaviour.
 
@@ -52,7 +52,7 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `show_descr` (with a true/false parameter) that will output the entered description if provided.
 
-All these boolean variables can be entered without a value (with default value true except for `show_thumb` whose default value is false). 
+All these boolean variables can be entered without a value (with default value true except for `show_thumb` whose default value is false).
 
 ### Block Usage
 
@@ -64,17 +64,17 @@ The parameters `numberposts`, `order`, `orderby`, `show_edit`,`new_tab`, `show_t
 
 ### Document Taxonomy Changes
 
-Note that this section does *not* refer to the terms used within a taxonomy are changed but to changes made when taxonomies are registereed with documents.
+Note that this section does _not_ refer to the terms used within a taxonomy are changed but to changes made when taxonomies are registereed with documents.
 
 It is possible that the taxonomies associated with documents are changed. Since the three taxonomies are chosen when the block is created, then if the taxonomies linked are subsequently changed, then a warning/error message "Taxonomy details in this block have changed." may be seen when the block is output.
 
-The resolution to this issue is to transform the block to a shortcode and then back to a block again. A side effect will be to lose any "supports" properties (see below) that have been used. 
+The resolution to this issue is to transform the block to a shortcode and then back to a block again. A side effect will be to lose any "supports" properties (see below) that have been used.
 
 ## Document Revisions Shortcode
 
-In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions. 
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions.
 
-You can find the ID in the URL of the edit document page. 
+You can find the ID in the URL of the edit document page.
 
 To limit the number of revisions displayed, passed the "number" argument, e.g., to display the 5 most recent revisions `[document_revisions id="100" number="5"]`.
 
@@ -90,7 +90,7 @@ It is also possible to add formatting parameters:
 
 `show_pdf` (with a true/false parameter) that, for accessibility, will display `(PDF)` as part of links if this links to a PDF document.
 
-These boolean variables can be entered without a value (with default value true ). 
+These boolean variables can be entered without a value (with default value true ).
 
 ### Block Usage
 
@@ -128,6 +128,6 @@ The block version of the widget called `Latest Documents` can be used on pages o
 
 ## Block supports properties
 
-Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering *if the theme allows it*.
+Additionally, later versions of WordPress provide for blocks to support additional display attributes that will be applied to the block on rendering _if the theme allows it_.
 
 These attributes are align, color, spacing and typography and these attributes have been added to all blocks.

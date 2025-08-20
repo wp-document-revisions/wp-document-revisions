@@ -1,30 +1,29 @@
 {
-  "name": "wp-document-revisions/wp-document-revisions",
-  "description": "A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.",
-  "license": "GPLv3",
-  "authors": [
-      {
-          "name": "Ben Balter",
-          "email": "ben@balter.com"
-      }
-  ],
-  "require": {
-  },
-  "require-dev": {
-    "phpcsstandards/phpcsutils": "^1.0",
-    "phpcsstandards/phpcsextra": "^1.2.1",
-    "wp-coding-standards/wpcs": "~3.1",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-    "yoast/phpunit-polyfills": "*",
-    "phpcompatibility/php-compatibility": "*",
-    "phpcompatibility/phpcompatibility-paragonie": "*",
-    "phpcompatibility/phpcompatibility-wp": "*"
-  },
-  "config": {
-   "bin-dir": "bin",
-   "vendor-dir": "vendor",
-   "allow-plugins": {
-     "dealerdirect/phpcodesniffer-composer-installer": true
-   }
- }
+	"name": "wp-document-revisions/wp-document-revisions",
+	"description": "A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.",
+	"license": "GPLv3",
+	"authors": [
+		{
+			"name": "Ben Balter",
+			"email": "ben@balter.com"
+		}
+	],
+	"require": {},
+	"require-dev": {
+		"phpcsstandards/phpcsutils": "^1.0",
+		"phpcsstandards/phpcsextra": "^1.2.1",
+		"wp-coding-standards/wpcs": "~3.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"yoast/phpunit-polyfills": "*",
+		"phpcompatibility/php-compatibility": "*",
+		"phpcompatibility/phpcompatibility-paragonie": "*",
+		"phpcompatibility/phpcompatibility-wp": "*"
+	},
+	"config": {
+		"bin-dir": "bin",
+		"vendor-dir": "vendor",
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
 }

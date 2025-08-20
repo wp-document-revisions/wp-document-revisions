@@ -4,9 +4,12 @@
 	background-image: url('../img/icon32.png') !important;
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+	only screen and (-o-min-device-pixel-ratio: 3/2),
+	only screen and (min-moz-device-pixel-ratio: 1.5),
+	only screen and (min-device-pixel-ratio: 1.5) {
 	.icon32-posts-document {
-		background-image: url("../img/icon64.png") !important;
+		background-image: url('../img/icon64.png') !important;
 		background-size: 32px 32px !important;
 	}
 }
@@ -17,8 +20,8 @@
 }
 
 #lock-notice {
-	background-color: #D4E8BA;
-	border-color: #92D43B;
+	background-color: #d4e8ba;
+	border-color: #92d43b;
 }
 
 #document-revisions {
@@ -30,7 +33,8 @@
 	padding: 5px 0 0;
 }
 
-#workflow-state select, #authordiv select {
+#workflow-state select,
+#authordiv select {
 	float: right;
 	margin-top: -2px;
 }

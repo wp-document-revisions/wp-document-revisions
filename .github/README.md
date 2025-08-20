@@ -26,22 +26,22 @@ See [**the full list of features**](../docs/features.md) for more information.
 
 ### 🎯 Quick Start Guides
 
-* **[Installation](../docs/installation.md)** - Get up and running in minutes
-* **[Features and Overview](../docs/features.md)** - Discover what WP Document Revisions can do
-* **[Screenshots](../docs/screenshots.md)** - See the plugin in action
+- **[Installation](../docs/installation.md)** - Get up and running in minutes
+- **[Features and Overview](../docs/features.md)** - Discover what WP Document Revisions can do
+- **[Screenshots](../docs/screenshots.md)** - See the plugin in action
 
-### 📖 User Documentation  
+### 📖 User Documentation
 
-* **[Frequently Asked Questions](../docs/frequently-asked-questions.md)** - Common questions answered
-* **[Plugin Actions](../docs/actions.md)** - Available WordPress actions  
-* **[Plugin Filters](../docs/filters.md)** - Available WordPress filters
-* **[Plugin Shortcodes and Widget](../docs/shortcodes.md)** - Display documents on your site
-* **[Useful Plugins and Tools](../docs/useful-plugins-and-tools.md)** - Extend functionality
-* **[Translations](../docs/translations.md)** - Multi-language support
-* **[Links](../docs/links.md)** - Additional resources
+- **[Frequently Asked Questions](../docs/frequently-asked-questions.md)** - Common questions answered
+- **[Plugin Actions](../docs/actions.md)** - Available WordPress actions
+- **[Plugin Filters](../docs/filters.md)** - Available WordPress filters
+- **[Plugin Shortcodes and Widget](../docs/shortcodes.md)** - Display documents on your site
+- **[Useful Plugins and Tools](../docs/useful-plugins-and-tools.md)** - Extend functionality
+- **[Translations](../docs/translations.md)** - Multi-language support
+- **[Links](../docs/links.md)** - Additional resources
 
 ### 🆘 Support & Community
 
-* **[Where to get Support or Report an Issue](../docs/SUPPORT.md)** - Get help when you need it
-* **[How to Contribute](../docs/CONTRIBUTING.md)** - Join our community
-* **[Join the Mailing List](https://groups.google.com/forum/#!forum/wp-document-revisions)** - Stay updated
+- **[Where to get Support or Report an Issue](../docs/SUPPORT.md)** - Get help when you need it
+- **[How to Contribute](../docs/CONTRIBUTING.md)** - Join our community
+- **[Join the Mailing List](https://groups.google.com/forum/#!forum/wp-document-revisions)** - Stay updated

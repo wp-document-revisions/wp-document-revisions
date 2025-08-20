@@ -2,20 +2,20 @@
 
 ### Permissions management
 
-* [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+- [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-	(Previously called Members)
+    (Previously called Members)
 
 ### Taxonomy management
 
-* [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+- [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
 
 ### Email notification and distribution
 
-* [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
+- [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
 
 ### Document workflow management
 
-* [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-* [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
-* [PublishPress Revisions](https://wordpress.org/plugins/publishpress-revisions/)
+- [Edit Flow](https://wordpress.org/plugins/edit-flow/)
+- [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
+- [PublishPress Revisions](https://wordpress.org/plugins/publishpress-revisions/)

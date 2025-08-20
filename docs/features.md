@@ -4,7 +4,7 @@
 
 ### Overview
 
-**Powerful Collaboration Tools** - *With great power does not have to come great complexity.* Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries — posts, attachments, revisions, taxonomies, authentication, and permalinks — to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
+**Powerful Collaboration Tools** - _With great power does not have to come great complexity._ Based on a simple philosophy of putting powerful but intuitive tools in the hands of managers and content creators, WP Document Revisions leverages many of the essential WordPress features that, for more than eight years, have been tested and proven across countless industries — posts, attachments, revisions, taxonomies, authentication, and permalinks — to make collaborating on the creation and publication of documents a natural endeavor. Think of it as an [open-source and more intuitive version](http://ben.balter.com/2011/04/04/when-all-you-have-is-a-pair-of-bolt-cutters/) of the popular Microsoft collaboration suite, [Sharepoint.](http://sharepoint.microsoft.com/en-us/Pages/default.aspx)
 
 **Document History** - At each step of the authoring process, WP Document Revisions gives you an instant snapshot of your team's progress and the document's history. It even gives you the option to revert back to a previous revision — so don't fret if you make a mistake — or receive updates on changes to the document right in your favorite feed reader.
 
@@ -18,32 +18,32 @@
 
 ### Features
 
-* Support for any file type (docs, spreadsheets, images, PDFs — anything!)
-* Securely stores unlimited revisions of your business's essential files
-* Provides a full file history in the form of a revision log, accessible via RSS
-* Helps you track and organize documents as they move through your organization's existing workflow
-* Each file gets a permanent, authenticated URL that always points to the latest version
-* Each revision gets its own unique url (e.g.,TPS-Report-revision-3.doc) accessible only to those you deem
-* Files are intuitively checked out and locked to prevent revisions from colliding
-* Toggle documents between public, private, and password protected with a single mouse click
-* Runs in-house or in the cloud
-* Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
-* Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
-* Documents and Revisions shortcodes, Recently Revised Documents widget
-* Multisite and Windows (XAMPP) support
-* Multiple language support including French, Spanish and German (easily translated to your language)
-* Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
-* Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
+- Support for any file type (docs, spreadsheets, images, PDFs — anything!)
+- Securely stores unlimited revisions of your business's essential files
+- Provides a full file history in the form of a revision log, accessible via RSS
+- Helps you track and organize documents as they move through your organization's existing workflow
+- Each file gets a permanent, authenticated URL that always points to the latest version
+- Each revision gets its own unique url (e.g.,TPS-Report-revision-3.doc) accessible only to those you deem
+- Files are intuitively checked out and locked to prevent revisions from colliding
+- Toggle documents between public, private, and password protected with a single mouse click
+- Runs in-house or in the cloud
+- Secure: filenames are hashed on upload and files are only accessible through WordPress's proven authentication system
+- Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
+- Documents and Revisions shortcodes, Recently Revised Documents widget
+- Multisite and Windows (XAMPP) support
+- Multiple language support including French, Spanish and German (easily translated to your language)
+- Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
+- Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 
 ### Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
 
-* **Audit Trail** - creates check in / check out audit trail for all documents
-* **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
-* **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
-* **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
-* **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
-* **Bulk Import** - how to batch import a directory (or other list) of files as documents
-* **Filetype Taxonomy** - Adds support to filter by filetype
-* **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
-* **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
-* **WPML Support** - Integration with WPML
+- **Audit Trail** - creates check in / check out audit trail for all documents
+- **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
+- **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
+- **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
+- **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
+- **Bulk Import** - how to batch import a directory (or other list) of files as documents
+- **Filetype Taxonomy** - Adds support to filter by filetype
+- **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+- **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
+- **WPML Support** - Integration with WPML
