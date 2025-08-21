@@ -615,6 +615,43 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should not fail with exception (but does).
 		// self::assertNull( $exception, 'exception' );.
 		// self::assertEmpty( $output, 'output' );.
+
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_slug_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_slug_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
 		self::assertNotNull( $exception, 'no exception' );
 
 		$current_user->add_cap( 'manage_network_options', false );

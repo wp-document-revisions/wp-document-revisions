@@ -908,7 +908,7 @@ class WP_Document_Revisions_Admin {
 
 		// verify nonce, auth.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['document_link_date_nonce'] ) ), 'network_document_slug' ) || ! current_user_can( 'manage_network_options' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['document_link_date_nonce'] ) ), 'network_document_link_date' ) || ! current_user_can( 'manage_network_options' ) ) {
 			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
 		}
 
