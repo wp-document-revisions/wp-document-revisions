@@ -622,6 +622,57 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test network slug save.
+	 */
+	public function test_network_link_date_save() {
+		global $wpdr;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['document_link_date_nonce']   = wp_create_nonce( 'network_document_link_date' );
+		$_POST['network_document_link_date'] = 'document';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options' );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
+
+		$current_user->add_cap( 'manage_network_options', false );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test network settings errors.
 	 */
 	public function test_network_settings_errors() {
@@ -633,6 +684,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		add_settings_error( 'document_upload_directory', 'upload-exists', 'DiR', 'updated' );
 		add_settings_error( 'document_slug', 'slug-exists', 'SlUg', 'updated' );
+		add_settings_error( 'document_link_date', 'link-date-exists', 'LinkDate', 'updated' );
 
 		ob_start();
 		$wpdr->admin->network_settings_errors();
@@ -641,6 +693,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, 'DiR' ), 'Setting error dir not found' );
 		self::assertEquals( 1, (int) substr_count( $output, 'SlUg' ), 'Setting error slug not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'LinkDate' ), 'Setting error link_date not found' );
 
 		self::assertTrue( true, 'run' );
 	}

@@ -104,6 +104,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_init', array( &$this, 'settings_fields' ) );
 		add_action( 'update_wpmu_options', array( &$this, 'network_upload_location_save' ) );
 		add_action( 'update_wpmu_options', array( &$this, 'network_slug_save' ) );
+		add_action( 'update_wpmu_options', array( &$this, 'network_link_date_save' ) );
 		add_action( 'wpmu_options', array( &$this, 'network_settings_cb' ) );
 		add_action( 'network_admin_notices', array( &$this, 'network_settings_errors' ) );
 		add_filter( 'wp_redirect', array( &$this, 'network_settings_redirect' ) );
@@ -708,7 +709,7 @@ class WP_Document_Revisions_Admin {
 		add_settings_field(
 			'document_link_date',
 			__( 'Document Date in Permalink', 'wp-document-revisions' ),
-			array( &$this, 'link_date_cb' ),
+			array( &$this, 'document_link_date_cb' ),
 			'media',
 			'uploads'
 		);
@@ -822,25 +823,14 @@ class WP_Document_Revisions_Admin {
 					<?php wp_nonce_field( 'network_document_slug', 'document_slug_nonce' ); ?>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Document Link Date', 'wp-document-revisions' ); ?></th>
+				<td>
+					<?php $this->document_link_date_cb(); ?>
+					<?php wp_nonce_field( 'network_document_link_date', 'document_link_date_nonce' ); ?>
+				</td>
+			</tr>
 		</table>
-		<?php
-	}
-
-
-	/**
-	 * Adds link_date option to permalink page.
-	 *
-	 * @since 3.5.0
-	 */
-	public function link_date_cb() {
-		?>
-		<label for="document_link_date">
-		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( '1', get_option( 'document_link_date' ) ); ?> />
-		<?php esc_html_e( 'Remove the year and month element /yyyy/mm from the document permalink.', 'wp-document-revisions' ); ?></label><br />
-		<span class="description">
-		<?php esc_html_e( 'By default the document permalink will contain the post year and month.', 'wp-document-revisions' ); ?><br />
-		<?php esc_html_e( 'The delivered rewrite rules support both formats.', 'wp-document-revisions' ); ?>
-		</span>
 		<?php
 	}
 
@@ -909,6 +899,35 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
+	 * Callback to validate and save slug on network settings page.
+	 */
+	public function network_link_date_save() {
+		if ( ! isset( $_POST['document_link_date_nonce'] ) ) {
+			return;
+		}
+
+		// verify nonce, auth.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['document_link_date_nonce'] ) ), 'network_document_slug' ) || ! current_user_can( 'manage_network_options' ) ) {
+			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
+		}
+
+		// verify upload dir.
+		$link_date = ( isset( $_POST['document_link_date'] ) ? sanitize_text_field( wp_unslash( $_POST['document_link_date'] ) ) : '' );
+		$link_date = $this->sanitize_document_link_date( $link_date );
+
+		// because there's a redirect, and there's no Settings API, force settings errors into a transient.
+		global $wp_settings_errors;
+		set_transient( 'settings_errors', $wp_settings_errors );
+
+		// if the dir is valid, save it.
+		if ( get_site_option( 'document_link_date' ) !== $link_date ) {
+			update_site_option( 'document_link_date', $link_date );
+		}
+	}
+
+
+	/**
 	 * Adds settings errors to network settings page for document upload directory CB.
 	 *
 	 * @since 1.0
@@ -916,6 +935,7 @@ class WP_Document_Revisions_Admin {
 	public function network_settings_errors() {
 		settings_errors( 'document_upload_directory' );
 		settings_errors( 'document_slug' );
+		settings_errors( 'document_link_date' );
 	}
 
 
@@ -970,7 +990,7 @@ class WP_Document_Revisions_Admin {
 	 */
 	public function document_slug_cb() {
 		// phpcs:ignore
-		$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . date( 'Y' ) . '/' . date( 'm' ) );
+		$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . date( 'Y/m' ) );
 		?>
 		<code><?php echo esc_html( trailingslashit( home_url() ) ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" /><?php echo esc_html( $year_month ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 		<span class="description">
@@ -979,6 +999,24 @@ class WP_Document_Revisions_Admin {
 		_e( '"Slug" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>.', 'wp-document-revisions' );
 		echo '<br />';
 		echo '</span>';
+	}
+
+
+	/**
+	 * Adds link_date option to permalink page.
+	 *
+	 * @since 3.5.0
+	 */
+	public function document_link_date_cb() {
+		?>
+		<label for="document_link_date">
+		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( '1', get_option( 'document_link_date' ) ); ?> />
+		<?php esc_html_e( 'Remove the year and month element /yyyy/mm from the document permalink.', 'wp-document-revisions' ); ?></label><br />
+		<span class="description">
+		<?php esc_html_e( 'By default the document permalink will contain the post year and month.', 'wp-document-revisions' ); ?><br />
+		<?php esc_html_e( 'The delivered rewrite rules support both formats.', 'wp-document-revisions' ); ?>
+		</span>
+		<?php
 	}
 
 

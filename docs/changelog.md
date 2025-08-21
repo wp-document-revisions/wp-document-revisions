@@ -4,11 +4,11 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 3.7.2
 
-Correct plugin metadata (no code chages).
+Correct plugin metadata (no code changes).
 
 ### 3.7.1
 
-Correct tested up to version (no code chages).
+Correct tested up to version (no code changes).
 
 ### 3.7.0
 
@@ -57,7 +57,7 @@ Correct tested up to version (no code chages).
 - FIX: Upload directory processing reviewed and simplified.
 - FIX: Document permalink month can be incorrect when saved at month end. (#300).
 - FIX: Valid document may not be found.
-  " FIX: Improve notification process when activation user does not have edit_documents capability.
+- FIX: Improve notification process when activation user does not have edit_documents capability.
 
 ### 3.4.0
 
