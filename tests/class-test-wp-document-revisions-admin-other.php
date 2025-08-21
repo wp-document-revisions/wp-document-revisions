@@ -630,9 +630,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		}
 
-		// Should not fail with exception (but does).
-		// self::assertNull( $exception, 'exception' );.
-		// self::assertEmpty( $output, 'output' );.
+		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
 		// repeat to exercise other paths - No nonce.
@@ -649,10 +647,9 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		}
 
-		// Should not fail with exception (but does).
-		// self::assertNull( $exception, 'exception' );.
-		// self::assertEmpty( $output, 'output' );.
-		self::assertNotNull( $exception, 'no exception' );
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
 
 		$current_user->add_cap( 'manage_network_options', false );
 		self::assertTrue( true, 'run' );
