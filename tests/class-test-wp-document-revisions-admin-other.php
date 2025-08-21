@@ -511,7 +511,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->admin->link_date_cb();
+		$wpdr->admin->document_link_date_cb();
 		$output = ob_get_contents();
 		ob_end_clean();
 
