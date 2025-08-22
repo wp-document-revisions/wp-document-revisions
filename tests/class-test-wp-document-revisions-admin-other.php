@@ -566,6 +566,41 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// self::assertEmpty( $output, 'output' );.
 		self::assertNotNull( $exception, 'no exception' );
 
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_upload_location_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_upload_location_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+
 		$current_user->add_cap( 'manage_network_options', false );
 		self::assertTrue( true, 'run' );
 	}
@@ -615,6 +650,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should not fail with exception (but does).
 		// self::assertNull( $exception, 'exception' );.
 		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
 
 		// repeat to exercise other paths - Invalid nonce.
 		$_POST['document_slug_nonce'] = 'rubbish';
@@ -701,6 +737,41 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// self::assertNull( $exception, 'exception' );.
 		// self::assertEmpty( $output, 'output' );.
 		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_link_date_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_link_date_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
 
 		$current_user->add_cap( 'manage_network_options', false );
 		self::assertTrue( true, 'run' );
