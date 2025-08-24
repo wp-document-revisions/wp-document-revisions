@@ -552,7 +552,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options' );
+		$current_user::add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -605,7 +605,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user->add_cap( 'manage_network_options', false );
+		$current_user::remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -638,7 +638,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options' );
+		$current_user::add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -691,7 +691,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user->add_cap( 'manage_network_options', false );
+		$current_user::remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -724,7 +724,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options' );
+		$current_user::add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -778,7 +778,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user->add_cap( 'manage_network_options', false );
+		$current_user::remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -1046,7 +1046,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Test save document.
+	 * Test revision summary.
 	 */
 	public function test_revision_summary_cb() {
 		global $wpdr;
@@ -1088,26 +1088,26 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// test locked.
 		// Add a filter to set lock user.
+		// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		add_filter(
 			'document_lock_check',
 			function (
 				$user,
 				$document
-			) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			) {
 				return 'Locker'; // set locker name.
 			},
 			10,
 			2
 		);
+		// phpcs:enable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		ob_start();
 		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		console_log( $output );
-
-		self::assertEquals( 1, (int) substr_count( $output, 'Locker' ), 'Locker name' );
+		self::assertEquals( 1, (int) substr_count( $output, 'has prevented' ), 'Locked post' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 
 		// Remove the test filter.
