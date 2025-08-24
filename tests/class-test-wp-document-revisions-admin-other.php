@@ -552,7 +552,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user::add_cap( 'manage_network_options', true );
+		$current_user->add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -605,7 +605,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user::remove_cap( 'manage_network_options' );
+		$current_user->remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -638,7 +638,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user::add_cap( 'manage_network_options', true );
+		$current_user->add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -691,7 +691,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user::remove_cap( 'manage_network_options' );
+		$current_user->remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -724,7 +724,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user::add_cap( 'manage_network_options', true );
+		$current_user->add_cap( 'manage_network_options', true );
 
 		$exception = null;
 		try {
@@ -737,7 +737,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		}
 
-		console_log( print_r( $exception ) );
 		// Should not fail with exception (but does).
 		// self::assertNull( $exception, 'exception' );.
 		// self::assertEmpty( $output, 'output' );.
@@ -778,7 +777,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNull( $exception, 'exception' );
 		self::assertEmpty( $output, 'output' );
 
-		$current_user::remove_cap( 'manage_network_options' );
+		$current_user->remove_cap( 'manage_network_options' );
 		self::assertTrue( true, 'run' );
 	}
 
