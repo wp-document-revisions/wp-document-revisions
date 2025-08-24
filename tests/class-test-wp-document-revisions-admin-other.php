@@ -737,6 +737,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		}
 
+		console_log( print_r( $exception ) );
 		// Should not fail with exception (but does).
 		// self::assertNull( $exception, 'exception' );.
 		// self::assertEmpty( $output, 'output' );.
@@ -1045,7 +1046,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Test revision summary.
+	 * Test save document.
 	 */
 	public function test_revision_summary_cb() {
 		global $wpdr;
@@ -1092,7 +1093,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			function (
 				$user,
 				$document
-			) { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 				return 'Locker'; // set locker name.
 			},
 			10,
@@ -1103,6 +1104,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $curr_post );
 		$output = ob_get_contents();
 		ob_end_clean();
+
+		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'Locker' ), 'Locker name' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
