@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.8.0
+
+- FIX: Ensure Link Date option is available on Multisite instances. (#389)
+
 ### 3.7.2
 
 Correct plugin metadata (no code changes).
