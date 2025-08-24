@@ -213,7 +213,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 - [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-  (Previously called Members)
+    (Previously called Members)
 
 = Taxonomy management =
 
@@ -234,14 +234,14 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 3.8.0 =
+
+- FIX: Ensure Link Date option is available on Multisite instances. (#389)
+
 = 3.7.2 =
 
-Correct plugin metadata (no code chages).
+Correct plugin metadata (no code changes).
 
 = 3.7.1 =
-
-Correct tested up to version (no code chages).
-
-= 3.7.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
