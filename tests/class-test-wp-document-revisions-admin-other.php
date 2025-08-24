@@ -703,7 +703,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$_POST['document_link_date_nonce'] = wp_create_nonce( 'network_document_link_date' );
-		$_POST['document_link_date']       = 'document';
+		$_POST['document_link_date']       = 1;
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		global $current_user;
