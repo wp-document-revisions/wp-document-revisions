@@ -316,6 +316,10 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add help text for current screen (none).
 		$screen->post_type = 'document';
 		$wpdr->admin->add_help_tab();
+
+		// add help text for different screen (none).
+		$screen->post_type = 'post';
+		$wpdr->admin->add_help_tab();
 	}
 
 	/**
@@ -612,8 +616,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_POST['document_slug_nonce']   = wp_create_nonce( 'network_document_slug' );
-		$_POST['network_document_slug'] = 'document';
+		$_POST['document_slug_nonce'] = wp_create_nonce( 'network_document_slug' );
+		$_POST['document_slug']       = 'document';
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		global $current_user;
@@ -698,8 +702,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_POST['document_link_date_nonce']   = wp_create_nonce( 'network_document_link_date' );
-		$_POST['network_document_link_date'] = 'document';
+		$_POST['document_link_date_nonce'] = wp_create_nonce( 'network_document_link_date' );
+		$_POST['document_link_date']       = 'document';
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		global $current_user;
@@ -1041,6 +1045,25 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test revision summary.
+	 */
+	public function test_revision_summary_cb() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr->admin->revision_summary_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '<textarea' ), 'textarea count' );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test document metabox auth.
 	 */
 	public function test_document_metabox_auth() {
@@ -1061,6 +1084,31 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
+
+		// test locked.
+		// Add a filter to set lock user.
+		add_filter(
+			'document_lock_check',
+			function (
+				$user,
+				$document
+			) { //phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				return 'Locker'; // set locker name.
+			},
+			10,
+			2
+		);
+
+		ob_start();
+		$wpdr->admin->document_metabox( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'Locker' ), 'Locker name' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+
+		// Remove the test filter.
+		remove_all_filters( 'document_lock_check' );
 	}
 
 	/**
@@ -1278,6 +1326,16 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// get a post in global scope (bending rule).
 		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->prepare_editor( $post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'Document Description' ), 'Description not found' );
+
+		// make sure content is old style.
+		$post->post_content = $wpdr->extract_document_id( $post->post_content );
 
 		ob_start();
 		$wpdr->admin->prepare_editor( $post );
