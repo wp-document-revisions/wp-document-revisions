@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var string
 	 */
-	public $version = '3.7.2';
+	public $version = '3.8.0';
 
 	/**
 	 * The WP default upload directory cache.
@@ -1568,11 +1568,11 @@ class WP_Document_Revisions {
 		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons.
 		if ( $compress ) {
 			if ( 'gzip' === $comp_type ) {
-				// phpcs:ignore  WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions
+				// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
 				echo gzencode( file_get_contents( $file ), 9 );
 				$headers['Content-Encoding'] = 'gzip';
 			} else {
-				// phpcs:ignore  WordPress.Security.EscapeOutput, WordPress.WP.AlternativeFunctions
+				// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
 				echo gzdeflate( file_get_contents( $file ), 9 );
 				$headers['Content-Encoding'] = 'deflate';
 			}

@@ -75,7 +75,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( &$this, 'add_help_tab' ) );
 
 		// edit document screen.
-		add_action( 'admin_head', array( &$this, 'make_private' ) );
+		add_action( 'admin_head', array( &$this, 'make_private' ), 20 );
 		add_action( 'set_object_terms', array( &$this, 'workflow_state_save' ), 10, 6 );
 		add_action( 'save_post_document', array( &$this, 'save_document' ) );
 		add_action( 'admin_init', array( &$this, 'enqueue_edit_scripts' ) );
@@ -676,7 +676,7 @@ class WP_Document_Revisions_Admin {
 	 * @param string[] $_default_tabs An array of media tabs.
 	 */
 	public function media_upload_tabs_computer( $_default_tabs ) {
-		// phpcs:ignore  WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
 			// keep just load from computer for the document (but not the thumbnail).
 			unset( $_default_tabs['type_url'] );
@@ -891,8 +891,8 @@ class WP_Document_Revisions_Admin {
 		global $wp_settings_errors;
 		set_transient( 'settings_errors', $wp_settings_errors );
 
-		// if the dir is valid, save it.
-		if ( $slug ) {
+		// if the slug is valid, save it.
+		if ( ! empty( $slug ) ) {
 			update_site_option( 'document_slug', $slug );
 		}
 	}
@@ -1803,7 +1803,7 @@ class WP_Document_Revisions_Admin {
 		}
 
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$attachmts       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID FROM {$wpdb->prefix}posts WHERE post_parent = %d AND post_type = 'attachment'",

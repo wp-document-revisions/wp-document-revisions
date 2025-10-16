@@ -4,7 +4,7 @@ Contributors: benbalter, nwjames
 Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 4.9
 Tested up to: 6.9
-Stable tag: 3.7.2
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -213,7 +213,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 - [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-    (Previously called Members)
+  (Previously called Members)
 
 = Taxonomy management =
 
@@ -237,6 +237,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 = 3.8.0 =
 
 - FIX: Ensure Link Date option is available on Multisite instances. (#389)
+- DEV: Review for WP Coding standard 3.2
 
 = 3.7.2 =
 
