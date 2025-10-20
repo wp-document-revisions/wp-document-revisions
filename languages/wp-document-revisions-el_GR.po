@@ -5,7 +5,8 @@ msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
 "POT-Creation-Date: 2025-10-20 20:18+0000\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
-"Last-Translator: Crowdin Contributors <https://crowdin.com/project/wordpress-document-revisions>\n"
+"Last-Translator: Crowdin Contributors <https://crowdin.com/project/wordpress-"
+"document-revisions>\n"
 "Language-Team: Greek\n"
 "Language: el_GR\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -56,7 +59,8 @@ msgstr ""
 
 #. translators: %s is the download link.
 #: includes/class-wp-document-revisions-admin.php:188
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -73,7 +77,9 @@ msgstr ""
 
 #. translators: %s is the link to download the document.
 #: includes/class-wp-document-revisions-admin.php:192
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:243
@@ -83,15 +89,15 @@ msgstr ""
 #: includes/class-wp-document-revisions-admin.php:244
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:245
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:246
@@ -123,8 +129,8 @@ msgstr ""
 #: includes/class-wp-document-revisions-admin.php:251
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:252
@@ -141,9 +147,9 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:254
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 
@@ -179,8 +185,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:262
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:294,
@@ -240,19 +246,17 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/class-wp-document-revisions-admin.php:547
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:567
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 
@@ -304,8 +308,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:754
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:784
@@ -339,8 +343,8 @@ msgstr ""
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/class-wp-document-revisions-admin.php:979
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:995
@@ -354,13 +358,11 @@ msgid ""
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1014
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1016
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 
 #: includes/class-wp-document-revisions-admin.php:1017
@@ -498,8 +500,7 @@ msgstr ""
 msgid "Recently Revised Documents"
 msgstr ""
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/class-wp-document-revisions-admin.php:2030
 msgid "%1$s ago by %2$s [%3$s]"
 msgstr ""
@@ -769,8 +770,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr ""
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:714,
 #: includes/class-wp-document-revisions-validate-structure.php:731
 msgid "[Modified Date: Document - %1$s, Attachment - %2$s]"
@@ -900,8 +900,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:997
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:998
@@ -922,15 +921,15 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1001
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1002
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1003
@@ -1145,8 +1144,7 @@ msgstr ""
 msgid "Sorry, this is a private feed."
 msgstr ""
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/class-wp-document-revisions.php:2574
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr ""
@@ -1156,8 +1154,7 @@ msgstr ""
 msgid "Dear %s:"
 msgstr ""
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/class-wp-document-revisions.php:2586
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr ""
