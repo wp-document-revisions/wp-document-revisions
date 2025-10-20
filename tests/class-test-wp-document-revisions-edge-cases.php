@@ -168,7 +168,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 	public function test_get_documents_with_status_filters() {
 		global $wpdr;
 
-		// Create documents with different statuses.
+		// Create documents with different statuses and attachments.
 		$published_doc = self::factory()->post->create(
 			array(
 				'post_title'  => 'Published Document',
@@ -176,6 +176,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 				'post_status' => 'publish',
 			)
 		);
+		self::add_document_attachment( self::factory(), $published_doc, self::$test_file );
 
 		$draft_doc = self::factory()->post->create(
 			array(
@@ -184,6 +185,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 				'post_status' => 'draft',
 			)
 		);
+		self::add_document_attachment( self::factory(), $draft_doc, self::$test_file );
 
 		$private_doc = self::factory()->post->create(
 			array(
@@ -192,11 +194,12 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 				'post_status' => 'private',
 			)
 		);
+		self::add_document_attachment( self::factory(), $private_doc, self::$test_file );
 
 		// Get all documents (should respect current user's permissions).
 		$all_docs = $wpdr->get_documents();
-		self::assertNotEmpty( $all_docs, 'get_documents should return documents' );
 		self::assertIsArray( $all_docs, 'get_documents should return an array' );
+		self::assertNotEmpty( $all_docs, 'get_documents should return documents with attachments' );
 	}
 
 	/**

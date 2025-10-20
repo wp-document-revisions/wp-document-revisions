@@ -67,7 +67,7 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 	public function test_get_document_input_types() {
 		global $wpdr;
 
-		// Create a test document.
+		// Create a test document with an attachment.
 		$doc_id = self::factory()->post->create(
 			array(
 				'post_title'  => 'Test Document',
@@ -76,9 +76,13 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 			)
 		);
 
+		// Add an attachment to the document.
+		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
+
 		// Test with integer ID.
 		$result = $wpdr->get_document( $doc_id );
-		self::assertInstanceOf( WP_Post::class, $result, 'get_document should return WP_Post for valid document ID' );
+		self::assertInstanceOf( WP_Post::class, $result, 'get_document should return WP_Post for valid document ID with attachment' );
+		self::assertEquals( 'attachment', $result->post_type, 'get_document should return attachment post type' );
 
 		// Test with WP_Post object.
 		$doc    = get_post( $doc_id );
@@ -88,6 +92,17 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 		// Test with non-existent ID.
 		$result = $wpdr->get_document( 999999 );
 		self::assertFalse( $result, 'get_document should return false for non-existent document ID' );
+
+		// Test with document without attachment.
+		$doc_no_attach = self::factory()->post->create(
+			array(
+				'post_title'  => 'Document Without Attachment',
+				'post_type'   => 'document',
+				'post_status' => 'publish',
+			)
+		);
+		$result        = $wpdr->get_document( $doc_no_attach );
+		self::assertFalse( $result, 'get_document should return false for document without attachment' );
 
 		// Test with invalid post type.
 		$regular_post = self::factory()->post->create(
@@ -149,17 +164,32 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 	public function test_get_latest_revision_edge_cases() {
 		global $wpdr;
 
-		// Create document without revisions.
+		// Create document with attachment (required for get_latest_revision to work).
 		$doc_id = self::factory()->post->create(
 			array(
-				'post_title'  => 'Document Without Revisions',
+				'post_title'  => 'Document With Attachment',
 				'post_type'   => 'document',
 				'post_status' => 'publish',
 			)
 		);
 
+		// Add an attachment to create a revision.
+		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
+
 		$result = $wpdr->get_latest_revision( $doc_id );
-		self::assertInstanceOf( WP_Post::class, $result, 'get_latest_revision should return the document itself if no revisions exist' );
+		self::assertInstanceOf( WP_Post::class, $result, 'get_latest_revision should return a revision for document with attachment' );
+
+		// Test with document without attachment - should return false.
+		$doc_no_attach = self::factory()->post->create(
+			array(
+				'post_title'  => 'Document Without Attachment',
+				'post_type'   => 'document',
+				'post_status' => 'publish',
+			)
+		);
+
+		$result = $wpdr->get_latest_revision( $doc_no_attach );
+		self::assertFalse( $result, 'get_latest_revision should return false for document without attachment' );
 
 		// Test with non-existent document.
 		$result = $wpdr->get_latest_revision( 999999 );
@@ -205,7 +235,7 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 	public function test_get_documents_filtering() {
 		global $wpdr;
 
-		// Create some test documents with different properties.
+		// Create some test documents with attachments (required for get_documents to return them).
 		$pub_doc = self::factory()->post->create(
 			array(
 				'post_title'  => 'Public Document',
@@ -213,6 +243,7 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 				'post_status' => 'publish',
 			)
 		);
+		self::add_document_attachment( self::factory(), $pub_doc, self::$test_file );
 
 		$draft_doc = self::factory()->post->create(
 			array(
@@ -221,16 +252,18 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 				'post_status' => 'draft',
 			)
 		);
+		self::add_document_attachment( self::factory(), $draft_doc, self::$test_file );
 
 		// Get all documents.
 		$all_docs = $wpdr->get_documents();
 		self::assertIsArray( $all_docs, 'get_documents should return an array' );
-		self::assertNotEmpty( $all_docs, 'get_documents should return documents' );
+		self::assertNotEmpty( $all_docs, 'get_documents should return documents with attachments' );
 
 		// Verify each returned item is a WP_Post.
 		foreach ( $all_docs as $doc ) {
 			self::assertInstanceOf( WP_Post::class, $doc, 'Each item should be a WP_Post object' );
-			self::assertEquals( 'document', $doc->post_type, 'Each item should be of type document' );
+			// Note: get_documents returns revisions, not the document post itself.
+			self::assertContains( $doc->post_type, array( 'document', 'revision' ), 'Each item should be a document or revision' );
 		}
 	}
 
