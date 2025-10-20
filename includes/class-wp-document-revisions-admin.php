@@ -141,7 +141,7 @@ class WP_Document_Revisions_Admin {
 	 * @since 1.0
 	 * @param function $funct the function to call.
 	 * @param array    $args  the arguments to pass to the function.
-	 * @returns mixed the result of the function.
+	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
@@ -153,7 +153,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.0
 	 * @param string $name the property to fetch.
-	 * @returns mixed the property's value
+	 * @return mixed the property's value
 	 */
 	public function __get( $name ) {
 		return WP_Document_Revisions::$$name;
@@ -165,7 +165,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 0.5
 	 * @param array $messages messages array.
-	 * @returns array messages array with doc. messages
+	 * @return array messages array with doc. messages
 	 */
 	public function update_messages( $messages ) {
 		global $post, $post_id;
@@ -227,7 +227,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.1
 	 * @param WP_Screen $screen (optional) the current screen.
-	 * @returns array the help text
+	 * @return array the help text
 	 */
 	public function get_help_text( $screen = null ) {
 		if ( is_null( $screen ) ) {
@@ -409,7 +409,7 @@ class WP_Document_Revisions_Admin {
 	 * @since 1.0
 	 * @param array     $hidden the default hidden metaboxes.
 	 * @param WP_Screen $screen the current screen.
-	 * @returns array defaults with postcustom
+	 * @return array defaults with postcustom
 	 */
 	public function hide_postcustom_metabox( $hidden, $screen ) {
 		if ( 'document' === $screen->id ) {
@@ -721,7 +721,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.0
 	 * @param string $dir path to the new directory.
-	 * @returns bool|string false on fail, path to new dir on sucess
+	 * @return bool|string false on fail, path to new dir on success
 	 */
 	public function sanitize_upload_dir( $dir ) {
 		// empty string passed.
@@ -924,7 +924,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.0
 	 * @param string $location the URL being redirected to.
-	 * @returns string the modified location
+	 * @return string the modified location
 	 */
 	public function network_settings_redirect( $location ) {
 		// Verify redirect string from /wp-admin/network/edit.php line 164.
@@ -1007,7 +1007,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 0.5
 	 * @param int $post_id the parent post.
-	 * @returns object the attachment object
+	 * @return object the attachment object
 	 */
 	public function get_latest_attachment( $post_id ) {
 		$attachments = $this->get_attachments( $post_id );
@@ -1068,7 +1068,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 0.5
 	 * @param int $user (optional) UserID.
-	 * @returns string the feed key
+	 * @return string the feed key
 	 */
 	public function get_feed_key( $user = null ) {
 		$key = get_user_option( $this->meta_key, $user );
@@ -1086,7 +1086,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 0.5
 	 * @param int $user (optional) UserID.
-	 * @returns string feed key
+	 * @return string feed key
 	 */
 	public function generate_new_feed_key( $user = null ) {
 		if ( ! $user ) {
@@ -1259,7 +1259,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.0.4
 	 * @param array $defaults the default column labels.
-	 * @returns array the modified column labels
+	 * @return array the modified column labels
 	 */
 	public function rename_author_column( $defaults ) {
 		if ( isset( $defaults['author'] ) ) {
@@ -1275,7 +1275,7 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.1
 	 * @param array $defaults the original columns.
-	 * @returns array our spliced columns
+	 * @return array our spliced columns
 	 */
 	public function add_currently_editing_column( $defaults ) {
 		// get checkbox and title.

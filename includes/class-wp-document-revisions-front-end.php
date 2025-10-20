@@ -72,7 +72,7 @@ class WP_Document_Revisions_Front_End {
 	 * @since 1.2
 	 * @param function $funct the function to call.
 	 * @param array    $args  the arguments to pass to the function.
-	 * @returns mixed the result of the function
+	 * @return mixed the result of the function
 	 */
 	public function __call( $funct, $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
@@ -84,7 +84,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @since 1.2
 	 * @param string $name the property to fetch.
-	 * @returns mixed the property's value
+	 * @return mixed the property's value
 	 */
 	public function __get( $name ) {
 		return WP_Document_Revisions::$$name;
@@ -95,7 +95,7 @@ class WP_Document_Revisions_Front_End {
 	 * Callback to display revisions.
 	 *
 	 * @param array $atts attributes passed via short code.
-	 * @returns string a UL with the revisions
+	 * @return string a UL with the revisions
 	 * @since 1.2
 	 */
 	public function revisions_shortcode( $atts ) {
@@ -891,7 +891,7 @@ class WP_Document_Revisions_Front_End {
 	 * Server side block to render the documents list.
 	 *
 	 * @param array $atts shortcode attributes.
-	 * @returns string a UL with the revisions
+	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
 	public function wpdr_documents_shortcode_display( $atts ) {
@@ -1039,7 +1039,7 @@ class WP_Document_Revisions_Front_End {
 	 * Server side block to render the revisions list.
 	 *
 	 * @param array $atts shortcode attributes.
-	 * @returns string a UL with the revisions
+	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
 	public function wpdr_revisions_shortcode_display( $atts ) {

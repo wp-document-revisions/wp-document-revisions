@@ -58,7 +58,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @param function $funct the function to call.
 	 * @param array    $args  the arguments to pass to the function.
-	 * @returns mixed the result of the function.
+	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
