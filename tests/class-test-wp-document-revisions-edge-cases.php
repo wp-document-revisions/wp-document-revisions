@@ -198,7 +198,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 
 		// Get all documents (should respect current user's permissions).
 		$all_docs = $wpdr->get_documents();
-		self::assertIsArray( $all_docs, 'get_documents should return an array' );
+		self::assertTrue( is_array( $all_docs ), 'get_documents should return an array' );
 		self::assertNotEmpty( $all_docs, 'get_documents should return documents with attachments' );
 	}
 
@@ -221,7 +221,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		$filename = array( 'name' => 'test file with spaces & special.txt' );
 		$result   = $wpdr->filename_rewrite( $filename );
 
-		self::assertIsArray( $result, 'filename_rewrite should return an array' );
+		self::assertTrue( is_array( $result ), 'filename_rewrite should return an array' );
 		self::assertArrayHasKey( 'name', $result, 'Result should have name key' );
 		self::assertNotEmpty( $result['name'], 'Rewritten filename should not be empty' );
 	}

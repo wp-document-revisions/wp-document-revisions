@@ -46,13 +46,13 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 
 		// Test with valid ID.
 		$result = $wpdr->format_doc_id( 123 );
-		self::assertIsString( $result, 'format_doc_id should return a string' );
-		self::assertStringContainsString( '123', $result, 'Formatted ID should contain the document ID' );
-		self::assertStringContainsString( 'WPDR', $result, 'Formatted ID should contain WPDR marker' );
+		self::assertTrue( is_string( $result ), 'format_doc_id should return a string' );
+		self::assertContains( '123', $result, 'Formatted ID should contain the document ID' );
+		self::assertContains( 'WPDR', $result, 'Formatted ID should contain WPDR marker' );
 
 		// Test with zero.
 		$result = $wpdr->format_doc_id( 0 );
-		self::assertIsString( $result, 'format_doc_id should return string even for ID 0' );
+		self::assertTrue( is_string( $result ), 'format_doc_id should return string even for ID 0' );
 
 		// Test round-trip: format then extract.
 		$original_id = 789;
@@ -136,22 +136,22 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 
 		// Test with simple filename.
 		$result = $wpdr->filename_rewrite( array( 'name' => 'simple.txt' ) );
-		self::assertIsArray( $result, 'filename_rewrite should return array' );
+		self::assertTrue( is_array( $result ), 'filename_rewrite should return array' );
 		self::assertArrayHasKey( 'name', $result, 'Result should have name key' );
 
 		// Test with spaces.
 		$result = $wpdr->filename_rewrite( array( 'name' => 'file with spaces.doc' ) );
-		self::assertIsArray( $result, 'Should handle filenames with spaces' );
+		self::assertTrue( is_array( $result ), 'Should handle filenames with spaces' );
 		self::assertNotEmpty( $result['name'], 'Rewritten filename should not be empty' );
 
 		// Test with Unicode characters.
 		$result = $wpdr->filename_rewrite( array( 'name' => 'tëst-dócumént.pdf' ) );
-		self::assertIsArray( $result, 'Should handle Unicode characters' );
+		self::assertTrue( is_array( $result ), 'Should handle Unicode characters' );
 		self::assertNotEmpty( $result['name'], 'Rewritten filename should not be empty' );
 
 		// Test with multiple dots.
 		$result = $wpdr->filename_rewrite( array( 'name' => 'file.backup.v2.txt' ) );
-		self::assertIsArray( $result, 'Should handle multiple dots in filename' );
+		self::assertTrue( is_array( $result ), 'Should handle multiple dots in filename' );
 		self::assertNotEmpty( $result['name'], 'Rewritten filename should not be empty' );
 
 		// Clean up.
@@ -201,9 +201,9 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Test is_locked function.
+	 * Test get_document_lock function.
 	 */
-	public function test_is_locked_function() {
+	public function test_get_document_lock_function() {
 		global $wpdr;
 
 		// Create a test document.
@@ -216,17 +216,17 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 		);
 
 		// Document should not be locked initially.
-		$result = $wpdr->is_locked( $doc_id );
+		$result = $wpdr->get_document_lock( $doc_id );
 		self::assertFalse( $result, 'New document should not be locked' );
 
 		// Test with WP_Post object.
 		$doc    = get_post( $doc_id );
-		$result = $wpdr->is_locked( $doc );
-		self::assertFalse( $result, 'is_locked should accept WP_Post object' );
+		$result = $wpdr->get_document_lock( $doc );
+		self::assertFalse( $result, 'get_document_lock should accept WP_Post object' );
 
 		// Test with non-existent document.
-		$result = $wpdr->is_locked( 999999 );
-		self::assertFalse( $result, 'is_locked should return false for non-existent document' );
+		$result = $wpdr->get_document_lock( 999999 );
+		self::assertFalse( $result, 'get_document_lock should return false for non-existent document' );
 	}
 
 	/**
@@ -256,14 +256,14 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 
 		// Get all documents.
 		$all_docs = $wpdr->get_documents();
-		self::assertIsArray( $all_docs, 'get_documents should return an array' );
+		self::assertTrue( is_array( $all_docs ), 'get_documents should return an array' );
 		self::assertNotEmpty( $all_docs, 'get_documents should return documents with attachments' );
 
 		// Verify each returned item is a WP_Post.
 		foreach ( $all_docs as $doc ) {
 			self::assertInstanceOf( WP_Post::class, $doc, 'Each item should be a WP_Post object' );
 			// Note: get_documents returns revisions, not the document post itself.
-			self::assertContains( $doc->post_type, array( 'document', 'revision' ), 'Each item should be a document or revision' );
+			self::assertTrue( in_array( $doc->post_type, array( 'document', 'revision' ), true ), 'Each item should be a document or revision' );
 		}
 	}
 
