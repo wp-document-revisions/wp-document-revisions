@@ -899,7 +899,7 @@ class WP_Document_Revisions_Admin {
 
 
 	/**
-	 * Callback to validate and save slug on network settings page.
+	 * Callback to validate and save link date on network settings page.
 	 */
 	public function network_link_date_save() {
 		if ( ! isset( $_POST['document_link_date_nonce'] ) ) {
