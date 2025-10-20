@@ -408,8 +408,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 	public function test_get_revisions() {
 		global $wpdr;
 
-		self::assertEquals( 3, count( $wpdr->get_revisions( self::$editor_public_post ) ) );
-		self::assertEquals( 2, count( $wpdr->get_revisions( self::$editor_private_post ) ) );
+		self::assertEquals( 3, count( $wpdr->get_revisions( self::$editor_public_post ) ), 'Expected 3 revisions for editor public post' );
+		self::assertEquals( 2, count( $wpdr->get_revisions( self::$editor_private_post ) ), 'Expected 2 revisions for editor private post' );
 	}
 
 	/**
@@ -420,8 +420,8 @@ class Test_WP_Document_Revisions extends Test_Common_WPDR {
 
 		$revisions = $wpdr->get_revisions( self::$editor_private_post );
 		$last      = end( $revisions );
-		self::assertEquals( 1, $wpdr->get_revision_number( $last->ID ) );
-		self::assertEquals( $last->ID, $wpdr->get_revision_id( 1, self::$editor_private_post ) );
+		self::assertEquals( 1, $wpdr->get_revision_number( $last->ID ), 'Last revision should be numbered as revision 1' );
+		self::assertEquals( $last->ID, $wpdr->get_revision_id( 1, self::$editor_private_post ), 'get_revision_id should return the correct revision ID' );
 	}
 
 	/**

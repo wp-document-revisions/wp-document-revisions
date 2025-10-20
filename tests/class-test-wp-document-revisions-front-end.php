@@ -299,8 +299,8 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		self::assertTrue( shortcode_exists( 'document_revisions' ) );
-		self::assertTrue( shortcode_exists( 'documents' ) );
+		self::assertTrue( shortcode_exists( 'document_revisions' ), 'document_revisions shortcode should be registered' );
+		self::assertTrue( shortcode_exists( 'documents' ), 'documents shortcode should be registered' );
 	}
 
 	/**

@@ -209,7 +209,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content );
+		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content, "Latest revision post_content does not match attachment ID for post $post_id" );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 		self::verify_attachment_matches_file( $post_id, $new_file, 'File Loaded' );
 	}
@@ -270,7 +270,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertEquals( $attch, $wpdr->get_latest_revision( $post_id )->post_content );
+		self::assertEquals( $attch, $wpdr->get_latest_revision( $post_id )->post_content, "Latest revision post_content does not match formatted attachment ID for post $post_id" );
 		self::verify_attachment_matches_file_new( $post_id, $filename, 'Initial Upload' );
 		self::verify_attachment_matches_file_new( $post_id, $new_file, 'File Loaded' );
 	}
@@ -352,7 +352,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertInstanceOf( WP_Post::class, $doc, "Post $post_id does not exist" );
 		global $wpdr;
 		$doc_id = $wpdr->extract_document_id( $doc->post_content );
-		self::assertTrue( is_numeric( $doc_id ) );
+		self::assertTrue( is_numeric( $doc_id ), "Document ID from post $post_id is not numeric" );
 
 		// check post type.
 		self::assertEquals( get_post_type( $doc ), 'document', "Post $post_id not a document" );
