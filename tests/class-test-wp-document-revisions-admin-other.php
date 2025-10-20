@@ -253,7 +253,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// get a post in global scope (bending rule).
 		global $post;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		$messages = array();
@@ -274,7 +274,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// get a post in global scope (bending rule).
 		global $post;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		// call with no screen.
@@ -316,6 +316,10 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add help text for current screen (none).
 		$screen->post_type = 'document';
 		$wpdr->admin->add_help_tab();
+
+		// add help text for different screen (none).
+		$screen->post_type = 'post';
+		$wpdr->admin->add_help_tab();
 	}
 
 	/**
@@ -349,7 +353,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// get a post in global scope (bending rule).
 		global $post;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		ob_start();
@@ -511,7 +515,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		ob_start();
-		$wpdr->admin->link_date_cb();
+		$wpdr->admin->document_link_date_cb();
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -530,7 +534,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$_POST['document_upload_directory']      = $wpdr::$wpdr_document_dir;
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		global $current_user;
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -548,7 +551,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options' );
+		// grant super_admin (will include 'manage_network_options').
+		grant_super_admin( self::$editor_user_id );
 
 		$exception = null;
 		try {
@@ -566,7 +570,42 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// self::assertEmpty( $output, 'output' );.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options', false );
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_upload_location_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_upload_location_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_upload_location_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+
+		revoke_super_admin( self::$editor_user_id );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -577,11 +616,10 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		global $wpdr;
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_POST['document_slug_nonce']   = wp_create_nonce( 'network_document_slug' );
-		$_POST['network_document_slug'] = 'document';
+		$_POST['document_slug_nonce'] = wp_create_nonce( 'network_document_slug' );
+		$_POST['document_slug']       = 'document';
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		global $current_user;
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
@@ -599,7 +637,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Should fail with exception.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options' );
+		// grant super_admin (will include 'manage_network_options').
+		grant_super_admin( self::$editor_user_id );
 
 		$exception = null;
 		try {
@@ -617,7 +656,128 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// self::assertEmpty( $output, 'output' );.
 		self::assertNotNull( $exception, 'no exception' );
 
-		$current_user->add_cap( 'manage_network_options', false );
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_slug_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_slug_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_slug_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+
+		revoke_super_admin( self::$editor_user_id );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
+	 * Test network slug save.
+	 */
+	public function test_network_link_date_save() {
+		global $wpdr;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['document_link_date_nonce'] = wp_create_nonce( 'network_document_link_date' );
+		$_POST['document_link_date']       = 1;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// grant super_admin (will include 'manage_network_options').
+		grant_super_admin( self::$editor_user_id );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception (but does).
+		// self::assertNull( $exception, 'exception' );.
+		// self::assertEmpty( $output, 'output' );.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - Invalid nonce.
+		$_POST['document_link_date_nonce'] = 'rubbish';
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with exception.
+		self::assertNotNull( $exception, 'no exception' );
+
+		// repeat to exercise other paths - No nonce.
+		unset( $_POST['document_link_date_nonce'] );
+
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->admin->network_link_date_save();
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should not fail with exception.
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+
+		revoke_super_admin( self::$editor_user_id );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -633,6 +793,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		add_settings_error( 'document_upload_directory', 'upload-exists', 'DiR', 'updated' );
 		add_settings_error( 'document_slug', 'slug-exists', 'SlUg', 'updated' );
+		add_settings_error( 'document_link_date', 'link-date-exists', 'LinkDate', 'updated' );
 
 		ob_start();
 		$wpdr->admin->network_settings_errors();
@@ -641,6 +802,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, 'DiR' ), 'Setting error dir not found' );
 		self::assertEquals( 1, (int) substr_count( $output, 'SlUg' ), 'Setting error slug not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'LinkDate' ), 'Setting error link_date not found' );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -883,6 +1045,25 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test revision summary.
+	 */
+	public function test_revision_summary_cb() {
+		global $wpdr;
+
+		global $current_user;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		ob_start();
+		$wpdr->admin->revision_summary_cb();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, '<textarea' ), 'textarea count' );
+		self::assertTrue( true, 'run' );
+	}
+
+	/**
 	 * Test document metabox auth.
 	 */
 	public function test_document_metabox_auth() {
@@ -903,6 +1084,33 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
+
+		// test locked.
+		// Add a filter to set lock user.
+		// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		add_filter(
+			'document_lock_check',
+			function (
+				$user,
+				$document
+			) {
+				return 'Locker'; // set locker name.
+			},
+			10,
+			2
+		);
+		// phpcs:enable Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+
+		ob_start();
+		$wpdr->admin->document_metabox( $curr_post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'has prevented' ), 'Locked post' );
+		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+
+		// Remove the test filter.
+		remove_all_filters( 'document_lock_check' );
 	}
 
 	/**
@@ -1007,7 +1215,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// get a post in global scope (bending rule).
 		global $post;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		ob_start();
@@ -1072,7 +1280,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// get a post in global scope (bending rule).
 		global $post;
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -1107,7 +1315,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$npost->post_parent = 0;
 		global $post;
 		// nothing in global scope.
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post( $npost );
 
 		ob_start();
@@ -1118,8 +1326,18 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEmpty( $output, 'not doc not empty' );
 
 		// get a post in global scope (bending rule).
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
+
+		ob_start();
+		$wpdr->admin->prepare_editor( $post );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		self::assertEquals( 1, (int) substr_count( $output, 'Document Description' ), 'Description not found' );
+
+		// make sure content is old style.
+		$post->post_content = $wpdr->extract_document_id( $post->post_content );
 
 		ob_start();
 		$wpdr->admin->prepare_editor( $post );
@@ -1150,7 +1368,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$npost->post_parent = 0;
 		global $post;
 		// nothing in global scope.
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post( $npost );
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
@@ -1164,7 +1382,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEmpty( $output, 'empty' );
 
 		// get a post in global scope (bending rule).
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		$output = $wpdr->admin->document_editor_setting( $settings, 'not_content' );
@@ -1348,7 +1566,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$npost->post_parent = 0;
 		global $post;
 		// nothing in global scope.
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = new WP_Post( $npost );
 
 		$body_class = '';
@@ -1358,7 +1576,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertEmpty( $body_class, 'not doc not empty' );
 
 		// get a post in global scope (bending rule).
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post_2 );
 
 		$body_class = $wpdr->admin->admin_body_class_filter( $body_class );

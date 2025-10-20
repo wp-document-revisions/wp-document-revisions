@@ -4,7 +4,7 @@
 
 - [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
 
-    (Previously called Members)
+  (Previously called Members)
 
 ### Taxonomy management
 

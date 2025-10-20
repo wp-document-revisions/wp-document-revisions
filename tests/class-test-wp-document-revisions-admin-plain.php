@@ -393,7 +393,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		global $post;
 
-		// phpcs:ignore  WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( $post_id );
 
 		$wpdr->admin->make_private();

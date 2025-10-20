@@ -2,13 +2,18 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.8.0
+
+- FIX: Ensure Link Date option is available on Multisite instances. (#389)
+- DEV: Review for WP Coding standard 3.2
+
 ### 3.7.2
 
-Correct plugin metadata (no code chages).
+Correct plugin metadata (no code changes).
 
 ### 3.7.1
 
-Correct tested up to version (no code chages).
+Correct tested up to version (no code changes).
 
 ### 3.7.0
 
@@ -57,7 +62,7 @@ Correct tested up to version (no code chages).
 - FIX: Upload directory processing reviewed and simplified.
 - FIX: Document permalink month can be incorrect when saved at month end. (#300).
 - FIX: Valid document may not be found.
-  " FIX: Improve notification process when activation user does not have edit_documents capability.
+- FIX: Improve notification process when activation user does not have edit_documents capability.
 
 ### 3.4.0
 
