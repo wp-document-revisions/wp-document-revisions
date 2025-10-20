@@ -1096,9 +1096,6 @@ class WP_Document_Revisions {
 
 		// Before post is saved GMT fields are zero.
 		if ( '0000-00-00 00:00:00' === $document->post_modified_gmt ) {
-			$date = new DateTime( $document->post_modified, new DateTimeZone( date_default_timezone_get() ) );
-			$date->setTimezone( new DateTimeZone( 'GMT' ) );
-			$document->post_modified_gmt = $date->format( 'Y-m-d H:i:s' );
 			$document->post_modified_gmt = current_time( 'mysql', 1 );
 		}
 		// correct the modified date.
