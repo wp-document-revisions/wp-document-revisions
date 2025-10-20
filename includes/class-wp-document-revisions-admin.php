@@ -912,7 +912,7 @@ class WP_Document_Revisions_Admin {
 			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
 		}
 
-		// verify upload dir.
+		// get link date value.
 		$link_date = ( isset( $_POST['document_link_date'] ) ? sanitize_text_field( wp_unslash( $_POST['document_link_date'] ) ) : '' );
 		$link_date = $this->sanitize_document_link_date( $link_date );
 
