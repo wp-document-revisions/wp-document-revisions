@@ -920,7 +920,7 @@ class WP_Document_Revisions_Admin {
 		global $wp_settings_errors;
 		set_transient( 'settings_errors', $wp_settings_errors );
 
-		// if the dir is valid, save it.
+		// if the value has changed, save it.
 		if ( get_site_option( 'document_link_date' ) !== $link_date ) {
 			update_site_option( 'document_link_date', $link_date );
 		}
