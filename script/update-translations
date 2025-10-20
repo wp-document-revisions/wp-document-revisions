@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Update translation files from POT template
+# This script:
+# 1. Merges the POT file into all .po files
+# 2. Compiles .mo files for languages with translations
+#
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+LANGUAGES_DIR="$REPO_ROOT/languages"
+
+echo "Updating Translation Files"
+echo "=========================="
+echo ""
+
+# Check if msgmerge is available
+if ! command -v msgmerge &> /dev/null; then
+    echo "Error: msgmerge not found. Please install gettext."
+    echo "  Ubuntu/Debian: sudo apt-get install gettext"
+    echo "  macOS: brew install gettext"
+    exit 1
+fi
+
+# Check if msgfmt is available
+if ! command -v msgfmt &> /dev/null; then
+    echo "Error: msgfmt not found. Please install gettext."
+    exit 1
+fi
+
+cd "$LANGUAGES_DIR"
+
+# Merge POT into all .po files
+echo "Merging POT template into .po files..."
+for po_file in wp-document-revisions-*.po; do
+    if [ -f "$po_file" ]; then
+        echo "  Updating $po_file..."
+        msgmerge --update --backup=none "$po_file" wp-document-revisions.pot 2>&1 | head -1
+    fi
+done
+
+echo ""
+echo "Compiling .mo files for languages with translations..."
+
+# Compile .mo files for languages that have translations
+for po_file in wp-document-revisions-*.po; do
+    if [ -f "$po_file" ]; then
+        lang_code=$(echo "$po_file" | sed 's/wp-document-revisions-//;s/.po$//')
+        mo_file="wp-document-revisions-${lang_code}.mo"
+        
+        # Check if there are any translated strings
+        translated=$(msgfmt --statistics "$po_file" 2>&1 | grep -o '^[0-9]* translated' | awk '{print $1}' || echo 0)
+        
+        if [ "$translated" -gt 0 ] 2>/dev/null; then
+            echo "  Compiling $mo_file ($translated translations)..."
+            msgfmt -o "$mo_file" "$po_file"
+        fi
+    fi
+done
+
+echo ""
+echo "Translation files updated successfully!"
+echo ""
+echo "To contribute translations, please visit:"
+echo "https://crowdin.com/project/wordpress-document-revisions"

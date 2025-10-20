@@ -5,3 +5,6 @@ bin
 wpcs
 build/logs/clover.xml
 composer.lock
+languages/messages.mo
+languages/*~
+languages/*.pot~
