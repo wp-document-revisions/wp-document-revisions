@@ -3064,11 +3064,11 @@ class WP_Document_Revisions {
 			return (int) $post_content;
 		} else {
 			// Early return if content doesn't contain WPDR marker to avoid regex cost.
-			if ( false === strpos( $post_content, 'WPDR' ) ) {
+			if ( false === stripos( $post_content, 'WPDR' ) ) {
 				return false;
 			}
 			// find document id. Might have white space from the screen upload process.
-			preg_match( '/<!-- WPDR \s*(\d+) -->/', $post_content, $id );
+			preg_match( '/<!-- WPDR \s*(\d+) -->/i', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id (Zero will be no document attached - WPML scenario).
 				return (int) $id[1];
