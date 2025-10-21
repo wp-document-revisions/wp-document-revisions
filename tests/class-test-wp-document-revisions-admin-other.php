@@ -260,10 +260,10 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// add messages.
 		$messages = $wpdr->admin->update_messages( $messages );
 
-		self::assertTrue( is_array( $messages ), 'still array' );
-		self::assertNotEmpty( $messages, 'has valuse' );
-		self::assertArrayHasKey( 'document', $messages, 'loaded' );
-		self::assertArrayHasKey( 10, $messages['document'], 'tenth' );
+		self::assertTrue( is_array( $messages ), 'Messages should remain an array after update_messages' );
+		self::assertNotEmpty( $messages, 'Messages array should not be empty after update' );
+		self::assertArrayHasKey( 'document', $messages, 'Messages should contain document post type key' );
+		self::assertArrayHasKey( 10, $messages['document'], 'Document messages should contain key 10' );
 	}
 
 	/**
@@ -422,7 +422,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$def_one = $wpdr->admin->media_upload_tabs_computer( $default );
 
-		self::assertEquals( 4, count( $def_one ), 'Values deleted' );
+		self::assertEquals( 4, count( $def_one ), 'Should retain all 4 tabs when not in document context' );
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$_GET['post']   = self::$editor_public_post;
 		$_GET['action'] = 'whatever';
@@ -430,7 +430,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$default = $wpdr->admin->media_upload_tabs_computer( $default );
 
-		self::assertEquals( 1, count( $default ), 'Values not deleted' );
+		self::assertEquals( 1, count( $default ), 'Should reduce to 1 tab (computer) when in document context' );
 		self::assertTrue( true, 'run' );
 	}
 

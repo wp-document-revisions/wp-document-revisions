@@ -280,16 +280,16 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 
 		foreach ( $routes as $route => $route_config ) {
 			if ( 1 === strpos( $route, $the_route ) ) {
-				self::assertTrue( is_array( $route_config ) );
+				self::assertTrue( is_array( $route_config ), 'Route config should be an array for route: ' . $route );
 				foreach ( $route_config as $i => $endpoint ) {
-					self::assertArrayHasKey( 'callback', $endpoint );
-					self::assertArrayHasKey( 0, $endpoint['callback'], get_class( $this ) );
-					self::assertArrayHasKey( 1, $endpoint['callback'], get_class( $this ) );
-					self::assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ) );
-					self::assertArrayHasKey( 'permission_callback', $endpoint );
-					self::assertArrayHasKey( 0, $endpoint['permission_callback'], get_class( $this ) );
-					self::assertArrayHasKey( 1, $endpoint['permission_callback'], get_class( $this ) );
-					self::assertTrue( is_callable( array( $endpoint['permission_callback'][0], $endpoint['permission_callback'][1] ) ) );
+					self::assertArrayHasKey( 'callback', $endpoint, 'Endpoint should have a callback key' );
+					self::assertArrayHasKey( 0, $endpoint['callback'], 'Callback should have index 0 for class: ' . get_class( $this ) );
+					self::assertArrayHasKey( 1, $endpoint['callback'], 'Callback should have index 1 for method: ' . get_class( $this ) );
+					self::assertTrue( is_callable( array( $endpoint['callback'][0], $endpoint['callback'][1] ) ), 'Callback should be callable' );
+					self::assertArrayHasKey( 'permission_callback', $endpoint, 'Endpoint should have a permission_callback key' );
+					self::assertArrayHasKey( 0, $endpoint['permission_callback'], 'Permission callback should have index 0 for class: ' . get_class( $this ) );
+					self::assertArrayHasKey( 1, $endpoint['permission_callback'], 'Permission callback should have index 1 for method: ' . get_class( $this ) );
+					self::assertTrue( is_callable( array( $endpoint['permission_callback'][0], $endpoint['permission_callback'][1] ) ), 'Permission callback should be callable' );
 				}
 			}
 		}
@@ -330,10 +330,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		// Two public posts.
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/documents' );
 		$response = $wp_rest_server->dispatch( $request );
-		self::assertEquals( 200, $response->get_status() );
+		self::assertEquals( 200, $response->get_status(), 'REST API should return 200 OK status for GET /wp/v2/documents (unauthenticated)' );
 
 		$responses = $response->get_data();
-		self::assertEquals( 2, count( $responses ) );
+		self::assertEquals( 2, count( $responses ), 'Should return exactly 2 public documents for unauthenticated user' );
 
 		// separate out which is which.
 		if ( self::$editor_public_post === $responses[1]['id'] && self::$editor_public_post_2 === $responses[0]['id'] ) {
