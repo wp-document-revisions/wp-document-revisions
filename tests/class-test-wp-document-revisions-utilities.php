@@ -47,8 +47,8 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 		// Test with valid ID.
 		$result = $wpdr->format_doc_id( 123 );
 		self::assertTrue( is_string( $result ), 'format_doc_id should return a string' );
-		self::assertContains( '123', $result, 'Formatted ID should contain the document ID' );
-		self::assertContains( 'WPDR', $result, 'Formatted ID should contain WPDR marker' );
+		self::assertNotFalse( strpos( $result, '123' ), 'Formatted ID should contain the document ID' );
+		self::assertNotFalse( strpos( $result, 'WPDR' ), 'Formatted ID should contain WPDR marker' );
 
 		// Test with zero.
 		$result = $wpdr->format_doc_id( 0 );
