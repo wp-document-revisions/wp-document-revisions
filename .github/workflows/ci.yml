@@ -68,15 +68,6 @@ jobs:
               env:
                   WP_MULTISITE: ${{ matrix.wp-multisite }}
 
-            - name: Codecov
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  files: coverage.xml
-                  directory: ${{ github.workspace }}
-                  verbose: true
-                  flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
-
     phpunit6:
         # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
         # magic_quotes_gpc = off since 4.9 contains lots of references
@@ -131,15 +122,6 @@ jobs:
                   /usr/local/bin/phpunit --config=${{ matrix.phpunit-config }}
               env:
                   WP_MULTISITE: ${{ matrix.wp-multisite }}
-
-            - name: Codecov
-              uses: codecov/codecov-action@v5
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  files: coverage.xml
-                  directory: ${{ github.workspace }}
-                  verbose: true
-                  flags: php-${{ matrix.php-versions }},wp-${{ matrix.wp-version }},multisite-${{ matrix.wp-multisite }}
 
     phpcs:
         runs-on: ubuntu-latest
