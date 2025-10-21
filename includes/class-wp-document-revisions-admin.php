@@ -171,6 +171,10 @@ class WP_Document_Revisions_Admin {
 	public function update_messages( $messages ) {
 		global $post, $post_id;
 
+		// Cache date/time format options to avoid multiple get_option calls.
+		$date_format = get_option( 'date_format' );
+		$time_format = get_option( 'time_format' );
+
 		$messages['document'] = array(
 			// translators: %s is the download link.
 			1  => sprintf( __( 'Document updated. <a href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( get_permalink( $post_id ) ) ),
@@ -187,7 +191,7 @@ class WP_Document_Revisions_Admin {
 			// translators: %s is the download link.
 			8  => sprintf( __( 'Document submitted. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
 			// translators: %1$s is the date, %2$s is the preview link.
-			9  => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), date_i18n( sprintf( _x( '%1$s @ %2$s', '%1$s: date; %2$s: time', 'wp-document-revisions' ), get_option( 'date_format' ), get_option( 'time_format' ) ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_id ) ) ),
+			9  => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), date_i18n( sprintf( _x( '%1$s @ %2$s', '%1$s: date; %2$s: time', 'wp-document-revisions' ), $date_format, $time_format ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_id ) ) ),
 			// translators: %s is the link to download the document.
 			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
 		);
@@ -1759,7 +1763,10 @@ class WP_Document_Revisions_Admin {
 			return true;
 		}
 		global $wpdr;
-		if ( $wpdr->extract_document_id( $post->post_content ) !== $wpdr->extract_document_id( $last_revision->post_content ) ) {
+		// Cache extract_document_id results to avoid duplicate regex operations.
+		$post_doc_id          = $wpdr->extract_document_id( $post->post_content );
+		$last_revision_doc_id = $wpdr->extract_document_id( $last_revision->post_content );
+		if ( $post_doc_id !== $last_revision_doc_id ) {
 			return true;
 		}
 
