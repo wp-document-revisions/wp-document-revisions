@@ -23,14 +23,9 @@ async function minifyFile(filename) {
 	const input = path.join('js', `${filename}.dev.js`);
 	const output = path.join('js', `${filename}.js`);
 
-	try {
-		// Use execFile for better security - no shell interpretation
-		await execFileAsync('npx', ['terser', input, '-o', output, '--compress', '--mangle']);
-		console.log(`✓ Minified ${filename}`);
-	} catch (error) {
-		console.error(`✗ Error minifying ${filename}:`, error.message);
-		throw error;
-	}
+	// Use execFile for better security - no shell interpretation
+	await execFileAsync('npx', ['terser', input, '-o', output, '--compress', '--mangle']);
+	console.log(`✓ Minified ${filename}`);
 }
 
 async function buildAll() {
@@ -42,7 +37,7 @@ async function buildAll() {
 		}
 		console.log('\n✓ JavaScript files minified successfully');
 	} catch (error) {
-		console.error('\nBuild failed:', error.message);
+		console.error('\n✗ Build failed:', error.message);
 		process.exit(1);
 	}
 }
