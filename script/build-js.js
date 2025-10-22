@@ -5,9 +5,11 @@
  * Minifies all .dev.js files to .js using terser
  */
 
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const { promisify } = require('util');
-const execAsync = promisify(exec);
+const path = require('path');
+
+const execFileAsync = promisify(execFile);
 
 const files = [
 	'wp-document-revisions',
@@ -18,30 +20,31 @@ const files = [
 ];
 
 async function minifyFile(filename) {
-	const input = `js/${filename}.dev.js`;
-	const output = `js/${filename}.js`;
-	const command = `npx terser ${input} -o ${output} --compress --mangle`;
+	const input = path.join('js', `${filename}.dev.js`);
+	const output = path.join('js', `${filename}.js`);
 
 	try {
-		await execAsync(command);
+		// Use execFile for better security - no shell interpretation
+		await execFileAsync('npx', ['terser', input, '-o', output, '--compress', '--mangle']);
 		console.log(`✓ Minified ${filename}`);
 	} catch (error) {
 		console.error(`✗ Error minifying ${filename}:`, error.message);
-		process.exit(1);
+		throw error;
 	}
 }
 
 async function buildAll() {
 	console.log('Building JavaScript files...\n');
 
-	for (const file of files) {
-		await minifyFile(file);
+	try {
+		for (const file of files) {
+			await minifyFile(file);
+		}
+		console.log('\n✓ JavaScript files minified successfully');
+	} catch (error) {
+		console.error('\nBuild failed:', error.message);
+		process.exit(1);
 	}
-
-	console.log('\n✓ JavaScript files minified successfully');
 }
 
-buildAll().catch((error) => {
-	console.error('Build failed:', error);
-	process.exit(1);
-});
+buildAll();
