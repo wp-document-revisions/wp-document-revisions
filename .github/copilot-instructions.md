@@ -1,8 +1,14 @@
-# WP Document Revisions
+# WP Document Revisions - Copilot Instructions
 
 WP Document Revisions is a document management and version control WordPress plugin that allows teams to collaboratively edit files and manage their workflow. Built with PHP, it follows WordPress coding standards and uses PHPUnit for testing.
 
-Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
+**Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
+
+**Note**: This file contains practical development workflow instructions. For comprehensive architectural documentation and detailed feature information, see `.copilot-instructions.md` in the repository root.
+
+## Quick Start
+
+For automated environment setup, the repository includes a GitHub Actions workflow at `.github/workflows/copilot-setup-steps.yml` that handles all dependencies and configuration. Manual setup instructions are provided below.
 
 ## Working Effectively
 
@@ -73,6 +79,18 @@ When making changes, ALWAYS test these core workflows:
 - PHP compatibility tested across versions 7.2-8.3
 - WordPress compatibility tested with latest and 4.9 minimum versions
 
+## Security Guidelines
+
+This plugin handles file uploads and sensitive documents. When making changes:
+
+- **File Uploads**: Always validate file types, sizes, and content before processing
+- **Input Validation**: Sanitize all user inputs using WordPress functions (`sanitize_text_field()`, `esc_html()`, etc.)
+- **Nonce Verification**: Use WordPress nonces for all admin actions and form submissions
+- **Capability Checks**: Verify user capabilities before allowing document operations (`current_user_can()`)
+- **SQL Queries**: Use `$wpdb->prepare()` for all database queries to prevent SQL injection
+- **File Access**: Never expose direct file paths; use WordPress authentication for file access
+- **No Secrets**: Never commit API keys, passwords, or sensitive data to the repository
+
 ## Common Tasks
 
 ### Repository Structure
@@ -115,6 +133,53 @@ wp-document-revisions/
 - Implements proper sanitization, escaping, and nonce verification
 - Supports multisite installations
 - Includes proper internationalization (i18n) support
+
+### Code Patterns and Conventions
+
+When writing code for this plugin:
+
+**Function Names**: Use WordPress naming conventions with plugin prefix
+```php
+// Correct
+function wp_document_revisions_get_document( $id ) { }
+
+// Incorrect
+function getDocument( $id ) { }
+```
+
+**Variable Names**: Use snake_case for variables
+```php
+$document_id = 123;
+$revision_count = get_revision_count();
+```
+
+**Error Handling**: Use WordPress error handling
+```php
+if ( is_wp_error( $result ) ) {
+    return $result;
+}
+```
+
+**Database Queries**: Always use prepared statements
+```php
+global $wpdb;
+$results = $wpdb->get_results( $wpdb->prepare(
+    "SELECT * FROM {$wpdb->posts} WHERE post_type = %s",
+    'document'
+) );
+```
+
+**Hooks and Filters**: Provide extensibility points
+```php
+do_action( 'document_revisions_document_uploaded', $document_id );
+$allowed = apply_filters( 'document_revisions_allowed_file_types', $default_types );
+```
+
+**Localization**: Use translation functions
+```php
+__( 'Document uploaded successfully', 'wp-document-revisions' );
+_e( 'Error uploading document', 'wp-document-revisions' );
+```
 
 ## Troubleshooting
 

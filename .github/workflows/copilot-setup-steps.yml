@@ -1,0 +1,59 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, pdo_mysql
+          coverage: none
+
+      - name: Set up MySQL
+        run: |
+          sudo systemctl start mysql.service
+          mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --optimize-autoloader --prefer-dist --no-interaction
+        timeout-minutes: 5
+
+      - name: Verify PHPCS installation
+        run: |
+          if [ ! -f "bin/phpcs" ]; then
+            echo "Error: PHPCS not installed correctly"
+            exit 1
+          fi
+          echo "PHPCS installed successfully"
+
+      - name: Verify PHPUnit installation
+        run: |
+          if [ ! -f "bin/phpunit" ]; then
+            echo "Error: PHPUnit not installed correctly"
+            exit 1
+          fi
+          echo "PHPUnit installed successfully"
+
+      - name: Install WordPress test environment
+        run: |
+          bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest
+        timeout-minutes: 5
+
+      - name: Verify setup
+        run: |
+          echo "Development environment setup complete!"
+          echo "- PHP: $(php -v | head -1)"
+          echo "- Composer: $(composer --version)"
+          echo "- PHPCS: $(bin/phpcs --version)"
+          echo "- PHPUnit: $(bin/phpunit --version)"
