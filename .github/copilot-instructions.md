@@ -14,10 +14,23 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 
 ### Bootstrap and Dependencies
 
-- Install dependencies: `composer install --optimize-autoloader --prefer-dist`
+- Install PHP dependencies: `composer install --optimize-autoloader --prefer-dist`
     - Downloads and installs all PHP development dependencies
     - Creates vendor directory with PHPUnit, PHPCS, and WordPress Coding Standards
     - Takes 2-4 minutes depending on network speed. NEVER CANCEL - Set timeout to 5+ minutes.
+- Install JavaScript dependencies: `npm install`
+    - Installs terser for JavaScript minification
+    - Takes a few seconds
+
+### JavaScript Development
+
+- JavaScript files are written in modern ES6+ JavaScript
+- Source files are in `js/*.dev.js` (human-readable)
+- Minified files are `js/*.js` (for production)
+- Build JavaScript: `npm run build` or `script/build-js`
+    - Minifies all JavaScript files using terser
+    - Takes a few seconds
+- Validate JavaScript syntax: `node -c js/filename.dev.js`
 
 ### Code Quality and Standards
 
@@ -49,9 +62,12 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 
 ### Build and Release
 
-- Validate JavaScript is current (files pre-built in js/ directory)
+- Build JavaScript: `npm run build` or `script/build-js`
+    - Minifies JavaScript files from .dev.js to .js using terser
+    - Required before release if JavaScript files are modified
 - Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
 - No traditional "build" step - this is a WordPress plugin distributed as source
+- JavaScript files are pre-built and committed to the repository
 
 ## Validation
 
@@ -59,8 +75,10 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 
 - ALWAYS run PHPCS before committing: `bin/phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php -v`
 - ALWAYS run code formatting: `bin/phpcbf --standard=phpcs.ruleset.xml *.php */**.php`
+- If making JavaScript changes, ALWAYS run: `npm run build` to regenerate minified files
 - If making WordPress functionality changes, ALWAYS run full PHPUnit test suite
 - Validate plugin loads in WordPress: Check wp-document-revisions.php syntax with `php -l wp-document-revisions.php`
+- Validate JavaScript syntax: `node -c js/wp-document-revisions.dev.js`
 
 ### Manual Validation Scenarios
 
@@ -102,10 +120,13 @@ wp-document-revisions/
 │   ├── class-wp-document-revisions-admin.php   # Admin interface
 │   └── class-wp-document-revisions-front-end.php # Frontend functionality
 ├── tests/                  # PHPUnit test files
-├── js/                     # JavaScript files (pre-built)
+├── js/                     # JavaScript files (modern ES6+)
+│   ├── *.dev.js           # Source files (human-readable)
+│   └── *.js               # Minified files (production)
 ├── css/                    # Stylesheets
 ├── script/                 # Development automation scripts
 ├── wp-document-revisions.php # Main plugin file
+├── package.json           # JavaScript dependencies (terser)
 ├── composer.json          # PHP dependencies
 ├── phpcs.ruleset.xml      # Code standards configuration
 ├── phpunit.xml|phpunit9.xml # Test configurations
@@ -124,7 +145,12 @@ wp-document-revisions/
 - **PHP**: 7.2+ (tested up to 8.3)
 - **WordPress**: 4.9+ (tested up to latest)
 - **Database**: MySQL 5.7+ or MariaDB equivalent
-- **Development Tools**: Composer, PHPUnit, PHPCS with WordPress standards
+- **Development Tools**: 
+  - Composer (PHP dependency management)
+  - PHPUnit (PHP testing)
+  - PHPCS with WordPress standards (code quality)
+  - Node.js/npm (JavaScript tooling)
+  - terser (JavaScript minification)
 
 ### WordPress Plugin Standards
 
@@ -181,6 +207,33 @@ __( 'Document uploaded successfully', 'wp-document-revisions' );
 _e( 'Error uploading document', 'wp-document-revisions' );
 ```
 
+**JavaScript**: Use modern ES6+ JavaScript
+```javascript
+// Use ES6 classes
+class MyClass {
+    constructor() {
+        this.property = value;
+    }
+    
+    myMethod() {
+        // Use arrow functions for callbacks
+        this.$('.element').click((e) => this.handleClick(e));
+    }
+}
+
+// Use const/let instead of var
+const myVariable = 'value';
+let counter = 0;
+
+// Use template literals
+const message = `Document ${documentId} uploaded`;
+
+// Use arrow functions
+const callback = (data) => {
+    console.log(data);
+};
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -190,11 +243,14 @@ _e( 'Error uploading document', 'wp-document-revisions' );
 - **Database connection errors**: Start MySQL and create wordpress_test database
 - **Permission errors**: Check file permissions on uploads directory in WordPress
 - **Network timeouts**: WordPress.org APIs may be temporarily unavailable, retry later
+- **JavaScript build errors**: Run `npm install` to install terser and other dependencies
+- **Minified JS missing**: Run `npm run build` or `script/build-js` to generate minified files
 
 ### Performance Notes
 
 - Code analysis (PHPCS): ~10 seconds for full codebase
 - Code formatting (PHPCBF): ~10 seconds for full codebase
+- JavaScript minification: ~1-2 seconds for all files
 - Full test suite: 2-5 minutes depending on system performance
 - WordPress installation: 1-3 minutes depending on network speed
 - Docker environment startup: 2-3 minutes first time, faster on subsequent runs
