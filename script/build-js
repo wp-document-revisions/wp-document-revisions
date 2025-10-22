@@ -1,4 +1,18 @@
 #!/bin/sh
 
-coffee --compile --print js/wp-document-revisions.coffee > js/wp-document-revisions.dev.js
-uglifyjs js/wp-document-revisions.dev.js --output js/wp-document-revisions.js
+# Modern JavaScript build script
+# Minifies JavaScript files using terser
+
+# Main admin JavaScript
+npx terser js/wp-document-revisions.dev.js -o js/wp-document-revisions.js --compress --mangle
+
+# Validation JavaScript
+npx terser js/wp-document-revisions-validate.dev.js -o js/wp-document-revisions-validate.js --compress --mangle
+
+# Gutenberg blocks (already modern ES6+)
+npx terser js/wpdr-documents-shortcode.dev.js -o js/wpdr-documents-shortcode.js --compress --mangle
+npx terser js/wpdr-documents-widget.dev.js -o js/wpdr-documents-widget.js --compress --mangle
+npx terser js/wpdr-revisions-shortcode.dev.js -o js/wpdr-revisions-shortcode.js --compress --mangle
+
+echo "JavaScript files minified successfully"
+

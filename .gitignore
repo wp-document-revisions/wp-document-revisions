@@ -7,3 +7,5 @@ build/logs/clover.xml
 composer.lock
 coverage.xml
 .phpunit.result.cache
+node_modules
+package-lock.json

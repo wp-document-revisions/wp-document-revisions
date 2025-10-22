@@ -1,0 +1,24 @@
+{
+	"name": "wp-document-revisions",
+	"version": "3.6.1",
+	"description": "Document management and version control for WordPress",
+	"scripts": {
+		"build": "npm run build:js",
+		"build:js": "node script/build-modern-js.js",
+		"minify": "terser js/wp-document-revisions.dev.js -o js/wp-document-revisions.js --compress --mangle"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wp-document-revisions/wp-document-revisions.git"
+	},
+	"keywords": [
+		"wordpress",
+		"document-management",
+		"version-control"
+	],
+	"author": "Ben Balter",
+	"license": "GPL-3.0-or-later",
+	"devDependencies": {
+		"terser": "^5.36.0"
+	}
+}
