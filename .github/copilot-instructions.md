@@ -27,9 +27,11 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 - JavaScript files are written in modern ES6+ JavaScript
 - Source files are in `js/*.dev.js` (human-readable)
 - Minified files are `js/*.js` (for production)
-- Build JavaScript: `npm run build` or `script/build-js`
+- Build JavaScript: `npm run build` (cross-platform Node.js script)
     - Minifies all JavaScript files using terser
     - Takes a few seconds
+    - Works on Windows, macOS, and Linux
+- Legacy shell script also available: `script/build-js` (Unix only)
 - Validate JavaScript syntax: `node -c js/filename.dev.js`
 
 ### Code Quality and Standards
@@ -62,9 +64,11 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 
 ### Build and Release
 
-- Build JavaScript: `npm run build` or `script/build-js`
+- Build JavaScript: `npm run build` (recommended, cross-platform)
     - Minifies JavaScript files from .dev.js to .js using terser
+    - Works on Windows, macOS, and Linux
     - Required before release if JavaScript files are modified
+- Alternative: `script/build-js` shell script (Unix systems only)
 - Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
 - No traditional "build" step - this is a WordPress plugin distributed as source
 - JavaScript files are pre-built and committed to the repository

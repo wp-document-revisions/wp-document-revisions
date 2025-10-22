@@ -4,7 +4,7 @@
 	"description": "Document management and version control for WordPress",
 	"scripts": {
 		"build": "npm run build:js",
-		"build:js": "sh script/build-js"
+		"build:js": "node script/build-js.js"
 	},
 	"repository": {
 		"type": "git",
