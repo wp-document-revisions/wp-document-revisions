@@ -3370,7 +3370,7 @@ class WP_Document_Revisions {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$this->clear_cache( $post_id, $doc, true );
 
-		// phpcs:ignore  WordPress.Security.EscapeOutput
+		// phpcs:ignore WordPress.Security.EscapeOutput
 		wp_die( get_sample_permalink_html( $post_id, $title, $slug ) );
 	}
 
