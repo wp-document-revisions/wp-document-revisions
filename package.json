@@ -4,8 +4,7 @@
 	"description": "Document management and version control for WordPress",
 	"scripts": {
 		"build": "npm run build:js",
-		"build:js": "node script/build-modern-js.js",
-		"minify": "terser js/wp-document-revisions.dev.js -o js/wp-document-revisions.js --compress --mangle"
+		"build:js": "sh script/build-js"
 	},
 	"repository": {
 		"type": "git",
