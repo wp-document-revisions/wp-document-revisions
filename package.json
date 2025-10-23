@@ -1,0 +1,47 @@
+{
+  "name": "wp-document-revisions",
+  "version": "3.5.0",
+  "description": "Document management and version control for WordPress",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wp-document-revisions/wp-document-revisions.git"
+  },
+  "keywords": [
+    "wordpress",
+    "documents",
+    "revisions",
+    "version-control"
+  ],
+  "author": "WP Document Revisions Contributors",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/tests/js/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "js/**/*.dev.js",
+      "!js/**/*.coffee",
+      "!js/**/*.coffee2"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/js/setup.js"
+    ]
+  }
+}

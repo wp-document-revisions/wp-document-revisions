@@ -1,0 +1,4 @@
+# Exclude minified/compressed JavaScript files
+# Only format the .dev.js files, not the compressed versions
+js/*.js
+!js/*.dev.js
