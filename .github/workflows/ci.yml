@@ -1,5 +1,7 @@
 # Based on https://github.com/wordpress/wp-plugin-dependencies
 name: CI
+permissions:
+  contents: read
 
 on:
     push:
