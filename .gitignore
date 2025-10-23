@@ -8,4 +8,5 @@ composer.lock
 coverage.xml
 .phpunit.result.cache
 node_modules
+coverage
 package-lock.json
