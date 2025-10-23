@@ -69,6 +69,17 @@ composer install
 ./vendor/bin/phpunit
 ```
 
+### JavaScript Tests
+
+```bash
+npm install
+npm test                  # Run all tests
+npm run test:watch        # Watch mode
+npm run test:coverage     # Generate coverage report
+```
+
+See [tests/js/README.md](tests/js/README.md) for detailed JavaScript testing documentation.
+
 ### Code Standards
 
 ```bash
