@@ -15,6 +15,14 @@ describe('WPDocumentRevisions', () => {
 
 		// Create a fresh mock jQuery
 		mockJQuery = jest.fn((selector) => {
+			// Handle jQuery ready: jQuery(function() { ... })
+			if (typeof selector === 'function') {
+				// Call the function immediately with jQuery as parameter (simulating ready)
+				selector(mockJQuery);
+				return mockJQuery;
+			}
+			
+			// Handle normal jQuery selector
 			const element = {
 				click: jest.fn(() => element),
 				bind: jest.fn(() => element),
@@ -45,6 +53,11 @@ describe('WPDocumentRevisions', () => {
 		mockJQuery.post = jest.fn();
 		mockJQuery.ajax = jest.fn();
 
+		// Make jQuery available globally for the eval
+		// BUT make it NOT call ready callbacks immediately
+		global.jQuery = mockJQuery;
+		window.jQuery = mockJQuery;
+
 		// Load the module
 		const fs = require('fs');
 		const path = require('path');
@@ -54,15 +67,54 @@ describe('WPDocumentRevisions', () => {
 		);
 
 		// Execute the code in the test environment
-		eval(jsFile);
+		// The code will try to call jQuery ready, which will create an instance
+		// But we want the constructor function, so we'll capture it
+		let WPDocumentRevisionsConstructor;
+		const originalMockJQuery = mockJQuery;
+		
+		// Temporarily override jQuery to capture the constructor
+		global.jQuery = jest.fn((selectorOrFunc) => {
+			if (typeof selectorOrFunc === 'function') {
+				// This is the ready callback - capture the result but don't execute yet
+				// The callback does: window.WPDocumentRevisions = new WPDocumentRevisions($)
+				// We want to capture WPDocumentRevisions constructor before it's called
+				// So we'll execute the file, capture the constructor from the IIFE, then create our own instance
+				return mockJQuery;
+			}
+			return originalMockJQuery(selectorOrFunc);
+		});
+		global.jQuery.post = mockJQuery.post;
+		global.jQuery.ajax = mockJQuery.ajax;
+		window.jQuery = global.jQuery;
 
-		// Create instance
-		global.window.WPDocumentRevisions = window.WPDocumentRevisions;
-		WPDocumentRevisions = new window.WPDocumentRevisions(mockJQuery);
+		// Modify the file to capture the constructor
+		const modifiedJsFile = jsFile.replace(
+			'jQuery(function ($) {',
+			'window.WPDocumentRevisionsConstructor = WPDocumentRevisions; jQuery(function ($) {'
+		);
+		
+		eval(modifiedJsFile);
+
+		// Restore jQuery
+		global.jQuery = originalMockJQuery;
+		window.jQuery = originalMockJQuery;
+
+		// Now create an instance with the constructor
+		if (window.WPDocumentRevisionsConstructor) {
+			// Store the constructor for tests that need to create new instances
+			window.WPDocumentRevisions = window.WPDocumentRevisionsConstructor;
+			WPDocumentRevisions = new window.WPDocumentRevisionsConstructor(mockJQuery);
+		} else {
+			// Fallback to the instance created by jQuery ready
+			WPDocumentRevisions = window.WPDocumentRevisions;
+		}
 	});
 
 	afterEach(() => {
-		delete global.window.WPDocumentRevisions;
+		delete window.WPDocumentRevisions;
+		delete window.WPDocumentRevisionsConstructor;
+		delete global.jQuery;
+		delete window.jQuery;
 	});
 
 	describe('Constructor and Initialization', () => {

@@ -102,8 +102,19 @@ describe('wp-document-revisions-validate', () => {
 		});
 
 		test('should call clear_line on success', () => {
-			const mockClearLine = jest.fn();
-			global.clear_line = mockClearLine;
+			// Setup DOM mocks for clear_line to work
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
+			global.document.getElementById = jest.fn((id) => {
+				if (id === 'Line123') {
+					return {
+						classList: { remove: jest.fn() },
+						getElementsByTagName: jest.fn(() => mockTds),
+					};
+				}
+				return { style: { display: '' } };
+			});
 
 			jQuery.ajax = jest.fn((options) => {
 				// Simulate successful response
@@ -112,7 +123,9 @@ describe('wp-document-revisions-validate', () => {
 
 			wpdr_valid_fix(123, 'type1', 456);
 
-			expect(mockClearLine).toHaveBeenCalledWith(123, 'type1');
+			// Verify clear_line was executed by checking its side effects
+			expect(mockTds[3].innerHTML).toBe('Processed');
+			expect(mockTds[4].innerHTML).toBe('');
 		});
 
 		test('should alert on error', () => {
@@ -155,12 +168,19 @@ describe('wp-document-revisions-validate', () => {
 
 	describe('clear_line', () => {
 		test('should get line element by ID', () => {
-			const mockGetElementById = jest.fn(() => ({
-				classList: { remove: jest.fn() },
-				getElementsByTagName: jest.fn(() => [
-					{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
-				]),
-			}));
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
+			const mockGetElementById = jest.fn((id) => {
+				if (id === 'Line123') {
+					return {
+						classList: { remove: jest.fn() },
+						getElementsByTagName: jest.fn(() => mockTds),
+					};
+				}
+				// Return elements with style for on_ and off elements
+				return { style: { display: '' } };
+			});
 			global.document.getElementById = mockGetElementById;
 
 			clear_line(123, 'type1');
@@ -170,13 +190,17 @@ describe('wp-document-revisions-validate', () => {
 
 		test('should remove validation type class from line', () => {
 			const mockRemove = jest.fn();
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
 			const mockLine = {
 				classList: { remove: mockRemove },
-				getElementsByTagName: jest.fn(() => [
-					{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
-				]),
+				getElementsByTagName: jest.fn(() => mockTds),
 			};
-			global.document.getElementById = jest.fn(() => mockLine);
+			global.document.getElementById = jest.fn((id) => {
+				if (id === 'Line123') return mockLine;
+				return { style: { display: '' } };
+			});
 
 			clear_line(123, 'type1');
 
@@ -191,7 +215,10 @@ describe('wp-document-revisions-validate', () => {
 				classList: { remove: jest.fn() },
 				getElementsByTagName: jest.fn(() => mockTds),
 			};
-			global.document.getElementById = jest.fn(() => mockLine);
+			global.document.getElementById = jest.fn((id) => {
+				if (id === 'Line123') return mockLine;
+				return { style: { display: '' } };
+			});
 			global.processed = 'PROCESSED';
 
 			clear_line(123, 'type1');
@@ -207,7 +234,10 @@ describe('wp-document-revisions-validate', () => {
 				classList: { remove: jest.fn() },
 				getElementsByTagName: jest.fn(() => mockTds),
 			};
-			global.document.getElementById = jest.fn(() => mockLine);
+			global.document.getElementById = jest.fn((id) => {
+				if (id === 'Line123') return mockLine;
+				return { style: { display: '' } };
+			});
 
 			clear_line(123, 'type1');
 
@@ -350,16 +380,40 @@ describe('wp-document-revisions-validate', () => {
 
 	describe('Integration tests', () => {
 		test('wpdr_valid_fix should trigger clear_line on success', () => {
-			const mockClearLine = jest.fn();
-			global.clear_line = mockClearLine;
+			// Setup mock DOM elements for clear_line
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
+			const mockLine = {
+				classList: { remove: jest.fn() },
+				getElementsByTagName: jest.fn(() => mockTds),
+			};
+			const mockOnElement = { style: { display: 'block' } };
+			const mockOffElement = { style: { display: 'none' } };
 
+			global.document.getElementById = jest.fn((id) => {
+				if (id === 'Line456') return mockLine;
+				if (id === 'on_456') return mockOnElement;
+				if (id === 'off456') return mockOffElement;
+				return { style: { display: '' } };
+			});
+
+			global.processed = 'Fixed';
+
+			// Simulate complete flow
 			jQuery.ajax = jest.fn((options) => {
 				options.success({ status: 'success' });
 			});
 
 			wpdr_valid_fix(456, 'wpdr_type', 789);
 
-			expect(mockClearLine).toHaveBeenCalledWith(456, 'wpdr_type');
+			// Verify AJAX was called
+			expect(jQuery.ajax).toHaveBeenCalled();
+
+			// Verify line was cleared by checking side effects
+			expect(mockLine.classList.remove).toHaveBeenCalledWith('wpdr_wpdr_type');
+			expect(mockOnElement.style.display).toBe('none');
+			expect(mockOffElement.style.display).toBe('block');
 		});
 
 		test('should handle complete validation workflow', () => {

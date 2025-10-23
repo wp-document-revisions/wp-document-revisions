@@ -86,16 +86,11 @@ window.location = {
 	reload: jest.fn(),
 };
 
-// Mock window parent/opener/top for iframe context
-global.opener = null;
-global.parent = window;
-global.top = window;
+// Mock window.dialogArguments (used by IE) - must be explicitly undefined
+window.dialogArguments = undefined;
 
-// Add document to window mock  
-window.document = global.document;
-
-// Mock document methods
-global.document.getElementById = jest.fn((id) => ({
+// Mock document methods FIRST before assigning to parent/top
+const mockGetElementById = jest.fn((id) => ({
 	id,
 	innerHTML: '',
 	style: { display: 'block' },
@@ -103,9 +98,34 @@ global.document.getElementById = jest.fn((id) => ({
 		remove: jest.fn(),
 	},
 	getElementsByTagName: jest.fn(() => []),
+	contentWindow: {
+		document: {
+			getElementById: jest.fn(() => ({ innerHTML: '' })),
+		},
+	},
 }));
 
-global.document.getElementsByClassName = jest.fn(() => []);
+const mockGetElementsByClassName = jest.fn(() => []);
+
+global.document.getElementById = mockGetElementById;
+global.document.getElementsByClassName = mockGetElementsByClassName;
+
+// Add document to window mock
+window.document = global.document;
+
+// Mock window parent/opener/top for iframe context
+// These need to be set BEFORE any code evals that references them
+// The WPDocumentRevisions code does: window.dialogArguments || opener || parent || top
+// So we need opener to be null, and parent/top to have document
+global.opener = null;
+global.parent = {
+	document: global.document,
+	jQuery: global.jQuery,
+};
+global.top = {
+	document: global.document,
+	jQuery: global.jQuery,
+};
 
 // Mock alert and confirm
 global.alert = jest.fn();
