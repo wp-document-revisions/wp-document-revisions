@@ -22,6 +22,7 @@ composer.lock
 crowdin.yml
 docker-compose.yml
 Gruntfile.js
+JS_TESTS_SUMMARY.md
 package.json
 phpunit.xml
 phpunit.xml.dist
