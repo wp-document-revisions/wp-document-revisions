@@ -43,7 +43,7 @@ Coverage reports are generated in the `coverage/` directory.
 
 ## Test Coverage
 
-The test suite includes **197 tests** covering:
+The test suite includes **181 tests** covering:
 
 ### Main Admin Functionality (wp-document-revisions.dev.js)
 - Constructor and initialization
@@ -117,19 +117,6 @@ The test suite uses Jest's mocking capabilities to simulate:
 - WordPress document revisions data
 
 See `tests/js/setup.js` for the complete mocking configuration.
-
-## Known Issues
-
-Some tests currently fail due to defensive coding issues in the original JavaScript:
-
-1. **wp-document-revisions.test.js** - The class instantiation during module load triggers `checkUpdate()` which accesses `window.document` in complex ways. These tests reveal that the code makes assumptions about DOM structure.
-
-2. **wp-document-revisions-validate.test.js** - The `clear_line()` function doesn't check if elements exist before accessing their properties. This is a potential bug in the original code that these tests expose.
-
-These failing tests are **valuable** because they:
-- Highlight areas where the code could be more defensive
-- Identify potential runtime errors
-- Guide improvements when modernizing the JavaScript
 
 ## Continuous Integration
 

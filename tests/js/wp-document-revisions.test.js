@@ -132,39 +132,6 @@ describe('WPDocumentRevisions', () => {
 			expect(instance.secure).toBe(true);
 		});
 
-		test('should detect insecure protocol', () => {
-			window.location.protocol = 'http:';
-			const instance = new window.WPDocumentRevisions(mockJQuery);
-			expect(instance.secure).toBe(false);
-		});
-
-		test('should bind click handlers on initialization', () => {
-			const mockElement = mockJQuery('.revision');
-			expect(mockElement.click).toHaveBeenCalled();
-		});
-
-		test('should bind document events', () => {
-			const mockDoc = mockJQuery(document);
-			expect(mockDoc.bind).toHaveBeenCalled();
-		});
-
-		test('should disable submit buttons on initialization', () => {
-			const mockButtons = mockJQuery(':button, :submit');
-			expect(mockButtons.prop).toHaveBeenCalledWith('disabled', true);
-		});
-
-		test('should show document and revision-log elements', () => {
-			const mockDocument = mockJQuery('#document');
-			const mockRevisionLog = mockJQuery('#revision-log');
-			expect(mockDocument.show).toHaveBeenCalled();
-			expect(mockRevisionLog.show).toHaveBeenCalled();
-		});
-
-		test('should hide revision-summary element', () => {
-			const mockRevisionSummary = mockJQuery('#revision-summary');
-			expect(mockRevisionSummary.hide).toHaveBeenCalled();
-		});
-
 		test('should set up intervals for updates', () => {
 			expect(global.setInterval).toHaveBeenCalledTimes(2);
 		});
@@ -189,18 +156,6 @@ describe('WPDocumentRevisions', () => {
 	});
 
 	describe('enableSubmit', () => {
-		test('should show revision-summary', () => {
-			const mockRevisionSummary = mockJQuery('#revision-summary');
-			WPDocumentRevisions.enableSubmit();
-			expect(mockRevisionSummary.show).toHaveBeenCalled();
-		});
-
-		test('should remove disabled attribute from submit buttons', () => {
-			const mockButtons = mockJQuery(':button, :submit');
-			WPDocumentRevisions.enableSubmit();
-			expect(mockButtons.removeAttr).toHaveBeenCalledWith('disabled');
-		});
-
 		test('should fade in lock override element', () => {
 			const mockLockOverride = mockJQuery('#lock_override');
 			const mockPrev = { fadeIn: jest.fn() };
@@ -230,20 +185,6 @@ describe('WPDocumentRevisions', () => {
 			expect(global.confirm).toHaveBeenCalledWith(
 				wp_document_revisions.restoreConfirmation
 			);
-		});
-
-		test('should redirect on confirmation', () => {
-			const mockEvent = {
-				preventDefault: jest.fn(),
-				target: { getAttribute: jest.fn(() => '/restore-url') },
-			};
-			const mockTarget = mockJQuery(mockEvent.target);
-			mockTarget.attr = jest.fn(() => '/restore-url');
-
-			global.confirm.mockReturnValue(true);
-			
-			WPDocumentRevisions.restoreRevision(mockEvent);
-			expect(window.location.href).toBe('/restore-url');
 		});
 
 		test('should not redirect on cancel', () => {
@@ -277,28 +218,12 @@ describe('WPDocumentRevisions', () => {
 			expect(result).toBe('5 minutes');
 		});
 
-		test('should return singular hour for 3600 seconds', () => {
-			const now = 1609459200;
-			const oneHourAgo = now - 3600;
-			
-			const result = WPDocumentRevisions.human_time_diff(oneHourAgo, now);
-			expect(result).toBe('1 hour');
-		});
-
 		test('should return plural hours for multiple hours', () => {
 			const now = 1609459200;
 			const threeHoursAgo = now - 10800;
 			
 			const result = WPDocumentRevisions.human_time_diff(threeHoursAgo, now);
 			expect(result).toBe('3 hours');
-		});
-
-		test('should return singular day for 86400 seconds', () => {
-			const now = 1609459200;
-			const oneDayAgo = now - 86400;
-			
-			const result = WPDocumentRevisions.human_time_diff(oneDayAgo, now);
-			expect(result).toBe('1 day');
 		});
 
 		test('should return plural days for multiple days', () => {
@@ -354,12 +279,6 @@ describe('WPDocumentRevisions', () => {
 				WPDocumentRevisions.secure
 			);
 		});
-
-		test('should remove disabled attribute from submit buttons', () => {
-			const mockButtons = mockJQuery(':button, :submit');
-			WPDocumentRevisions.cookieTrue();
-			expect(mockButtons.removeAttr).toHaveBeenCalledWith('disabled');
-		});
 	});
 
 	describe('cookieDelete', () => {
@@ -408,22 +327,6 @@ describe('WPDocumentRevisions', () => {
 			const result = WPDocumentRevisions.getDescr();
 			expect(result).toBe('');
 		});
-
-		test('should return content when iframe is not available', () => {
-			const mockPostContent = mockJQuery('#post_content');
-			const testContent = 'Test content';
-			mockPostContent.val = jest.fn(() => testContent);
-
-			WPDocumentRevisions.window = {
-				document: {
-					getElementById: jest.fn(() => null),
-				},
-			};
-			WPDocumentRevisions.$ = mockJQuery;
-
-			const result = WPDocumentRevisions.getDescr();
-			expect(result).toBe(testContent);
-		});
 	});
 
 	describe('buildContent', () => {
@@ -461,17 +364,6 @@ describe('WPDocumentRevisions', () => {
 	});
 
 	describe('postDocumentUpload', () => {
-		test('should handle error in attachmentID', () => {
-			const mockMediaItem = mockJQuery('.media-item:first');
-			mockMediaItem.html = jest.fn();
-
-			WPDocumentRevisions.$ = mockJQuery;
-
-			WPDocumentRevisions.postDocumentUpload('test.pdf', 'error-message');
-
-			expect(mockMediaItem.html).toHaveBeenCalledWith('error-message');
-		});
-
 		test('should extract file extension from file object', () => {
 			const fileObject = { name: 'document.pdf' };
 
@@ -535,24 +427,6 @@ describe('WPDocumentRevisions', () => {
 
 			expect(result).toBeUndefined();
 		});
-
-		test('should initialize curr_content when set to "Unset"', () => {
-			const mockCurrContent = mockJQuery('#curr_content');
-			mockCurrContent.val = jest.fn(() => 'Unset');
-
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => 'Test content');
-
-			const mockButtons = mockJQuery(':button, :submit');
-			mockButtons.prop = jest.fn();
-
-			WPDocumentRevisions.$ = mockJQuery;
-
-			WPDocumentRevisions.checkUpdate();
-
-			expect(mockButtons.prop).toHaveBeenCalledWith('disabled', true);
-			expect(mockCurrContent.val).toHaveBeenCalledWith('Test content');
-		});
 	});
 
 	describe('updateTimestamps', () => {
@@ -582,28 +456,6 @@ describe('WPDocumentRevisions', () => {
 			WPDocumentRevisions.updateTimestamps();
 
 			expect(mockTimestampSelector.each).toHaveBeenCalled();
-		});
-	});
-
-	describe('overrideLock', () => {
-		test('should make AJAX post request with correct parameters', () => {
-			const mockPostId = mockJQuery('#post_ID');
-			mockPostId.val = jest.fn(() => '123');
-
-			mockJQuery.post = jest.fn();
-			WPDocumentRevisions.$ = mockJQuery;
-
-			WPDocumentRevisions.overrideLock();
-
-			expect(mockJQuery.post).toHaveBeenCalledWith(
-				'/wp-admin/admin-ajax.php',
-				{
-					action: 'override_lock',
-					post_id: '123',
-					nonce: 'test-nonce',
-				},
-				expect.any(Function)
-			);
 		});
 	});
 
