@@ -519,4 +519,283 @@ describe('WPDocumentRevisions', () => {
 			expect(mockBind).toHaveBeenCalledWith('FileUploaded', expect.any(Function));
 		});
 	});
+
+	describe('overrideLock', () => {
+		beforeEach(() => {
+			// Mock jQuery.post
+			mockJQuery.post = jest.fn();
+			WPDocumentRevisions.$ = mockJQuery;
+		});
+
+		test('should call jQuery.post with correct parameters', () => {
+			const mockPostID = jest.fn(() => '123');
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#post_ID') {
+					return { val: mockPostID };
+				}
+				return mockJQuery(selector);
+			});
+			WPDocumentRevisions.$.post = jest.fn();
+
+			global.ajaxurl = '/wp-admin/admin-ajax.php';
+			global.wp_document_revisions = {
+				nonce: 'test-nonce',
+			};
+
+			WPDocumentRevisions.overrideLock();
+
+			expect(WPDocumentRevisions.$.post).toHaveBeenCalledWith(
+				'/wp-admin/admin-ajax.php',
+				{
+					action: 'override_lock',
+					post_id: '123',
+					nonce: 'test-nonce',
+				},
+				expect.any(Function)
+			);
+		});
+
+		test('should hide lock_override on success', () => {
+			const mockLockOverride = {
+				hide: jest.fn(),
+			};
+			const mockError = {
+				not: jest.fn(() => mockError),
+				hide: jest.fn(),
+			};
+			const mockPublish = {
+				fadeIn: jest.fn(),
+			};
+
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#post_ID') return { val: jest.fn(() => '123') };
+				if (selector === '#lock_override') return mockLockOverride;
+				if (selector === '.error') return mockError;
+				if (selector === '#publish, .add_media, #lock-notice') return mockPublish;
+				return mockJQuery(selector);
+			});
+			WPDocumentRevisions.$.post = jest.fn((url, data, callback) => {
+				callback(true); // Success response
+			});
+
+			global.autosave = jest.fn();
+			global.ajaxurl = '/wp-admin/admin-ajax.php';
+			global.wp_document_revisions = { nonce: 'test-nonce' };
+
+			WPDocumentRevisions.overrideLock();
+
+			expect(mockLockOverride.hide).toHaveBeenCalled();
+			expect(mockPublish.fadeIn).toHaveBeenCalled();
+			expect(global.autosave).toHaveBeenCalled();
+		});
+
+		test('should show alert on failure', () => {
+			global.alert = jest.fn();
+			global.ajaxurl = '/wp-admin/admin-ajax.php';
+			global.wp_document_revisions = {
+				nonce: 'test-nonce',
+				lockError: 'Lock override failed',
+			};
+
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#post_ID') return { val: jest.fn(() => '123') };
+				return mockJQuery(selector);
+			});
+			WPDocumentRevisions.$.post = jest.fn((url, data, callback) => {
+				callback(false); // Failure response
+			});
+
+			WPDocumentRevisions.overrideLock();
+
+			expect(global.alert).toHaveBeenCalledWith('Lock override failed');
+		});
+
+		test('should default to post_id 0 if #post_ID val is empty', () => {
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#post_ID') return { val: jest.fn(() => '') };
+				return mockJQuery(selector);
+			});
+			WPDocumentRevisions.$.post = jest.fn();
+
+			global.ajaxurl = '/wp-admin/admin-ajax.php';
+			global.wp_document_revisions = { nonce: 'test-nonce' };
+
+			WPDocumentRevisions.overrideLock();
+
+			expect(WPDocumentRevisions.$.post).toHaveBeenCalledWith(
+				'/wp-admin/admin-ajax.php',
+				{
+					action: 'override_lock',
+					post_id: 0,
+					nonce: 'test-nonce',
+				},
+				expect.any(Function)
+			);
+		});
+	});
+
+	describe('lockOverrideNotice', () => {
+		test('should request permission if checkPermission > 0', () => {
+			const mockRequestPermission = jest.fn();
+			global.window.webkitNotifications = {
+				checkPermission: jest.fn(() => 1),
+				RequestPermission: mockRequestPermission,
+			};
+
+			WPDocumentRevisions.lockOverrideNotice('Test notice');
+
+			expect(mockRequestPermission).toHaveBeenCalled();
+		});
+
+		test('should create and show notification if permission granted', () => {
+			const mockShow = jest.fn();
+			const mockNotification = { show: mockShow };
+			const mockCreateNotification = jest.fn(() => mockNotification);
+
+			global.window.webkitNotifications = {
+				checkPermission: jest.fn(() => 0),
+				createNotification: mockCreateNotification,
+			};
+			global.wp_document_revisions = {
+				lostLockNoticeLogo: 'logo.png',
+				lostLockNoticeTitle: 'Lock Override',
+			};
+
+			WPDocumentRevisions.lockOverrideNotice('Test notice message');
+
+			expect(mockCreateNotification).toHaveBeenCalledWith(
+				'logo.png',
+				'Lock Override',
+				'Test notice message'
+			);
+			expect(mockShow).toHaveBeenCalled();
+		});
+	});
+
+	describe('postAutosaveCallback', () => {
+		beforeEach(() => {
+			// Reset mocks
+			global.location = { reload: jest.fn() };
+			global.alert = jest.fn();
+			global.window.webkitNotifications = undefined;
+		});
+
+		test('should do nothing if autosave-alert does not exist', () => {
+			WPDocumentRevisions.$ = jest.fn(() => ({
+				length: 0,
+			}));
+
+			WPDocumentRevisions.postAutosaveCallback();
+
+			expect(global.location.reload).not.toHaveBeenCalled();
+		});
+
+		test('should do nothing if lock-notice does not exist', () => {
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#autosave-alert') return { length: 1 };
+				if (selector === '#lock-notice') return { length: 0 };
+				return mockJQuery(selector);
+			});
+
+			WPDocumentRevisions.postAutosaveCallback();
+
+			expect(global.location.reload).not.toHaveBeenCalled();
+		});
+
+		test('should do nothing if lock-notice is not visible', () => {
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#autosave-alert') return { length: 1 };
+				if (selector === '#lock-notice') {
+					return {
+						length: 1,
+						is: jest.fn(() => false),
+					};
+				}
+				return mockJQuery(selector);
+			});
+
+			WPDocumentRevisions.postAutosaveCallback();
+
+			expect(global.location.reload).not.toHaveBeenCalled();
+		});
+
+		test('should show alert and reload when lock is lost', () => {
+			const mockTitle = { val: jest.fn(() => 'Test Document') };
+			const mockWindowDocument = {
+				$: jest.fn(() => mockTitle),
+			};
+			WPDocumentRevisions.window = { document: mockWindowDocument };
+
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#autosave-alert') return { length: 1 };
+				if (selector === '#lock-notice') {
+					return {
+						length: 1,
+						is: jest.fn(() => true),
+					};
+				}
+				return mockJQuery(selector);
+			});
+
+			global.wp_document_revisions = {
+				lostLockNotice: 'Lock lost for %s',
+			};
+
+			WPDocumentRevisions.postAutosaveCallback();
+
+			expect(global.alert).toHaveBeenCalledWith('Lock lost for Test Document');
+			expect(global.location.reload).toHaveBeenCalledWith(true);
+		});
+
+		test('should use lockOverrideNotice when webkitNotifications available', () => {
+			const mockTitle = { val: jest.fn(() => 'Test Document') };
+			const mockWindowDocument = {
+				$: jest.fn(() => mockTitle),
+			};
+			WPDocumentRevisions.window = { document: mockWindowDocument };
+			WPDocumentRevisions.lockOverrideNotice = jest.fn();
+
+			WPDocumentRevisions.$ = jest.fn((selector) => {
+				if (selector === '#autosave-alert') return { length: 1 };
+				if (selector === '#lock-notice') {
+					return {
+						length: 1,
+						is: jest.fn(() => true),
+					};
+				}
+				return mockJQuery(selector);
+			});
+
+			global.window.webkitNotifications = { checkPermission: jest.fn(() => 0) };
+			global.wp_document_revisions = {
+				lostLockNotice: 'Lock lost for %s',
+			};
+
+			WPDocumentRevisions.postAutosaveCallback();
+
+			expect(WPDocumentRevisions.lockOverrideNotice).toHaveBeenCalledWith(
+				'Lock lost for Test Document'
+			);
+			expect(global.location.reload).toHaveBeenCalledWith(true);
+		});
+	});
+
+	describe('legacyPostDocumentUpload', () => {
+		test('should call postDocumentUpload with correct parameters', () => {
+			WPDocumentRevisions.postDocumentUpload = jest.fn();
+
+			WPDocumentRevisions.legacyPostDocumentUpload('12345', '.pdf');
+
+			expect(WPDocumentRevisions.postDocumentUpload).toHaveBeenCalledWith('12345', '.pdf');
+		});
+
+		test('should pass through both string and object parameters', () => {
+			WPDocumentRevisions.postDocumentUpload = jest.fn();
+			const fileObj = { name: 'document.pdf' };
+
+			WPDocumentRevisions.legacyPostDocumentUpload(fileObj, '12345');
+
+			expect(WPDocumentRevisions.postDocumentUpload).toHaveBeenCalledWith(fileObj, '12345');
+		});
+	});
 });
