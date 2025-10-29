@@ -1039,7 +1039,7 @@ class WP_Document_Revisions_Admin {
 			?>
 			<script type="text/javascript">
 				window.addEventListener('load', function() {
-					if (typeof window.WPDocumentRevisions === 'undefined') {window.WPDocumentRevisions = new WPDocumentRevisions();}
+					if (typeof window.WPDocumentRevisions === 'undefined') {window.WPDocumentRevisions = new WPDocumentRevisions(jQuery);}
 				});
 			</script>
 			<?php
