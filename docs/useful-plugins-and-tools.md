@@ -18,4 +18,4 @@
 
 - [Edit Flow](https://wordpress.org/plugins/edit-flow/)
 - [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
-- [PublishPress Revisions](https://wordpress.org/plugins/publishpress-revisions/)
+- [PublishPress Revisions](https://wordpress.org/plugins/publishpress-revisions/) - See the [integration guide](cookbook/publishpress-revisions-integration.md) for scheduling document revisions

@@ -37,6 +37,7 @@ See [**the full list of features**](./features.md) for more information.
 - **[Plugin Filters](./filters.md)** - Available WordPress filters
 - **[Plugin Shortcodes and Widget](./shortcodes.md)** - Display documents on your site
 - **[Useful Plugins and Tools](./useful-plugins-and-tools.md)** - Extend functionality
+- **[Cookbook](./cookbook/README.md)** - Integration guides and recipes
 - **[Translations](./translations.md)** - Multi-language support
 - **[Links](./links.md)** - Additional resources
 
