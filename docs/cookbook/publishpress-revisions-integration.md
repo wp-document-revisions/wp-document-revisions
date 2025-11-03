@@ -186,6 +186,11 @@ class WP_Document_Revisions_PublishPress_Compatibility {
 			return $attach;
 		}
 
+		// Validate attachment parent ID before querying.
+		if ( ! is_numeric( $attach->post_parent ) || $attach->post_parent <= 0 ) {
+			return $attach;
+		}
+
 		// Check if the attachment's parent is a revision (has a parent itself).
 		global $wpdb;
 
@@ -199,13 +204,21 @@ class WP_Document_Revisions_PublishPress_Compatibility {
 
 		// If the attachment's parent has a parent (meaning it's a revision),
 		// update the attachment to point to the original document.
-		if ( 0 !== (int) $parent ) {
-			wp_update_post(
+		if ( $parent && (int) $parent > 0 ) {
+			$result = wp_update_post(
 				array(
 					'ID'          => $attach->ID,
 					'post_parent' => $parent,
 				)
 			);
+
+			// Log error if update fails, but still return the attachment.
+			if ( is_wp_error( $result ) ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( 'WPDR PublishPress Compatibility: Failed to update attachment parent - ' . $result->get_error_message() );
+				return $attach;
+			}
+
 			$attach->post_parent = $parent;
 		}
 
