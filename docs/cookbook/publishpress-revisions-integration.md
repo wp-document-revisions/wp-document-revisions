@@ -152,20 +152,26 @@ class WP_Document_Revisions_PublishPress_Compatibility {
 	/**
 	 * Modify the permalink for draft document revisions.
 	 *
-	 * This ensures that draft revisions use the correct URL structure
-	 * for preview and workflow purposes.
+	 * This filter hook ensures the permalink is processed through WPDR's logic
+	 * in the correct order when working with PublishPress Revisions. While this
+	 * method doesn't modify the link directly (WPDR handles the actual permalink
+	 * generation), hooking into this filter ensures compatibility with both plugins'
+	 * permalink handling.
+	 *
+	 * Note: This hook can be extended in the future if custom permalink modifications
+	 * are needed for draft revisions.
 	 *
 	 * @param string  $link The document permalink.
 	 * @param WP_Post $post The document post object.
-	 * @return string Modified permalink.
+	 * @return string The permalink (unmodified by this method).
 	 */
 	public function modify_permalink( $link, $post ) {
 		if ( ! $this->is_document_revision( $post ) ) {
 			return $link;
 		}
 
-		// For draft revisions, ensure the permalink includes the document slug.
-		// This is handled by WPDR's permalink logic, so we just return the link.
+		// WPDR's permalink logic handles the URL structure for draft revisions.
+		// This hook ensures compatibility with PublishPress Revisions workflow.
 		return $link;
 	}
 
