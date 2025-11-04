@@ -1,26 +1,112 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/php-mariadb
 {
-	"name": "PHP & MariaDB",
+	"name": "WP Document Revisions Development",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// For use with PHP or Apache (e.g.php -S localhost:8080 or apache2ctl start)
-	"forwardPorts": [8080, 3306],
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": {}
-	}
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "20"
+		},
+		"ghcr.io/devcontainers/features/git:1": {
+			"version": "latest"
+		}
+	},
+
+	// Forward WordPress and database ports
+	"forwardPorts": [
+		80,      // WordPress
+		3306     // MariaDB
+	],
+
+	// Set port attributes for better labels
+	"portsAttributes": {
+		"80": {
+			"label": "WordPress",
+			"onAutoForward": "notify"
+		},
+		"3306": {
+			"label": "MariaDB",
+			"onAutoForward": "silent"
+		}
+	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+	// This sets up the development environment automatically
+	"postCreateCommand": "bash .devcontainer/setup.sh",
+
+	// Use 'postStartCommand' to run commands each time the container starts
+	"postStartCommand": "echo 'Development environment ready! WordPress available at http://localhost'",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				// PHP Development
+				"bmewburn.vscode-intelephense-client",
+				"xdebug.php-debug",
+				"whatwedo.twig",
+				
+				// WordPress Development
+				"wordpresstoolbox.wordpress-toolbox",
+				
+				// Code Quality
+				"shevaua.phpcs",
+				"recca0120.vscode-phpunit",
+				
+				// JavaScript/Node
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				
+				// Git
+				"eamodio.gitlens",
+				
+				// Docker
+				"ms-azuretools.vscode-docker",
+				
+				// General Development
+				"editorconfig.editorconfig",
+				"streetsidesoftware.code-spell-checker"
+			],
+			"settings": {
+				// PHP Settings
+				"php.validate.executablePath": "/usr/local/bin/php",
+				"php.suggest.basic": false,
+				"intelephense.environment.phpVersion": "8.2",
+				
+				// PHPCS Settings
+				"phpcs.enable": true,
+				"phpcs.standard": "phpcs.ruleset.xml",
+				"phpcs.executablePath": "${workspaceFolder}/bin/phpcs",
+				
+				// Editor Settings
+				"editor.formatOnSave": false,
+				"editor.tabSize": 4,
+				"editor.insertSpaces": false,
+				"files.trimTrailingWhitespace": true,
+				"files.insertFinalNewline": true,
+				
+				// File Associations
+				"files.associations": {
+					"*.php": "php"
+				},
+				
+				// Terminal Settings
+				"terminal.integrated.defaultProfile.linux": "bash",
+				
+				// WordPress specific
+				"intelephense.stubs": [
+					"wordpress",
+					"wordpress-globals",
+					"wp-cli"
+				]
+			}
+		}
+	},
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	// Use the vscode user instead of root
+	"remoteUser": "vscode"
 }
