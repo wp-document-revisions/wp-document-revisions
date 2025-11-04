@@ -237,6 +237,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 = 3.8.0 =
 
 - FIX: Ensure Link Date option is available on Multisite instances. (#389)
+- FIX: Bug on upload, Cannot read properties of undefined (#414)
 - DEV: Review for WP Coding standard 3.2
 
 = 3.7.2 =

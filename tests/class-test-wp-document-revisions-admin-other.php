@@ -1153,6 +1153,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'addEventListener' ), 'no listener' );
+		self::assertEquals( 1, (int) substr_count( $output, 'typeof window.WPDocumentRevisions' ), 'no typeof check' );
+		self::assertEquals( 1, (int) substr_count( $output, 'WPDocumentRevisions(jQuery)' ), 'no instantiation' );
 		self::assertTrue( true, 'run' );
 	}
 
