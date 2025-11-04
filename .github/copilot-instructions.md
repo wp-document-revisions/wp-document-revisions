@@ -6,6 +6,27 @@ WP Document Revisions is a document management and version control WordPress plu
 
 **Note**: This file contains practical development workflow instructions. For comprehensive architectural documentation and detailed feature information, see `.copilot-instructions.md` in the repository root.
 
+## Custom Agents
+
+This repository includes specialized custom agents in `.github/agents/` for focused tasks:
+
+- **@documentation-expert**: Documentation creation and updates
+- **@wordpress-php-expert**: WordPress plugin PHP development  
+- **@testing-expert**: PHPUnit testing for WordPress
+- **@security-expert**: Security review and auditing
+
+See [.github/agents/README.md](agents/README.md) for details on using these agents.
+
+## Path-Specific Instructions
+
+The repository includes path-specific instructions in `.github/instructions/` that provide focused guidance:
+
+- **docs.instructions.md**: For documentation files (`docs/`, `README.md`, `readme.txt`)
+- **tests.instructions.md**: For test files (`tests/`)
+- **includes.instructions.md**: For plugin code (`includes/`, `wp-document-revisions.php`)
+
+These instructions are automatically applied when working with files in the specified paths.
+
 ## Quick Start
 
 For automated environment setup, the repository includes a GitHub Actions workflow at `.github/workflows/copilot-setup-steps.yml` that handles all dependencies and configuration. Manual setup instructions are provided below.
@@ -35,7 +56,7 @@ For automated environment setup, the repository includes a GitHub Actions workfl
     - Downloads WordPress core and test framework to /tmp/wordpress-tests-lib
     - Requires MySQL database and internet connection to WordPress.org APIs
     - Takes 1-3 minutes. NEVER CANCEL - Set timeout to 5+ minutes.
-    - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"`
+    - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"` (replace root/root with your MySQL credentials)
 - Run PHPUnit tests: `bin/phpunit --config=phpunit9.xml` (after WordPress test setup)
     - Executes comprehensive test suite covering all plugin functionality
     - Takes 2-5 minutes. NEVER CANCEL - Set timeout to 10+ minutes.
