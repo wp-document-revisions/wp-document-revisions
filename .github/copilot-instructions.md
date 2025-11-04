@@ -56,7 +56,7 @@ For automated environment setup, the repository includes a GitHub Actions workfl
     - Downloads WordPress core and test framework to /tmp/wordpress-tests-lib
     - Requires MySQL database and internet connection to WordPress.org APIs
     - Takes 1-3 minutes. NEVER CANCEL - Set timeout to 5+ minutes.
-    - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"`
+    - Create test database first: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"` (replace root/root with your MySQL credentials)
 - Run PHPUnit tests: `bin/phpunit --config=phpunit9.xml` (after WordPress test setup)
     - Executes comprehensive test suite covering all plugin functionality
     - Takes 2-5 minutes. NEVER CANCEL - Set timeout to 10+ minutes.

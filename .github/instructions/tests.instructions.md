@@ -18,6 +18,7 @@ When working with test files:
 
 1. Ensure WordPress test environment is set up:
    ```bash
+   # Note: Replace 'root'/'root' with your actual MySQL username/password
    mysql -u root -proot -e "CREATE DATABASE wordpress_test;"
    bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest
    ```

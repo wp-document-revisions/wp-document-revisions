@@ -28,7 +28,7 @@ You are a testing specialist for the WP Document Revisions WordPress plugin. You
 
 ## Test Environment Setup
 
-1. Create test database: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"`
+1. Create test database: `mysql -u root -proot -e "CREATE DATABASE wordpress_test;"` (replace root/root with actual MySQL credentials)
 2. Install WordPress test environment: `bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest`
 3. Run tests: `bin/phpunit --config=phpunit9.xml`
 
