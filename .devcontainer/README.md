@@ -86,6 +86,8 @@ The dev container includes MariaDB with the following credentials:
 - **Password**: `wordpress`
 - **Root Password**: `mariadb`
 
+> **Note:** These are development-only credentials for local use. Never use simple passwords like these in production environments.
+
 ## Development Workflow
 
 ### Running Tests
@@ -147,7 +149,7 @@ wp post create --post_type=document --post_title="Test Document"
 ### Database connection issues
 - Ensure the database service is healthy: `docker ps`
 - Check database credentials in `docker-compose.yml`
-- Verify the test database exists: `mysql -h db -u wordpress -pwordpress -e "SHOW DATABASES;"`
+- Verify the test database exists: `mysql -h db -u wordpress -p"wordpress" -e "SHOW DATABASES;"`
 
 ### Plugin not showing in WordPress
 - Check that the symlink was created: `ls -la /var/www/html/wp-content/plugins/`

@@ -1,6 +1,10 @@
 #!/bin/bash
 # Development environment setup script for WP Document Revisions
 # This script runs automatically when the devcontainer is created
+#
+# Note: This script uses simple passwords for local development only.
+# These credentials are already defined in docker-compose.yml and are
+# not intended for production use.
 
 set -e
 
