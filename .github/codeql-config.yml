@@ -1,0 +1,25 @@
+# CodeQL Configuration File
+# This file explicitly configures which languages to analyze and which to exclude
+
+name: "WP Document Revisions CodeQL Config"
+
+# Disable default language detection to prevent Ruby analysis
+disable-default-queries: false
+
+# Explicitly define paths to analyze
+paths:
+  - includes/
+  - js/
+  - wp-document-revisions.php
+
+# Paths to ignore during analysis
+paths-ignore:
+  - vendor/
+  - node_modules/
+  - tests/
+  - script/
+  - docs/
+
+# Query suites to run
+queries:
+  - uses: security-and-quality
