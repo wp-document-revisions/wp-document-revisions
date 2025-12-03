@@ -105,7 +105,7 @@ See our [Contributing Guide](https://wp-document-revisions.github.io/wp-document
 
 ## 🔒 Security
 
-Security is a top priority. To report security vulnerabilities, please email [ben@balter.com](mailto:ben@balter.com).
+Security is a top priority. This project uses GitHub's CodeQL for automated security scanning of JavaScript code. To report security vulnerabilities, please email [ben@balter.com](mailto:ben@balter.com).
 
 ## 📄 License
 
