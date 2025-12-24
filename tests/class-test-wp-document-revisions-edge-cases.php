@@ -266,6 +266,10 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 
 		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
 
+		// Store the original slug before attempting unauthorized modification.
+		$original_doc  = get_post( $doc_id );
+		$original_slug = $original_doc->post_name;
+
 		// Switch to subscriber user who doesn't have edit_document capability.
 		wp_set_current_user( $subscriber_user_id );
 		wp_cache_flush();
@@ -301,6 +305,13 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 
 		// Should fail with WPDieException because subscriber doesn't have edit_document capability.
 		self::assertNotNull( $exception, 'Expected WPDieException for unauthorized user' );
+
+		// Verify the exception message contains 'Not authorized' to ensure correct authorization check failed.
+		self::assertStringContainsString( 'Not authorized', $exception->getMessage(), 'Exception message should indicate authorization failure' );
+
+		// Verify the document slug was NOT modified.
+		$doc_after = get_post( $doc_id );
+		self::assertEquals( $original_slug, $doc_after->post_name, 'Document slug should not have been modified by unauthorized user' );
 
 		// Clean up.
 		remove_filter( 'wp_doing_ajax', '__return_true' );
