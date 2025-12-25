@@ -3351,6 +3351,11 @@ class WP_Document_Revisions {
 			return;
 		}
 
+		// Verify user can edit this document.
+		if ( ! current_user_can( 'edit_document', $post_id ) ) {
+			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
+		}
+
 		// update the post name with the slug and then the guid - direct in the database.
 		$doc            = get_post( $post_id );
 		$slug           = wp_unique_post_slug( $slug, $post_id, $doc->post_status, 'document', 0 );

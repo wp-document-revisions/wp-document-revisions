@@ -225,4 +225,180 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		self::assertArrayHasKey( 'name', $result, 'Result should have name key' );
 		self::assertNotEmpty( $result['name'], 'Rewritten filename should not be empty' );
 	}
+
+	/**
+	 * Test update_post_slug_field authorization check - user without edit_document capability.
+	 */
+	public function test_update_post_slug_field_unauthorized() {
+		global $wpdr;
+
+		// Create an editor user who will have edit_document capability.
+		$editor_user_id = self::factory()->user->create(
+			array(
+				'user_nicename' => 'Editor',
+				'role'          => 'editor',
+			)
+		);
+
+		// Create a subscriber user who will NOT have edit_document capability.
+		$subscriber_user_id = self::factory()->user->create(
+			array(
+				'user_nicename' => 'Subscriber',
+				'role'          => 'subscriber',
+			)
+		);
+
+		// Flush roles to ensure capabilities are set correctly.
+		self::flush_roles();
+
+		// Create a document as editor.
+		wp_set_current_user( $editor_user_id );
+		wp_cache_flush();
+
+		$doc_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Document for Slug Update',
+				'post_type'   => 'document',
+				'post_status' => 'publish',
+				'post_author' => $editor_user_id,
+			)
+		);
+
+		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
+
+		// Store the original slug before attempting unauthorized modification.
+		$original_doc  = get_post( $doc_id );
+		$original_slug = $original_doc->post_name;
+
+		// Switch to subscriber user who doesn't have edit_document capability.
+		wp_set_current_user( $subscriber_user_id );
+		wp_cache_flush();
+
+		// Set up AJAX context so check_ajax_referer uses wp_die() instead of die().
+		add_filter( 'wp_doing_ajax', '__return_true' );
+
+		// Override the AJAX die handler to use the standard test die handler.
+		add_filter( 'wp_die_ajax_handler', '_wpdr_die_handler_filter' );
+
+		// Create nonce for the subscriber user.
+		$nonce = wp_create_nonce( 'samplepermalink' );
+
+		// Set up $_POST and $_REQUEST variables needed for the function.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['post_id']                 = $doc_id;
+		$_POST['new_title']               = 'New Title';
+		$_POST['new_slug']                = 'new-slug';
+		$_POST['samplepermalinknonce']    = $nonce;
+		$_REQUEST['samplepermalinknonce'] = $nonce;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// Call the function and expect WPDieException due to unauthorized access.
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->update_post_slug_field();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// Should fail with WPDieException because subscriber doesn't have edit_document capability.
+		self::assertNotNull( $exception, 'Expected WPDieException for unauthorized user' );
+
+		// Verify the exception message contains 'Not authorized' to ensure correct authorization check failed.
+		self::assertStringContainsString( 'Not authorized', $exception->getMessage(), 'Exception message should indicate authorization failure' );
+
+		// Verify the document slug was NOT modified.
+		$doc_after = get_post( $doc_id );
+		self::assertEquals( $original_slug, $doc_after->post_name, 'Document slug should not have been modified by unauthorized user' );
+
+		// Clean up.
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', '_wpdr_die_handler_filter' );
+		unset( $_POST['post_id'], $_POST['new_title'], $_POST['new_slug'], $_POST['samplepermalinknonce'], $_REQUEST['samplepermalinknonce'] );
+	}
+
+	/**
+	 * Test update_post_slug_field authorization check - user with edit_document capability.
+	 */
+	public function test_update_post_slug_field_authorized() {
+		global $wpdr;
+
+		// Create an editor user who will have edit_document capability.
+		$editor_user_id = self::factory()->user->create(
+			array(
+				'user_nicename' => 'EditorAuth',
+				'role'          => 'editor',
+			)
+		);
+
+		// Flush roles to ensure capabilities are set correctly.
+		self::flush_roles();
+
+		// Create a document as editor.
+		wp_set_current_user( $editor_user_id );
+		wp_cache_flush();
+
+		$doc_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Document for Authorized Slug Update',
+				'post_type'   => 'document',
+				'post_status' => 'publish',
+				'post_author' => $editor_user_id,
+			)
+		);
+
+		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
+
+		// Set up AJAX context so check_ajax_referer uses wp_die() instead of die().
+		add_filter( 'wp_doing_ajax', '__return_true' );
+
+		// Override the AJAX die handler to use the standard test die handler.
+		add_filter( 'wp_die_ajax_handler', '_wpdr_die_handler_filter' );
+
+		// Create nonce for the editor user.
+		$nonce = wp_create_nonce( 'samplepermalink' );
+
+		// Set up $_POST and $_REQUEST variables needed for the function.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$_POST['post_id']                 = $doc_id;
+		$_POST['new_title']               = 'New Title';
+		$_POST['new_slug']                = 'new-authorized-slug';
+		$_POST['samplepermalinknonce']    = $nonce;
+		$_REQUEST['samplepermalinknonce'] = $nonce;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// Call the function - should proceed without WPDieException for authorization.
+		// Note: The function does call wp_die() at the end to output the permalink HTML,
+		// but this is different from the authorization wp_die().
+		$exception = null;
+		try {
+			ob_start();
+			$wpdr->update_post_slug_field();
+			ob_end_clean();
+		} catch ( WPDieException $e ) {
+			$exception = $e;
+			ob_end_clean();
+		}
+
+		// The function calls wp_die() at the end to output HTML, so we expect an exception.
+		// But the message should NOT be "Not authorized" - it should be the permalink HTML.
+		if ( null !== $exception ) {
+			self::assertStringNotContainsString(
+				'Not authorized',
+				$exception->getMessage(),
+				'Authorized user should not get "Not authorized" error'
+			);
+		}
+
+		// Verify the slug was actually updated.
+		$updated_doc = get_post( $doc_id );
+		self::assertEquals( 'new-authorized-slug', $updated_doc->post_name, 'Slug should have been updated' );
+
+		// Clean up.
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', '_wpdr_die_handler_filter' );
+		unset( $_POST['post_id'], $_POST['new_title'], $_POST['new_slug'], $_POST['samplepermalinknonce'], $_REQUEST['samplepermalinknonce'] );
+	}
 }
