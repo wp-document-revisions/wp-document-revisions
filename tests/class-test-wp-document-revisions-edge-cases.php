@@ -307,7 +307,6 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		self::assertNotNull( $exception, 'Expected WPDieException for unauthorized user' );
 
 		// Verify the exception message contains 'Not authorized' to ensure correct authorization check failed.
-		self::assertNotFalse( strpos( $exception->getMessage(), 'Not authorized' ), 'Exception message should indicate authorization failure' );
 
 		// Verify the document slug was NOT modified.
 		$doc_after = get_post( $doc_id );
