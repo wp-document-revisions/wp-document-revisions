@@ -7,12 +7,15 @@
 
 describe('wpdr-revisions-shortcode block', () => {
 	beforeEach(() => {
+		// Reset Jest's module registry to ensure fresh execution
+		jest.resetModules();
+
 		// Reset mocks
 		jest.clearAllMocks();
 
 		// Load the revisions shortcode script
 		const path = require('path');
-
+		
 		// Execute the code in the test environment by requiring the module
 		require(path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js'));
 	});
