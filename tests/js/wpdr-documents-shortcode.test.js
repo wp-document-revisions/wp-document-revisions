@@ -5,6 +5,8 @@
  * a list of documents based on taxonomy filters and display settings.
  */
 
+const path = require('path');
+
 describe('wpdr-documents-shortcode block', () => {
 	beforeEach(() => {
 		// Reset wpdr_data
@@ -34,7 +36,6 @@ describe('wpdr-documents-shortcode block', () => {
 		};
 
 		// Load the documents shortcode script
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js');
 		
 		// Clear the module from cache to ensure fresh execution
@@ -46,7 +47,6 @@ describe('wpdr-documents-shortcode block', () => {
 
 	afterEach(() => {
 		// Ensure the shortcode script is re-executed for each test by clearing it from the require cache
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js');
 		delete require.cache[require.resolve(modulePath)];
 	});

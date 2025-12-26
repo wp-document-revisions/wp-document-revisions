@@ -5,10 +5,11 @@
  * a list of revisions for a specific document.
  */
 
+const path = require('path');
+
 describe('wpdr-revisions-shortcode block', () => {
 	beforeEach(() => {
 		// Load the revisions shortcode script
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js');
 		
 		// Clear the module from cache to ensure fresh execution
@@ -20,7 +21,6 @@ describe('wpdr-revisions-shortcode block', () => {
 
 	afterEach(() => {
 		// Ensure the shortcode script is re-executed for each test by clearing it from the require cache
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js');
 		delete require.cache[require.resolve(modulePath)];
 	});

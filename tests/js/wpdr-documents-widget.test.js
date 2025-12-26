@@ -5,10 +5,11 @@
  * a list of the most recent documents.
  */
 
+const path = require('path');
+
 describe('wpdr-documents-widget block', () => {
 	beforeEach(() => {
 		// Load the documents widget script
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js');
 		
 		// Clear the module from cache to ensure fresh execution
@@ -20,7 +21,6 @@ describe('wpdr-documents-widget block', () => {
 
 	afterEach(() => {
 		// Ensure the widget script is re-executed for each test by clearing it from the require cache
-		const path = require('path');
 		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js');
 		delete require.cache[require.resolve(modulePath)];
 	});
