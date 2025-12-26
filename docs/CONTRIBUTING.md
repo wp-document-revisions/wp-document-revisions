@@ -81,6 +81,21 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 `script/cibuild`
 
+## Continuous Integration and Security
+
+The project uses GitHub Actions for continuous integration and automated security scanning:
+
+- **PHPUnit Tests**: Run on multiple PHP versions (7.2-8.3) and WordPress versions
+- **PHPCS**: WordPress coding standards enforcement
+- **Jest**: JavaScript unit tests
+- **CodeQL**: Automated security scanning for JavaScript code
+
+CodeQL is configured to analyze only JavaScript since CodeQL does not yet support PHP. The configuration files are:
+- `.github/workflows/codeql.yml` - Defines the CodeQL analysis workflow
+- `.github/codeql-config.yml` - Specifies paths to analyze and exclude
+
+Ruby is explicitly excluded from analysis as this repository contains no Ruby code.
+
 ## Code of conduct
 
 This project is governed by [the Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.

@@ -10,3 +10,4 @@ coverage.xml
 node_modules
 coverage
 package-lock.json
+clover.xml
