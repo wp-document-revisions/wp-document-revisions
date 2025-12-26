@@ -307,7 +307,7 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		self::assertNotNull( $exception, 'Expected WPDieException for unauthorized user' );
 
 		// Verify the exception message contains 'Not authorized' to ensure correct authorization check failed.
-		self::assertStringContainsString( 'Not authorized', $exception->getMessage(), 'Exception message should indicate authorization failure' );
+		self::assertNotFalse( strpos( $exception->getMessage(), 'Not authorized' ), 'Exception message should indicate authorization failure' );
 
 		// Verify the document slug was NOT modified.
 		$doc_after = get_post( $doc_id );
@@ -385,9 +385,8 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		// The function calls wp_die() at the end to output HTML, so we expect an exception.
 		// But the message should NOT be "Not authorized" - it should be the permalink HTML.
 		if ( null !== $exception ) {
-			self::assertStringNotContainsString(
-				'Not authorized',
-				$exception->getMessage(),
+			self::assertFalse(
+				strpos( $exception->getMessage(), 'Not authorized' ),
 				'Authorized user should not get "Not authorized" error'
 			);
 		}
