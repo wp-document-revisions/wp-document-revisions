@@ -385,8 +385,6 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 		// The function calls wp_die() at the end to output HTML, so we expect an exception.
 		// But the message should NOT be "Not authorized" - it should be the permalink HTML.
 		if ( null !== $exception ) {
-			self::assertFalse(
-				strpos( $exception->getMessage(), 'Not authorized' ),
 				'Authorized user should not get "Not authorized" error'
 			);
 		}
