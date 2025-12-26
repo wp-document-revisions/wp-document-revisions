@@ -234,6 +234,10 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 3.8.1 =
+
+Update README.
+
 = 3.8.0 =
 
 == Security ==
@@ -258,9 +262,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 **Full Changelog**: https://github.com/wp-document-revisions/wp-document-revisions/compare/3.7.2...v3.8.0
 
 = 3.7.2 =
-
-Correct plugin metadata (no code changes).
-
-= 3.7.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

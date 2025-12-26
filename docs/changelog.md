@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.8.1
+
+Update README.
+
 ### 3.8.0
 
 ## Security
