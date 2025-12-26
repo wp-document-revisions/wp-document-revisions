@@ -7,9 +7,6 @@
 
 describe('wpdr-documents-shortcode block', () => {
 	beforeEach(() => {
-		// Reset mocks
-		jest.clearAllMocks();
-
 		// Reset wpdr_data
 		global.wpdr_data = {
 			stmax: 2,
@@ -37,15 +34,21 @@ describe('wpdr-documents-shortcode block', () => {
 		};
 
 		// Load the documents shortcode script
-		const fs = require('fs');
 		const path = require('path');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js'),
-			'utf8'
-		);
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js');
+		
+		// Clear the module from cache to ensure fresh execution
+		delete require.cache[require.resolve(modulePath)];
 
-		// Execute the code in the test environment
-		eval(jsFile);
+		// Execute the code in the test environment by requiring the module
+		require(modulePath);
+	});
+
+	afterEach(() => {
+		// Ensure the shortcode script is re-executed for each test by clearing it from the require cache
+		const path = require('path');
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js');
+		delete require.cache[require.resolve(modulePath)];
 	});
 
 	describe('Block Registration', () => {

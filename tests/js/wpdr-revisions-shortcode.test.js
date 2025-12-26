@@ -7,14 +7,22 @@
 
 describe('wpdr-revisions-shortcode block', () => {
 	beforeEach(() => {
-		// Reset mocks
-		jest.clearAllMocks();
-
 		// Load the revisions shortcode script
 		const path = require('path');
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js');
+		
+		// Clear the module from cache to ensure fresh execution
+		delete require.cache[require.resolve(modulePath)];
 
 		// Execute the code in the test environment by requiring the module
-		require(path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js'));
+		require(modulePath);
+	});
+
+	afterEach(() => {
+		// Ensure the shortcode script is re-executed for each test by clearing it from the require cache
+		const path = require('path');
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js');
+		delete require.cache[require.resolve(modulePath)];
 	});
 
 	describe('Block Registration', () => {

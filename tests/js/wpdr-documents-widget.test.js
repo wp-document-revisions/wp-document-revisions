@@ -7,19 +7,22 @@
 
 describe('wpdr-documents-widget block', () => {
 	beforeEach(() => {
-		// Reset mocks
-		jest.clearAllMocks();
-
 		// Load the documents widget script
-		const fs = require('fs');
 		const path = require('path');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js'),
-			'utf8'
-		);
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js');
+		
+		// Clear the module from cache to ensure fresh execution
+		delete require.cache[require.resolve(modulePath)];
 
-		// Execute the code in the test environment
-		eval(jsFile);
+		// Execute the code in the test environment by requiring the module
+		require(modulePath);
+	});
+
+	afterEach(() => {
+		// Ensure the widget script is re-executed for each test by clearing it from the require cache
+		const path = require('path');
+		const modulePath = path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js');
+		delete require.cache[require.resolve(modulePath)];
 	});
 
 	describe('Block Registration', () => {
