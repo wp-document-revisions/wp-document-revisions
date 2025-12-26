@@ -26,7 +26,7 @@ RUN if ! command -v composer &> /dev/null; then \
 
 # Set up shell conveniences for vscode user
 RUN echo 'alias ll="ls -la"' >> /home/vscode/.bashrc \
-    && echo 'alias phpcs="vendor/bin/phpcs"' >> /home/vscode/.bashrc \
-    && echo 'alias phpcbf="vendor/bin/phpcbf"' >> /home/vscode/.bashrc \
-    && echo 'alias phpunit="vendor/bin/phpunit"' >> /home/vscode/.bashrc
+    && echo 'alias phpcs="bin/phpcs"' >> /home/vscode/.bashrc \
+    && echo 'alias phpcbf="bin/phpcbf"' >> /home/vscode/.bashrc \
+    && echo 'alias phpunit="bin/phpunit"' >> /home/vscode/.bashrc
 

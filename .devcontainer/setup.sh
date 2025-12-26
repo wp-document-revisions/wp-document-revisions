@@ -40,7 +40,7 @@ echo ""
 echo "Waiting for database to be ready..."
 max_attempts=30
 attempt=0
-until mysql -h db -u wordpress -pwordpress -e "SELECT 1" &> /dev/null || [ $attempt -eq $max_attempts ]; do
+until MYSQL_PWD=wordpress mysql -h db -u wordpress -e "SELECT 1" &> /dev/null || [ $attempt -eq $max_attempts ]; do
     attempt=$((attempt + 1))
     echo "Waiting for database... (attempt $attempt/$max_attempts)"
     sleep 2
@@ -54,7 +54,7 @@ else
     # Create test database for PHPUnit
     echo ""
     echo "Setting up test database..."
-    mysql -h db -u wordpress -pwordpress -e "CREATE DATABASE IF NOT EXISTS wordpress_test;" 2>/dev/null || true
+    MYSQL_PWD=wordpress mysql -h db -u wordpress -e "CREATE DATABASE IF NOT EXISTS wordpress_test;" 2>/dev/null || true
     echo "✓ Test database created"
 fi
 

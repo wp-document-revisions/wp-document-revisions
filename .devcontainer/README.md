@@ -108,12 +108,12 @@ npm run test:coverage     # Generate coverage report
 
 **Check code standards**:
 ```bash
-bin/phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php
+bin/phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */*.php
 ```
 
 **Auto-fix code style**:
 ```bash
-bin/phpcbf --standard=phpcs.ruleset.xml *.php */**.php
+bin/phpcbf --standard=phpcs.ruleset.xml *.php */*.php
 ```
 
 ### Using WP-CLI
@@ -149,7 +149,7 @@ wp post create --post_type=document --post_title="Test Document"
 ### Database connection issues
 - Ensure the database service is healthy: `docker ps`
 - Check database credentials in `docker-compose.yml`
-- Verify the test database exists: `mysql -h db -u wordpress -p"wordpress" -e "SHOW DATABASES;"`
+- Verify the test database exists: `MYSQL_PWD=wordpress mysql -h db -u wordpress -e "SHOW DATABASES;"`
 
 ### Plugin not showing in WordPress
 - Check that the symlink was created: `ls -la /var/www/html/wp-content/plugins/`
