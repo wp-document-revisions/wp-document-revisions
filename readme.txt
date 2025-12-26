@@ -240,6 +240,10 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 - FIX: Bug on upload, Cannot read properties of undefined (#414)
 - DEV: Review for WP Coding standard 3.2
 
+= 3.7.3 =
+
+Fix CVE-2025-68585: Add missing authorization check to update_post_slug_field
+
 = 3.7.2 =
 
 Correct plugin metadata (no code changes).
