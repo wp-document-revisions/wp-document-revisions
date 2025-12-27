@@ -487,16 +487,24 @@ describe('wpdr-documents-shortcode block', () => {
 				wf_efpp: '0',
 			};
 
-			// Reload the script
+			// Reload the script using Node.js VM module for safer execution
 			const fs = require('fs');
 			const path = require('path');
+			const vm = require('vm');
 			const jsFile = fs.readFileSync(
 				path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js'),
 				'utf8'
 			);
 
+			// Create a context with access to required globals
+			const context = vm.createContext({
+				wp: global.wp,
+				wpdr_data: global.wpdr_data,
+				window: global.window,
+			});
+
 			expect(() => {
-				eval(jsFile);
+				vm.runInContext(jsFile, context);
 			}).not.toThrow();
 		});
 	});
