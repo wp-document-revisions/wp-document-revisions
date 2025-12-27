@@ -1038,7 +1038,6 @@ class WP_Document_Revisions {
 		$link = apply_filters( 'document_permalink', $link, $document );
 
 		return $link;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -3329,7 +3328,6 @@ class WP_Document_Revisions {
 		}
 
 		return untrailingslashit( $redirect );
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
