@@ -290,6 +290,8 @@
 					return wp_document_revisions.days.replace('%d', days);
 				}
 			}
+
+			return '';
 		};
 
 		/**
@@ -376,7 +378,27 @@
 				}
 				return content;
 			}
-			let text = iframe.contentWindow.document.getElementById('tinymce').innerHTML;
+
+			// Safely access iframe content with null checks
+			const iframeWindow = iframe.contentWindow;
+			if (!iframeWindow || !iframeWindow.document) {
+				const content = this.$('#post_content').val();
+				if (undefined === content || '' === content || /^\d+$/.test(content)) {
+					return '';
+				}
+				return content;
+			}
+
+			const tinymceElement = iframeWindow.document.getElementById('tinymce');
+			if (!tinymceElement || typeof tinymceElement.innerHTML === 'undefined') {
+				const content = this.$('#post_content').val();
+				if (undefined === content || '' === content || /^\d+$/.test(content)) {
+					return '';
+				}
+				return content;
+			}
+
+			let text = tinymceElement.innerHTML;
 			if (undefined === text) {
 				const content = this.$('#post_content').val();
 				if ('' === content || /^\d+$/.test(content)) {
@@ -406,8 +428,8 @@
 			} else if (/^\d+$/.test(content)) {
 				attach = ['<!-- WPDR ' + content + ' -->'];
 			} else {
-				// match returns array, so ensure all return array
-				attach = content.match(/<!-- WPDR \s*\d+ -->/);
+				// match returns array or null, so ensure all return array
+				attach = content.match(/<!-- WPDR \s*\d+ -->/) || [''];
 			}
 
 			// Remove any existing WPDR comment from description
@@ -448,8 +470,17 @@
 				return;
 			}
 
-			// Extract document ID from attachment
-			const docID = /\d+$/.exec(attachmentID);
+			// Extract document ID from attachment safely
+			if (typeof attachmentID !== 'string') {
+				return;
+			}
+
+			const docIDMatch = attachmentID.match(/\d+$/);
+			if (!docIDMatch) {
+				return;
+			}
+
+			const docID = docIDMatch[0];
 
 			// Set the document identifier in the new format
 			this.window.jQuery('#post_content').val('<!-- WPDR ' + docID + ' -->');
