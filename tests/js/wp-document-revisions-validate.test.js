@@ -38,10 +38,16 @@ describe('wp-document-revisions-validate', () => {
 		// Execute the code in the sandboxed context
 		vm.runInContext(jsFile, context);
 
-		// Make functions available globally
-		global.wpdr_valid_fix = context.wpdr_valid_fix;
-		global.clear_line = context.clear_line;
-		global.hide_show = context.hide_show;
+		// Make functions available globally with null checks
+		if (context.wpdr_valid_fix) {
+			global.wpdr_valid_fix = context.wpdr_valid_fix;
+		}
+		if (context.clear_line) {
+			global.clear_line = context.clear_line;
+		}
+		if (context.hide_show) {
+			global.hide_show = context.hide_show;
+		}
 	});
 
 	afterEach(() => {

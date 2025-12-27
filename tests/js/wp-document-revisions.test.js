@@ -98,7 +98,6 @@ describe('WPDocumentRevisions', () => {
 		// Share the actual objects so changes are reflected
 		const context = {
 			window: window,
-			global: global,
 			jQuery: global.jQuery,
 			opener: global.opener,
 			parent: global.parent,
