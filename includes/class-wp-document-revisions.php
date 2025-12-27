@@ -177,15 +177,15 @@ class WP_Document_Revisions {
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
-		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
+		add_action( 'post_link', array( &$this, 'permalink' ), 10, 3 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
-		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
+		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 1 );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( &$this, 'revision_feed_auth' ) );
-		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 4 );
+		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 5 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
