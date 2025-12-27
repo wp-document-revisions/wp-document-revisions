@@ -3371,7 +3371,7 @@ class WP_Document_Revisions {
 			$guid,
 			$post_id
 		);
-		$res        = $wpdb->query( $sql );
+		$wpdb->query( $sql );
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$this->clear_cache( $post_id, $doc, true );
 

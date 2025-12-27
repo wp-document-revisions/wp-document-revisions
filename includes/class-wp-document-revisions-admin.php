@@ -1487,7 +1487,7 @@ class WP_Document_Revisions_Admin {
 				$thumb,
 				$doc_id
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			wp_cache_delete( $thumb, 'posts' );
 			clean_post_cache( $thumb );
@@ -1518,7 +1518,7 @@ class WP_Document_Revisions_Admin {
 				$new_guid,
 				$doc_id
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			clean_post_cache( $doc_id );
 		}
@@ -1544,7 +1544,7 @@ class WP_Document_Revisions_Admin {
 				$doc_id,
 				self::$last_revn_excerpt
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
 			wp_cache_delete( self::$last_revn, 'posts' );
 			wp_cache_delete( $doc_id, 'posts' );

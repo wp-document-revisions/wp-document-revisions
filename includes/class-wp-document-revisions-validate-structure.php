@@ -275,7 +275,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content,
 				$id
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
@@ -303,7 +303,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content,
 				$id
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
@@ -358,7 +358,7 @@ class WP_Document_Revisions_Validate_Structure {
 					$new_name,
 					$attach_id
 				);
-				$res = $wpdb->query( $sql );
+				$wpdb->query( $sql );
 				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 				wp_cache_delete( $id, 'posts' );
 				wp_cache_delete( $id, 'document_revisions' );
@@ -438,7 +438,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$guid,
 				$id
 			);
-			$res        = $wpdb->query( $sql );
+			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
