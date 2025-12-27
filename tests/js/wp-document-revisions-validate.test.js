@@ -13,21 +13,35 @@ describe('wp-document-revisions-validate', () => {
 		jest.clearAllMocks();
 		originalAjax = jQuery.ajax;
 
-		// Load the validation script
+		// Load the validation script using Node.js VM module for safer execution
 		const fs = require('fs');
 		const path = require('path');
+		const vm = require('vm');
 		const jsFile = fs.readFileSync(
 			path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js'),
 			'utf8'
 		);
 
-		// Execute the code in the test environment
-		eval(jsFile);
+		// Create a context with access to required globals
+		// Use the actual global objects so changes are reflected
+		const context = {
+			jQuery: jQuery,
+			wpApiSettings: global.wpApiSettings,
+			get nonce() { return global.nonce; },
+			get user() { return global.user; },
+			get processed() { return global.processed; },
+			document: global.document,
+			get alert() { return global.alert; },
+		};
+		vm.createContext(context);
+
+		// Execute the code in the sandboxed context
+		vm.runInContext(jsFile, context);
 
 		// Make functions available globally
-		global.wpdr_valid_fix = wpdr_valid_fix;
-		global.clear_line = clear_line;
-		global.hide_show = hide_show;
+		global.wpdr_valid_fix = context.wpdr_valid_fix;
+		global.clear_line = context.clear_line;
+		global.hide_show = context.hide_show;
 	});
 
 	afterEach(() => {

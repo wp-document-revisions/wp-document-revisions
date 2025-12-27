@@ -61,12 +61,13 @@ describe('WPDocumentRevisions', () => {
 		// Load the module
 		const fs = require('fs');
 		const path = require('path');
+		const vm = require('vm');
 		const jsFile = fs.readFileSync(
 			path.resolve(__dirname, '../../js/wp-document-revisions.dev.js'),
 			'utf8'
 		);
 
-		// Execute the code in the test environment
+		// Execute the code in the test environment using VM for safer execution
 		// The code will try to call jQuery ready, which will create an instance
 		// But we want the constructor function, so we'll capture it
 		let WPDocumentRevisionsConstructor;
@@ -93,7 +94,30 @@ describe('WPDocumentRevisions', () => {
 			'window.WPDocumentRevisionsConstructor = WPDocumentRevisions; jQuery(function ($) {'
 		);
 		
-		eval(modifiedJsFile);
+		// Create a context with access to required globals
+		// Share the actual objects so changes are reflected
+		const context = {
+			window: window,
+			global: global,
+			jQuery: global.jQuery,
+			opener: global.opener,
+			parent: global.parent,
+			top: global.top,
+			wpCookies: global.wpCookies,
+			wp_document_revisions: global.wp_document_revisions,
+			autosave: global.autosave,
+			autosave_enable_buttons: global.autosave_enable_buttons,
+			get uploader() { return global.uploader; },
+			setInterval: global.setInterval,
+			clearInterval: global.clearInterval,
+			document: global.document,
+			confirm: global.confirm,
+			alert: global.alert,
+		};
+		vm.createContext(context);
+
+		// Execute the modified code in the sandboxed context
+		vm.runInContext(modifiedJsFile, context);
 
 		// Restore jQuery
 		global.jQuery = originalMockJQuery;
