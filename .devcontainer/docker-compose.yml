@@ -13,10 +13,24 @@ services:
         command: sleep infinity
 
         # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-        network_mode: service:db
+        network_mode: service:wordpress
 
         # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
         # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+    wordpress:
+        image: wordpress:latest
+        restart: unless-stopped
+        volumes:
+            - wordpress-data:/var/www/html
+            - ../..:/workspaces:cached
+        environment:
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: wordpress
+            WORDPRESS_DB_PASSWORD: wordpress
+            WORDPRESS_DB_NAME: wordpress
+        depends_on:
+            - db
 
     db:
         image: mariadb:10.4
@@ -25,12 +39,13 @@ services:
             - mariadb-data:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: mariadb
-            MYSQL_DATABASE: mariadb
-            MYSQL_USER: mariadb
-            MYSQL_PASSWORD: mariadb
+            MYSQL_DATABASE: wordpress
+            MYSQL_USER: wordpress
+            MYSQL_PASSWORD: wordpress
 
         # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MariaDB locally.
         # (Adding the "ports" property to this file will not forward from a Codespace.)
 
 volumes:
     mariadb-data:
+    wordpress-data:

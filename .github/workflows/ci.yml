@@ -38,7 +38,7 @@ jobs:
               run: sudo systemctl start mysql
 
             - name: Checkout
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -92,7 +92,7 @@ jobs:
         name: PHP ${{ matrix.php-versions }} Test WP ${{ matrix.wp-version }} MS ${{ matrix.wp-multisite }} ${{ matrix.operating-system }}
         steps:
             - name: Checkout
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -131,7 +131,7 @@ jobs:
             matrix:
                 php_version: [8.2]
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -141,7 +141,7 @@ jobs:
 
             - name: Cache Composer packages
               id: composer-cache
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ matrix.php_version }}-${{ hashFiles('**/composer.lock') }}
@@ -161,15 +161,15 @@ jobs:
                 node_version: [18, 20]
         name: JavaScript Tests (Node ${{ matrix.node_version }})
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
                   node-version: ${{ matrix.node_version }}
 
             - name: Cache Node modules
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: node_modules
                   key: ${{ runner.os }}-node-${{ matrix.node_version }}-${{ hashFiles('**/package-lock.json') }}
@@ -183,7 +183,7 @@ jobs:
               run: npm test -- --ci --coverage --maxWorkers=2
 
             - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v4
+              uses: codecov/codecov-action@v5
               if: matrix.node_version == 20
               with:
                   files: ./coverage/lcov.info
