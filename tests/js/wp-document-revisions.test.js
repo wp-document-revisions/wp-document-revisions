@@ -15,7 +15,7 @@ describe('WPDocumentRevisions', () => {
 
 		// Create a fresh mock jQuery
 		mockJQuery = jest.fn((selector) => {
-			// Handle jQuery ready: jQuery(function() { ... })
+			// Handle jQuery ready: jQuery(function() { ... }) or jQuery(($) => {...})
 			if (typeof selector === 'function') {
 				// Call the function immediately with jQuery as parameter (simulating ready)
 				selector(mockJQuery);
@@ -38,7 +38,8 @@ describe('WPDocumentRevisions', () => {
 				attr: jest.fn(() => ''),
 				html: jest.fn(() => ''),
 				each: jest.fn((callback) => {
-					callback.call(element);
+					// Modern ES6 version passes (index, element) to callback
+					callback(0, element);
 					return element;
 				}),
 				before: jest.fn(() => element),
@@ -54,7 +55,6 @@ describe('WPDocumentRevisions', () => {
 		mockJQuery.ajax = jest.fn();
 
 		// Make jQuery available globally for the eval
-		// BUT make it NOT call ready callbacks immediately
 		global.jQuery = mockJQuery;
 		window.jQuery = mockJQuery;
 
@@ -66,19 +66,18 @@ describe('WPDocumentRevisions', () => {
 			'utf8'
 		);
 
-		// Execute the code in the test environment
-		// The code will try to call jQuery ready, which will create an instance
-		// But we want the constructor function, so we'll capture it
-		let WPDocumentRevisionsConstructor;
-		const originalMockJQuery = mockJQuery;
+		// For the modern ES6 class code, we need to:
+		// 1. Execute the IIFE which defines the class
+		// 2. Capture the class before it's instantiated in jQuery ready
 		
-		// Temporarily override jQuery to capture the constructor
+		const originalMockJQuery = mockJQuery;
+		let capturedReadyCallback = null;
+		
+		// Override jQuery to capture the ready callback instead of executing it immediately
 		global.jQuery = jest.fn((selectorOrFunc) => {
 			if (typeof selectorOrFunc === 'function') {
-				// This is the ready callback - capture the result but don't execute yet
-				// The callback does: window.WPDocumentRevisions = new WPDocumentRevisions($)
-				// We want to capture WPDocumentRevisions constructor before it's called
-				// So we'll execute the file, capture the constructor from the IIFE, then create our own instance
+				// Capture the ready callback for later
+				capturedReadyCallback = selectorOrFunc;
 				return mockJQuery;
 			}
 			return originalMockJQuery(selectorOrFunc);
@@ -87,10 +86,13 @@ describe('WPDocumentRevisions', () => {
 		global.jQuery.ajax = mockJQuery.ajax;
 		window.jQuery = global.jQuery;
 
-		// Modify the file to capture the constructor
+		// Modify the ES6 code to export the class before the jQuery ready callback
+		// The ES6 code structure is:
+		// (function () { 'use strict'; class WPDocumentRevisions {...} jQuery(($) => {...}); }).call(this);
+		// We need to inject: window.WPDocumentRevisionsClass = WPDocumentRevisions;
 		const modifiedJsFile = jsFile.replace(
-			'jQuery(function ($) {',
-			'window.WPDocumentRevisionsConstructor = WPDocumentRevisions; jQuery(function ($) {'
+			'// Initialize when DOM is ready',
+			'// Export class for testing\n\twindow.WPDocumentRevisionsClass = WPDocumentRevisions;\n\n\t// Initialize when DOM is ready'
 		);
 		
 		eval(modifiedJsFile);
@@ -99,20 +101,21 @@ describe('WPDocumentRevisions', () => {
 		global.jQuery = originalMockJQuery;
 		window.jQuery = originalMockJQuery;
 
-		// Now create an instance with the constructor
-		if (window.WPDocumentRevisionsConstructor) {
+		// Now create an instance with the captured class
+		if (window.WPDocumentRevisionsClass) {
 			// Store the constructor for tests that need to create new instances
-			window.WPDocumentRevisions = window.WPDocumentRevisionsConstructor;
-			WPDocumentRevisions = new window.WPDocumentRevisionsConstructor(mockJQuery);
-		} else {
-			// Fallback to the instance created by jQuery ready
+			window.WPDocumentRevisions = window.WPDocumentRevisionsClass;
+			WPDocumentRevisions = new window.WPDocumentRevisionsClass(mockJQuery);
+		} else if (capturedReadyCallback) {
+			// Execute the ready callback to create the instance
+			capturedReadyCallback(mockJQuery);
 			WPDocumentRevisions = window.WPDocumentRevisions;
 		}
 	});
 
 	afterEach(() => {
 		delete window.WPDocumentRevisions;
-		delete window.WPDocumentRevisionsConstructor;
+		delete window.WPDocumentRevisionsClass;
 		delete global.jQuery;
 		delete window.jQuery;
 	});
