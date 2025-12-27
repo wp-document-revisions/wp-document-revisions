@@ -608,11 +608,11 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		$_POST['post_id'] = self::$editor_public_post;
 
 		// straight return.
-		$res = $wpdr->document_upload_dir_filter( $dir );
+		$wpdr->document_upload_dir_filter( $dir );
 
 		// possibly image.
 		$_POST['type'] = 'file';
-		$res           = $wpdr->document_upload_dir_filter( $dir );
+		$wpdr->document_upload_dir_filter( $dir );
 
 		// set pagenow.
 		global $pagenow;
