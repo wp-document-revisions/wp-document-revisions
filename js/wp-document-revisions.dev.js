@@ -20,8 +20,8 @@
 	 * Time constants in seconds for human_time_diff calculations
 	 */
 	const SECONDS_PER_MINUTE = 60;
-	const SECONDS_PER_HOUR = 3600;
-	const SECONDS_PER_DAY = 86400;
+	const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;
+	const SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR;
 
 	/**
 	 * Cookie expiry time in seconds (1 hour)
