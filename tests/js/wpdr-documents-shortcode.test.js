@@ -5,11 +5,12 @@
  * a list of documents based on taxonomy filters and display settings.
  */
 
+const path = require('path');
+
+const MODULE_PATH = path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js');
+
 describe('wpdr-documents-shortcode block', () => {
 	beforeEach(() => {
-		// Reset mocks
-		jest.clearAllMocks();
-
 		// Reset wpdr_data
 		global.wpdr_data = {
 			stmax: 2,
@@ -37,15 +38,16 @@ describe('wpdr-documents-shortcode block', () => {
 		};
 
 		// Load the documents shortcode script
-		const fs = require('fs');
-		const path = require('path');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wpdr-documents-shortcode.dev.js'),
-			'utf8'
-		);
+		// Clear the module from cache to ensure fresh execution
+		delete require.cache[require.resolve(MODULE_PATH)];
 
-		// Execute the code in the test environment
-		eval(jsFile);
+		// Execute the code in the test environment by requiring the module
+		require(MODULE_PATH);
+	});
+
+	afterEach(() => {
+		// Clean up the shortcode module from the require cache after each test to prevent side effects
+		delete require.cache[require.resolve(MODULE_PATH)];
 	});
 
 	describe('Block Registration', () => {

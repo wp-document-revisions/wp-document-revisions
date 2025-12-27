@@ -5,19 +5,23 @@
  * a list of revisions for a specific document.
  */
 
+const path = require('path');
+
+const MODULE_PATH = path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js');
+
 describe('wpdr-revisions-shortcode block', () => {
 	beforeEach(() => {
-		// Reset Jest's module registry to ensure fresh execution
-		jest.resetModules();
-
-		// Reset mocks
-		jest.clearAllMocks();
-
 		// Load the revisions shortcode script
-		const path = require('path');
-		
+		// Clear the module from cache to ensure fresh execution
+		delete require.cache[require.resolve(MODULE_PATH)];
+
 		// Execute the code in the test environment by requiring the module
-		require(path.resolve(__dirname, '../../js/wpdr-revisions-shortcode.dev.js'));
+		require(MODULE_PATH);
+	});
+
+	afterEach(() => {
+		// Clean up the module cache after each test to prevent side effects between tests
+		delete require.cache[require.resolve(MODULE_PATH)];
 	});
 
 	describe('Block Registration', () => {
