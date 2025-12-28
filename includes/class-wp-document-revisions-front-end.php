@@ -970,7 +970,7 @@ class WP_Document_Revisions_Front_End {
 			null;
 		} else {
 			// get likely taxonomy.
-			$taxo = ( $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
+			$taxo = ( isset( $curr_taxos[0]['query'] ) && $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
 			$term = get_term( $atts['term_0'], $taxo );
 			if ( $term instanceof WP_Term ) {
