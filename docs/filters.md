@@ -79,6 +79,12 @@ In: class-wp-document-revisions.php
 
 Filters the lost lock document email text.
 
+## Filter document_no_revision_found_response_code
+
+In: class-wp-document-revisions.php
+
+Filters the http response code when a document revision (attachment) is not found.
+
 ## Filter document_output_sent_is_ok
 
 In: class-wp-document-revisions.php
