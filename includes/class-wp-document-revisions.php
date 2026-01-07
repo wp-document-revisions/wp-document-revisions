@@ -1278,7 +1278,7 @@ class WP_Document_Revisions {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => apply_filters( 'document_no_revision_found_response_code', 403 ) )
+					array( 'response' => absint( apply_filters( 'document_no_revision_found_response_code', 403 ) ) )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
