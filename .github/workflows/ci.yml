@@ -10,6 +10,8 @@ on:
 jobs:
     phpunit:
         runs-on: ${{ matrix.operating-system }}
+        permissions:
+            contents: read
         strategy:
             fail-fast: true
             matrix:
@@ -72,6 +74,8 @@ jobs:
         # Cloned version to use MySQL 5.7 instead of supplied 8.0 version as not supported by 4.9.
         # magic_quotes_gpc = off since 4.9 contains lots of references
         runs-on: ${{ matrix.operating-system }}
+        permissions:
+            contents: read
         services:
             mydb:
                 image: mysql:5.7
@@ -125,6 +129,8 @@ jobs:
 
     phpcs:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         env:
             TRAVIS_BUILD_DIR: ${{ github.workspace }}
         strategy:
@@ -156,6 +162,8 @@ jobs:
 
     jest:
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         strategy:
             matrix:
                 node_version: [18, 20]

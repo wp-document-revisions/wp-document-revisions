@@ -4,7 +4,7 @@ Contributors: benbalter, nwjames
 Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 4.9
 Tested up to: 6.9
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -234,16 +234,33 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 3.8.1 =
+
+Update README.
+
 = 3.8.0 =
 
-- FIX: Ensure Link Date option is available on Multisite instances. (#389)
-- FIX: Bug on upload, Cannot read properties of undefined (#414)
-- DEV: Review for WP Coding standard 3.2
+== Security ==
+
+* Fix CVE-2025-68585: Add missing authorization check to update_post_slug_field by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/429
+
+== Bug fixes ==
+
+* Address Link Date field issue #389 by @NeilWJames in https://github.com/wp-document-revisions/wp-document-revisions/pull/390
+* Address #414 - Bug on upload, Cannot read properties of undefined by @NeilWJames in https://github.com/wp-document-revisions/wp-document-revisions/pull/417
+
+== Developer fixes ==
+
+* Fix PHPDoc tags: Replace non-standard @returns with @return by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/394
+* Improve test suite with better assertions, edge cases, and utility coverage by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/392
+* Optimize performance: reduce database queries and regex operations by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/402
+* Fix: Regenerate minified JS files and prevent Prettier from formatting them by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/404
+* Add comprehensive front-end JavaScript test suite by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/410
+* Small corrections by @NeilWJames in https://github.com/wp-document-revisions/wp-document-revisions/pull/408
+* Replace PHPUnit string assertions with strpos-based alternatives for compatibility by @Copilot in https://github.com/wp-document-revisions/wp-document-revisions/pull/434
+
+**Full Changelog**: https://github.com/wp-document-revisions/wp-document-revisions/compare/3.7.2...v3.8.0
 
 = 3.7.2 =
-
-Correct plugin metadata (no code changes).
-
-= 3.7.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

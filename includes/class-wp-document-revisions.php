@@ -37,7 +37,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var string
 	 */
-	public $version = '3.8.0';
+	public $version = '3.8.1';
 
 	/**
 	 * The WP default upload directory cache.
@@ -177,15 +177,15 @@ class WP_Document_Revisions {
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
 		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
-		add_action( 'post_link', array( &$this, 'permalink' ), 10, 4 );
+		add_action( 'post_link', array( &$this, 'permalink' ), 10, 3 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
-		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 4 );
+		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 1 );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( &$this, 'revision_feed_auth' ) );
-		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 4 );
+		add_filter( 'get_sample_permalink_html', array( &$this, 'sample_permalink_html_filter' ), 10, 5 );
 		add_filter( 'wp_get_attachment_url', array( &$this, 'attachment_url_filter' ), 10, 2 );
 		add_filter( 'image_downsize', array( &$this, 'image_downsize' ), 10, 3 );
 		add_filter( 'document_path', array( &$this, 'wamp_document_path_filter' ), 9, 1 );
@@ -1038,7 +1038,6 @@ class WP_Document_Revisions {
 		$link = apply_filters( 'document_permalink', $link, $document );
 
 		return $link;
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -3329,7 +3328,6 @@ class WP_Document_Revisions {
 		}
 
 		return untrailingslashit( $redirect );
-		// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	}
 
 
@@ -3351,6 +3349,11 @@ class WP_Document_Revisions {
 			return;
 		}
 
+		// Verify user can edit this document.
+		if ( ! current_user_can( 'edit_document', $post_id ) ) {
+			wp_die( esc_html__( 'Not authorized', 'wp-document-revisions' ) );
+		}
+
 		// update the post name with the slug and then the guid - direct in the database.
 		$doc            = get_post( $post_id );
 		$slug           = wp_unique_post_slug( $slug, $post_id, $doc->post_status, 'document', 0 );
@@ -3366,7 +3369,7 @@ class WP_Document_Revisions {
 			$guid,
 			$post_id
 		);
-		$res        = $wpdb->query( $sql );
+		$wpdb->query( $sql );
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$this->clear_cache( $post_id, $doc, true );
 
