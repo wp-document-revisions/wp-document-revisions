@@ -176,12 +176,12 @@ class WP_Document_Revisions {
 		add_filter( 'rewrite_rules_array', array( &$this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( &$this, 'revision_rewrite' ) );
 		add_action( 'init', array( &$this, 'inject_rules' ) );
-		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 4 );
+		add_action( 'post_type_link', array( &$this, 'permalink' ), 10, 3 );
 		add_action( 'post_link', array( &$this, 'permalink' ), 10, 3 );
 		add_filter( 'template_include', array( &$this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( &$this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( &$this, 'ie_cache_fix' ) );
-		add_filter( 'query_vars', array( &$this, 'add_query_var' ), 10, 1 );
+		add_filter( 'query_vars', array( &$this, 'add_query_var' ) );
 		add_filter( 'default_feed', array( &$this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( &$this, 'do_feed_revision_log' ) );
 		add_action( 'template_redirect', array( &$this, 'revision_feed_auth' ) );
@@ -980,13 +980,12 @@ class WP_Document_Revisions {
 	 * Builds document post type permalink.
 	 *
 	 * @since 0.5
-	 * @param string $link original permalink.
-	 * @param object $document post object.
+	 * @param string $link      original permalink.
+	 * @param object $document  post object.
 	 * @param bool   $leavename whether to leave the %document% placeholder.
-	 * @param String $sample (optional) not used.
 	 * @return string the real permalink
 	 */
-	public function permalink( $link, $document, $leavename, $sample = '' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function permalink( $link, $document, $leavename ) {
 		global $wp_rewrite;
 		$revision_num = false;
 
@@ -1046,13 +1045,14 @@ class WP_Document_Revisions {
 	 *
 	 * @rerurns string modified HTML
 	 * @since 0.5
-	 * @param string $html original HTML.
-	 * @param int    $id Post ID.
-	 * @return unknown
+	 * @param string      $html      original HTML.
+	 * @param int         $id        Post ID.
+	 * @param string|null $new_title New sample permalink title.
+	 * @param string|null $new_slug  New sample permalink slug.
+	 * @param WP_Post     $document  Post object.
+	 * @return string
 	 */
-	public function sample_permalink_html_filter( $html, $id ) {
-		$document = get_post( $id );
-
+	public function sample_permalink_html_filter( $html, $id, $new_title, $new_slug, $document ) {
 		// verify post type.
 		if ( ! $this->verify_post_type( $document ) ) {
 			return $html;
