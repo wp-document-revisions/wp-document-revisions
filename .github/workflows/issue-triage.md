@@ -7,7 +7,7 @@ on:
     types: [opened, reopened]
 permissions:
   contents: read
-  issues: write
+  issues: read
 tools:
   github:
     toolsets: [issues, labels]

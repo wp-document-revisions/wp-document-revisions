@@ -10,10 +10,10 @@ on:
       - "wp-document-revisions.php"
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: read
 tools:
   github:
-    toolsets: [pull-requests]
+    toolsets: [pull_requests]
 safe-outputs:
   add-comment: {}
 ---

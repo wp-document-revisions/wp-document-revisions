@@ -7,11 +7,11 @@ on:
     - cron: "0 9 * * 1"
 permissions:
   contents: read
-  issues: write
+  issues: read
   pull-requests: read
 tools:
   github:
-    toolsets: [issues, pull-requests]
+    toolsets: [issues, pull_requests]
 safe-outputs:
   create-issue: {}
 ---
