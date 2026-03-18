@@ -7,7 +7,7 @@ on:
     types: [opened, reopened]
 permissions:
   contents: read
-  issues: read
+  issues: write
 tools:
   github:
     toolsets: [issues, labels]
@@ -40,7 +40,7 @@ When a new issue is opened or reopened, analyze the issue title and body and per
 
 - This is a **WordPress plugin** for document management with version control.
 - Core functionality includes: file uploads/downloads, document revisions, workflow states, user permissions, RSS feeds, shortcodes, and REST API support.
-- It supports WordPress 4.9+ and PHP 7.4+.
+- It supports WordPress 4.9+ and PHP 7.2+.
 - Common areas of concern: file upload handling, document access permissions, revision history, multisite compatibility, and REST API endpoints.
 
 ## Comment Guidelines

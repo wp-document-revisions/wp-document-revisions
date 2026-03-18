@@ -7,7 +7,7 @@ on:
     - cron: "0 9 * * 1"
 permissions:
   contents: read
-  issues: read
+  issues: write
   pull-requests: read
 tools:
   github:

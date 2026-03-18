@@ -10,7 +10,7 @@ on:
       - "wp-document-revisions.php"
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
 tools:
   github:
     toolsets: [pull-requests]

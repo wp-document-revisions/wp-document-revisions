@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize]
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
 tools:
   github:
     toolsets: [pull-requests]
@@ -47,7 +47,7 @@ Evaluate the PR changes against these criteria:
 - Changes are focused and minimal — no unrelated modifications.
 - Error handling uses `WP_Error` where appropriate.
 - No hardcoded values that should be filterable.
-- Backward compatibility maintained (PHP 7.4+, WordPress 4.9+).
+- Backward compatibility maintained (PHP 7.2+, WordPress 4.9+).
 
 ### Test Coverage
 - New functionality has corresponding PHPUnit tests.
