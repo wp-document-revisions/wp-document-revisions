@@ -49,7 +49,7 @@ jobs:
 
       - name: Install WordPress test environment
         run: |
-          bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest
+          bash script/install-wp-tests wordpress_test root root 127.0.0.1 latest true
         timeout-minutes: 5
 
       - name: Verify setup
