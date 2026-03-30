@@ -191,7 +191,7 @@ jobs:
               run: npm test -- --ci --coverage --maxWorkers=2
 
             - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v5
+              uses: codecov/codecov-action@v6
               if: matrix.node_version == 20
               with:
                   files: ./coverage/lcov.info
