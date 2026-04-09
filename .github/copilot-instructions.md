@@ -60,13 +60,26 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 - Run PHPUnit tests: `bin/phpunit --config=phpunit9.xml` (after WordPress test setup)
     - Executes comprehensive test suite covering all plugin functionality
     - Takes 2-5 minutes. NEVER CANCEL - Set timeout to 10+ minutes.
+- Run Jest unit tests: `npm test`
+    - Tests JavaScript functionality (blocks, admin UI, validation) in jsdom
+    - Takes ~15 seconds. NEVER CANCEL - Set timeout to 2+ minutes.
+- Run E2E tests: `npm run test:e2e` (requires Docker and wp-env)
+    - Playwright tests against a real WordPress instance via `@wordpress/env`
+    - Start environment first: `npx wp-env start`
+    - Tests Gutenberg blocks and admin document workflows in a real browser
+    - Takes 1-2 minutes. NEVER CANCEL - Set timeout to 5+ minutes.
+    - Stop environment after: `npx wp-env stop`
 
 ### Development Environment Options
 
 - **Option 1 - Docker**: Use `docker-compose up` and access WordPress at http://localhost:8088
     - Includes MySQL, PHPMyAdmin (port 8089), and WordPress with plugin mounted
     - Takes 2-3 minutes to start. NEVER CANCEL - Set timeout to 5+ minutes.
-- **Option 2 - Local**: Install WordPress manually and symlink plugin directory
+- **Option 2 - wp-env**: Use `npx wp-env start` for a lightweight WordPress environment at http://localhost:8888
+    - Configured via `.wp-env.json`, automatically mounts the plugin
+    - Required for running E2E tests
+    - Admin credentials: `admin` / `password`
+- **Option 3 - Local**: Install WordPress manually and symlink plugin directory
 
 ### Build and Release
 
@@ -81,6 +94,8 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 - ALWAYS run PHPCS before committing: `bin/phpcs --standard=phpcs.ruleset.xml -p -s --colors *.php */**.php -v`
 - ALWAYS run code formatting: `bin/phpcbf --standard=phpcs.ruleset.xml *.php */**.php`
 - If making WordPress functionality changes, ALWAYS run full PHPUnit test suite
+- If making JavaScript changes, ALWAYS run Jest tests: `npm test`
+- If making Gutenberg block or admin UI changes, run E2E tests: `npm run test:e2e` (requires wp-env)
 - Validate plugin loads in WordPress: Check wp-document-revisions.php syntax with `php -l wp-document-revisions.php`
 
 ### Manual Validation Scenarios
@@ -97,8 +112,11 @@ When making changes, ALWAYS test these core workflows:
 
 - All code must pass PHPCS with zero violations
 - All existing PHPUnit tests must pass
+- All Jest unit tests must pass
+- All Playwright E2E tests must pass
 - PHP compatibility tested across versions 7.2-8.3
 - WordPress compatibility tested with latest and 4.9 minimum versions
+- CI uses a two-stage pipeline: fast checks (lint, audit, Jest) gate slow checks (PHPUnit, E2E)
 
 ## Security Guidelines
 
@@ -122,11 +140,19 @@ wp-document-revisions/
 │   ├── class-wp-document-revisions.php         # Main plugin class
 │   ├── class-wp-document-revisions-admin.php   # Admin interface
 │   └── class-wp-document-revisions-front-end.php # Frontend functionality
-├── tests/                  # PHPUnit test files
-├── js/                     # JavaScript files (pre-built)
+├── tests/                  # Test files
+│   ├── class-test-*.php    # PHPUnit test files
+│   ├── js/                 # Jest unit tests for JavaScript
+│   └── e2e/                # Playwright E2E tests
+│       ├── config/         # Global setup and auth state
+│       ├── fixtures/       # Test upload files
+│       └── specs/          # Test specs (blocks/, admin/)
+├── js/                     # JavaScript files (*.dev.js source, *.js minified)
 ├── css/                    # Stylesheets
 ├── script/                 # Development automation scripts
 ├── wp-document-revisions.php # Main plugin file
+├── .wp-env.json           # WordPress dev environment (wp-env)
+├── playwright.config.js   # Playwright E2E test configuration
 ├── composer.json          # PHP dependencies
 ├── phpcs.ruleset.xml      # Code standards configuration
 ├── phpunit.xml|phpunit9.xml # Test configurations
@@ -211,13 +237,18 @@ _e( 'Error uploading document', 'wp-document-revisions' );
 - **Database connection errors**: Start MySQL and create wordpress_test database
 - **Permission errors**: Check file permissions on uploads directory in WordPress
 - **Network timeouts**: WordPress.org APIs may be temporarily unavailable, retry later
+- **E2E test failures**: Ensure Docker is running and wp-env is started (`npx wp-env start`)
+- **wp-env port conflicts**: If port 8888 is in use, stop other services or configure `.wp-env.json`
 
 ### Performance Notes
 
 - Code analysis (PHPCS): ~10 seconds for full codebase
 - Code formatting (PHPCBF): ~10 seconds for full codebase
-- Full test suite: 2-5 minutes depending on system performance
+- Full PHPUnit test suite: 2-5 minutes depending on system performance
+- Jest unit tests: ~15 seconds
+- E2E tests (Playwright): 1-2 minutes (after wp-env is running)
 - WordPress installation: 1-3 minutes depending on network speed
 - Docker environment startup: 2-3 minutes first time, faster on subsequent runs
+- wp-env startup: 1-2 minutes first time, faster on subsequent runs
 
 Remember: This is a WordPress plugin, not a standalone application. All testing and validation must be done within a WordPress environment.
