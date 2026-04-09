@@ -49,7 +49,7 @@ $wpdr = new WP_Document_Revisions();
 require_once __DIR__ . '/includes/template-functions.php';
 
 // Activation hooks must be relative to the main plugin file.
-register_activation_hook( __FILE__, array( &$wpdr, 'activation_hook' ) );
+register_activation_hook( __FILE__, array( $wpdr, 'activation_hook' ) );
 
 // polyfill for str_contains.
 if ( ! function_exists( 'str_contains' ) ) {
