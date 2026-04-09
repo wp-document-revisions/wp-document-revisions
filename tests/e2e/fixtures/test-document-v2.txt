@@ -1,0 +1,2 @@
+This is an updated test document for WP Document Revisions E2E tests.
+Version 2 - Updated content with changes.

@@ -282,3 +282,47 @@ jobs:
                   echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> /tmp/wordpress-tests-lib/wp-tests-config.php
                   /usr/local/bin/phpunit --config=phpunit.xml
 
+    # E2E tests — Playwright against a real WordPress instance
+    e2e:
+        needs: [code-quality, jest]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: E2E Tests
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 20
+
+            - name: Cache Node modules
+              uses: actions/cache@v5
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-20-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-20-
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Install Playwright browsers
+              run: npx playwright install chromium
+
+            - name: Start WordPress environment
+              run: npx wp-env start
+
+            - name: Run E2E tests
+              run: npm run test:e2e
+
+            - name: Upload test artifacts
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: e2e-results
+                  path: |
+                      tests/e2e/results/
+                  retention-days: 7
