@@ -1,12 +1,12 @@
-# Copyright (C) 2025 WP Document Revisions 3.8.0
-# This file is distributed under the same license as the WP Document Revisions 3.8.0 package.
+# Copyright (C) 2026 WP Document Revisions 3.8.1
+# This file is distributed under the same license as the WP Document Revisions 3.8.1 package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 3.8.0\n"
+"Project-Id-Version: WP Document Revisions 3.8.1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-04 17:26+0000\n"
+"POT-Creation-Date: 2026-04-09 20:24+0000\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -255,7 +255,7 @@ msgstr ""
 msgid "Document Link Date"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:855, includes/class-wp-document-revisions-admin.php:887, includes/class-wp-document-revisions-admin.php:916, includes/class-wp-document-revisions.php:2523
+#: includes/class-wp-document-revisions-admin.php:855, includes/class-wp-document-revisions-admin.php:887, includes/class-wp-document-revisions-admin.php:916, includes/class-wp-document-revisions.php:2539, includes/class-wp-document-revisions.php:3371
 msgid "Not authorized"
 msgstr ""
 
@@ -399,7 +399,7 @@ msgstr ""
 msgid "%d days"
 msgstr ""
 
-#: includes/class-wp-document-revisions-admin.php:1996, includes/class-wp-document-revisions-recently-revised-widget.php:440, includes/class-wp-document-revisions-recently-revised-widget.php:443
+#: includes/class-wp-document-revisions-admin.php:1996, includes/class-wp-document-revisions-recently-revised-widget.php:438, includes/class-wp-document-revisions-recently-revised-widget.php:441
 msgid "Recently Revised Documents"
 msgstr ""
 
@@ -416,7 +416,7 @@ msgstr ""
 msgid "This is not a valid document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:146, includes/class-wp-document-revisions-front-end.php:324, includes/class-wp-document-revisions-recently-revised-widget.php:116
+#: includes/class-wp-document-revisions-front-end.php:146, includes/class-wp-document-revisions-front-end.php:324, includes/class-wp-document-revisions-recently-revised-widget.php:114
 msgid "(PDF)"
 msgstr ""
 
@@ -428,7 +428,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:438, includes/class-wp-document-revisions-recently-revised-widget.php:124
+#: includes/class-wp-document-revisions-front-end.php:438, includes/class-wp-document-revisions-recently-revised-widget.php:122
 msgid "No thumbnail available."
 msgstr ""
 
@@ -460,72 +460,72 @@ msgstr ""
 msgid "Sorry, you are not allowed to edit documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:107, includes/class-wp-document-revisions-manage-rest.php:202
+#: includes/class-wp-document-revisions-manage-rest.php:107, includes/class-wp-document-revisions-manage-rest.php:195
 msgid "Sorry, you are not allowed to view revisions."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:118
+#: includes/class-wp-document-revisions-manage-rest.php:116
 msgid "Sorry, you are not allowed to read documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:145
+#: includes/class-wp-document-revisions-manage-rest.php:137
 msgid "Sorry, you are only allowed to use GET method"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:138
+#: includes/class-wp-document-revisions-manage-rest.php:130
 msgid "Sorry, invalid PUT call"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:235, includes/class-wp-document-revisions-manage-rest.php:236, includes/class-wp-document-revisions-manage-rest.php:238
+#: includes/class-wp-document-revisions-manage-rest.php:228, includes/class-wp-document-revisions-manage-rest.php:229, includes/class-wp-document-revisions-manage-rest.php:231
 msgid "<!-- protected -->"
 msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
-#: includes/class-wp-document-revisions-recently-revised-widget.php:108
+#: includes/class-wp-document-revisions-recently-revised-widget.php:106
 msgid "%1$s ago by %2$s"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:108
+#: includes/class-wp-document-revisions-recently-revised-widget.php:106
 msgid "%1$s ago"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:195
+#: includes/class-wp-document-revisions-recently-revised-widget.php:193
 msgid "Title:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:199
+#: includes/class-wp-document-revisions-recently-revised-widget.php:197
 msgid "Number of Posts:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:203
+#: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Posts to Show:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:210
+#: includes/class-wp-document-revisions-recently-revised-widget.php:208
 msgid "Display Featured Image:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:211, includes/class-wp-document-revisions-recently-revised-widget.php:215, includes/class-wp-document-revisions-recently-revised-widget.php:219, includes/class-wp-document-revisions-recently-revised-widget.php:223, includes/class-wp-document-revisions-recently-revised-widget.php:227
+#: includes/class-wp-document-revisions-recently-revised-widget.php:209, includes/class-wp-document-revisions-recently-revised-widget.php:213, includes/class-wp-document-revisions-recently-revised-widget.php:217, includes/class-wp-document-revisions-recently-revised-widget.php:221, includes/class-wp-document-revisions-recently-revised-widget.php:225
 msgid "Yes"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:214
+#: includes/class-wp-document-revisions-recently-revised-widget.php:212
 msgid "Display Document Description:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:218
+#: includes/class-wp-document-revisions-recently-revised-widget.php:216
 msgid "Display Document Author:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:222
+#: includes/class-wp-document-revisions-recently-revised-widget.php:220
 msgid "Display PDF File Indication:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:226
+#: includes/class-wp-document-revisions-recently-revised-widget.php:224
 msgid "Open documents in new tab:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:302
+#: includes/class-wp-document-revisions-recently-revised-widget.php:300
 msgid "This block provides a block of the most recently changed documentsand is functionally equivalent to the recently revised widget."
 msgstr ""
 
@@ -935,92 +935,92 @@ msgstr ""
 msgid "Somebody"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1002, includes/class-wp-document-revisions.php:1403
+#: includes/class-wp-document-revisions.php:1001, includes/class-wp-document-revisions.php:1402
 msgid "-revision-"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1280, includes/class-wp-document-revisions.php:1312
+#: includes/class-wp-document-revisions.php:1279, includes/class-wp-document-revisions.php:1311
 msgid "No document file is attached."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1312
+#: includes/class-wp-document-revisions.php:1311
 msgid "Document is not available."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1362
+#: includes/class-wp-document-revisions.php:1361
 msgid "You are not authorized to access that file."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1536
+#: includes/class-wp-document-revisions.php:1535
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:1542
+#: includes/class-wp-document-revisions.php:1541
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2456
+#: includes/class-wp-document-revisions.php:2472
 msgid "Sorry, this is a private feed."
 msgstr ""
 
 #. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
-#: includes/class-wp-document-revisions.php:2574
+#: includes/class-wp-document-revisions.php:2590
 msgid "%1$s: %2$s has overridden your lock on %3$s"
 msgstr ""
 
 #. translators: %s is the user's name.
-#: includes/class-wp-document-revisions.php:2584
+#: includes/class-wp-document-revisions.php:2600
 msgid "Dear %s:"
 msgstr ""
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
-#: includes/class-wp-document-revisions.php:2586
+#: includes/class-wp-document-revisions.php:2602
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2587
+#: includes/class-wp-document-revisions.php:2603
 msgid "Any changes you have made will be lost."
 msgstr ""
 
 #. translators: %s is the blog name.
-#: includes/class-wp-document-revisions.php:2589
+#: includes/class-wp-document-revisions.php:2605
 msgid "- The %s Team"
 msgstr ""
 
 #. translators: %s is the document title.
-#: includes/class-wp-document-revisions.php:2783
+#: includes/class-wp-document-revisions.php:2799
 msgid "%s - Latest Revision"
 msgstr ""
 
 #. translators: %1$s is the document title, %2$d is the revision ID.
-#: includes/class-wp-document-revisions.php:2804
+#: includes/class-wp-document-revisions.php:2820
 msgid "%1$s - Revision %2$d"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2897
+#: includes/class-wp-document-revisions.php:2913
 msgid "Status"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2921
+#: includes/class-wp-document-revisions.php:2937
 msgid "Published"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2922
+#: includes/class-wp-document-revisions.php:2938
 msgid "Draft"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2923
+#: includes/class-wp-document-revisions.php:2939
 msgid "Scheduled"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2924
+#: includes/class-wp-document-revisions.php:2940
 msgid "Private"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2925
+#: includes/class-wp-document-revisions.php:2941
 msgid "Pending Review"
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:2926
+#: includes/class-wp-document-revisions.php:2942
 msgid "Trash"
 msgstr ""
