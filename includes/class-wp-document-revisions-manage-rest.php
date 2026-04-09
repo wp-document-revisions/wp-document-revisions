@@ -82,7 +82,7 @@ class WP_Document_Revisions_Manage_Rest {
 		$route     = $request->get_route();
 		$params    = $request->get_params();
 		$target    = 'wp/v2/' . $post_type->rest_base . '/';
-		if ( ! strpos( $route . '/', $target ) ) {
+		if ( false === strpos( $route . '/', $target ) ) {
 			return $response;
 		}
 
@@ -110,9 +110,7 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		// does user require read_documents and not just read to read document.
-		if ( apply_filters( 'document_read_uses_read', true ) || current_user_can( 'read_documents' ) ) {
-			null;
-		} else {
+		if ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_documents' ) ) {
 			return new WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to read documents.', 'wp-document-revisions' ),
@@ -122,29 +120,24 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Check methods.
 		$method = $request->get_method();
-		if ( 'GET' === $method ) {
-			// Only GET method always supported.
-			null;
-		} elseif ( 'PUT' === $method && apply_filters( 'document_use_block_editor', false ) ) {
-			// Editor usage needs review.
-			// Check nonce.
-			$nonce = $request->get_header( 'x-wp-nonce' );
-			if ( isset( $nonce ) && false !== wp_verify_nonce( $nonce, 'wp_rest' ) ) {
-				// nonce OK.
-				null;
+		if ( 'GET' !== $method ) {
+			if ( 'PUT' === $method && apply_filters( 'document_use_block_editor', false ) ) {
+				// Editor usage needs review. Check nonce.
+				$nonce = $request->get_header( 'x-wp-nonce' );
+				if ( ! isset( $nonce ) || false === wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+					return new WP_Error(
+						'rest_cannot_modify',
+						__( 'Sorry, invalid PUT call', 'wp-document-revisions' ),
+						array( 'status' => rest_authorization_required_code() )
+					);
+				}
 			} else {
 				return new WP_Error(
 					'rest_cannot_modify',
-					__( 'Sorry, invalid PUT call', 'wp-document-revisions' ),
+					__( 'Sorry, you are only allowed to use GET method', 'wp-document-revisions' ),
 					array( 'status' => rest_authorization_required_code() )
 				);
 			}
-		} else {
-			return new WP_Error(
-				'rest_cannot_modify',
-				__( 'Sorry, you are only allowed to use GET method', 'wp-document-revisions' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
 		}
 
 		return $response;
@@ -243,26 +236,25 @@ class WP_Document_Revisions_Manage_Rest {
 			$std_dir = $wpdr::$wp_default_dir['basedir'];
 			$doc_dir = $wpdr->document_upload_dir();
 
-			if ( $response->data['media_details'] instanceof stdClass ) {
-				// attachment meta data not present so cannot expose anything.
-				null;
-			} elseif ( ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) && false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) ) {
-				// cannot trust the metadata, treat as not present.
-				$response->data['media_details'] = new stdClass();
-			} elseif ( $doc_dir !== $std_dir ) {
-				// need to correct link.
-				if ( isset( $response->data['media_details']['sizes'] ) ) {
-					$block = $response->data['media_details']['sizes'];
-					require_once ABSPATH . '/wp-admin/includes/file.php';
-					$home    = get_home_path();
-					$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
-					$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
-					foreach ( $block as $size => $sizeinfo ) {
-						if ( isset( $sizeinfo['source_url'] ) ) {
-							$block[ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
+			if ( ! ( $response->data['media_details'] instanceof stdClass ) ) {
+				if ( ! array_key_exists( 'wpdr_hidden', $response->data['media_details'] ) && false === get_post_meta( $post->ID, '_wpdr_meta_hidden', true ) ) {
+					// cannot trust the metadata, treat as not present.
+					$response->data['media_details'] = new stdClass();
+				} elseif ( $doc_dir !== $std_dir ) {
+					// need to correct link.
+					if ( isset( $response->data['media_details']['sizes'] ) ) {
+						$block = $response->data['media_details']['sizes'];
+						require_once ABSPATH . '/wp-admin/includes/file.php';
+						$home    = get_home_path();
+						$std_dir = trailingslashit( site_url() ) . str_replace( $home, '', $std_dir );
+						$doc_dir = trailingslashit( site_url() ) . str_replace( $home, '', $doc_dir );
+						foreach ( $block as $size => $sizeinfo ) {
+							if ( isset( $sizeinfo['source_url'] ) ) {
+								$block[ $size ]['source_url'] = str_replace( $std_dir, $doc_dir, $sizeinfo['source_url'] );
+							}
 						}
+						$response->data['media_details']['sizes'] = $block;
 					}
-					$response->data['media_details']['sizes'] = $block;
 				}
 			}
 		}

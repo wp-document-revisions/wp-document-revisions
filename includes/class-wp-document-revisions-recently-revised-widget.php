@@ -36,7 +36,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	public function __construct() {
 		// Do translation stuff in widgets_init.
 		parent::__construct( 'WP_Document_Revisions_Recently_Revised_Widget', 'Recently Revised Documents' );
-		null;
 	}
 
 
@@ -103,7 +102,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				),
 				admin_url( 'post.php' )
 			) : $permalink;
-			$target    = ( $instance['new_tab'] ? ' target="_blank"' : '' );
 			// translators: %1$s is the time ago in words, %2$s is the author.
 			$format_string = ( $instance['show_author'] ) ? __( '%1$s ago by %2$s', 'wp-document-revisions' ) : __( '%1$s ago', 'wp-document-revisions' );
 			// do we need to highlight PDFs.
@@ -118,7 +116,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			}
 			?>
 			<li>
-				<h<?php echo esc_attr( $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_attr( $link ) . '"' . esc_attr( $target ) . '>' . esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( $h_n ); ?>>
+				<h<?php echo esc_attr( $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( $h_n ); ?>>
 				<?php
 				if ( (bool) $instance['show_thumb'] ) {
 					$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
@@ -410,17 +408,17 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			'after_widget'  => '',
 		);
 		$instance                = array();
-		$instance['title']       = ( isset( $atts['header'] ) ? $atts['header'] : '' );
-		$instance['numberposts'] = ( isset( $atts['numberposts'] ) ? (int) $atts['numberposts'] : 5 );
-		$instance['show_thumb']  = ( isset( $atts['show_thumb'] ) ? (bool) $atts['show_thumb'] : false );
-		$instance['show_descr']  = ( isset( $atts['show_descr'] ) ? (bool) $atts['show_descr'] : true );
-		$instance['show_author'] = ( isset( $atts['show_author'] ) ? (bool) $atts['show_author'] : true );
-		$instance['show_pdf']    = ( isset( $atts['show_pdf'] ) ? (bool) $atts['show_pdf'] : false );
-		$instance['new_tab']     = ( isset( $atts['new_tab'] ) ? (bool) $atts['new_tab'] : true );
+		$instance['title']       = $atts['header'] ?? '';
+		$instance['numberposts'] = (int) ( $atts['numberposts'] ?? 5 );
+		$instance['show_thumb']  = (bool) ( $atts['show_thumb'] ?? false );
+		$instance['show_descr']  = (bool) ( $atts['show_descr'] ?? true );
+		$instance['show_author'] = (bool) ( $atts['show_author'] ?? true );
+		$instance['show_pdf']    = (bool) ( $atts['show_pdf'] ?? false );
+		$instance['new_tab']     = (bool) ( $atts['new_tab'] ?? true );
 		$instance['post_status'] = array(  // temp.
-			'publish' => ( isset( $atts['post_stat_publish'] ) ? (bool) $atts['post_stat_publish'] : true ),
-			'private' => ( isset( $atts['post_stat_private'] ) ? (bool) $atts['post_stat_private'] : false ),
-			'draft'   => ( isset( $atts['post_stat_draft'] ) ? (bool) $atts['post_stat_draft'] : false ),
+			'publish' => (bool) ( $atts['post_stat_publish'] ?? true ),
+			'private' => (bool) ( $atts['post_stat_private'] ?? false ),
+			'draft'   => (bool) ( $atts['post_stat_draft'] ?? false ),
 		);
 
 		// if header is set, then title at level h2.

@@ -1,6 +1,6 @@
 {
   "name": "wp-document-revisions",
-  "version": "3.5.0",
+  "version": "3.8.1",
   "description": "Document management and version control for WordPress",
   "scripts": {
     "test": "jest",

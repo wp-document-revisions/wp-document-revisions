@@ -121,7 +121,7 @@ class WP_Document_Revisions {
 	 * @since 0.5
 	 */
 	public function __construct() {
-		self::$instance = &$this;
+		self::$instance = $this;
 
 		// set the standard default directory - creating the cache (before applying filter).
 		self::$wp_default_dir = wp_upload_dir( null, true, true );
@@ -1237,7 +1237,7 @@ class WP_Document_Revisions {
 	public function get_revision_id( $revision_num, $post_id ) {
 		$index = $this->get_revision_indices( $post_id );
 
-		return ( isset( $index[ $revision_num ] ) ) ? $index[ $revision_num ] : false;
+		return $index[ $revision_num ] ?? false;
 	}
 
 
@@ -1610,17 +1610,23 @@ class WP_Document_Revisions {
 						global $wp_filesystem;
 
 						// downloading a file, not normally WP text so don't sanitize.
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						echo $wp_filesystem->get_contents( $file );
-						return;
+						$contents = $wp_filesystem->get_contents( $file );
+						if ( false !== $contents ) {
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							echo $contents;
+							return;
+						}
+						// Fall through to readfile if get_contents fails.
 					}
 				}
 			}
-			// If we marrive here, serve the file via readfile.
-			// Note: We use defsault readfile, and not WP_Filesystem for memory/performance reasons.
+			// If we arrive here, serve the file via readfile.
+			// Note: We use default readfile, and not WP_Filesystem for memory/performance reasons.
 
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
-			readfile( $file );
+			if ( false === readfile( $file ) ) {
+				status_header( 500 );
+			}
 		}
 
 		/**
