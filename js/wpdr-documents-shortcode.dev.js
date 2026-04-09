@@ -1,4 +1,5 @@
 (function (blocks, element, blockEditor, components, compose, serverSideRender, i18n) {
+	'use strict';
 	const { registerBlockType, createBlock } = wp.blocks; //Blocks API
 	const { createElement } = wp.element;
 	const { InspectorControls } = wp.blockEditor; //Block inspector wrapper
@@ -117,21 +118,21 @@
 			const attributes = props.attributes;
 			const setAttributes = props.setAttributes;
 
-			var taxo = wpdr_data.taxos;
+			const taxo = wpdr_data.taxos;
 
 			function id_to_slug(n, tax, val) {
-				for (i = 0; i < wpdr_data.stmax; i++) {
-					if (i != n && tax === taxo[i].query) {
-						var terms = taxo[i].terms;
-						for (j = 0, lenj = terms.length; j < lenj; j++) {
+				for (let i = 0; i < wpdr_data.stmax; i++) {
+					if (i !== n && tax === taxo[i].query) {
+						const terms = taxo[i].terms;
+						for (let j = 0; j < terms.length; j++) {
 							if (val === terms[j][0]) {
-								return tax + '="' + terms[j][2] + '"';
+								return `${tax}="${terms[j][2]}"`;
 							}
 						}
-						return tax + '="??"';
+						return `${tax}="??"`;
 					}
 				}
-				return tax + '="???"';
+				return `${tax}="???"`;
 			}
 
 			// consistency check (possibly reordered). If same order, this does nothing.
@@ -180,13 +181,13 @@
 
 			//Function to create the select grouping
 			function tax_n(i) {
-				var terms = taxo[i].terms;
-				var opts = [];
-				for (j = 0, lenj = terms.length; j < lenj; j++) {
+				const terms = taxo[i].terms;
+				const opts = [];
+				for (let j = 0; j < terms.length; j++) {
 					opts.push({ label: terms[j][1], value: terms[j][0] });
 				}
 				// Set taxonomy slug
-				if (i == 0) {
+				if (i === 0) {
 					setAttributes({ taxonomy_0: taxo[0].query });
 					return createElement(
 						PanelBody,
@@ -199,14 +200,14 @@
 								label: taxo[0].label,
 								selected: attributes.term_0,
 								options: opts,
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ term_0: parseInt(val) });
 								},
 							}),
 						]
 					);
 				}
-				if (i == 1) {
+				if (i === 1) {
 					setAttributes({ taxonomy_1: taxo[1].query });
 					return createElement(
 						PanelBody,
@@ -219,14 +220,14 @@
 								label: taxo[1].label,
 								selected: attributes.term_1,
 								options: opts,
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ term_1: parseInt(val) });
 								},
 							}),
 						]
 					);
 				}
-				if (i == 2) {
+				if (i === 2) {
 					setAttributes({ taxonomy_2: taxo[2].query });
 					return createElement(
 						PanelBody,
@@ -239,7 +240,7 @@
 								label: taxo[2].label,
 								selected: attributes.term_2,
 								options: opts,
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ term_2: parseInt(val) });
 								},
 							}),
@@ -249,7 +250,7 @@
 			}
 
 			function taxonomies() {
-				if (wpdr_data.stmax == 0) {
+				if (wpdr_data.stmax === 0) {
 					return createElement(
 						'p',
 						{},
@@ -257,8 +258,8 @@
 					);
 				}
 
-				var taxos = [];
-				for (var i = 0; i < wpdr_data.stmax; i++) {
+				const taxos = [];
+				for (let i = 0; i < wpdr_data.stmax; i++) {
 					taxos.push(tax_n(i));
 				}
 				return taxos;
@@ -278,7 +279,7 @@
 						type: 'string',
 						value: attributes.header,
 						label: __('Block Heading', 'wp-document-revisions'),
-						onChange: function (val) {
+						onChange: (val) => {
 							setAttributes({ header: val });
 						},
 					}),
@@ -297,7 +298,7 @@
 									'Number of documents to display',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ numberposts: parseInt(val) });
 								},
 								min: 1,
@@ -312,7 +313,7 @@
 									'Example fields are post_title, post_date and post_modified.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ orderby: val });
 								},
 							}),
@@ -329,7 +330,7 @@
 										value: 'DESC',
 									},
 								],
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ order: val });
 								},
 							}),
@@ -351,7 +352,7 @@
 										value: '1',
 									},
 								],
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_edit: val });
 								},
 							}),
@@ -360,7 +361,7 @@
 								type: 'boolean',
 								checked: attributes.show_thumb,
 								label: __('Show featured image?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_thumb: val });
 								},
 							}),
@@ -369,7 +370,7 @@
 								type: 'boolean',
 								checked: attributes.show_descr,
 								label: __('Show document description?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_descr: val });
 								},
 							}),
@@ -378,7 +379,7 @@
 								type: 'boolean',
 								checked: attributes.show_pdf,
 								label: __('Show PDF File indication?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_pdf: val });
 								},
 							}),
@@ -391,7 +392,7 @@
 									'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ new_tab: val });
 								},
 							}),
@@ -414,7 +415,7 @@
 									'The query parameters can be very extensive. enter any other parameters required here.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ freeform: val });
 								},
 							}),
@@ -431,43 +432,43 @@
 				{
 					type: 'block',
 					blocks: ['core/shortcode'],
-					isMatch: function ({ text }) {
+					isMatch: ({ text }) => {
 						return /^\[?documents\b\s*/.test(text);
 					},
 					transform: ({ text }) => {
 						// defaults.
-						var sheader = '';
-						var staxonomy_0 = '';
-						var sterm_0 = 0;
-						var staxonomy_1 = '';
-						var sterm_1 = 0;
-						var staxonomy_2 = '';
-						var sterm_2 = 0;
-						var snumberposts = 5;
-						var sorderby = '';
-						var sorder = '';
-						var sshow_edit = '';
-						var sshow_thumb = false;
-						var sshow_descr = true;
-						var sshow_pdf = false;
-						var snew_tab = true;
-						var sfreeform = '';
+						let sheader = '';
+						let staxonomy_0 = '';
+						let sterm_0 = 0;
+						let staxonomy_1 = '';
+						let sterm_1 = 0;
+						let staxonomy_2 = '';
+						let sterm_2 = 0;
+						let snumberposts = 5;
+						let sorderby = '';
+						let sorder = '';
+						let sshow_edit = '';
+						let sshow_thumb = false;
+						let sshow_descr = true;
+						let sshow_pdf = false;
+						let snew_tab = true;
+						let sfreeform = '';
 
 						// prepare text string.
-						var iput = text.toLowerCase();
-						if (iput.indexOf('[') == 0) {
+						let iput = text.toLowerCase();
+						if (iput.indexOf('[') === 0) {
 							iput = iput.slice(1, iput.length - 1);
 						}
-						var args = iput.split(' ');
+						const args = iput.split(' ');
 						args.shift();
 
-						var taxo = wpdr_data.taxos;
-						var wf_efpp = wpdr_data.wf_efpp;
+						const taxo = wpdr_data.taxos;
+						const wf_efpp = wpdr_data.wf_efpp;
 
 						function slug_to_id(n, val) {
-							var terms = taxo[n].terms;
-							var alt_val = val.replace(/_/g, '-');
-							for (j = 0, lenj = terms.length; j < lenj; j++) {
+							const terms = taxo[n].terms;
+							const alt_val = val.replace(/_/g, '-');
+							for (let j = 0; j < terms.length; j++) {
 								if (val === terms[j][2] || alt_val === terms[j][2]) {
 									return terms[j][0];
 								}
@@ -475,13 +476,12 @@
 							return 0;
 						}
 
-						var i;
-						for (i of args) {
+						for (const i of args) {
 							if (i.length === 0) {
 								continue;
 							}
-							var used = false;
-							var parm = i.split('=');
+							let used = false;
+							const parm = i.split('=');
 							if (
 								parm.length > 1 &&
 								(parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0)
@@ -551,9 +551,9 @@
 								}
 								used = true;
 							}
-							if (false == used) {
+							if (!used) {
 								// other parameter, add to freeform one.
-								sfreeform += ' ' + i;
+								sfreeform += ` ${i}`;
 							}
 						}
 
@@ -583,51 +583,50 @@
 					type: 'block',
 					blocks: ['core/shortcode'],
 					transform: (attributes) => {
-						var taxo = wpdr_data.taxos;
+						const taxo = wpdr_data.taxos;
 
 						function id_to_slug(n, val) {
-							var terms = taxo[n].terms;
-							for (j = 0, lenj = terms.length; j < lenj; j++) {
+							const terms = taxo[n].terms;
+							for (let j = 0; j < terms.length; j++) {
 								if (val === terms[j][0]) {
-									return '"' + terms[j][2] + '"';
+									return `"${terms[j][2]}"`;
 								}
 							}
 							return '??';
 						}
 
 						function decode_taxo(tax, val) {
-							if ('' !== tax && 0 != val) {
-								var i;
-								for (i in [0, 1, 2]) {
+							if ('' !== tax && 0 !== val) {
+								for (const i of [0, 1, 2]) {
 									if (tax === taxo[i].query) {
-										content += ' ' + tax + '=' + id_to_slug(i, val);
+										content += ` ${tax}=${id_to_slug(i, val)}`;
 										return;
 									}
 								}
-								content += ' ' + tax + '=' + val;
+								content += ` ${tax}=${val}`;
 							}
 							return;
 						}
 
-						var content = '[documents ';
+						let content = '[documents ';
 						decode_taxo(attributes.taxonomy_0, attributes.term_0);
 						decode_taxo(attributes.taxonomy_1, attributes.term_1);
 						decode_taxo(attributes.taxonomy_2, attributes.term_2);
 						if ('' !== attributes.numberposts) {
-							content += ' numberposts="' + attributes.numberposts + '"';
+							content += ` numberposts="${attributes.numberposts}"`;
 						}
 						if (undefined !== attributes.orderby && '' !== attributes.orderby) {
-							content += ' orderby="' + attributes.orderby + '"';
+							content += ` orderby="${attributes.orderby}"`;
 						}
 						if (
 							'' !== attributes.order &&
 							undefined !== attributes.orderby &&
 							'' !== attributes.orderby
 						) {
-							content += ' order="' + attributes.order + '"';
+							content += ` order="${attributes.order}"`;
 						}
 						if ('' !== attributes.show_edit) {
-							content += ' show_edit="' + attributes.show_edit + '"';
+							content += ` show_edit="${attributes.show_edit}"`;
 						}
 						if (attributes.show_thumb) {
 							content += ' show_thumb';
@@ -642,7 +641,7 @@
 							content += ' new_tab';
 						}
 						if ('' !== attributes.freeform && undefined !== attributes.freeform) {
-							content += ' ' + attributes.freeform;
+							content += ` ${attributes.freeform}`;
 						}
 						content += ' ]';
 						return createBlock('core/shortcode', {

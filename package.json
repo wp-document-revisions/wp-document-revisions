@@ -5,7 +5,9 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build": "for f in js/*.dev.js; do npx terser \"$f\" --compress --mangle --output \"${f%.dev.js}.js\" --comments '/^!/'; done",
+    "build:check": "node -e \"const fs=require('fs'); const devFiles=fs.readdirSync('js').filter(f=>f.endsWith('.dev.js')); devFiles.forEach(f=>{const min=f.replace('.dev.js','.js'); if(!fs.existsSync('js/'+min)){console.error('Missing: '+min);process.exit(1);}; console.log('OK: '+f+' -> '+min);})\""
   },
   "repository": {
     "type": "git",
@@ -22,7 +24,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.5",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "terser": "^5.46.1"
   },
   "jest": {
     "testEnvironment": "jsdom",

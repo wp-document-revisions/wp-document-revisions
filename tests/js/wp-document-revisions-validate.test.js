@@ -24,6 +24,8 @@ describe('wp-document-revisions-validate', () => {
 
 		// Create a context with access to required globals
 		// Use the actual global objects so changes are reflected
+		// Include window object so IIFE can assign functions to it
+		const contextWindow = {};
 		const context = {
 			jQuery: jQuery,
 			wpApiSettings: global.wpApiSettings,
@@ -32,6 +34,8 @@ describe('wp-document-revisions-validate', () => {
 			get processed() { return global.processed; },
 			document: global.document,
 			get alert() { return global.alert; },
+			window: contextWindow,
+			Array: Array,
 		};
 		vm.createContext(context);
 
@@ -39,14 +43,15 @@ describe('wp-document-revisions-validate', () => {
 		vm.runInContext(jsFile, context);
 
 		// Make functions available globally with null checks
-		if (context.wpdr_valid_fix) {
-			global.wpdr_valid_fix = context.wpdr_valid_fix;
+		// Functions are assigned to window inside the IIFE
+		if (contextWindow.wpdr_valid_fix) {
+			global.wpdr_valid_fix = contextWindow.wpdr_valid_fix;
 		}
-		if (context.clear_line) {
-			global.clear_line = context.clear_line;
+		if (contextWindow.clear_line) {
+			global.clear_line = contextWindow.clear_line;
 		}
-		if (context.hide_show) {
-			global.hide_show = context.hide_show;
+		if (contextWindow.hide_show) {
+			global.hide_show = contextWindow.hide_show;
 		}
 	});
 

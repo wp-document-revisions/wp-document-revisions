@@ -1,4 +1,5 @@
 (function (blocks, element, blockEditor, components, compose, serverSideRender, i18n) {
+	'use strict';
 	const { registerBlockType, createBlock } = wp.blocks; //Blocks API
 	const { createElement } = wp.element; //React.createElement
 	const { InspectorControls } = wp.blockEditor; //Block inspector wrapper
@@ -94,7 +95,7 @@
 								type: 'number',
 								value: attributes.id,
 								label: __('Document Id', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ id: parseInt(val) });
 								},
 							}),
@@ -102,7 +103,7 @@
 							createElement(RangeControl, {
 								value: attributes.numberposts,
 								label: __('Revisions to Display', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ numberposts: parseInt(val) });
 								},
 								min: 1,
@@ -113,7 +114,7 @@
 								type: 'boolean',
 								checked: attributes.summary,
 								label: __('Show Revision Summaries?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ summary: val });
 								},
 							}),
@@ -122,7 +123,7 @@
 								type: 'boolean',
 								checked: attributes.show_pdf,
 								label: __('Show PDF File indication?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_pdf: val });
 								},
 							}),
@@ -135,7 +136,7 @@
 									'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ new_tab: val });
 								},
 							}),
@@ -152,30 +153,29 @@
 				{
 					type: 'block',
 					blocks: ['core/shortcode'],
-					isMatch: function ({ text }) {
+					isMatch: ({ text }) => {
 						return /^\[?document_revisions\b\s*/.test(text);
 					},
 					transform: ({ text }) => {
 						// prepare text string.
-						var iput = text.toLowerCase();
-						if (iput.indexOf('[') == 0) {
+						let iput = text.toLowerCase();
+						if (iput.indexOf('[') === 0) {
 							iput = iput.slice(1, iput.length - 1);
 						}
-						var args = iput.split(' ');
+						const args = iput.split(' ');
 						args.shift();
 
 						// defaults.
-						var sid = 1;
-						var snumberposts = 5;
-						var ssummary = false;
-						var sshow_pdf = false;
-						var snew_tab = true;
-						var i;
-						for (i of args) {
-							if (i.length === 0) {
+						let sid = 1;
+						let snumberposts = 5;
+						let ssummary = false;
+						let sshow_pdf = false;
+						let snew_tab = true;
+						for (const arg of args) {
+							if (arg.length === 0) {
 								continue;
 							}
-							var parm = i.split('=');
+							const parm = arg.split('=');
 							if (
 								parm.length > 1 &&
 								(parm[1].indexOf("'") === 0 || parm[1].indexOf('"') === 0)
@@ -200,7 +200,6 @@
 								if (parm.length === 1 || parm[1] === 'true') {
 									sshow_pdf = true;
 								}
-								used = true;
 							}
 							if (parm[0] === 'new_tab') {
 								if (parm.length === 1 || parm[1] === 'false') {
@@ -224,12 +223,12 @@
 					type: 'block',
 					blocks: ['core/shortcode'],
 					transform: (attributes) => {
-						var content = '[document_revisions ';
-						if ('' != attributes.id) {
-							content += 'id=' + attributes.id;
+						let content = '[document_revisions ';
+						if ('' !== attributes.id) {
+							content += `id=${attributes.id}`;
 						}
-						if ('' != attributes.numberposts) {
-							content += ' numberposts=' + attributes.numberposts;
+						if ('' !== attributes.numberposts) {
+							content += ` numberposts=${attributes.numberposts}`;
 						}
 						if (!attributes.summary) {
 							content += ' summary=false';
