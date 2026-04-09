@@ -1579,6 +1579,15 @@ class WP_Document_Revisions {
 			// only know the length after writing to buffer, so only output headers now.
 			$this->serve_headers( $headers, $file );
 		} else {
+			// Check file readability before committing to response headers.
+			if ( ! is_readable( $file ) ) {
+				status_header( 500 );
+				if ( $under_test ) {
+					return $template;
+				}
+				exit;
+			}
+
 			// know the headers and buffering may cause writing, so output headers first.
 			$this->serve_headers( $headers, $file );
 			// see if PHP readfile could be used.
@@ -1592,6 +1601,7 @@ class WP_Document_Revisions {
 			 * @param integer $post->ID   Post id of the document.
 			 * @param integer $attach->ID Post id of the attachment.
 			 */
+			$file_served = false;
 			if ( apply_filters( 'document_use_wp_filesystem', false, $file, $post->ID, $attach->ID ) ) {
 				// try WP_filesystem for $doc_dir.
 				// file code may not be already loaded.
@@ -1614,18 +1624,19 @@ class WP_Document_Revisions {
 						if ( false !== $contents ) {
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							echo $contents;
-							return;
+							$file_served = true;
 						}
 						// Fall through to readfile if get_contents fails.
 					}
 				}
 			}
-			// If we arrive here, serve the file via readfile.
-			// Note: We use default readfile, and not WP_Filesystem for memory/performance reasons.
 
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
-			if ( false === readfile( $file ) ) {
-				status_header( 500 );
+			if ( ! $file_served ) {
+				// Serve the file via readfile.
+				// Note: We use default readfile, and not WP_Filesystem for memory/performance reasons.
+
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+				readfile( $file );
 			}
 		}
 

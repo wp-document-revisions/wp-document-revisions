@@ -39,7 +39,7 @@
 	</rule>
 
 	<rule ref="PHPCompatibilityWP">
-		<config name="testVersion" value="7.4-8.3"/>
+		<config name="testVersion" value="7.2-8.3"/>
 	</rule>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
