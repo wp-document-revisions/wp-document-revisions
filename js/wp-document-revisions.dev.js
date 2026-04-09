@@ -93,7 +93,10 @@
 			}
 		};
 
-		overrideLock = () => {
+		overrideLock = (e) => {
+			if (e) {
+				e.preventDefault();
+			}
 			const postId = document.getElementById('post_ID');
 
 			return wp.apiFetch({
@@ -110,7 +113,7 @@
 			})
 				.then((response) => response.text())
 				.then((data) => {
-					if (data) {
+					if (data.trim() === '1') {
 						const lockOverride = document.getElementById('lock_override');
 						if (lockOverride) {
 							lockOverride.style.display = 'none';
@@ -125,6 +128,9 @@
 					} else {
 						alert(wp_document_revisions.lockError);
 					}
+				})
+				.catch(() => {
+					alert(wp_document_revisions.lockError);
 				});
 		};
 

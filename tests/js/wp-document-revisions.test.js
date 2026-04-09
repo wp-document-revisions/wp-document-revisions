@@ -777,6 +777,14 @@ describe('WPDocumentRevisions', () => {
 			expect(opts.body.get('post_id')).toBe('42');
 		});
 
+		test('should call preventDefault when event is provided', () => {
+			const mockEvent = { preventDefault: jest.fn() };
+
+			WPDocumentRevisions.overrideLock(mockEvent);
+
+			expect(mockEvent.preventDefault).toHaveBeenCalled();
+		});
+
 		test('should call autosave on successful lock override', async () => {
 			document.getElementById = jest.fn(() => null);
 			document.querySelectorAll = jest.fn(() => []);
@@ -807,9 +815,27 @@ describe('WPDocumentRevisions', () => {
 			expect(mockPublish.style.display).toBe('');
 		});
 
-		test('should alert lockError on failed lock override', async () => {
+		test('should alert lockError on empty response', async () => {
 			global.wp.apiFetch = jest.fn(() =>
 				Promise.resolve({ text: () => Promise.resolve('') })
+			);
+
+			await WPDocumentRevisions.overrideLock();
+			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+		});
+
+		test('should alert lockError on non-1 response (e.g. -1)', async () => {
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.resolve({ text: () => Promise.resolve('-1') })
+			);
+
+			await WPDocumentRevisions.overrideLock();
+			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+		});
+
+		test('should alert lockError on network error', async () => {
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.reject(new Error('Network failure'))
 			);
 
 			await WPDocumentRevisions.overrideLock();

@@ -1,7 +1,7 @@
 /**
  * Jest setup file for WP Document Revisions JavaScript tests
  * 
- * This file sets up the testing environment with WordPress and jQuery globals
+ * This file sets up the testing environment with WordPress and browser globals
  */
 
 // Mock WordPress globals
