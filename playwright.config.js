@@ -15,10 +15,10 @@ process.env.STORAGE_STATE_PATH = STORAGE_STATE_PATH;
 module.exports = defineConfig( {
 	testDir: './tests/e2e/specs',
 	outputDir: './tests/e2e/results',
-	fullyParallel: false,
+	fullyParallel: true,
 	forbidOnly: !! process.env.CI,
 	retries: process.env.CI ? 2 : 0,
-	workers: 1,
+	workers: process.env.CI ? 2 : 3,
 	reporter: process.env.CI ? 'github' : 'list',
 	globalSetup: require.resolve( './tests/e2e/config/global-setup.js' ),
 	use: {

@@ -6,39 +6,53 @@
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
 test.describe( 'Documents Shortcode Block', () => {
-	test.beforeEach( async ( { admin } ) => {
+	test( 'can be inserted with defaults, configured, and previewed', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
 		await admin.createNewPost( { title: 'Shortcode Block Test' } );
-	} );
 
-	test( 'can be inserted into the editor', async ( { editor } ) => {
+		// Insert with defaults and verify.
 		await editor.insertBlock( {
 			name: 'wp-document-revisions/documents-shortcode',
 		} );
 
-		const blocks = await editor.getBlocks();
+		let blocks = await editor.getBlocks();
 		expect( blocks ).toHaveLength( 1 );
 		expect( blocks[ 0 ].name ).toBe(
 			'wp-document-revisions/documents-shortcode'
 		);
-	} );
 
-	test( 'renders with default attributes', async ( { editor } ) => {
-		await editor.insertBlock( {
-			name: 'wp-document-revisions/documents-shortcode',
-		} );
-
-		const blocks = await editor.getBlocks();
-		const attrs = blocks[ 0 ].attributes;
-
-		// Verify default attribute values match the block registration.
+		// Check defaults.
+		let attrs = blocks[ 0 ].attributes;
 		expect( attrs.numberposts ).toBe( 5 );
 		expect( attrs.new_tab ).toBe( true );
 		expect( attrs.show_descr ).toBe( true );
 		expect( attrs.show_thumb ).toBe( false );
 		expect( attrs.show_pdf ).toBe( false );
+
+		// ServerSideRender preview should appear.
+		const blockContent = page.locator(
+			'[data-type="wp-document-revisions/documents-shortcode"]'
+		);
+		await expect( blockContent ).toBeVisible();
+
+		// Inspector controls should be present.
+		await editor.openDocumentSettingsSidebar();
+		const settingsPanel = page.locator(
+			'.components-panel__body >> text=Documents List Settings'
+		);
+		await expect( settingsPanel ).toBeVisible();
 	} );
 
-	test( 'can configure attributes', async ( { editor } ) => {
+	test( 'can configure attributes and render on frontend', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( { title: 'Shortcode Config Test' } );
+
 		await editor.insertBlock( {
 			name: 'wp-document-revisions/documents-shortcode',
 			attributes: {
@@ -61,45 +75,8 @@ test.describe( 'Documents Shortcode Block', () => {
 		expect( attrs.show_thumb ).toBe( true );
 		expect( attrs.show_pdf ).toBe( true );
 		expect( attrs.new_tab ).toBe( false );
-	} );
 
-	test( 'shows inspector controls', async ( { editor, page } ) => {
-		await editor.insertBlock( {
-			name: 'wp-document-revisions/documents-shortcode',
-		} );
-
-		await editor.openDocumentSettingsSidebar();
-
-		// Verify key inspector controls are present.
-		const settingsPanel = page.locator(
-			'.components-panel__body >> text=Documents List Settings'
-		);
-		await expect( settingsPanel ).toBeVisible();
-	} );
-
-	test( 'renders ServerSideRender preview', async ( { editor, page } ) => {
-		await editor.insertBlock( {
-			name: 'wp-document-revisions/documents-shortcode',
-		} );
-
-		const blockContent = page.locator(
-			'[data-type="wp-document-revisions/documents-shortcode"]'
-		);
-		await expect( blockContent ).toBeVisible();
-	} );
-
-	test( 'block can be saved and appears on frontend', async ( {
-		editor,
-		page,
-	} ) => {
-		await editor.insertBlock( {
-			name: 'wp-document-revisions/documents-shortcode',
-			attributes: {
-				header: 'All Documents',
-				numberposts: 10,
-			},
-		} );
-
+		// Publish and verify frontend.
 		const postId = await editor.publishPost();
 		await page.goto( `/?p=${ postId }` );
 
