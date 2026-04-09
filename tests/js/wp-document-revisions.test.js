@@ -11,59 +11,47 @@ const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions.dev.
 
 describe('WPDocumentRevisions', () => {
 	let WPDocumentRevisions;
-	let mockJQuery;
+
+	// Default mock element factory for document.getElementById
+	const mockElement = (id) => ({
+		id,
+		innerHTML: '',
+		value: '',
+		style: { display: '' },
+		classList: { remove: jest.fn() },
+		getElementsByTagName: jest.fn(() => []),
+		addEventListener: jest.fn(),
+		removeAttribute: jest.fn(),
+		getAttribute: jest.fn(() => ''),
+		querySelector: jest.fn(() => null),
+		querySelectorAll: jest.fn(() => []),
+		insertAdjacentHTML: jest.fn(),
+		previousElementSibling: null,
+		offsetParent: null,
+		disabled: false,
+		contentWindow: {
+			document: {
+				getElementById: jest.fn(() => ({ innerHTML: '' })),
+			},
+		},
+	});
 
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
 		jest.resetModules();
 
-		// Create a fresh mock jQuery
-		mockJQuery = jest.fn((selector) => {
-			// Handle jQuery ready: jQuery(function() { ... })
-			if (typeof selector === 'function') {
-				// Call the function immediately with jQuery as parameter (simulating ready)
-				selector(mockJQuery);
-				return mockJQuery;
-			}
-			
-			// Handle normal jQuery selector
-			const element = {
-				click: jest.fn(() => element),
-				bind: jest.fn(() => element),
-				on: jest.fn(() => element),
-				show: jest.fn(() => element),
-				hide: jest.fn(() => element),
-				fadeIn: jest.fn(() => element),
-				fadeOut: jest.fn(() => element),
-				prop: jest.fn(() => element),
-				removeAttr: jest.fn(() => element),
-				val: jest.fn(() => ''),
-				text: jest.fn(() => ''),
-				attr: jest.fn(() => ''),
-				html: jest.fn(() => ''),
-				each: jest.fn((callback) => {
-					callback.call(element);
-					return element;
-				}),
-				before: jest.fn(() => element),
-				prev: jest.fn(() => element),
-				not: jest.fn(() => element),
-				is: jest.fn(() => false),
-				length: 0,
-			};
-			return element;
-		});
+		// Reset document mocks to defaults (tests may override these)
+		document.getElementById = jest.fn((id) => mockElement(id));
+		document.querySelector = jest.fn(() => null);
+		document.querySelectorAll = jest.fn(() => []);
 
-		mockJQuery.post = jest.fn();
-		mockJQuery.ajax = jest.fn();
+		// Mock wp.apiFetch — overrideLock uses parse:false so returns a Response-like object
+		global.wp.apiFetch = jest.fn(() =>
+			Promise.resolve({ text: () => Promise.resolve('1') })
+		);
 
-		// Set up jQuery globally before requiring the module
-		global.jQuery = mockJQuery;
-		window.jQuery = mockJQuery;
-
-		// Clear the module cache for fresh execution
-		// Execute the module — jQuery ready runs immediately, creating the instance
+		// Execute the module — readyState is 'complete' in jsdom, so constructor runs immediately
 		require(MODULE_PATH);
 
 		// Get the instance and expose the constructor class for tests that create new instances
@@ -73,13 +61,12 @@ describe('WPDocumentRevisions', () => {
 
 	afterEach(() => {
 		delete window.WPDocumentRevisions;
-		delete global.jQuery;
-		delete window.jQuery;
 	});
 
 	describe('Constructor and Initialization', () => {
-		test('should initialize with jQuery', () => {
-			expect(WPDocumentRevisions.$).toBe(mockJQuery);
+		test('should create an instance on window', () => {
+			expect(WPDocumentRevisions).toBeDefined();
+			expect(WPDocumentRevisions.constructor.name).toBe('WPDocumentRevisions');
 		});
 
 		test('should set initial hasUpload to false', () => {
@@ -88,7 +75,7 @@ describe('WPDocumentRevisions', () => {
 
 		test('should detect secure protocol', () => {
 			window.location.protocol = 'https:';
-			const instance = new window.WPDocumentRevisions(mockJQuery);
+			const instance = new window.WPDocumentRevisions();
 			expect(instance.secure).toBe(true);
 		});
 
@@ -102,7 +89,7 @@ describe('WPDocumentRevisions', () => {
 			const originalAutosave = jest.fn();
 			window.autosave_enable_buttons = originalAutosave;
 			
-			const instance = new window.WPDocumentRevisions(mockJQuery);
+			const instance = new window.WPDocumentRevisions();
 			expect(instance.autosaveEnableButtonsOriginal).toBe(originalAutosave);
 		});
 
@@ -110,24 +97,45 @@ describe('WPDocumentRevisions', () => {
 			const originalAutosave = jest.fn();
 			window.autosave_enable_buttons = originalAutosave;
 			
-			const instance = new window.WPDocumentRevisions(mockJQuery);
+			new window.WPDocumentRevisions();
 			expect(window.autosave_enable_buttons).not.toBe(originalAutosave);
 		});
 	});
 
 	describe('enableSubmit', () => {
-		test('should fade in lock override element', () => {
-			const mockLockOverride = mockJQuery('#lock_override');
-			const mockPrev = { fadeIn: jest.fn() };
-			mockLockOverride.prev = jest.fn(() => mockPrev);
-			
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#lock_override') return mockLockOverride;
-				return mockJQuery(selector);
+		test('should show lock override previous sibling', () => {
+			const mockPrev = { style: { display: 'none' } };
+			const mockLockOverride = { previousElementSibling: mockPrev };
+			document.getElementById = jest.fn((id) => {
+				if (id === 'lock_override') return mockLockOverride;
+				if (id === 'revision-summary') return { style: { display: 'none' } };
+				return null;
 			});
+			document.querySelectorAll = jest.fn(() => []);
 
 			WPDocumentRevisions.enableSubmit();
-			expect(mockPrev.fadeIn).toHaveBeenCalled();
+			expect(mockPrev.style.display).toBe('');
+		});
+
+		test('should show revision summary', () => {
+			const mockRevSummary = { style: { display: 'none' } };
+			document.getElementById = jest.fn((id) => {
+				if (id === 'revision-summary') return mockRevSummary;
+				return null;
+			});
+			document.querySelectorAll = jest.fn(() => []);
+
+			WPDocumentRevisions.enableSubmit();
+			expect(mockRevSummary.style.display).toBe('');
+		});
+
+		test('should remove disabled from submit buttons', () => {
+			const mockButton = { removeAttribute: jest.fn() };
+			document.getElementById = jest.fn(() => null);
+			document.querySelectorAll = jest.fn(() => [mockButton]);
+
+			WPDocumentRevisions.enableSubmit();
+			expect(mockButton.removeAttribute).toHaveBeenCalledWith('disabled');
 		});
 	});
 
@@ -246,6 +254,7 @@ describe('WPDocumentRevisions', () => {
 	describe('cookieTrue', () => {
 		test('should set doc_image cookie to true', () => {
 			global.wpCookies.set = jest.fn();
+			document.querySelectorAll = jest.fn(() => []);
 			WPDocumentRevisions.cookieTrue();
 			
 			expect(global.wpCookies.set).toHaveBeenCalledWith(
@@ -277,30 +286,30 @@ describe('WPDocumentRevisions', () => {
 
 	describe('getDescr', () => {
 		test('should return empty string when post_content is empty', () => {
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => '');
-
 			WPDocumentRevisions.window = {
 				document: {
 					getElementById: jest.fn(() => null),
 				},
 			};
-			WPDocumentRevisions.$ = mockJQuery;
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '' };
+				return null;
+			});
 
 			const result = WPDocumentRevisions.getDescr();
 			expect(result).toBe('');
 		});
 
 		test('should return empty string when post_content is only digits', () => {
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => '12345');
-
 			WPDocumentRevisions.window = {
 				document: {
 					getElementById: jest.fn(() => null),
 				},
 			};
-			WPDocumentRevisions.$ = mockJQuery;
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '12345' };
+				return null;
+			});
 
 			const result = WPDocumentRevisions.getDescr();
 			expect(result).toBe('');
@@ -371,11 +380,9 @@ describe('WPDocumentRevisions', () => {
 				},
 			};
 
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => 'Fallback content');
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: 'Fallback content' };
+				return null;
 			});
 
 			const result = WPDocumentRevisions.getDescr();
@@ -385,12 +392,14 @@ describe('WPDocumentRevisions', () => {
 
 	describe('buildContent', () => {
 		test('should handle empty content', () => {
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => '');
-
-			WPDocumentRevisions.$ = mockJQuery;
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '' };
+				return null;
+			});
 			WPDocumentRevisions.window = {
-				jQuery: mockJQuery,
+				document: {
+					getElementById: jest.fn(() => ({ value: '' })),
+				},
 			};
 			WPDocumentRevisions.getDescr = jest.fn(() => 'Description');
 
@@ -401,12 +410,14 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should handle numeric content (document ID)', () => {
-			const mockPostContent = mockJQuery('#post_content');
-			mockPostContent.val = jest.fn(() => '12345');
-
-			WPDocumentRevisions.$ = mockJQuery;
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '12345' };
+				return null;
+			});
 			WPDocumentRevisions.window = {
-				jQuery: mockJQuery,
+				document: {
+					getElementById: jest.fn(() => ({ value: '' })),
+				},
 			};
 			WPDocumentRevisions.getDescr = jest.fn(() => 'Description');
 
@@ -417,53 +428,69 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should wrap numeric content in WPDR comment', () => {
-			const mockPostContent = { val: jest.fn(() => '123') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '123' };
+				return null;
 			});
 
-			const windowValMock = jest.fn();
-			const windowEl = { val: windowValMock };
+			const currContentEl = { value: '' };
+			const postContentEl = { value: '' };
+			const contentEl = { value: '' };
 			WPDocumentRevisions.window = {
-				jQuery: jest.fn(() => windowEl),
+				document: {
+					getElementById: jest.fn((id) => {
+						if (id === 'curr_content') return currContentEl;
+						if (id === 'post_content') return postContentEl;
+						if (id === 'content') return contentEl;
+						return null;
+					}),
+				},
 			};
 			WPDocumentRevisions.getDescr = jest.fn(() => 'Description text');
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.buildContent();
 
-			expect(windowValMock).toHaveBeenCalledWith('<!-- WPDR 123 -->Description text');
+			expect(currContentEl.value).toBe('<!-- WPDR 123 -->Description text');
 		});
 
 		test('should extract existing WPDR comment from content', () => {
-			const mockPostContent = { val: jest.fn(() => '<!-- WPDR 456 -->some text') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '<!-- WPDR 456 -->some text' };
+				return null;
 			});
 
-			const windowValMock = jest.fn();
-			const windowEl = { val: windowValMock };
+			const currContentEl = { value: '' };
+			const postContentEl = { value: '' };
+			const contentEl = { value: '' };
 			WPDocumentRevisions.window = {
-				jQuery: jest.fn(() => windowEl),
+				document: {
+					getElementById: jest.fn((id) => {
+						if (id === 'curr_content') return currContentEl;
+						if (id === 'post_content') return postContentEl;
+						if (id === 'content') return contentEl;
+						return null;
+					}),
+				},
 			};
 			WPDocumentRevisions.getDescr = jest.fn(() => 'New description');
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.buildContent();
 
-			expect(windowValMock).toHaveBeenCalledWith('<!-- WPDR 456 -->New description');
+			expect(currContentEl.value).toBe('<!-- WPDR 456 -->New description');
 		});
 
 		test('should call enableSubmit when content changes', () => {
-			const mockPostContent = { val: jest.fn(() => '') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_content') return { value: '' };
+				return null;
 			});
 
-			const windowEl = { val: jest.fn() };
 			WPDocumentRevisions.window = {
-				jQuery: jest.fn(() => windowEl),
+				document: {
+					getElementById: jest.fn(() => ({ value: '' })),
+				},
 			};
 			WPDocumentRevisions.getDescr = jest.fn(() => 'changed description');
 			WPDocumentRevisions.enableSubmit = jest.fn();
@@ -480,12 +507,14 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.hasUpload = false;
 			WPDocumentRevisions.window = {
-				jQuery: mockJQuery,
+				document: {
+					getElementById: jest.fn(() => ({ value: '', style: { display: '' }, innerHTML: '', insertAdjacentHTML: jest.fn() })),
+				},
 				tb_remove: jest.fn(),
 			};
-			WPDocumentRevisions.$ = mockJQuery;
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
-			const result = WPDocumentRevisions.postDocumentUpload(fileObject, '123');
+			WPDocumentRevisions.postDocumentUpload(fileObject, '123');
 
 			// Should have processed the file
 			expect(WPDocumentRevisions.hasUpload).toBe(true);
@@ -503,10 +532,12 @@ describe('WPDocumentRevisions', () => {
 		test('should set hasUpload to true after successful upload', () => {
 			WPDocumentRevisions.hasUpload = false;
 			WPDocumentRevisions.window = {
-				jQuery: mockJQuery,
+				document: {
+					getElementById: jest.fn(() => ({ value: '', style: { display: '' }, innerHTML: '', insertAdjacentHTML: jest.fn() })),
+				},
 				tb_remove: jest.fn(),
 			};
-			WPDocumentRevisions.$ = mockJQuery;
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.postDocumentUpload('pdf', '123');
 
@@ -516,10 +547,12 @@ describe('WPDocumentRevisions', () => {
 		test('should call tb_remove after upload', () => {
 			WPDocumentRevisions.hasUpload = false;
 			WPDocumentRevisions.window = {
-				jQuery: mockJQuery,
+				document: {
+					getElementById: jest.fn(() => ({ value: '', style: { display: '' }, innerHTML: '', insertAdjacentHTML: jest.fn() })),
+				},
 				tb_remove: jest.fn(),
 			};
-			WPDocumentRevisions.$ = mockJQuery;
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.postDocumentUpload('pdf', '123');
 
@@ -529,86 +562,68 @@ describe('WPDocumentRevisions', () => {
 		test('should display error when attachmentID contains error string', () => {
 			WPDocumentRevisions.hasUpload = false;
 			const errorHtml = '<div class="error">Upload failed</div>';
-			const mockMediaItem = { html: jest.fn() };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '.media-item:first') return mockMediaItem;
-				return mockJQuery(selector);
+			const mockMediaItem = { innerHTML: '' };
+			document.querySelector = jest.fn((sel) => {
+				if (sel === '.media-item') return mockMediaItem;
+				return null;
 			});
 
 			WPDocumentRevisions.postDocumentUpload('test.pdf', errorHtml);
 
-			expect(mockMediaItem.html).toHaveBeenCalledWith(errorHtml);
+			expect(mockMediaItem.innerHTML).toBe(errorHtml);
 		});
 
 		test('should update permalink with file extension after upload', () => {
 			WPDocumentRevisions.hasUpload = false;
 
 			const mockPermalink = {
-				length: 1,
-				html: jest.fn((val) => {
-					if (val === undefined) return 'http://example.com/doc</span>.pdf@';
-					return mockPermalink;
-				}),
+				innerHTML: 'http://example.com/doc</span>.pdf@',
 			};
 
-			const windowEl = {
-				val: jest.fn(),
-				hide: jest.fn(),
-				before: jest.fn(() => windowEl),
-				prev: jest.fn(() => windowEl),
-				fadeIn: jest.fn(() => windowEl),
-				fadeOut: jest.fn(() => windowEl),
-			};
+			const defaultEl = { value: '', style: { display: '' }, innerHTML: '', insertAdjacentHTML: jest.fn() };
 
 			WPDocumentRevisions.window = {
-				jQuery: jest.fn((selector) => {
-					if (selector === '#sample-permalink') return mockPermalink;
-					return windowEl;
-				}),
+				document: {
+					getElementById: jest.fn((id) => {
+						if (id === 'sample-permalink') return mockPermalink;
+						return defaultEl;
+					}),
+				},
 				tb_remove: jest.fn(),
 			};
 			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.postDocumentUpload('doc', '123');
 
-			const setCalls = mockPermalink.html.mock.calls.filter((c) => c.length > 0);
-			expect(setCalls.length).toBeGreaterThan(0);
-			expect(setCalls[0][0]).toContain('.docx');
+			expect(mockPermalink.innerHTML).toContain('.docx');
 		});
 
 		test('should set post_content to WPDR comment format on upload', () => {
 			WPDocumentRevisions.hasUpload = false;
 
-			const postContentVal = jest.fn();
-			const windowEl = {
-				val: postContentVal,
-				hide: jest.fn(),
-				before: jest.fn(() => windowEl),
-				prev: jest.fn(() => windowEl),
-				fadeIn: jest.fn(() => windowEl),
-				fadeOut: jest.fn(() => windowEl),
-				length: 0,
-				html: jest.fn(),
-			};
+			const postContentEl = { value: '' };
+			const defaultEl = { value: '', style: { display: '' }, innerHTML: '', insertAdjacentHTML: jest.fn() };
 
 			WPDocumentRevisions.window = {
-				jQuery: jest.fn(() => windowEl),
+				document: {
+					getElementById: jest.fn((id) => {
+						if (id === 'post_content') return postContentEl;
+						return defaultEl;
+					}),
+				},
 				tb_remove: jest.fn(),
 			};
 			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.postDocumentUpload('doc', '456');
 
-			expect(postContentVal).toHaveBeenCalledWith('<!-- WPDR 456 -->');
+			expect(postContentEl.value).toBe('<!-- WPDR 456 -->');
 		});
 	});
 
 	describe('checkUpdate', () => {
-		test('should return early if curr_content is undefined', () => {
-			const mockCurrContent = mockJQuery('#curr_content');
-			mockCurrContent.val = jest.fn(() => undefined);
-
-			WPDocumentRevisions.$ = mockJQuery;
+		test('should return early if curr_content element does not exist', () => {
+			document.getElementById = jest.fn(() => null);
 
 			const result = WPDocumentRevisions.checkUpdate();
 
@@ -616,29 +631,27 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should disable submit on first check (Unset state)', () => {
-			const mockCurrContent = { val: jest.fn(() => 'Unset') };
-			const mockPostContent = { val: jest.fn(() => 'some content') };
-			const mockSubmitButtons = { prop: jest.fn() };
-			WPDocumentRevisions.$ = jest.fn((selector, context) => {
-				if (selector === '#curr_content') return mockCurrContent;
-				if (selector === '#post_content') return mockPostContent;
-				if (selector === ':button, :submit' && context === '#submitpost') return mockSubmitButtons;
-				return mockJQuery(selector);
+			const mockCurrContent = { value: 'Unset' };
+			const mockPostContent = { value: 'some content' };
+			const mockButton = { disabled: false };
+			document.getElementById = jest.fn((id) => {
+				if (id === 'curr_content') return mockCurrContent;
+				if (id === 'post_content') return mockPostContent;
+				return null;
 			});
+			document.querySelectorAll = jest.fn(() => [mockButton]);
 
 			WPDocumentRevisions.checkUpdate();
 
-			expect(mockSubmitButtons.prop).toHaveBeenCalledWith('disabled', true);
-			expect(mockCurrContent.val).toHaveBeenCalledWith('some content');
+			expect(mockButton.disabled).toBe(true);
+			expect(mockCurrContent.value).toBe('some content');
 		});
 
 		test('should call buildContent when content differs', () => {
-			const mockCurrContent = { val: jest.fn(() => 'old content') };
-			const mockPostContent = { val: jest.fn(() => 'new content') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#curr_content') return mockCurrContent;
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'curr_content') return { value: 'old content' };
+				if (id === 'post_content') return { value: 'new content' };
+				return null;
 			});
 			WPDocumentRevisions.getDescr = jest.fn(() => 'different content');
 			WPDocumentRevisions.buildContent = jest.fn();
@@ -651,12 +664,10 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should not call buildContent when content matches', () => {
-			const mockCurrContent = { val: jest.fn(() => 'same content') };
-			const mockPostContent = { val: jest.fn(() => 'same content') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#curr_content') return mockCurrContent;
-				if (selector === '#post_content') return mockPostContent;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'curr_content') return { value: 'same content' };
+				if (id === 'post_content') return { value: 'same content' };
+				return null;
 			});
 			WPDocumentRevisions.getDescr = jest.fn(() => 'same content');
 			WPDocumentRevisions.buildContent = jest.fn();
@@ -669,31 +680,17 @@ describe('WPDocumentRevisions', () => {
 
 	describe('updateTimestamps', () => {
 		test('should update all timestamp elements', () => {
-			const mockElements = [];
-			const mockTimestamp = {
-				text: jest.fn(),
-				attr: jest.fn(() => '1609459200'),
-			};
-
-			mockElements.push(mockTimestamp);
-
-			const mockTimestampSelector = {
-				each: jest.fn((callback) => {
-					mockElements.forEach(callback.bind(mockTimestamp));
-					return mockTimestampSelector;
-				}),
-			};
-
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '.timestamp') return mockTimestampSelector;
-				return mockTimestamp;
+			const mockEl = { id: '1609459200', textContent: '' };
+			document.querySelectorAll = jest.fn((sel) => {
+				if (sel === '.timestamp') return [mockEl];
+				return [];
 			});
 
 			WPDocumentRevisions.human_time_diff = jest.fn(() => '5 minutes');
 
 			WPDocumentRevisions.updateTimestamps();
 
-			expect(mockTimestampSelector.each).toHaveBeenCalled();
+			expect(mockEl.textContent).toBe('5 minutes');
 		});
 	});
 
@@ -750,71 +747,142 @@ describe('WPDocumentRevisions', () => {
 	});
 
 	describe('overrideLock', () => {
-		test('should call $.post with correct URL and data', () => {
+		test('should call wp.apiFetch with correct URL and data', () => {
+			document.getElementById = jest.fn(() => null);
+
 			WPDocumentRevisions.overrideLock();
-			expect(mockJQuery.post).toHaveBeenCalledWith(
-				'/wp-admin/admin-ajax.php',
-				expect.objectContaining({ action: 'override_lock', nonce: 'test-nonce' }),
-				expect.any(Function)
+
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: '/wp-admin/admin-ajax.php',
+					method: 'POST',
+					parse: false,
+				})
 			);
+
+			const opts = global.wp.apiFetch.mock.calls[0][0];
+			expect(opts.body.get('action')).toBe('override_lock');
+			expect(opts.body.get('nonce')).toBe('test-nonce');
 		});
 
 		test('should include post_id in lock override request', () => {
+			document.getElementById = jest.fn((id) => {
+				if (id === 'post_ID') return { value: '42' };
+				return null;
+			});
+
 			WPDocumentRevisions.overrideLock();
-			expect(mockJQuery.post).toHaveBeenCalledWith(
-				expect.any(String),
-				expect.objectContaining({ post_id: 0 }),
-				expect.any(Function)
-			);
+
+			const opts = global.wp.apiFetch.mock.calls[0][0];
+			expect(opts.body.get('post_id')).toBe('42');
 		});
 
-		test('should call autosave on successful lock override', () => {
-			WPDocumentRevisions.overrideLock();
-			const callback = mockJQuery.post.mock.calls[0][2];
-			callback.call(WPDocumentRevisions, true);
+		test('should call preventDefault when event is provided', () => {
+			const mockEvent = { preventDefault: jest.fn() };
+
+			WPDocumentRevisions.overrideLock(mockEvent);
+
+			expect(mockEvent.preventDefault).toHaveBeenCalled();
+		});
+
+		test('should call autosave on successful lock override', async () => {
+			document.getElementById = jest.fn(() => null);
+			document.querySelectorAll = jest.fn(() => []);
+
+			await WPDocumentRevisions.overrideLock();
 			expect(global.autosave).toHaveBeenCalled();
 		});
 
-		test('should hide lock override and errors on success', () => {
-			WPDocumentRevisions.overrideLock();
-			const callback = mockJQuery.post.mock.calls[0][2];
+		test('should hide lock override and errors on success', async () => {
+			const mockLockOverride = { style: { display: '' } };
+			const mockError = { style: { display: '' } };
+			const mockPublish = { style: { display: 'none' } };
 
-			const mockLockOverride = { hide: jest.fn() };
-			const mockErrorsNot = { hide: jest.fn() };
-			const mockPublish = { fadeIn: jest.fn() };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#lock_override') return mockLockOverride;
-				if (selector === '.error') return { not: jest.fn(() => mockErrorsNot) };
-				if (selector === '#publish, .add_media, #lock-notice') return mockPublish;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'lock_override') return mockLockOverride;
+				return null;
+			});
+			document.querySelectorAll = jest.fn((sel) => {
+				if (sel === '.error:not(#lock-notice)') return [mockError];
+				if (sel === '#publish, .add_media, #lock-notice') return [mockPublish];
+				return [];
 			});
 
-			callback.call(WPDocumentRevisions, true);
+			await WPDocumentRevisions.overrideLock();
 
-			expect(mockLockOverride.hide).toHaveBeenCalled();
-			expect(mockErrorsNot.hide).toHaveBeenCalled();
-			expect(mockPublish.fadeIn).toHaveBeenCalled();
+			expect(mockLockOverride.style.display).toBe('none');
+			expect(mockError.style.display).toBe('none');
+			expect(mockPublish.style.display).toBe('');
 		});
 
-		test('should alert lockError on failed lock override', () => {
-			WPDocumentRevisions.overrideLock();
-			const callback = mockJQuery.post.mock.calls[0][2];
-			callback.call(WPDocumentRevisions, false);
+		test('should alert lockError on empty response', async () => {
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.resolve({ text: () => Promise.resolve('') })
+			);
+
+			await WPDocumentRevisions.overrideLock();
 			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+		});
+
+		test('should alert lockError on non-1 response (e.g. -1)', async () => {
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.resolve({ text: () => Promise.resolve('-1') })
+			);
+
+			await WPDocumentRevisions.overrideLock();
+			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+		});
+
+		test('should alert lockError on network error', async () => {
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.reject(new Error('Network failure'))
+			);
+
+			await WPDocumentRevisions.overrideLock();
+			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+		});
+	});
+
+	describe('autosaveEnableButtons', () => {
+		test('should dispatch autosaveComplete event', () => {
+			const dispatchSpy = jest.spyOn(document, 'dispatchEvent');
+
+			WPDocumentRevisions.autosaveEnableButtons();
+
+			expect(dispatchSpy).toHaveBeenCalledWith(
+				expect.objectContaining({ type: 'autosaveComplete' })
+			);
+
+			dispatchSpy.mockRestore();
+		});
+
+		test('should call original autosave when hasUpload is true', () => {
+			WPDocumentRevisions.hasUpload = true;
+			WPDocumentRevisions.autosaveEnableButtonsOriginal = jest.fn();
+
+			WPDocumentRevisions.autosaveEnableButtons();
+
+			expect(WPDocumentRevisions.autosaveEnableButtonsOriginal).toHaveBeenCalled();
+		});
+
+		test('should not call original autosave when hasUpload is false', () => {
+			WPDocumentRevisions.hasUpload = false;
+			WPDocumentRevisions.autosaveEnableButtonsOriginal = jest.fn();
+
+			WPDocumentRevisions.autosaveEnableButtons();
+
+			expect(WPDocumentRevisions.autosaveEnableButtonsOriginal).not.toHaveBeenCalled();
 		});
 	});
 
 	describe('postAutosaveCallback', () => {
 		test('should reload page when lock notice is visible and autosave alert exists', () => {
 			const originalNotice = wp_document_revisions.lostLockNotice;
-			const mockAutosaveAlert = { length: 1 };
-			const mockLockNotice = { length: 1, is: jest.fn(() => true) };
-			const mockTitleEl = { val: jest.fn(() => 'Test Document') };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#autosave-alert') return mockAutosaveAlert;
-				if (selector === '#lock-notice') return mockLockNotice;
-				if (selector === '#title') return mockTitleEl;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'autosave-alert') return {};
+				if (id === 'lock-notice') return { offsetParent: document.body };
+				if (id === 'title') return { value: 'Test Document' };
+				return null;
 			});
 
 			delete window.webkitNotifications;
@@ -830,11 +898,7 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should not reload when autosave-alert is absent', () => {
-			const mockAutosaveAlert = { length: 0 };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#autosave-alert') return mockAutosaveAlert;
-				return mockJQuery(selector);
-			});
+			document.getElementById = jest.fn(() => null);
 
 			WPDocumentRevisions.postAutosaveCallback();
 
@@ -842,12 +906,10 @@ describe('WPDocumentRevisions', () => {
 		});
 
 		test('should not reload when lock-notice is not visible', () => {
-			const mockAutosaveAlert = { length: 1 };
-			const mockLockNotice = { length: 1, is: jest.fn(() => false) };
-			WPDocumentRevisions.$ = jest.fn((selector) => {
-				if (selector === '#autosave-alert') return mockAutosaveAlert;
-				if (selector === '#lock-notice') return mockLockNotice;
-				return mockJQuery(selector);
+			document.getElementById = jest.fn((id) => {
+				if (id === 'autosave-alert') return {};
+				if (id === 'lock-notice') return { offsetParent: null };
+				return null;
 			});
 
 			WPDocumentRevisions.postAutosaveCallback();
