@@ -189,6 +189,18 @@ describe('wp-document-revisions-validate', () => {
 				})
 			);
 		});
+		test('should construct URL with correct path segments', () => {
+			jQuery.ajax = jest.fn();
+
+			wpdr_valid_fix(42, 'orphan', 99);
+
+			const expectedUrl = wpApiSettings.root + 'wpdr/v1/correct/42/type/orphan/attach/99';
+			expect(jQuery.ajax).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: expectedUrl,
+				})
+			);
+		});
 	});
 
 	describe('clear_line', () => {
@@ -297,6 +309,33 @@ describe('wp-document-revisions-validate', () => {
 			expect(mockOffElement.style.display).toBe('block');
 		});
 
+		test('should show off element (no underscore in ID)', () => {
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
+			const mockOnElement = { style: { display: 'block' } };
+			const mockOffElement = { style: { display: 'none' } };
+			const mockGetElementById = jest.fn((id) => {
+				if (id === 'Line123') {
+					return {
+						classList: { remove: jest.fn() },
+						getElementsByTagName: jest.fn(() => mockTds),
+					};
+				}
+				if (id === 'on_123') return mockOnElement;
+				if (id === 'off123') return mockOffElement;
+				return null;
+			});
+			global.document.getElementById = mockGetElementById;
+
+			clear_line(123, 'type1');
+
+			// Verify getElementById is called with 'off123' (no underscore), not 'off_123'
+			expect(mockGetElementById).toHaveBeenCalledWith('off123');
+			expect(mockGetElementById).not.toHaveBeenCalledWith('off_123');
+			expect(mockOffElement.style.display).toBe('block');
+		});
+
 		test('should handle missing on_ element gracefully', () => {
 			const mockTds = [
 				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
@@ -399,6 +438,39 @@ describe('wp-document-revisions-validate', () => {
 			expect(mockElements.length).toBe(3);
 			mockElements.forEach((el) => {
 				expect(el.style.display).toBe('table-row');
+			});
+		});
+		test('should set display on all matching elements when checked', () => {
+			const mockElements = [
+				{ style: { display: 'none' } },
+				{ style: { display: 'none' } },
+				{ style: { display: 'none' } },
+			];
+			global.document.getElementById = jest.fn(() => ({ checked: true }));
+			global.document.getElementsByClassName = jest.fn(() => mockElements);
+
+			hide_show('test_id');
+
+			expect(mockElements).toHaveLength(3);
+			mockElements.forEach((el) => {
+				expect(el.style.display).toBe('table-row');
+			});
+		});
+
+		test('should set display on all matching elements when unchecked', () => {
+			const mockElements = [
+				{ style: { display: 'table-row' } },
+				{ style: { display: 'table-row' } },
+				{ style: { display: 'table-row' } },
+			];
+			global.document.getElementById = jest.fn(() => ({ checked: false }));
+			global.document.getElementsByClassName = jest.fn(() => mockElements);
+
+			hide_show('test_id');
+
+			expect(mockElements).toHaveLength(3);
+			mockElements.forEach((el) => {
+				expect(el.style.display).toBe('none');
 			});
 		});
 	});
