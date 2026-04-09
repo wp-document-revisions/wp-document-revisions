@@ -4,45 +4,6 @@
  * This file sets up the testing environment with WordPress and jQuery globals
  */
 
-// Mock jQuery
-global.jQuery = jest.fn((selector) => {
-	const element = {
-		click: jest.fn(() => element),
-		bind: jest.fn(() => element),
-		on: jest.fn(() => element),
-		show: jest.fn(() => element),
-		hide: jest.fn(() => element),
-		fadeIn: jest.fn(() => element),
-		fadeOut: jest.fn(() => element),
-		prop: jest.fn(() => element),
-		removeAttr: jest.fn(() => element),
-		val: jest.fn(() => ''),
-		text: jest.fn(() => ''),
-		attr: jest.fn(() => ''),
-		html: jest.fn(() => ''),
-		each: jest.fn(() => element),
-		before: jest.fn(() => element),
-		prev: jest.fn(() => element),
-		not: jest.fn(() => element),
-		is: jest.fn(() => false),
-		length: 0,
-	};
-
-	// Allow chaining
-	if (typeof selector === 'function') {
-		// jQuery ready function
-		selector(jQuery);
-	}
-
-	return element;
-});
-
-global.jQuery.ajax = jest.fn();
-global.jQuery.post = jest.fn();
-
-// Alias for jQuery
-global.$ = global.jQuery;
-
 // Mock WordPress globals
 global.wp = {
 	blocks: {
@@ -66,6 +27,7 @@ global.wp = {
 	},
 	compose: {},
 	serverSideRender: jest.fn(),
+	apiFetch: jest.fn(() => Promise.resolve({})),
 	i18n: {
 		__: jest.fn((text) => text),
 		_e: jest.fn((text) => text),
@@ -93,11 +55,21 @@ window.dialogArguments = undefined;
 const mockGetElementById = jest.fn((id) => ({
 	id,
 	innerHTML: '',
+	value: '',
 	style: { display: 'block' },
 	classList: {
 		remove: jest.fn(),
 	},
 	getElementsByTagName: jest.fn(() => []),
+	addEventListener: jest.fn(),
+	removeAttribute: jest.fn(),
+	getAttribute: jest.fn(() => ''),
+	querySelector: jest.fn(() => null),
+	querySelectorAll: jest.fn(() => []),
+	insertAdjacentHTML: jest.fn(),
+	previousElementSibling: null,
+	offsetParent: null,
+	disabled: false,
 	contentWindow: {
 		document: {
 			getElementById: jest.fn(() => ({ innerHTML: '' })),
@@ -106,9 +78,13 @@ const mockGetElementById = jest.fn((id) => ({
 }));
 
 const mockGetElementsByClassName = jest.fn(() => []);
+const mockQuerySelector = jest.fn(() => null);
+const mockQuerySelectorAll = jest.fn(() => []);
 
 global.document.getElementById = mockGetElementById;
 global.document.getElementsByClassName = mockGetElementsByClassName;
+global.document.querySelector = mockQuerySelector;
+global.document.querySelectorAll = mockQuerySelectorAll;
 
 // Add document to window mock
 window.document = global.document;
@@ -120,11 +96,9 @@ window.document = global.document;
 global.opener = null;
 global.parent = {
 	document: global.document,
-	jQuery: global.jQuery,
 };
 global.top = {
 	document: global.document,
-	jQuery: global.jQuery,
 };
 
 // Mock alert and confirm

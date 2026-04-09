@@ -1040,7 +1040,7 @@ class WP_Document_Revisions_Admin {
 			<script type="text/javascript">
 				window.addEventListener('load', function() {
 					if ( typeof window.WPDocumentRevisions === "undefined" ) {
-						window.WPDocumentRevisions = new WPDocumentRevisions(jQuery);
+						window.WPDocumentRevisions = new WPDocumentRevisions();
 					}
 				});
 			</script>
@@ -1640,7 +1640,7 @@ class WP_Document_Revisions_Admin {
 		wp_enqueue_script(
 			'wp_document_revisions',
 			plugins_url( $path, __DIR__ ),
-			array( 'jquery' ),
+			array( 'wp-api-fetch' ),
 			$vers,
 			false
 		);

@@ -1,32 +1,55 @@
 (function () {
 	'use strict';
 
+	const SUBMIT_BUTTONS =
+		'#submitpost button, #submitpost [type="submit"], #submitpost [type="button"]';
+
 	class WPDocumentRevisions {
 		hasUpload = false;
 		secure = 'https:' === window.location.protocol;
 		window = window.dialogArguments || opener || parent || top;
 
-		constructor($) {
-			this.$ = $;
-			this.$('.revision').click(this.restoreRevision);
-			this.$('#override_link').click(this.overrideLock);
-			this.$('#document a').click(this.requestPermission);
-			this.$(document).bind('autosaveComplete', this.postAutosaveCallback);
-			this.$(document).bind('documentUpload', this.legacyPostDocumentUpload);
-			this.$(':button, :submit', '#submitpost').prop('disabled', true);
-			this.$('#misc-publishing-actions a').click(this.enableSubmit);
-			this.$('input, select').on('change', this.enableSubmit);
-			this.$('input[type=text], textarea').on('keyup', this.enableSubmit);
-			this.$('#sample-permalink').on('change', this.enableSubmit);
-			this.$('#content-add_media').click(this.cookieFalse);
-			this.$('#postimagediv .inside').click(this.cookieTrue);
-			this.$('#publishing-action').click(this.buildContent);
-			this.$('#submitdiv .inside').click(this.cookieDelete);
-			this.$('#adminmenumain').click(this.cookieDelete);
-			this.$('#wpadminbar').click(this.cookieDelete);
-			this.$('#document').show();
-			this.$('#revision-log').show();
-			this.$('#revision-summary').hide();
+		constructor() {
+			document.querySelectorAll('.revision').forEach((el) => {
+				el.addEventListener('click', this.restoreRevision);
+			});
+			document.getElementById('override_link')?.addEventListener('click', this.overrideLock);
+			document.querySelectorAll('#document a').forEach((el) => {
+				el.addEventListener('click', this.requestPermission);
+			});
+			document.addEventListener('autosaveComplete', this.postAutosaveCallback);
+			document.addEventListener('documentUpload', this.legacyPostDocumentUpload);
+			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
+				el.disabled = true;
+			});
+			document.querySelectorAll('#misc-publishing-actions a').forEach((el) => {
+				el.addEventListener('click', this.enableSubmit);
+			});
+			document.querySelectorAll('input, select').forEach((el) => {
+				el.addEventListener('change', this.enableSubmit);
+			});
+			document.querySelectorAll('input[type=text], textarea').forEach((el) => {
+				el.addEventListener('keyup', this.enableSubmit);
+			});
+			document.getElementById('sample-permalink')?.addEventListener('change', this.enableSubmit);
+			document.getElementById('content-add_media')?.addEventListener('click', this.cookieFalse);
+			document.querySelector('#postimagediv .inside')?.addEventListener('click', this.cookieTrue);
+			document.getElementById('publishing-action')?.addEventListener('click', this.buildContent);
+			document.querySelector('#submitdiv .inside')?.addEventListener('click', this.cookieDelete);
+			document.getElementById('adminmenumain')?.addEventListener('click', this.cookieDelete);
+			document.getElementById('wpadminbar')?.addEventListener('click', this.cookieDelete);
+			const docEl = document.getElementById('document');
+			if (docEl) {
+				docEl.style.display = '';
+			}
+			const revLog = document.getElementById('revision-log');
+			if (revLog) {
+				revLog.style.display = '';
+			}
+			const revSummary = document.getElementById('revision-summary');
+			if (revSummary) {
+				revSummary.style.display = 'none';
+			}
 			this.bindPostDocumentUploadCB();
 			this.hijackAutosave();
 			this.checkUpdate();
@@ -36,48 +59,73 @@
 
 		hijackAutosave = () => {
 			this.autosaveEnableButtonsOriginal = window.autosave_enable_buttons;
-			return (window.autosave_enable_buttons = this.autosaveEnableButtons);
+			window.autosave_enable_buttons = this.autosaveEnableButtons;
 		};
 
 		autosaveEnableButtons = () => {
-			this.$(document).trigger('autosaveComplete');
+			document.dispatchEvent(new Event('autosaveComplete'));
 			if (this.hasUpload) {
 				return this.autosaveEnableButtonsOriginal();
 			}
 		};
 
 		enableSubmit = () => {
-			this.$('#revision-summary').show();
-			this.$(':button, :submit', '#submitpost').removeAttr('disabled');
-			return this.$('#lock_override').prev().fadeIn();
+			const revSummary = document.getElementById('revision-summary');
+			if (revSummary) {
+				revSummary.style.display = '';
+			}
+			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
+				el.removeAttribute('disabled');
+			});
+			const lockOverride = document.getElementById('lock_override');
+			if (lockOverride) {
+				const prev = lockOverride.previousElementSibling;
+				if (prev) {
+					prev.style.display = '';
+				}
+			}
 		};
 
 		restoreRevision = (e) => {
 			e.preventDefault();
 			if (confirm(wp_document_revisions.restoreConfirmation)) {
-				return (window.location.href = this.$(e.target).attr('href'));
+				window.location.href = e.target.getAttribute('href');
 			}
 		};
 
 		overrideLock = () => {
-			return this.$.post(
-				ajaxurl,
-				{
+			const postId = document.getElementById('post_ID');
+
+			return wp.apiFetch({
+				url: ajaxurl,
+				method: 'POST',
+				// admin-ajax expects form-encoded body, not JSON.
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: new URLSearchParams({
 					action: 'override_lock',
-					post_id: this.$('#post_ID').val() || 0,
+					post_id: postId ? postId.value : 0,
 					nonce: wp_document_revisions.nonce,
-				},
-				function (data) {
+				}),
+				parse: false,
+			})
+				.then((response) => response.text())
+				.then((data) => {
 					if (data) {
-						this.$('#lock_override').hide();
-						this.$('.error').not('#lock-notice').hide();
-						this.$('#publish, .add_media, #lock-notice').fadeIn();
-						return autosave();
+						const lockOverride = document.getElementById('lock_override');
+						if (lockOverride) {
+							lockOverride.style.display = 'none';
+						}
+						document.querySelectorAll('.error:not(#lock-notice)').forEach((el) => {
+							el.style.display = 'none';
+						});
+						document.querySelectorAll('#publish, .add_media, #lock-notice').forEach((el) => {
+							el.style.display = '';
+						});
+						autosave();
 					} else {
-						return alert(wp_document_revisions.lockError);
+						alert(wp_document_revisions.lockError);
 					}
-				}
-			);
+				});
 		};
 
 		requestPermission() {
@@ -101,14 +149,13 @@
 		}
 
 		postAutosaveCallback = () => {
-			if (
-				this.$('#autosave-alert').length > 0 &&
-				this.$('#lock-notice').length > 0 &&
-				this.$('#lock-notice').is(':visible')
-			) {
+			const autosaveAlert = document.getElementById('autosave-alert');
+			const lockNotice = document.getElementById('lock-notice');
+			if (autosaveAlert && lockNotice && lockNotice.offsetParent !== null) {
+				const title = document.getElementById('title');
 				wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace(
 					'%s',
-					this.$('#title').val()
+					title ? title.value : ''
 				);
 				if (window.webkitNotifications) {
 					lock_override_notice(wp_document_revisions.lostLockNotice);
@@ -176,8 +223,9 @@
 
 		cookieTrue = () => {
 			wpCookies.set('doc_image', 'true', 60 * 60, '/wp-admin', false, this.secure);
-			this.$(':button, :submit', '#submitpost').removeAttr('disabled');
-			// Propagation will be stopped in postimagediv to stop document event setting cookie false.
+			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
+				el.removeAttribute('disabled');
+			});
 		};
 
 		cookieDelete = () => {
@@ -185,8 +233,8 @@
 		};
 
 		updateTimestamps = () => {
-			return this.$('.timestamp').each(() => {
-				return this.$(this).text(this.human_time_diff(this.$(this).attr('id')));
+			document.querySelectorAll('.timestamp').forEach((el) => {
+				el.textContent = this.human_time_diff(el.id);
 			});
 		};
 
@@ -195,7 +243,8 @@
 			// On starting, the post_content is set to BOTH fields content and post_content.
 			const iframe = this.window.document.getElementById('content_ifr');
 			if (null === iframe) {
-				const content = this.$('#post_content').val();
+				const el = document.getElementById('post_content');
+				const content = el ? el.value : '';
 				if (undefined === content || '' === content || /^\d+$/.test(content)) {
 					return '';
 				}
@@ -203,7 +252,8 @@
 			}
 			let text = iframe.contentWindow.document.getElementById('tinymce').innerHTML;
 			if (undefined === text) {
-				const content = this.$('#post_content').val();
+				const el = document.getElementById('post_content');
+				const content = el ? el.value : '';
 				if ('' === content || /^\d+$/.test(content)) {
 					return '';
 				}
@@ -218,7 +268,8 @@
 		buildContent = () => {
 			// Create the desired content for post_content.
 			// Will be the combination of document id from field post_content and description from content.
-			const content = this.$('#post_content').val();
+			const postContentEl = document.getElementById('post_content');
+			const content = postContentEl ? postContentEl.value : '';
 			let newtext = this.getDescr();
 			let attach;
 			if ('' === content) {
@@ -235,15 +286,29 @@
 			if (content !== newtext) {
 				this.enableSubmit();
 			}
-			// set the desired text eeverywhere.
-			this.window.jQuery('#curr_content').val(newtext);
-			this.window.jQuery('#post_content').val(newtext);
-			this.window.jQuery('#content').val(newtext);
+			// Set the desired text in the parent window fields.
+			const wDoc = this.window.document;
+			const currContent = wDoc.getElementById('curr_content');
+			if (currContent) {
+				currContent.value = newtext;
+			}
+			const postContent = wDoc.getElementById('post_content');
+			if (postContent) {
+				postContent.value = newtext;
+			}
+			const contentEl = wDoc.getElementById('content');
+			if (contentEl) {
+				contentEl.value = newtext;
+			}
 		};
 
 		postDocumentUpload(file, attachmentID) {
 			if (typeof attachmentID === 'string' && attachmentID.indexOf('error') !== -1) {
-				return this.$('.media-item:first').html(attachmentID);
+				const mediaItem = document.querySelector('.media-item');
+				if (mediaItem) {
+					mediaItem.innerHTML = attachmentID;
+				}
+				return;
 			}
 			if (file instanceof Object) {
 				file = file.name.split('.').pop();
@@ -254,39 +319,49 @@
 			// On upload set the document identifier in the new format.
 			const docID = /\d+$/.exec(attachmentID);
 			// This will throw away the description for an existing post - but it is in content.
-			this.window.jQuery('#post_content').val(`<!-- WPDR ${docID} -->`);
-			this.window.jQuery('#message').hide();
+			const wDoc = this.window.document;
+			const postContent = wDoc.getElementById('post_content');
+			if (postContent) {
+				postContent.value = `<!-- WPDR ${docID} -->`;
+			}
+			const message = wDoc.getElementById('message');
+			if (message) {
+				message.style.display = 'none';
+			}
 			this.hasUpload = true;
 			this.window.tb_remove();
-			this.window
-				.jQuery('#post')
-				.before(wp_document_revisions.postUploadNotice)
-				.prev()
-				.fadeIn()
-				.fadeOut()
-				.fadeIn();
+			const post = wDoc.getElementById('post');
+			if (post) {
+				post.insertAdjacentHTML('beforebegin', wp_document_revisions.postUploadNotice);
+			}
 			this.enableSubmit();
-			if (this.window.jQuery('#sample-permalink').length !== 0) {
-				return this.window.jQuery('#sample-permalink').html(
-					this.window
-						.jQuery('#sample-permalink')
-						.html()
-						.replace(/\<\/span>(\.[a-z0-9]{1,7})?@$/i, wp_document_revisions.extension)
+			const samplePermalink = wDoc.getElementById('sample-permalink');
+			if (samplePermalink) {
+				samplePermalink.innerHTML = samplePermalink.innerHTML.replace(
+					/\<\/span>(\.[a-z0-9]{1,7})?@$/i,
+					wp_document_revisions.extension
 				);
 			}
 		}
 
 		checkUpdate = () => {
 			// Check whether an update is needed - via a 3rd field as amalgam of two input fields.
-			const curr_content = this.$('#curr_content').val();
+			const currContentEl = document.getElementById('curr_content');
+			if (!currContentEl) {
+				return;
+			}
+			const curr_content = currContentEl.value;
 			if (undefined === curr_content) {
 				return;
 			}
-			const post_content = this.$('#post_content').val();
+			const postContentEl = document.getElementById('post_content');
+			const post_content = postContentEl ? postContentEl.value : '';
 			if (curr_content === 'Unset') {
 				// Clunky process to miss the first update (and keep the save button inactive).
-				this.$(':button, :submit', '#submitpost').prop('disabled', true);
-				this.$('#curr_content').val(post_content);
+				document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
+					el.disabled = true;
+				});
+				currContentEl.value = post_content;
 				return;
 			}
 			const curr_text = this.getDescr();
@@ -297,7 +372,11 @@
 		};
 	}
 
-	jQuery(function ($) {
-		return (window.WPDocumentRevisions = new WPDocumentRevisions($));
-	});
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', () => {
+			window.WPDocumentRevisions = new WPDocumentRevisions();
+		});
+	} else {
+		window.WPDocumentRevisions = new WPDocumentRevisions();
+	}
 }).call(this);

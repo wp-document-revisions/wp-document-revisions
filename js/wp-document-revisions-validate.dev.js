@@ -2,23 +2,17 @@
 	'use strict';
 
 	window.wpdr_valid_fix = function wpdr_valid_fix(id, code, parm) {
-		const url = `${wpApiSettings.root}wpdr/v1/correct/${id}/type/${code}/attach/${parm}`;
-		jQuery.ajax({
-			type: 'PUT',
-			url: url,
-			beforeSend: (xhr) => {
-				xhr.setRequestHeader('X-WP-Nonce', nonce);
-			},
-			data: {
-				userid: user,
-			},
-			success: (response) => {
+		return wp.apiFetch({
+			path: `wpdr/v1/correct/${id}/type/${code}/attach/${parm}`,
+			method: 'PUT',
+			data: { userid: user },
+		})
+			.then(() => {
 				window.clear_line(id, code);
-			},
-			error: (response) => {
-				alert(response.failureMessage);
-			},
-		});
+			})
+			.catch((error) => {
+				alert(error.message);
+			});
 	};
 
 	window.clear_line = function clear_line(id, code) {

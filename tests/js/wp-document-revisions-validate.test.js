@@ -10,93 +10,58 @@ const path = require('path');
 const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js');
 
 describe('wp-document-revisions-validate', () => {
-	let originalAjax;
-
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
 		jest.resetModules();
-		originalAjax = jQuery.ajax;
 
-		// Clear the module cache for fresh execution
-		delete require.cache[require.resolve(MODULE_PATH)];
+		// Default wp.apiFetch mock — resolves with parsed JSON
+		global.wp.apiFetch = jest.fn(() => Promise.resolve({ status: 'success' }));
 
 		// Execute the module — the IIFE assigns functions to window
 		require(MODULE_PATH);
 	});
 
 	afterEach(() => {
-		jQuery.ajax = originalAjax;
 		delete window.wpdr_valid_fix;
 		delete window.clear_line;
 		delete window.hide_show;
 	});
 
 	describe('wpdr_valid_fix', () => {
-		test('should construct correct REST API URL', () => {
-			jQuery.ajax = jest.fn();
+		test('should construct correct REST API path', async () => {
+			await wpdr_valid_fix(123, 'type1', 456);
 
-			wpdr_valid_fix(123, 'type1', 456);
-
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					url: 'https://example.com/wp-json/wpdr/v1/correct/123/type/type1/attach/456',
+					path: 'wpdr/v1/correct/123/type/type1/attach/456',
 				})
 			);
 		});
 
-		test('should use PUT method', () => {
-			jQuery.ajax = jest.fn();
+		test('should use PUT method', async () => {
+			await wpdr_valid_fix(123, 'type1', 456);
 
-			wpdr_valid_fix(123, 'type1', 456);
-
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'PUT',
+					method: 'PUT',
 				})
 			);
 		});
 
-		test('should set X-WP-Nonce header', () => {
-			jQuery.ajax = jest.fn();
-
-			wpdr_valid_fix(123, 'type1', 456);
-
-			expect(jQuery.ajax).toHaveBeenCalledWith(
-				expect.objectContaining({
-					beforeSend: expect.any(Function),
-				})
-			);
-
-			// Test the beforeSend function
-			const beforeSend = jQuery.ajax.mock.calls[0][0].beforeSend;
-			const mockXhr = {
-				setRequestHeader: jest.fn(),
-			};
-			beforeSend(mockXhr);
-
-			expect(mockXhr.setRequestHeader).toHaveBeenCalledWith(
-				'X-WP-Nonce',
-				'test-nonce'
-			);
-		});
-
-		test('should send userid in data', () => {
-			jQuery.ajax = jest.fn();
+		test('should send userid in data', async () => {
 			global.user = 42;
 
-			wpdr_valid_fix(123, 'type1', 456);
+			await wpdr_valid_fix(123, 'type1', 456);
 
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					data: {
-						userid: 42,
-					},
+					data: { userid: 42 },
 				})
 			);
 		});
 
-		test('should call clear_line on success', () => {
+		test('should call clear_line on success', async () => {
 			// Setup DOM mocks for clear_line to work
 			const mockTds = [
 				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
@@ -111,63 +76,63 @@ describe('wp-document-revisions-validate', () => {
 				return { style: { display: '' } };
 			});
 
-			jQuery.ajax = jest.fn((options) => {
-				// Simulate successful response
-				options.success({ status: 'success' });
-			});
-
-			wpdr_valid_fix(123, 'type1', 456);
+			await wpdr_valid_fix(123, 'type1', 456);
 
 			// Verify clear_line was executed by checking its side effects
 			expect(mockTds[3].innerHTML).toBe('Processed');
 			expect(mockTds[4].innerHTML).toBe('');
 		});
 
-		test('should alert on error', () => {
+		test('should alert on API error', async () => {
 			global.alert = jest.fn();
 
-			jQuery.ajax = jest.fn((options) => {
-				// Simulate error response
-				options.error({ failureMessage: 'Test error message' });
-			});
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.reject(new Error('Internal Server Error'))
+			);
 
-			wpdr_valid_fix(123, 'type1', 456);
+			await wpdr_valid_fix(123, 'type1', 456);
 
-			expect(global.alert).toHaveBeenCalledWith('Test error message');
+			expect(global.alert).toHaveBeenCalledWith('Internal Server Error');
 		});
 
-		test('should handle different document IDs', () => {
-			jQuery.ajax = jest.fn();
+		test('should alert on network error', async () => {
+			global.alert = jest.fn();
 
-			wpdr_valid_fix(999, 'validation', 777);
+			global.wp.apiFetch = jest.fn(() =>
+				Promise.reject(new Error('Network failure'))
+			);
 
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			await wpdr_valid_fix(123, 'type1', 456);
+
+			expect(global.alert).toHaveBeenCalledWith('Network failure');
+		});
+
+		test('should handle different document IDs', async () => {
+			await wpdr_valid_fix(999, 'validation', 777);
+
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					url: 'https://example.com/wp-json/wpdr/v1/correct/999/type/validation/attach/777',
+					path: 'wpdr/v1/correct/999/type/validation/attach/777',
 				})
 			);
 		});
 
-		test('should handle different validation codes', () => {
-			jQuery.ajax = jest.fn();
+		test('should handle different validation codes', async () => {
+			await wpdr_valid_fix(123, 'wpdr_orphan', 456);
 
-			wpdr_valid_fix(123, 'wpdr_orphan', 456);
-
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					url: 'https://example.com/wp-json/wpdr/v1/correct/123/type/wpdr_orphan/attach/456',
+					path: 'wpdr/v1/correct/123/type/wpdr_orphan/attach/456',
 				})
 			);
 		});
-		test('should construct URL with correct path segments', () => {
-			jQuery.ajax = jest.fn();
 
-			wpdr_valid_fix(42, 'orphan', 99);
+		test('should construct path with correct segments', async () => {
+			await wpdr_valid_fix(42, 'orphan', 99);
 
-			const expectedUrl = wpApiSettings.root + 'wpdr/v1/correct/42/type/orphan/attach/99';
-			expect(jQuery.ajax).toHaveBeenCalledWith(
+			expect(global.wp.apiFetch).toHaveBeenCalledWith(
 				expect.objectContaining({
-					url: expectedUrl,
+					path: 'wpdr/v1/correct/42/type/orphan/attach/99',
 				})
 			);
 		});
@@ -446,7 +411,7 @@ describe('wp-document-revisions-validate', () => {
 	});
 
 	describe('Integration tests', () => {
-		test('wpdr_valid_fix should trigger clear_line on success', () => {
+		test('wpdr_valid_fix should trigger clear_line on success', async () => {
 			// Setup mock DOM elements for clear_line
 			const mockTds = [
 				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
@@ -467,15 +432,10 @@ describe('wp-document-revisions-validate', () => {
 
 			global.processed = 'Fixed';
 
-			// Simulate complete flow
-			jQuery.ajax = jest.fn((options) => {
-				options.success({ status: 'success' });
-			});
+			await wpdr_valid_fix(456, 'wpdr_type', 789);
 
-			wpdr_valid_fix(456, 'wpdr_type', 789);
-
-			// Verify AJAX was called
-			expect(jQuery.ajax).toHaveBeenCalled();
+			// Verify apiFetch was called
+			expect(global.wp.apiFetch).toHaveBeenCalled();
 
 			// Verify line was cleared by checking side effects
 			expect(mockLine.classList.remove).toHaveBeenCalledWith('wpdr_wpdr_type');
@@ -483,7 +443,7 @@ describe('wp-document-revisions-validate', () => {
 			expect(mockOffElement.style.display).toBe('block');
 		});
 
-		test('should handle complete validation workflow', () => {
+		test('should handle complete validation workflow', async () => {
 			// Setup mock DOM elements
 			const mockLine = {
 				classList: { remove: jest.fn() },
@@ -503,15 +463,10 @@ describe('wp-document-revisions-validate', () => {
 
 			global.processed = 'Fixed';
 
-			// Simulate complete flow
-			jQuery.ajax = jest.fn((options) => {
-				options.success({ status: 'success' });
-			});
+			await wpdr_valid_fix(100, 'wpdr_orphan', 200);
 
-			wpdr_valid_fix(100, 'wpdr_orphan', 200);
-
-			// Verify AJAX was called
-			expect(jQuery.ajax).toHaveBeenCalled();
+			// Verify apiFetch was called
+			expect(global.wp.apiFetch).toHaveBeenCalled();
 
 			// Verify line was cleared
 			expect(mockLine.classList.remove).toHaveBeenCalledWith('wpdr_wpdr_orphan');

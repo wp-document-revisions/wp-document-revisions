@@ -654,7 +654,7 @@ class WP_Document_Revisions_Validate_Structure {
 		wp_enqueue_script(
 			'wpdr_validate',
 			plugins_url( $path, __DIR__ ),
-			array( 'jquery', 'wp-api-request' ),
+			array( 'wp-api-fetch' ),
 			$vers,
 			true
 		);
