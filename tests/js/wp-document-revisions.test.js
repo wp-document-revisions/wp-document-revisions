@@ -5,6 +5,10 @@
  * document management functionality in the WordPress admin.
  */
 
+const path = require('path');
+
+const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions.dev.js');
+
 describe('WPDocumentRevisions', () => {
 	let WPDocumentRevisions;
 	let mockJQuery;
@@ -12,6 +16,7 @@ describe('WPDocumentRevisions', () => {
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
+		jest.resetModules();
 
 		// Create a fresh mock jQuery
 		mockJQuery = jest.fn((selector) => {
@@ -53,91 +58,21 @@ describe('WPDocumentRevisions', () => {
 		mockJQuery.post = jest.fn();
 		mockJQuery.ajax = jest.fn();
 
-		// Make jQuery available globally for the eval
-		// BUT make it NOT call ready callbacks immediately
+		// Set up jQuery globally before requiring the module
 		global.jQuery = mockJQuery;
 		window.jQuery = mockJQuery;
 
-		// Load the module
-		const fs = require('fs');
-		const path = require('path');
-		const vm = require('vm');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wp-document-revisions.dev.js'),
-			'utf8'
-		);
+		// Clear the module cache for fresh execution
+		// Execute the module — jQuery ready runs immediately, creating the instance
+		require(MODULE_PATH);
 
-		// Execute the code in the test environment using VM for safer execution
-		// The code will try to call jQuery ready, which will create an instance
-		// But we want the constructor function, so we'll capture it
-		let WPDocumentRevisionsConstructor;
-		const originalMockJQuery = mockJQuery;
-		
-		// Temporarily override jQuery to capture the constructor
-		global.jQuery = jest.fn((selectorOrFunc) => {
-			if (typeof selectorOrFunc === 'function') {
-				// This is the ready callback - capture the result but don't execute yet
-				// The callback does: window.WPDocumentRevisions = new WPDocumentRevisions($)
-				// We want to capture WPDocumentRevisions constructor before it's called
-				// So we'll execute the file, capture the constructor from the IIFE, then create our own instance
-				return mockJQuery;
-			}
-			return originalMockJQuery(selectorOrFunc);
-		});
-		global.jQuery.post = mockJQuery.post;
-		global.jQuery.ajax = mockJQuery.ajax;
-		window.jQuery = global.jQuery;
-
-		// Modify the file to capture the constructor
-		const modifiedJsFile = jsFile.replace(
-			'jQuery(function ($) {',
-			'window.WPDocumentRevisionsConstructor = WPDocumentRevisions; jQuery(function ($) {'
-		);
-		
-		// Create a context with access to required globals
-		// Share the actual objects so changes are reflected
-		const context = {
-			window: window,
-			jQuery: global.jQuery,
-			opener: global.opener,
-			parent: global.parent,
-			top: global.top,
-			wpCookies: global.wpCookies,
-			wp_document_revisions: global.wp_document_revisions,
-			autosave: global.autosave,
-			autosave_enable_buttons: global.autosave_enable_buttons,
-			get uploader() { return global.uploader; },
-			setInterval: global.setInterval,
-			clearInterval: global.clearInterval,
-			document: global.document,
-			confirm: global.confirm,
-			alert: global.alert,
-			ajaxurl: global.ajaxurl,
-			location: window.location,
-		};
-		vm.createContext(context);
-
-		// Execute the modified code in the sandboxed context
-		vm.runInContext(modifiedJsFile, context);
-
-		// Restore jQuery
-		global.jQuery = originalMockJQuery;
-		window.jQuery = originalMockJQuery;
-
-		// Now create an instance with the constructor
-		if (window.WPDocumentRevisionsConstructor) {
-			// Store the constructor for tests that need to create new instances
-			window.WPDocumentRevisions = window.WPDocumentRevisionsConstructor;
-			WPDocumentRevisions = new window.WPDocumentRevisionsConstructor(mockJQuery);
-		} else {
-			// Fallback to the instance created by jQuery ready
-			WPDocumentRevisions = window.WPDocumentRevisions;
-		}
+		// Get the instance and expose the constructor class for tests that create new instances
+		WPDocumentRevisions = window.WPDocumentRevisions;
+		window.WPDocumentRevisions = WPDocumentRevisions.constructor;
 	});
 
 	afterEach(() => {
 		delete window.WPDocumentRevisions;
-		delete window.WPDocumentRevisionsConstructor;
 		delete global.jQuery;
 		delete window.jQuery;
 	});

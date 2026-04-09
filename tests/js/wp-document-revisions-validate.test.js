@@ -5,61 +5,31 @@
  * document validation issues via REST API calls.
  */
 
+const path = require('path');
+
+const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js');
+
 describe('wp-document-revisions-validate', () => {
 	let originalAjax;
 
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
+		jest.resetModules();
 		originalAjax = jQuery.ajax;
 
-		// Load the validation script using Node.js VM module for safer execution
-		const fs = require('fs');
-		const path = require('path');
-		const vm = require('vm');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js'),
-			'utf8'
-		);
+		// Clear the module cache for fresh execution
+		delete require.cache[require.resolve(MODULE_PATH)];
 
-		// Create a context with access to required globals
-		// Use the actual global objects so changes are reflected
-		// Include window object so IIFE can assign functions to it
-		const contextWindow = {};
-		const context = {
-			jQuery: jQuery,
-			wpApiSettings: global.wpApiSettings,
-			get nonce() { return global.nonce; },
-			get user() { return global.user; },
-			get processed() { return global.processed; },
-			document: global.document,
-			get alert() { return global.alert; },
-			window: contextWindow,
-			Array: Array,
-		};
-		vm.createContext(context);
-
-		// Execute the code in the sandboxed context
-		vm.runInContext(jsFile, context);
-
-		// Make functions available globally with null checks
-		// Functions are assigned to window inside the IIFE
-		if (contextWindow.wpdr_valid_fix) {
-			global.wpdr_valid_fix = contextWindow.wpdr_valid_fix;
-		}
-		if (contextWindow.clear_line) {
-			global.clear_line = contextWindow.clear_line;
-		}
-		if (contextWindow.hide_show) {
-			global.hide_show = contextWindow.hide_show;
-		}
+		// Execute the module — the IIFE assigns functions to window
+		require(MODULE_PATH);
 	});
 
 	afterEach(() => {
 		jQuery.ajax = originalAjax;
-		delete global.wpdr_valid_fix;
-		delete global.clear_line;
-		delete global.hide_show;
+		delete window.wpdr_valid_fix;
+		delete window.clear_line;
+		delete window.hide_show;
 	});
 
 	describe('wpdr_valid_fix', () => {
