@@ -660,7 +660,6 @@ class WP_Document_Revisions_Validate_Structure {
 		);
 		// phpcs:disable Squiz.Strings.DoubleQuoteUsage
 		$script =
-			"var nonce = '" . wp_create_nonce( 'wp_rest' ) . "';" . PHP_EOL .
 			"var user  = '" . get_current_user_id() . "';" . PHP_EOL .
 			"var processed = '" . esc_html__( 'Processed successfully.', 'wp-document-revisions' ) . "';";
 		// phpcs:enable Squiz.Strings.DoubleQuoteUsage
