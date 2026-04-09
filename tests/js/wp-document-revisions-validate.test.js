@@ -5,56 +5,31 @@
  * document validation issues via REST API calls.
  */
 
+const path = require('path');
+
+const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js');
+
 describe('wp-document-revisions-validate', () => {
 	let originalAjax;
 
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
+		jest.resetModules();
 		originalAjax = jQuery.ajax;
 
-		// Load the validation script using Node.js VM module for safer execution
-		const fs = require('fs');
-		const path = require('path');
-		const vm = require('vm');
-		const jsFile = fs.readFileSync(
-			path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js'),
-			'utf8'
-		);
+		// Clear the module cache for fresh execution
+		delete require.cache[require.resolve(MODULE_PATH)];
 
-		// Create a context with access to required globals
-		// Use the actual global objects so changes are reflected
-		const context = {
-			jQuery: jQuery,
-			wpApiSettings: global.wpApiSettings,
-			get nonce() { return global.nonce; },
-			get user() { return global.user; },
-			get processed() { return global.processed; },
-			document: global.document,
-			get alert() { return global.alert; },
-		};
-		vm.createContext(context);
-
-		// Execute the code in the sandboxed context
-		vm.runInContext(jsFile, context);
-
-		// Make functions available globally with null checks
-		if (context.wpdr_valid_fix) {
-			global.wpdr_valid_fix = context.wpdr_valid_fix;
-		}
-		if (context.clear_line) {
-			global.clear_line = context.clear_line;
-		}
-		if (context.hide_show) {
-			global.hide_show = context.hide_show;
-		}
+		// Execute the module — the IIFE assigns functions to window
+		require(MODULE_PATH);
 	});
 
 	afterEach(() => {
 		jQuery.ajax = originalAjax;
-		delete global.wpdr_valid_fix;
-		delete global.clear_line;
-		delete global.hide_show;
+		delete window.wpdr_valid_fix;
+		delete window.clear_line;
+		delete window.hide_show;
 	});
 
 	describe('wpdr_valid_fix', () => {
@@ -184,6 +159,18 @@ describe('wp-document-revisions-validate', () => {
 				})
 			);
 		});
+		test('should construct URL with correct path segments', () => {
+			jQuery.ajax = jest.fn();
+
+			wpdr_valid_fix(42, 'orphan', 99);
+
+			const expectedUrl = wpApiSettings.root + 'wpdr/v1/correct/42/type/orphan/attach/99';
+			expect(jQuery.ajax).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: expectedUrl,
+				})
+			);
+		});
 	});
 
 	describe('clear_line', () => {
@@ -292,6 +279,33 @@ describe('wp-document-revisions-validate', () => {
 			expect(mockOffElement.style.display).toBe('block');
 		});
 
+		test('should show off element (no underscore in ID)', () => {
+			const mockTds = [
+				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
+			];
+			const mockOnElement = { style: { display: 'block' } };
+			const mockOffElement = { style: { display: 'none' } };
+			const mockGetElementById = jest.fn((id) => {
+				if (id === 'Line123') {
+					return {
+						classList: { remove: jest.fn() },
+						getElementsByTagName: jest.fn(() => mockTds),
+					};
+				}
+				if (id === 'on_123') return mockOnElement;
+				if (id === 'off123') return mockOffElement;
+				return null;
+			});
+			global.document.getElementById = mockGetElementById;
+
+			clear_line(123, 'type1');
+
+			// Verify getElementById is called with 'off123' (no underscore), not 'off_123'
+			expect(mockGetElementById).toHaveBeenCalledWith('off123');
+			expect(mockGetElementById).not.toHaveBeenCalledWith('off_123');
+			expect(mockOffElement.style.display).toBe('block');
+		});
+
 		test('should handle missing on_ element gracefully', () => {
 			const mockTds = [
 				{}, {}, {}, { innerHTML: '' }, { innerHTML: '' }
@@ -394,6 +408,39 @@ describe('wp-document-revisions-validate', () => {
 			expect(mockElements.length).toBe(3);
 			mockElements.forEach((el) => {
 				expect(el.style.display).toBe('table-row');
+			});
+		});
+		test('should set display on all matching elements when checked', () => {
+			const mockElements = [
+				{ style: { display: 'none' } },
+				{ style: { display: 'none' } },
+				{ style: { display: 'none' } },
+			];
+			global.document.getElementById = jest.fn(() => ({ checked: true }));
+			global.document.getElementsByClassName = jest.fn(() => mockElements);
+
+			hide_show('test_id');
+
+			expect(mockElements).toHaveLength(3);
+			mockElements.forEach((el) => {
+				expect(el.style.display).toBe('table-row');
+			});
+		});
+
+		test('should set display on all matching elements when unchecked', () => {
+			const mockElements = [
+				{ style: { display: 'table-row' } },
+				{ style: { display: 'table-row' } },
+				{ style: { display: 'table-row' } },
+			];
+			global.document.getElementById = jest.fn(() => ({ checked: false }));
+			global.document.getElementsByClassName = jest.fn(() => mockElements);
+
+			hide_show('test_id');
+
+			expect(mockElements).toHaveLength(3);
+			mockElements.forEach((el) => {
+				expect(el.style.display).toBe('none');
 			});
 		});
 	});

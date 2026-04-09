@@ -476,6 +476,284 @@ describe('wpdr-revisions-shortcode block', () => {
 		});
 	});
 
+	describe('Edit Function - createElement rendering', () => {
+		let blockConfig, editFunction;
+
+		beforeEach(() => {
+			jest.clearAllMocks();
+			jest.resetModules();
+			require(MODULE_PATH);
+			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
+			editFunction = blockConfig.edit;
+		});
+
+		test('should render ServerSideRender with correct block name', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const ssrCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === wp.serverSideRender
+			);
+			expect(ssrCall).toBeDefined();
+			expect(ssrCall[1].block).toBe('wp-document-revisions/revisions-shortcode');
+			expect(ssrCall[1].attributes).toBe(props.attributes);
+		});
+
+		test('should render InspectorControls', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const inspectorCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'InspectorControls'
+			);
+			expect(inspectorCall).toBeDefined();
+		});
+
+		test('should render PanelBody with Selection Criteria title', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const panelCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'PanelBody' && c[1] && c[1].title === 'Selection Criteria'
+			);
+			expect(panelCall).toBeDefined();
+			expect(panelCall[1].initialOpen).toBe(true);
+		});
+
+		test('should render TextControl for Document Id', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const textCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'TextControl' && c[1] && c[1].label === 'Document Id'
+			);
+			expect(textCall).toBeDefined();
+			expect(textCall[1].type).toBe('number');
+			expect(textCall[1].value).toBe(1);
+		});
+
+		test('should render RangeControl for Revisions to Display', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const rangeCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'RangeControl' && c[1] && c[1].label === 'Revisions to Display'
+			);
+			expect(rangeCall).toBeDefined();
+			expect(rangeCall[1].value).toBe(5);
+			expect(rangeCall[1].min).toBe(1);
+			expect(rangeCall[1].max).toBe(20);
+		});
+
+		test('should render ToggleControl for summary', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show Revision Summaries?'
+			);
+			expect(toggleCall).toBeDefined();
+			expect(toggleCall[1].checked).toBe(false);
+		});
+
+		test('should render ToggleControl for show_pdf', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) =>
+					c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show PDF File indication?'
+			);
+			expect(toggleCall).toBeDefined();
+			expect(toggleCall[1].checked).toBe(false);
+		});
+
+		test('should render ToggleControl for new_tab with help text', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Open in New Tab?'
+			);
+			expect(toggleCall).toBeDefined();
+			expect(toggleCall[1].checked).toBe(true);
+			expect(toggleCall[1].help).toBeDefined();
+			expect(toggleCall[1].help.length).toBeGreaterThan(0);
+		});
+
+		test('should wrap everything in a div element', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const divCall = wp.element.createElement.mock.calls.find((c) => c[0] === 'div');
+			expect(divCall).toBeDefined();
+		});
+	});
+
+	describe('Edit Function - onChange callbacks', () => {
+		let blockConfig, editFunction;
+
+		beforeEach(() => {
+			jest.clearAllMocks();
+			jest.resetModules();
+			require(MODULE_PATH);
+			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
+			editFunction = blockConfig.edit;
+		});
+
+		test('should update id via TextControl onChange', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const textCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'TextControl' && c[1] && c[1].label === 'Document Id'
+			);
+			textCall[1].onChange('42');
+			expect(props.setAttributes).toHaveBeenCalledWith({ id: 42 });
+		});
+
+		test('should update numberposts via RangeControl onChange', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const rangeCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'RangeControl' && c[1] && c[1].label === 'Revisions to Display'
+			);
+			rangeCall[1].onChange(10);
+			expect(props.setAttributes).toHaveBeenCalledWith({ numberposts: 10 });
+		});
+
+		test('should update summary via ToggleControl onChange', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show Revision Summaries?'
+			);
+			toggleCall[1].onChange(true);
+			expect(props.setAttributes).toHaveBeenCalledWith({ summary: true });
+		});
+
+		test('should update show_pdf via ToggleControl onChange', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) =>
+					c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show PDF File indication?'
+			);
+			toggleCall[1].onChange(true);
+			expect(props.setAttributes).toHaveBeenCalledWith({ show_pdf: true });
+		});
+
+		test('should update new_tab via ToggleControl onChange', () => {
+			const props = {
+				attributes: { id: 1, numberposts: 5, summary: false, show_pdf: false, new_tab: true },
+				setAttributes: jest.fn(),
+			};
+			editFunction(props);
+			const toggleCall = wp.element.createElement.mock.calls.find(
+				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Open in New Tab?'
+			);
+			toggleCall[1].onChange(false);
+			expect(props.setAttributes).toHaveBeenCalledWith({ new_tab: false });
+		});
+	});
+
+	describe('Block Transforms - From Shortcode Edge Cases', () => {
+		let blockConfig, fromTransform;
+
+		beforeEach(() => {
+			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
+			fromTransform = blockConfig.transforms.from[0];
+			wp.blocks.createBlock.mockClear();
+			wp.blocks.createBlock.mockImplementation((blockName, attrs) => attrs);
+		});
+
+		test('should handle show_pdf without value in from transform', () => {
+			const result = fromTransform.transform({ text: '[document_revisions id=5 show_pdf]' });
+			expect(result.show_pdf).toBe(true);
+			expect(result.id).toBe(5);
+		});
+
+		test('should handle new_tab=false specifically', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions id=5 new_tab=false]',
+			});
+			expect(result.new_tab).toBe(false);
+			expect(result.id).toBe(5);
+		});
+
+		test('should handle new_tab without value (bare flag sets to false)', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions id=5 new_tab]',
+			});
+			expect(result.new_tab).toBe(false);
+		});
+
+		test('should skip empty args from consecutive spaces', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions  id=5  numberposts=3]',
+			});
+			expect(result.id).toBe(5);
+			expect(result.numberposts).toBe(3);
+		});
+
+		test('should handle show_pdf=true explicitly', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions show_pdf=true]',
+			});
+			expect(result.show_pdf).toBe(true);
+		});
+
+		test('should not set show_pdf true when show_pdf=false', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions show_pdf=false]',
+			});
+			expect(result.show_pdf).toBe(false);
+		});
+
+		test('should not set summary true when summary=false', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions summary=false]',
+			});
+			expect(result.summary).toBe(false);
+		});
+
+		test('should handle new_tab=true keeping default', () => {
+			const result = fromTransform.transform({
+				text: '[document_revisions new_tab=true]',
+			});
+			expect(result.new_tab).toBe(true);
+		});
+	});
+
 	describe('Edge Cases', () => {
 		let blockConfig;
 

@@ -1,4 +1,6 @@
 (function (blocks, element, blockEditor, components, serverSideRender, i18n) {
+	'use strict';
+
 	const { registerBlockType, createBlock } = wp.blocks; //Blocks API
 	const { createElement } = wp.element; //React.createElement
 	const { InspectorControls } = wp.blockEditor; //Block inspector wrapper
@@ -113,7 +115,7 @@
 								type: 'string',
 								value: attributes.header,
 								label: __('Latest Documents List Heading', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ header: val });
 								},
 							}),
@@ -121,7 +123,7 @@
 							createElement(RangeControl, {
 								value: attributes.numberposts,
 								label: __('Documents to Display', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ numberposts: parseInt(val) });
 								},
 								min: 1,
@@ -140,7 +142,7 @@
 								createElement(CheckboxControl, {
 									checked: attributes.post_stat_publish,
 									label: __('Publish', 'wp-document-revisions'),
-									onChange: function (val) {
+									onChange: (val) => {
 										setAttributes({ post_stat_publish: val });
 									},
 								}),
@@ -148,7 +150,7 @@
 								createElement(CheckboxControl, {
 									checked: attributes.post_stat_private,
 									label: __('Private', 'wp-document-revisions'),
-									onChange: function (val) {
+									onChange: (val) => {
 										setAttributes({ post_stat_private: val });
 									},
 								}),
@@ -156,7 +158,7 @@
 								createElement(CheckboxControl, {
 									checked: attributes.post_stat_draft,
 									label: __('Draft', 'wp-document-revisions'),
-									onChange: function (val) {
+									onChange: (val) => {
 										setAttributes({ post_stat_draft: val });
 									},
 								})
@@ -170,7 +172,7 @@
 									'Under certain conditons WordPress can generate an image for Page 1 of PDF documents. If created this will be used as the Featured Image.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_thumb: val });
 								},
 							}),
@@ -179,7 +181,7 @@
 								type: 'boolean',
 								checked: attributes.show_descr,
 								label: __('Show document description?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_descr: val });
 								},
 							}),
@@ -188,7 +190,7 @@
 								type: 'boolean',
 								checked: attributes.show_author,
 								label: __('Show author name?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_author: val });
 								},
 							}),
@@ -197,7 +199,7 @@
 								type: 'boolean',
 								checked: attributes.show_pdf,
 								label: __('Show PDF File indication?', 'wp-document-revisions'),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ show_pdf: val });
 								},
 							}),
@@ -210,7 +212,7 @@
 									'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
 									'wp-document-revisions'
 								),
-								onChange: function (val) {
+								onChange: (val) => {
 									setAttributes({ new_tab: val });
 								},
 							}),
