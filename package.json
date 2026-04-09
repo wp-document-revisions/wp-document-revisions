@@ -6,7 +6,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build": "for f in js/*.dev.js; do npx terser \"$f\" --compress --mangle --output \"${f%.dev.js}.js\" --comments '/^!/'; done",
+    "build": "node script/build.js",
     "build:check": "node -e \"const fs=require('fs'); const devFiles=fs.readdirSync('js').filter(f=>f.endsWith('.dev.js')); devFiles.forEach(f=>{const min=f.replace('.dev.js','.js'); if(!fs.existsSync('js/'+min)){console.error('Missing: '+min);process.exit(1);}; console.log('OK: '+f+' -> '+min);})\""
   },
   "repository": {

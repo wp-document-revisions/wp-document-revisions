@@ -40,7 +40,7 @@
 		};
 
 		autosaveEnableButtons = () => {
-			this.window.document.$(document).trigger('autosaveComplete');
+			this.$(document).trigger('autosaveComplete');
 			if (this.hasUpload) {
 				return this.autosaveEnableButtonsOriginal();
 			}
@@ -108,7 +108,7 @@
 			) {
 				wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace(
 					'%s',
-					this.window.document.$('#title').val()
+					this.$('#title').val()
 				);
 				if (window.webkitNotifications) {
 					lock_override_notice(wp_document_revisions.lostLockNotice);
@@ -226,8 +226,8 @@
 			} else if (/^\d+$/.test(content)) {
 				attach = [`<!-- WPDR ${content} -->`];
 			} else {
-				// match returns array, so ensure all return array.
-				attach = content.match(/<!-- WPDR \s*\d+ -->/);
+				// match returns array or null, so ensure all return array.
+				attach = content.match(/<!-- WPDR \s*\d+ -->/) || [''];
 			}
 			// might have an extra space includes in the id provided.
 			newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '');

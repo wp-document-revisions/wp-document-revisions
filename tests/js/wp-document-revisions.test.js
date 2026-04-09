@@ -874,18 +874,13 @@ describe('WPDocumentRevisions', () => {
 			const originalNotice = wp_document_revisions.lostLockNotice;
 			const mockAutosaveAlert = { length: 1 };
 			const mockLockNotice = { length: 1, is: jest.fn(() => true) };
+			const mockTitleEl = { val: jest.fn(() => 'Test Document') };
 			WPDocumentRevisions.$ = jest.fn((selector) => {
 				if (selector === '#autosave-alert') return mockAutosaveAlert;
 				if (selector === '#lock-notice') return mockLockNotice;
+				if (selector === '#title') return mockTitleEl;
 				return mockJQuery(selector);
 			});
-
-			const mockTitleEl = { val: jest.fn(() => 'Test Document') };
-			WPDocumentRevisions.window = {
-				document: {
-					$: jest.fn(() => mockTitleEl),
-				},
-			};
 
 			delete window.webkitNotifications;
 
