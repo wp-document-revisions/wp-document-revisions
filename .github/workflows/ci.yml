@@ -55,15 +55,15 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v6
               with:
-                  node-version: 20
+                  node-version: 22
 
             - name: Cache Node modules
               uses: actions/cache@v5
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node-20-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-node-20-
+                      ${{ runner.os }}-node-22-
 
             - name: Install dependencies
               run: npm install
@@ -238,15 +238,15 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v6
               with:
-                  node-version: 20
+                  node-version: 22
 
             - name: Cache Node modules
               uses: actions/cache@v5
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node-20-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-node-20-
+                      ${{ runner.os }}-node-22-
 
             - name: Install dependencies
               run: npm install

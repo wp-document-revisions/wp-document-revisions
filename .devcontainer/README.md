@@ -6,7 +6,7 @@ This directory contains the development container configuration for WP Document 
 
 ### Environment
 - **PHP 8.4** — Development container with Composer
-- **Node.js 20** — JavaScript runtime and package management
+- **Node.js 22** — JavaScript runtime and package management
 - **Docker** — Host Docker socket shared via docker-outside-of-docker for wp-env
 - **GitHub CLI** — `gh` for issues, PRs, and workflows
 
