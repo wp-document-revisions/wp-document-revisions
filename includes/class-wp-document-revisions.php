@@ -455,7 +455,7 @@ class WP_Document_Revisions {
 	 *
 	 * @since 3.2.2
 	 *
-	 * @param int     $num  default value for the number of revisions for the post_type.
+	 * @param int      $num  default value for the number of revisions for the post_type.
 	 * @param ?WP_Post $post current post.
 	 */
 	public function manage_document_revisions_limit( int $num, ?WP_Post $post ): int {

@@ -412,7 +412,7 @@ class WP_Document_Revisions_Admin {
 	 * Forces postcustom metabox to be hidden by default, despite the fact that the CPT creates it.
 	 *
 	 * @since 1.0
-	 * @param array     $hidden the default hidden metaboxes.
+	 * @param array      $hidden the default hidden metaboxes.
 	 * @param ?WP_Screen $screen the current screen.
 	 * @return array defaults with postcustom
 	 */
