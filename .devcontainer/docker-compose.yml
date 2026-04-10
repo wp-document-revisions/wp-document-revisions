@@ -14,7 +14,7 @@ services:
         network_mode: service:wordpress
 
     wordpress:
-        image: wordpress:6.8-php8.3-apache
+        image: wordpress:6.9-php8.3-apache
         restart: unless-stopped
         volumes:
             - wordpress-data:/var/www/html
