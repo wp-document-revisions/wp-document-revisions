@@ -327,6 +327,21 @@ jobs:
             - name: Start WordPress environment
               run: npx wp-env start
 
+            - name: Wait for WordPress to be ready
+              run: |
+                  for i in $(seq 1 30); do
+                    if curl -s -o /dev/null -w '%{http_code}' http://localhost:8888 | grep -qE '200|302'; then
+                      echo "WordPress is ready"
+                      exit 0
+                    fi
+                    echo "Waiting for WordPress... ($i/30)"
+                    sleep 2
+                  done
+                  echo "WordPress failed to start"
+                  docker ps -a
+                  npx wp-env logs
+                  exit 1
+
             - name: Run E2E tests
               run: npm run test:e2e
 

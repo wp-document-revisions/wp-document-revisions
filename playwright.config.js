@@ -13,6 +13,7 @@ const STORAGE_STATE_PATH = path.resolve(
 process.env.STORAGE_STATE_PATH = STORAGE_STATE_PATH;
 
 module.exports = defineConfig( {
+	globalTimeout: 600_000, // 10 minutes max for the entire test suite
 	testDir: './tests/e2e/specs',
 	outputDir: './tests/e2e/results',
 	fullyParallel: true,
