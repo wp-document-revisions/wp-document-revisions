@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     app:
         build:
@@ -12,14 +10,11 @@ services:
         # Overrides default command so things don't shut down after the process ends.
         command: sleep infinity
 
-        # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+        # Runs app on the same network as the WordPress container, allows "forwardPorts" in devcontainer.json function.
         network_mode: service:wordpress
 
-        # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
-        # (Adding the "ports" property to this file will not forward from a Codespace.)
-
     wordpress:
-        image: wordpress:latest
+        image: wordpress:6.8-php8.3-apache
         restart: unless-stopped
         volumes:
             - wordpress-data:/var/www/html
@@ -30,10 +25,11 @@ services:
             WORDPRESS_DB_PASSWORD: wordpress
             WORDPRESS_DB_NAME: wordpress
         depends_on:
-            - db
+            db:
+                condition: service_healthy
 
     db:
-        image: mariadb:10.4
+        image: mariadb:10.11
         restart: unless-stopped
         volumes:
             - mariadb-data:/var/lib/mysql
@@ -42,9 +38,12 @@ services:
             MYSQL_DATABASE: wordpress
             MYSQL_USER: wordpress
             MYSQL_PASSWORD: wordpress
-
-        # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MariaDB locally.
-        # (Adding the "ports" property to this file will not forward from a Codespace.)
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 10s
 
 volumes:
     mariadb-data:

@@ -17,9 +17,14 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.3'
           extensions: mbstring, xml, pdo_mysql
           coverage: none
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
 
       - name: Set up MySQL
         run: |
@@ -31,21 +36,22 @@ jobs:
           composer install --optimize-autoloader --prefer-dist --no-interaction
         timeout-minutes: 5
 
-      - name: Verify PHPCS installation
+      - name: Install Node.js dependencies and build blocks
         run: |
-          if [ ! -f "bin/phpcs" ]; then
-            echo "Error: PHPCS not installed correctly"
-            exit 1
-          fi
-          echo "PHPCS installed successfully"
+          npm install
+          npm run build:blocks
+        timeout-minutes: 5
 
-      - name: Verify PHPUnit installation
+      - name: Verify tool installation
         run: |
-          if [ ! -f "bin/phpunit" ]; then
-            echo "Error: PHPUnit not installed correctly"
-            exit 1
-          fi
-          echo "PHPUnit installed successfully"
+          echo "Verifying development tools..."
+          for tool in bin/phpcs bin/phpcbf bin/phpunit bin/phpstan; do
+            if [ ! -f "$tool" ]; then
+              echo "Error: $tool not installed"
+              exit 1
+            fi
+          done
+          echo "All PHP tools verified"
 
       - name: Install WordPress test environment
         run: |
@@ -56,6 +62,8 @@ jobs:
         run: |
           echo "Development environment setup complete!"
           echo "- PHP: $(php -v | head -1)"
+          echo "- Node: $(node --version)"
           echo "- Composer: $(composer --version)"
           echo "- PHPCS: $(bin/phpcs --version)"
           echo "- PHPUnit: $(bin/phpunit --version)"
+          echo "- PHPStan: $(bin/phpstan --version)"

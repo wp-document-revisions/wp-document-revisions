@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/php:1-8.2-bookworm
+FROM mcr.microsoft.com/devcontainers/php:1-8.3-bookworm
 
 # Install MariaDB client, subversion (for WordPress tests), and other useful tools
 # Remove Yarn apt source with expired GPG key from base image to unblock apt-get update
@@ -30,5 +30,7 @@ RUN if ! command -v composer &> /dev/null; then \
 RUN echo 'alias ll="ls -la"' >> /home/vscode/.bashrc \
     && echo 'alias phpcs="bin/phpcs"' >> /home/vscode/.bashrc \
     && echo 'alias phpcbf="bin/phpcbf"' >> /home/vscode/.bashrc \
-    && echo 'alias phpunit="bin/phpunit"' >> /home/vscode/.bashrc
+    && echo 'alias phpunit="bin/phpunit"' >> /home/vscode/.bashrc \
+    && echo 'alias phpstan="bin/phpstan"' >> /home/vscode/.bashrc \
+    && echo 'cd /workspaces/wp-document-revisions 2>/dev/null' >> /home/vscode/.bashrc
 
