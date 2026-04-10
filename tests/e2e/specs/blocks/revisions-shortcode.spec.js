@@ -1,7 +1,7 @@
 /**
  * E2E tests for the Document Revisions (revisions-shortcode) Gutenberg block.
  *
- * @see js/wpdr-revisions-shortcode.dev.js
+ * @see src/blocks/revisions-shortcode/
  */
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 

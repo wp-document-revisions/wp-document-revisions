@@ -1,7 +1,7 @@
 /**
  * E2E tests for the Documents List (documents-shortcode) Gutenberg block.
  *
- * @see js/wpdr-documents-shortcode.dev.js
+ * @see src/blocks/documents-shortcode/
  */
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 
