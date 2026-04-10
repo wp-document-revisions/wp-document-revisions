@@ -3071,7 +3071,7 @@ class WP_Document_Revisions {
 	 * Returns the.document id associated with a post from the content.
 	 *
 	 * @param ?string $post_content post_content from a post object (document or revision).
-	 * @return int||false
+	 * @return int|false
 	 */
 	public function extract_document_id( ?string $post_content ) {
 		if ( empty( $post_content ) ) {
