@@ -144,11 +144,6 @@ parameters:
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
-		-
-			message: '#^Parameter \$funct of method WP_Document_Revisions_Admin\:\:__call\(\) has invalid type function\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
 
 		-
 			message: '#^Parameter \$instance of method WP_Document_Revisions_Admin\:\:__construct\(\) has invalid type unknown\.$#'
@@ -168,11 +163,6 @@ parameters:
 			count: 3
 			path: includes/class-wp-document-revisions-front-end.php
 
-		-
-			message: '#^PHPDoc tag @param for parameter \$funct with type function is incompatible with native type string\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
 
 		-
 			message: '#^Parameter \#1 \$term of function get_term expects int\|object, string given\.$#'
@@ -192,11 +182,6 @@ parameters:
 			count: 1
 			path: includes/class-wp-document-revisions-front-end.php
 
-		-
-			message: '#^Parameter \$funct of method WP_Document_Revisions_Front_End\:\:__call\(\) has invalid type function\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
 
 		-
 			message: '#^Undefined variable\: \$document$#'
@@ -216,17 +201,7 @@ parameters:
 			count: 1
 			path: includes/class-wp-document-revisions-front-end.php
 
-		-
-			message: '#^PHPDoc tag @param for parameter \$funct with type function is incompatible with native type string\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: includes/class-wp-document-revisions-manage-rest.php
 
-		-
-			message: '#^Parameter \$funct of method WP_Document_Revisions_Manage_Rest\:\:__call\(\) has invalid type function\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-manage-rest.php
 
 		-
 			message: '#^Method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should return array but returns ArrayAccess\.$#'
@@ -384,11 +359,6 @@ parameters:
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
-		-
-			message: '#^Parameter \$funct of method WP_Document_Revisions_Validate_Structure\:\:__call\(\) has invalid type function\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
 			message: '#^@param string \$user does not accept actual type of parameter\: int\<min, \-1\>\|int\<1, max\>\|false\.$#'
