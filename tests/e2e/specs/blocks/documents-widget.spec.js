@@ -1,7 +1,7 @@
 /**
  * E2E tests for the Latest Documents (documents-widget) Gutenberg block.
  *
- * @see js/wpdr-documents-widget.dev.js
+ * @see src/blocks/documents-widget/
  */
 const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
 

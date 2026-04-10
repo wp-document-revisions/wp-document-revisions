@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Cross-platform build script to minify .dev.js files to .js using terser.
+ * Cross-platform build script to minify admin .dev.js files to .js using terser.
+ *
+ * Block scripts are built by @wordpress/scripts (see npm run build:blocks).
+ * This script only handles admin scripts in the js/ directory.
  *
  * Usage: node script/build.js
  */
@@ -12,11 +15,17 @@ const terser = require('terser');
 
 const JS_DIR = path.resolve(__dirname, '..', 'js');
 
+// Only process admin scripts, not block scripts (which are now in src/blocks/)
+const ADMIN_FILES = [
+	'wp-document-revisions.dev.js',
+	'wp-document-revisions-validate.dev.js',
+];
+
 (async () => {
-	const devFiles = fs.readdirSync(JS_DIR).filter((f) => f.endsWith('.dev.js'));
+	const devFiles = fs.readdirSync(JS_DIR).filter((f) => ADMIN_FILES.includes(f));
 
 	if (devFiles.length === 0) {
-		console.error('No .dev.js files found in js/');
+		console.error('No admin .dev.js files found in js/');
 		process.exit(1);
 	}
 
