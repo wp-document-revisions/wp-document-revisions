@@ -38,7 +38,7 @@
 	},
 
 	// Install dependencies (runs on create and when sources change)
-	"updateContentCommand": "composer install --optimize-autoloader --prefer-dist --no-interaction && npm install && npm run build:blocks",
+	"updateContentCommand": "composer install --optimize-autoloader --prefer-dist --no-interaction && npm install && NODE_OPTIONS=--max-old-space-size=512 npm run build:blocks",
 
 	// One-time setup: WordPress install, test DB, plugin activation
 	"postCreateCommand": "bash .devcontainer/setup.sh",

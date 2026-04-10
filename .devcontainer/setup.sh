@@ -7,8 +7,6 @@
 # These credentials are already defined in docker-compose.yml and are
 # not intended for production use.
 
-set -e
-
 echo "=========================================="
 echo "Setting up WP Document Revisions"
 echo "=========================================="
@@ -67,13 +65,6 @@ fi
 # ── Activate plugin ─────────────────────────────────────────────────
 wp --path=/var/www/html plugin activate wp-document-revisions --allow-root 2>/dev/null && echo "✓ Plugin activated" || echo "⚠ Plugin activation failed"
 
-# ── Install WordPress test framework ────────────────────────────────
-echo ""
-echo "Installing WordPress test environment..."
-if [ -f "script/install-wp-tests" ]; then
-    bash script/install-wp-tests wordpress_test wordpress wordpress db latest true 2>/dev/null && echo "✓ Test environment installed" || echo "⚠ Test environment setup failed"
-fi
-
 # ── Summary ─────────────────────────────────────────────────────────
 echo ""
 echo "=========================================="
@@ -87,4 +78,7 @@ echo ""
 echo "  Commands:   bin/phpcs   bin/phpcbf"
 echo "              bin/phpunit bin/phpstan"
 echo "              npm test    npm run build:blocks"
+echo ""
+echo "  To set up PHPUnit test environment:"
+echo "    bash script/install-wp-tests wordpress_test wordpress wordpress db latest true"
 echo "=========================================="

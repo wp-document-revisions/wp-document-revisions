@@ -6,7 +6,7 @@ This directory contains the development container configuration for WP Document 
 
 ### Services
 - **PHP 8.3** — Main development container
-- **WordPress 6.8** — Full WordPress installation with plugin auto-activated
+- **WordPress 6.9** — Full WordPress installation with plugin auto-activated
 - **MariaDB 10.11** — Database server with health checks
 
 ### Development Tools
@@ -61,7 +61,11 @@ The container setup:
 3. Builds Gutenberg blocks (`npm run build:blocks`)
 4. Installs WordPress and creates an admin account
 5. Activates the WP Document Revisions plugin
-6. Sets up the PHPUnit test database and framework
+
+To run PHPUnit tests, first install the WordPress test framework:
+```bash
+bash script/install-wp-tests wordpress_test wordpress wordpress db latest true
+```
 
 ### Accessing WordPress
 
@@ -165,4 +169,4 @@ wp --path=/var/www/html post create --post_type=document --post_title="Test Docu
 ### Lifecycle
 
 1. **`updateContentCommand`** — Runs on create and when source changes: installs Composer/npm deps, builds blocks
-2. **`postCreateCommand`** — Runs once: WordPress install, plugin activation, test DB setup
+2. **`postCreateCommand`** — Runs once: WordPress install, plugin activation, test DB creation
