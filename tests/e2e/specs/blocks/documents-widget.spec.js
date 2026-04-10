@@ -74,7 +74,7 @@ test.describe( 'Documents Widget Block', () => {
 		const postId = await editor.publishPost();
 		await page.goto( `/?p=${ postId }` );
 
-		const content = page.locator( '.entry-content, .post-content, main' );
+		const content = page.locator( '.entry-content, .post-content, main' ).first();
 		await expect( content ).toBeVisible();
 	} );
 } );

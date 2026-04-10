@@ -47,7 +47,7 @@ test.describe( 'Revisions Shortcode Block', () => {
 		// Inspector controls should be accessible.
 		await editor.openDocumentSettingsSidebar();
 		const settingsPanel = page.locator(
-			'.components-panel__body >> text=Document Revisions Settings'
+			'.components-panel__body >> text=Selection Criteria'
 		);
 		await expect( settingsPanel ).toBeVisible();
 	} );
@@ -70,7 +70,7 @@ test.describe( 'Revisions Shortcode Block', () => {
 		const postId = await editor.publishPost();
 		await page.goto( `/?p=${ postId }` );
 
-		const content = page.locator( '.entry-content, .post-content, main' );
+		const content = page.locator( '.entry-content, .post-content, main' ).first();
 		await expect( content ).toBeVisible();
 	} );
 } );

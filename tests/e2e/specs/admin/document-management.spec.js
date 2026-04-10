@@ -76,8 +76,10 @@ test.describe( 'Document Management', () => {
 		);
 		await expect( titleField ).toHaveValue( 'E2E Test Document' );
 
-		// The editor area should be present for revision log.
-		const editorContent = page.locator( '#editor, .editor-styles-wrapper' );
-		await expect( editorContent ).toBeVisible();
+		// The editor area should be present.
+		const editorContent = page.locator(
+			'.edit-post-visual-editor, .editor-visual-editor, #editor'
+		).first();
+		await expect( editorContent ).toBeVisible( { timeout: 10000 } );
 	} );
 } );

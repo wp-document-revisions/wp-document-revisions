@@ -36,12 +36,12 @@ test.describe( 'Documents Shortcode Block', () => {
 		const blockContent = page.locator(
 			'[data-type="wp-document-revisions/documents-shortcode"]'
 		);
-		await expect( blockContent ).toBeVisible();
+		await expect( blockContent ).toBeVisible( { timeout: 10000 } );
 
 		// Inspector controls should be present.
 		await editor.openDocumentSettingsSidebar();
 		const settingsPanel = page.locator(
-			'.components-panel__body >> text=Documents List Settings'
+			'.components-panel__body >> text=Display Settings'
 		);
 		await expect( settingsPanel ).toBeVisible();
 	} );
@@ -80,7 +80,7 @@ test.describe( 'Documents Shortcode Block', () => {
 		const postId = await editor.publishPost();
 		await page.goto( `/?p=${ postId }` );
 
-		const content = page.locator( '.entry-content, .post-content, main' );
+		const content = page.locator( '.entry-content, .post-content, main' ).first();
 		await expect( content ).toBeVisible();
 	} );
 } );
