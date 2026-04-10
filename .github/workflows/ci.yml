@@ -44,6 +44,7 @@ jobs:
                   configuration: phpstan.neon.dist
                   memory_limit: 1G
                   path: wp-document-revisions.php includes/
+                  vendored_phpstan_path: bin/phpstan
 
             - name: Audit dependencies
               run: composer audit
