@@ -1,36 +1,23 @@
 # WP Document Revisions Dev Container
 
-This directory contains the development container configuration for WP Document Revisions. The dev container provides a complete, consistent development environment with all necessary tools pre-configured.
+This directory contains the development container configuration for WP Document Revisions. The dev container uses [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) to provide a complete WordPress development environment.
 
 ## What's Included
 
-### Services
-- **PHP 8.3** — Main development container
-- **WordPress 6.9** — Full WordPress installation with plugin auto-activated
-- **MariaDB 10.11** — Database server with health checks
-
-### Development Tools
-- **Composer** — PHP dependency management
+### Environment
+- **PHP 8.3** — Development container with Composer
 - **Node.js 20** — JavaScript runtime and package management
-- **WP-CLI** — WordPress command-line interface
-- **PHPUnit** — PHP testing framework
-- **PHPCS/PHPCBF** — PHP CodeSniffer for code standards
-- **PHPStan** — Static analysis
+- **Docker-in-Docker** — Required by wp-env to manage WordPress containers
 - **GitHub CLI** — `gh` for issues, PRs, and workflows
-- **Git** — Version control
+
+### WordPress (via wp-env)
+- **WordPress** (latest) with WP_DEBUG and SCRIPT_DEBUG enabled
+- **MySQL** database managed automatically
+- Plugin mounted and activated via `.wp-env.json`
+- mu-plugins from `tests/e2e/mu-plugins/` mapped automatically
 
 ### VS Code Extensions
-The dev container automatically installs helpful extensions:
-- **Intelephense** — PHP language server
-- **PHP Debug** — Xdebug integration
-- **PHPCS** — Code standards checking in-editor
-- **PHPStan** — Static analysis in-editor
-- **PHPUnit** — Test runner integration
-- **WordPress Toolbox** — WordPress-specific tools
-- **ESLint** — JavaScript linting
-- **GitLens** — Enhanced Git integration
-- **Code Spell Checker** — Spelling assistance
-- **GitHub Copilot** — AI-assisted coding
+The dev container automatically installs helpful extensions for PHP, WordPress, JavaScript, and code quality.
 
 ## Getting Started
 
@@ -39,7 +26,7 @@ The dev container automatically installs helpful extensions:
 1. Go to the repository on GitHub
 2. Click **Code** → **Codespaces** → **Create codespace on main**
 3. Wait for the environment to build (~3-5 min first time)
-4. Start developing — WordPress is already running and the plugin is activated
+4. Start developing — WordPress is already running with the plugin activated
 
 ### Option 2: Local Dev Container
 
@@ -59,45 +46,28 @@ The container setup:
 1. Installs PHP dependencies via Composer
 2. Installs Node.js dependencies via npm
 3. Builds Gutenberg blocks (`npm run build:blocks`)
-4. Installs WordPress and creates an admin account
-5. Activates the WP Document Revisions plugin
-
-To run PHPUnit tests, first install the WordPress test framework:
-```bash
-bash script/install-wp-tests wordpress_test wordpress wordpress db latest true
-```
+4. Starts WordPress via `npx wp-env start`
 
 ### Accessing WordPress
 
-- **WordPress:** http://localhost (or the forwarded port shown in VS Code/Codespaces)
-- **Admin:** http://localhost/wp-admin
+- **WordPress:** http://localhost:8888 (or the forwarded port in Codespaces)
+- **Admin:** http://localhost:8888/wp-admin
 - **Login:** `admin` / `password`
-
-### Database Access
-
-| Setting | Value |
-|---------|-------|
-| Host | `db` (from container) or `localhost:3306` (from host) |
-| WordPress DB | `wordpress` |
-| Test DB | `wordpress_test` |
-| Username | `wordpress` |
-| Password | `wordpress` |
-| Root Password | `mariadb` |
-
-> **Note:** These are development-only credentials. Never use simple passwords in production.
+- **Test instance:** http://localhost:8889
 
 ## Development Workflow
 
 ### Running Tests
 
 ```bash
-# PHP unit tests
+# PHP unit tests (requires test framework setup first)
+bash script/install-wp-tests wordpress_test root '' localhost latest true
 bin/phpunit --config=phpunit9.xml
 
 # JavaScript tests
 npm test
 
-# E2E tests (requires wp-env)
+# E2E tests (wp-env already running)
 npm run test:e2e
 ```
 
@@ -124,32 +94,33 @@ npm run build:blocks
 npx wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks
 ```
 
-### Using WP-CLI
+### Managing WordPress
 
 ```bash
-wp --path=/var/www/html plugin list
-wp --path=/var/www/html post create --post_type=document --post_title="Test Document"
+# wp-env wraps WP-CLI
+npx wp-env run cli wp plugin list
+npx wp-env run cli wp post create --post_type=document --post_title="Test"
+
+# Stop/start/restart
+npx wp-env stop
+npx wp-env start
+npx wp-env destroy  # full reset
 ```
 
 ## Troubleshooting
 
 ### Container won't start
 - Ensure Docker is running
-- Check that ports 80 and 3306 are not in use
 - Try rebuilding: `Dev Containers: Rebuild Container`
 
 ### WordPress not accessible
-- Check if services are running: `docker ps`
+- Check wp-env status: `npx wp-env start` (idempotent)
 - Verify port forwarding in the Ports panel
-- Wait a few moments after container startup
+- Check Docker containers: `docker ps`
 
-### Database connection issues
-- The `db` service has a health check — it must be healthy before WordPress starts
-- Verify: `MYSQL_PWD=wordpress mysql -h db -u wordpress -e "SHOW DATABASES;"`
-
-### Plugin not showing
-- Check symlink: `ls -la /var/www/html/wp-content/plugins/wp-document-revisions`
-- Re-run setup: `bash .devcontainer/setup.sh`
+### wp-env issues
+- Full reset: `npx wp-env destroy && npx wp-env start`
+- Logs: `npx wp-env logs`
 
 ### Dependencies not installed
 - Dependencies install via `updateContentCommand` (automatic)
@@ -159,14 +130,13 @@ wp --path=/var/www/html post create --post_type=document --post_title="Test Docu
 
 ```
 .devcontainer/
-├── devcontainer.json    # Main configuration and lifecycle commands
-├── docker-compose.yml   # Service definitions (app, wordpress, db)
-├── Dockerfile           # Custom PHP 8.3 dev container image
-├── setup.sh             # One-time WordPress install and plugin activation
+├── devcontainer.json    # Main configuration (image, features, lifecycle)
 └── README.md            # This file
+
+.wp-env.json             # wp-env configuration (plugin mapping, mu-plugins)
 ```
 
 ### Lifecycle
 
 1. **`updateContentCommand`** — Runs on create and when source changes: installs Composer/npm deps, builds blocks
-2. **`postCreateCommand`** — Runs once: WordPress install, plugin activation, test DB creation
+2. **`postCreateCommand`** — Runs once: starts WordPress via wp-env

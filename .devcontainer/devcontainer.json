@@ -1,38 +1,33 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/php-mariadb
+// For format details, see https://aka.ms/devcontainer.json
 {
 	"name": "WP Document Revisions Development",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
+	// Features to add to the dev container
 	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "20"
-		},
-		"ghcr.io/devcontainers/features/git:1": {
-			"version": "latest"
 		},
 		"ghcr.io/devcontainers/features/github-cli:1": {
 			"version": "latest"
 		}
 	},
 
-	// Forward WordPress and database ports
+	// Forward wp-env ports
 	"forwardPorts": [
-		80,
-		3306
+		8888,
+		8889
 	],
 
 	// Set port attributes for better labels
 	"portsAttributes": {
-		"80": {
+		"8888": {
 			"label": "WordPress",
 			"onAutoForward": "notify"
 		},
-		"3306": {
-			"label": "MariaDB",
+		"8889": {
+			"label": "WordPress Tests",
 			"onAutoForward": "silent"
 		}
 	},
@@ -40,67 +35,43 @@
 	// Install dependencies (runs on create and when sources change)
 	"updateContentCommand": "composer install --optimize-autoloader --prefer-dist --no-interaction && npm install && NODE_OPTIONS=--max-old-space-size=512 npm run build:blocks",
 
-	// One-time setup: WordPress install, test DB, plugin activation
-	"postCreateCommand": "bash .devcontainer/setup.sh",
+	// Start WordPress via wp-env (uses .wp-env.json config)
+	"postCreateCommand": "npx wp-env start",
 
-	// Configure tool-specific properties.
+	// Configure tool-specific properties
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				// PHP Development
 				"bmewburn.vscode-intelephense-client",
 				"xdebug.php-debug",
-
-				// WordPress Development
 				"wordpresstoolbox.wordpress-toolbox",
-
-				// Code Quality
 				"shevaua.phpcs",
 				"recca0120.vscode-phpunit",
 				"SanderRonde.phpstan-vscode",
-
-				// JavaScript/Node
 				"dbaeumer.vscode-eslint",
-
-				// Git
 				"eamodio.gitlens",
-
-				// General Development
 				"editorconfig.editorconfig",
 				"streetsidesoftware.code-spell-checker",
 				"GitHub.copilot"
 			],
 			"settings": {
-				// PHP Settings
 				"php.validate.executablePath": "/usr/local/bin/php",
 				"php.suggest.basic": false,
 				"intelephense.environment.phpVersion": "8.3",
-
-				// PHPCS Settings
 				"phpcs.enable": true,
 				"phpcs.standard": "phpcs.ruleset.xml",
 				"phpcs.executablePath": "${workspaceFolder}/bin/phpcs",
-
-				// PHPStan Settings
 				"phpstan.configFile": "phpstan.neon.dist",
 				"phpstan.binPath": "${workspaceFolder}/bin/phpstan",
-
-				// Editor Settings
 				"editor.formatOnSave": false,
 				"editor.tabSize": 4,
 				"editor.insertSpaces": false,
 				"files.trimTrailingWhitespace": true,
 				"files.insertFinalNewline": true,
-
-				// File Associations
 				"files.associations": {
 					"*.php": "php"
 				},
-
-				// Terminal Settings
 				"terminal.integrated.defaultProfile.linux": "bash",
-
-				// WordPress specific
 				"intelephense.stubs": [
 					"wordpress",
 					"wordpress-globals",
@@ -110,6 +81,5 @@
 		}
 	},
 
-	// Use the vscode user instead of root
 	"remoteUser": "vscode"
 }
