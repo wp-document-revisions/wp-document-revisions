@@ -307,6 +307,8 @@ jobs:
 
             - name: Run E2E tests
               run: npm run test:e2e
+              env:
+                  WP_BASE_URL: http://localhost:8888
 
             - name: Upload test artifacts
               if: failure()
