@@ -43,7 +43,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @param Object $instance The WP Document Revisions instance.
 	 */
-	public function __construct( ?object &$instance = null ): void {
+	public function __construct( ?object &$instance = null ) {
 
 		self::$instance = &$this;
 

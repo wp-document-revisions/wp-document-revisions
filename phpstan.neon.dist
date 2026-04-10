@@ -1,0 +1,15 @@
+parameters:
+    level: 5
+    paths:
+        - wp-document-revisions.php
+        - includes/
+    excludePaths:
+        - vendor/
+    bootstrapFiles:
+        - vendor/autoload.php
+    ignoreErrors: []
+    treatPhpDocTypesAsCertain: false
+
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    - phpstan-baseline.neon

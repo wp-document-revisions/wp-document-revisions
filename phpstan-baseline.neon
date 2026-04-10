@@ -1,0 +1,775 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property WP_Document_Revisions_Admin\:\:\$key_length\.$#'
+			identifier: property.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Access to an undefined property WP_Document_Revisions_Admin\:\:\$meta_key\.$#'
+			identifier: property.notFound
+			count: 2
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:document_slug\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:document_upload_dir\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:extract_document_id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:format_doc_id\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_attachments\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document_lock\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_documents\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_latest_revision\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_revisions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:sanitize_document_link_date\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:verify_post_type\(\)\.$#'
+			identifier: method.notFound
+			count: 14
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
+			identifier: expr.resultUnused
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Filter callback return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Function remove_filter invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Method WP_Document_Revisions_Admin\:\:sanitize_link_date\(\) should return string but returns bool\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^One or more @param tags has an invalid name or invalid syntax\.$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(int 0 number of seconds between revisions to NOT create an extra revision\.\)\: Unexpected token "0", expected variable at offset 383 on line 9$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(bool\.\)\: Unexpected token "\.", expected TOKEN_HORIZONTAL_WS at offset 282 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Parameter \#1 \$args of function wp_dropdown_users expects array\{show_option_all\?\: string, show_option_none\?\: string, option_none_value\?\: int\|string, hide_if_only_one_author\?\: string, orderby\?\: array\|string, order\?\: string, include\?\: array\<int\>\|string, exclude\?\: array\<int\>\|string, \.\.\.\}, array\{name\: ''author'', show_option_all\: string, value_field\: ''slug'', selected\: string\|false\|null, orderby\: ''name'', order\: ''ASC'', wpdr_added\: ''list'', has_published_posts\: array\{''document''\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Parameter \#1 \$post of function clean_post_cache expects int\|WP_Post, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Parameter \$funct of method WP_Document_Revisions_Admin\:\:__call\(\) has invalid type function\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Parameter \$instance of method WP_Document_Revisions_Admin\:\:__construct\(\) has invalid type unknown\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
+			message: '#^Call to an undefined method WP_Document_Revisions_Front_End\:\:get_revisions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
+			identifier: expr.resultUnused
+			count: 3
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$funct with type function is incompatible with native type string\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Parameter \#1 \$term of function get_term expects int\|object, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_html expects string, \(int\|false\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Parameter \$funct of method WP_Document_Revisions_Front_End\:\:__call\(\) has invalid type function\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Undefined variable\: \$document$#'
+			identifier: variable.undefined
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Undefined variable\: \$id$#'
+			identifier: variable.undefined
+			count: 3
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^Undefined variable\: \$numberposts$#'
+			identifier: variable.undefined
+			count: 1
+			path: includes/class-wp-document-revisions-front-end.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$funct with type function is incompatible with native type string\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: includes/class-wp-document-revisions-manage-rest.php
+
+		-
+			message: '#^Parameter \$funct of method WP_Document_Revisions_Manage_Rest\:\:__call\(\) has invalid type function\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-manage-rest.php
+
+		-
+			message: '#^Method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should return array but returns ArrayAccess\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#1 \$instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:form\(\) should be compatible with parameter \$instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:form\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#1 \$new_instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should be compatible with parameter \$new_instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:update\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#2 \$instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget\(\) should be compatible with parameter \$instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:widget\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#2 \$instance of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget_gen\(\) expects object, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#2 \$instance of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget_gen\(\) expects object, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Parameter \#2 \$old_instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should be compatible with parameter \$old_instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:update\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: includes/class-wp-document-revisions-recently-revised-widget.php
+
+		-
+			message: '#^Expected 3 @param tags, found 2\.$#'
+			identifier: paramTag.count
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
+			identifier: expr.resultUnused
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Function remove_filter invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:correct_document\(\) should return WP_REST_Response but returns WP_Error\.$#'
+			identifier: return.type
+			count: 5
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^One or more @param tags has an invalid name or invalid syntax\.$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true\.\)\: Unexpected token "true", expected variable at offset 105 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\|\|false\)\: Unexpected token "\|", expected type at offset 273 on line 9$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\|\|false\)\: Unexpected token "\|", expected type at offset 399 on line 12$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int\|\|false\)\: Unexpected token "\|", expected type at offset 126 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int\|\|false\)\: Unexpected token "\|", expected type at offset 235 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \#1 \$attachment_id of function get_attached_file expects int, id given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, id given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \#2 \$doc_id of static method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) expects string, id given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \$attach_id of method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) has invalid type id\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:get_last_attachment\(\) has invalid type id\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_document\(\) has invalid type id\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_guid\(\) has invalid type id\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^Parameter \$funct of method WP_Document_Revisions_Validate_Structure\:\:__call\(\) has invalid type function\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions-validate-structure.php
+
+		-
+			message: '#^@param string \$user does not accept actual type of parameter\: int\<min, \-1\>\|int\<1, max\>\|false\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Access to property \$ID on an unknown class obj\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Access to property \$post_status on an unknown class obj\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Action callback returns string but should not return anything\.$#'
+			identifier: return.void
+			count: 2
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Action callback returns the but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Call to function is_array\(\) with list\<mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Callback expects 1 parameter, \$accepted_args is set to 2\.$#'
+			identifier: arguments.count
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$document \(string\) of method WP_Document_Revisions\:\:get_attachments\(\) is incompatible with type object\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$document_or_attachment \(string\) of method WP_Document_Revisions\:\:get_file_type\(\) is incompatible with type int\|object\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Function wp_get_current_user invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_attachments\(\) should return object but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_attachments\(\) should return object but returns array\<array\|int\|WP_Post\>\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_latest_revision\(\) should return object but returns false\.$#'
+			identifier: return.type
+			count: 2
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_latest_version\(\) has invalid return type unknown\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_revision_number\(\) should return int but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_revision_query\(\) has invalid return type obj\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_revision_query\(\) should return bool\|obj but returns WP_Query\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:get_revisions\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:ie_cache_fix\(\) has invalid return type the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:permalink\(\) invoked with 4 parameters, 3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\.$#'
+			identifier: return.type
+			count: 3
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) has invalid return type unknown\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) should return unknown but returns bool\.$#'
+			identifier: return.type
+			count: 2
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) should return unknown but returns false\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^One or more @param tags has an invalid name or invalid syntax\.$#'
+			identifier: phpDoc.parseError
+			count: 10
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean false  default to not allow deletion\.\)\: Unexpected token "false", expected variable at offset 142 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean false default not to be in rest\.\)\: Unexpected token "false", expected variable at offset 123 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true     default action to serve file\.\)\: Unexpected token "true", expected variable at offset 247 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true  default action to capability read for documents \(not read_document\)\.\)\: Unexpected token "true", expected variable at offset 131 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true Allows an RSS feed for documents\.\)\: Unexpected token "true", expected variable at offset 74 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true default value to use Edit_Flow processes if installed and active\. Normally internally used\.\)\: Unexpected token "true", expected variable at offset 95 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true default value to use Edit_Flow processes if installed and active\.\)\: Unexpected token "true", expected variable at offset 92 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(boolean true default value to use PublishPress Statuses processes if installed and active\.\)\: Unexpected token "true", expected variable at offset 95 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(int \-1 \(unlimited\)\.\)\: Unexpected token "\-1", expected variable at offset 288 on line 10$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(string ''''  helps define a more specific sub\-directory for no direct file access\.\)\: Unexpected token "''''", expected variable at offset 716 on line 17$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(string/false \$file          The file path to where the attached file should be\.\)\: Unexpected token "/false", expected variable at offset 128 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(WP_Post\|\|false\)\: Unexpected token "\|", expected type at offset 155 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int\|\|false\)\: Unexpected token "\|", expected type at offset 181 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(void\.\)\: Unexpected token "\.", expected TOKEN_HORIZONTAL_WS at offset 170 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$documentish of method WP_Document_Revisions\:\:verify_post_type\(\) expects bool\|int\|object, string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\<0, max\>\|string\|false\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\|string\|false\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$post of function wp_check_post_lock expects int\|WP_Post, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$post of function wp_set_post_lock expects int\|WP_Post, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$post_id of method WP_Document_Revisions\:\:send_override_notice\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$user_id of function get_userdata expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#2 \$gmt of function current_time expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#2 \$gmt of function get_post_modified_time expects bool, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#2 \$post of function get_post_field expects int\|WP_Post\|null, id given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#2 \$title of function wp_die expects int\|string, null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \$post of method WP_Document_Revisions\:\:serve_document_auth\(\) has invalid type obj\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \$post_id of method WP_Document_Revisions\:\:get_document\(\) has invalid type id\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Property WP_Post\:\:\$ID \(int\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and \*NEVER\* will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Variable \$attachment might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Variable \$comp_type might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: includes/class-wp-document-revisions.php
+
+		-
+			message: '#^Parameter \#1 \$timezone of function get_lastpostmodified expects ''blog''\|''gmt''\|''server'', ''GMT'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/revision-feed.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(boolean\.\)\: Unexpected token "\.", expected TOKEN_HORIZONTAL_WS at offset 185 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: wp-document-revisions.php

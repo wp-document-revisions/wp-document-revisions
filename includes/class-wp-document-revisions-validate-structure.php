@@ -160,7 +160,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param object $instance class instance.
 	 * @return void
 	 */
-	public function __construct( ?object &$instance = null ): void {
+	public function __construct( ?object &$instance = null ) {
 		self::$instance = &$this;
 
 		// create or store parent instance.
