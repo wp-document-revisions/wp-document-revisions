@@ -35,7 +35,7 @@ services:
             start_period: 30s
 
     db:
-        image: mariadb:11.4
+        image: mariadb:10.11
         restart: unless-stopped
         volumes:
             - mariadb-data:/var/lib/mysql

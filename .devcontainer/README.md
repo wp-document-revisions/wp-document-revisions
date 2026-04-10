@@ -7,7 +7,7 @@ This directory contains the development container configuration for WP Document 
 ### Services
 - **PHP 8.3** — Main development container
 - **WordPress 6.9** — Full WordPress installation with plugin auto-activated
-- **MariaDB 11.4** — Database server with health checks
+- **MariaDB 10.11** — Database server with health checks
 
 ### Development Tools
 - **Composer** — PHP dependency management
