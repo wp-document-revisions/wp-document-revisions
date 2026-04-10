@@ -39,7 +39,7 @@ jobs:
               run: script/cibuild-phpcs
 
             - name: PHPStan
-              run: bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M
+              run: bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=1G
 
             - name: Audit dependencies
               run: composer audit
