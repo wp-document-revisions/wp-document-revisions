@@ -2,7 +2,6 @@
 /.wordpress-org
 /.git/
 /.github/
-.copilot-instructions.md
 .devcontainer/
 .distignore
 .gitattributes

@@ -118,5 +118,4 @@ When adding new agents:
 ## Learn More
 
 - [GitHub Copilot Custom Agents Documentation](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
-- [WP Document Revisions Main Instructions](../copilot-instructions.md)
-- [Architectural Documentation](../../.copilot-instructions.md)
+- [WP Document Revisions Instructions](../copilot-instructions.md)

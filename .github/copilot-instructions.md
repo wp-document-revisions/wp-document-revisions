@@ -4,8 +4,6 @@ WP Document Revisions is a document management and version control WordPress plu
 
 **Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
-**Note**: This file contains practical development workflow instructions. For comprehensive architectural documentation and detailed feature information, see `.copilot-instructions.md` in the repository root.
-
 ## Custom Agents
 
 This repository includes specialized custom agents in `.github/agents/` for focused tasks:
@@ -83,9 +81,11 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 
 ### Build and Release
 
-- Validate JavaScript is current (files pre-built in js/ directory)
+- Build Gutenberg blocks: `npm run build:blocks` (compiles `src/blocks/` → `build/blocks/`)
+- Build admin JS: `npm run build:admin` (minifies `js/*.dev.js` → `js/*.js`)
+- Build all: `npm run build`
 - Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
-- No traditional "build" step - this is a WordPress plugin distributed as source
+- The `build/` directory is gitignored; blocks must be built before E2E tests or distribution
 
 ## Validation
 
@@ -139,7 +139,13 @@ wp-document-revisions/
 ├── includes/               # Core PHP classes
 │   ├── class-wp-document-revisions.php         # Main plugin class
 │   ├── class-wp-document-revisions-admin.php   # Admin interface
-│   └── class-wp-document-revisions-front-end.php # Frontend functionality
+│   ├── class-wp-document-revisions-front-end.php # Frontend functionality
+│   └── class-wp-document-revisions-manage-rest.php # REST API
+├── src/blocks/             # Block source files (JSX/ESM)
+│   ├── documents-shortcode/  # Documents list block
+│   ├── documents-widget/     # Recently revised widget block
+│   └── revisions-shortcode/  # Document revisions block
+├── build/blocks/           # Compiled block output (gitignored, run npm run build)
 ├── tests/                  # Test files
 │   ├── class-test-*.php    # PHPUnit test files
 │   ├── js/                 # Jest unit tests for JavaScript
@@ -147,7 +153,7 @@ wp-document-revisions/
 │       ├── config/         # Global setup and auth state
 │       ├── fixtures/       # Test upload files
 │       └── specs/          # Test specs (blocks/, admin/)
-├── js/                     # JavaScript files (*.dev.js source, *.js minified)
+├── js/                     # Admin JavaScript (*.dev.js source, *.js minified)
 ├── css/                    # Stylesheets
 ├── script/                 # Development automation scripts
 ├── wp-document-revisions.php # Main plugin file
@@ -155,9 +161,32 @@ wp-document-revisions/
 ├── playwright.config.js   # Playwright E2E test configuration
 ├── composer.json          # PHP dependencies
 ├── phpcs.ruleset.xml      # Code standards configuration
-├── phpunit.xml|phpunit9.xml # Test configurations
+├── phpunit9.xml           # Test configuration
 └── docker-compose.yml     # Local development environment
 ```
+
+### Core Classes
+
+1. **WP_Document_Revisions** (`class-wp-document-revisions.php`) - Main plugin class, handles core functionality
+2. **WP_Document_Revisions_Admin** (`class-wp-document-revisions-admin.php`) - WordPress admin interface
+3. **WP_Document_Revisions_Front_End** (`class-wp-document-revisions-front-end.php`) - Public-facing functionality
+4. **WP_Document_Revisions_Manage_Rest** (`class-wp-document-revisions-manage-rest.php`) - REST API endpoints
+5. **WP_Document_Revisions_Recently_Revised_Widget** (`class-wp-document-revisions-recently-revised-widget.php`) - Dashboard widget
+
+### WordPress Integration
+
+- Uses custom post type `document` for storing documents
+- Leverages WordPress attachments for file storage
+- Integrates with WordPress user roles and capabilities
+- Custom capabilities: `edit_documents`, `edit_others_documents`, etc.
+- Uses WordPress hooks and filters extensively (`document_revisions_*`)
+- Supports WordPress multisite installations
+
+### Key Constants & Globals
+
+- `$wpdr` - Main plugin instance (global)
+- Document post type: `document`
+- Block namespace: `wp-document-revisions/`
 
 ### Key Files to Monitor
 

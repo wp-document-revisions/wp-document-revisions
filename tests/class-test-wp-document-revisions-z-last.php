@@ -41,6 +41,9 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr->activation_hook();
 
 		// make sure that we have the admin set up.
+		include_once dirname( __DIR__ ) . '/includes/trait-wp-document-revisions-admin-editor.php';
+		include_once dirname( __DIR__ ) . '/includes/trait-wp-document-revisions-admin-list.php';
+		include_once dirname( __DIR__ ) . '/includes/trait-wp-document-revisions-admin-settings.php';
 		include_once dirname( __DIR__ ) . '/includes/class-wp-document-revisions-admin.php';
 		$wpdr->admin = new WP_Document_Revisions_Admin( $wpdr::$instance );
 

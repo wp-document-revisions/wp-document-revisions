@@ -44,7 +44,7 @@ Path-specific instructions provide:
 ## Relationship to Other Instructions
 
 - **Repository-wide instructions**: [../copilot-instructions.md](../copilot-instructions.md)
-- **Architectural documentation**: [../../.copilot-instructions.md](../../.copilot-instructions.md)
+
 - **Custom agents**: [../agents/README.md](../agents/README.md)
 
 ## Adding New Path-Specific Instructions
