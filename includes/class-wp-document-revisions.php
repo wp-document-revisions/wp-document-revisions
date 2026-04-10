@@ -6,11 +6,6 @@
  * @package WP_Document_Revisions
  */
 
-require_once __DIR__ . '/trait-wp-document-revisions-rewrites.php';
-require_once __DIR__ . '/trait-wp-document-revisions-file-handler.php';
-require_once __DIR__ . '/trait-wp-document-revisions-revisions.php';
-require_once __DIR__ . '/trait-wp-document-revisions-query.php';
-
 /**
  * Main WP_Document_Revisions class definition.
  */

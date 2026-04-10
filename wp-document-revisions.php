@@ -42,6 +42,10 @@ Domain Path: /languages
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
+require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
+require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
+require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';
+require_once __DIR__ . '/includes/trait-wp-document-revisions-query.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
