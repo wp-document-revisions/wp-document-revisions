@@ -7,17 +7,54 @@ import {
 	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
 import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
 
 /* global wpdr_data */
+
+// Attribute name maps keyed by taxonomy index.
+const TAXONOMY_KEYS = [ 'taxonomy_0', 'taxonomy_1', 'taxonomy_2' ];
+const TERM_KEYS = [ 'term_0', 'term_1', 'term_2' ];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
 	const taxo = wpdr_data.taxos;
 
-	function id_to_slug( n, tax, val ) {
+	// Synchronise taxonomy slug attributes and handle reordering.
+	// Runs as an effect so we never call setAttributes during render.
+	useEffect( () => {
+		const updates = {};
+
+		for ( let i = 0; i < wpdr_data.stmax && i < 3; i++ ) {
+			const currentSlug = attributes[ TAXONOMY_KEYS[ i ] ];
+
+			if ( '' !== currentSlug && currentSlug !== taxo[ i ].query ) {
+				// Taxonomy was reordered — move old selection to freeform.
+				const slug = idToSlug( i, currentSlug, attributes[ TERM_KEYS[ i ] ] );
+				updates.freeform = ( updates.freeform || attributes.freeform ) + ' ' + slug;
+				updates[ TAXONOMY_KEYS[ i ] ] = taxo[ i ].query;
+				updates[ TERM_KEYS[ i ] ] = 0;
+			} else if ( currentSlug !== taxo[ i ].query ) {
+				// First render — set the slug.
+				updates[ TAXONOMY_KEYS[ i ] ] = taxo[ i ].query;
+			}
+		}
+
+		if ( Object.keys( updates ).length ) {
+			setAttributes( updates );
+		}
+	}, [
+		attributes.taxonomy_0,
+		attributes.taxonomy_1,
+		attributes.taxonomy_2,
+		attributes.term_0,
+		attributes.term_1,
+		attributes.term_2,
+	] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	function idToSlug( n, tax, val ) {
 		for ( let i = 0; i < wpdr_data.stmax; i++ ) {
 			if ( i !== n && tax === taxo[ i ].query ) {
 				const terms = taxo[ i ].terms;
@@ -32,123 +69,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		return `${ tax }="???"`;
 	}
 
-	// consistency check (possibly reordered). If same order, this does nothing.
-	if (
-		wpdr_data.stmax > 0 &&
-		'' !== attributes.taxonomy_0 &&
-		attributes.taxonomy_0 !== taxo[ 0 ].query
-	) {
-		setAttributes( {
-			freeform:
-				attributes.freeform +
-				' ' +
-				id_to_slug( 0, attributes.taxonomy_0, attributes.term_0 ),
-		} );
-		setAttributes( { taxonomy_0: taxo[ 0 ].query } );
-		setAttributes( { term_0: 0 } );
-	}
-	if (
-		wpdr_data.stmax > 1 &&
-		'' !== attributes.taxonomy_1 &&
-		attributes.taxonomy_1 !== taxo[ 1 ].query
-	) {
-		setAttributes( {
-			freeform:
-				attributes.freeform +
-				' ' +
-				id_to_slug( 1, attributes.taxonomy_1, attributes.term_1 ),
-		} );
-		setAttributes( { taxonomy_1: taxo[ 1 ].query } );
-		setAttributes( { term_1: 0 } );
-	}
-	if (
-		wpdr_data.stmax > 2 &&
-		'' !== attributes.taxonomy_2 &&
-		attributes.taxonomy_2 !== taxo[ 2 ].query
-	) {
-		setAttributes( {
-			freeform:
-				attributes.freeform +
-				' ' +
-				id_to_slug( 2, attributes.taxonomy_2, attributes.term_2 ),
-		} );
-		setAttributes( { taxonomy_2: taxo[ 2 ].query } );
-		setAttributes( { term_2: 0 } );
-	}
-
-	// Function to create the select grouping
-	function tax_n( i ) {
-		const terms = taxo[ i ].terms;
-		const opts = [];
-		for ( let j = 0; j < terms.length; j++ ) {
-			opts.push( { label: terms[ j ][ 1 ], value: terms[ j ][ 0 ] } );
-		}
-		// Set taxonomy slug
-		if ( i === 0 ) {
-			setAttributes( { taxonomy_0: taxo[ 0 ].query } );
-			return (
-				<PanelBody
-					title={
-						__( 'Taxonomy: ', 'wp-document-revisions' ) +
-						taxo[ 0 ].label
-					}
-					initialOpen={ false }
-				>
-					<RadioControl
-						label={ taxo[ 0 ].label }
-						selected={ attributes.term_0 }
-						options={ opts }
-						onChange={ ( val ) => {
-							setAttributes( { term_0: parseInt( val ) } );
-						} }
-					/>
-				</PanelBody>
-			);
-		}
-		if ( i === 1 ) {
-			setAttributes( { taxonomy_1: taxo[ 1 ].query } );
-			return (
-				<PanelBody
-					title={
-						__( 'Taxonomy: ', 'wp-document-revisions' ) +
-						taxo[ 1 ].label
-					}
-					initialOpen={ false }
-				>
-					<RadioControl
-						label={ taxo[ 1 ].label }
-						selected={ attributes.term_1 }
-						options={ opts }
-						onChange={ ( val ) => {
-							setAttributes( { term_1: parseInt( val ) } );
-						} }
-					/>
-				</PanelBody>
-			);
-		}
-		if ( i === 2 ) {
-			setAttributes( { taxonomy_2: taxo[ 2 ].query } );
-			return (
-				<PanelBody
-					title={
-						__( 'Taxonomy: ', 'wp-document-revisions' ) +
-						taxo[ 2 ].label
-					}
-					initialOpen={ false }
-				>
-					<RadioControl
-						label={ taxo[ 2 ].label }
-						selected={ attributes.term_2 }
-						options={ opts }
-						onChange={ ( val ) => {
-							setAttributes( { term_2: parseInt( val ) } );
-						} }
-					/>
-				</PanelBody>
-			);
-		}
-	}
-
 	function taxonomies() {
 		if ( wpdr_data.stmax === 0 ) {
 			return (
@@ -161,11 +81,34 @@ export default function Edit( { attributes, setAttributes } ) {
 			);
 		}
 
-		const taxos = [];
-		for ( let i = 0; i < wpdr_data.stmax; i++ ) {
-			taxos.push( tax_n( i ) );
-		}
-		return taxos;
+		return taxo.slice( 0, wpdr_data.stmax ).map( ( tax, i ) => {
+			const opts = tax.terms.map( ( term ) => ( {
+				label: term[ 1 ],
+				value: term[ 0 ],
+			} ) );
+
+			return (
+				<PanelBody
+					key={ tax.query }
+					title={
+						__( 'Taxonomy: ', 'wp-document-revisions' ) +
+						tax.label
+					}
+					initialOpen={ false }
+				>
+					<RadioControl
+						label={ tax.label }
+						selected={ attributes[ TERM_KEYS[ i ] ] }
+						options={ opts }
+						onChange={ ( val ) => {
+							setAttributes( {
+								[ TERM_KEYS[ i ] ]: parseInt( val ),
+							} );
+						} }
+					/>
+				</PanelBody>
+			);
+		} );
 	}
 
 	return (

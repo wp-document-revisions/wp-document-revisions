@@ -51,6 +51,15 @@ jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
 jest.mock( '@wordpress/i18n', () => ( { __: jest.fn( ( text ) => text ) } ), {
 	virtual: true,
 } );
+jest.mock(
+	'@wordpress/element',
+	() => ( {
+		useEffect: jest.fn( ( cb ) => {
+			cb();
+		} ),
+	} ),
+	{ virtual: true }
+);
 
 // --- Imports ---
 
