@@ -1530,15 +1530,14 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_cache_flush();
 
 		$hidden     = array();
-		$screen     = new StdClass();
-		$screen->id = 'post';
+		$screen     = WP_Screen::get( 'post' );
 
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 
 		self::assertTrue( is_array( $hidden ), 'not doc not array' );
 		self::assertEmpty( $hidden, 'not doc not empty' );
 
-		$screen->id = 'document';
+		$screen = WP_Screen::get( 'document' );
 
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 

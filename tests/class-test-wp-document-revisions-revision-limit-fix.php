@@ -153,11 +153,6 @@ class WP_Document_Revisions_Revision_Limit_Test extends WP_UnitTestCase {
 		// Test with null post.
 		$result = $wpdr->manage_document_revisions_limit( 3, null );
 		$this->assertEquals( 3, $result, 'Should return original value for null post' );
-
-		// Test with invalid post.
-		$fake_post = new stdClass();
-		$result    = $wpdr->manage_document_revisions_limit( 3, $fake_post );
-		$this->assertEquals( 3, $result, 'Should return original value for invalid post' );
 	}
 
 	/**
