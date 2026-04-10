@@ -34,6 +34,7 @@ trait WP_Document_Revisions_Admin_List {
 					'value_field'     => 'slug',
 					'selected'        => filter_input( INPUT_GET, 'workflow_state', FILTER_SANITIZE_SPECIAL_CHARS ),
 				);
+				echo '<label class="screen-reader-text" for="workflow_state">' . esc_html( $so_all ) . '</label>';
 				wp_dropdown_categories( $args );
 			}
 
