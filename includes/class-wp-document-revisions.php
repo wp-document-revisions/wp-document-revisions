@@ -456,10 +456,10 @@ class WP_Document_Revisions {
 	 * @since 3.2.2
 	 *
 	 * @param int     $num  default value for the number of revisions for the post_type.
-	 * @param WP_Post $post current post.
+	 * @param ?WP_Post $post current post.
 	 */
-	public function manage_document_revisions_limit( int $num, WP_Post $post ): int {
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
+	public function manage_document_revisions_limit( int $num, ?WP_Post $post ): int {
+		if ( ! $post || ! $this->verify_post_type( $post ) ) {
 			return $num;
 		}
 
@@ -1078,10 +1078,10 @@ class WP_Document_Revisions {
 	 * Workaround removed as a) 16215 fixed 6 years ago and b) gives erroneous results
 	 *
 	 * @since 1.0
-	 * @param int $post_id the post ID.
+	 * @param ?int $post_id the post ID.
 	 * @return array array of post objects
 	 */
-	public function get_revisions( int $post_id ) {
+	public function get_revisions( ?int $post_id ) {
 		$document = get_post( $post_id );
 
 		if ( ! $document || 'document' !== $document->post_type ) {
@@ -3070,10 +3070,10 @@ class WP_Document_Revisions {
 	/**
 	 * Returns the.document id associated with a post from the content.
 	 *
-	 * @param string $post_content post_content from a post object (document or revision).
+	 * @param ?string $post_content post_content from a post object (document or revision).
 	 * @return int||false
 	 */
-	public function extract_document_id( string $post_content ) {
+	public function extract_document_id( ?string $post_content ) {
 		if ( empty( $post_content ) ) {
 			return false;
 		} elseif ( is_numeric( $post_content ) ) {
@@ -3111,11 +3111,11 @@ class WP_Document_Revisions {
 	 *
 	 * See https://developer.wordpress.org/reference/classes/wp_query/ for more information on potential parameters
 	 *
-	 * @param array   $args (optional) an array of WP_Query arguments.
+	 * @param ?array  $args (optional) an array of WP_Query arguments.
 	 * @param boolean $return_attachments (optional).
 	 * @return array an array of post objects
 	 */
-	public function get_documents( array $args = array(), bool $return_attachments = false ): array {
+	public function get_documents( ?array $args = array(), bool $return_attachments = false ): array {
 		$args              = (array) $args;
 		$args['post_type'] = 'document';
 		$args['perm']      = 'readable';

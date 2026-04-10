@@ -413,11 +413,11 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 1.0
 	 * @param array     $hidden the default hidden metaboxes.
-	 * @param WP_Screen $screen the current screen.
+	 * @param ?WP_Screen $screen the current screen.
 	 * @return array defaults with postcustom
 	 */
-	public function hide_postcustom_metabox( array $hidden, WP_Screen $screen ): array {
-		if ( 'document' === $screen->id ) {
+	public function hide_postcustom_metabox( array $hidden, ?WP_Screen $screen ): array {
+		if ( $screen && 'document' === $screen->id ) {
 			$hidden[] = 'postcustom';
 		}
 
@@ -796,10 +796,10 @@ class WP_Document_Revisions_Admin {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param string $link_date value to represent whether to add the year/month into the permalink.
+	 * @param ?string $link_date value to represent whether to add the year/month into the permalink.
 	 * @return string sanitized value
 	 */
-	public function sanitize_link_date( string $link_date ) {
+	public function sanitize_link_date( ?string $link_date ) {
 		return (bool) $link_date;
 	}
 

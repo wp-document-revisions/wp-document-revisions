@@ -523,9 +523,9 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @since 3.3.0
 	 * @param Array                   $categories           Block categories available.
-	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
+	 * @param ?WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	public function wpdr_block_categories( array $categories, WP_Block_Editor_Context $block_editor_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function wpdr_block_categories( array $categories, ?WP_Block_Editor_Context $block_editor_context = null ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		return array_merge(
 			$categories,
