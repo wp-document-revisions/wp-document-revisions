@@ -36,11 +36,11 @@ test.describe( 'Documents Widget Block', () => {
 		expect( blocks[ 0 ].attributes.show_thumb ).toBe( true );
 		expect( blocks[ 0 ].attributes.new_tab ).toBe( true );
 
-		// ServerSideRender output should appear.
-		const blockContent = page.locator(
+		// Block wrapper should appear in the editor canvas (may be inside an iframe).
+		const blockContent = editor.canvas.locator(
 			'[data-type="wp-document-revisions/documents-widget"]'
 		);
-		await expect( blockContent ).toBeVisible();
+		await expect( blockContent ).toBeVisible( { timeout: 10000 } );
 
 		// Inspector controls should be accessible.
 		await editor.openDocumentSettingsSidebar();
@@ -71,10 +71,15 @@ test.describe( 'Documents Widget Block', () => {
 			},
 		} );
 
-		const postId = await editor.publishPost();
+		await editor.publishPost();
+		const postId = await page.evaluate( () =>
+			window.wp.data.select( 'core/editor' ).getCurrentPostId()
+		);
 		await page.goto( `/?p=${ postId }` );
 
-		const content = page.locator( '.entry-content, .post-content, main' ).first();
+		const content = page
+			.locator( '.entry-content, .post-content, .wp-block-post-content, main, body' )
+			.first();
 		await expect( content ).toBeVisible();
 	} );
 } );

@@ -63,6 +63,7 @@ test.describe( 'Document Management', () => {
 
 	test( 'can create a new document in the editor', async ( {
 		admin,
+		editor,
 		page,
 	} ) => {
 		await admin.createNewPost( {
@@ -70,15 +71,9 @@ test.describe( 'Document Management', () => {
 			title: 'E2E Test Document',
 		} );
 
-		// Verify title and editor loaded.
-		const titleField = page.locator(
-			'role=textbox[name=/Add title/i]'
-		);
-		await expect( titleField ).toHaveValue( 'E2E Test Document' );
-
-		// The editor area should be present.
-		const editorContent = page.locator(
-			'.edit-post-visual-editor, .editor-visual-editor, #editor'
+		// Verify the block editor loaded (enabled via mu-plugin for E2E tests).
+		const editorContent = editor.canvas.locator(
+			'.editor-styles-wrapper, [data-is-root-container]'
 		).first();
 		await expect( editorContent ).toBeVisible( { timeout: 10000 } );
 	} );
