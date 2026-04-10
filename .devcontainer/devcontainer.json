@@ -16,6 +16,13 @@
 		}
 	},
 
+	// Minimum resources for wp-env (WordPress + MySQL containers)
+	"hostRequirements": {
+		"cpus": 2,
+		"memory": "4gb",
+		"storage": "16gb"
+	},
+
 	// Forward wp-env ports
 	"forwardPorts": [
 		8888,
@@ -26,19 +33,27 @@
 	"portsAttributes": {
 		"8888": {
 			"label": "WordPress",
-			"onAutoForward": "notify"
+			"onAutoForward": "notify",
+			"protocol": "https"
 		},
 		"8889": {
 			"label": "WordPress Tests",
-			"onAutoForward": "silent"
+			"onAutoForward": "silent",
+			"protocol": "https"
 		}
 	},
 
 	// Install dependencies (runs on create and when sources change)
 	"updateContentCommand": "composer install --optimize-autoloader --prefer-dist --no-interaction && npm install && NODE_OPTIONS=--max-old-space-size=512 npm run build:blocks",
 
-	// Start WordPress via wp-env (uses .wp-env.json config)
-	"postCreateCommand": "npx wp-env start",
+	// Wait for dependencies before opening terminal
+	"waitFor": "updateContentCommand",
+
+	// Start WordPress via wp-env (uses .wp-env.json config); retry once on failure
+	"postCreateCommand": "npx wp-env start || npx wp-env start",
+
+	// Ensure wp-env is running on container restart (e.g., after Codespace sleep)
+	"postStartCommand": "npx wp-env start",
 
 	// Configure tool-specific properties
 	"customizations": {

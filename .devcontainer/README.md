@@ -61,6 +61,11 @@ The container setup:
 
 ```bash
 # PHP unit tests (requires test framework setup first)
+# Option 1: Use wp-env's test database
+npx wp-env run tests-cli wp db create 2>/dev/null; bash script/install-wp-tests wordpress_test root '' localhost latest true
+bin/phpunit --config=phpunit9.xml
+
+# Option 2: Use local MySQL (if available)
 bash script/install-wp-tests wordpress_test root '' localhost latest true
 bin/phpunit --config=phpunit9.xml
 
@@ -126,11 +131,16 @@ npx wp-env destroy  # full reset
 - Dependencies install via `updateContentCommand` (automatic)
 - Manual: `composer install && npm install && npm run build:blocks`
 
+### After Codespace wakes from sleep
+- wp-env auto-restarts via `postStartCommand` — wait a moment for containers to start
+- If WordPress is unresponsive: `npx wp-env start`
+
 ## Architecture
 
 ```
 .devcontainer/
-├── devcontainer.json    # Main configuration (image, features, lifecycle)
+├── devcontainer.json    # Main configuration (build, features, lifecycle)
+├── Dockerfile           # Strips stale Yarn apt repo from PHP base image
 └── README.md            # This file
 
 .wp-env.json             # wp-env configuration (plugin mapping, mu-plugins)
@@ -139,4 +149,6 @@ npx wp-env destroy  # full reset
 ### Lifecycle
 
 1. **`updateContentCommand`** — Runs on create and when source changes: installs Composer/npm deps, builds blocks
-2. **`postCreateCommand`** — Runs once: starts WordPress via wp-env
+2. **`waitFor: updateContentCommand`** — Terminal opens only after deps are ready
+3. **`postCreateCommand`** — Runs once on first create: starts WordPress via wp-env (with retry)
+4. **`postStartCommand`** — Runs on every start (including Codespace wake from sleep): ensures wp-env is running
