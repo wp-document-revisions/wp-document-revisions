@@ -39,12 +39,7 @@ jobs:
               run: script/cibuild-phpcs
 
             - name: PHPStan
-              uses: php-actions/phpstan@v3
-              with:
-                  configuration: phpstan.neon.dist
-                  memory_limit: 1G
-                  path: wp-document-revisions.php includes/
-                  vendored_phpstan_path: bin/phpstan
+              run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
 
             - name: Audit dependencies
               run: composer audit
