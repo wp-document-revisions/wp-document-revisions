@@ -1,7 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json
 {
 	"name": "WP Document Revisions Development",
-	"image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 
 	// Features to add to the dev container
 	"features": {
