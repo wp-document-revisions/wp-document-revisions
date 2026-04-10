@@ -13,6 +13,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Add `"engines": { "node": ">=18" }` to `package.json`
 * Remove jQuery dependency from all JavaScript files
 * Modernize JavaScript to ES6+ (const/let, arrow functions, template literals)
+* Extract large PHP classes into traits for maintainability (4 core traits, 3 admin traits)
 
 #### Testing & CI
 
@@ -21,13 +22,20 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Add comprehensive front-end JavaScript test suite with Jest
 * Upgrade npm dependencies: Jest 30, `@wordpress/scripts` 31, `@testing-library/jest-dom` 6.9
 * Multi-stage CI pipeline with caching, reduced PR matrix, and extended push-to-main matrix
-* Drop PHP 7.2/7.4 and legacy PHPUnit 6 from CI; drop WP 4.9 testing
+* Drop PHP 7.2/7.4 and legacy PHPUnit 6 from CI; drop WP 4.9 and Node 18 testing
+* Add `npm audit` to CI pipeline
+
+#### REST API
+
+* Allow POST, PUT, and DELETE methods (not just PUT) when `document_use_block_editor` filter is enabled; all write methods require valid nonce
 
 #### Developer improvements
 
+* Modernize devcontainer: PHP 8.3, MariaDB 10.11, WordPress 6.8, auto-install WordPress and activate plugin
+* Add GitHub CLI, PHPStan, and Copilot to devcontainer/Codespaces extensions
+* Upgrade Copilot setup steps: PHP 8.3, Node.js 20, block build
 * Fix bugs, harden security, modernize config and code
 * Optimize performance: reduce database queries and regex operations
-* Speed up CI with multi-step pipeline, caching, and reduced PR matrix
 
 **Full Changelog**: https://github.com/wp-document-revisions/wp-document-revisions/compare/v3.8.1...v3.9.0
 
