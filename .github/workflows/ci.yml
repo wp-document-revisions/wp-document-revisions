@@ -252,6 +252,9 @@ jobs:
             - name: Install dependencies
               run: npm install
 
+            - name: Build blocks
+              run: npm run build:blocks
+
             - name: Get Playwright version
               id: playwright-version
               run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
