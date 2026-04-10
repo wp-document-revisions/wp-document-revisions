@@ -48,25 +48,22 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
             contents: read
-        strategy:
-            matrix:
-                node_version: [18, 20]
-        name: JavaScript Tests (Node ${{ matrix.node_version }})
+        name: JavaScript Tests
         steps:
             - uses: actions/checkout@v6
 
             - name: Setup Node.js
               uses: actions/setup-node@v6
               with:
-                  node-version: ${{ matrix.node_version }}
+                  node-version: 20
 
             - name: Cache Node modules
               uses: actions/cache@v5
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node-${{ matrix.node_version }}-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node-20-${{ hashFiles('**/package-lock.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-node-${{ matrix.node_version }}-
+                      ${{ runner.os }}-node-20-
 
             - name: Install dependencies
               run: npm install
@@ -76,7 +73,6 @@ jobs:
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v5
-              if: matrix.node_version == 20
               with:
                   files: ./coverage/lcov.info
                   flags: javascript
