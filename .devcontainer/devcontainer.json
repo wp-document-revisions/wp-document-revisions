@@ -74,7 +74,7 @@
 			"settings": {
 				"php.validate.executablePath": "/usr/local/bin/php",
 				"php.suggest.basic": false,
-				"intelephense.environment.phpVersion": "8.3",
+				"intelephense.environment.phpVersion": "8.4",
 				"phpcs.enable": true,
 				"phpcs.standard": "phpcs.ruleset.xml",
 				"phpcs.executablePath": "${workspaceFolder}/bin/phpcs",
