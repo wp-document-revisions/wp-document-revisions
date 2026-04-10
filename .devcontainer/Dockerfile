@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/php:1-8.2-bookworm
 
 # Install MariaDB client, subversion (for WordPress tests), and other useful tools
+# Remove Yarn apt source with expired GPG key from base image to unblock apt-get update
+RUN rm -f /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y \
         mariadb-client \
