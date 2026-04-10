@@ -27,9 +27,15 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost/"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
 
     db:
-        image: mariadb:lts
+        image: mariadb:11.4
         restart: unless-stopped
         volumes:
             - mariadb-data:/var/lib/mysql
