@@ -7,6 +7,7 @@
 const { RequestUtils } = require( '@wordpress/e2e-test-utils-playwright' );
 const path = require( 'path' );
 
+const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8888';
 const STORAGE_STATE_PATH = path.resolve(
 	__dirname,
 	'.auth',
@@ -17,38 +18,16 @@ const STORAGE_STATE_PATH = path.resolve(
 process.env.STORAGE_STATE_PATH = STORAGE_STATE_PATH;
 
 module.exports = async function globalSetup() {
-	const SETUP_TIMEOUT = 60_000; // 60 seconds
-	let timerId;
-
-	const timeout = new Promise( ( _, reject ) => {
-		timerId = setTimeout( () => {
-			reject(
-				new Error(
-					`Global setup timed out after ${ SETUP_TIMEOUT / 1000 }s. ` +
-						'WordPress REST API may not be available at http://localhost:8888.'
-				)
-			);
-		}, SETUP_TIMEOUT );
+	const requestUtils = await RequestUtils.setup( {
+		storageStatePath: STORAGE_STATE_PATH,
+		baseURL: BASE_URL,
+		user: {
+			username: 'admin',
+			password: 'password',
+		},
 	} );
 
-	const setup = async () => {
-		const requestUtils = await RequestUtils.setup( {
-			storageStatePath: STORAGE_STATE_PATH,
-			baseURL: 'http://localhost:8888',
-			user: {
-				username: 'admin',
-				password: 'password',
-			},
-		} );
-
-		// Activate the plugin if not already active.
-		await requestUtils.activatePlugin( 'wp-document-revisions' );
-	};
-
-	try {
-		await Promise.race( [ setup(), timeout ] );
-	} finally {
-		clearTimeout( timerId );
-	}
+	// Activate the plugin if not already active.
+	await requestUtils.activatePlugin( 'wp-document-revisions' );
 };
 
