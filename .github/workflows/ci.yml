@@ -329,15 +329,35 @@ jobs:
 
             - name: Wait for WordPress to be ready
               run: |
+                  echo "Waiting for WordPress to respond..."
+                  wp_ready=false
                   for i in $(seq 1 30); do
                     if curl --connect-timeout 2 --max-time 5 -s -o /dev/null -w '%{http_code}' http://localhost:8888 | grep -qE '200|302'; then
-                      echo "WordPress is ready"
-                      exit 0
+                      echo "WordPress is responding"
+                      wp_ready=true
+                      break
                     fi
                     echo "Waiting for WordPress... ($i/30)"
                     sleep 2
                   done
-                  echo "WordPress failed to start"
+
+                  if [ "$wp_ready" != "true" ]; then
+                    echo "WordPress failed to respond"
+                    docker ps -a
+                    npx wp-env logs
+                    exit 1
+                  fi
+
+                  echo "Waiting for REST API to respond..."
+                  for i in $(seq 1 30); do
+                    if curl --connect-timeout 2 --max-time 5 -s -o /dev/null -w '%{http_code}' http://localhost:8888/wp-json/wp/v2/ | grep -qE '200'; then
+                      echo "REST API is ready"
+                      exit 0
+                    fi
+                    echo "Waiting for REST API... ($i/30)"
+                    sleep 2
+                  done
+                  echo "REST API failed to respond"
                   docker ps -a
                   npx wp-env logs
                   exit 1
