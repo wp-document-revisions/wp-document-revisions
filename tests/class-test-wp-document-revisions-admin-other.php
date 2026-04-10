@@ -1529,8 +1529,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		$hidden     = array();
-		$screen     = WP_Screen::get( 'post' );
+		$hidden = array();
+		$screen = WP_Screen::get( 'post' );
 
 		$hidden = $wpdr->admin->hide_postcustom_metabox( $hidden, $screen );
 
