@@ -70,7 +70,7 @@ class WP_Document_Revisions_Front_End {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param function $funct the function to call.
+	 * @param string $funct the function to call.
 	 * @param array    $args  the arguments to pass to the function.
 	 * @return mixed the result of the function
 	 */
