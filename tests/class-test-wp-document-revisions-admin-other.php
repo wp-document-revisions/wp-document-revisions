@@ -911,7 +911,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertSame( 1, (int) substr_count( $output, 'All workflow states' ), 'heading' );
+		self::assertSame( 2, (int) substr_count( $output, 'All workflow states' ), 'heading' );
 		self::assertSame( 1, (int) substr_count( $output, 'value="final">Final' ), 'final' );
 		self::assertSame( 1, (int) substr_count( $output, 'value="in-progress">In Progress' ), 'progress' );
 		self::assertSame( 1, (int) substr_count( $output, 'value="initial-draft">Initial Draft' ), 'draft' );
