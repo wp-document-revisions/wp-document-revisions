@@ -9,6 +9,8 @@ parameters:
         - vendor/autoload.php
     ignoreErrors: []
     treatPhpDocTypesAsCertain: false
+    parallel:
+        maximumNumberOfProcesses: 1
 
 includes:
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
