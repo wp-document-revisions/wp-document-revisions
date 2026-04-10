@@ -5,6 +5,7 @@ Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-mana
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
 Version: 3.8.1
 Requires at least: 5.0
+Requires PHP: 7.4
 Author: Ben Balter
 Author URI: https://ben.balter.com
 License: GPLv2 or later

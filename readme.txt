@@ -3,6 +3,7 @@
 Contributors: benbalter, nwjames
 Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.0
+Requires PHP: 7.4
 Tested up to: 6.9
 Stable tag: 3.8.1
 License: GPLv2 or later
