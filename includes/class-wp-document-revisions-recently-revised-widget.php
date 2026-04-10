@@ -265,14 +265,25 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		$dir = dirname( __DIR__ );
+		$dir       = dirname( __DIR__ );
+		$build_dir = $dir . '/build/blocks/documents-widget';
 
-		register_block_type(
-			$dir . '/build/blocks/documents-widget',
-			array(
-				'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
-			)
-		);
+		if ( file_exists( $build_dir . '/block.json' ) ) {
+			register_block_type(
+				$build_dir,
+				array(
+					'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
+				)
+			);
+		} else {
+			// Fallback when build directory is not available (e.g. development/CI).
+			register_block_type(
+				'wp-document-revisions/documents-widget',
+				array(
+					'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
+				)
+			);
+		}
 
 		// set translations.
 		if ( function_exists( 'wp_set_script_translations' ) ) {

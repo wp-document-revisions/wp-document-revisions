@@ -553,21 +553,44 @@ class WP_Document_Revisions_Front_End {
 		// add the plugin category.
 		add_filter( 'block_categories_all', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
-		$dir = dirname( __DIR__ );
+		$dir       = dirname( __DIR__ );
+		$build_dir = $dir . '/build/blocks/documents-shortcode';
 
-		register_block_type(
-			$dir . '/build/blocks/documents-shortcode',
-			array(
-				'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
-			)
-		);
+		if ( file_exists( $build_dir . '/block.json' ) ) {
+			register_block_type(
+				$build_dir,
+				array(
+					'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
+				)
+			);
+		} else {
+			// Fallback when build directory is not available (e.g. development/CI).
+			register_block_type(
+				'wp-document-revisions/documents-shortcode',
+				array(
+					'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
+				)
+			);
+		}
 
-		register_block_type(
-			$dir . '/build/blocks/revisions-shortcode',
-			array(
-				'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
-			)
-		);
+		$rev_build_dir = $dir . '/build/blocks/revisions-shortcode';
+
+		if ( file_exists( $rev_build_dir . '/block.json' ) ) {
+			register_block_type(
+				$rev_build_dir,
+				array(
+					'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
+				)
+			);
+		} else {
+			// Fallback when build directory is not available (e.g. development/CI).
+			register_block_type(
+				'wp-document-revisions/revisions-shortcode',
+				array(
+					'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
+				)
+			);
+		}
 
 		// Add supplementary script for additional information.
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
