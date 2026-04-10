@@ -121,13 +121,13 @@ class WP_Document_Revisions_Manage_Rest {
 		// Check methods.
 		$method = $request->get_method();
 		if ( 'GET' !== $method ) {
-			if ( 'PUT' === $method && apply_filters( 'document_use_block_editor', false ) ) {
-				// Editor usage needs review. Check nonce.
+			if ( in_array( $method, array( 'POST', 'PUT', 'DELETE' ), true ) && apply_filters( 'document_use_block_editor', false ) ) {
+				// Block editor needs POST/PUT/DELETE. Verify nonce.
 				$nonce = $request->get_header( 'x-wp-nonce' );
 				if ( ! isset( $nonce ) || false === wp_verify_nonce( $nonce, 'wp_rest' ) ) {
 					return new WP_Error(
 						'rest_cannot_modify',
-						__( 'Sorry, invalid PUT call', 'wp-document-revisions' ),
+						__( 'Sorry, invalid REST call', 'wp-document-revisions' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}

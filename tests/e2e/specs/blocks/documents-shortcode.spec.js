@@ -32,8 +32,8 @@ test.describe( 'Documents Shortcode Block', () => {
 		expect( attrs.show_thumb ).toBe( false );
 		expect( attrs.show_pdf ).toBe( false );
 
-		// ServerSideRender preview should appear.
-		const blockContent = page.locator(
+		// Block wrapper should appear in the editor canvas (may be inside an iframe).
+		const blockContent = editor.canvas.locator(
 			'[data-type="wp-document-revisions/documents-shortcode"]'
 		);
 		await expect( blockContent ).toBeVisible( { timeout: 10000 } );
@@ -77,10 +77,15 @@ test.describe( 'Documents Shortcode Block', () => {
 		expect( attrs.new_tab ).toBe( false );
 
 		// Publish and verify frontend.
-		const postId = await editor.publishPost();
+		await editor.publishPost();
+		const postId = await page.evaluate( () =>
+			window.wp.data.select( 'core/editor' ).getCurrentPostId()
+		);
 		await page.goto( `/?p=${ postId }` );
 
-		const content = page.locator( '.entry-content, .post-content, main' ).first();
+		const content = page
+			.locator( '.entry-content, .post-content, .wp-block-post-content, main, body' )
+			.first();
 		await expect( content ).toBeVisible();
 	} );
 } );
