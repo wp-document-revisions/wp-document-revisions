@@ -29,7 +29,7 @@ services:
                 condition: service_healthy
 
     db:
-        image: mariadb:10.11
+        image: mariadb:lts
         restart: unless-stopped
         volumes:
             - mariadb-data:/var/lib/mysql

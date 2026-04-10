@@ -1,7 +1,7 @@
 services:
     wordpress:
         image: wordpress:6.9-php8.3-apache
-        restart: always
+        restart: unless-stopped
         ports:
             - 8088:80
         environment:
@@ -12,10 +12,13 @@ services:
         volumes:
             - wordpress:/var/www/html
             - $PWD:/var/www/html/wp-content/plugins/wp-document-revisions
+        depends_on:
+            db:
+                condition: service_healthy
 
     db:
-        image: mysql:8.0
-        restart: always
+        image: mysql:8.4
+        restart: unless-stopped
         environment:
             MYSQL_DATABASE: exampledb
             MYSQL_USER: exampleuser
@@ -23,15 +26,25 @@ services:
             MYSQL_RANDOM_ROOT_PASSWORD: '1'
         volumes:
             - db:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 10s
 
     phpmyadmin:
-        image: phpmyadmin:5.2
+        image: phpmyadmin:latest
+        restart: unless-stopped
         ports:
             - 8089:80
         environment:
             PMA_HOST: db
             MYSQL_USER: exampleuser
             MYSQL_PASSWORD: examplepass
+        depends_on:
+            db:
+                condition: service_healthy
 
 volumes:
     wordpress:
