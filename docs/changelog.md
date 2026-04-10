@@ -2,6 +2,35 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 3.9.0
+
+#### Modernization
+
+* Modernize Gutenberg blocks to block.json (API v3), JSX edit components, and `@wordpress/scripts` build pipeline
+* Add PHP type declarations (parameter and return types) to all methods across 8 source files
+* Add PHPStan static analysis at level 5 with `szepeviktor/phpstan-wordpress`
+* Raise minimum PHP version to 7.4; add `Requires PHP: 7.4` to plugin headers
+* Add `"engines": { "node": ">=18" }` to `package.json`
+* Remove jQuery dependency from all JavaScript files
+* Modernize JavaScript to ES6+ (const/let, arrow functions, template literals)
+
+#### Testing & CI
+
+* Add E2E tests with Playwright and `@wordpress/env`
+* Add Axe accessibility (WCAG 2.1 AA) E2E tests for blocks and admin pages
+* Add comprehensive front-end JavaScript test suite with Jest
+* Upgrade npm dependencies: Jest 30, `@wordpress/scripts` 31, `@testing-library/jest-dom` 6.9
+* Multi-stage CI pipeline with caching, reduced PR matrix, and extended push-to-main matrix
+* Drop PHP 7.2/7.4 and legacy PHPUnit 6 from CI; drop WP 4.9 testing
+
+#### Developer improvements
+
+* Fix bugs, harden security, modernize config and code
+* Optimize performance: reduce database queries and regex operations
+* Speed up CI with multi-step pipeline, caching, and reduced PR matrix
+
+**Full Changelog**: https://github.com/wp-document-revisions/wp-document-revisions/compare/v3.8.1...v3.9.0
+
 ### 3.8.1
 
 Update README.

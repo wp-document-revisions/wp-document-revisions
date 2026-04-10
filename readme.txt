@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 3.8.1
+Stable tag: 3.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -234,6 +234,31 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 == Changelog ==
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+= 3.9.0 =
+
+== Modernization ==
+
+* Modernize Gutenberg blocks to block.json (API v3), JSX edit components, and @wordpress/scripts build pipeline
+* Add PHP type declarations (parameter and return types) to all methods across 8 source files
+* Add PHPStan static analysis at level 5 with szepeviktor/phpstan-wordpress
+* Raise minimum PHP version to 7.4
+* Remove jQuery dependency from all JavaScript files
+* Modernize JavaScript to ES6+ (const/let, arrow functions, template literals)
+
+== Testing & CI ==
+
+* Add E2E tests with Playwright and @wordpress/env
+* Add Axe accessibility (WCAG 2.1 AA) E2E tests for blocks and admin pages
+* Upgrade npm dependencies: Jest 30, @wordpress/scripts 31
+* Multi-stage CI pipeline with caching and reduced PR matrix
+
+== Developer improvements ==
+
+* Fix bugs, harden security, modernize config and code
+* Optimize performance: reduce database queries and regex operations
+
+**Full Changelog**: https://github.com/wp-document-revisions/wp-document-revisions/compare/v3.8.1...v3.9.0
 
 = 3.8.1 =
 
