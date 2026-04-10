@@ -22,7 +22,7 @@ test.describe( 'Accessibility', () => {
 		page,
 	} ) => {
 		await admin.visitAdminPage( 'edit.php', 'post_type=document' );
-		await page.waitForLoadState( 'networkidle' );
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		const results = await new AxeBuilder( { page } )
 			.include( '#wpbody-content' )
@@ -43,7 +43,7 @@ test.describe( 'Accessibility', () => {
 			postType: 'document',
 			title: 'Accessibility Test Document',
 		} );
-		await page.waitForLoadState( 'networkidle' );
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		const results = await new AxeBuilder( { page } )
 			.exclude( 'iframe' )
@@ -68,7 +68,7 @@ test.describe( 'Accessibility', () => {
 			attributes: { header: 'Recent Docs', numberposts: 5 },
 		} );
 		await editor.openDocumentSettingsSidebar();
-		await page.waitForLoadState( 'networkidle' );
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		const results = await new AxeBuilder( { page } )
 			.include( '.interface-interface-skeleton__sidebar' )
@@ -92,7 +92,7 @@ test.describe( 'Accessibility', () => {
 			name: 'wp-document-revisions/documents-shortcode',
 		} );
 		await editor.openDocumentSettingsSidebar();
-		await page.waitForLoadState( 'networkidle' );
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		const results = await new AxeBuilder( { page } )
 			.include( '.interface-interface-skeleton__sidebar' )
@@ -117,7 +117,7 @@ test.describe( 'Accessibility', () => {
 			attributes: { id: 1, numberposts: 5 },
 		} );
 		await editor.openDocumentSettingsSidebar();
-		await page.waitForLoadState( 'networkidle' );
+		await page.waitForLoadState( 'domcontentloaded' );
 
 		const results = await new AxeBuilder( { page } )
 			.include( '.interface-interface-skeleton__sidebar' )

@@ -33,10 +33,12 @@ test.describe( 'Documents Shortcode Block', () => {
 		expect( attrs.show_pdf ).toBe( false );
 
 		// Block wrapper should appear in the editor canvas (may be inside an iframe).
+		// Use toHaveCount since ServerSideRender may produce zero-height content
+		// when no documents exist, which Playwright considers "hidden".
 		const blockContent = editor.canvas.locator(
 			'[data-type="wp-document-revisions/documents-shortcode"]'
 		);
-		await expect( blockContent ).toBeVisible( { timeout: 10000 } );
+		await expect( blockContent ).toHaveCount( 1 );
 
 		// Inspector controls should be present.
 		await editor.openDocumentSettingsSidebar();
