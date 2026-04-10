@@ -1,6 +1,6 @@
 services:
     wordpress:
-        image: wordpress:6.7-php8.2-apache
+        image: wordpress:6.8-php8.3-apache
         restart: always
         ports:
             - 8088:80
