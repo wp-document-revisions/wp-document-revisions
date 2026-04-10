@@ -62,7 +62,7 @@ if ( ! function_exists( 'str_contains' ) ) {
 	 * @param string $needle   the text to search.
 	 * @return boolean.
 	 */
-	function str_contains( string $haystack, string $needle ) {
+	function str_contains( string $haystack, string $needle ): bool {
 		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
 	}
 }

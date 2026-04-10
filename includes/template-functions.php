@@ -18,7 +18,7 @@ if ( ! function_exists( 'get_documents' ) ) {
 	 * @param bool  $return_attachments whether to return attachment or revisions objects.
 	 * @return array array of post objects
 	 */
-	function get_documents( $args = array(), $return_attachments = false ) {
+	function get_documents( array $args = array(), bool $return_attachments = false ): array {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
@@ -38,7 +38,7 @@ if ( ! function_exists( 'get_document_revisions' ) ) {
 	 * @param int $document_id the ID of the document.
 	 * @return array array of revision-post objects
 	 */
-	function get_document_revisions( $document_id ) {
+	function get_document_revisions( int $document_id ): array {
 
 		global $wpdr;
 		if ( ! $wpdr ) {

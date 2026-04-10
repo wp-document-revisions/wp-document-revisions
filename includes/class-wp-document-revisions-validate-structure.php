@@ -160,7 +160,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param object $instance class instance.
 	 * @return void
 	 */
-	public function __construct( &$instance = null ) {
+	public function __construct( ?object &$instance = null ): void {
 		self::$instance = &$this;
 
 		// create or store parent instance.
@@ -186,7 +186,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param array    $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
-	public function __call( $funct, $args ) {
+	public function __call( $funct, array $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
@@ -195,7 +195,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 **/
-	public static function add_menu() {
+	public static function add_menu(): void {
 		$slug = 'wpdr_validate';
 		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
 
@@ -206,7 +206,7 @@ class WP_Document_Revisions_Validate_Structure {
 	/**
 	 * Register route
 	 */
-	public function wpdr_register_route() {
+	public function wpdr_register_route(): void {
 		$args = array(
 			'methods'             => 'PUT',
 			'callback'            => array( &$this, 'correct_document' ),
@@ -244,7 +244,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @global $wpdb Database object.
 	 */
-	public static function correct_document( $request ) {
+	public static function correct_document( WP_REST_Request $request ) {
 		global $wpdb;
 		$wpdr   = self::$parent;
 		$params = $request->get_params();
@@ -454,7 +454,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param WP_REST_Request $request the arguments to pass to the function.
 	 * @return boolean
 	 */
-	public function check_permission( $request ) {
+	public function check_permission( WP_REST_Request $request ): bool {
 		// userid must be passed and able to edit the document.
 		$params = $request->get_params();
 		if ( ! isset( $params['userid'] ) ) {
@@ -468,7 +468,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 */
-	public static function page_validate() {
+	public static function page_validate(): void {
 		// ensure not in document image mode.
 		$wpdr             = self::$parent;
 		$wpdr::$doc_image = false;
@@ -582,7 +582,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param mixed[] $rows table of errors.
 	 * @return void
 	 */
-	private static function build_table( $rows ) {
+	private static function build_table( array $rows ): void {
 		?>
 		<div id="col-container">
 		<table class="widefat" cellspacing="0">
@@ -646,7 +646,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @return void
 	 */
-	public static function enqueue_scripts() {
+	public static function enqueue_scripts(): void {
 		$suffix = ( WP_DEBUG ) ? '.dev' : '';
 		$path   = '/js/wp-document-revisions-validate' . $suffix . '.js';
 		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
@@ -676,7 +676,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $post_modified_gmt post modified field.
 	 * @return array||false
 	 */
-	private static function validate_document( $doc_id, $attach_id, $post_modified_gmt ) {
+	private static function validate_document( $doc_id, $attach_id, string $post_modified_gmt ) {
 		global $wpdb;
 
 		if ( $attach_id ) {
@@ -751,7 +751,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $guid        post guid field.
 	 * @return array||false
 	 */
-	private static function validate_guid( $doc_id, $attach_id, $post_status, $post_date, $post_name, $guid ) {
+	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
 		if ( get_option( 'document_link_date' ) ) {
 			$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
@@ -868,7 +868,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $doc_id    id of the document post object.
 	 * @return int||false
 	 */
-	private static function check_attachment( $attach_id, $doc_id ) {
+	private static function check_attachment( $attach_id, string $doc_id ) {
 		$attach = get_post( $attach_id );
 		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || (int) $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
@@ -953,7 +953,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $file file name as returned by get_attached_file.
 	 * @return string
 	 */
-	private static function check_document_folder( $file ) {
+	private static function check_document_folder( string $file ): string {
 		// manipulate file as in serve_file process.
 		return apply_filters( 'document_path', $file );
 	}
@@ -965,7 +965,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @return void
 	 */
-	public static function add_help_tab() {
+	public static function add_help_tab(): void {
 		$screen = get_current_screen();
 
 		if ( 'document_page_wpdr_validate' !== $screen->id ) {

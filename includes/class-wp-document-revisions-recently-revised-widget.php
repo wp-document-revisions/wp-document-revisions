@@ -45,7 +45,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param Array  $args the widget arguments.
 	 * @param Object $instance the WP Document Revisions instance.
 	 */
-	public function widget_gen( $args, $instance ) {
+	public function widget_gen( array $args, $instance ) {
 		global $wpdr;
 		if ( ! $wpdr ) {
 			$wpdr = new WP_Document_Revisions();
@@ -259,7 +259,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 *
 	 * @since 3.3.0
 	 */
-	public function documents_widget_block() {
+	public function documents_widget_block(): void {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			// Gutenberg is not active, e.g. Old WP version installed.
 			return;
@@ -325,7 +325,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @param string $content  Optional. Block content. Default empty string.
 	 * @since 3.3.0
 	 */
-	public function wpdr_documents_widget_display( $atts, $content = '' ) {
+	public function wpdr_documents_widget_display( array $atts, string $content = '' ) {
 		// Create the two parameter sets.
 		$args                    = array(
 			'before_widget' => '',
@@ -360,7 +360,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Callback to register the recently revised widget.
 	 */
-	public function wpdr_widgets_init() {
+	public function wpdr_widgets_init(): void {
 		$this->name = __( 'Recently Revised Documents', 'wp-document-revisions' );
 
 		// can't i18n outside of a function.
@@ -376,7 +376,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 *
 	 * Call with low priority to let taxonomies be registered.
 	 */
-	public function wpdr_widgets_block_init() {
+	public function wpdr_widgets_block_init(): void {
 		global $wpdr_widget;
 
 		$wpdr_widget->documents_widget_block();

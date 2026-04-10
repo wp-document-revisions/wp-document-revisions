@@ -32,7 +32,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param object $instance class instance.
 	 * @return void
 	 */
-	public function __construct( &$instance = null ) {
+	public function __construct( ?object &$instance = null ): void {
 		self::$instance = &$this;
 
 		// create or store parent instance.
@@ -60,7 +60,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param array    $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
-	public function __call( $funct, $args ) {
+	public function __call( string $funct, array $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
@@ -73,7 +73,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param array                                            $handler  Route handler used for the request.
 	 * @param WP_REST_Request                                  $request  Request used to generate the response.
 	 **/
-	public static function document_validation( $response, $handler, $request ) {
+	public static function document_validation( $response, array $handler, WP_REST_Request $request ) {
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
@@ -152,7 +152,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_document( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_document( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document.
 		if ( 'document' !== get_post_type( $post->ID ) ) {
 			return $response;
@@ -181,7 +181,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_revision( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_revision( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document revision.
 		$parent = $post->post_parent;
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
@@ -209,7 +209,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_Post          $post     Post object.
 	 * @param WP_REST_Request  $request  Request object.
 	 */
-	public function doc_clean_attachment( $response, $post, $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_attachment( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {

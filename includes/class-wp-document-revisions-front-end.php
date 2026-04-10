@@ -43,7 +43,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @param Object $instance The WP Document Revisions instance.
 	 */
-	public function __construct( &$instance = null ) {
+	public function __construct( ?object &$instance = null ): void {
 
 		self::$instance = &$this;
 
@@ -74,7 +74,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param array    $args  the arguments to pass to the function.
 	 * @return mixed the result of the function
 	 */
-	public function __call( $funct, $args ) {
+	public function __call( string $funct, array $args ) {
 		return call_user_func_array( array( &self::$parent, $funct ), $args );
 	}
 
@@ -86,7 +86,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param string $name the property to fetch.
 	 * @return mixed the property's value
 	 */
-	public function __get( $name ) {
+	public function __get( string $name ) {
 		return WP_Document_Revisions::$$name;
 	}
 
@@ -98,7 +98,7 @@ class WP_Document_Revisions_Front_End {
 	 * @return string a UL with the revisions
 	 * @since 1.2
 	 */
-	public function revisions_shortcode( $atts ) {
+	public function revisions_shortcode( $atts ): string {
 
 		// change attribute number into numberposts (for backward compatibility).
 		if ( array_key_exists( 'number', $atts ) && ! array_key_exists( 'numberposts', $atts ) ) {
@@ -192,7 +192,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
-	public function documents_shortcode( $atts ) {
+	public function documents_shortcode( $atts ): string {
 
 		// Only need to do something if workflow_state points to post_status.
 		if ( 'workflow_state' !== self::$parent->taxonomy_key() ) {
@@ -218,7 +218,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param array $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
-	private function documents_shortcode_int( $atts ) {
+	private function documents_shortcode_int( array $atts ): string {
 
 		$defaults = array(
 			'orderby' => 'modified',
@@ -481,7 +481,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @since 3.2.0
 	 */
-	public function enqueue_front() {
+	public function enqueue_front(): void {
 
 		$wpdr = self::$parent;
 
@@ -497,7 +497,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param Array $atts shortcode attributes.
 	 * @return Array modified shortcode attributes
 	 */
-	public function shortcode_atts_hyphen_filter( $atts ) {
+	public function shortcode_atts_hyphen_filter( array $atts ): array {
 
 		foreach ( (array) $atts as $k => $v ) {
 
@@ -525,7 +525,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param Array                   $categories           Block categories available.
 	 * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
-	public function wpdr_block_categories( $categories, $block_editor_context ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function wpdr_block_categories( array $categories, WP_Block_Editor_Context $block_editor_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 		return array_merge(
 			$categories,
@@ -544,7 +544,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @since 3.3.0
 	 */
-	public function documents_shortcode_blocks() {
+	public function documents_shortcode_blocks(): void {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			// Gutenberg is not active, e.g. Old WP version installed.
 			return;
@@ -633,7 +633,7 @@ class WP_Document_Revisions_Front_End {
 	 * @param int    $level    level in hierarchy.
 	 * @since 3.3.0
 	 */
-	private function get_taxonomy_hierarchy( $taxonomy, $par_term = 0, $level = 0 ) {
+	private function get_taxonomy_hierarchy( string $taxonomy, int $par_term = 0, int $level = 0 ): void {
 		// get all direct descendants of the $parent.
 		$terms = get_terms(
 			array(
@@ -659,7 +659,7 @@ class WP_Document_Revisions_Front_End {
 	 * @return Array Taxonomy names for documents
 	 * @since 3.3.0
 	 */
-	public function get_taxonomy_details() {
+	public function get_taxonomy_details(): array {
 		$taxonomy_details = wp_cache_get( 'wpdr_document_taxonomies' );
 
 		if ( false === $taxonomy_details ) {
@@ -756,7 +756,7 @@ class WP_Document_Revisions_Front_End {
 	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
-	public function wpdr_documents_shortcode_display( $atts ) {
+	public function wpdr_documents_shortcode_display( array $atts ): string {
 		// get instance of global class.
 		global $wpdr;
 
@@ -904,7 +904,7 @@ class WP_Document_Revisions_Front_End {
 	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
-	public function wpdr_revisions_shortcode_display( $atts ) {
+	public function wpdr_revisions_shortcode_display( array $atts ): string {
 		// get instance of global class.
 		global $wpdr_fe;
 
