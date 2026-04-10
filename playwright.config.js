@@ -6,13 +6,18 @@
 const { defineConfig } = require( '@playwright/test' );
 const path = require( 'path' );
 
+const BASE_URL = 'http://localhost:8888';
 const STORAGE_STATE_PATH = path.resolve(
 	__dirname,
 	'tests/e2e/config/.auth/admin.json'
 );
 process.env.STORAGE_STATE_PATH = STORAGE_STATE_PATH;
+// Ensure @wordpress/e2e-test-utils-playwright targets the dev instance (port 8888)
+// rather than its default test instance (port 8889).
+process.env.WP_BASE_URL = BASE_URL;
 
 module.exports = defineConfig( {
+	globalTimeout: 600_000, // 10 minutes max for the entire test suite
 	testDir: './tests/e2e/specs',
 	outputDir: './tests/e2e/results',
 	fullyParallel: true,
@@ -22,7 +27,7 @@ module.exports = defineConfig( {
 	reporter: process.env.CI ? 'github' : 'list',
 	globalSetup: require.resolve( './tests/e2e/config/global-setup.js' ),
 	use: {
-		baseURL: 'http://localhost:8888',
+		baseURL: BASE_URL,
 		storageState: STORAGE_STATE_PATH,
 		trace: 'retain-on-failure',
 		screenshot: 'only-on-failure',

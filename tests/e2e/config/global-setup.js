@@ -7,6 +7,7 @@
 const { RequestUtils } = require( '@wordpress/e2e-test-utils-playwright' );
 const path = require( 'path' );
 
+const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8888';
 const STORAGE_STATE_PATH = path.resolve(
 	__dirname,
 	'.auth',
@@ -19,7 +20,7 @@ process.env.STORAGE_STATE_PATH = STORAGE_STATE_PATH;
 module.exports = async function globalSetup() {
 	const requestUtils = await RequestUtils.setup( {
 		storageStatePath: STORAGE_STATE_PATH,
-		baseURL: 'http://localhost:8888',
+		baseURL: BASE_URL,
 		user: {
 			username: 'admin',
 			password: 'password',
