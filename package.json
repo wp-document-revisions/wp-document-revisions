@@ -6,8 +6,11 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build": "node script/build.js",
+    "build": "npm run build:blocks && npm run build:admin",
+    "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
+    "build:admin": "node script/build.js",
     "build:check": "node -e \"const fs=require('fs'); const devFiles=fs.readdirSync('js').filter(f=>f.endsWith('.dev.js')); devFiles.forEach(f=>{const min=f.replace('.dev.js','.js'); if(!fs.existsSync('js/'+min)){console.error('Missing: '+min);process.exit(1);}; console.log('OK: '+f+' -> '+min);})\"",
+    "start": "wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks",
     "test:e2e": "npx playwright test --config=playwright.config.js",
     "test:e2e:ui": "npx playwright test --config=playwright.config.js --ui",
     "wp-env": "wp-env"
@@ -29,6 +32,7 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@wordpress/e2e-test-utils-playwright": "^1.43.0",
     "@wordpress/env": "^11.3.0",
+    "@wordpress/scripts": "^30.12.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "terser": "^5.46.1"
@@ -40,6 +44,7 @@
     ],
     "collectCoverageFrom": [
       "js/**/*.dev.js",
+      "src/blocks/**/*.js",
       "!js/**/*.coffee",
       "!js/**/*.coffee2"
     ],
@@ -51,6 +56,12 @@
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/tests/js/setup.js"
-    ]
+    ],
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "<rootDir>/tests/js/__mocks__/styleMock.js"
+    }
   }
 }

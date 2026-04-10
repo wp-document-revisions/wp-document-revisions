@@ -9,6 +9,7 @@ coverage.xml
 .phpunit.result.cache
 node_modules
 coverage
+build
 package-lock.json
 clover.xml
 tests/e2e/results

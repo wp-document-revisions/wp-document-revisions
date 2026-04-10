@@ -553,171 +553,19 @@ class WP_Document_Revisions_Front_End {
 		// add the plugin category.
 		add_filter( 'block_categories_all', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
+		$dir = dirname( __DIR__ );
+
 		register_block_type(
-			'wp-document-revisions/documents-shortcode',
+			$dir . '/build/blocks/documents-shortcode',
 			array(
-				'description'     => __( 'This block provides a list of all documents meeting the selection criteria and is functionally equivalent to the [documents] shortcode.', 'wp-document-revisions' ),
-				'editor_script'   => 'wpdr-documents-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_documents_shortcode_display' ),
-				'attributes'      => array(
-					'header'          => array(
-						'type'    => 'string',
-						'default' => '',
-					),
-					'taxonomy_0'      => array(
-						'type'    => 'string',
-						'default' => '',
-					),
-					'term_0'          => array(
-						'type'    => 'number',
-						'default' => 0,
-					),
-					'taxonomy_1'      => array(
-						'type'    => 'string',
-						'default' => '',
-					),
-					'term_1'          => array(
-						'type'    => 'number',
-						'default' => 0,
-					),
-					'taxonomy_2'      => array(
-						'type'    => 'string',
-						'default' => '',
-					),
-					'term_2'          => array(
-						'type'    => 'number',
-						'default' => 0,
-					),
-					'numberposts'     => array(
-						'type'    => 'number',
-						'default' => 5,
-					),
-					'orderby'         => array(
-						'type' => 'string',
-					),
-					'order'           => array(
-						'type' => 'string',
-					),
-					'show_edit'       => array(
-						'type' => 'string',
-					),
-					'show_thumb'      => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'show_descr'      => array(
-						'type'    => 'boolean',
-						'default' => true,
-					),
-					'show_pdf'        => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'new_tab'         => array(
-						'type'    => 'boolean',
-						'default' => true,
-					),
-					'freeform'        => array(
-						'type' => 'string',
-					),
-					'align'           => array(
-						'type' => 'string',
-					),
-					'backgroundColor' => array(
-						'type' => 'string',
-					),
-					'linkColor'       => array(
-						'type' => 'string',
-					),
-					'textColor'       => array(
-						'type' => 'string',
-					),
-					'gradient'        => array(
-						'type' => 'string',
-					),
-					'fontSize'        => array(
-						'type' => 'string',
-					),
-					'style'           => array(
-						'type' => 'object',
-					),
-				),
 			)
 		);
 
 		register_block_type(
-			'wp-document-revisions/revisions-shortcode',
+			$dir . '/build/blocks/revisions-shortcode',
 			array(
-				'description'     => __( 'This block provides a list of all the revisions of a selected document and is functionally equivalent to the [documents_revisions] shortcode.', 'wp-document-revisions' ),
-				'editor_script'   => 'wpdr-revisions-shortcode-editor',
 				'render_callback' => array( $this, 'wpdr_revisions_shortcode_display' ),
-				'attributes'      => array(
-					'id'              => array(
-						'type'    => 'number',
-						'default' => 0,
-					),
-					'numberposts'     => array(
-						'type'    => 'number',
-						'default' => 5,
-					),
-					'summary'         => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'show_pdf'        => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'new_tab'         => array(
-						'type'    => 'boolean',
-						'default' => true,
-					),
-					'align'           => array(
-						'type' => 'string',
-					),
-					'backgroundColor' => array(
-						'type' => 'string',
-					),
-					'linkColor'       => array(
-						'type' => 'string',
-					),
-					'textColor'       => array(
-						'type' => 'string',
-					),
-					'gradient'        => array(
-						'type' => 'string',
-					),
-					'fontSize'        => array(
-						'type' => 'string',
-					),
-					'style'           => array(
-						'type' => 'object',
-					),
-				),
-			)
-		);
-
-		// register scripts.
-		$dir      = dirname( __DIR__ );
-		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
-		$index_js = 'js/wpdr-documents-shortcode' . $suffix . '.js';
-		wp_register_script(
-			'wpdr-documents-shortcode-editor',
-			plugins_url( $index_js, __DIR__ ),
-			array(
-				'wp-blocks',
-				'wp-data',
-				'wp-element',
-				'wp-block-editor',
-				'wp-components',
-				'wp-compose',
-				'wp-server-side-render',
-				'wp-i18n',
-			),
-			filemtime( "$dir/$index_js" ),
-			array(
-				'in_footer' => true,
-				'strategy'  => 'defer',
 			)
 		);
 
@@ -725,33 +573,24 @@ class WP_Document_Revisions_Front_End {
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
 		// Ensure taxonomies are set.
 		$taxonomies = $this->get_taxonomy_details();
-		wp_add_inline_script( 'wpdr-documents-shortcode-editor', 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 
-		$index_js = 'js/wpdr-revisions-shortcode' . $suffix . '.js';
-		wp_register_script(
-			'wpdr-revisions-shortcode-editor',
-			plugins_url( $index_js, __DIR__ ),
-			array(
-				'wp-blocks',
-				'wp-data',
-				'wp-element',
-				'wp-block-editor',
-				'wp-components',
-				'wp-compose',
-				'wp-server-side-render',
-				'wp-i18n',
-			),
-			filemtime( "$dir/$index_js" ),
-			array(
-				'in_footer' => true,
-				'strategy'  => 'defer',
-			)
-		);
+		// Get the auto-generated script handle from the registered block.
+		$registry = \WP_Block_Type_Registry::get_instance();
+		$block    = $registry->get_registered( 'wp-document-revisions/documents-shortcode' );
+		if ( $block && ! empty( $block->editor_script_handles ) ) {
+			$handle = $block->editor_script_handles[0];
+			wp_add_inline_script( $handle, 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
+		}
 
 		// set translations.
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( 'wpdr-documents-shortcode-editor', 'wp-document-revisions' );
-			wp_set_script_translations( 'wpdr-revisions-shortcode-editor', 'wp-document-revisions' );
+			if ( $block && ! empty( $block->editor_script_handles ) ) {
+				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
+			}
+			$rev_block = $registry->get_registered( 'wp-document-revisions/revisions-shortcode' );
+			if ( $rev_block && ! empty( $rev_block->editor_script_handles ) ) {
+				wp_set_script_translations( $rev_block->editor_script_handles[0], 'wp-document-revisions' );
+			}
 		}
 	}
 

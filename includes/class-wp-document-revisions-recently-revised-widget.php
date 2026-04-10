@@ -265,107 +265,22 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			return;
 		}
 
-		$dir      = dirname( __DIR__ );
-		$suffix   = ( WP_DEBUG ) ? '.dev' : '';
-		$index_js = 'js/wpdr-documents-widget' . $suffix . '.js';
-		wp_register_script(
-			'wpdr-documents-widget-editor',
-			plugins_url( $index_js, __DIR__ ),
-			array(
-				'wp-blocks',
-				'wp-element',
-				'wp-block-editor',
-				'wp-components',
-				'wp-server-side-render',
-				'wp-i18n',
-			),
-			filemtime( "$dir/$index_js" ),
-			array(
-				'in_footer' => true,
-				'strategy'  => 'defer',
-			)
-		);
-
-		$index_css = 'css/wpdr-widget-editor-style.css';
-		wp_register_style(
-			'wpdr-documents-widget-editor-style',
-			plugins_url( $index_css, __DIR__ ),
-			array( 'wp-edit-blocks' ),
-			filemtime( plugin_dir_path( "$dir/$index_css" ) )
-		);
+		$dir = dirname( __DIR__ );
 
 		register_block_type(
-			'wp-document-revisions/documents-widget',
+			$dir . '/build/blocks/documents-widget',
 			array(
-				'description'     => __( 'This block provides a block of the most recently changed documentsand is functionally equivalent to the recently revised widget.', 'wp-document-revisions' ),
-				'editor_script'   => 'wpdr-documents-widget-editor',
-				'editor_style'    => 'wpdr-documents-widget-editor-style',
 				'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
-				'attributes'      => array(
-					'header'            => array(
-						'type' => 'string',
-					),
-					'numberposts'       => array(
-						'type'    => 'number',
-						'default' => 5,
-					),
-					'post_stat_publish' => array(
-						'type' => 'boolean',
-					),
-					'post_stat_private' => array(
-						'type' => 'boolean',
-					),
-					'post_stat_draft'   => array(
-						'type' => 'boolean',
-					),
-					'show_thumb'        => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'show_descr'        => array(
-						'type'    => 'boolean',
-						'default' => true,
-					),
-					'show_author'       => array(
-						'type'    => 'boolean',
-						'default' => true,
-					),
-					'show_pdf'          => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'new_tab'           => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'align'             => array(
-						'type' => 'string',
-					),
-					'backgroundColor'   => array(
-						'type' => 'string',
-					),
-					'linkColor'         => array(
-						'type' => 'string',
-					),
-					'textColor'         => array(
-						'type' => 'string',
-					),
-					'gradient'          => array(
-						'type' => 'string',
-					),
-					'fontSize'          => array(
-						'type' => 'string',
-					),
-					'style'             => array(
-						'type' => 'object',
-					),
-				),
 			)
 		);
 
 		// set translations.
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( 'wpdr-documents-widget-editor', 'wp-document-revisions' );
+			$registry = \WP_Block_Type_Registry::get_instance();
+			$block    = $registry->get_registered( 'wp-document-revisions/documents-widget' );
+			if ( $block && ! empty( $block->editor_script_handles ) ) {
+				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
+			}
 		}
 
 		// Find sizes for images for PDFs. (Logic based on /wp-admin/includes/image.php).

@@ -1,0 +1,113 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-document-revisions/documents-shortcode",
+	"version": "3.8.1",
+	"title": "Documents List",
+	"category": "wpdr-category",
+	"icon": "editor-ul",
+	"description": "Display a list of documents.",
+	"textdomain": "wp-document-revisions",
+	"editorScript": "file:./index.js",
+	"attributes": {
+		"header": {
+			"type": "string",
+			"default": ""
+		},
+		"taxonomy_0": {
+			"type": "string",
+			"default": ""
+		},
+		"term_0": {
+			"type": "number",
+			"default": 0
+		},
+		"taxonomy_1": {
+			"type": "string",
+			"default": ""
+		},
+		"term_1": {
+			"type": "number",
+			"default": 0
+		},
+		"taxonomy_2": {
+			"type": "string",
+			"default": ""
+		},
+		"term_2": {
+			"type": "number",
+			"default": 0
+		},
+		"numberposts": {
+			"type": "number",
+			"default": 5
+		},
+		"orderby": {
+			"type": "string"
+		},
+		"order": {
+			"type": "string",
+			"default": "ASC"
+		},
+		"show_edit": {
+			"type": "string",
+			"default": ""
+		},
+		"show_thumb": {
+			"type": "boolean",
+			"default": false
+		},
+		"show_descr": {
+			"type": "boolean",
+			"default": true
+		},
+		"show_pdf": {
+			"type": "boolean",
+			"default": false
+		},
+		"new_tab": {
+			"type": "boolean",
+			"default": true
+		},
+		"freeform": {
+			"type": "string",
+			"default": ""
+		},
+		"align": {
+			"type": "string"
+		},
+		"backgroundColor": {
+			"type": "string"
+		},
+		"linkColor": {
+			"type": "string"
+		},
+		"textColor": {
+			"type": "string"
+		},
+		"gradient": {
+			"type": "string"
+		},
+		"fontSize": {
+			"type": "string"
+		},
+		"style": {
+			"type": "object"
+		}
+	},
+	"supports": {
+		"align": true,
+		"color": {
+			"gradients": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	}
+}

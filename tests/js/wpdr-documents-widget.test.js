@@ -1,793 +1,882 @@
 /**
- * Tests for wpdr-documents-widget.dev.js
- * 
+ * Tests for documents-widget block (modern JSX/ESM version).
+ *
  * This file tests the Latest Documents Gutenberg block that displays
  * a list of the most recent documents.
+ *
+ * @package WP_Document_Revisions
  */
 
-const path = require('path');
+// Mock react/jsx-runtime (babel automatic runtime target).
+jest.mock( 'react/jsx-runtime', () => ( {
+	jsx: jest.fn( ( ...args ) => args ),
+	jsxs: jest.fn( ( ...args ) => args ),
+	Fragment: Symbol( 'Fragment' ),
+} ) );
 
-const MODULE_PATH = path.resolve(__dirname, '../../js/wpdr-documents-widget.dev.js');
+// Mock WordPress packages (virtual — not installed locally).
+jest.mock(
+	'@wordpress/blocks',
+	() => ( {
+		registerBlockType: jest.fn(),
+	} ),
+	{ virtual: true }
+);
 
-describe('wpdr-documents-widget block', () => {
-	beforeEach(() => {
-		// Load the documents widget script
-		// Clear the module from cache to ensure fresh execution
-		delete require.cache[require.resolve(MODULE_PATH)];
+jest.mock(
+	'@wordpress/block-editor',
+	() => ( {
+		useBlockProps: jest.fn( () => ( { className: 'wp-block' } ) ),
+		InspectorControls: 'InspectorControls',
+	} ),
+	{ virtual: true }
+);
 
-		// Execute the code in the test environment by requiring the module
-		require(MODULE_PATH);
-	});
+jest.mock(
+	'@wordpress/components',
+	() => ( {
+		PanelBody: 'PanelBody',
+		RadioControl: 'RadioControl',
+		RangeControl: 'RangeControl',
+		TextControl: 'TextControl',
+		TextareaControl: 'TextareaControl',
+		ToggleControl: 'ToggleControl',
+		CheckboxControl: 'CheckboxControl',
+	} ),
+	{ virtual: true }
+);
 
-	afterEach(() => {
-		// Clean up the module cache after each test to prevent side effects between tests
-		delete require.cache[require.resolve(MODULE_PATH)];
-	});
+jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
+	virtual: true,
+} );
 
-	describe('Block Registration', () => {
-		test('should register block with correct name', () => {
-			expect(wp.blocks.registerBlockType).toHaveBeenCalledWith(
-				'wp-document-revisions/documents-widget',
-				expect.any(Object)
-			);
-		});
+jest.mock(
+	'@wordpress/i18n',
+	() => ( {
+		__: jest.fn( ( text ) => text ),
+	} ),
+	{ virtual: true }
+);
 
-		test('should have correct block title', () => {
-			const blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			expect(blockConfig.title).toBe('Latest Documents');
-		});
+import { jsx, jsxs } from 'react/jsx-runtime';
+import { registerBlockType } from '@wordpress/blocks';
 
-		test('should have correct block description', () => {
-			const blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			expect(blockConfig.description).toBe('Display a list of your most recent documents.');
-		});
+/**
+ * Return all JSX calls from both jsx() and jsxs() mocks.
+ *
+ * @return {Array} Combined array of mock call arguments.
+ */
+function getAllJsxCalls() {
+	return [ ...jsx.mock.calls, ...jsxs.mock.calls ];
+}
 
-		test('should be in wpdr-category', () => {
-			const blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			expect(blockConfig.category).toBe('wpdr-category');
-		});
+/**
+ * Find the first JSX call whose component type matches the given value.
+ *
+ * @param {Array}  calls    Combined JSX mock calls.
+ * @param {string} typeName Component type to search for.
+ * @return {Array|undefined} The matching call arguments, or undefined.
+ */
+function findCall( calls, typeName ) {
+	return calls.find( ( call ) => call[ 0 ] === typeName );
+}
 
-		test('should have admin-page icon', () => {
-			const blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			expect(blockConfig.icon).toBe('admin-page');
-		});
-	});
+/**
+ * Find every JSX call whose component type matches the given value.
+ *
+ * @param {Array}  calls    Combined JSX mock calls.
+ * @param {string} typeName Component type to search for.
+ * @return {Array} Matching call arguments.
+ */
+function findAllCalls( calls, typeName ) {
+	return calls.filter( ( call ) => call[ 0 ] === typeName );
+}
 
-	describe('Block Attributes', () => {
-		let blockConfig;
+// ─── Shared state ────────────────────────────────────────────────────────────────────
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-		});
+let metadata;
+let blockConfig;
 
-		test('should have header attribute', () => {
-			expect(blockConfig.attributes.header).toEqual({
-				type: 'string',
-			});
-		});
+beforeAll( () => {
+	require( '../../src/blocks/documents-widget/index.js' );
+	metadata = registerBlockType.mock.calls[ 0 ][ 0 ];
+	blockConfig = registerBlockType.mock.calls[ 0 ][ 1 ];
+} );
 
-		test('should have numberposts attribute with default 5', () => {
-			expect(blockConfig.attributes.numberposts).toEqual({
-				type: 'number',
-				default: 5,
-			});
-		});
+// ─── Block Registration ─────────────────────────────────────────────────────────────
 
-		test('should have post_stat_publish attribute with default true', () => {
-			expect(blockConfig.attributes.post_stat_publish).toEqual({
-				type: 'boolean',
-				default: true,
-			});
-		});
+describe( 'Block Registration', () => {
+	test( 'registers block with correct name', () => {
+		expect( metadata.name ).toBe(
+			'wp-document-revisions/documents-widget'
+		);
+	} );
 
-		test('should have post_stat_private attribute with default true', () => {
-			expect(blockConfig.attributes.post_stat_private).toEqual({
-				type: 'boolean',
-				default: true,
-			});
-		});
+	test( 'has correct title', () => {
+		expect( metadata.title ).toBe( 'Latest Documents' );
+	} );
 
-		test('should have post_stat_draft attribute with default false', () => {
-			expect(blockConfig.attributes.post_stat_draft).toEqual({
-				type: 'boolean',
-				default: false,
-			});
-		});
+	test( 'has correct description', () => {
+		expect( metadata.description ).toBe(
+			'Display a list of your most recent documents.'
+		);
+	} );
 
-		test('should have show_thumb attribute with default false', () => {
-			expect(blockConfig.attributes.show_thumb).toEqual({
-				type: 'boolean',
-				default: false,
-			});
-		});
+	test( 'has correct category', () => {
+		expect( metadata.category ).toBe( 'wpdr-category' );
+	} );
 
-		test('should have show_descr attribute with default true', () => {
-			expect(blockConfig.attributes.show_descr).toEqual({
-				type: 'boolean',
-				default: true,
-			});
-		});
+	test( 'has correct icon', () => {
+		expect( metadata.icon ).toBe( 'admin-page' );
+	} );
 
-		test('should have show_author attribute with default true', () => {
-			expect(blockConfig.attributes.show_author).toEqual({
-				type: 'boolean',
-				default: true,
-			});
-		});
+	test( 'provides an edit function', () => {
+		expect( typeof blockConfig.edit ).toBe( 'function' );
+	} );
 
-		test('should have show_pdf attribute with default false', () => {
-			expect(blockConfig.attributes.show_pdf).toEqual({
-				type: 'boolean',
-				default: false,
-			});
-		});
+	test( 'provides a save function', () => {
+		expect( typeof blockConfig.save ).toBe( 'function' );
+	} );
+} );
 
-		test('should have new_tab attribute with default false', () => {
-			expect(blockConfig.attributes.new_tab).toEqual({
-				type: 'boolean',
-				default: false,
-			});
-		});
+// ─── Block Attributes ───────────────────────────────────────────────────────────────
 
-		test('should have styling attributes', () => {
-			expect(blockConfig.attributes.align).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.backgroundColor).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.linkColor).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.textColor).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.gradient).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.fontSize).toEqual({ type: 'string' });
-			expect(blockConfig.attributes.style).toEqual({ type: 'object' });
-		});
-	});
+describe( 'Block Attributes', () => {
+	test( 'defines header attribute as string', () => {
+		expect( metadata.attributes.header ).toEqual( { type: 'string' } );
+	} );
 
-	describe('Block Supports', () => {
-		let blockConfig;
+	test( 'defines numberposts attribute as number', () => {
+		expect( metadata.attributes.numberposts.type ).toBe( 'number' );
+	} );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-		});
+	test( 'defines boolean status attributes', () => {
+		expect( metadata.attributes.post_stat_publish.type ).toBe(
+			'boolean'
+		);
+		expect( metadata.attributes.post_stat_private.type ).toBe(
+			'boolean'
+		);
+		expect( metadata.attributes.post_stat_draft.type ).toBe( 'boolean' );
+	} );
 
-		test('should support alignment', () => {
-			expect(blockConfig.supports.align).toBe(true);
-		});
+	test( 'defines boolean display attributes', () => {
+		expect( metadata.attributes.show_thumb.type ).toBe( 'boolean' );
+		expect( metadata.attributes.show_descr.type ).toBe( 'boolean' );
+		expect( metadata.attributes.show_author.type ).toBe( 'boolean' );
+		expect( metadata.attributes.show_pdf.type ).toBe( 'boolean' );
+		expect( metadata.attributes.new_tab.type ).toBe( 'boolean' );
+	} );
 
-		test('should support color with gradients and link', () => {
-			expect(blockConfig.supports.color).toEqual({
-				gradients: true,
-				link: true,
-			});
-		});
+	test( 'defines styling attributes', () => {
+		expect( metadata.attributes.align.type ).toBe( 'string' );
+		expect( metadata.attributes.backgroundColor.type ).toBe( 'string' );
+		expect( metadata.attributes.linkColor.type ).toBe( 'string' );
+		expect( metadata.attributes.textColor.type ).toBe( 'string' );
+		expect( metadata.attributes.gradient.type ).toBe( 'string' );
+		expect( metadata.attributes.fontSize.type ).toBe( 'string' );
+		expect( metadata.attributes.style.type ).toBe( 'object' );
+	} );
+} );
 
-		test('should support spacing with margin and padding', () => {
-			expect(blockConfig.supports.spacing).toEqual({
-				margin: true,
-				padding: true,
-			});
-		});
+// ─── Block Supports ─────────────────────────────────────────────────────────────────
 
-		test('should support typography with fontSize and lineHeight', () => {
-			expect(blockConfig.supports.typography).toEqual({
-				fontSize: true,
-				lineHeight: true,
-			});
-		});
-	});
+describe( 'Block Supports', () => {
+	test( 'supports align', () => {
+		expect( metadata.supports.align ).toBe( true );
+	} );
 
-	describe('Block Edit Function', () => {
-		let blockConfig;
-		let editFunction;
+	test( 'supports color with gradients and link', () => {
+		expect( metadata.supports.color ).toEqual( {
+			gradients: true,
+			link: true,
+		} );
+	} );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			editFunction = blockConfig.edit;
-		});
+	test( 'supports spacing (margin and padding)', () => {
+		expect( metadata.supports.spacing ).toEqual( {
+			margin: true,
+			padding: true,
+		} );
+	} );
 
-		test('should be defined', () => {
-			expect(editFunction).toBeDefined();
-			expect(typeof editFunction).toBe('function');
-		});
+	test( 'supports typography (fontSize and lineHeight)', () => {
+		expect( metadata.supports.typography ).toEqual( {
+			fontSize: true,
+			lineHeight: true,
+		} );
+	} );
+} );
 
-		test('should accept props and not throw', () => {
-			const props = {
-				attributes: {
-					header: 'Latest Documents',
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
+// ─── Attribute Defaults ─────────────────────────────────────────────────────────────
+
+describe( 'Attribute Defaults', () => {
+	test( 'header has no default', () => {
+		expect( metadata.attributes.header.default ).toBeUndefined();
+	} );
+
+	test( 'numberposts defaults to 5', () => {
+		expect( metadata.attributes.numberposts.default ).toBe( 5 );
+	} );
+
+	test( 'post_stat_publish defaults to true', () => {
+		expect( metadata.attributes.post_stat_publish.default ).toBe( true );
+	} );
+
+	test( 'post_stat_private defaults to true', () => {
+		expect( metadata.attributes.post_stat_private.default ).toBe( true );
+	} );
+
+	test( 'post_stat_draft defaults to false', () => {
+		expect( metadata.attributes.post_stat_draft.default ).toBe( false );
+	} );
+
+	test( 'show_thumb defaults to false', () => {
+		expect( metadata.attributes.show_thumb.default ).toBe( false );
+	} );
+
+	test( 'show_descr defaults to true', () => {
+		expect( metadata.attributes.show_descr.default ).toBe( true );
+	} );
+
+	test( 'show_author defaults to true', () => {
+		expect( metadata.attributes.show_author.default ).toBe( true );
+	} );
+
+	test( 'show_pdf defaults to false', () => {
+		expect( metadata.attributes.show_pdf.default ).toBe( false );
+	} );
+
+	test( 'new_tab defaults to false', () => {
+		expect( metadata.attributes.new_tab.default ).toBe( false );
+	} );
+} );
+
+// ─── Block Save Function ──────────────────────────────────────────────────────────────
+
+describe( 'Block Save Function', () => {
+	test( 'returns null (server-side rendered)', () => {
+		expect( blockConfig.save() ).toBeNull();
+	} );
+} );
+
+// ─── Edit Function – JSX Rendering ──────────────────────────────────────────────────────
+
+describe( 'Edit Function - JSX Rendering', () => {
+	const defaultAttributes = {
+		header: 'Recent Documents',
+		numberposts: 5,
+		post_stat_publish: true,
+		post_stat_private: true,
+		post_stat_draft: false,
+		show_thumb: false,
+		show_descr: true,
+		show_author: true,
+		show_pdf: false,
+		new_tab: false,
+	};
+
+	beforeEach( () => {
+		jsx.mockClear();
+		jsxs.mockClear();
+	} );
+
+	test( 'renders without throwing', () => {
+		expect( () => {
+			blockConfig.edit( {
+				attributes: defaultAttributes,
 				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+				className: 'test-class',
+			} );
+		} ).not.toThrow();
+	} );
 
-			expect(() => {
-				editFunction(props);
-			}).not.toThrow();
-		});
-	});
+	test( 'renders ServerSideRender with correct block name', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-	describe('Block Save Function', () => {
-		let blockConfig;
+		const calls = getAllJsxCalls();
+		const ssrCall = findCall( calls, 'ServerSideRender' );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-		});
+		expect( ssrCall ).toBeDefined();
+		expect( ssrCall[ 1 ].block ).toBe(
+			'wp-document-revisions/documents-widget'
+		);
+		expect( ssrCall[ 1 ].attributes ).toBe( defaultAttributes );
+	} );
 
-		test('should return null (dynamic block)', () => {
-			expect(blockConfig.save()).toBeNull();
-		});
-	});
+	test( 'renders InspectorControls', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-	describe('Attribute Defaults', () => {
-		let blockConfig;
+		const calls = getAllJsxCalls();
+		const inspectorCall = findCall( calls, 'InspectorControls' );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-		});
+		expect( inspectorCall ).toBeDefined();
+	} );
 
-		test('should default to showing 5 documents', () => {
-			expect(blockConfig.attributes.numberposts.default).toBe(5);
-		});
+	test( 'renders PanelBody with correct title', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should default to showing publish and private documents', () => {
-			expect(blockConfig.attributes.post_stat_publish.default).toBe(true);
-			expect(blockConfig.attributes.post_stat_private.default).toBe(true);
-		});
+		const calls = getAllJsxCalls();
+		const panelCall = findCall( calls, 'PanelBody' );
 
-		test('should default to not showing draft documents', () => {
-			expect(blockConfig.attributes.post_stat_draft.default).toBe(false);
-		});
+		expect( panelCall ).toBeDefined();
+		expect( panelCall[ 1 ].title ).toBe( 'Latest Documents Settings' );
+		expect( panelCall[ 1 ].initialOpen ).toBe( true );
+	} );
 
-		test('should default to not showing thumbnails', () => {
-			expect(blockConfig.attributes.show_thumb.default).toBe(false);
-		});
+	test( 'renders TextControl for header', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should default to showing descriptions', () => {
-			expect(blockConfig.attributes.show_descr.default).toBe(true);
-		});
+		const calls = getAllJsxCalls();
+		const textCall = findCall( calls, 'TextControl' );
 
-		test('should default to showing author', () => {
-			expect(blockConfig.attributes.show_author.default).toBe(true);
-		});
+		expect( textCall ).toBeDefined();
+		expect( textCall[ 1 ].value ).toBe( 'Recent Documents' );
+		expect( textCall[ 1 ].label ).toBe(
+			'Latest Documents List Heading'
+		);
+		expect( textCall[ 1 ].type ).toBe( 'string' );
+	} );
 
-		test('should default to not showing PDF indicator', () => {
-			expect(blockConfig.attributes.show_pdf.default).toBe(false);
-		});
+	test( 'renders RangeControl for numberposts', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should default to not opening in new tab', () => {
-			expect(blockConfig.attributes.new_tab.default).toBe(false);
-		});
-	});
+		const calls = getAllJsxCalls();
+		const rangeCall = findCall( calls, 'RangeControl' );
 
-	describe('Inspector Controls', () => {
-		let blockConfig;
-		let editFunction;
+		expect( rangeCall ).toBeDefined();
+		expect( rangeCall[ 1 ].value ).toBe( 5 );
+		expect( rangeCall[ 1 ].label ).toBe( 'Documents to Display' );
+		expect( rangeCall[ 1 ].min ).toBe( 1 );
+		expect( rangeCall[ 1 ].max ).toBe( 25 );
+	} );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			editFunction = blockConfig.edit;
-		});
+	test( 'renders three CheckboxControls for document statuses', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should accept setAttributes callback', () => {
-			const mockSetAttributes = jest.fn();
-			const props = {
-				attributes: {
-					header: '',
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: mockSetAttributes,
-				className: 'wp-block',
-			};
+		const calls = getAllJsxCalls();
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
 
-			expect(() => {
-				editFunction(props);
-			}).not.toThrow();
-		});
-	});
+		expect( checkboxCalls ).toHaveLength( 3 );
 
-	describe('Component Structure', () => {
-		let blockConfig;
-		let editFunction;
+		const labels = checkboxCalls.map( ( call ) => call[ 1 ].label );
+		expect( labels ).toContain( 'Publish' );
+		expect( labels ).toContain( 'Private' );
+		expect( labels ).toContain( 'Draft' );
+	} );
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			editFunction = blockConfig.edit;
-		});
+	test( 'renders CheckboxControls with correct checked values', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should accept all required props', () => {
-			const testAttributes = {
-				header: 'Test Header',
-				numberposts: 10,
-				post_stat_publish: true,
-				post_stat_private: false,
-				post_stat_draft: true,
-				show_thumb: true,
-				show_descr: false,
-				show_author: false,
-				show_pdf: true,
-				new_tab: true,
-			};
+		const calls = getAllJsxCalls();
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
 
-			const props = {
-				attributes: testAttributes,
+		const publishCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Publish'
+		);
+		const privateCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Private'
+		);
+		const draftCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Draft'
+		);
+
+		expect( publishCb[ 1 ].checked ).toBe( true );
+		expect( privateCb[ 1 ].checked ).toBe( true );
+		expect( draftCb[ 1 ].checked ).toBe( false );
+	} );
+
+	test( 'renders ToggleControls for display options', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+
+		expect( toggleCalls.length ).toBe( 5 );
+
+		const labels = toggleCalls.map( ( call ) => call[ 1 ].label );
+		expect( labels ).toContain( 'Show featured image?' );
+		expect( labels ).toContain( 'Show document description?' );
+		expect( labels ).toContain( 'Show author name?' );
+		expect( labels ).toContain( 'Show PDF File indication?' );
+		expect( labels ).toContain( 'Open documents in new tab?' );
+	} );
+
+	test( 'renders ToggleControls with correct checked values', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+
+		const byLabel = ( label ) =>
+			toggleCalls.find( ( c ) => c[ 1 ].label === label );
+
+		expect( byLabel( 'Show featured image?' )[ 1 ].checked ).toBe(
+			false
+		);
+		expect(
+			byLabel( 'Show document description?' )[ 1 ].checked
+		).toBe( true );
+		expect( byLabel( 'Show author name?' )[ 1 ].checked ).toBe( true );
+		expect(
+			byLabel( 'Show PDF File indication?' )[ 1 ].checked
+		).toBe( false );
+		expect(
+			byLabel( 'Open documents in new tab?' )[ 1 ].checked
+		).toBe( false );
+	} );
+
+	test( 'show_thumb toggle includes help text', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const thumbToggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Show featured image?'
+		);
+
+		expect( thumbToggle[ 1 ].help ).toBeDefined();
+		expect( thumbToggle[ 1 ].help ).toContain( 'Under certain' );
+	} );
+
+	test( 'new_tab toggle includes help text', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const newTabToggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Open documents in new tab?'
+		);
+
+		expect( newTabToggle[ 1 ].help ).toBeDefined();
+		expect( newTabToggle[ 1 ].help ).toContain( 'Setting this on' );
+	} );
+
+	test( 'renders wrapper div with blockProps', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const divCalls = findAllCalls( calls, 'div' );
+		const blockDiv = divCalls.find(
+			( c ) => c[ 1 ].className === 'wp-block'
+		);
+
+		expect( blockDiv ).toBeDefined();
+	} );
+
+	test( 'renders status wrapper div with className prop', () => {
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
+
+		const calls = getAllJsxCalls();
+		const divCalls = findAllCalls( calls, 'div' );
+		const statusDiv = divCalls.find(
+			( c ) => c[ 1 ].className === 'test-class'
+		);
+
+		expect( statusDiv ).toBeDefined();
+	} );
+} );
+
+// ─── Edit Function – onChange Callbacks ──────────────────────────────────────────────────
+
+describe( 'Edit Function - onChange Callbacks', () => {
+	const defaultAttributes = {
+		header: 'Recent Documents',
+		numberposts: 5,
+		post_stat_publish: true,
+		post_stat_private: true,
+		post_stat_draft: false,
+		show_thumb: false,
+		show_descr: true,
+		show_author: true,
+		show_pdf: false,
+		new_tab: false,
+	};
+
+	let setAttributes;
+
+	beforeEach( () => {
+		jsx.mockClear();
+		jsxs.mockClear();
+		setAttributes = jest.fn();
+		blockConfig.edit( {
+			attributes: defaultAttributes,
+			setAttributes,
+			className: 'test-class',
+		} );
+	} );
+
+	test( 'header onChange calls setAttributes correctly', () => {
+		const calls = getAllJsxCalls();
+		const textCall = findCall( calls, 'TextControl' );
+
+		textCall[ 1 ].onChange( 'New Heading' );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			header: 'New Heading',
+		} );
+	} );
+
+	test( 'numberposts onChange calls setAttributes with parseInt', () => {
+		const calls = getAllJsxCalls();
+		const rangeCall = findCall( calls, 'RangeControl' );
+
+		rangeCall[ 1 ].onChange( 10 );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			numberposts: 10,
+		} );
+	} );
+
+	test( 'numberposts onChange parses string values', () => {
+		const calls = getAllJsxCalls();
+		const rangeCall = findCall( calls, 'RangeControl' );
+
+		rangeCall[ 1 ].onChange( '7' );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			numberposts: 7,
+		} );
+	} );
+
+	test( 'post_stat_publish onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
+		const publishCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Publish'
+		);
+
+		publishCb[ 1 ].onChange( false );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			post_stat_publish: false,
+		} );
+	} );
+
+	test( 'post_stat_private onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
+		const privateCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Private'
+		);
+
+		privateCb[ 1 ].onChange( false );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			post_stat_private: false,
+		} );
+	} );
+
+	test( 'post_stat_draft onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
+		const draftCb = checkboxCalls.find(
+			( c ) => c[ 1 ].label === 'Draft'
+		);
+
+		draftCb[ 1 ].onChange( true );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			post_stat_draft: true,
+		} );
+	} );
+
+	test( 'show_thumb onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const toggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Show featured image?'
+		);
+
+		toggle[ 1 ].onChange( true );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			show_thumb: true,
+		} );
+	} );
+
+	test( 'show_descr onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const toggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Show document description?'
+		);
+
+		toggle[ 1 ].onChange( false );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			show_descr: false,
+		} );
+	} );
+
+	test( 'show_author onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const toggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Show author name?'
+		);
+
+		toggle[ 1 ].onChange( false );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			show_author: false,
+		} );
+	} );
+
+	test( 'show_pdf onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const toggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Show PDF File indication?'
+		);
+
+		toggle[ 1 ].onChange( true );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			show_pdf: true,
+		} );
+	} );
+
+	test( 'new_tab onChange calls setAttributes', () => {
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const toggle = toggleCalls.find(
+			( c ) => c[ 1 ].label === 'Open documents in new tab?'
+		);
+
+		toggle[ 1 ].onChange( true );
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			new_tab: true,
+		} );
+	} );
+} );
+
+// ─── Edge Cases ───────────────────────────────────────────────────────────────────
+
+describe( 'Edge Cases', () => {
+	beforeEach( () => {
+		jsx.mockClear();
+		jsxs.mockClear();
+	} );
+
+	test( 'renders with undefined header', () => {
+		const attrs = {
+			header: undefined,
+			numberposts: 5,
+			post_stat_publish: true,
+			post_stat_private: true,
+			post_stat_draft: false,
+			show_thumb: false,
+			show_descr: true,
+			show_author: true,
+			show_pdf: false,
+			new_tab: false,
+		};
+
+		expect( () => {
+			blockConfig.edit( {
+				attributes: attrs,
 				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+				className: 'test-class',
+			} );
+		} ).not.toThrow();
 
-			expect(() => {
-				editFunction(props);
-			}).not.toThrow();
-		});
-	});
+		const calls = getAllJsxCalls();
+		const textCall = findCall( calls, 'TextControl' );
+		expect( textCall[ 1 ].value ).toBeUndefined();
+	} );
 
-	describe('Edge Cases', () => {
-		let blockConfig;
+	test( 'renders with minimum numberposts value', () => {
+		const attrs = {
+			header: 'Test',
+			numberposts: 1,
+			post_stat_publish: true,
+			post_stat_private: true,
+			post_stat_draft: false,
+			show_thumb: false,
+			show_descr: true,
+			show_author: true,
+			show_pdf: false,
+			new_tab: false,
+		};
 
-		beforeEach(() => {
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-		});
+		blockConfig.edit( {
+			attributes: attrs,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should handle undefined header attribute', () => {
-			const props = {
-				attributes: {
-					header: undefined,
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+		const calls = getAllJsxCalls();
+		const rangeCall = findCall( calls, 'RangeControl' );
+		expect( rangeCall[ 1 ].value ).toBe( 1 );
+	} );
 
-			expect(() => {
-				blockConfig.edit(props);
-			}).not.toThrow();
-		});
+	test( 'renders with maximum numberposts value', () => {
+		const attrs = {
+			header: 'Test',
+			numberposts: 25,
+			post_stat_publish: true,
+			post_stat_private: true,
+			post_stat_draft: false,
+			show_thumb: false,
+			show_descr: true,
+			show_author: true,
+			show_pdf: false,
+			new_tab: false,
+		};
 
-		test('should handle extreme numberposts values', () => {
-			const props = {
-				attributes: {
-					header: '',
-					numberposts: 1000, // Very high value
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+		blockConfig.edit( {
+			attributes: attrs,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-			expect(() => {
-				blockConfig.edit(props);
-			}).not.toThrow();
-		});
+		const calls = getAllJsxCalls();
+		const rangeCall = findCall( calls, 'RangeControl' );
+		expect( rangeCall[ 1 ].value ).toBe( 25 );
+	} );
 
-		test('should handle all boolean attributes as false', () => {
-			const props = {
-				attributes: {
-					header: '',
-					numberposts: 5,
-					post_stat_publish: false,
-					post_stat_private: false,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: false,
-					show_author: false,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+	test( 'renders with all boolean attributes true', () => {
+		const attrs = {
+			header: 'All On',
+			numberposts: 10,
+			post_stat_publish: true,
+			post_stat_private: true,
+			post_stat_draft: true,
+			show_thumb: true,
+			show_descr: true,
+			show_author: true,
+			show_pdf: true,
+			new_tab: true,
+		};
 
-			expect(() => {
-				blockConfig.edit(props);
-			}).not.toThrow();
-		});
+		blockConfig.edit( {
+			attributes: attrs,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should handle all boolean attributes as true', () => {
-			const props = {
-				attributes: {
-					header: '',
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: true,
-					show_thumb: true,
-					show_descr: true,
-					show_author: true,
-					show_pdf: true,
-					new_tab: true,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
 
-			expect(() => {
-				blockConfig.edit(props);
-			}).not.toThrow();
-		});
-	});
+		toggleCalls.forEach( ( call ) => {
+			expect( call[ 1 ].checked ).toBe( true );
+		} );
 
-	describe('Edit Function - createElement calls', () => {
-		let blockConfig, editFunction;
+		checkboxCalls.forEach( ( call ) => {
+			expect( call[ 1 ].checked ).toBe( true );
+		} );
+	} );
 
-		beforeEach(() => {
-			jest.clearAllMocks();
-			jest.resetModules();
-			require(MODULE_PATH);
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			editFunction = blockConfig.edit;
-		});
+	test( 'renders with all boolean attributes false', () => {
+		const attrs = {
+			header: 'All Off',
+			numberposts: 3,
+			post_stat_publish: false,
+			post_stat_private: false,
+			post_stat_draft: false,
+			show_thumb: false,
+			show_descr: false,
+			show_author: false,
+			show_pdf: false,
+			new_tab: false,
+		};
 
-		afterEach(() => {
-			delete require.cache[require.resolve(MODULE_PATH)];
-		});
+		blockConfig.edit( {
+			attributes: attrs,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		function getDefaultProps() {
-			return {
-				attributes: {
-					header: '',
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
-		}
+		const calls = getAllJsxCalls();
+		const toggleCalls = findAllCalls( calls, 'ToggleControl' );
+		const checkboxCalls = findAllCalls( calls, 'CheckboxControl' );
 
-		test('should call createElement for div wrapper', () => {
-			editFunction(getDefaultProps());
-			expect(wp.element.createElement).toHaveBeenCalled();
-			// Outer div is the last call since inner children evaluate first
-			const calls = wp.element.createElement.mock.calls;
-			const lastCall = calls[calls.length - 1];
-			expect(lastCall[0]).toBe('div');
-		});
+		toggleCalls.forEach( ( call ) => {
+			expect( call[ 1 ].checked ).toBe( false );
+		} );
 
-		test('should render ServerSideRender for preview', () => {
-			editFunction(getDefaultProps());
-			const ssrCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === wp.serverSideRender
-			);
-			expect(ssrCall).toBeDefined();
-			expect(ssrCall[1].block).toBe('wp-document-revisions/documents-widget');
-		});
+		checkboxCalls.forEach( ( call ) => {
+			expect( call[ 1 ].checked ).toBe( false );
+		} );
+	} );
 
-		test('should pass attributes to ServerSideRender', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const ssrCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === wp.serverSideRender
-			);
-			expect(ssrCall[1].attributes).toBe(props.attributes);
-		});
+	test( 'renders with empty string header', () => {
+		const attrs = {
+			header: '',
+			numberposts: 5,
+			post_stat_publish: true,
+			post_stat_private: true,
+			post_stat_draft: false,
+			show_thumb: false,
+			show_descr: true,
+			show_author: true,
+			show_pdf: false,
+			new_tab: false,
+		};
 
-		test('should render InspectorControls', () => {
-			editFunction(getDefaultProps());
-			const icCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'InspectorControls'
-			);
-			expect(icCall).toBeDefined();
-		});
+		blockConfig.edit( {
+			attributes: attrs,
+			setAttributes: jest.fn(),
+			className: 'test-class',
+		} );
 
-		test('should render PanelBody with correct title', () => {
-			editFunction(getDefaultProps());
-			const pbCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'PanelBody'
-			);
-			expect(pbCall).toBeDefined();
-			expect(pbCall[1].title).toBe('Latest Documents Settings');
-			expect(pbCall[1].initialOpen).toBe(true);
-		});
-
-		test('should render TextControl for header', () => {
-			editFunction(getDefaultProps());
-			const tcCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'TextControl'
-			);
-			expect(tcCall).toBeDefined();
-			expect(tcCall[1].label).toBe('Latest Documents List Heading');
-		});
-
-		test('should render RangeControl for numberposts', () => {
-			editFunction(getDefaultProps());
-			const rcCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'RangeControl'
-			);
-			expect(rcCall).toBeDefined();
-			expect(rcCall[1].label).toBe('Documents to Display');
-			expect(rcCall[1].min).toBe(1);
-			expect(rcCall[1].max).toBe(25);
-		});
-
-		test('should render three CheckboxControls for post statuses', () => {
-			editFunction(getDefaultProps());
-			const cbCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'CheckboxControl'
-			);
-			expect(cbCalls).toHaveLength(3);
-		});
-
-		test('should render CheckboxControl labels for Publish, Private, Draft', () => {
-			editFunction(getDefaultProps());
-			const cbCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'CheckboxControl'
-			);
-			const labels = cbCalls.map((call) => call[1].label);
-			expect(labels).toContain('Publish');
-			expect(labels).toContain('Private');
-			expect(labels).toContain('Draft');
-		});
-
-		test('should render five ToggleControls', () => {
-			editFunction(getDefaultProps());
-			const tgCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'ToggleControl'
-			);
-			expect(tgCalls).toHaveLength(5);
-		});
-
-		test('should render ToggleControl labels for all toggle options', () => {
-			editFunction(getDefaultProps());
-			const tgCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'ToggleControl'
-			);
-			const labels = tgCalls.map((call) => call[1].label);
-			expect(labels).toContain('Show featured image?');
-			expect(labels).toContain('Show document description?');
-			expect(labels).toContain('Show author name?');
-			expect(labels).toContain('Show PDF File indication?');
-			expect(labels).toContain('Open documents in new tab?');
-		});
-
-		test('should render Document Statuses paragraph', () => {
-			editFunction(getDefaultProps());
-			const pCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'p'
-			);
-			expect(pCall).toBeDefined();
-		});
-
-		test('should render statuses wrapper div with className', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const divCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'div'
-			);
-			const statusDiv = divCalls.find(
-				(call) => call[1] && call[1].className === 'wp-block'
-			);
-			expect(statusDiv).toBeDefined();
-		});
-
-		test('should render ToggleControls with help text for show_thumb and new_tab', () => {
-			editFunction(getDefaultProps());
-			const tgCalls = wp.element.createElement.mock.calls.filter(
-				(call) => call[0] === 'ToggleControl'
-			);
-			const thumbCall = tgCalls.find((call) => call[1].label === 'Show featured image?');
-			expect(thumbCall[1].help).toBeDefined();
-			expect(thumbCall[1].help.length).toBeGreaterThan(0);
-
-			const newTabCall = tgCalls.find((call) => call[1].label === 'Open documents in new tab?');
-			expect(newTabCall[1].help).toBeDefined();
-			expect(newTabCall[1].help.length).toBeGreaterThan(0);
-		});
-
-		test('should bind current attribute values to controls', () => {
-			const props = getDefaultProps();
-			props.attributes.header = 'My Docs';
-			props.attributes.numberposts = 10;
-			props.attributes.post_stat_publish = false;
-			props.attributes.show_thumb = true;
-			editFunction(props);
-
-			const tcCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'TextControl'
-			);
-			expect(tcCall[1].value).toBe('My Docs');
-
-			const rcCall = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'RangeControl'
-			);
-			expect(rcCall[1].value).toBe(10);
-
-			const publishCb = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'CheckboxControl' && call[1].label === 'Publish'
-			);
-			expect(publishCb[1].checked).toBe(false);
-
-			const thumbTg = wp.element.createElement.mock.calls.find(
-				(call) => call[0] === 'ToggleControl' && call[1].label === 'Show featured image?'
-			);
-			expect(thumbTg[1].checked).toBe(true);
-		});
-	});
-
-	describe('Edit Function - onChange callbacks', () => {
-		let blockConfig, editFunction;
-
-		beforeEach(() => {
-			jest.clearAllMocks();
-			jest.resetModules();
-			require(MODULE_PATH);
-			blockConfig = wp.blocks.registerBlockType.mock.calls[0][1];
-			editFunction = blockConfig.edit;
-		});
-
-		afterEach(() => {
-			delete require.cache[require.resolve(MODULE_PATH)];
-		});
-
-		function getDefaultProps() {
-			return {
-				attributes: {
-					header: '',
-					numberposts: 5,
-					post_stat_publish: true,
-					post_stat_private: true,
-					post_stat_draft: false,
-					show_thumb: false,
-					show_descr: true,
-					show_author: true,
-					show_pdf: false,
-					new_tab: false,
-				},
-				setAttributes: jest.fn(),
-				className: 'wp-block',
-			};
-		}
-
-		test('should update header via TextControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const textControlCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'TextControl' && c[1] && c[1].label && c[1].label.includes('Heading')
-			);
-			expect(textControlCall).toBeDefined();
-			textControlCall[1].onChange('New Header');
-			expect(props.setAttributes).toHaveBeenCalledWith({ header: 'New Header' });
-		});
-
-		test('should update numberposts via RangeControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const rangeControlCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'RangeControl'
-			);
-			expect(rangeControlCall).toBeDefined();
-			rangeControlCall[1].onChange('10');
-			expect(props.setAttributes).toHaveBeenCalledWith({ numberposts: 10 });
-		});
-
-		test('should parseInt numberposts value', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const rangeControlCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'RangeControl'
-			);
-			rangeControlCall[1].onChange(7);
-			expect(props.setAttributes).toHaveBeenCalledWith({ numberposts: 7 });
-		});
-
-		test('should update post_stat_publish via CheckboxControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const cbCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'CheckboxControl' && c[1] && c[1].label === 'Publish'
-			);
-			expect(cbCall).toBeDefined();
-			cbCall[1].onChange(false);
-			expect(props.setAttributes).toHaveBeenCalledWith({ post_stat_publish: false });
-		});
-
-		test('should update post_stat_private via CheckboxControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const cbCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'CheckboxControl' && c[1] && c[1].label === 'Private'
-			);
-			expect(cbCall).toBeDefined();
-			cbCall[1].onChange(false);
-			expect(props.setAttributes).toHaveBeenCalledWith({ post_stat_private: false });
-		});
-
-		test('should update post_stat_draft via CheckboxControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const cbCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'CheckboxControl' && c[1] && c[1].label === 'Draft'
-			);
-			expect(cbCall).toBeDefined();
-			cbCall[1].onChange(true);
-			expect(props.setAttributes).toHaveBeenCalledWith({ post_stat_draft: true });
-		});
-
-		test('should update show_thumb via ToggleControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const tgCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show featured image?'
-			);
-			expect(tgCall).toBeDefined();
-			tgCall[1].onChange(true);
-			expect(props.setAttributes).toHaveBeenCalledWith({ show_thumb: true });
-		});
-
-		test('should update show_descr via ToggleControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const tgCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show document description?'
-			);
-			expect(tgCall).toBeDefined();
-			tgCall[1].onChange(false);
-			expect(props.setAttributes).toHaveBeenCalledWith({ show_descr: false });
-		});
-
-		test('should update show_author via ToggleControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const tgCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show author name?'
-			);
-			expect(tgCall).toBeDefined();
-			tgCall[1].onChange(false);
-			expect(props.setAttributes).toHaveBeenCalledWith({ show_author: false });
-		});
-
-		test('should update show_pdf via ToggleControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const tgCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Show PDF File indication?'
-			);
-			expect(tgCall).toBeDefined();
-			tgCall[1].onChange(true);
-			expect(props.setAttributes).toHaveBeenCalledWith({ show_pdf: true });
-		});
-
-		test('should update new_tab via ToggleControl onChange', () => {
-			const props = getDefaultProps();
-			editFunction(props);
-			const tgCall = wp.element.createElement.mock.calls.find(
-				(c) => c[0] === 'ToggleControl' && c[1] && c[1].label === 'Open documents in new tab?'
-			);
-			expect(tgCall).toBeDefined();
-			tgCall[1].onChange(true);
-			expect(props.setAttributes).toHaveBeenCalledWith({ new_tab: true });
-		});
-	});
-});
+		const calls = getAllJsxCalls();
+		const textCall = findCall( calls, 'TextControl' );
+		expect( textCall[ 1 ].value ).toBe( '' );
+	} );
+} );
