@@ -178,9 +178,10 @@ trait WP_Document_Revisions_File_Handler {
 		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
 
 		// Sanitize the filename for use in the Content-Disposition header to prevent header injection
-		// or quote-escape attacks via filterable extension/post slug values: strip any character that
-		// is not safe to appear inside an HTTP header value or inside a quoted-string filename param.
-		$filename = preg_replace( '/[\x00-\x1f"\\\\]/', '', (string) $filename );
+		// or quote-escape attacks via filterable extension/post slug values: strip control characters
+		// (including DEL, 0x7F) and characters that are unsafe inside an HTTP header value or quoted
+		// filename param.
+		$filename = preg_replace( '/[\x00-\x1f\x7f"\\\\]/', '', (string) $filename );
 
 		$headers = array();
 
@@ -336,6 +337,16 @@ trait WP_Document_Revisions_File_Handler {
 		// Make sure that there is a buffer to be written on close.
 		ob_start( null, $buffsize );
 
+		// Check file readability before committing to response headers (covers both branches:
+		// compressed streaming via fopen/deflate and uncompressed via readfile/WP_Filesystem).
+		if ( ! is_readable( $file ) ) {
+			status_header( 500 );
+			if ( $under_test ) {
+				return $template;
+			}
+			exit;
+		}
+
 		// If we made it this far, just serve the file.
 		if ( $compress ) {
 			// Stream the file through an incremental deflate context so the entire raw file
@@ -383,15 +394,6 @@ trait WP_Document_Revisions_File_Handler {
 			// only know the length after writing to buffer, so only output headers now.
 			$this->serve_headers( $headers, $file );
 		} else {
-			// Check file readability before committing to response headers.
-			if ( ! is_readable( $file ) ) {
-				status_header( 500 );
-				if ( $under_test ) {
-					return $template;
-				}
-				exit;
-			}
-
 			// know the headers and buffering may cause writing, so output headers first.
 			$this->serve_headers( $headers, $file );
 			// see if PHP readfile could be used.
