@@ -43,6 +43,13 @@ Domain Path: /languages
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
+// Single source of truth for the plugin version. The "Version:" header above is
+// parsed by WordPress from the file header itself and must remain literal; this
+// constant is the canonical value for runtime PHP code (cache busters, etc.).
+if ( ! defined( 'WPDR_VERSION' ) ) {
+	define( 'WPDR_VERSION', '4.0.4' );
+}
+
 require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';

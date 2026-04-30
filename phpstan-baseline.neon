@@ -169,18 +169,6 @@ parameters:
 			path: includes/class-wp-document-revisions-front-end.php
 
 		-
-			message: '#^Undefined variable\: \$id$#'
-			identifier: variable.undefined
-			count: 3
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
-			message: '#^Undefined variable\: \$numberposts$#'
-			identifier: variable.undefined
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
 			message: '#^Method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should return array but returns ArrayAccess\.$#'
 			identifier: return.type
 			count: 1

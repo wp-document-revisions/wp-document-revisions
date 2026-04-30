@@ -113,9 +113,10 @@ class WP_Document_Revisions_Front_End {
 
 		// normalize args.
 		$atts = shortcode_atts( $this->shortcode_defaults, $atts, 'document' );
-		foreach ( array_keys( (array) $this->shortcode_defaults ) as $key ) {
-			$$key = isset( $atts[ $key ] ) ? (int) $atts[ $key ] : null;
-		}
+		// Extract recognized shortcode attributes into explicit local variables
+		// (avoids the dynamic `$$key` pattern, which is opaque to static analysis).
+		$id          = isset( $atts['id'] ) ? (int) $atts['id'] : null;
+		$numberposts = isset( $atts['numberposts'] ) ? (int) $atts['numberposts'] : null;
 
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
@@ -161,7 +162,7 @@ class WP_Document_Revisions_Front_End {
 		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
-		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
+		<ul class="revisions document-<?php echo esc_attr( (string) $id ); ?>">
 		<?php
 		// loop through each revision.
 		foreach ( $revisions as $revision ) {
