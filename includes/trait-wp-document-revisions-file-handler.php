@@ -177,6 +177,11 @@ trait WP_Document_Revisions_File_Handler {
 		$filename .= $this->get_extension( wp_get_attachment_url( $attach->ID ) );
 		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
 
+		// Sanitize the filename for use in the Content-Disposition header to prevent header injection
+		// or quote-escape attacks via filterable extension/post slug values: strip any character that
+		// is not safe to appear inside an HTTP header value or inside a quoted-string filename param.
+		$filename = preg_replace( '/[\x00-\x1f"\\\\]/', '', (string) $filename );
+
 		$headers = array();
 
 		// Set content-disposition header. Two options here:
@@ -331,18 +336,46 @@ trait WP_Document_Revisions_File_Handler {
 		// Make sure that there is a buffer to be written on close.
 		ob_start( null, $buffsize );
 
-		// If we made it this far, just serve the file
-		// Note: We use readfile, and not WP_Filesystem for memory/performance reasons.
+		// If we made it this far, just serve the file.
 		if ( $compress ) {
-			if ( 'gzip' === $comp_type ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
-				echo gzencode( file_get_contents( $file ), 9 );
-				$headers['Content-Encoding'] = 'gzip';
+			// Stream the file through an incremental deflate context so the entire raw file
+			// is never resident in memory at once. The compressed bytes still accumulate in
+			// the output buffer (so we can populate Content-Length), but compressed size is
+			// typically << raw size for compressible payloads. Replaces the previous
+			// gzencode( file_get_contents( $file ) ) approach which loaded the entire file
+			// into PHP memory before compressing - a real DoS vector for multi-MB documents.
+			$encoding = ( 'gzip' === $comp_type ) ? ZLIB_ENCODING_GZIP : ZLIB_ENCODING_RAW;
+			$ctx      = deflate_init( $encoding, array( 'level' => 9 ) );
+			$fp       = @fopen( $file, 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+			if ( false === $ctx || false === $fp ) {
+				// Fallback path - avoid breaking download if streaming primitives fail.
+				if ( $fp ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+					fclose( $fp );
+				}
+				if ( 'gzip' === $comp_type ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
+					echo gzencode( file_get_contents( $file ), 9 );
+				} else {
+					// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
+					echo gzdeflate( file_get_contents( $file ), 9 );
+				}
 			} else {
-				// phpcs:ignore WordPress.Security.EscapeOutput,WordPress.WP.AlternativeFunctions
-				echo gzdeflate( file_get_contents( $file ), 9 );
-				$headers['Content-Encoding'] = 'deflate';
+				while ( ! feof( $fp ) ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+					$chunk = fread( $fp, 8192 );
+					if ( false === $chunk || '' === $chunk ) {
+						break;
+					}
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo deflate_add( $ctx, $chunk, ZLIB_NO_FLUSH );
+				}
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo deflate_add( $ctx, '', ZLIB_FINISH );
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+				fclose( $fp );
 			}
+			$headers['Content-Encoding'] = ( 'gzip' === $comp_type ) ? 'gzip' : 'deflate';
 			if ( array_key_exists( 'Content-Length', $headers ) ) {
 				// only update to the correct value.
 				$headers['Content-Length'] = ob_get_length();
