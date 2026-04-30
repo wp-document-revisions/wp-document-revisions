@@ -39,9 +39,12 @@ class WP_Document_Revisions {
 	/**
 	 * The plugin version.
 	 *
+	 * Sourced from the WPDR_VERSION constant defined in the main plugin file
+	 * so the version string lives in exactly one place.
+	 *
 	 * @var string
 	 */
-	public $version = '4.0.4';
+	public $version = WPDR_VERSION;
 
 	/**
 	 * The WP default upload directory cache.
