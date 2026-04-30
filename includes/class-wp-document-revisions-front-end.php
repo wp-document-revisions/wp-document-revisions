@@ -162,7 +162,7 @@ class WP_Document_Revisions_Front_End {
 		// buffer output to return rather than echo directly.
 		ob_start();
 		?>
-		<ul class="revisions document-<?php echo esc_attr( $id ); ?>">
+		<ul class="revisions document-<?php echo esc_attr( (string) $id ); ?>">
 		<?php
 		// loop through each revision.
 		foreach ( $revisions as $revision ) {
