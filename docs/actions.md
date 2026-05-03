@@ -8,46 +8,46 @@ Most of them are named with a leading 'document-' but there are a few additional
 
 Called when the post is saved and Workflow_State taxonomy value is changed. (Only post_ID and new value are available)
 
-In: class-wp-document-revisions-admin.php
+In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_change_workflow_state
 
 Called when the post is saved and Workflow_State taxonomy value is changed. (post_ID, new and old value are available)
 
-In: class-wp-document-revisions-admin.php
+In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_edit
 
 Called as part of the Workflow_State taxonomy when putting the metabox on the admin page
 
-In: class-wp-document-revisions-admin.php
+In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_lock_notice
 
 Called when putting the lock notice on the admin edit screen.
 
-In: class-wp-document-revisions-admin.php
+In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_lock_override
 
 Called after trying to over-ride the lock and possibly a notice has been sent.
 
-In: class-wp-document-revisions.php
+In: trait-wp-document-revisions-revisions.php
 
 ## Action document_saved
 
 Called when a document has been saved and all plugin processing done.
 
-In: class-wp-document-revisions-admin.php
+In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_serve_done
 
 Called just after serving the file to the user.
 
-In: class-wp-document-revisions.php
+In: trait-wp-document-revisions-file-handler.php
 
 ## Action serve_document
 
 Called just before serving the file to the user.
 
-In: class-wp-document-revisions.php
+In: trait-wp-document-revisions-file-handler.php
