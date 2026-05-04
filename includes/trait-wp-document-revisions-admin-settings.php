@@ -145,7 +145,7 @@ trait WP_Document_Revisions_Admin_Settings {
 		// delete revision if there is no content.
 		if ( 0 === strlen( $revision->post_content ) ) {
 			global $wpdr;
-			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999);
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999 );
 			wp_delete_post_revision( $revision_id );
 			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 			return;
