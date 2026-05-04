@@ -6,6 +6,11 @@
  * @package WP Document Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The WP Admin backend object
  */
@@ -30,20 +35,6 @@ class WP_Document_Revisions_Admin {
 	public static $instance;
 
 	/**
-	 * The last_but_one revision
-	 *
-	 * @var int | null
-	 */
-	private static $last_but_one_revn = null;
-
-	/**
-	 * The last_but_one revision excerpt
-	 *
-	 * @var string | null
-	 */
-	private static $last_revn_excerpt = null;
-
-	/**
 	 * The last revision
 	 *
 	 * @var int | null
@@ -62,7 +53,7 @@ class WP_Document_Revisions_Admin {
 	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 *
 	 * @since 0.5
-	 * @param unknown $instance (optional, reference).
+	 * @param object|null $instance (optional, reference).
 	 */
 	public function __construct( $instance = null ) {
 		self::$instance = &$this;

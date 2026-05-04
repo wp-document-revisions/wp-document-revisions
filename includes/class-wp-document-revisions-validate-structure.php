@@ -6,6 +6,11 @@
  * @package WP Document Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Design notes
  * ============

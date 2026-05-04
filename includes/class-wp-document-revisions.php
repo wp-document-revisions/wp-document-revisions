@@ -6,6 +6,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Main WP_Document_Revisions class definition.
  */
@@ -245,6 +250,7 @@ class WP_Document_Revisions {
 
 		// load front-end features (shortcode, widgets, etc.).
 		// For shortcode blocks, json endpoint need to link back to front end and widget so make global.
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound 
 		global $wpdr_fe, $wpdr_widget;
 
 		if ( ! $wpdr_fe ) {
@@ -257,6 +263,7 @@ class WP_Document_Revisions {
 			add_action( 'widgets_init', array( $wpdr_widget, 'wpdr_widgets_init' ) );
 			add_action( 'init', array( $wpdr_widget, 'wpdr_widgets_block_init' ), 99 );
 		}
+		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound 
 
 		// load validation code.
 		require_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
@@ -914,7 +921,7 @@ class WP_Document_Revisions {
 		 *
 		 * @param array $states default workflow_state values.
 		 */
-		$states = apply_filters( 'default_workflow_states', $states );
+		$states = apply_filters( 'default_workflow_states', $states ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		foreach ( $states as $state => $desc ) {
 			wp_insert_term(
@@ -1206,6 +1213,7 @@ class WP_Document_Revisions {
 		// are cleaned via /wp/v2/media/ even when document REST is disabled.
 		global $wpdr_mr;
 		if ( ! $wpdr_mr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound 
 			$wpdr_mr = new WP_Document_Revisions_Manage_Rest( $this );
 		}
 	}

@@ -5,10 +5,29 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Admin editor functionality for WP_Document_Revisions_Admin.
  */
 trait WP_Document_Revisions_Admin_Editor {
+
+	/**
+	 * The last_but_one revision
+	 *
+	 * @var int | null
+	 */
+	private static $last_but_one_revn = null;
+
+	/**
+	 * The last_but_one revision excerpt
+	 *
+	 * @var string | null
+	 */
+	private static $last_revn_excerpt = null;
 
 	/**
 	 * Registers update messages
@@ -315,6 +334,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// Old action hook.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		do_action( 'change_document_workflow_state', $doc_id, $new_id );
 
 		// Replacement action hook.
@@ -398,7 +418,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
 			// Remove our filter so that we can delete the revision.
 			global $wpdr;
-			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999 );
 			wp_delete_post_revision( self::$last_but_one_revn );
 			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 

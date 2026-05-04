@@ -6,6 +6,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * WP Document Revisions Front End.
  */
@@ -360,6 +365,7 @@ class WP_Document_Revisions_Front_End {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 
@@ -505,8 +511,8 @@ class WP_Document_Revisions_Front_End {
 	 * Provides workaround for taxonomies with hyphens in their name
 	 * User should replace hyphen with underscope and plugin will compensate.
 	 *
-	 * @param Array $atts shortcode attributes.
-	 * @return Array modified shortcode attributes
+	 * @param mixed[] $atts shortcode attributes.
+	 * @return mixed[] modified shortcode attributes
 	 */
 	public function shortcode_atts_hyphen_filter( array $atts ): array {
 
@@ -533,7 +539,7 @@ class WP_Document_Revisions_Front_End {
 	 * Register WP Document Revisions block category.
 	 *
 	 * @since 3.3.0
-	 * @param Array                    $categories           Block categories available.
+	 * @param mixed[]                  $categories           Block categories available.
 	 * @param ?WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
 	public function wpdr_block_categories( array $categories, ?WP_Block_Editor_Context $block_editor_context = null ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
@@ -667,7 +673,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Get taxonomy names for documents (use cache).
 	 *
-	 * @return Array Taxonomy names for documents
+	 * @return mixed[] Taxonomy names for documents
 	 * @since 3.3.0
 	 */
 	public function get_taxonomy_details(): array {
