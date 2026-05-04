@@ -6,17 +6,26 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 global $post, $wpdr;
 if ( ! $wpdr ) {
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	$wpdr = new WP_Document_Revisions();
 }
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $rev_query = $wpdr->get_revision_query( $post->ID, true );
 
 // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 @header( 'Content-Type: ' . feed_content_type( 'rss-http' ) . '; charset=' . get_option( 'blog_charset' ), true );
 
-echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_charset' ) ) ) . '"?' . '>'; ?>
+echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_charset' ) ) ) . '"?' . '>';
+//phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+?>
 
 <rss version="2.0"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"

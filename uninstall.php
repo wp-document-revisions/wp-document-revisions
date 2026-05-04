@@ -33,6 +33,7 @@ if ( ! is_object( $wp_roles ) ) {
 	$wp_roles = new WP_Roles(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $caps = array(
 	'edit_documents',
 	'edit_others_documents',

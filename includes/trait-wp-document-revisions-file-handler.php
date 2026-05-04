@@ -5,6 +5,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * File serving, uploads, and attachment handling functionality for WP_Document_Revisions.
  */
@@ -123,7 +128,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param object  $post    WP Post to be served.
 		 * @param string  $version Document revision.
 		 */
-		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version );
+		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( ! $serve_file ) {
 			if ( false === $serve_file ) {
 				wp_die(
@@ -152,7 +157,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param integer $post->ID     Post id of the document.
 		 * @param string  $file         File name to be served.
 		 */
-		do_action( 'serve_document', $post->ID, $file );
+		do_action( 'serve_document', $post->ID, $file ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Filters file name of document to be served. (Useful if file is encrypted at rest).
@@ -281,7 +286,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// in case this is a large file, remove PHP time limits.
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DiscouragedFunctions.Discouraged
 		@set_time_limit( 0 );
 
 		// In normal operation, corruption can occur if ouput is written by any other process.

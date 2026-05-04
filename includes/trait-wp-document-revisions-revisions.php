@@ -5,6 +5,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Revision data, caching, and lock management functionality for WP_Document_Revisions.
  */
@@ -43,6 +48,7 @@ trait WP_Document_Revisions_Revisions {
 		$document->post_excerpt = html_entity_decode( $document->post_excerpt );
 
 		// get revisions, remove autosaves, and prepend the post.
+		// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters
 		$get_revs = wp_get_post_revisions(
 			$post_id,
 			array(
@@ -50,6 +56,7 @@ trait WP_Document_Revisions_Revisions {
 				'suppress_filters' => true,   // try to avoid 'perm' overrides.
 			)
 		);
+		// phpcs:enable WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters
 
 		$revs     = array();
 		$post_rev = $post_id . '-autosave-v1';
@@ -197,7 +204,7 @@ trait WP_Document_Revisions_Revisions {
 		 *
 		 * @param boolean $send_notice selector whether to send the locked document.
 		 */
-		if ( apply_filters( 'send_document_override_notice', $send_notice ) ) {
+		if ( apply_filters( 'send_document_override_notice', $send_notice ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			$this->send_override_notice( $post_id, $current_owner, $current_user->ID );
 		}
 
@@ -392,7 +399,7 @@ trait WP_Document_Revisions_Revisions {
 		 *
 		 * @param string $subject delivered email subject text.
 		 */
-		$subject = apply_filters( 'lock_override_notice_subject', $subject );
+		$subject = apply_filters( 'lock_override_notice_subject', $subject ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		// build the message.
 		// translators: %s is the user's name.
@@ -407,7 +414,7 @@ trait WP_Document_Revisions_Revisions {
 		 *
 		 * @param string $message delivered email message text.
 		 */
-		$message = apply_filters( 'lock_override_notice_message', $message );
+		$message = apply_filters( 'lock_override_notice_message', $message ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Filters the lost lock document email text.
