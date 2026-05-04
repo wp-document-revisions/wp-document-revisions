@@ -109,6 +109,12 @@ In: trait-wp-document-revisions-query.php
 
 Filters the post-thumbnail size parameters (used only if this image size has not been set).
 
+## Filter document_read_uses_read
+
+In: class-wp-document-revisions.php, class-wp-document-revisions-front-end.php, class-wp-document-revisions-manage-rest.php, trait-wp-document-revisions-file-handler.php
+
+Filters the users capacities to require read (or read_document) capability.
+
 ## Filter document_revision_query
 
 In: trait-wp-document-revisions-revisions.php
@@ -129,7 +135,7 @@ Filters the default structure and label values of the workflow_state taxonomy on
 
 ## Filter document_revisions_limit
 
-In: ctrait-wp-document-revisions-query.php
+In: trait-wp-document-revisions-query.php
 
 Filters the number of revisions to keep for documents.
 
