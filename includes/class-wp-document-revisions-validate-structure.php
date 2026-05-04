@@ -900,7 +900,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$file = self::check_document_folder( $file );
 		if ( ! file_exists( $file ) ) {
 			// file does not exist. Get it from the standard media location. May be another plug-in that modified it.
-			remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+			remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10 );
 			$media = get_attached_file( $attach_id );
 
 			// make sure we're looking at the document directory again.
