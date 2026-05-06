@@ -259,7 +259,7 @@ trait WP_Document_Revisions_Rewrites {
 	public function rewrite_file_url( array $file ): array {
 		// verify that this is a document.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
+		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
 			self::$doc_image = true;
 			return $file;
 		}

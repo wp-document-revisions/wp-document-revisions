@@ -423,7 +423,7 @@ trait WP_Document_Revisions_Query {
 				return '';
 			}
 
-			$attachment = $this->get_document( $latest_revision );
+			$attachment = $this->get_document( $latest_revision->ID );
 
 			// sanity check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed.
@@ -636,7 +636,7 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 3.3.0
 	 * @param string $column_name the column name of the all documents list to be populated.
-	 * @param string $post_id     the post id of the all documents list to be populated.
+	 * @param int    $post_id     the post id of the all documents list to be populated.
 	 */
 	public function post_status_column_cb( string $column_name, $post_id ): void {
 

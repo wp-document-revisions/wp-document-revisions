@@ -1223,27 +1223,27 @@ class WP_Document_Revisions {
 	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
 	 * See http://support.microsoft.com/kb/323308.
 	 *
-	 * @param WP $wp The global WP object.
-	 * @return WP WP global object
+	 * @param WP $wp The global WP object. Passed by reference.
+	 * @return void
 	 */
-	public function ie_cache_fix( WP $wp ): object {
+	public function ie_cache_fix( WP $wp ): void {
 		// SSL check.
 		if ( ! is_ssl() ) {
-			return $wp;
+			return;
 		}
 
 		// IE check.
 		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || stripos( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 'MSIE' ) === false ) {
-			return $wp;
+			return;
 		}
 
 		// verify that they are requesting a document.
 		if ( ! isset( $wp->query_vars['post_type'] ) || 'document' !== $wp->query_vars['post_type'] ) {
-			return $wp;
+			return;
 		}
 
 		add_filter( 'nocache_headers', '__return_empty_array' );
 
-		return $wp;
+		return;
 	}
 }

@@ -115,8 +115,8 @@ trait WP_Document_Revisions_Revisions {
 	/**
 	 * Given a post ID, returns the latest revision attachment.
 	 *
-	 * @param Int $post_id the post id.
-	 * @return WP_Post latest revision object
+	 * @param int $post_id the post id.
+	 * @return WP_Post|false latest revision object
 	 */
 	public function get_latest_revision( $post_id ) {
 		if ( is_object( $post_id ) ) {
@@ -232,10 +232,10 @@ trait WP_Document_Revisions_Revisions {
 	 * Given a post object, returns all attached uploads.
 	 *
 	 * @since 0.5
-	 * @param WP_Post $document (optional) post object.
+	 * @param WP_Post|int|null $document (optional) post object.
 	 * @return WP_Post[] all attached uploads
 	 */
-	public function get_attachments( $document = '' ) {
+	public function get_attachments( $document = null ) {
 		if ( '' === $document ) {
 			global $post;
 			$document = $post;
@@ -437,7 +437,7 @@ trait WP_Document_Revisions_Revisions {
 	 * @param WP_Post|false|null $delete       Whether to go forward with deletion.
 	 * @param WP_Post            $post         Post object.
 	 * @param bool               $force_delete Whether to bypass the Trash.
-	 * @return WP_Post | null  Null - No opinion (will run deletion); $post - Bypass delete.
+	 * @return WP_Post|false|null  Null - No opinion (will run deletion); $post - Bypass delete.
 	 */
 	public function possibly_delete_revision( $delete, WP_Post $post, bool $force_delete ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// bail if not a revision, an autosave or already decided not to delete.
