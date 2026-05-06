@@ -18,7 +18,7 @@ trait WP_Document_Revisions_Query {
 	/**
 	 * Returns the.document attachment associated with a post.
 	 *
-	 * @param id $post_id ID of a post object (document or revision).
+	 * @param int $post_id ID of a post object (document or revision).
 	 * @return WP_Post|false
 	 */
 	public function get_document( $post_id ) {
@@ -148,7 +148,7 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * Note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts).
 	 *
-	 * @param object|int|bool $documentish a post object, postID, or false.
+	 * @param WP_Post|int|bool $documentish a post object, postID, or false.
 	 * @since 0.5
 	 * @return bool true if document, false if not
 	 */
@@ -471,9 +471,9 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 1.2.1
 	 * @param Array  $terms the terms to filter.
-	 * @param Object $taxonomy the taxonomy object.
+	 * @param WP_Taxonomy $taxonomy the taxonomy object.
 	 */
-	public function term_count_cb( array $terms, object $taxonomy ): void {
+	public function term_count_cb( array $terms, WP_Taxonomy $taxonomy ): void {
 		add_filter( 'query', array( $this, 'term_count_query_filter' ) );
 		_update_post_term_count( $terms, $taxonomy );
 		remove_filter( 'query', array( $this, 'term_count_query_filter' ) );

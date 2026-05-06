@@ -30,8 +30,8 @@ trait WP_Document_Revisions_Rewrites {
 	 * Adds document rewrite rules to the rewrite array.
 	 *
 	 * @since 0.5
-	 * @param Array $rules rewrite rules.
-	 * @return Array rewrite rules
+	 * @param string[] $rules rewrite rules.
+	 * @return string[] rewrite rules
 	 */
 	public function revision_rewrite( array $rules ): array {
 		$slug = $this->document_slug();
@@ -87,12 +87,12 @@ trait WP_Document_Revisions_Rewrites {
 	 * Builds document post type permalink.
 	 *
 	 * @since 0.5
-	 * @param string $link      original permalink.
-	 * @param object $document  post object.
-	 * @param bool   $leavename whether to leave the %document% placeholder.
+	 * @param string  $link      original permalink.
+	 * @param WP_Post $document  post object.
+	 * @param bool    $leavename whether to leave the %document% placeholder.
 	 * @return string the real permalink
 	 */
-	public function permalink( string $link, object $document, bool $leavename ): string {
+	public function permalink( string $link, WP_Post $document, bool $leavename ): string {
 		global $wp_rewrite;
 		$revision_num = false;
 
@@ -138,8 +138,8 @@ trait WP_Document_Revisions_Rewrites {
 		/**
 		 * Filters the Document permalink.
 		 *
-		 * @param string $link     generated permalink.
-		 * @param object $document Post object.
+		 * @param string  $link     generated permalink.
+		 * @param WP_Post $document Post object.
 		 */
 		$link = apply_filters( 'document_permalink', $link, $document );
 
@@ -316,11 +316,11 @@ trait WP_Document_Revisions_Rewrites {
 	 * Because documents end with a phaux file extension, we don't want that unless there is a named extension
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working.
 	 *
-	 * @param String $redirect the redirect URL.
-	 * @param Object $request  the request object.
+	 * @param String $redirect    the redirect URL.
+	 * @param bool   $do_redirect whether to redirect.
 	 * @return String the redirect URL without the trailing slash
 	 */
-	public function redirect_canonical_filter( string $redirect, $request ): string {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function redirect_canonical_filter( string $redirect, $do_redirect ): string {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! $this->verify_post_type() ) {
 			return $redirect;
 		}
@@ -362,7 +362,7 @@ trait WP_Document_Revisions_Rewrites {
 		$doc            = get_post( $post_id );
 		$slug           = wp_unique_post_slug( $slug, $post_id, $doc->post_status, 'document', 0 );
 		$doc->post_name = $slug;
-		$guid           = $this->permalink( $doc->guid, $doc, false, '' );
+		$guid           = $this->permalink( $doc->guid, $doc, false );
 
 		global $wpdb;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
