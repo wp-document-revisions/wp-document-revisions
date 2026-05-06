@@ -349,12 +349,6 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Action callback returns the but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -369,12 +363,6 @@ parameters:
 		-
 			message: '#^Callback expects 1 parameter, \$accepted_args is set to 2\.$#'
 			identifier: arguments.count
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$document \(string\) of method WP_Document_Revisions\:\:get_attachments\(\) is incompatible with type object\.$#'
-			identifier: parameter.defaultValue
 			count: 1
 			path: includes/class-wp-document-revisions.php
 
@@ -403,24 +391,6 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Method WP_Document_Revisions\:\:permalink\(\) invoked with 4 parameters, 3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\.$#'
-			identifier: return.type
-			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\<0, max\>\|string\|false\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -434,12 +404,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions.php
@@ -484,12 +448,6 @@ parameters:
 			message: '#^Parameter \#2 \$title of function wp_die expects int\|string, null given\.$#'
 			identifier: argument.type
 			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \$post of method WP_Document_Revisions\:\:serve_document_auth\(\) has invalid type obj\.$#'
-			identifier: class.notFound
-			count: 1
 			path: includes/class-wp-document-revisions.php
 
 		-
