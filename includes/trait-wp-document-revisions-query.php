@@ -470,7 +470,7 @@ trait WP_Document_Revisions_Query {
 	 * Allows Workflow State counts to include non-published posts.
 	 *
 	 * @since 1.2.1
-	 * @param Array  $terms the terms to filter.
+	 * @param Array       $terms the terms to filter.
 	 * @param WP_Taxonomy $taxonomy the taxonomy object.
 	 */
 	public function term_count_cb( array $terms, WP_Taxonomy $taxonomy ): void {

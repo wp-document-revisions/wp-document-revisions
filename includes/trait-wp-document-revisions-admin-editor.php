@@ -823,7 +823,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @since 0.5
 	 * @param WP_Post $post the post object.
 	 */
-	public function revision_metabox( object $post ): void {
+	public function revision_metabox( WP_Post $post ): void {
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
 		$revisions    = $this->get_revisions( $post->ID );
 		$key          = $this->get_feed_key();
