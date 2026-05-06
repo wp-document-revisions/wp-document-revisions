@@ -159,9 +159,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Metabox to provide common document functions.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function document_metabox( object $post ): void {
+	public function document_metabox( WP_Post $post ): void {
 		// convert old format to new.
 		if ( is_numeric( $post->post_content ) ) {
 			$post->post_content = $this->format_doc_id( $post->post_content );
@@ -246,9 +246,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Callback to generate metabox for workflow state.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function workflow_state_metabox_cb( object $post ): void {
+	public function workflow_state_metabox_cb( WP_Post $post ): void {
 		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
 		$current_state = wp_get_post_terms(
@@ -821,7 +821,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Creates revision log metabox.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
 	public function revision_metabox( object $post ): void {
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
@@ -1020,9 +1020,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Slightly modified document author metabox because the current one is ugly.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function post_author_meta_box( object $post ): void {
+	public function post_author_meta_box( WP_Post $post ): void {
 		global $user_id;
 		?>
 		<label class="screen-reader-text" for="post_author_override"><?php esc_html_e( 'Owner', 'wp-document-revisions' ); ?></label>

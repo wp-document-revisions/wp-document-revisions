@@ -83,9 +83,9 @@ trait WP_Document_Revisions_Admin_List {
 	 * If the user can read Private documents, then include private in the selection.
 	 *
 	 * @since 3.6
-	 * @param Object $query the WP_Query object.
+	 * @param WP_User_Query $query the WP_Query object.
 	 */
-	public function pre_user_query( object $query ): void {
+	public function pre_user_query( WP_User_Query $query ): void {
 		if ( current_user_can( 'read_private_documents' ) ) {
 			$query->query_where = str_replace( "= 'publish'", "IN ('publish', 'private')", $query->query_where );
 		}
@@ -96,9 +96,9 @@ trait WP_Document_Revisions_Admin_List {
 	 *
 	 * Only invoked if taxonomy slug needs to be changed.
 	 *
-	 * @param Object $query the WP_Query object.
+	 * @param WP_Query $query the WP_Query object.
 	 */
-	public function convert_workflow_state_to_post_status( object $query ): void {
+	public function convert_workflow_state_to_post_status( WP_Query $query ): void {
 		global $pagenow, $typenow;
 		if ( 'edit.php' === $pagenow && 'document' === $typenow ) {
 			if ( 'workflow_state' !== self::$parent->taxonomy_key() && array_key_exists( 'workflow_state', $query->query_vars ) ) {

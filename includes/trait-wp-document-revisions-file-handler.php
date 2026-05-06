@@ -124,8 +124,8 @@ trait WP_Document_Revisions_File_Handler {
 		 * I.e. return null if user not logged on and want to deny existence.
 		 * (only if filter 'document_read_uses_read' returns false)
 		 *
-		 * @param bool   $serve_file default action to serve file.
-		 * @param object  $post    WP Post to be served.
+		 * @param bool    $serve_file default action to serve file.
+		 * @param WP_Post $post    WP Post to be served.
 		 * @param string  $version Document revision.
 		 */
 		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
@@ -479,9 +479,9 @@ trait WP_Document_Revisions_File_Handler {
 	 * Filter to authenticate document delivery.
 	 *
 	 * @param bool     $deflt   true unless overridden by prior filter.
-	 * @param obj      $post    the post object.
+	 * @param WP_Post  $post    the post object.
 	 * @param bool|int $version version of the document being served, if any.
-	 * @return unknown
+	 * @return bool
 	 */
 	public function serve_document_auth( bool $deflt, $post, $version ) {
 		$user     = wp_get_current_user();
@@ -854,7 +854,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * Deprecated for consistency of terms.
 	 *
 	 * @param Int $id the post ID.
-	 * @return unknown
+	 * @return string!bool
 	 */
 	public function get_latest_version( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_version' );
@@ -1234,7 +1234,7 @@ trait WP_Document_Revisions_File_Handler {
 			return $downsize;
 		}
 
-		remove_filter( 'image_downsize', array( $this, 'image_downsize' ) );
+		remove_filter( 'image_downsize', array( $this, 'image_downsize' ), 10 );
 		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
 
 		$direct = wp_get_attachment_url( $id );

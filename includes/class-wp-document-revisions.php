@@ -869,7 +869,7 @@ class WP_Document_Revisions {
 		 *
 		 * @since 0.5
 		 *
-		 * @param array of default structure and label workflow_state values.
+		 * @param mixed[] array of default structure and label workflow_state values.
 		 */
 		register_taxonomy(
 			'workflow_state',
@@ -1223,10 +1223,10 @@ class WP_Document_Revisions {
 	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
 	 * See http://support.microsoft.com/kb/323308.
 	 *
-	 * @param Object $wp The global WP object.
-	 * @return the WP global object
+	 * @param WP $wp The global WP object.
+	 * @return WP WP global object
 	 */
-	public function ie_cache_fix( object $wp ): object {
+	public function ie_cache_fix( WP $wp ): object {
 		// SSL check.
 		if ( ! is_ssl() ) {
 			return $wp;
