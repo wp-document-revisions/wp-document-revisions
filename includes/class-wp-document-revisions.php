@@ -1243,7 +1243,5 @@ class WP_Document_Revisions {
 		}
 
 		add_filter( 'nocache_headers', '__return_empty_array' );
-
-		return;
 	}
 }
