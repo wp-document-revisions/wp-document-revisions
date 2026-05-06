@@ -141,13 +141,13 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		global $wp;
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 		$_SERVER['HTTPS'] = 'on';
-		$wpdr->ie_cache_fix( &$wp );
+		$wpdr->ie_cache_fix( $wp );
 		self::assertTrue( true, 'ie_cache_fix 1' );
 		$_SERVER['HTTP_USER_AGENT'] = 'msie';
-		$wpdr->ie_cache_fix( &$wp );
+		$wpdr->ie_cache_fix( $wp );
 		self::assertTrue( true, 'ie_cache_fix 2' );
 		$_SERVER['HTTP_USER_AGENT'] = 'other';
-		$wpdr->ie_cache_fix( &$wp );
+		$wpdr->ie_cache_fix( $wp );
 		self::assertTrue( true, 'ie_cache_fix 2' );
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 
