@@ -199,12 +199,6 @@ parameters:
 			path: includes/class-wp-document-revisions-recently-revised-widget.php
 
 		-
-			message: '#^Cannot access offset ''code'' on int\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Expected 3 @param tags, found 2\.$#'
 			identifier: paramTag.count
 			count: 1
@@ -213,30 +207,6 @@ parameters:
 		-
 			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
 			identifier: expr.resultUnused
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) never returns int so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 2, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 3, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 8, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
@@ -265,20 +235,8 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Parameter \#1 \$attachment_id of function get_attached_file expects int, id given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_document\(\) has invalid type id\.$#'
-			identifier: class.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
