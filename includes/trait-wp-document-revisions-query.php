@@ -188,7 +188,12 @@ trait WP_Document_Revisions_Query {
 			return false;
 		}
 
-		$post = get_post( $documentish );
+		// if not a WP_Post, then get it.
+		if ( $documentish instanceof WP_Post ) {
+			$post = $documentish;
+		} else {
+			$post = get_post( $documentish );
+		}
 
 		if ( ! $post ) {
 			return false;

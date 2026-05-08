@@ -879,7 +879,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @param int $attach_id id of an attachment post object.
 	 * @param int $doc_id    id of the document post object.
-	 * @return int|false
+	 * @return mixed[]|false
 	 */
 	private static function check_attachment( $attach_id, $doc_id ) {
 		$attach = get_post( $attach_id );
