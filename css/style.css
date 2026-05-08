@@ -15,10 +15,10 @@
 }
 
 /* General document edit styling */
-#postdiv,
+/*#postdiv,
 #postdivrich {
 	display: none;
-}
+}*/
 
 #lock-notice {
 	background-color: #d4e8ba;
@@ -47,9 +47,9 @@
 	padding-bottom: 5px;
 }
 
-#revision-summary {
+/*#revision-summary {
 	display: none;
-}
+}*/
 
 #autosave-alert {
 	display: none;

@@ -413,7 +413,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				self::$last_revn_excerpt
 			);
 			$wpdb->query( $sql );
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			wp_cache_delete( self::$last_revn, 'posts' );
 			wp_cache_delete( $doc_id, 'posts' );
 			clean_post_cache( self::$last_revn_excerpt );
@@ -478,7 +478,10 @@ trait WP_Document_Revisions_Admin_Editor {
 					'.post-type-document .editor-visual-editor,
 					.post-type-document .edit-post-visual-editor,
 					.post-type-document .editor-text-editor,
-					.post-type-document .edit-post-text-editor {
+					.post-type-document .edit-post-text-editor,
+				    #postdiv,
+					#postdivrich,
+					#revision-summary {
 						display: none !important;
 					}'
 				);
