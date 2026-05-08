@@ -763,7 +763,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		global $pagenow;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
+		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
 			?>
 			<style>
 				#media-upload-header {display:none;}
