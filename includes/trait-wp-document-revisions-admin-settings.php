@@ -734,8 +734,10 @@ trait WP_Document_Revisions_Admin_Settings {
 	 */
 	public function filter_from_media_grid( WP_Query $query ) {
 		// note: hook late so that unattached filter can hook in, if necessary.
-		add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
-		add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
+		if ( ! apply_filters( 'document_use_block_editor', false ) ) {
+			add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
+			add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
+		}
 
 		return $query;
 	}
