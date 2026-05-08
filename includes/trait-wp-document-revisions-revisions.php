@@ -236,7 +236,7 @@ trait WP_Document_Revisions_Revisions {
 	 * @return WP_Post[] all attached uploads
 	 */
 	public function get_attachments( $document = null ) {
-		if ( '' === $document ) {
+		if ( is_null( $document ) || '' === $document ) {
 			global $post;
 			$document = $post;
 		}
