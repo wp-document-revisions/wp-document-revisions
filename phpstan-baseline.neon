@@ -151,12 +151,6 @@ parameters:
 			path: includes/class-wp-document-revisions-front-end.php
 
 		-
-			message: '#^Undefined variable\: \$document$#'
-			identifier: variable.undefined
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
 			message: '#^Method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should return array but returns ArrayAccess\.$#'
 			identifier: return.type
 			count: 1
@@ -241,18 +235,6 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 6, error\: 0, msg\: string, fix\: 1, parm\: id\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 7, error\: 1, msg\: string, fix\: 1, parm\: id\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 8, error\: 1, msg\: string, fix\: 0\}\.$#'
 			identifier: return.type
 			count: 1
@@ -283,21 +265,9 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Parameter \#1 \$attach_id of static method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) expects id, int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \#1 \$attachment_id of function get_attached_file expects int, id given\.$#'
 			identifier: argument.type
 			count: 2
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, id given\.$#'
-			identifier: argument.type
-			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
@@ -307,31 +277,7 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Parameter \#2 \$doc_id of static method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) expects string, id given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$attach_id of method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:get_last_attachment\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_document\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_guid\(\) has invalid type id\.$#'
 			identifier: class.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
