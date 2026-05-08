@@ -254,6 +254,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 
 		// should be nothing found - as all valid...
+		console_log( $output );
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
 	}
 
@@ -293,6 +294,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 
 		// should have two rows - the header row.
+		console_log( $output );
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file_cnt' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment exists but related file not found' ), 'test_struct_missing_file_msg' );
 
