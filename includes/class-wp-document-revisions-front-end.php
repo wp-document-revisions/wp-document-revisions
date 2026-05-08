@@ -371,8 +371,9 @@ class WP_Document_Revisions_Front_End {
 
 		$documents = $wpdr->get_documents( $atts );
 
-		// We'll use this variable below for thumbnails if $atts_show_thumb is true.
-		$doc_dir = null;
+		// We'll use these variables below for thumbnails if $atts_show_thumb is true.
+		$doc_dir    = null;
+		$thumb_size = null;
 
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
