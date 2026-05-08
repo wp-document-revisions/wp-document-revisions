@@ -150,7 +150,7 @@ class WP_Document_Revisions_Front_End {
 
 		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
-			$attach = $wpdr->get_document( $document->ID );
+			$attach = $wpdr->get_document( $id );
 			$file   = get_attached_file( $attach->ID );
 			if ( $file ) {
 				$mimetype      = $wpdr->get_doc_mimetype( $file );
@@ -369,22 +369,10 @@ class WP_Document_Revisions_Front_End {
 			$wpdr = new WP_Document_Revisions();
 		}
 
-		if ( $atts_show_thumb ) {
-			// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
-			// so cannot change within call and may be wrong, so possibly replace it in the output.
-			$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
-
-			/**
-			 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
-			 *
-			 * @since 3.7.0
-			 *
-			 * @param string $size Requested image size. Can be any registered image size name.
-			 */
-			$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
-		}
-
 		$documents = $wpdr->get_documents( $atts );
+
+		// We'll use this variable below for thumbnails if $atts_show_thumb is true.
+		$doc_dir = null;
 
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
@@ -452,6 +440,21 @@ class WP_Document_Revisions_Front_End {
 				echo '&nbsp;&nbsp;<small><a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a></small><br />';
 			}
 			if ( $atts_show_thumb ) {
+				if ( is_null( $doc_dir ) ) {
+					// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
+					// so cannot change within call and may be wrong, so possibly replace it in the output.
+					$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
+
+					/**
+					 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+					 *
+					 * @since 3.7.0
+					 *
+					 * @param string $size Requested image size. Can be any registered image size name.
+					 */
+					$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
+				}
+
 				$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
 				$thumb = get_post_thumbnail_id( $document->ID );
 				if ( $thumb ) {

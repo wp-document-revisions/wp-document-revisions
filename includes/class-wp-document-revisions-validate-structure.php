@@ -684,7 +684,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id     $doc_id            ID of a post object.
+	 * @param int    $doc_id            ID of a post object.
 	 * @param string $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
 	 * @return array|false
@@ -730,7 +730,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		// there was a attachment id in post_content - but did it point to an attachment.
-		if ( false !== $att_error && 2 === $att_error['code'] ) {
+		if ( false !== $att_error && 2 === absint( $att_error['code'] ) ) {
 			$last = self::get_last_attachment( $doc_id );
 			if ( $last ) {
 				$post_date   = get_date_from_gmt( $post_modified_gmt );
@@ -756,7 +756,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param id     $doc_id      ID of a post object.
+	 * @param int    $doc_id      ID of a post object.
 	 * @param string $attach_id   attachment id from post content field.
 	 * @param string $post_status post status field.
 	 * @param string $post_date   post date field.
@@ -774,7 +774,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
 		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
 		global $wp_rewrite;
-		$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
+		$permalink1 = site_url( '?post_type=document&p=' . (string) $doc_id );
 		$permalink2 = str_replace( '/?', '?', $permalink1 );
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
 			$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
@@ -848,7 +848,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id $doc_id ID of a post object.
+	 * @param int $doc_id ID of a post object.
 	 * @return int|false
 	 */
 	private static function get_last_attachment( $doc_id ) {
@@ -877,7 +877,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id     $attach_id id of an attachment post object.
+	 * @param int    $attach_id id of an attachment post object.
 	 * @param string $doc_id    id of the document post object.
 	 * @return int|false
 	 */
