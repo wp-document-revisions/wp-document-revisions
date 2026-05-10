@@ -1217,7 +1217,8 @@ trait WP_Document_Revisions_File_Handler {
 	 * @param string     $size     the size requested.
 	 * @return bool|array false or the image array to be returned from image_downsize()
 	 */
-	public function image_downsize( $downsize, int $id, $size ) {
+	public function image_downsize( $downsize, $id, $size ) {
+		$id = (int) $id;
 		// previous filter code wants to short-cut the process.
 		if ( is_array( $downsize ) ) {
 			return $downsize;

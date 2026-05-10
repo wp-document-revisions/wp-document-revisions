@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -214,6 +214,11 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 == Changelog ==
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+= 4.0.5 =
+
+* Fix PHP fatal error in `suppress_adjacent_doc()` when WordPress passes `$excluded_terms` as a string instead of an array.
+* Fix PHP fatal error in `image_downsize()` when WordPress passes `$id` as a string instead of an int.
 
 = 4.0.4 =
 

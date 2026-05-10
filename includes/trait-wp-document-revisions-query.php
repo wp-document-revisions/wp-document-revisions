@@ -519,13 +519,13 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @param string  $where          The `WHERE` clause in the SQL.
 	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
-	 * @param array   $excluded_terms Array of excluded term IDs.
+	 * @param array|string $excluded_terms Array of excluded term IDs, or comma-separated string.
 	 * @param string  $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
 	 * @param WP_Post $post           WP_Post object.
 	 *
 	 * @return string
 	 */
-	public function suppress_adjacent_doc( string $where, bool $in_same_term, array $excluded_terms, string $taxonomy, WP_Post $post ): string {
+	public function suppress_adjacent_doc( string $where, bool $in_same_term, $excluded_terms, string $taxonomy, WP_Post $post ): string {
 		if ( ! $this->verify_post_type( $post ) ) {
 			return $where;
 		}
