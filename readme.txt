@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.5
+Stable tag: 4.0.6
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -214,6 +214,11 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 == Changelog ==
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
+
+= 4.0.6 =
+
+* Fix description field hidden in classic editor after 4.0.4: `#postdivrich` (the TinyMCE visual editor) was incorrectly added to the CSS `display:none` rule intended only for the HTML text tab (`#postdiv`).
+* Fix revision summary box not appearing: removed CSS `display:none` on `#revision-summary` since JavaScript already manages its visibility; the stale CSS rule prevented it from appearing when TinyMCE failed to initialise.
 
 = 4.0.5 =
 

@@ -15,8 +15,7 @@
 }
 
 /* General document edit styling */
-#postdiv,
-#postdivrich {
+#postdiv {
 	display: none;
 }
 
@@ -45,10 +44,6 @@
 	text-align: right;
 	margin-top: 10px;
 	padding-bottom: 5px;
-}
-
-#revision-summary {
-	display: none;
 }
 
 #autosave-alert {
