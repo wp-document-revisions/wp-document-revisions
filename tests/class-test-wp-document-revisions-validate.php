@@ -195,7 +195,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// clear down the ws terms.
 		$ws_terms = get_terms(
@@ -253,8 +253,13 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
 
-		// should be nothing found - as all valid...
+		// dump document data.
+		self::dump_document( self::$editor_public_post );
+		self::dump_document( self::$editor_private_post );
+		self::dump_document( self::$editor_public_post_2 );
 		console_log( $output );
+
+		// should be nothing found - as all valid...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
 	}
 
