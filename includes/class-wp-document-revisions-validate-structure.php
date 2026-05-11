@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Type     Error
  * Message  There is no attachment record held for document
  * Fixable  No
- * Cause    Post_contrent does not contain an attachment id and there is no attachment post for the document.
+ * Cause    Post_content does not contain an attachment id and there is no attachment post for the document.
  *
  * Code     2
  * Type     Error
@@ -72,13 +72,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Type     Error
  * Message  Document attachment exists but related file not found
  * Fixable  No
- * Cause    Post_content contains an attaclment post belonging to the document, but there is no file there.
+ * Cause    Post_content contains an attachment post belonging to the document, but there is no file there.
  *
  * Code     4
  * Type     Error
  * Message  Attachment found for document, but not currently linked
  * Fixable  Yes
- * Cause    Post_content does not contain an attaclment post belonging to the document, but there is one there so we could link to it.
+ * Cause    Post_content does not contain an attachment post belonging to the document, but there is one there so we could link to it.
  *
  * Code     5
  * Type     Error
@@ -171,6 +171,9 @@ class WP_Document_Revisions_Validate_Structure {
 		// create or store parent instance.
 		if ( null === $instance ) {
 			global $wpdr;
+			if ( ! $wpdr ) {
+				$wpdr = new WP_Document_Revisions();
+			}
 			self::$parent = $wpdr;
 		} else {
 			self::$parent = $instance;
@@ -422,7 +425,7 @@ class WP_Document_Revisions_Validate_Structure {
 					$orig_dir = trailingslashit( dirname( $orig ) );
 					$file_dir = trailingslashit( $file_dir );
 					// move files.
-					foreach ( $meta['sizes'] as $size => $sizeinfo ) {
+					foreach ( $meta['sizes'] as $sizeinfo ) {
 						if ( file_exists( $orig_dir . $sizeinfo['file'] ) ) {
 							// Use copy and unlink because rename breaks streams.
 							if ( @copy( $orig_dir . $sizeinfo['file'], $file_dir . $sizeinfo['file'] ) ) {
@@ -505,7 +508,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$num_doc = $wpdb->num_rows;
 		$fails   = array();
 		$guids   = array();
-		foreach ( $documents as $rec => $doc ) {
+		foreach ( $documents as $doc ) {
 			/**
 			 * Filters whether to validate the document structure for a document.
 			 *
@@ -730,7 +733,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		// there was a attachment id in post_content - but did it point to an attachment.
-		if ( false !== $att_error && 2 === absint( $att_error['code'] ) ) {
+		if ( false !== $att_error && 2 === $att_error['code'] ) {
 			$last = self::get_last_attachment( $doc_id );
 			if ( $last ) {
 				$post_date   = get_date_from_gmt( $post_modified_gmt );
@@ -893,7 +896,7 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 		}
 
-		// check that there is an file.
+		// check that there is a file.
 		$file = get_attached_file( $attach_id );
 
 		// manipulate file as in serve_file process.

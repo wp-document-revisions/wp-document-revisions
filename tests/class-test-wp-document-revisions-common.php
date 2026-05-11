@@ -672,7 +672,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		foreach ( $children as $child ) {
 			console_log( (string) $child->ID . '/' . $child->post_type . '/' . $child->post_content );
 			if ( 'attachment' === $child->post_type ) {
-				console_log( get_attached_file( $child->ID ) );
+				$file = get_attached_file( $child->ID );
+				console_log( $file . ' | ' . file_exists( $file ) );
 			}
 		}
 
