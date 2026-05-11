@@ -509,6 +509,8 @@ class WP_Document_Revisions_Validate_Structure {
 		$fails   = array();
 		$guids   = array();
 		foreach ( $documents as $doc ) {
+			// created as a string - convert to integer.
+			$doc['ID'] = (int) $doc['ID'];
 			/**
 			 * Filters whether to validate the document structure for a document.
 			 *
@@ -872,7 +874,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 0 === $wpdb->num_rows ) {
 			return false;
 		}
-		return ( is_null( $attach['ID'] ) ? false : $attach['ID'] );
+		return ( is_null( $attach['ID'] ) ? false : (int) $attach['ID'] );
 	}
 
 	/**
