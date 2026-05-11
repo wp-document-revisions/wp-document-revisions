@@ -517,11 +517,11 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 3.3.0
 	 *
-	 * @param string  $where          The `WHERE` clause in the SQL.
-	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
+	 * @param string       $where          The `WHERE` clause in the SQL.
+	 * @param bool         $in_same_term   Whether post should be in a same taxonomy term.
 	 * @param array|string $excluded_terms Array of excluded term IDs, or comma-separated string.
-	 * @param string  $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
-	 * @param WP_Post $post           WP_Post object.
+	 * @param string       $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
+	 * @param WP_Post      $post           WP_Post object.
 	 *
 	 * @return string
 	 */
