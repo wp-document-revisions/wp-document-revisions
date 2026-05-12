@@ -4,27 +4,6 @@ WP Document Revisions is a document management and version control WordPress plu
 
 **Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
-## Custom Agents
-
-This repository includes specialized custom agents in `.github/agents/` for focused tasks:
-
-- **@documentation-expert**: Documentation creation and updates
-- **@wordpress-php-expert**: WordPress plugin PHP development  
-- **@testing-expert**: PHPUnit testing for WordPress
-- **@security-expert**: Security review and auditing
-
-See [.github/agents/README.md](agents/README.md) for details on using these agents.
-
-## Path-Specific Instructions
-
-The repository includes path-specific instructions in `.github/instructions/` that provide focused guidance:
-
-- **docs.instructions.md**: For documentation files (`docs/`, `README.md`, `readme.txt`)
-- **tests.instructions.md**: For test files (`tests/`)
-- **includes.instructions.md**: For plugin code (`includes/`, `wp-document-revisions.php`)
-
-These instructions are automatically applied when working with files in the specified paths.
-
 ## Quick Start
 
 For automated environment setup, the repository includes a GitHub Actions workflow at `.github/workflows/copilot-setup-steps.yml` that handles all dependencies and configuration. Manual setup instructions are provided below.
