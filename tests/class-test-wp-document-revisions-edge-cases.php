@@ -227,6 +227,38 @@ class Test_WP_Document_Revisions_Edge_Cases extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Test suppress_adjacent_doc accepts string for $excluded_terms (WordPress filter compat).
+	 *
+	 * WordPress's get_next_post_where / get_previous_post_where filters pass an empty string
+	 * for $excluded_terms when no terms are excluded. A strict `array` type hint would cause
+	 * a fatal TypeError in that case.
+	 */
+	public function test_suppress_adjacent_doc_accepts_string_excluded_terms() {
+		global $wpdr;
+
+		// Create a non-document post to use as $post (function returns early for non-documents).
+		$post = get_post(
+			self::factory()->post->create(
+				array(
+					'post_title'  => 'Regular Post',
+					'post_type'   => 'post',
+					'post_status' => 'publish',
+				)
+			)
+		);
+
+		$where = 'WHERE 1=1';
+
+		// Passing an empty string for $excluded_terms must not throw a TypeError.
+		$result = $wpdr->suppress_adjacent_doc( $where, false, '', 'category', $post );
+		self::assertSame( $where, $result, 'suppress_adjacent_doc should return WHERE unchanged for non-document posts' );
+
+		// Passing an array for $excluded_terms should also work (normal case).
+		$result = $wpdr->suppress_adjacent_doc( $where, false, array(), 'category', $post );
+		self::assertSame( $where, $result, 'suppress_adjacent_doc should return WHERE unchanged when given an empty array' );
+	}
+
+	/**
 	 * Test update_post_slug_field authorization check - user without edit_document capability.
 	 */
 	public function test_update_post_slug_field_unauthorized() {
