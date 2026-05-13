@@ -225,6 +225,8 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Remove 252 PHPStan baseline suppressions by resolving the underlying type errors.
 * Update filter/action documentation to reflect file-splitting of trait files.
 * Exclude build artifacts from distributed plugin package via `.distignore`.
+* Add `npm ci && npm run build` step to deploy workflow so compiled block JS is included in the WordPress.org distribution.
+* Exclude `src/` (uncompiled JSX source) from the WordPress.org distribution via `.distignore`.
 
 = 4.0.6 =
 
