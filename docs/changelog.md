@@ -2,6 +2,31 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 4.0.7
+
+#### Bug Fixes
+
+* Fix #494: restore attachment ID in `post_content` when classic-editor upload save fails. Two root causes addressed: `wp_kses_post` stripping the `<!-- WPDR N -->` HTML comment for users without `unfiltered_html` (fixed via `restore_document_attachment_id` on `wp_insert_post_data`), and JS upload callback not firing leaving `post_content` empty (fixed via `save_document` fallback to `get_latest_attachment()`).
+* Fix PHP `TypeError` in `filter_from_media_grid()`: the `ajax_query_attachments_args` filter passes an `array`, not a `WP_Query` object, so the incorrect type hint caused a fatal error that prevented media library items from loading in the block editor.
+* Add WP Plugin Check compliance: phpcs ignore directives for non-prefixed hook names and other plugin-check messages.
+* Remove 252 PHPStan baseline suppressions by resolving the underlying type errors.
+* Update filter/action documentation to reflect file-splitting of trait files.
+* Exclude build artifacts from distributed plugin package via `.distignore`.
+
+### 4.0.6
+
+#### Bug Fixes
+
+* Fix description field hidden in classic editor after 4.0.4: `#postdivrich` (the TinyMCE visual editor) was incorrectly added to the CSS `display:none` rule intended only for the HTML text tab (`#postdiv`).
+* Fix revision summary box not appearing: removed CSS `display:none` on `#revision-summary` since JavaScript already manages its visibility; the stale CSS rule prevented it from appearing when TinyMCE failed to initialise.
+
+### 4.0.5
+
+#### Bug Fixes
+
+* Fix PHP fatal error in `suppress_adjacent_doc()` when WordPress passes `$excluded_terms` as a string instead of an array.
+* Fix PHP fatal error in `image_downsize()` when WordPress passes `$id` as a string instead of an int.
+
 ### 4.0.4
 
 #### Security

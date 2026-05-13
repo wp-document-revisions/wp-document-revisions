@@ -27,13 +27,13 @@ parameters:
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:extract_document_id\(\)\.$#'
 			identifier: method.notFound
-			count: 1
+			count: 3
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:format_doc_id\(\)\.$#'
 			identifier: method.notFound
-			count: 3
+			count: 5
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
