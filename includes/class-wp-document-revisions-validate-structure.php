@@ -6,6 +6,11 @@
  * @package WP Document Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Design notes
  * ============
@@ -55,7 +60,7 @@
  * Type     Error
  * Message  There is no attachment record held for document
  * Fixable  No
- * Cause    Post_contrent does not contain an attachment id and there is no attachment post for the document.
+ * Cause    Post_content does not contain an attachment id and there is no attachment post for the document.
  *
  * Code     2
  * Type     Error
@@ -67,13 +72,13 @@
  * Type     Error
  * Message  Document attachment exists but related file not found
  * Fixable  No
- * Cause    Post_content contains an attaclment post belonging to the document, but there is no file there.
+ * Cause    Post_content contains an attachment post belonging to the document, but there is no file there.
  *
  * Code     4
  * Type     Error
  * Message  Attachment found for document, but not currently linked
  * Fixable  Yes
- * Cause    Post_content does not contain an attaclment post belonging to the document, but there is one there so we could link to it.
+ * Cause    Post_content does not contain an attachment post belonging to the document, but there is one there so we could link to it.
  *
  * Code     5
  * Type     Error
@@ -166,6 +171,9 @@ class WP_Document_Revisions_Validate_Structure {
 		// create or store parent instance.
 		if ( null === $instance ) {
 			global $wpdr;
+			if ( ! $wpdr ) {
+				$wpdr = new WP_Document_Revisions();
+			}
 			self::$parent = $wpdr;
 		} else {
 			self::$parent = $instance;
@@ -417,7 +425,7 @@ class WP_Document_Revisions_Validate_Structure {
 					$orig_dir = trailingslashit( dirname( $orig ) );
 					$file_dir = trailingslashit( $file_dir );
 					// move files.
-					foreach ( $meta['sizes'] as $size => $sizeinfo ) {
+					foreach ( $meta['sizes'] as $sizeinfo ) {
 						if ( file_exists( $orig_dir . $sizeinfo['file'] ) ) {
 							// Use copy and unlink because rename breaks streams.
 							if ( @copy( $orig_dir . $sizeinfo['file'], $file_dir . $sizeinfo['file'] ) ) {
@@ -500,7 +508,9 @@ class WP_Document_Revisions_Validate_Structure {
 		$num_doc = $wpdb->num_rows;
 		$fails   = array();
 		$guids   = array();
-		foreach ( $documents as $rec => $doc ) {
+		foreach ( $documents as $doc ) {
+			// created as a string - convert to integer.
+			$doc['ID'] = (int) $doc['ID'];
 			/**
 			 * Filters whether to validate the document structure for a document.
 			 *
@@ -679,7 +689,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id     $doc_id            ID of a post object.
+	 * @param int    $doc_id            ID of a post object.
 	 * @param string $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
 	 * @return array|false
@@ -751,7 +761,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param id     $doc_id      ID of a post object.
+	 * @param int    $doc_id      ID of a post object.
 	 * @param string $attach_id   attachment id from post content field.
 	 * @param string $post_status post status field.
 	 * @param string $post_date   post date field.
@@ -769,7 +779,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
 		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
 		global $wp_rewrite;
-		$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
+		$permalink1 = site_url( '?post_type=document&p=' . (string) $doc_id );
 		$permalink2 = str_replace( '/?', '?', $permalink1 );
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
 			$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
@@ -843,7 +853,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id $doc_id ID of a post object.
+	 * @param int $doc_id ID of a post object.
 	 * @return int|false
 	 */
 	private static function get_last_attachment( $doc_id ) {
@@ -864,7 +874,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( 0 === $wpdb->num_rows ) {
 			return false;
 		}
-		return ( is_null( $attach['ID'] ) ? false : $attach['ID'] );
+		return ( is_null( $attach['ID'] ) ? false : (int) $attach['ID'] );
 	}
 
 	/**
@@ -872,13 +882,13 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param id     $attach_id id of an attachment post object.
-	 * @param string $doc_id    id of the document post object.
-	 * @return int|false
+	 * @param int $attach_id id of an attachment post object.
+	 * @param int $doc_id    id of the document post object.
+	 * @return mixed[]|false
 	 */
-	private static function check_attachment( $attach_id, string $doc_id ) {
+	private static function check_attachment( $attach_id, $doc_id ) {
 		$attach = get_post( $attach_id );
-		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || (int) $doc_id !== $attach->post_parent ) {
+		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
 			return array(
 				'code'  => 2,
@@ -888,14 +898,14 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 		}
 
-		// check that there is an file.
+		// check that there is a file.
 		$file = get_attached_file( $attach_id );
 
 		// manipulate file as in serve_file process.
 		$file = self::check_document_folder( $file );
 		if ( ! file_exists( $file ) ) {
 			// file does not exist. Get it from the standard media location. May be another plug-in that modified it.
-			remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+			remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10 );
 			$media = get_attached_file( $attach_id );
 
 			// make sure we're looking at the document directory again.

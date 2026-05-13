@@ -5,6 +5,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Document retrieval, taxonomy, and display functionality for WP_Document_Revisions.
  */
@@ -13,7 +18,7 @@ trait WP_Document_Revisions_Query {
 	/**
 	 * Returns the.document attachment associated with a post.
 	 *
-	 * @param id $post_id ID of a post object (document or revision).
+	 * @param int $post_id ID of a post object (document or revision).
 	 * @return WP_Post|false
 	 */
 	public function get_document( $post_id ) {
@@ -143,7 +148,7 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * Note: We can't use the screen API because A) used on front end, and B) admin_init is too early (enqueue scripts).
 	 *
-	 * @param object|int|bool $documentish a post object, postID, or false.
+	 * @param WP_Post|int|bool $documentish a post object, postID, or false.
 	 * @since 0.5
 	 * @return bool true if document, false if not
 	 */
@@ -183,7 +188,12 @@ trait WP_Document_Revisions_Query {
 			return false;
 		}
 
-		$post = get_post( $documentish );
+		// if not a WP_Post, then get it.
+		if ( $documentish instanceof WP_Post ) {
+			$post = $documentish;
+		} else {
+			$post = get_post( $documentish );
+		}
 
 		if ( ! $post ) {
 			return false;
@@ -418,7 +428,7 @@ trait WP_Document_Revisions_Query {
 				return '';
 			}
 
-			$attachment = $this->get_document( $latest_revision );
+			$attachment = $this->get_document( $latest_revision->ID );
 
 			// sanity check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed.
@@ -465,10 +475,10 @@ trait WP_Document_Revisions_Query {
 	 * Allows Workflow State counts to include non-published posts.
 	 *
 	 * @since 1.2.1
-	 * @param Array  $terms the terms to filter.
-	 * @param Object $taxonomy the taxonomy object.
+	 * @param Array       $terms the terms to filter.
+	 * @param WP_Taxonomy $taxonomy the taxonomy object.
 	 */
-	public function term_count_cb( array $terms, object $taxonomy ): void {
+	public function term_count_cb( array $terms, WP_Taxonomy $taxonomy ): void {
 		add_filter( 'query', array( $this, 'term_count_query_filter' ) );
 		_update_post_term_count( $terms, $taxonomy );
 		remove_filter( 'query', array( $this, 'term_count_query_filter' ) );
@@ -631,7 +641,7 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 3.3.0
 	 * @param string $column_name the column name of the all documents list to be populated.
-	 * @param string $post_id     the post id of the all documents list to be populated.
+	 * @param int    $post_id     the post id of the all documents list to be populated.
 	 */
 	public function post_status_column_cb( string $column_name, $post_id ): void {
 

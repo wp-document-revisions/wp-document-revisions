@@ -97,12 +97,6 @@ parameters:
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
-			message: '#^Function remove_filter invoked with 4 parameters, 2\-3 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Method WP_Document_Revisions_Admin\:\:sanitize_link_date\(\) should return string but returns bool\.$#'
 			identifier: return.type
 			count: 1
@@ -123,12 +117,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Parameter \$instance of method WP_Document_Revisions_Admin\:\:__construct\(\) has invalid type unknown\.$#'
-			identifier: class.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
@@ -159,12 +147,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
-			message: '#^Undefined variable\: \$document$#'
-			identifier: variable.undefined
 			count: 1
 			path: includes/class-wp-document-revisions-front-end.php
 
@@ -217,12 +199,6 @@ parameters:
 			path: includes/class-wp-document-revisions-recently-revised-widget.php
 
 		-
-			message: '#^Cannot access offset ''code'' on int\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Expected 3 @param tags, found 2\.$#'
 			identifier: paramTag.count
 			count: 1
@@ -231,48 +207,6 @@ parameters:
 		-
 			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
 			identifier: expr.resultUnused
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Function remove_filter invoked with 4 parameters, 2\-3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) never returns int so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 2, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 3, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 6, error\: 0, msg\: string, fix\: 1, parm\: id\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 7, error\: 1, msg\: string, fix\: 1, parm\: id\}\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) should return int\|false but returns array\{code\: 8, error\: 1, msg\: string, fix\: 0\}\.$#'
-			identifier: return.type
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
@@ -301,56 +235,8 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Parameter \#1 \$attach_id of static method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) expects id, int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \#1 \$attachment_id of function get_attached_file expects int, id given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, id given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \#2 \$doc_id of static method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) expects string, id given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$attach_id of method WP_Document_Revisions_Validate_Structure\:\:check_attachment\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:get_last_attachment\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_document\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \$doc_id of method WP_Document_Revisions_Validate_Structure\:\:validate_guid\(\) has invalid type id\.$#'
-			identifier: class.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
@@ -361,27 +247,9 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Access to property \$ID on an unknown class obj\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Access to property \$post_status on an unknown class obj\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Action callback returns string but should not return anything\.$#'
 			identifier: return.void
 			count: 2
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Action callback returns the but should not return anything\.$#'
-			identifier: return.void
-			count: 1
 			path: includes/class-wp-document-revisions.php
 
 		-
@@ -403,20 +271,8 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$document \(string\) of method WP_Document_Revisions\:\:get_attachments\(\) is incompatible with type object\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$document_or_attachment \(string\) of method WP_Document_Revisions\:\:get_file_type\(\) is incompatible with type int\|object\.$#'
 			identifier: parameter.defaultValue
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Function wp_get_current_user invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: includes/class-wp-document-revisions.php
 
@@ -427,43 +283,7 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Method WP_Document_Revisions\:\:get_attachments\(\) should return object but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_attachments\(\) should return object but returns array\<array\|int\|WP_Post\>\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_latest_revision\(\) should return object but returns false\.$#'
-			identifier: return.type
-			count: 2
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_latest_version\(\) has invalid return type unknown\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Method WP_Document_Revisions\:\:get_revision_number\(\) should return int but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_revision_query\(\) has invalid return type obj\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_revision_query\(\) should return bool\|obj but returns WP_Query\.$#'
 			identifier: return.type
 			count: 1
 			path: includes/class-wp-document-revisions.php
@@ -472,54 +292,6 @@ parameters:
 			message: '#^Method WP_Document_Revisions\:\:get_revisions\(\) should return array but returns false\.$#'
 			identifier: return.type
 			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:ie_cache_fix\(\) has invalid return type the\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:permalink\(\) invoked with 4 parameters, 3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\.$#'
-			identifier: return.type
-			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:possibly_delete_revision\(\) should return WP_Post\|null but returns false\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) has invalid return type unknown\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) should return unknown but returns bool\.$#'
-			identifier: return.type
-			count: 2
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:serve_document_auth\(\) should return unknown but returns false\|null\.$#'
-			identifier: return.type
-			count: 2
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$documentish of method WP_Document_Revisions\:\:verify_post_type\(\) expects bool\|int\|object, string given\.$#'
-			identifier: argument.type
-			count: 3
 			path: includes/class-wp-document-revisions.php
 
 		-
@@ -536,12 +308,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$post of function get_post expects int\|WP_Post\|null, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions.php
@@ -583,27 +349,9 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#2 \$post of function get_post_field expects int\|WP_Post\|null, id given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Parameter \#2 \$title of function wp_die expects int\|string, null given\.$#'
 			identifier: argument.type
 			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \$post of method WP_Document_Revisions\:\:serve_document_auth\(\) has invalid type obj\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \$post_id of method WP_Document_Revisions\:\:get_document\(\) has invalid type id\.$#'
-			identifier: class.notFound
-			count: 1
 			path: includes/class-wp-document-revisions.php
 
 		-

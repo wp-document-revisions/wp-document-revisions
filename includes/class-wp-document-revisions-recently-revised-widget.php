@@ -6,6 +6,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Recently revised documents widget.
  */
@@ -42,12 +47,13 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Generate widget contents.
 	 *
-	 * @param Array  $args the widget arguments.
-	 * @param Object $instance the WP Document Revisions instance.
+	 * @param mixed[] $args the widget arguments.
+	 * @param Object  $instance the WP Document Revisions instance.
 	 */
 	public function widget_gen( array $args, $instance ) {
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 
@@ -309,7 +315,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		 * @param string[] $merged_sizes An array of image size names.
 		 * @param array    $metadata     Current attachment metadata.
 		 */
-		$merged_sizes = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() );
+		$merged_sizes = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		if ( function_exists( 'get_intermediate_image_sizes' ) ) {
 			$registered_sizes = get_intermediate_image_sizes();

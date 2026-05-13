@@ -16,6 +16,11 @@ Domain Path: /languages
 @package wp-document-revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * WP Document Revisions
  *
@@ -58,6 +63,7 @@ require_once __DIR__ . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
 global $wpdr;
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $wpdr = new WP_Document_Revisions();
 require_once __DIR__ . '/includes/template-functions.php';
 
