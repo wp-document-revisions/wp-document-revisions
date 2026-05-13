@@ -375,7 +375,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
 		$raw_posted = wp_unslash( $_POST['post_content'] );
 		$attach_id  = $this->extract_document_id( $raw_posted );
 
