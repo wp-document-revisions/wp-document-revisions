@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.6
+Stable tag: 4.0.7
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -110,48 +110,6 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - **WPML Support** - Integration with WPML
 
 
-== Useful plugins and tools ==
-
-= Permissions management =
-
-- [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
-
-  (Previously called Members)
-
-= Taxonomy management =
-
-- [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
-
-= Email notification and distribution =
-
-- [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
-
-= Document workflow management =
-
-- [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-- [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
-- [PublishPress Revisions](https://wp-document-revisions.github.io/wp-document-revisions/https://wordpress.org/plugins/publishpress-revisions/) - See the [integration guide](cookbook/publishpress-revisions-integration/) for scheduling document revisions
-
-
-== Screenshots ==
-
-\###1. A typical WP Document Revisions edit document screen.###
-
-![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/master/screenshot-1.png)
-
-
-== Links ==
-
-- **[Source Code](https://github.com/wp-document-revisions/wp-document-revisions/)** (GitHub)
-- **[Latest Release](https://github.com/wp-document-revisions/wp-document-revisions/releases/latest)** - Download the newest version
-- **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
-- **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
-- **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
-- **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
-- **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
-- **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
-
-
 == Installation ==
 
 = 🚀 Automatic Install (Recommended) =
@@ -195,6 +153,25 @@ After installation, you'll find a new **Documents** menu in your WordPress admin
 Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/) or [get support](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/).
 
 
+== Links ==
+
+- **[Source Code](https://github.com/wp-document-revisions/wp-document-revisions/)** (GitHub)
+- **[Latest Release](https://github.com/wp-document-revisions/wp-document-revisions/releases/latest)** - Download the newest version
+- **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
+- **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
+- **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
+- **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
+- **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
+- **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
+
+
+== Screenshots ==
+
+\###1. A typical WP Document Revisions edit document screen.###
+
+![A typical WP Document Revisions edit document screen.](https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/master/screenshot-1.png)
+
+
 == Translations ==
 
 Interested in translating WP Document Revisions? You can do so [via Crowdin](https://crowdin.com/project/wordpress-document-revisions), or by submitting a pull request.
@@ -211,42 +188,50 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 - Dutch - @tijscruysen
 
 
+== Useful plugins and tools ==
+
+= Permissions management =
+
+- [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
+
+  (Previously called Members)
+
+= Taxonomy management =
+
+- [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
+
+= Email notification and distribution =
+
+- [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
+
+= Document workflow management =
+
+- [Edit Flow](https://wordpress.org/plugins/edit-flow/)
+- [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
+- [PublishPress Revisions](https://wp-document-revisions.github.io/wp-document-revisions/https://wordpress.org/plugins/publishpress-revisions/) - See the [integration guide](cookbook/publishpress-revisions-integration/) for scheduling document revisions
+
+
 == Changelog ==
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 4.0.7 =
+
+= # Bug Fixes =
+
+* Fix PHP `TypeError` in `filter_from_media_grid()`: the `ajax_query_attachments_args` filter passes an `array`, not a `WP_Query` object, so the incorrect type hint caused a fatal error that prevented media library items from loading in the block editor.
+* Add WP Plugin Check compliance: phpcs ignore directives for non-prefixed hook names and other plugin-check messages.
+* Remove 252 PHPStan baseline suppressions by resolving the underlying type errors.
+* Update filter/action documentation to reflect file-splitting of trait files.
+* Exclude build artifacts from distributed plugin package via `.distignore`.
+
 = 4.0.6 =
+
+= # Bug Fixes =
 
 * Fix description field hidden in classic editor after 4.0.4: `#postdivrich` (the TinyMCE visual editor) was incorrectly added to the CSS `display:none` rule intended only for the HTML text tab (`#postdiv`).
 * Fix revision summary box not appearing: removed CSS `display:none` on `#revision-summary` since JavaScript already manages its visibility; the stale CSS rule prevented it from appearing when TinyMCE failed to initialise.
 
 = 4.0.5 =
-
-* Fix PHP fatal error in `suppress_adjacent_doc()` when WordPress passes `$excluded_terms` as a string instead of an array.
-* Fix PHP fatal error in `image_downsize()` when WordPress passes `$id` as a string instead of an int.
-
-= 4.0.4 =
-
-= # Security =
-
-* Fix authentication bypass in revision feed key validation (`validate_feed_key()`) where `$wpdb->get_var()` returning NULL was treated as a successful match.
-* Fix variable shadowing in validate-structure REST `correct_document()` (code 4) that could overwrite the `post_content` of an unrelated post.
-* Add per-document capability checks to Abilities API endpoints `override-document-lock` and `get-document-revisions`.
-* Sanitize the `revision` query var (`absint()`) before concatenation into the `Content-Disposition` filename header in `serve_file()`.
-
-= 4.0.3 =
-
-= # Bug Fixes =
-
-* Restore plugin banner image for WordPress.org plugin page
-* Add required `== Description ==` section header to readme.txt
-
-= 4.0.2 =
-
-= # Bug Fixes =
-
-* Fix WordPress Playground `blueprint.json` path and schema for WordPress.org Live Preview
-
-= 4.0.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
