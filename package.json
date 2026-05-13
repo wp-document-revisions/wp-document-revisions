@@ -39,7 +39,7 @@
     "@wordpress/env": "^11.3.0",
     "@wordpress/scripts": "^31.8.0",
     "jest": "^30.3.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-jsdom": "^30.4.1",
     "terser": "^5.46.1"
   },
   "overrides": {
