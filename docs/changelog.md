@@ -6,6 +6,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 #### Bug Fixes
 
+* Fix #494: restore attachment ID in `post_content` when classic-editor upload save fails. Two root causes addressed: `wp_kses_post` stripping the `<!-- WPDR N -->` HTML comment for users without `unfiltered_html` (fixed via `restore_document_attachment_id` on `wp_insert_post_data`), and JS upload callback not firing leaving `post_content` empty (fixed via `save_document` fallback to `get_latest_attachment()`).
 * Fix PHP `TypeError` in `filter_from_media_grid()`: the `ajax_query_attachments_args` filter passes an `array`, not a `WP_Query` object, so the incorrect type hint caused a fatal error that prevented media library items from loading in the block editor.
 * Add WP Plugin Check compliance: phpcs ignore directives for non-prefixed hook names and other plugin-check messages.
 * Remove 252 PHPStan baseline suppressions by resolving the underlying type errors.
