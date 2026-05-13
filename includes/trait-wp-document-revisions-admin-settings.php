@@ -729,10 +729,10 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Filters documents from the media grid view when queried via Ajax. This uses
 	 * the same filters from the list view applied in `filter_from_media()`.
 	 *
-	 * @param WP_Query $query the WP_Query object.
-	 * @return mixed
+	 * @param array $query the attachment query arguments.
+	 * @return array
 	 */
-	public function filter_from_media_grid( WP_Query $query ) {
+	public function filter_from_media_grid( array $query ) {
 		// note: hook late so that unattached filter can hook in, if necessary.
 		if ( ! apply_filters( 'document_use_block_editor', false ) ) {
 			add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );

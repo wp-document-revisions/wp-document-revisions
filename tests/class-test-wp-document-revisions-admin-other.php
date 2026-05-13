@@ -1603,7 +1603,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertNotEmpty( $where, 'where not empty' );
 		self::assertEquals( 2, (int) substr_count( $where, 'wpdr' ), '<wpdr not found twice 2' );
 
-		$query = new WP_Query();
+		$query = array();
 		$query = $wpdr->admin->filter_from_media_grid( $query );
 		self::assertTrue( true, 'run' );
 	}
