@@ -42,6 +42,9 @@
     "jest-environment-jsdom": "^29.7.0",
     "terser": "^5.46.1"
   },
+  "overrides": {
+    "jest-mock": "^30"
+  },
   "jest": {
     "testEnvironment": "jsdom",
     "testMatch": [
