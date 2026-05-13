@@ -16,6 +16,15 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v6
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Build assets
+              run: npm ci && npm run build
+
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@stable
               env:

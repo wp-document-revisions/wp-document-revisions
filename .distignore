@@ -45,6 +45,7 @@ wp-cli.local.yml
 tests/
 .github
 node_modules/
+src/
 *.sql
 *.tar.gz
 *.zip
