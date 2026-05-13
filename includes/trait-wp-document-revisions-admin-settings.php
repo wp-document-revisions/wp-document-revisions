@@ -5,6 +5,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Admin settings functionality for WP_Document_Revisions_Admin.
  */
@@ -140,7 +145,7 @@ trait WP_Document_Revisions_Admin_Settings {
 		// delete revision if there is no content.
 		if ( 0 === strlen( $revision->post_content ) ) {
 			global $wpdr;
-			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999 );
 			wp_delete_post_revision( $revision_id );
 			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 			return;
@@ -261,6 +266,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	public function dashboard_display(): void {
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 
@@ -723,13 +729,15 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Filters documents from the media grid view when queried via Ajax. This uses
 	 * the same filters from the list view applied in `filter_from_media()`.
 	 *
-	 * @param Object $query the WP_Query object.
-	 * @return mixed
+	 * @param array $query the attachment query arguments.
+	 * @return array
 	 */
-	public function filter_from_media_grid( $query ) {
+	public function filter_from_media_grid( array $query ) {
 		// note: hook late so that unattached filter can hook in, if necessary.
-		add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
-		add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
+		if ( ! apply_filters( 'document_use_block_editor', false ) ) {
+			add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
+			add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
+		}
 
 		return $query;
 	}

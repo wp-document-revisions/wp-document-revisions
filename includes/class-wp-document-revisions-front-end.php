@@ -6,6 +6,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * WP Document Revisions Front End.
  */
@@ -145,7 +150,7 @@ class WP_Document_Revisions_Front_End {
 
 		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
-			$attach = $wpdr->get_document( $document->ID );
+			$attach = $wpdr->get_document( $id );
 			$file   = get_attached_file( $attach->ID );
 			if ( $file ) {
 				$mimetype      = $wpdr->get_doc_mimetype( $file );
@@ -360,25 +365,15 @@ class WP_Document_Revisions_Front_End {
 
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 
-		if ( $atts_show_thumb ) {
-			// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
-			// so cannot change within call and may be wrong, so possibly replace it in the output.
-			$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
-
-			/**
-			 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
-			 *
-			 * @since 3.7.0
-			 *
-			 * @param string $size Requested image size. Can be any registered image size name.
-			 */
-			$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
-		}
-
 		$documents = $wpdr->get_documents( $atts );
+
+		// We'll use these variables below for thumbnails if $atts_show_thumb is true.
+		$doc_dir    = null;
+		$thumb_size = null;
 
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
@@ -446,6 +441,21 @@ class WP_Document_Revisions_Front_End {
 				echo '&nbsp;&nbsp;<small><a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a></small><br />';
 			}
 			if ( $atts_show_thumb ) {
+				if ( is_null( $doc_dir ) ) {
+					// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
+					// so cannot change within call and may be wrong, so possibly replace it in the output.
+					$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
+
+					/**
+					 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+					 *
+					 * @since 3.7.0
+					 *
+					 * @param string $size Requested image size. Can be any registered image size name.
+					 */
+					$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
+				}
+
 				$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
 				$thumb = get_post_thumbnail_id( $document->ID );
 				if ( $thumb ) {
@@ -505,8 +515,8 @@ class WP_Document_Revisions_Front_End {
 	 * Provides workaround for taxonomies with hyphens in their name
 	 * User should replace hyphen with underscope and plugin will compensate.
 	 *
-	 * @param Array $atts shortcode attributes.
-	 * @return Array modified shortcode attributes
+	 * @param mixed[] $atts shortcode attributes.
+	 * @return mixed[] modified shortcode attributes
 	 */
 	public function shortcode_atts_hyphen_filter( array $atts ): array {
 
@@ -533,7 +543,7 @@ class WP_Document_Revisions_Front_End {
 	 * Register WP Document Revisions block category.
 	 *
 	 * @since 3.3.0
-	 * @param Array                    $categories           Block categories available.
+	 * @param mixed[]                  $categories           Block categories available.
 	 * @param ?WP_Block_Editor_Context $block_editor_context The current block editor context.
 	 */
 	public function wpdr_block_categories( array $categories, ?WP_Block_Editor_Context $block_editor_context = null ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
@@ -667,7 +677,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Get taxonomy names for documents (use cache).
 	 *
-	 * @return Array Taxonomy names for documents
+	 * @return mixed[] Taxonomy names for documents
 	 * @since 3.3.0
 	 */
 	public function get_taxonomy_details(): array {

@@ -488,7 +488,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$result = wp_delete_post( $post_id );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// flush cache to assure result.
 		wp_cache_flush();
@@ -563,7 +563,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$result = wp_delete_post( $post_id );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// flush cache to assure result.
 		wp_cache_flush();
@@ -649,13 +649,35 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wpdr;
 
 		if ( ! current_user_can( 'read_documents' ) ) {
-			remove_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10, 2 );
+			remove_filter( 'posts_results', array( $wpdr, 'posts_results' ), 10 );
 		}
 
 		// no longer filter the queries.
 		remove_action( 'pre_get_posts', array( $wpdr, 'retrieve_documents' ) );
 
 		remove_filter( 'document_read_uses_read', '__return_false' );
+	}
+
+	/**
+	 * Dump key fields of the document and its attachments (for debugging).
+	 *
+	 * @param int $doc_id Post ID.
+	 */
+	public function dump_document( $doc_id ): void {
+		$document = get_post( $doc_id );
+
+		console_log( (string) $doc_id . '/' . $document->post_type . '/' . $document->post_content );
+
+		$children = get_children( array( 'post_parent' => $doc_id ) );
+		foreach ( $children as $child ) {
+			console_log( (string) $child->ID . '/' . $child->post_type . '/' . $child->post_content );
+			if ( 'attachment' === $child->post_type ) {
+				$file = get_attached_file( $child->ID );
+				console_log( $file . ' | ' . file_exists( $file ) );
+			}
+		}
+
+		console_log( '' );
 	}
 
 	/**

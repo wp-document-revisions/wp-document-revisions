@@ -5,6 +5,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * File serving, uploads, and attachment handling functionality for WP_Document_Revisions.
  */
@@ -119,11 +124,11 @@ trait WP_Document_Revisions_File_Handler {
 		 * I.e. return null if user not logged on and want to deny existence.
 		 * (only if filter 'document_read_uses_read' returns false)
 		 *
-		 * @param bool   $serve_file default action to serve file.
-		 * @param object  $post    WP Post to be served.
+		 * @param bool    $serve_file default action to serve file.
+		 * @param WP_Post $post    WP Post to be served.
 		 * @param string  $version Document revision.
 		 */
-		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version );
+		$serve_file = apply_filters( 'serve_document_auth', true, $post, $version ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( ! $serve_file ) {
 			if ( false === $serve_file ) {
 				wp_die(
@@ -152,7 +157,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param integer $post->ID     Post id of the document.
 		 * @param string  $file         File name to be served.
 		 */
-		do_action( 'serve_document', $post->ID, $file );
+		do_action( 'serve_document', $post->ID, $file ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Filters file name of document to be served. (Useful if file is encrypted at rest).
@@ -281,7 +286,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// in case this is a large file, remove PHP time limits.
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DiscouragedFunctions.Discouraged
 		@set_time_limit( 0 );
 
 		// In normal operation, corruption can occur if ouput is written by any other process.
@@ -474,9 +479,9 @@ trait WP_Document_Revisions_File_Handler {
 	 * Filter to authenticate document delivery.
 	 *
 	 * @param bool     $deflt   true unless overridden by prior filter.
-	 * @param obj      $post    the post object.
+	 * @param WP_Post  $post    the post object.
 	 * @param bool|int $version version of the document being served, if any.
-	 * @return unknown
+	 * @return bool
 	 */
 	public function serve_document_auth( bool $deflt, $post, $version ) {
 		$user     = wp_get_current_user();
@@ -553,7 +558,7 @@ trait WP_Document_Revisions_File_Handler {
 	public function filename_rewrite( array $file ): array {
 		// verify this is a document.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
+		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
 			self::$doc_image = true;
 			return $file;
 		}
@@ -849,7 +854,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * Deprecated for consistency of terms.
 	 *
 	 * @param Int $id the post ID.
-	 * @return unknown
+	 * @return string|bool
 	 */
 	public function get_latest_version( $id ) {
 		_deprecated_function( __FUNCTION__, '1.0.3 of WP Document Revisions', 'get_latest_version' );
@@ -1229,7 +1234,7 @@ trait WP_Document_Revisions_File_Handler {
 			return $downsize;
 		}
 
-		remove_filter( 'image_downsize', array( $this, 'image_downsize' ) );
+		remove_filter( 'image_downsize', array( $this, 'image_downsize' ), 10 );
 		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
 
 		$direct = wp_get_attachment_url( $id );

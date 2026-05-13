@@ -7,6 +7,11 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! function_exists( 'get_documents' ) ) {
 
 	/**
@@ -18,10 +23,11 @@ if ( ! function_exists( 'get_documents' ) ) {
 	 * @param bool  $return_attachments whether to return attachment or revisions objects.
 	 * @return array array of post objects
 	 */
-	function get_documents( array $args = array(), bool $return_attachments = false ): array {
+	function get_documents( array $args = array(), bool $return_attachments = false ): array { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 
@@ -38,10 +44,11 @@ if ( ! function_exists( 'get_document_revisions' ) ) {
 	 * @param int $document_id the ID of the document.
 	 * @return array array of revision-post objects
 	 */
-	function get_document_revisions( int $document_id ): array {
+	function get_document_revisions( int $document_id ): array { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
 		global $wpdr;
 		if ( ! $wpdr ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$wpdr = new WP_Document_Revisions();
 		}
 

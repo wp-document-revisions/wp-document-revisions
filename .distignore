@@ -9,10 +9,14 @@
 .git
 .gitignore
 .gitlab-ci.yml
+.npmrc
 .prettierignore
+.prettier.json
 .travis.yml
+.wp-env.json
 .DS_Store
 Thumbs.db
+babel.config.json
 behat.yml
 bin
 circle.yml
@@ -29,8 +33,12 @@ phpunit9.xml
 multisite.xml
 multisite.xml.dist
 phpcs.ruleset.xml
+phpstan.neon.dist
+phpstan-baseline.neon
+playwright.config.js
 README.md
 screenshot-1.png
+docs/_config.yml
 script/
 TEST_IMPROVEMENTS.md
 wp-cli.local.yml

@@ -5,10 +5,29 @@
  * @package WP_Document_Revisions
  */
 
+// direct file access protection.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Admin editor functionality for WP_Document_Revisions_Admin.
  */
 trait WP_Document_Revisions_Admin_Editor {
+
+	/**
+	 * The last_but_one revision
+	 *
+	 * @var int | null
+	 */
+	private static $last_but_one_revn = null;
+
+	/**
+	 * The last_but_one revision excerpt
+	 *
+	 * @var string | null
+	 */
+	private static $last_revn_excerpt = null;
 
 	/**
 	 * Registers update messages
@@ -140,9 +159,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Metabox to provide common document functions.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function document_metabox( object $post ): void {
+	public function document_metabox( WP_Post $post ): void {
 		// convert old format to new.
 		if ( is_numeric( $post->post_content ) ) {
 			$post->post_content = $this->format_doc_id( $post->post_content );
@@ -227,9 +246,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Callback to generate metabox for workflow state.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function workflow_state_metabox_cb( object $post ): void {
+	public function workflow_state_metabox_cb( WP_Post $post ): void {
 		wp_nonce_field( 'wp-document-revisions', 'workflow_state_nonce' );
 
 		$current_state = wp_get_post_terms(
@@ -315,6 +334,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// Old action hook.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		do_action( 'change_document_workflow_state', $doc_id, $new_id );
 
 		// Replacement action hook.
@@ -398,7 +418,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
 			// Remove our filter so that we can delete the revision.
 			global $wpdr;
-			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
+			remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999 );
 			wp_delete_post_revision( self::$last_but_one_revn );
 			add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
 
@@ -743,7 +763,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		global $pagenow;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
+		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
 			?>
 			<style>
 				#media-upload-header {display:none;}
@@ -801,9 +821,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Creates revision log metabox.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function revision_metabox( object $post ): void {
+	public function revision_metabox( WP_Post $post ): void {
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
 		$revisions    = $this->get_revisions( $post->ID );
 		$key          = $this->get_feed_key();
@@ -1000,9 +1020,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Slightly modified document author metabox because the current one is ugly.
 	 *
 	 * @since 0.5
-	 * @param object $post the post object.
+	 * @param WP_Post $post the post object.
 	 */
-	public function post_author_meta_box( object $post ): void {
+	public function post_author_meta_box( WP_Post $post ): void {
 		global $user_id;
 		?>
 		<label class="screen-reader-text" for="post_author_override"><?php esc_html_e( 'Owner', 'wp-document-revisions' ); ?></label>
