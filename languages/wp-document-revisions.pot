@@ -1,12 +1,12 @@
-# Copyright (C) 2026 WP Document Revisions 4.0.4
-# This file is distributed under the same license as the WP Document Revisions 4.0.4 package.
+# Copyright (C) 2026 WP Document Revisions 4.0.7
+# This file is distributed under the same license as the WP Document Revisions 4.0.7 package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 4.0.4\n"
+"Project-Id-Version: WP Document Revisions 4.0.7\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-13 17:28+0000\n"
+"POT-Creation-Date: 2026-05-13 23:21+0000\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -368,7 +368,7 @@ msgstr ""
 msgid "The fix is therefore to md5-encode the file name."
 msgstr ""
 
-#: includes/class-wp-document-revisions.php:319, includes/class-wp-document-revisions.php:733, includes/trait-wp-document-revisions-admin-editor.php:624
+#: includes/class-wp-document-revisions.php:319, includes/class-wp-document-revisions.php:733, includes/trait-wp-document-revisions-admin-editor.php:699
 msgid "Documents"
 msgstr ""
 
@@ -660,7 +660,7 @@ msgstr ""
 msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:112, includes/trait-wp-document-revisions-admin-editor.php:814
+#: includes/trait-wp-document-revisions-admin-editor.php:112, includes/trait-wp-document-revisions-admin-editor.php:889
 msgid "Revision Summary"
 msgstr ""
 
@@ -668,15 +668,15 @@ msgstr ""
 msgid "Document"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:116, includes/trait-wp-document-revisions-admin-editor.php:615
+#: includes/trait-wp-document-revisions-admin-editor.php:116, includes/trait-wp-document-revisions-admin-editor.php:690
 msgid "Revision Log"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:120, includes/trait-wp-document-revisions-admin-editor.php:618
+#: includes/trait-wp-document-revisions-admin-editor.php:120, includes/trait-wp-document-revisions-admin-editor.php:693
 msgid "Workflow State"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:128, includes/trait-wp-document-revisions-admin-editor.php:1028, includes/trait-wp-document-revisions-admin-list.php:120
+#: includes/trait-wp-document-revisions-admin-editor.php:128, includes/trait-wp-document-revisions-admin-editor.php:1103, includes/trait-wp-document-revisions-admin-list.php:120
 msgid "Owner"
 msgstr ""
 
@@ -714,182 +714,182 @@ msgstr ""
 msgid "Current State"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:509
+#: includes/trait-wp-document-revisions-admin-editor.php:584
 msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:510
+#: includes/trait-wp-document-revisions-admin-editor.php:585
 msgid "is currently editing this"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:511
+#: includes/trait-wp-document-revisions-admin-editor.php:586
 msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:512
+#: includes/trait-wp-document-revisions-admin-editor.php:587
 msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:513
+#: includes/trait-wp-document-revisions-admin-editor.php:588
 msgid "New version uploaded. Press Update to save."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:514
+#: includes/trait-wp-document-revisions-admin-editor.php:589
 msgid "Upload failed."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:515
+#: includes/trait-wp-document-revisions-admin-editor.php:590
 msgid "Please save the current version before uploading another."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:516
+#: includes/trait-wp-document-revisions-admin-editor.php:591
 msgid "Uploading…"
 msgstr ""
 
 #. translators: %s is the title of the document.
-#: includes/trait-wp-document-revisions-admin-editor.php:518
+#: includes/trait-wp-document-revisions-admin-editor.php:593
 msgid "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:519
+#: includes/trait-wp-document-revisions-admin-editor.php:594
 msgid "An error has occurred, please try reloading the page."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:520
+#: includes/trait-wp-document-revisions-admin-editor.php:595
 msgid "Lost Document Lock"
 msgstr ""
 
 #. translators: %d is the numeric minutes, when singular.
 #. translators: %d is the numeric minutes, when plural.
-#: includes/trait-wp-document-revisions-admin-editor.php:523, includes/trait-wp-document-revisions-admin-editor.php:525
+#: includes/trait-wp-document-revisions-admin-editor.php:598, includes/trait-wp-document-revisions-admin-editor.php:600
 msgid "%d mins"
 msgstr ""
 
 #. translators: %d is the numeric hour, when singular.
-#: includes/trait-wp-document-revisions-admin-editor.php:527
+#: includes/trait-wp-document-revisions-admin-editor.php:602
 msgid "%d hour"
 msgstr ""
 
 #. translators: %d is the numeric hour, when plural.
-#: includes/trait-wp-document-revisions-admin-editor.php:529
+#: includes/trait-wp-document-revisions-admin-editor.php:604
 msgid "%d hours"
 msgstr ""
 
 #. translators: %d is the numeric day, when singular.
-#: includes/trait-wp-document-revisions-admin-editor.php:531
+#: includes/trait-wp-document-revisions-admin-editor.php:606
 msgid "%d day"
 msgstr ""
 
 #. translators: %d is the numeric days, when plural.
-#: includes/trait-wp-document-revisions-admin-editor.php:533
+#: includes/trait-wp-document-revisions-admin-editor.php:608
 msgid "%d days"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:608
+#: includes/trait-wp-document-revisions-admin-editor.php:683
 msgid "Basic Usage"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:609
+#: includes/trait-wp-document-revisions-admin-editor.php:684
 msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:610
+#: includes/trait-wp-document-revisions-admin-editor.php:685
 msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:611
+#: includes/trait-wp-document-revisions-admin-editor.php:686
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:612, includes/trait-wp-document-revisions-admin-editor.php:680
+#: includes/trait-wp-document-revisions-admin-editor.php:687, includes/trait-wp-document-revisions-admin-editor.php:755
 msgid "Document Description"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:613
+#: includes/trait-wp-document-revisions-admin-editor.php:688
 msgid "The document description provides a short user-oriented summary of the document."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:614
+#: includes/trait-wp-document-revisions-admin-editor.php:689
 msgid "This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:616
+#: includes/trait-wp-document-revisions-admin-editor.php:691
 msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:617
+#: includes/trait-wp-document-revisions-admin-editor.php:692
 msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:619
+#: includes/trait-wp-document-revisions-admin-editor.php:694
 msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:620
+#: includes/trait-wp-document-revisions-admin-editor.php:695
 msgid "Publishing Documents"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:621
+#: includes/trait-wp-document-revisions-admin-editor.php:696
 msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:625
+#: includes/trait-wp-document-revisions-admin-editor.php:700
 msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:626
+#: includes/trait-wp-document-revisions-admin-editor.php:701
 msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:627
+#: includes/trait-wp-document-revisions-admin-editor.php:702
 msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:798, includes/trait-wp-document-revisions-admin-editor.php:790
+#: includes/trait-wp-document-revisions-admin-editor.php:873, includes/trait-wp-document-revisions-admin-editor.php:865
 msgid "You do not have the upload_files capability!"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:800
+#: includes/trait-wp-document-revisions-admin-editor.php:875
 msgid "You will not be able to upload any documents."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:792
+#: includes/trait-wp-document-revisions-admin-editor.php:867
 msgid "You will not be able to upload documents though you may be able change some attributes."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:816
+#: includes/trait-wp-document-revisions-admin-editor.php:891
 msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:834
+#: includes/trait-wp-document-revisions-admin-editor.php:909
 msgid "Modified"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:835
+#: includes/trait-wp-document-revisions-admin-editor.php:910
 msgid "User"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:836
+#: includes/trait-wp-document-revisions-admin-editor.php:911
 msgid "Summary"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:840
+#: includes/trait-wp-document-revisions-admin-editor.php:915
 msgid "Actions"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:890
+#: includes/trait-wp-document-revisions-admin-editor.php:965
 msgid "Restore"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:898
+#: includes/trait-wp-document-revisions-admin-editor.php:973
 msgid "RSS Feed"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:948
+#: includes/trait-wp-document-revisions-admin-editor.php:1023
 msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-editor.php:1029
+#: includes/trait-wp-document-revisions-admin-editor.php:1104
 msgid "Document Owner"
 msgstr ""
 

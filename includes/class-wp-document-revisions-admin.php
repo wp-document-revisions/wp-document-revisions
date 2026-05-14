@@ -73,6 +73,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( $this, 'make_private' ), 20 );
 		add_action( 'set_object_terms', array( $this, 'workflow_state_save' ), 10, 6 );
 		add_action( 'save_post_document', array( $this, 'save_document' ) );
+		add_filter( 'wp_insert_post_data', array( $this, 'restore_document_attachment_id' ), 10, 2 );
 		add_action( 'admin_init', array( $this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( $this, 'revision_filter' ), 10, 1 );
 		add_filter( 'wp_save_post_revision_post_has_changed', array( $this, 'identify_last_but_one' ), 10, 3 );
