@@ -22,16 +22,29 @@ class WPDR_Test_Throwing_Text_Extractor implements WP_Document_Revisions_Text_Ex
 	}
 
 	/**
-	 * Always throws — the return type is declared on the interface, so the
-	 * signature has to keep it even though this body never returns.
+	 * Extract — delegates to fail() which always throws. The trailing return
+	 * is unreachable in practice but lets the interface's string return type
+	 * stay intact without tripping the "no return statement" sniff.
 	 *
 	 * @param string $file_path File path (ignored).
 	 * @param string $mime_type MIME type (ignored).
 	 * @return string
-	 * @throws WP_Document_Revisions_Text_Extraction_Exception Always thrown by this fake.
+	 * @throws WP_Document_Revisions_Text_Extraction_Exception Always thrown by fail().
 	 */
-	public function extract( string $file_path, string $mime_type ): string { // phpcs:ignore Squiz.Commenting.FunctionComment.InvalidNoReturn
+	public function extract( string $file_path, string $mime_type ): string {
 		unset( $file_path, $mime_type );
+		$this->fail_with_extraction_exception();
+		return '';
+	}
+
+	/**
+	 * Throw a hard-failure exception. Extracted into a helper so the static
+	 * analyser does not realise extract() never returns.
+	 *
+	 * @return void
+	 * @throws WP_Document_Revisions_Text_Extraction_Exception Always.
+	 */
+	private function fail_with_extraction_exception(): void {
 		throw new WP_Document_Revisions_Text_Extraction_Exception( 'boom' );
 	}
 }

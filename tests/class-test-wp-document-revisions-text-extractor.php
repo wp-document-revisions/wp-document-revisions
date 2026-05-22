@@ -8,13 +8,19 @@
  * @package WP_Document_Revisions
  */
 
-require_once __DIR__ . '/class-wpdr-test-fake-text-extractor.php';
-require_once __DIR__ . '/class-wpdr-test-throwing-text-extractor.php';
-
 /**
  * Tests for the text extractor registry and wpdr_extract_text().
  */
 class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
+
+	/**
+	 * Load the fake extractor helper classes once per test class run.
+	 */
+	public static function set_up_before_class() {
+		parent::set_up_before_class();
+		require_once __DIR__ . '/class-wpdr-test-fake-text-extractor.php';
+		require_once __DIR__ . '/class-wpdr-test-throwing-text-extractor.php';
+	}
 
 	/**
 	 * Clear any filters registered during a test so they don't leak across tests.
