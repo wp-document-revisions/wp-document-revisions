@@ -17,3 +17,10 @@ updates:
       directory: '/'
       schedule:
           interval: 'weekly'
+      # jest-environment-jsdom 30.x bundles a newer jsdom in which
+      # `window.location` is non-configurable, breaking the test-suite
+      # setup.js mock. Pin to the 29.x line until that compatibility work
+      # is done. See tests/js/setup.js and PR #519 for context.
+      ignore:
+          - dependency-name: 'jest-environment-jsdom'
+            update-types: ['version-update:semver-major']
