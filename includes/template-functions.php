@@ -66,8 +66,10 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 	 * Returns an empty string if no extractor is registered for the type, the
 	 * file is missing, or the extractor declines to produce text.
 	 *
-	 * Phase 1 of issue #514: pure dispatch, no caching. Caching and async
-	 * scheduling land in later phases.
+	 * Phase 6 of issue #514 wraps the registry dispatch with a SHA-256-keyed
+	 * post-meta cache: subsequent calls against the same revision and the
+	 * same file return the cached text without re-running the extractor. The
+	 * cache invalidates automatically whenever the file content changes.
 	 *
 	 * @since 4.1.0
 	 *
@@ -79,9 +81,23 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 			return '';
 		}
 
-		$file_path = get_attached_file( $revision_id );
-		if ( ! is_string( $file_path ) || '' === $file_path ) {
+		// Cache lives on the attachment post; bail (without touching the
+		// cache) if someone passes a parent document or another post type.
+		if ( 'attachment' !== get_post_type( $revision_id ) ) {
 			return '';
+		}
+
+		$file_path = get_attached_file( $revision_id );
+		if ( ! is_string( $file_path ) || '' === $file_path || ! is_readable( $file_path ) ) {
+			// Unreadable file: do NOT invalidate or overwrite the cache —
+			// a transient I/O blip shouldn't blow away previously-extracted
+			// text. Return '' for this call only.
+			return '';
+		}
+
+		$cached = WP_Document_Revisions_Text_Extractor_Cache::get( $revision_id, $file_path );
+		if ( null !== $cached ) {
+			return $cached;
 		}
 
 		$mime_type = get_post_mime_type( $revision_id );
@@ -89,6 +105,8 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 			return '';
 		}
 
-		return WP_Document_Revisions_Text_Extractor_Registry::extract( $file_path, $mime_type );
+		$text = WP_Document_Revisions_Text_Extractor_Registry::extract( $file_path, $mime_type );
+		WP_Document_Revisions_Text_Extractor_Cache::set( $revision_id, $file_path, $text );
+		return $text;
 	}
 }
