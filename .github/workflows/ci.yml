@@ -83,7 +83,7 @@ jobs:
               # produced an output directory.
               run: |
                   php -r '
-                      require __DIR__ . "/vendor-prefixed/scoper-autoload.php";
+                      require __DIR__ . "/vendor-prefixed/autoload.php";
                       if (!class_exists("WP_Document_Revisions\\Vendor\\Smalot\\PdfParser\\Parser")) {
                           fwrite(STDERR, "Scoped PdfParser class is not autoloadable\n");
                           exit(1);

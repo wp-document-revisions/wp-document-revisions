@@ -63,8 +63,8 @@ if ( ! defined( 'WPDR_VERSION' ) ) {
 // an autoloader that maps unscoped `Smalot\PdfParser\*` (and any future scoped
 // vendor namespace) onto the prefixed `WP_Document_Revisions\Vendor\*` names
 // the plugin uses internally, so the same plugin source works in both modes.
-if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
-	require_once __DIR__ . '/vendor-prefixed/scoper-autoload.php';
+if ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/autoload.php';
 } elseif ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 

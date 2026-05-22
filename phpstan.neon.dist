@@ -6,7 +6,9 @@ parameters:
     excludePaths:
         - vendor/
         - vendor-bin/
-        - vendor-prefixed/
+        # vendor-prefixed/ only exists after `composer build:scope`; tolerate
+        # its absence so plain `composer install` + phpstan works in dev.
+        - vendor-prefixed/ (?)
     bootstrapFiles:
         - vendor/autoload.php
     ignoreErrors: []
