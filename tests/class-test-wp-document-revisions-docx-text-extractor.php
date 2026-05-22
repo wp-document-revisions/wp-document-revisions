@@ -298,8 +298,28 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 		$revision  = $wpdr->get_latest_revision( $doc_id );
 		$attach_id = (int) $revision->post_content;
 
+		// Diagnostic state in case the assertion below fails: print what
+		// wpdr_extract_text() actually sees so we don't have to guess at
+		// the wp_upload_dir filter / MIME / path interaction.
+		$attached_path = get_attached_file( $attach_id );
+		$attached_mime = get_post_mime_type( $attach_id );
+		$direct_text   = ( new WP_Document_Revisions_DOCX_Text_Extractor() )->extract(
+			(string) $attached_path,
+			(string) $attached_mime
+		);
+
 		$text = wpdr_extract_text( $attach_id );
 
-		self::assertStringContainsString( 'Integration test content.', $text );
+		$diagnostic = sprintf(
+			"path=%s exists=%s readable=%s mime=%s direct_extract_len=%d wpdr_extract_len=%d",
+			$attached_path,
+			( $attached_path && file_exists( $attached_path ) ) ? 'yes' : 'no',
+			( $attached_path && is_readable( $attached_path ) ) ? 'yes' : 'no',
+			$attached_mime,
+			strlen( $direct_text ),
+			strlen( $text )
+		);
+
+		self::assertStringContainsString( 'Integration test content.', $text, $diagnostic );
 	}
 }
