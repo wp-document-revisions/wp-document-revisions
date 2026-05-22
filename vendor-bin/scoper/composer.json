@@ -1,0 +1,6 @@
+{
+	"description": "Isolated composer manifest for php-scoper, installed by bamarni/composer-bin-plugin. See ../../scoper.inc.php and the build:scope script in the root composer.json.",
+	"require": {
+		"humbug/php-scoper": "^0.18.18"
+	}
+}

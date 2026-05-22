@@ -36,6 +36,8 @@ phpcs.ruleset.xml
 phpstan.neon.dist
 phpstan-baseline.neon
 playwright.config.js
+scoper.inc.php
+vendor-bin/
 README.md
 screenshot-1.png
 docs/_config.yml

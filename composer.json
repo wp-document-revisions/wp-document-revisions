@@ -27,5 +27,11 @@
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
+	},
+	"scripts": {
+		"build:scope": [
+			"@composer install --working-dir=vendor-bin/scoper --no-progress --no-interaction",
+			"@php vendor-bin/scoper/vendor/bin/php-scoper add-prefix --output-dir=vendor-prefixed --force --quiet"
+		]
 	}
 }

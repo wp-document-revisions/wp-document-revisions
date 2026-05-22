@@ -44,6 +44,45 @@ jobs:
             - name: Audit dependencies
               run: composer audit
 
+            - name: Validate scoper config (php -l)
+              run: php -l scoper.inc.php
+
+            - name: Install php-scoper
+              run: composer install --working-dir=vendor-bin/scoper --no-progress --no-interaction
+
+            - name: Verify php-scoper is callable
+              run: vendor-bin/scoper/vendor/bin/php-scoper --version
+
+    # End-to-end smoke test for the scoper build pipeline. Runs in its own
+    # job because it needs `composer install --no-dev`, which would remove
+    # the dev tools (phpcs, phpstan) that `code-quality` relies on.
+    scoper-pipeline:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Scoper pipeline smoke test
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Install production composer dependencies
+              run: composer install --no-dev --no-progress
+
+            - name: Run build:scope
+              run: composer build:scope
+
+            - name: Verify vendor-prefixed/ was produced
+              run: |
+                  if [ ! -d vendor-prefixed ]; then
+                      echo "vendor-prefixed/ was not created by build:scope" >&2
+                      exit 1
+                  fi
+                  ls -la vendor-prefixed
+
     jest:
         runs-on: ubuntu-latest
         permissions:
