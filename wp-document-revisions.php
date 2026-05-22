@@ -55,6 +55,33 @@ if ( ! defined( 'WPDR_VERSION' ) ) {
 	define( 'WPDR_VERSION', '4.0.7' );
 }
 
+// Composer autoloader for production / scoped dependencies.
+//
+// Release builds ship `vendor-prefixed/` (produced by `composer build:scope`).
+// Dev environments that have only run `composer install` keep the unprefixed
+// `vendor/` tree. The shim below picks whichever is present, and then registers
+// an autoloader that maps unscoped `Smalot\PdfParser\*` (and any future scoped
+// vendor namespace) onto the prefixed `WP_Document_Revisions\Vendor\*` names
+// the plugin uses internally, so the same plugin source works in both modes.
+if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/scoper-autoload.php';
+} elseif ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+
+	spl_autoload_register(
+		static function ( $class ) {
+			$prefix = 'WP_Document_Revisions\\Vendor\\';
+			if ( 0 !== strpos( $class, $prefix ) ) {
+				return;
+			}
+			$unscoped = substr( $class, strlen( $prefix ) );
+			if ( class_exists( $unscoped ) || interface_exists( $unscoped ) || trait_exists( $unscoped ) ) {
+				class_alias( $unscoped, $class );
+			}
+		}
+	);
+}
+
 require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';

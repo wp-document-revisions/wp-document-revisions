@@ -22,8 +22,26 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
             - name: Build assets
               run: npm ci && npm run build
+
+            - name: Install production composer dependencies
+              # Production deps only — no dev tools in the release artifact.
+              run: composer install --no-dev --no-progress --no-interaction
+
+            - name: Build scoped vendor
+              # Rewrites the production composer dependencies into
+              # vendor-prefixed/ under the WP_Document_Revisions\Vendor\
+              # namespace so they cannot collide with the same libraries
+              # shipped by another wordpress.org plugin. The 10up action
+              # ships vendor-prefixed/ (not excluded in .distignore) and
+              # excludes vendor/ + composer.* via the existing .distignore.
+              run: composer build:scope
 
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@stable

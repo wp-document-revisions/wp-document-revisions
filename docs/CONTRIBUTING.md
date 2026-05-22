@@ -83,22 +83,35 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 ## Scoped PHP dependencies
 
-When the plugin gains production composer dependencies (e.g. `smalot/pdfparser` for PDF text extraction in [issue #514](https://github.com/wp-document-revisions/wp-document-revisions/issues/514)), their namespaces are rewritten under `WP_Document_Revisions\Vendor\` via [php-scoper](https://github.com/humbug/php-scoper) so they cannot collide with the same library shipped by another wordpress.org plugin.
+Production composer dependencies (currently `smalot/pdfparser`, with more landing as [issue #514](https://github.com/wp-document-revisions/wp-document-revisions/issues/514) progresses) are rewritten under `WP_Document_Revisions\Vendor\` via [php-scoper](https://github.com/humbug/php-scoper) so they cannot collide with the same library shipped by another wordpress.org plugin.
 
 The pipeline lives at:
 
-- `composer.json` — declares the `build:scope` script.
+- `composer.json` — declares the `build:scope` script and the production `require` entries.
 - `vendor-bin/scoper/composer.json` — isolated manifest pinning `humbug/php-scoper`, installed via `composer install --working-dir=vendor-bin/scoper`. Lives in its own subdirectory so scoper's own dependencies cannot conflict with the main `vendor/` tree.
 - `scoper.inc.php` — prefix, finders, patchers, exposers.
+- `wp-document-revisions.php` — picks `vendor-prefixed/scoper-autoload.php` when present, falls back to `vendor/autoload.php`, and registers a `class_alias` shim so plugin source code can always reference the scoped names regardless of which autoload is active.
 
-Local workflow for a release build:
+### Dev workflow
+
+After every `composer install`, run:
 
 ```sh
-composer install --no-dev --no-progress    # production composer deps only
-composer build:scope                        # runs php-scoper into vendor-prefixed/
+composer build:scope    # produces vendor-prefixed/ from the current vendor/ tree
 ```
 
-`vendor-prefixed/` is gitignored. It is generated at release time and bundled into the wordpress.org artifact instead of `vendor/`. The deploy workflow's integration with this pipeline lands alongside the first real production dependency in phase 3 of issue #514 — until then, `composer build:scope` runs in CI as a smoke test (validates `scoper.inc.php` syntactically and confirms `php-scoper` is installable) but does not produce a shipped artifact.
+Without it, phpstan will error because `vendor-prefixed/scoper-autoload.php` is listed as a bootstrap file in `phpstan.neon.dist`. The runtime alias shim means the plugin itself still loads in dev without `vendor-prefixed/` — only static analysis requires it.
+
+### Release workflow
+
+The deploy workflow (`.github/workflows/deploy.yml`) runs the same two steps before invoking the WordPress.org deploy action:
+
+```sh
+composer install --no-dev --no-progress
+composer build:scope
+```
+
+`vendor-prefixed/` is gitignored but **not** in `.distignore`, so it ships in the wordpress.org artifact. The unscoped `vendor/` and the `composer.*` manifests are excluded by `.distignore` so only the scoped tree reaches end users.
 
 ## Continuous Integration and Security
 

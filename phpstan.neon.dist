@@ -5,6 +5,8 @@ parameters:
         - includes/
     excludePaths:
         - vendor/
+        - vendor-bin/
+        - vendor-prefixed/
     bootstrapFiles:
         - vendor/autoload.php
     ignoreErrors: []

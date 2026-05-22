@@ -35,23 +35,17 @@ jobs:
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress
 
-            - name: phpcs
-              run: script/cibuild-phpcs
-
-            - name: PHPStan
-              run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
-
             - name: Audit dependencies
               run: composer audit
 
             - name: Validate scoper config (php -l)
               run: php -l scoper.inc.php
 
-            - name: Install php-scoper
-              run: composer install --working-dir=vendor-bin/scoper --no-progress --no-interaction
+            - name: phpcs
+              run: script/cibuild-phpcs
 
-            - name: Verify php-scoper is callable
-              run: vendor-bin/scoper/vendor/bin/php-scoper --version
+            - name: PHPStan
+              run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
 
     # End-to-end smoke test for the scoper build pipeline. Runs in its own
     # job because it needs `composer install --no-dev`, which would remove
@@ -82,6 +76,14 @@ jobs:
                       exit 1
                   fi
                   ls -la vendor-prefixed
+
+            - name: Verify scoped class is autoloadable
+              # End-to-end check that the prefix actually rewrote the
+              # production dependency's namespaces — not just that scoper
+              # produced an output directory.
+              run: |
+                  php -r 'require __DIR__ . "/vendor-prefixed/scoper-autoload.php";' \
+                      -r 'if (!class_exists("WP_Document_Revisions\\Vendor\\Smalot\\PdfParser\\Parser")) { fwrite(STDERR, "Scoped PdfParser class is not autoloadable\n"); exit(1); }'
 
     jest:
         runs-on: ubuntu-latest

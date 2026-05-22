@@ -8,7 +8,10 @@
 			"email": "ben@balter.com"
 		}
 	],
-	"require": {},
+	"require": {
+		"php": ">=7.4",
+		"smalot/pdfparser": "^2.10"
+	},
 	"require-dev": {
 		"phpcsstandards/phpcsutils": "^1.1",
 		"phpcsstandards/phpcsextra": "^1.4",
