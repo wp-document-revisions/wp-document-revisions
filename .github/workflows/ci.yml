@@ -82,8 +82,13 @@ jobs:
               # production dependency's namespaces — not just that scoper
               # produced an output directory.
               run: |
-                  php -r 'require __DIR__ . "/vendor-prefixed/scoper-autoload.php";' \
-                      -r 'if (!class_exists("WP_Document_Revisions\\Vendor\\Smalot\\PdfParser\\Parser")) { fwrite(STDERR, "Scoped PdfParser class is not autoloadable\n"); exit(1); }'
+                  php -r '
+                      require __DIR__ . "/vendor-prefixed/scoper-autoload.php";
+                      if (!class_exists("WP_Document_Revisions\\Vendor\\Smalot\\PdfParser\\Parser")) {
+                          fwrite(STDERR, "Scoped PdfParser class is not autoloadable\n");
+                          exit(1);
+                      }
+                  '
 
     jest:
         runs-on: ubuntu-latest

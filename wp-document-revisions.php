@@ -69,14 +69,14 @@ if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 
 	spl_autoload_register(
-		static function ( $class ) {
+		static function ( $class_name ) {
 			$prefix = 'WP_Document_Revisions\\Vendor\\';
-			if ( 0 !== strpos( $class, $prefix ) ) {
+			if ( 0 !== strpos( $class_name, $prefix ) ) {
 				return;
 			}
-			$unscoped = substr( $class, strlen( $prefix ) );
+			$unscoped = substr( $class_name, strlen( $prefix ) );
 			if ( class_exists( $unscoped ) || interface_exists( $unscoped ) || trait_exists( $unscoped ) ) {
-				class_alias( $unscoped, $class );
+				class_alias( $unscoped, $class_name );
 			}
 		}
 	);
