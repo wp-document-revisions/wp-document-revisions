@@ -15,7 +15,7 @@
 class Test_WP_Document_Revisions_PDF_Text_Extractor extends Test_Common_WPDR {
 
 	/**
-	 * supports() returns true for application/pdf and false for everything else.
+	 * Supports returns true for application/pdf and false for everything else.
 	 */
 	public function test_supports_only_application_pdf() {
 		$extractor = new WP_Document_Revisions_PDF_Text_Extractor();
@@ -28,7 +28,7 @@ class Test_WP_Document_Revisions_PDF_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() returns non-empty alphabetic text from the bundled test PDF.
+	 * Returns non-empty alphabetic text when run against the bundled PDF.
 	 *
 	 * Deliberately not asserting the literal content — only that smalot ran
 	 * and produced a sensible string. Tightening the assertion couples the
@@ -45,9 +45,9 @@ class Test_WP_Document_Revisions_PDF_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() returns an empty string for a missing file rather than
-	 * throwing — defensive even though the registry already short-circuits
-	 * unreadable paths before calling into the extractor.
+	 * Returns an empty string for a missing file rather than throwing —
+	 * defensive even though the registry already short-circuits unreadable
+	 * paths before calling into the extractor.
 	 */
 	public function test_extract_returns_empty_for_missing_file() {
 		$extractor = new WP_Document_Revisions_PDF_Text_Extractor();
@@ -56,8 +56,8 @@ class Test_WP_Document_Revisions_PDF_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() returns an empty string when handed a plain text file
-	 * masquerading as a PDF — smalot throws, the extractor catches.
+	 * Returns an empty string when handed a plain text file masquerading as
+	 * a PDF — smalot throws, the extractor catches.
 	 */
 	public function test_extract_returns_empty_for_non_pdf_content() {
 		$extractor = new WP_Document_Revisions_PDF_Text_Extractor();
@@ -94,8 +94,8 @@ class Test_WP_Document_Revisions_PDF_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * wpdr_extract_text() — the public template function — produces text
-	 * end-to-end when called against a PDF attachment.
+	 * End-to-end: the public wpdr_extract_text() template function produces
+	 * text when called against a PDF attachment.
 	 */
 	public function test_wpdr_extract_text_runs_pdf_extractor_against_attachment() {
 		$doc_id = self::factory()->post->create(
