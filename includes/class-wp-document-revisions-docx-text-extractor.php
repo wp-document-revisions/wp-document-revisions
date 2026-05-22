@@ -190,7 +190,12 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 			foreach ( $row->getCells() as $cell ) {
 				$cell_texts[] = $this->extract_from_container( $cell );
 			}
-			$cell_texts = array_filter( $cell_texts, 'strlen' );
+			$cell_texts = array_filter(
+				$cell_texts,
+				static function ( string $cell ): bool {
+					return '' !== $cell;
+				}
+			);
 			if ( ! empty( $cell_texts ) ) {
 				$rows[] = implode( "\t", $cell_texts );
 			}
@@ -199,12 +204,22 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	}
 
 	/**
-	 * Drop empty strings and join the rest with newlines.
+	 * Drop empty strings and join the rest with newlines. Closure rather
+	 * than 'strlen' so phpstan sees a callable returning bool (strlen
+	 * returns int, even though PHP coerces it to a truthy/falsy bool).
 	 *
 	 * @param string[] $parts text fragments to concatenate.
 	 * @return string non-empty fragments joined by newline.
 	 */
 	private function join_parts( array $parts ): string {
-		return implode( "\n", array_filter( $parts, 'strlen' ) );
+		return implode(
+			"\n",
+			array_filter(
+				$parts,
+				static function ( string $part ): bool {
+					return '' !== $part;
+				}
+			)
+		);
 	}
 }
