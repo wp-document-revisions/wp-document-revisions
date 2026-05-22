@@ -44,7 +44,7 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 	public function tear_down() {
 		foreach ( $this->temp_files as $path ) {
 			if ( file_exists( $path ) ) {
-				unlink( $path );
+				wp_delete_file( $path );
 			}
 		}
 		$this->temp_files = array();
@@ -64,18 +64,17 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 		$phpword = new \PhpOffice\PhpWord\PhpWord();
 		$builder( $phpword );
 
-		$path = tempnam( sys_get_temp_dir(), 'wpdr_test_' );
-		// tempnam returns a path with no extension; rename so PHPWord picks
-		// the right reader hint on load and the file name reads naturally
-		// in any debugging output.
-		$with_ext = $path . $ext;
-		rename( $path, $with_ext );
+		// wp_tempnam() gives us a unique path inside the WP upload tree;
+		// pass the desired suffix so PHPWord's writer sees a sensible
+		// extension when it saves and the file name reads naturally in
+		// any debugging output.
+		$path = wp_tempnam( 'wpdr_test_' . wp_generate_password( 6, false ) . $ext );
 
 		$writer_obj = \PhpOffice\PhpWord\IOFactory::createWriter( $phpword, $writer );
-		$writer_obj->save( $with_ext );
+		$writer_obj->save( $path );
 
-		$this->temp_files[] = $with_ext;
-		return $with_ext;
+		$this->temp_files[] = $path;
+		return $path;
 	}
 
 	/**
