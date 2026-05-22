@@ -47,8 +47,8 @@ jobs:
             - name: Validate scoper config (php -l)
               run: php -l scoper.inc.php
 
-            - name: Install php-scoper (bamarni/composer-bin)
-              run: composer bin scoper install --no-interaction --no-progress
+            - name: Install php-scoper
+              run: composer install --working-dir=vendor-bin/scoper --no-progress --no-interaction
 
             - name: Verify php-scoper is callable
               run: vendor-bin/scoper/vendor/bin/php-scoper --version
@@ -71,9 +71,6 @@ jobs:
 
             - name: Install production composer dependencies
               run: composer install --no-dev --no-progress
-
-            - name: Install php-scoper (bamarni/composer-bin)
-              run: composer bin scoper install --no-interaction --no-progress
 
             - name: Run build:scope
               run: composer build:scope

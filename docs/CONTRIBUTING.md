@@ -87,8 +87,8 @@ When the plugin gains production composer dependencies (e.g. `smalot/pdfparser` 
 
 The pipeline lives at:
 
-- `composer.json` — declares `bamarni/composer-bin-plugin` and a `build:scope` script.
-- `vendor-bin/scoper/composer.json` — isolated manifest pinning `humbug/php-scoper`.
+- `composer.json` — declares the `build:scope` script.
+- `vendor-bin/scoper/composer.json` — isolated manifest pinning `humbug/php-scoper`, installed via `composer install --working-dir=vendor-bin/scoper`. Lives in its own subdirectory so scoper's own dependencies cannot conflict with the main `vendor/` tree.
 - `scoper.inc.php` — prefix, finders, patchers, exposers.
 
 Local workflow for a release build:
