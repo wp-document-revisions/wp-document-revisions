@@ -51,6 +51,14 @@ return array(
 	'exclude-constants'  => array(),
 
 	'expose-global-constants' => false,
-	'expose-global-classes'   => false,
+	// Composer's generated `ComposerAutoloaderInit<hash>` class lives in the
+	// global namespace and is referenced by string callback inside the
+	// composer-generated `autoload_real.php` (passed to spl_autoload_unregister).
+	// Scoper rewrites the class definition but not the string callback, which
+	// leaves a "class not found" fatal at boot. Exposing global classes makes
+	// scoper alias the prefixed name back to the original global one, so both
+	// names resolve. The hash makes this safe — no other plugin will define
+	// ComposerAutoloaderInit<this exact hash>.
+	'expose-global-classes'   => true,
 	'expose-global-functions' => false,
 );
