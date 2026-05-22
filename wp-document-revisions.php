@@ -59,6 +59,9 @@ require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-query.php';
+require_once __DIR__ . '/includes/interface-wp-document-revisions-text-extractor.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-exception.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-registry.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
 
 // $wpdr is a global reference to the class.
