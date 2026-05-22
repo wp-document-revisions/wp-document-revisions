@@ -29,12 +29,25 @@ class WPDR_Test_Counting_Text_Extractor implements WP_Document_Revisions_Text_Ex
 	private $supported_mime;
 
 	/**
+	 * Fixed string to return from extract(), or null to read the file.
+	 *
+	 * @var string|null
+	 */
+	private $fixed_return;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string $supported_mime MIME type this fake claims.
+	 * @param string      $supported_mime MIME type this fake claims.
+	 * @param string|null $fixed_return   When set, extract() returns this
+	 *                                    instead of reading the file. Lets
+	 *                                    callers exercise the "extractor
+	 *                                    returned ''" path without depending
+	 *                                    on file content.
 	 */
-	public function __construct( string $supported_mime = 'text/plain' ) {
+	public function __construct( string $supported_mime = 'text/plain', ?string $fixed_return = null ) {
 		$this->supported_mime = $supported_mime;
+		$this->fixed_return   = $fixed_return;
 	}
 
 	/**
@@ -58,6 +71,9 @@ class WPDR_Test_Counting_Text_Extractor implements WP_Document_Revisions_Text_Ex
 	public function extract( string $file_path, string $mime_type ): string {
 		unset( $mime_type );
 		++$this->calls;
+		if ( null !== $this->fixed_return ) {
+			return $this->fixed_return;
+		}
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$contents = file_get_contents( $file_path );
 		return false === $contents ? '' : (string) $contents;

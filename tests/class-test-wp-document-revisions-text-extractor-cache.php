@@ -31,15 +31,16 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Register a counting fake extractor for application/octet-stream so
-	 * the built-in PDF/DOCX extractors don't shadow it, and so we have a
-	 * stable instance whose call count we can read.
+	 * Register a counting fake extractor at a higher priority than the
+	 * built-ins so we have a stable instance whose call count we can read.
 	 *
-	 * @param string $mime MIME type the fake should claim.
+	 * @param string      $mime         MIME type the fake should claim.
+	 * @param string|null $fixed_return Optional fixed extract() return; null
+	 *                                  means read the file's contents.
 	 * @return WPDR_Test_Counting_Text_Extractor the registered fake.
 	 */
-	private function register_counting_fake( string $mime = 'text/plain' ): WPDR_Test_Counting_Text_Extractor {
-		$fake = new WPDR_Test_Counting_Text_Extractor( $mime );
+	private function register_counting_fake( string $mime = 'text/plain', ?string $fixed_return = null ): WPDR_Test_Counting_Text_Extractor {
+		$fake = new WPDR_Test_Counting_Text_Extractor( $mime, $fixed_return );
 		add_filter(
 			'wpdr_text_extractors',
 			static function ( array $extractors ) use ( $fake ): array {
@@ -211,28 +212,9 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	 * file is parsed at most once per file revision.
 	 */
 	public function test_wpdr_extract_text_caches_empty_extractions() {
-		$fake = new class() implements WP_Document_Revisions_Text_Extractor {
-			public $calls = 0;
-
-			public function supports( string $mime_type ): bool {
-				return 'text/plain' === $mime_type;
-			}
-
-			public function extract( string $file_path, string $mime_type ): string {
-				unset( $file_path, $mime_type );
-				++$this->calls;
-				return '';
-			}
-		};
-
-		add_filter(
-			'wpdr_text_extractors',
-			static function ( array $extractors ) use ( $fake ): array {
-				array_unshift( $extractors, $fake );
-				return $extractors;
-			}
-		);
-
+		// Configure the fake to return '' so we exercise the
+		// "extractor returned empty" branch without depending on file content.
+		$fake      = $this->register_counting_fake( 'text/plain', '' );
 		$attach_id = $this->create_text_attachment();
 
 		self::assertSame( '', wpdr_extract_text( $attach_id ) );
