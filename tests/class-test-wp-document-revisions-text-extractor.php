@@ -23,6 +23,17 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Start each test with no extractors registered. The plugin bootstrap
+	 * auto-registers WP_Document_Revisions_PDF_Text_Extractor via the
+	 * wpdr_text_extractors filter; these tests target the dispatcher itself,
+	 * so clear the slate to keep their setup explicit.
+	 */
+	public function set_up() {
+		parent::set_up();
+		remove_all_filters( 'wpdr_text_extractors' );
+	}
+
+	/**
 	 * Clear any filters registered during a test so they don't leak across tests.
 	 */
 	public function tear_down() {

@@ -96,7 +96,20 @@ require_once __DIR__ . '/includes/trait-wp-document-revisions-query.php';
 require_once __DIR__ . '/includes/interface-wp-document-revisions-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-exception.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-registry.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
+
+// Register the built-in PDF text extractor. Lazy construction inside the
+// filter callback avoids paying the parser allocation cost on requests that
+// never extract anything. Third parties can prepend their own extractors at
+// a higher priority to override this one.
+add_filter(
+	'wpdr_text_extractors',
+	static function ( array $extractors ): array {
+		$extractors[] = new WP_Document_Revisions_PDF_Text_Extractor();
+		return $extractors;
+	}
+);
 
 // $wpdr is a global reference to the class.
 global $wpdr;
