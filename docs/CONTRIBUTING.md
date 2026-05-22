@@ -81,6 +81,25 @@ At a high level, [the process for proposing changes](https://guides.github.com/i
 
 `script/cibuild`
 
+## Scoped PHP dependencies
+
+When the plugin gains production composer dependencies (e.g. `smalot/pdfparser` for PDF text extraction in [issue #514](https://github.com/wp-document-revisions/wp-document-revisions/issues/514)), their namespaces are rewritten under `WP_Document_Revisions\Vendor\` via [php-scoper](https://github.com/humbug/php-scoper) so they cannot collide with the same library shipped by another wordpress.org plugin.
+
+The pipeline lives at:
+
+- `composer.json` — declares `bamarni/composer-bin-plugin` and a `build:scope` script.
+- `vendor-bin/scoper/composer.json` — isolated manifest pinning `humbug/php-scoper`.
+- `scoper.inc.php` — prefix, finders, patchers, exposers.
+
+Local workflow for a release build:
+
+```sh
+composer install --no-dev --no-progress    # production composer deps only
+composer build:scope                        # runs php-scoper into vendor-prefixed/
+```
+
+`vendor-prefixed/` is gitignored. It is generated at release time and bundled into the wordpress.org artifact instead of `vendor/`. The deploy workflow's integration with this pipeline lands alongside the first real production dependency in phase 3 of issue #514 — until then, `composer build:scope` runs in CI as a smoke test (validates `scoper.inc.php` syntactically and confirms `php-scoper` is installable) but does not produce a shipped artifact.
+
 ## Continuous Integration and Security
 
 The project uses GitHub Actions for continuous integration and automated security scanning:

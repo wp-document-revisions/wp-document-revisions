@@ -19,13 +19,27 @@
 		"phpcompatibility/phpcompatibility-paragonie": "*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"phpstan/phpstan": "^2.1",
-		"szepeviktor/phpstan-wordpress": "^2.0"
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"bamarni/composer-bin-plugin": "^1.8.2"
 	},
 	"config": {
 		"bin-dir": "bin",
 		"vendor-dir": "vendor",
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"bamarni/composer-bin-plugin": true
 		}
+	},
+	"extra": {
+		"bamarni-bin": {
+			"bin-links": false,
+			"forward-command": false
+		}
+	},
+	"scripts": {
+		"build:scope": [
+			"@composer bin scoper install --no-interaction",
+			"@php vendor-bin/scoper/vendor/bin/php-scoper add-prefix --output-dir=vendor-prefixed --force --quiet"
+		]
 	}
 }
