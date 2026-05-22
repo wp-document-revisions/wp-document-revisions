@@ -8,88 +8,8 @@
  * @package WP_Document_Revisions
  */
 
-/**
- * Fake extractor that returns a fixed string for a single MIME type.
- */
-class WPDR_Test_Fake_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
-
-	/**
-	 * MIME type this fake claims to support.
-	 *
-	 * @var string
-	 */
-	private $supported_mime;
-
-	/**
-	 * String to return from extract().
-	 *
-	 * @var string
-	 */
-	private $return_text;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param string $supported_mime MIME type this fake claims.
-	 * @param string $return_text    Text to return from extract().
-	 */
-	public function __construct( string $supported_mime, string $return_text = 'fake text' ) {
-		$this->supported_mime = $supported_mime;
-		$this->return_text    = $return_text;
-	}
-
-	/**
-	 * Supports check.
-	 *
-	 * @param string $mime_type MIME type to check.
-	 * @return bool
-	 */
-	public function supports( string $mime_type ): bool {
-		return $mime_type === $this->supported_mime;
-	}
-
-	/**
-	 * Extract — returns the configured fixed string.
-	 *
-	 * @param string $file_path file path.
-	 * @param string $mime_type MIME type.
-	 * @return string
-	 */
-	public function extract( string $file_path, string $mime_type ): string {
-		unset( $file_path, $mime_type );
-		return $this->return_text;
-	}
-}
-
-/**
- * Fake extractor that throws a hard-failure exception.
- */
-class WPDR_Test_Throwing_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
-
-	/**
-	 * Supports any MIME type.
-	 *
-	 * @param string $mime_type MIME type.
-	 * @return bool
-	 */
-	public function supports( string $mime_type ): bool {
-		unset( $mime_type );
-		return true;
-	}
-
-	/**
-	 * Always throws.
-	 *
-	 * @param string $file_path file path.
-	 * @param string $mime_type MIME type.
-	 * @return string
-	 * @throws WP_Document_Revisions_Text_Extraction_Exception always.
-	 */
-	public function extract( string $file_path, string $mime_type ): string {
-		unset( $file_path, $mime_type );
-		throw new WP_Document_Revisions_Text_Extraction_Exception( 'boom' );
-	}
-}
+require_once __DIR__ . '/class-wpdr-test-fake-text-extractor.php';
+require_once __DIR__ . '/class-wpdr-test-throwing-text-extractor.php';
 
 /**
  * Tests for the text extractor registry and wpdr_extract_text().
@@ -148,7 +68,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * find_for picks the first extractor whose supports() returns true.
+	 * Picks the first registered extractor whose supports() returns true.
 	 */
 	public function test_find_for_picks_first_supporting_extractor() {
 		$pdf  = new WPDR_Test_Fake_Text_Extractor( 'application/pdf', 'pdf text' );
@@ -166,7 +86,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * find_for returns null when no registered extractor claims the MIME type.
+	 * Returns null when no registered extractor claims the MIME type.
 	 */
 	public function test_find_for_returns_null_when_no_match() {
 		add_filter(
@@ -180,7 +100,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * find_for returns null for an empty MIME type, without scanning the registry.
+	 * Returns null for an empty MIME type, without scanning the registry.
 	 */
 	public function test_find_for_returns_null_for_empty_mime() {
 		add_filter(
@@ -225,7 +145,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * A naive append leaves the earlier-registered extractor in place — this
+	 * Naive append leaves the earlier-registered extractor in place — this
 	 * documents the gotcha and prevents accidental regressions if someone
 	 * changes the dispatcher to "last match wins."
 	 */
@@ -256,7 +176,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() dispatches to the matching extractor and returns its output.
+	 * Dispatches to the matching extractor and returns its output.
 	 */
 	public function test_extract_dispatches_to_matching_extractor() {
 		add_filter(
@@ -271,7 +191,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() returns empty when no extractor supports the type.
+	 * Returns empty when no extractor supports the type.
 	 */
 	public function test_extract_returns_empty_when_no_match() {
 		add_filter(
@@ -285,7 +205,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * extract() returns empty when the file path is missing or unreadable.
+	 * Returns empty when the file path is missing or unreadable.
 	 */
 	public function test_extract_returns_empty_for_missing_file() {
 		add_filter(
@@ -325,7 +245,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * wpdr_extract_text() returns empty for invalid IDs.
+	 * Returns empty for invalid IDs.
 	 */
 	public function test_wpdr_extract_text_invalid_id() {
 		self::assertSame( '', wpdr_extract_text( 0 ) );
@@ -333,8 +253,8 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * wpdr_extract_text() looks up the attachment, resolves mime + file, and
-	 * dispatches to a registered extractor.
+	 * Looks up the attachment, resolves mime + file, and dispatches to a
+	 * registered extractor.
 	 */
 	public function test_wpdr_extract_text_dispatches_for_attachment() {
 		add_filter(
@@ -354,7 +274,7 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 		self::add_document_attachment( self::factory(), $doc_id, self::$test_file );
 
 		global $wpdr;
-		$revision = $wpdr->get_latest_revision( $doc_id );
+		$revision  = $wpdr->get_latest_revision( $doc_id );
 		$attach_id = (int) $revision->post_content;
 
 		$result = wpdr_extract_text( $attach_id );
@@ -362,8 +282,8 @@ class Test_WP_Document_Revisions_Text_Extractor extends Test_Common_WPDR {
 	}
 
 	/**
-	 * wpdr_extract_text() returns empty when no extractor is registered for
-	 * the attachment's MIME type — never throws, never warns.
+	 * Returns empty when no extractor is registered for the attachment's
+	 * MIME type — never throws, never warns.
 	 */
 	public function test_wpdr_extract_text_empty_when_no_extractor_registered() {
 		$doc_id = self::factory()->post->create(

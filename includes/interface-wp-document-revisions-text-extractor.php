@@ -51,7 +51,7 @@ interface WP_Document_Revisions_Text_Extractor {
 	 * @param string $file_path absolute path to the file on disk.
 	 * @param string $mime_type the MIME type of the file.
 	 * @return string extracted text, or empty string if nothing could be extracted.
-	 * @throws WP_Document_Revisions_Text_Extraction_Exception on hard failure.
+	 * @throws WP_Document_Revisions_Text_Extraction_Exception On hard failure.
 	 */
 	public function extract( string $file_path, string $mime_type ): string;
 }
