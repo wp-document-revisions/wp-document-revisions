@@ -45,9 +45,15 @@ class WP_Document_Revisions_Text_Extractor_Registry {
 		 * same MIME type — a plain append loses to anything already
 		 * registered.
 		 *
+		 * Entries that are not instances of
+		 * WP_Document_Revisions_Text_Extractor are silently skipped by
+		 * the dispatcher.
+		 *
 		 * @since 4.1.0
 		 *
-		 * @param WP_Document_Revisions_Text_Extractor[] $extractors registered extractors.
+		 * @param array $extractors Registered extractors. Each entry should
+		 *                          implement WP_Document_Revisions_Text_Extractor;
+		 *                          other values are ignored.
 		 */
 		$extractors = apply_filters( 'wpdr_text_extractors', array() );
 
