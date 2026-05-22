@@ -311,7 +311,7 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 		$text = wpdr_extract_text( $attach_id );
 
 		$diagnostic = sprintf(
-			"path=%s exists=%s readable=%s mime=%s direct_extract_len=%d wpdr_extract_len=%d",
+			'path=%s exists=%s readable=%s mime=%s direct_extract_len=%d wpdr_extract_len=%d',
 			$attached_path,
 			( $attached_path && file_exists( $attached_path ) ) ? 'yes' : 'no',
 			( $attached_path && is_readable( $attached_path ) ) ? 'yes' : 'no',
