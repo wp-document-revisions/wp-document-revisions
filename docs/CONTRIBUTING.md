@@ -90,7 +90,7 @@ The pipeline lives at:
 - `composer.json` — declares the `build:scope` script and the production `require` entries.
 - `vendor-bin/scoper/composer.json` — isolated manifest pinning `humbug/php-scoper`, installed via `composer install --working-dir=vendor-bin/scoper`. Lives in its own subdirectory so scoper's own dependencies cannot conflict with the main `vendor/` tree.
 - `scoper.inc.php` — prefix, finders, patchers, exposers.
-- `wp-document-revisions.php` — picks `vendor-prefixed/autoload.php` when present, falls back to `vendor/autoload.php`, and registers a `class_alias` shim so plugin source code can always reference the scoped names regardless of which autoload is active.
+- `wp-document-revisions.php` — picks `vendor-prefixed/scoper-autoload.php` (php-scoper 0.19+) or `vendor-prefixed/autoload.php` (older scoper) when present, falls back to `vendor/autoload.php`, and registers a `class_alias` shim so plugin source code can always reference the scoped names regardless of which autoload is active.
 
 ### Dev workflow
 
