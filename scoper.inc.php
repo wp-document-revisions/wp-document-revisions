@@ -31,12 +31,21 @@ return array(
 			->in( 'vendor' ),
 	),
 
-	// Patchers, exposers, and excludes will be added alongside the first
-	// real dependency in phase 3 (smalot/pdfparser) — empty defaults are
-	// fine for the empty-vendor smoke test that runs in Phase 2.
 	'patchers' => array(),
 
-	'exclude-namespaces' => array(),
+	'exclude-namespaces' => array(
+		// Leave Composer's own autoload machinery unscoped. If we let
+		// scoper rewrite it, vendor-prefixed/composer/autoload_real.php
+		// ends up referencing `WP_Document_Revisions\Vendor\Composer\
+		// Autoload\ClassLoader` but the ClassLoader.php file scoper
+		// produces is loaded by file path before that name resolves,
+		// and the result is "class not found" at boot. Excluding the
+		// `Composer\` namespace from scoping keeps the bootstrap
+		// internally consistent — the scoped deps still get prefixed
+		// via the classmap entries scoper rewrites in
+		// autoload_classmap.php.
+		'Composer\\',
+	),
 	'exclude-classes'    => array(),
 	'exclude-functions'  => array(),
 	'exclude-constants'  => array(),
