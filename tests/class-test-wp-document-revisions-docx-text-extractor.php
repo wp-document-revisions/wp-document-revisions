@@ -55,6 +55,13 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 	 * Build a PhpWord document with caller-supplied content and persist it
 	 * to a temp file via the requested writer.
 	 *
+	 * The file extension is part of the contract: downstream code
+	 * (`wp_check_filetype` in particular) keys the MIME type off the
+	 * extension, and `wp_tempnam()` cannot be used here because it
+	 * unconditionally rewrites the suffix to `.tmp` regardless of input,
+	 * which then propagates to the attachment's MIME being empty and the
+	 * registry not matching any extractor.
+	 *
 	 * @param callable $builder receives a PhpWord instance, populates it.
 	 * @param string   $writer  PHPWord writer name ('Word2007' or 'ODText').
 	 * @param string   $ext     file extension to use for the temp file.
@@ -64,11 +71,9 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 		$phpword = new \PhpOffice\PhpWord\PhpWord();
 		$builder( $phpword );
 
-		// wp_tempnam() gives us a unique path inside the WP upload tree;
-		// pass the desired suffix so PHPWord's writer sees a sensible
-		// extension when it saves and the file name reads naturally in
-		// any debugging output.
-		$path = wp_tempnam( 'wpdr_test_' . wp_generate_password( 6, false ) . $ext );
+		$dir  = trailingslashit( get_temp_dir() );
+		$name = wp_unique_filename( $dir, 'wpdr_test_' . wp_generate_password( 12, false ) . $ext );
+		$path = $dir . $name;
 
 		$writer_obj = \PhpOffice\PhpWord\IOFactory::createWriter( $phpword, $writer );
 		$writer_obj->save( $path );
@@ -298,28 +303,8 @@ class Test_WP_Document_Revisions_DOCX_Text_Extractor extends Test_Common_WPDR {
 		$revision  = $wpdr->get_latest_revision( $doc_id );
 		$attach_id = (int) $revision->post_content;
 
-		// Diagnostic state in case the assertion below fails: print what
-		// wpdr_extract_text() actually sees so we don't have to guess at
-		// the wp_upload_dir filter / MIME / path interaction.
-		$attached_path = get_attached_file( $attach_id );
-		$attached_mime = get_post_mime_type( $attach_id );
-		$direct_text   = ( new WP_Document_Revisions_DOCX_Text_Extractor() )->extract(
-			(string) $attached_path,
-			(string) $attached_mime
-		);
-
 		$text = wpdr_extract_text( $attach_id );
 
-		$diagnostic = sprintf(
-			'path=%s exists=%s readable=%s mime=%s direct_extract_len=%d wpdr_extract_len=%d',
-			$attached_path,
-			( $attached_path && file_exists( $attached_path ) ) ? 'yes' : 'no',
-			( $attached_path && is_readable( $attached_path ) ) ? 'yes' : 'no',
-			$attached_mime,
-			strlen( $direct_text ),
-			strlen( $text )
-		);
-
-		self::assertStringContainsString( 'Integration test content.', $text, $diagnostic );
+		self::assertStringContainsString( 'Integration test content.', $text );
 	}
 }
