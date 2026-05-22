@@ -32,16 +32,11 @@ jobs:
 
             - name: Install production composer dependencies
               # Production deps only — no dev tools in the release artifact.
+              # smalot/pdfparser ships unscoped from vendor/ for now; the
+              # scoper pipeline exists (composer build:scope) but is not on
+              # the release path until the Composer-autoload bootstrap edge
+              # cases are worked out. See scoper.inc.php and issue #514.
               run: composer install --no-dev --no-progress --no-interaction
-
-            - name: Build scoped vendor
-              # Rewrites the production composer dependencies into
-              # vendor-prefixed/ under the WP_Document_Revisions\Vendor\
-              # namespace so they cannot collide with the same libraries
-              # shipped by another wordpress.org plugin. The 10up action
-              # ships vendor-prefixed/ (not excluded in .distignore) and
-              # excludes vendor/ + composer.* via the existing .distignore.
-              run: composer build:scope
 
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@stable

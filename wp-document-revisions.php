@@ -55,18 +55,19 @@ if ( ! defined( 'WPDR_VERSION' ) ) {
 	define( 'WPDR_VERSION', '4.0.7' );
 }
 
-// Composer autoloader for production / scoped dependencies.
+// Composer autoloader for production dependencies.
 //
-// Release builds ship `vendor-prefixed/` (produced by `composer build:scope`).
-// Dev environments that have only run `composer install` keep the unprefixed
-// `vendor/` tree. The shim below picks whichever is present, and then registers
-// an autoloader that maps unscoped `Smalot\PdfParser\*` (and any future scoped
-// vendor namespace) onto the prefixed `WP_Document_Revisions\Vendor\*` names
-// the plugin uses internally, so the same plugin source works in both modes.
+// Today smalot/pdfparser ships unscoped from `vendor/` — both dev and
+// release. The `vendor-prefixed/` branches below stay as defensive code so
+// that the future scoper-on-the-release-path switch (when the Composer-
+// autoload bootstrap edge cases are worked out — see scoper.inc.php) needs
+// no further changes here. php-scoper writes `scoper-autoload.php` from
+// 0.19 onward and a plain `autoload.php` in 0.18, hence the two paths.
 //
-// php-scoper writes `scoper-autoload.php` from 0.19 onward; 0.18 and earlier
-// only wrote a scoped `autoload.php`. Check both so version bumps don't break
-// the bootstrap.
+// In every shipping configuration today the `vendor/autoload.php` branch
+// is the one that runs; the spl_autoload_register shim then registers an
+// alias so plugin code referencing `WP_Document_Revisions\Vendor\*` keeps
+// working if a downstream user opts into scoping locally.
 if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
 	require_once __DIR__ . '/vendor-prefixed/scoper-autoload.php';
 } elseif ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {

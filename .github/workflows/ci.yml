@@ -70,28 +70,17 @@ jobs:
               run: composer build:scope
 
             - name: Verify vendor-prefixed/ was produced
+              # Scoper still runs in CI as a smoke check that the build
+              # pipeline itself is wired up correctly, even though the
+              # release does not ship vendor-prefixed/ yet. When scoping is
+              # promoted onto the release path, this step gains a follow-up
+              # that asserts the scoped class is autoloadable.
               run: |
                   if [ ! -d vendor-prefixed ]; then
                       echo "vendor-prefixed/ was not created by build:scope" >&2
                       exit 1
                   fi
                   ls -la vendor-prefixed
-
-            - name: Verify scoped class is autoloadable
-              # End-to-end check that the prefix actually rewrote the
-              # production dependency's namespaces — not just that scoper
-              # produced an output directory.
-              run: |
-                  php -r '
-                      $autoload = file_exists(__DIR__ . "/vendor-prefixed/scoper-autoload.php")
-                          ? __DIR__ . "/vendor-prefixed/scoper-autoload.php"
-                          : __DIR__ . "/vendor-prefixed/autoload.php";
-                      require $autoload;
-                      if (!class_exists("WP_Document_Revisions\\Vendor\\Smalot\\PdfParser\\Parser")) {
-                          fwrite(STDERR, "Scoped PdfParser class is not autoloadable\n");
-                          exit(1);
-                      }
-                  '
 
     jest:
         runs-on: ubuntu-latest
