@@ -35,23 +35,17 @@ jobs:
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress
 
-            - name: phpcs
-              run: script/cibuild-phpcs
-
-            - name: PHPStan
-              run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
-
             - name: Audit dependencies
               run: composer audit
 
             - name: Validate scoper config (php -l)
               run: php -l scoper.inc.php
 
-            - name: Install php-scoper
-              run: composer install --working-dir=vendor-bin/scoper --no-progress --no-interaction
+            - name: phpcs
+              run: script/cibuild-phpcs
 
-            - name: Verify php-scoper is callable
-              run: vendor-bin/scoper/vendor/bin/php-scoper --version
+            - name: PHPStan
+              run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
 
     # End-to-end smoke test for the scoper build pipeline. Runs in its own
     # job because it needs `composer install --no-dev`, which would remove
@@ -76,6 +70,11 @@ jobs:
               run: composer build:scope
 
             - name: Verify vendor-prefixed/ was produced
+              # Scoper still runs in CI as a smoke check that the build
+              # pipeline itself is wired up correctly, even though the
+              # release does not ship vendor-prefixed/ yet. When scoping is
+              # promoted onto the release path, this step gains a follow-up
+              # that asserts the scoped class is autoloadable.
               run: |
                   if [ ! -d vendor-prefixed ]; then
                       echo "vendor-prefixed/ was not created by build:scope" >&2

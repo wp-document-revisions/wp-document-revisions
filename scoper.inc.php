@@ -2,16 +2,16 @@
 /**
  * php-scoper config for WP Document Revisions.
  *
- * Production composer dependencies are scoped under WP_Document_Revisions\Vendor
- * to avoid namespace collisions with other plugins shipping the same libraries
- * (a recurring problem for wordpress.org-distributed plugins).
+ * Intended to scope production composer dependencies under
+ * WP_Document_Revisions\Vendor to avoid namespace collisions with other
+ * plugins shipping the same libraries (a recurring problem for
+ * wordpress.org-distributed plugins).
  *
- * Phase 2 of issue #514: the pipeline exists, but no production dependencies
- * have been added yet, so this config currently scopes nothing. Phase 3 will
- * add smalot/pdfparser as the first scoped dependency.
- *
- * Run via `composer build:scope` after a production install
- * (`composer install --no-dev --no-progress`).
+ * Status: the pipeline (composer build:scope, vendor-bin/scoper, CI smoke
+ * job) is in place but not on the release path yet. smalot/pdfparser (the
+ * first production composer dep) currently ships unscoped from `vendor/`
+ * pending more work on scoper's Composer-autoload bootstrap edge cases. See
+ * issue #514 for context and `docs/CONTRIBUTING.md` for the dev workflow.
  *
  * @package WP_Document_Revisions
  */
@@ -31,9 +31,6 @@ return array(
 			->in( 'vendor' ),
 	),
 
-	// Patchers, exposers, and excludes will be added alongside the first
-	// real dependency in phase 3 (smalot/pdfparser) — empty defaults are
-	// fine for the empty-vendor smoke test that runs in Phase 2.
 	'patchers' => array(),
 
 	'exclude-namespaces' => array(),
