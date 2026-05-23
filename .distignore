@@ -22,6 +22,11 @@ bin
 circle.yml
 composer.json
 composer.lock
+# Note: `vendor` is intentionally NOT excluded — smalot/pdfparser and its
+# dependencies are installed via `composer install --no-dev` in the deploy
+# workflow and ship to wordpress.org from there. When the scoper pipeline
+# moves onto the release path, swap to excluding `vendor` and shipping
+# `vendor-prefixed/` instead.
 crowdin.yml
 docker-compose.yml
 Gruntfile.js
@@ -36,6 +41,8 @@ phpcs.ruleset.xml
 phpstan.neon.dist
 phpstan-baseline.neon
 playwright.config.js
+scoper.inc.php
+vendor-bin/
 README.md
 screenshot-1.png
 docs/_config.yml

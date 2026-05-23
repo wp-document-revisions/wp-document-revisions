@@ -55,11 +55,70 @@ if ( ! defined( 'WPDR_VERSION' ) ) {
 	define( 'WPDR_VERSION', '4.0.7' );
 }
 
+// Composer autoloader for production dependencies.
+//
+// Today smalot/pdfparser ships unscoped from `vendor/` — both dev and
+// release. The `vendor-prefixed/` branches below stay as defensive code so
+// that the future scoper-on-the-release-path switch (when the Composer-
+// autoload bootstrap edge cases are worked out — see scoper.inc.php) needs
+// no further changes here. php-scoper writes `scoper-autoload.php` from
+// 0.19 onward and a plain `autoload.php` in 0.18, hence the two paths.
+//
+// In every shipping configuration today the `vendor/autoload.php` branch
+// is the one that runs; the spl_autoload_register shim then registers an
+// alias so plugin code referencing `WP_Document_Revisions\Vendor\*` keeps
+// working if a downstream user opts into scoping locally.
+if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/scoper-autoload.php';
+} elseif ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor-prefixed/autoload.php';
+} elseif ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+
+	spl_autoload_register(
+		static function ( $class_name ) {
+			$prefix = 'WP_Document_Revisions\\Vendor\\';
+			if ( 0 !== strpos( $class_name, $prefix ) ) {
+				return;
+			}
+			$unscoped = substr( $class_name, strlen( $prefix ) );
+			if ( class_exists( $unscoped ) || interface_exists( $unscoped ) || trait_exists( $unscoped ) ) {
+				class_alias( $unscoped, $class_name );
+			}
+		}
+	);
+}
+
 require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-query.php';
+require_once __DIR__ . '/includes/interface-wp-document-revisions-text-extractor.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-exception.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-registry.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-cache.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
+
+// Register the built-in text extractors. Lazy construction inside the filter
+// callbacks avoids paying allocation cost on requests that never extract
+// anything. Third parties can prepend their own extractors at a higher
+// filter priority to override these defaults.
+add_filter(
+	'wpdr_text_extractors',
+	static function ( array $extractors ): array {
+		$extractors[] = new WP_Document_Revisions_PDF_Text_Extractor();
+		return $extractors;
+	}
+);
+add_filter(
+	'wpdr_text_extractors',
+	static function ( array $extractors ): array {
+		$extractors[] = new WP_Document_Revisions_DOCX_Text_Extractor();
+		return $extractors;
+	}
+);
 
 // $wpdr is a global reference to the class.
 global $wpdr;

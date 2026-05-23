@@ -1,6 +1,7 @@
 .DS_Store
 tests/wp-tests-config.php
 vendor
+vendor-prefixed
 bin
 wpcs
 build/logs/clover.xml

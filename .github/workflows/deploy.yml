@@ -22,8 +22,21 @@ jobs:
                   node-version: '20'
                   cache: 'npm'
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
             - name: Build assets
               run: npm ci && npm run build
+
+            - name: Install production composer dependencies
+              # Production deps only — no dev tools in the release artifact.
+              # smalot/pdfparser ships unscoped from vendor/ for now; the
+              # scoper pipeline exists (composer build:scope) but is not on
+              # the release path until the Composer-autoload bootstrap edge
+              # cases are worked out. See scoper.inc.php and issue #514.
+              run: composer install --no-dev --no-progress --no-interaction
 
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@stable

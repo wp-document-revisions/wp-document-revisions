@@ -44,5 +44,8 @@
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/vendor/autoload.php</exclude-pattern>
+	<exclude-pattern>*/vendor-bin/*</exclude-pattern>
+	<exclude-pattern>*/vendor-prefixed/*</exclude-pattern>
+	<exclude-pattern>scoper.inc.php</exclude-pattern>
 	<exclude-pattern>*/docs/*</exclude-pattern>
 </ruleset>

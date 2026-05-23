@@ -35,14 +35,52 @@ jobs:
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress
 
+            - name: Audit dependencies
+              run: composer audit
+
+            - name: Validate scoper config (php -l)
+              run: php -l scoper.inc.php
+
             - name: phpcs
               run: script/cibuild-phpcs
 
             - name: PHPStan
               run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
 
-            - name: Audit dependencies
-              run: composer audit
+    # End-to-end smoke test for the scoper build pipeline. Runs in its own
+    # job because it needs `composer install --no-dev`, which would remove
+    # the dev tools (phpcs, phpstan) that `code-quality` relies on.
+    scoper-pipeline:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Scoper pipeline smoke test
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Install production composer dependencies
+              run: composer install --no-dev --no-progress
+
+            - name: Run build:scope
+              run: composer build:scope
+
+            - name: Verify vendor-prefixed/ was produced
+              # Scoper still runs in CI as a smoke check that the build
+              # pipeline itself is wired up correctly, even though the
+              # release does not ship vendor-prefixed/ yet. When scoping is
+              # promoted onto the release path, this step gains a follow-up
+              # that asserts the scoped class is autoloadable.
+              run: |
+                  if [ ! -d vendor-prefixed ]; then
+                      echo "vendor-prefixed/ was not created by build:scope" >&2
+                      exit 1
+                  fi
+                  ls -la vendor-prefixed
 
     jest:
         runs-on: ubuntu-latest
