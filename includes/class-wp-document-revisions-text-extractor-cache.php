@@ -141,6 +141,23 @@ class WP_Document_Revisions_Text_Extractor_Cache {
 		// for this file, so the async scheduler is free to run again if the
 		// file is later replaced.
 		delete_post_meta( $attachment_id, self::META_KEY_FAILED_HASH );
+
+		/**
+		 * Fires after extracted text is successfully cached for a
+		 * revision attachment.
+		 *
+		 * Phase 11's AI-summary scheduler listens for this so it can
+		 * queue a summary cron event once extracted text is available.
+		 * Third parties can hook this for downstream consumers
+		 * (search indexing, embeddings, etc.) without monkey-patching
+		 * the cache class.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param int $attachment_id ID of the revision attachment whose
+		 *                           extracted text was just cached.
+		 */
+		do_action( 'wpdr_text_extracted', $attachment_id );
 	}
 
 	/**
