@@ -11,7 +11,19 @@ parameters:
         - vendor-prefixed/ (?)
     bootstrapFiles:
         - vendor/autoload.php
-    ignoreErrors: []
+    ignoreErrors:
+        # WP_CLI is only defined when running under the WP-CLI runtime. The
+        # bootstrap guards the only call site with `defined('WP_CLI')` and
+        # the command class is only required from the same guarded block,
+        # so the class is always present when these calls execute. Phpstan
+        # has no WP_CLI stubs via phpstan-wordpress, so silence the
+        # unknown-class noise on the two files that intentionally call it.
+        -
+            message: '#^Call to static method [^(]+\(\) on an unknown class WP_CLI\.$#'
+            identifier: class.notFound
+            paths:
+                - includes/class-wp-document-revisions-text-extraction-cli-command.php
+                - wp-document-revisions.php
     treatPhpDocTypesAsCertain: false
     parallel:
         maximumNumberOfProcesses: 4

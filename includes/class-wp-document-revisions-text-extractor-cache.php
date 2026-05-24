@@ -170,6 +170,34 @@ class WP_Document_Revisions_Text_Extractor_Cache {
 	}
 
 	/**
+	 * Delete every cache-managed meta key for an attachment.
+	 *
+	 * Removes the extracted text, its source hash, the producing extractor
+	 * identity, and the failure flag. Used by phase 8 when a document is
+	 * opted out of text extraction so previously-cached output cannot leak
+	 * through readers that hit the cache directly, and by phase 9's WP-CLI
+	 * `--force` path to guarantee a clean re-extraction.
+	 *
+	 * The failed-hash key is included on purpose: clearing the text without
+	 * clearing the failure flag would leave the attachment unable to retry
+	 * extraction (its current hash would still match the failure record), so
+	 * a later opt-in or `--force` would silently noop.
+	 *
+	 * @param int $attachment_id ID of the revision attachment post.
+	 * @return void
+	 */
+	public static function clear( int $attachment_id ): void {
+		if ( $attachment_id <= 0 ) {
+			return;
+		}
+
+		delete_post_meta( $attachment_id, self::META_KEY_TEXT );
+		delete_post_meta( $attachment_id, self::META_KEY_HASH );
+		delete_post_meta( $attachment_id, self::META_KEY_EXTRACTOR );
+		delete_post_meta( $attachment_id, self::META_KEY_FAILED_HASH );
+	}
+
+	/**
 	 * Record that extraction threw a hard failure for this file.
 	 *
 	 * The current SHA-256 is stored so the failure flag self-invalidates
