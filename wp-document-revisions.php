@@ -99,6 +99,7 @@ require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-reg
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-cache.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-scheduler.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-opt-out.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-diff.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
