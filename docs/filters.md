@@ -302,3 +302,63 @@ Filters the option to send a locked document override email
 In: trait-wp-document-revisions-file-handler.php
 
 Filters the decision to serve the document through WP Document Revisions.
+
+## Filter wpdr_text_extractors
+
+In: includes/class-wp-document-revisions-text-extractor-registry.php
+
+Ordered list of `WP_Document_Revisions_Text_Extractor` implementations. The first whose `supports($mime_type)` returns true wins. Prepend with `array_unshift()` to override the built-in PDF and DOCX extractors; append to add support for additional file formats. See the [Text Extraction & AI Summaries cookbook entry](cookbook/text-extraction-and-ai-summaries.md#recipe-1-register-a-custom-extractor) for an example.
+
+## Filter wpdr_text_extraction_delay
+
+In: includes/class-wp-document-revisions-text-extractor-scheduler.php
+
+Seconds between a revision attachment insert and the cron event that runs extraction. Default 10. Raise on sites where post-save listeners are slow.
+
+## Filter wpdr_text_extraction_timeout
+
+In: includes/class-wp-document-revisions-text-extractor-scheduler.php
+
+Hard timeout, in seconds, applied via `set_time_limit()` inside the extraction cron handler. Default 30. Advisory only — no-op when `safe_mode` is on or `set_time_limit` is disabled.
+
+## Filter wpdr_text_diff_context_lines
+
+In: includes/class-wp-document-revisions-text-diff.php
+
+Lines of context per hunk emitted by the unified-diff helper when summarising a revision. Default 3. Set higher to give the AI more surrounding context for references like "Section 4.2."
+
+## Filter wpdr_text_diff_max_chars
+
+In: includes/class-wp-document-revisions-text-diff.php
+
+Maximum rendered-diff size, in characters, before the helper reports `too_large` and the summary path falls back to summarising the new document directly. Default 50000.
+
+## Filter wpdr_ai_summary_available
+
+In: includes/class-wp-document-revisions-ai-summary.php
+
+Force-enable (return true) or force-disable (return false) the AI summary generation pipeline. The default check is `function_exists( 'wp_ai_client_prompt' )` (WordPress 7.0+) combined with the `WP_AI_SUPPORT` constant. Tests and sites running an alternative provider via `wpdr_ai_summary_generator` use this to force-enable without WP 7.0.
+
+## Filter wpdr_ai_summary_generator
+
+In: includes/class-wp-document-revisions-ai-summary.php
+
+Intercept the AI call. Receives `(string|null $default, string $prompt)`; return a string to short-circuit the WP AI Client invocation (used by the test suite and by sites running an alternative SDK), or null to defer to the default `wp_ai_client_prompt()` path.
+
+## Filter wpdr_ai_summary_prompt
+
+In: includes/class-wp-document-revisions-ai-summary.php
+
+Customize the system prompt template. Receives `(string $default, string $kind, int $attachment_id)` where `$kind` is one of `'change'` or `'document'`. Return a string to replace the template. The input text (diff or extracted text) is deliberately NOT passed — it is concatenated after the template, not substituted into it. See the [cookbook recipe](cookbook/text-extraction-and-ai-summaries.md#recipe-2-customize-the-ai-summary-prompt) for an example.
+
+## Filter wpdr_ai_summary_delay
+
+In: includes/class-wp-document-revisions-ai-summary.php
+
+Seconds between text extraction completing and the summary cron event firing. Default 10. Mirrors `wpdr_text_extraction_delay` for the second stage of the pipeline.
+
+## Filter wpdr_ai_summary_timeout
+
+In: includes/class-wp-document-revisions-ai-summary.php
+
+Hard timeout, in seconds, for a single summary generation call. Default 60. Applied via `set_time_limit()` inside the cron handler (advisory).

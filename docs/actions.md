@@ -51,3 +51,9 @@ In: trait-wp-document-revisions-file-handler.php
 Called just before serving the file to the user.
 
 In: trait-wp-document-revisions-file-handler.php
+
+## Action wpdr_text_extracted
+
+Fires after extracted text is successfully cached for a revision attachment. Receives the attachment ID. Used internally by the AI summary scheduler to queue a follow-on cron event; third-party consumers (search indexing, embedding generation, etc.) can hook this to react to new extracted content without monkey-patching the cache class.
+
+In: includes/class-wp-document-revisions-text-extractor-cache.php
