@@ -147,6 +147,25 @@ class Test_WP_Document_Revisions_Text_Extraction_CLI_Command extends Test_Common
 	}
 
 	/**
+	 * When --id and --all are both present, --id wins and only the
+	 * single document is returned (the documented precedence rule).
+	 */
+	public function test_collect_target_document_ids_id_wins_over_all() {
+		list( $doc_a ) = $this->create_document_with_attachment( 'doc-a' );
+		list( $doc_b ) = $this->create_document_with_attachment( 'doc-b' );
+
+		$ids = WP_Document_Revisions_Text_Extraction_CLI_Command::collect_target_document_ids(
+			array(
+				'all' => true,
+				'id'  => (string) $doc_a,
+			)
+		);
+
+		self::assertSame( array( $doc_a ), $ids );
+		self::assertNotContains( $doc_b, $ids, '--id must win and ignore --all when both are present' );
+	}
+
+	/**
 	 * `--all` returns every document in the library.
 	 */
 	public function test_collect_target_document_ids_all_returns_every_document() {

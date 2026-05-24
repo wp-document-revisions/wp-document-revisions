@@ -164,9 +164,12 @@ class WP_Document_Revisions_Text_Extraction_CLI_Command {
 	/**
 	 * Resolve the document IDs to walk based on selector flags.
 	 *
-	 * `--id=<id>` wins over `--all` / `--missing` when combined.
-	 * Pagination uses `BATCH_SIZE` per page and flushes the object cache
-	 * between batches so large libraries don't OOM.
+	 * `--id=<id>` wins over `--all` / `--missing` when combined. The
+	 * `--all` / `--missing` paths paginate via `WP_Query` with
+	 * `fields => 'ids'` so only integers (not full WP_Post objects) are
+	 * accumulated; flushing the object cache between batches would
+	 * invalidate the post lookups `extract_text()` is about to do on the
+	 * returned IDs, so the loop deliberately does not flush.
 	 *
 	 * @param array<string, string> $assoc_args parsed associative args.
 	 * @return array<int, int> document post IDs, in WP_Query order.
@@ -198,7 +201,6 @@ class WP_Document_Revisions_Text_Extraction_CLI_Command {
 				$document_ids[] = (int) $id;
 			}
 			$page_size = count( $query->posts );
-			wp_cache_flush();
 			++$page;
 		} while ( self::BATCH_SIZE === $page_size );
 
