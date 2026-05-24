@@ -55,6 +55,20 @@ async function loadModule() {
 }
 
 describe('wp-document-revisions-ai-prefill', () => {
+	// tests/js/setup.js globally replaces document.getElementById /
+	// querySelector / querySelectorAll with jest.fn() mocks that return
+	// synthetic elements regardless of the real DOM — fine for the
+	// existing classic-editor tests, but the pre-fill module's contract
+	// is "look at the real textarea and respect its real value." Drop
+	// the instance overrides so the native jsdom prototype methods
+	// take over for this file only.
+	beforeAll(() => {
+		delete document.getElementById;
+		delete document.querySelector;
+		delete document.querySelectorAll;
+		delete document.getElementsByClassName;
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 		document.body.innerHTML = '';
