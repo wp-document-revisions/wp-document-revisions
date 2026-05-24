@@ -101,6 +101,7 @@ require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-sch
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-opt-out.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-diff.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary-rest.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
@@ -138,6 +139,10 @@ WP_Document_Revisions_Text_Extraction_Opt_Out::init();
 // available; the cron event is still scheduled so a future site
 // upgrade does not require re-extracting historical content.
 WP_Document_Revisions_AI_Summary::init();
+
+// Register the read + review REST endpoints. Generation is intentionally
+// NOT exposed over REST — cron drives it after extraction completes.
+WP_Document_Revisions_AI_Summary_REST::init();
 
 // Register the WP-CLI backfill command when running under WP-CLI.
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
