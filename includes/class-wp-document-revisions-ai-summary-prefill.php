@@ -110,29 +110,24 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
 			plugins_url( $path, __DIR__ ),
-			array(),
+			array( 'wp-api-fetch' ),
 			$vers,
 			true
 		);
 
 		$data = array(
-			'restUrl'  => esc_url_raw(
-				rest_url(
-					sprintf(
-						'%s/documents/%d/revisions/%d/summary',
-						WP_Document_Revisions_AI_Summary_REST::ROUTE_NAMESPACE,
-						$document_id,
-						$revision_id
-					)
-				)
+			'restPath'       => sprintf(
+				'%s/documents/%d/revisions/%d/summary',
+				WP_Document_Revisions_AI_Summary_REST::ROUTE_NAMESPACE,
+				$document_id,
+				$revision_id
 			),
-			'restNonce' => wp_create_nonce( 'wp_rest' ),
-			'fieldId'   => 'excerpt',
+			'fieldId'        => 'excerpt',
 			'initialDelayMs' => 10000,
-			'i18n'      => array(
-				'hint'         => __( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
-				'dismiss'      => __( 'Dismiss', 'wp-document-revisions' ),
-				'pending'      => __( '✨ AI summary will be available shortly — refresh this page to see it.', 'wp-document-revisions' ),
+			'i18n'           => array(
+				'hint'    => __( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
+				'dismiss' => __( 'Dismiss', 'wp-document-revisions' ),
+				'pending' => __( '✨ AI summary will be available shortly — refresh this page to see it.', 'wp-document-revisions' ),
 			),
 		);
 
