@@ -19,7 +19,7 @@
  * which honours both the `WPDR_TEXT_EXTRACTION` sitewide constant and
  * the per-document `_wpdr_no_text_extraction` flag.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -110,7 +110,7 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 		/**
 		 * Filter the delay between attachment insert and async extraction.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param int $delay         Delay in seconds.
 		 * @param int $attachment_id Attachment ID about to be scheduled.
@@ -169,7 +169,7 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 		/**
 		 * Filter the per-file extraction timeout, in seconds.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param int $timeout       Timeout in seconds. Zero disables the cap.
 		 * @param int $attachment_id Attachment being extracted.

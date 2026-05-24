@@ -71,7 +71,7 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 	 * same file return the cached text without re-running the extractor. The
 	 * cache invalidates automatically whenever the file content changes.
 	 *
-	 * @since 4.1.0
+	 * @since 5.0.0
 	 *
 	 * @param int $revision_id the attachment/revision post ID.
 	 * @return string extracted text, or empty string.

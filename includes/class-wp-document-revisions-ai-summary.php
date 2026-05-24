@@ -42,7 +42,7 @@
  *
  * Phase 11 of issue #514.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -160,7 +160,7 @@ class WP_Document_Revisions_AI_Summary {
 		 * alternative provider via the `wpdr_ai_summary_generator`
 		 * filter) can force-enable the pipeline without WP 7.0.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param bool|null $available Force true/false to override; null
 		 *                             defers to the default check.
@@ -201,7 +201,7 @@ class WP_Document_Revisions_AI_Summary {
 		/**
 		 * Filter the delay between text extraction and summary generation.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param int $delay         Seconds to wait before running the summary cron.
 		 * @param int $attachment_id Attachment being scheduled.
@@ -427,7 +427,7 @@ class WP_Document_Revisions_AI_Summary {
 		 * input text — the prompt template is the instruction; the
 		 * input is concatenated after it. Return a plain string.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param string $template      Default prompt for this kind.
 		 * @param string $kind          'change' or 'document'.
@@ -451,7 +451,7 @@ class WP_Document_Revisions_AI_Summary {
 		 * intercept the call. Return a string to short-circuit (used by
 		 * the test suite); return null to defer to the real provider.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param string|null $result Forced result, or null to defer.
 		 * @param string      $prompt The composed prompt.

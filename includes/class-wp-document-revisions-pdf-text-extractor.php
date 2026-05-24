@@ -7,7 +7,7 @@
  * cannot interrupt a check-in. Scanned PDFs (no embedded text layer) also
  * return empty — see the OCR follow-up in issue #514 for that path.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 

@@ -38,7 +38,7 @@
  *
  * Phase 9 of issue #514.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 

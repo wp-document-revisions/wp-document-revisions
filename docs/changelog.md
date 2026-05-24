@@ -2,9 +2,11 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
-### 4.1.0
+### 5.0.0
 
 Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.
+
+**Breaking changes:** raises the minimum PHP from 7.4 to 8.0 and the minimum WordPress from 5.0 to 5.9 to match what CI actually exercises. Sites on older PHP or WP will no longer see updates to this plugin until they upgrade their runtime. The composer floor was already at PHP 7.4, so install on PHP < 7.4 was already failing; this commit bumps the same constraint to 8.0 and brings the readme.txt declaration in line with what the test matrix verifies. WordPress 5.0–5.8 were never in CI's matrix; that floor's bump is similarly a "claim what we test" cleanup. PHP 7.4 has been EOL since November 2022 and WP 5.0 is from December 2018, so the practical population affected is small.
 
 #### Features
 

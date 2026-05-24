@@ -13,7 +13,7 @@
  * Phase 1 of issue #514: dispatcher only. No caching, no async, no built-in
  * extractors yet — those land in later phases.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -49,7 +49,7 @@ class WP_Document_Revisions_Text_Extractor_Registry {
 		 * WP_Document_Revisions_Text_Extractor are silently skipped by
 		 * the dispatcher.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param array $extractors Registered extractors. Each entry should
 		 *                          implement WP_Document_Revisions_Text_Extractor;

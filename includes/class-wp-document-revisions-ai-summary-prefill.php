@@ -21,7 +21,7 @@
  *
  * Phase 12 of issue #514.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -105,7 +105,7 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 		$suffix = defined( 'WP_DEBUG' ) && WP_DEBUG ? '.dev' : '';
 		$path   = '/js/wp-document-revisions-ai-prefill' . $suffix . '.js';
 		$abs    = dirname( __DIR__ ) . $path;
-		$vers   = file_exists( $abs ) ? (string) filemtime( $abs ) : '4.1.0';
+		$vers   = file_exists( $abs ) ? (string) filemtime( $abs ) : '5.0.0';
 
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,

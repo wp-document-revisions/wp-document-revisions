@@ -36,7 +36,7 @@
  *
  * Phase 10 of issue #514.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -192,7 +192,7 @@ class WP_Document_Revisions_Text_Diff {
 			 * Filter the default number of context lines per hunk used
 			 * by the unified-diff helper.
 			 *
-			 * @since 4.1.0
+			 * @since 5.0.0
 			 *
 			 * @param int $context_lines Default context-line count.
 			 */
@@ -217,7 +217,7 @@ class WP_Document_Revisions_Text_Diff {
 			 * Filter the maximum rendered-diff size, in characters,
 			 * before the helper reports 'too_large'.
 			 *
-			 * @since 4.1.0
+			 * @since 5.0.0
 			 *
 			 * @param int $max_chars Default size cap in characters.
 			 */

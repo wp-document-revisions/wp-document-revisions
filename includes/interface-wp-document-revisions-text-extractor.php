@@ -16,7 +16,7 @@
  * MIME type wins. To override a built-in extractor for a given MIME type,
  * prepend with `array_unshift()` instead of appending.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 

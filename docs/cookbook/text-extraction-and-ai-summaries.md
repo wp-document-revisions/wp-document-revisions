@@ -18,7 +18,7 @@ This recipe covers:
 
 ## Prerequisites
 
-- WP Document Revisions 4.1.0 or later
+- WP Document Revisions 5.0.0 or later
 - PHP 7.4 or later (PHP 8.3+ recommended)
 - WordPress 5.0 or later for extraction; **WordPress 7.0 or later** for AI summary generation (uses the core AI Client). The pre-fill UI is harmless on older WordPress — it simply finds no summaries to show.
 - One of the [WordPress AI provider connectors](https://wordpress.org/plugins/search/ai+provider/) (Anthropic, OpenAI, or Google) configured under **Settings → Connectors**, for summary generation. Without a provider, extraction still runs and the cache populates.

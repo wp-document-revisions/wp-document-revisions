@@ -19,7 +19,7 @@
  * here and refuses to retry against the same content. A successful set() or
  * a file replacement clears the flag automatically.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -152,7 +152,7 @@ class WP_Document_Revisions_Text_Extractor_Cache {
 		 * (search indexing, embeddings, etc.) without monkey-patching
 		 * the cache class.
 		 *
-		 * @since 4.1.0
+		 * @since 5.0.0
 		 *
 		 * @param int $attachment_id ID of the revision attachment whose
 		 *                           extracted text was just cached.
