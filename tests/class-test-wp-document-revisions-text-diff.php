@@ -212,7 +212,7 @@ class Test_WP_Document_Revisions_Text_Diff extends Test_Common_WPDR {
 	 * standard unified-diff parsers expect.
 	 */
 	public function test_renderer_emits_canonical_block_header() {
-		require_once ABSPATH . WPINC . '/wp-diff.php';
+		require_once ABSPATH . 'wp-includes/wp-diff.php';
 		require_once __DIR__ . '/../includes/class-wp-document-revisions-unified-diff-renderer.php';
 
 		$diff     = new Text_Diff(

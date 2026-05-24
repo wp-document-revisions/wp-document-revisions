@@ -235,7 +235,11 @@ class WP_Document_Revisions_Text_Diff {
 	 */
 	private static function load_diff_engine(): void {
 		if ( ! class_exists( 'Text_Diff_Renderer' ) ) {
-			require_once ABSPATH . WPINC . '/wp-diff.php';
+			// Hard-coded 'wp-includes' rather than the WPINC constant
+			// because phpstan-wordpress does not stub WPINC and this
+			// directory name is part of WordPress's stable public
+			// layout — it has not changed since 2.5 and is unlikely to.
+			require_once ABSPATH . 'wp-includes/wp-diff.php';
 		}
 		if ( ! class_exists( 'WP_Document_Revisions_Unified_Diff_Renderer' ) ) {
 			require_once __DIR__ . '/class-wp-document-revisions-unified-diff-renderer.php';

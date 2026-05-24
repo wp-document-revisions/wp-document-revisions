@@ -11,7 +11,7 @@
  *
  * The file is intentionally loaded lazily — it depends on
  * `Text_Diff_Renderer` being defined, which only happens after
- * `ABSPATH . WPINC . '/wp-diff.php'` has been required. The helper class
+ * `ABSPATH . 'wp-includes/wp-diff.php'` has been required. The helper class
  * loads both before instantiating the renderer; do not require this file
  * directly at plugin bootstrap.
  *
@@ -72,7 +72,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param int $ylen number of lines from the new side.
 	 * @return string the `@@ ... @@` header.
 	 */
-	protected function _blockHeader( $xbeg, $xlen, $ybeg, $ylen ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _blockHeader( $xbeg, $xlen, $ybeg, $ylen ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return sprintf( '@@ -%d,%d +%d,%d @@', $xbeg, $xlen, $ybeg, $ylen );
 	}
 
@@ -83,7 +83,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param string $header the header text returned by _blockHeader().
 	 * @return string header followed by a single newline.
 	 */
-	protected function _startBlock( $header ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _startBlock( $header ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $header . "\n";
 	}
 
@@ -93,7 +93,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 *
 	 * @return string empty string.
 	 */
-	protected function _endBlock() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _endBlock() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return '';
 	}
 
@@ -107,7 +107,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 *                trailing newline so the next group starts on its
 	 *                own row.
 	 */
-	protected function _lines( $lines, $prefix = ' ' ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _lines( $lines, $prefix = ' ' ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		if ( empty( $lines ) ) {
 			return '';
 		}
@@ -120,7 +120,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param string[] $lines lines added.
 	 * @return string lines prefixed with `+`.
 	 */
-	protected function _added( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _added( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $this->_lines( $lines, '+' );
 	}
 
@@ -130,7 +130,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param string[] $lines lines deleted.
 	 * @return string lines prefixed with `-`.
 	 */
-	protected function _deleted( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _deleted( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $this->_lines( $lines, '-' );
 	}
 
@@ -140,7 +140,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param string[] $lines unchanged lines.
 	 * @return string lines prefixed with a single space.
 	 */
-	protected function _context( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _context( $lines ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $this->_lines( $lines, ' ' );
 	}
 
@@ -160,7 +160,7 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * @param string[] $replacement new-side lines that replace them.
 	 * @return string deletions followed by additions.
 	 */
-	protected function _changed( $orig, $replacement ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+	public function _changed( $orig, $replacement ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $this->_deleted( $orig ) . $this->_added( $replacement );
 	}
 }
