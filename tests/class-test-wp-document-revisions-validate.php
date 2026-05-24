@@ -713,8 +713,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	 */
 	public function test_endpoints() {
 		global $wp_rest_server;
-		// only want the default documents one and not the namespace one.
-		$the_route = $this->namespaced_route . '/';
+		// Only inspect the validate-structure `/correct/` route shape;
+		// other routes registered under the same namespace (the AI
+		// summary routes added in #514 phase 11, for example) have a
+		// different shape and would trip the per-route assertions
+		// below if iterated here.
+		$the_route = $this->namespaced_route . '/correct/';
 		$routes    = $wp_rest_server->get_routes( $this->namespaced_route );
 		self::assertNotEmpty( $routes, 'No document routes' );
 
