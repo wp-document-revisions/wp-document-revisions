@@ -154,7 +154,7 @@ class Test_WP_Document_Revisions_AI_Summary_REST extends Test_Common_WPDR {
 	 */
 	public function test_get_returns_404_when_revision_does_not_match_document() {
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
-		list( $doc_a, ) = $this->create_document_with_attachment();
+		list( $doc_a, )  = $this->create_document_with_attachment();
 		list( , $rev_b ) = $this->create_document_with_attachment();
 
 		$response = $this->server->dispatch(
@@ -217,7 +217,7 @@ class Test_WP_Document_Revisions_AI_Summary_REST extends Test_Common_WPDR {
 		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
 		WP_Document_Revisions_AI_Summary::store( $attach_id, 'change', 'summary', 'hash' );
 
-		$request = new WP_REST_Request( 'POST', $this->summary_route( $doc_id, $attach_id, '/review' ) );
+		$request  = new WP_REST_Request( 'POST', $this->summary_route( $doc_id, $attach_id, '/review' ) );
 		$response = $this->server->dispatch( $request );
 
 		self::assertContains( $response->get_status(), array( 401, 403 ) );
@@ -233,7 +233,7 @@ class Test_WP_Document_Revisions_AI_Summary_REST extends Test_Common_WPDR {
 
 		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
 
-		$request = new WP_REST_Request( 'POST', $this->summary_route( $doc_id, $attach_id, '/review' ) );
+		$request  = new WP_REST_Request( 'POST', $this->summary_route( $doc_id, $attach_id, '/review' ) );
 		$response = $this->server->dispatch( $request );
 
 		self::assertSame( 404, $response->get_status() );

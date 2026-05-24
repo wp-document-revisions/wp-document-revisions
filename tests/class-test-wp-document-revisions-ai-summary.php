@@ -126,7 +126,7 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 	}
 
 	/**
-	 * maybe_schedule queues a single cron event for a revision attachment.
+	 * Scheduling queues a single cron event for a revision attachment.
 	 */
 	public function test_maybe_schedule_queues_cron_event() {
 		list( , $attach_id ) = $this->attach_revision( 'body' );
@@ -142,8 +142,8 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 	}
 
 	/**
-	 * maybe_schedule skips attachments whose parent document is
-	 * opted out of text extraction.
+	 * Scheduling skips attachments whose parent document is opted out
+	 * of text extraction.
 	 */
 	public function test_maybe_schedule_skips_opted_out_document() {
 		list( $doc_id, $attach_id ) = $this->attach_revision( 'body' );
@@ -216,9 +216,9 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 			}
 		);
 
-		list( $doc_id, $first_id ) = $this->attach_revision( "same text" );
+		list( $doc_id, $first_id ) = $this->attach_revision( 'same text' );
 		wpdr_extract_text( $first_id );
-		list( , $second_id )       = $this->attach_revision( "same text", $doc_id );
+		list( , $second_id ) = $this->attach_revision( 'same text', $doc_id );
 
 		WP_Document_Revisions_AI_Summary::run( $second_id );
 
@@ -248,7 +248,7 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 
 		list( $doc_id, $first_id ) = $this->attach_revision( "alpha\nbeta" );
 		wpdr_extract_text( $first_id );
-		list( , $second_id )       = $this->attach_revision( "completely different\nlines\nhere", $doc_id );
+		list( , $second_id ) = $this->attach_revision( "completely different\nlines\nhere", $doc_id );
 
 		WP_Document_Revisions_AI_Summary::run( $second_id );
 
@@ -311,7 +311,7 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 			}
 		);
 
-		list( , $attach_id ) = $this->attach_revision( "something" );
+		list( , $attach_id ) = $this->attach_revision( 'something' );
 
 		WP_Document_Revisions_AI_Summary::run( $attach_id );
 
@@ -378,7 +378,8 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 
 		add_filter(
 			'wpdr_ai_summary_prompt',
-			static function ( string $default, string $kind, int $rev_id ) use ( &$captured_kind, &$captured_revision_id ): string {
+			static function ( string $ignored_default, string $kind, int $rev_id ) use ( &$captured_kind, &$captured_revision_id ): string {
+				unset( $ignored_default );
 				$captured_kind        = $kind;
 				$captured_revision_id = $rev_id;
 				return 'CUSTOM PROMPT';
@@ -388,7 +389,8 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 		);
 		add_filter(
 			'wpdr_ai_summary_generator',
-			static function ( $default, string $prompt ) use ( &$captured_prompt_passed ): string {
+			static function ( $ignored_default, string $prompt ) use ( &$captured_prompt_passed ): string {
+				unset( $ignored_default );
 				$captured_prompt_passed = $prompt;
 				return 'ok';
 			},
@@ -396,7 +398,7 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 			2
 		);
 
-		list( , $attach_id ) = $this->attach_revision( "first revision text" );
+		list( , $attach_id ) = $this->attach_revision( 'first revision text' );
 		WP_Document_Revisions_AI_Summary::run( $attach_id );
 
 		self::assertSame( 'document', $captured_kind, 'First revision uses document kind' );
@@ -406,13 +408,13 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 	}
 
 	/**
-	 * prior_revision_id walks the document's attachments and returns
-	 * the entry immediately after the given one (older revision).
+	 * Finding the prior revision walks the document's attachments and
+	 * returns the entry immediately older than the given one.
 	 */
 	public function test_prior_revision_id_returns_immediately_older_attachment() {
-		list( $doc_id, $first_id )  = $this->attach_revision( 'one' );
-		list( , $second_id )        = $this->attach_revision( 'two', $doc_id );
-		list( , $third_id )         = $this->attach_revision( 'three', $doc_id );
+		list( $doc_id, $first_id ) = $this->attach_revision( 'one' );
+		list( , $second_id )       = $this->attach_revision( 'two', $doc_id );
+		list( , $third_id )        = $this->attach_revision( 'three', $doc_id );
 
 		self::assertSame( $second_id, WP_Document_Revisions_AI_Summary::prior_revision_id( $third_id, $doc_id ) );
 		self::assertSame( $first_id, WP_Document_Revisions_AI_Summary::prior_revision_id( $second_id, $doc_id ) );
@@ -420,8 +422,8 @@ class Test_WP_Document_Revisions_AI_Summary extends Test_Common_WPDR {
 	}
 
 	/**
-	 * set_reviewed writes the reviewer ID + timestamp when given a
-	 * positive user ID, and clears them when given 0.
+	 * Setting reviewed writes the reviewer ID + timestamp when given
+	 * a positive user ID, and clears them when given 0.
 	 */
 	public function test_set_reviewed_writes_and_clears_meta() {
 		$this->register_counting_fake();
