@@ -93,7 +93,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
 - WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use
-- AI-generated revision summaries via the [WordPress 7.0 AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), computed from a unified diff of the new revision against the prior one and pre-filled into the revision log for editor review. See the [Text Extraction & AI cookbook entry](https://wp-document-revisions.github.io/wp-document-revisions/cookbook/text-extraction-and-ai-summaries/) for customization recipes
+- AI-generated revision summaries via the [WordPress 7.0 AI Client](https://wp-document-revisions.github.io/wp-document-revisions/https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), computed from a unified diff of the new revision against the prior one and pre-filled into the revision log for editor review. See the [Text Extraction & AI cookbook entry](cookbook/text-extraction-and-ai-summaries/) for customization recipes
 - WP-CLI `document-revisions extract-text` command to backfill the extraction cache across an existing library, with `--all`/`--missing`/`--id`/`--extractor`/`--force`/`--dry-run` selectors
 - Per-document and sitewide opt-outs for text extraction and AI pre-fill — extraction respects `WPDR_TEXT_EXTRACTION`, AI pre-fill respects `WPDR_AI_SUMMARY_PREFILL` and the core `WP_AI_SUPPORT` constant
 - Clean uninstall: options, user meta, and capabilities removed on plugin deletion
@@ -248,12 +248,5 @@ Adds native text extraction and AI-generated revision summaries for document lib
 * Exclude `src/` (uncompiled JSX source) from the WordPress.org distribution via `.distignore`.
 
 = 4.0.6 =
-
-= # Bug Fixes =
-
-* Fix description field hidden in classic editor after 4.0.4: `#postdivrich` (the TinyMCE visual editor) was incorrectly added to the CSS `display:none` rule intended only for the HTML text tab (`#postdiv`).
-* Fix revision summary box not appearing: removed CSS `display:none` on `#revision-summary` since JavaScript already manages its visibility; the stale CSS rule prevented it from appearing when TinyMCE failed to initialise.
-
-= 4.0.5 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
