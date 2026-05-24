@@ -102,6 +102,90 @@ class Test_WP_Document_Revisions_Text_Extraction_Opt_Out extends Test_Common_WPD
 	}
 
 	/**
+	 * Pre-fill predicate is false by default and true when the
+	 * per-document meta is set.
+	 */
+	public function test_prefill_predicate_reflects_per_document_meta() {
+		list( $doc_id, ) = $this->create_document_with_attachment();
+
+		self::assertFalse( WP_Document_Revisions_Text_Extraction_Opt_Out::is_prefill_disabled_for_document( $doc_id ) );
+
+		update_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY_PREFILL, '1' );
+		self::assertTrue( WP_Document_Revisions_Text_Extraction_Opt_Out::is_prefill_disabled_for_document( $doc_id ) );
+	}
+
+	/**
+	 * Pre-fill predicate is true whenever extraction is disabled for
+	 * the document — no extracted text means no summary to pre-fill.
+	 */
+	public function test_prefill_predicate_true_when_extraction_disabled() {
+		list( $doc_id, ) = $this->create_document_with_attachment();
+		update_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY, '1' );
+
+		self::assertTrue( WP_Document_Revisions_Text_Extraction_Opt_Out::is_prefill_disabled_for_document( $doc_id ) );
+	}
+
+	/**
+	 * Save handler persists the pre-fill checkbox state alongside the
+	 * extraction checkbox under one nonce.
+	 */
+	public function test_save_handler_persists_prefill_checkbox() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		list( $doc_id, ) = $this->create_document_with_attachment();
+
+		$_POST = array(
+			WP_Document_Revisions_Text_Extraction_Opt_Out::NONCE_FIELD => wp_create_nonce(
+				WP_Document_Revisions_Text_Extraction_Opt_Out::NONCE_ACTION
+			),
+			WP_Document_Revisions_Text_Extraction_Opt_Out::FORM_FIELD_PREFILL => '1',
+		);
+
+		try {
+			WP_Document_Revisions_Text_Extraction_Opt_Out::save( $doc_id, get_post( $doc_id ) );
+
+			self::assertSame(
+				'1',
+				(string) get_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY_PREFILL, true )
+			);
+			// Extraction flag should remain off (the form didn't include it).
+			self::assertSame(
+				'',
+				(string) get_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY, true )
+			);
+		} finally {
+			$_POST = array();
+		}
+	}
+
+	/**
+	 * Save handler removes the pre-fill flag when the checkbox is
+	 * unchecked on a document that had it set.
+	 */
+	public function test_save_handler_removes_prefill_flag_when_unchecked() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		list( $doc_id, ) = $this->create_document_with_attachment();
+		update_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY_PREFILL, '1' );
+
+		$_POST = array(
+			WP_Document_Revisions_Text_Extraction_Opt_Out::NONCE_FIELD => wp_create_nonce(
+				WP_Document_Revisions_Text_Extraction_Opt_Out::NONCE_ACTION
+			),
+			// Neither checkbox in the POST → both unchecked.
+		);
+
+		try {
+			WP_Document_Revisions_Text_Extraction_Opt_Out::save( $doc_id, get_post( $doc_id ) );
+
+			self::assertSame(
+				'',
+				(string) get_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY_PREFILL, true )
+			);
+		} finally {
+			$_POST = array();
+		}
+	}
+
+	/**
 	 * Cache::clear() removes every cache-managed meta key.
 	 */
 	public function test_cache_clear_removes_all_meta_keys() {

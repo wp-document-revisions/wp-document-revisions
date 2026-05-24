@@ -102,6 +102,7 @@ require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-op
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-diff.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary-rest.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary-prefill.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
@@ -143,6 +144,11 @@ WP_Document_Revisions_AI_Summary::init();
 // Register the read + review REST endpoints. Generation is intentionally
 // NOT exposed over REST — cron drives it after extraction completes.
 WP_Document_Revisions_AI_Summary_REST::init();
+
+// Register the admin-editor JS enqueue for the AI revision-log pre-fill.
+// Only fires on the document edit screen; gated on the per-document and
+// sitewide pre-fill opt-out so opted-out documents pay no enqueue cost.
+WP_Document_Revisions_AI_Summary_Prefill::init();
 
 // Register the WP-CLI backfill command when running under WP-CLI.
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
