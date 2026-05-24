@@ -22,6 +22,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WP_Document_Revisions_PDF_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
 
 	/**
+	 * Extractor identity version, recorded alongside cached text via
+	 * {@see WP_Document_Revisions_Text_Extractor_Cache::identity_for()}. Bump
+	 * when the extraction logic or the underlying library version changes
+	 * meaningfully, so a WP-CLI reprocess can target everything produced by
+	 * an outdated build.
+	 *
+	 * @var string
+	 */
+	const VERSION = '1.0.0';
+
+	/**
 	 * Whether this extractor can handle the given MIME type.
 	 *
 	 * @param string $mime_type the MIME type to check.

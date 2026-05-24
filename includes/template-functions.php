@@ -122,7 +122,8 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 			return '';
 		}
 
-		WP_Document_Revisions_Text_Extractor_Cache::set( $revision_id, $file_path, $text );
+		$identity = WP_Document_Revisions_Text_Extractor_Cache::identity_for( $extractor );
+		WP_Document_Revisions_Text_Extractor_Cache::set( $revision_id, $file_path, $text, $identity );
 		return $text;
 	}
 }

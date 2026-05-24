@@ -249,6 +249,94 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
+	 * identity_for() returns the bare class name for an extractor with no
+	 * VERSION constant — graceful degradation for third-party impls.
+	 */
+	public function test_identity_for_returns_class_when_no_version_constant() {
+		$fake = new WPDR_Test_Counting_Text_Extractor();
+
+		self::assertSame(
+			'WPDR_Test_Counting_Text_Extractor',
+			WP_Document_Revisions_Text_Extractor_Cache::identity_for( $fake )
+		);
+	}
+
+	/**
+	 * identity_for() suffixes the class name with @<version> when the class
+	 * defines a public VERSION constant.
+	 */
+	public function test_identity_for_includes_version_constant_when_present() {
+		$pdf = new WP_Document_Revisions_PDF_Text_Extractor();
+
+		$identity = WP_Document_Revisions_Text_Extractor_Cache::identity_for( $pdf );
+
+		self::assertStringStartsWith( 'WP_Document_Revisions_PDF_Text_Extractor@', $identity );
+		self::assertSame(
+			'WP_Document_Revisions_PDF_Text_Extractor@' . WP_Document_Revisions_PDF_Text_Extractor::VERSION,
+			$identity
+		);
+	}
+
+	/**
+	 * set() with an explicit identity writes the META_KEY_EXTRACTOR meta.
+	 */
+	public function test_set_writes_extractor_identity_meta() {
+		$attach_id = $this->create_text_attachment();
+		$file_path = get_attached_file( $attach_id );
+
+		WP_Document_Revisions_Text_Extractor_Cache::set(
+			$attach_id,
+			$file_path,
+			'hello',
+			'My_Custom_Extractor@2.0.0'
+		);
+
+		self::assertSame(
+			'My_Custom_Extractor@2.0.0',
+			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_EXTRACTOR, true )
+		);
+	}
+
+	/**
+	 * set() with a null identity clears any stale identity meta — so a caller
+	 * that downgrades to "I don't know which tool produced this" cannot leave
+	 * the previous tool's identity in place.
+	 */
+	public function test_set_with_null_identity_clears_existing_extractor_meta() {
+		$attach_id = $this->create_text_attachment();
+		$file_path = get_attached_file( $attach_id );
+
+		WP_Document_Revisions_Text_Extractor_Cache::set( $attach_id, $file_path, 'first', 'Old_Extractor@1.0.0' );
+		self::assertSame(
+			'Old_Extractor@1.0.0',
+			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_EXTRACTOR, true )
+		);
+
+		WP_Document_Revisions_Text_Extractor_Cache::set( $attach_id, $file_path, 'second', null );
+
+		self::assertSame(
+			'',
+			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_EXTRACTOR, true )
+		);
+	}
+
+	/**
+	 * wpdr_extract_text() records the dispatching extractor's identity in
+	 * post meta so a WP-CLI backfill can target outdated tooling.
+	 */
+	public function test_wpdr_extract_text_records_extractor_identity() {
+		$this->register_counting_fake();
+		$attach_id = $this->create_text_attachment();
+
+		wpdr_extract_text( $attach_id );
+
+		self::assertSame(
+			'WPDR_Test_Counting_Text_Extractor',
+			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_EXTRACTOR, true )
+		);
+	}
+
+	/**
 	 * An unreadable file path does not wipe a previously-cached extraction.
 	 * Simulates a transient I/O blip on a real revision.
 	 */

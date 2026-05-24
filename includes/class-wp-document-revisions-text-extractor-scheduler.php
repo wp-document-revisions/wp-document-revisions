@@ -187,6 +187,7 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 			return;
 		}
 
-		WP_Document_Revisions_Text_Extractor_Cache::set( $attachment_id, $file_path, $text );
+		$identity = WP_Document_Revisions_Text_Extractor_Cache::identity_for( $extractor );
+		WP_Document_Revisions_Text_Extractor_Cache::set( $attachment_id, $file_path, $text, $identity );
 	}
 }

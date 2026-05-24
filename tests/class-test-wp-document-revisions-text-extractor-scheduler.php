@@ -226,6 +226,23 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	}
 
 	/**
+	 * run() writes the dispatching extractor's identity alongside the text
+	 * so a later WP-CLI backfill can target everything produced by an
+	 * outdated tool.
+	 */
+	public function test_run_records_extractor_identity() {
+		$this->register_counting_fake();
+		$attach_id = $this->create_text_attachment();
+
+		WP_Document_Revisions_Text_Extractor_Scheduler::run( $attach_id );
+
+		self::assertSame(
+			'WPDR_Test_Counting_Text_Extractor',
+			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_EXTRACTOR, true )
+		);
+	}
+
+	/**
 	 * run() is a no-op when the file is already cached against the current hash.
 	 */
 	public function test_run_skips_when_cache_already_populated() {
