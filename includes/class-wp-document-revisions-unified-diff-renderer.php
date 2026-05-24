@@ -150,11 +150,17 @@ class WP_Document_Revisions_Unified_Diff_Renderer extends Text_Diff_Renderer {
 	 * Unified diff represents this as the deletions first, then the
 	 * additions — no inline "change" form like the table renderer uses.
 	 *
-	 * @param string[] $orig  original-side lines being replaced.
-	 * @param string[] $final new-side lines that replace them.
+	 * The parent's signature uses `$final` for the new-side lines; we
+	 * rename to `$replacement` here because phpcs treats `$final` as a
+	 * reserved-keyword parameter name (PHP allows it, but it shadows
+	 * the `final` class/method keyword and is harder to read). PHP
+	 * does not require parameter names to match across overrides.
+	 *
+	 * @param string[] $orig        original-side lines being replaced.
+	 * @param string[] $replacement new-side lines that replace them.
 	 * @return string deletions followed by additions.
 	 */
-	protected function _changed( $orig, $final ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-		return $this->_deleted( $orig ) . $this->_added( $final );
+	protected function _changed( $orig, $replacement ) { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		return $this->_deleted( $orig ) . $this->_added( $replacement );
 	}
 }

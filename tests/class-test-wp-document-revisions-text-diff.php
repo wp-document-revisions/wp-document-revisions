@@ -107,10 +107,10 @@ class Test_WP_Document_Revisions_Text_Diff extends Test_Common_WPDR {
 
 		self::assertSame( 'ok', $result['status'] );
 		self::assertStringContainsString( '@@', $result['diff'], 'Unified diff should contain a block header' );
-		self::assertStringContainsString( "-beta", $result['diff'] );
-		self::assertStringContainsString( "+BETA", $result['diff'] );
+		self::assertStringContainsString( '-beta', $result['diff'] );
+		self::assertStringContainsString( '+BETA', $result['diff'] );
 		// Context line "alpha" should appear (prefixed with a single space).
-		self::assertStringContainsString( " alpha", $result['diff'] );
+		self::assertStringContainsString( ' alpha', $result['diff'] );
 	}
 
 	/**
@@ -202,7 +202,7 @@ class Test_WP_Document_Revisions_Text_Diff extends Test_Common_WPDR {
 			}
 		);
 
-		$result = WP_Document_Revisions_Text_Diff::diff_text( "a", "b" );
+		$result = WP_Document_Revisions_Text_Diff::diff_text( 'a', 'b' );
 
 		self::assertSame( 'too_large', $result['status'] );
 	}
@@ -233,8 +233,8 @@ class Test_WP_Document_Revisions_Text_Diff extends Test_Common_WPDR {
 		// With 3 lines of context on both sides of a single-line change
 		// inside a 3-line file, both old and new sides have length 3.
 		self::assertStringContainsString( '@@ -1,3 +1,3 @@', $output );
-		self::assertStringContainsString( "-b", $output );
-		self::assertStringContainsString( "+X", $output );
+		self::assertStringContainsString( '-b', $output );
+		self::assertStringContainsString( '+X', $output );
 	}
 
 	/**

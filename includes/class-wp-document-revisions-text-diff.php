@@ -80,9 +80,9 @@ class WP_Document_Revisions_Text_Diff {
 	 * Treats both inputs as line-oriented text (split on "\n") and
 	 * returns a result array as described in the class docblock.
 	 *
-	 * @param string                                   $old_text the original-side text.
-	 * @param string                                   $new_text the new-side text.
-	 * @param array{context_lines?: int, max_chars?: int} $opts   optional per-call overrides.
+	 * @param string                                      $old_text the original-side text.
+	 * @param string                                      $new_text the new-side text.
+	 * @param array{context_lines?: int, max_chars?: int} $opts     optional per-call overrides.
 	 * @return array{status: string, diff: string} result with `status` in
 	 *                                             {'identical','ok','too_large'} and
 	 *                                             `diff` populated only when status is 'ok'.
@@ -100,7 +100,7 @@ class WP_Document_Revisions_Text_Diff {
 
 		self::load_diff_engine();
 
-		$diff = new Text_Diff(
+		$diff     = new Text_Diff(
 			'auto',
 			array(
 				explode( "\n", $old_text ),
@@ -150,8 +150,8 @@ class WP_Document_Revisions_Text_Diff {
 	 * to `identical`, so phase 11 can distinguish "scanned PDF on one
 	 * side" from "both sides have the same text."
 	 *
-	 * @param int                                      $old_revision_id attachment post ID of the original-side revision.
-	 * @param int                                      $new_revision_id attachment post ID of the new-side revision.
+	 * @param int                                         $old_revision_id attachment post ID of the original-side revision.
+	 * @param int                                         $new_revision_id attachment post ID of the new-side revision.
 	 * @param array{context_lines?: int, max_chars?: int} $opts            optional per-call overrides.
 	 * @return array{status: string, diff: string} result with `status` in
 	 *                                             {'identical','ok','too_large','old_text_missing','new_text_missing'}.
