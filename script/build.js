@@ -19,6 +19,7 @@ const JS_DIR = path.resolve(__dirname, '..', 'js');
 const ADMIN_FILES = [
 	'wp-document-revisions.dev.js',
 	'wp-document-revisions-validate.dev.js',
+	'wp-document-revisions-ai-prefill.dev.js',
 ];
 
 (async () => {
