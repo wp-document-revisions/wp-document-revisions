@@ -147,6 +147,7 @@ class Test_WP_Document_Revisions_Text_Extraction_Opt_Out extends Test_Common_WPD
 	 */
 	public function test_scheduler_run_skips_when_document_opted_out() {
 		$fake = $this->register_counting_fake();
+
 		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
 		update_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY, '1' );
 
@@ -161,6 +162,7 @@ class Test_WP_Document_Revisions_Text_Extraction_Opt_Out extends Test_Common_WPD
 	 */
 	public function test_sync_helper_skips_when_document_opted_out() {
 		$fake = $this->register_counting_fake();
+
 		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
 		update_post_meta( $doc_id, WP_Document_Revisions_Text_Extraction_Opt_Out::META_KEY, '1' );
 

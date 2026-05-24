@@ -85,8 +85,8 @@ class WP_Document_Revisions_Text_Extraction_CLI_Command {
 	 * : Print what would be done without invoking any extractor or
 	 * writing cache meta.
 	 *
-	 * @param array<int, string>     $args       positional CLI arguments (unused).
-	 * @param array<string, string>  $assoc_args parsed `--flag` arguments.
+	 * @param array<int, string>    $args       positional CLI arguments (unused).
+	 * @param array<string, string> $assoc_args parsed `--flag` arguments.
 	 * @return void
 	 */
 	public static function extract_text( array $args, array $assoc_args ): void {
@@ -104,8 +104,8 @@ class WP_Document_Revisions_Text_Extraction_CLI_Command {
 			return;
 		}
 
-		$dry_run    = self::flag_set( $assoc_args, 'dry-run' );
-		$totals     = array(
+		$dry_run = self::flag_set( $assoc_args, 'dry-run' );
+		$totals  = array(
 			'extracted' => 0,
 			'skipped'   => 0,
 			'failed'    => 0,
