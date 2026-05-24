@@ -97,6 +97,7 @@ require_once __DIR__ . '/includes/interface-wp-document-revisions-text-extractor
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-exception.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-registry.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-cache.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-scheduler.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
@@ -119,6 +120,11 @@ add_filter(
 		return $extractors;
 	}
 );
+
+// Wire up async extraction: schedule a wp-cron event on each revision
+// attachment insert, and register the worker that runs extraction off the
+// request thread.
+WP_Document_Revisions_Text_Extractor_Scheduler::init();
 
 // $wpdr is a global reference to the class.
 global $wpdr;
