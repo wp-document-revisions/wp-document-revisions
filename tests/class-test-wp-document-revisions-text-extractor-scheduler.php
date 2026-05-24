@@ -119,7 +119,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 		// an event is already queued for this attachment ID.
 		WP_Document_Revisions_Text_Extractor_Scheduler::maybe_schedule( $attach_id );
 
-		$cron = _get_cron_array();
+		$cron    = _get_cron_array();
 		$matches = 0;
 		foreach ( $cron as $events_for_ts ) {
 			if ( isset( $events_for_ts[ WP_Document_Revisions_Text_Extractor_Scheduler::CRON_ACTION ] ) ) {
@@ -138,7 +138,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	 */
 	public function test_non_document_attachment_does_not_schedule() {
 		// An attachment whose parent is a regular post, not a document.
-		$post_id = self::factory()->post->create(
+		$post_id   = self::factory()->post->create(
 			array(
 				'post_title' => 'Just a post',
 				'post_type'  => 'post',
@@ -208,7 +208,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	}
 
 	/**
-	 * run() extracts and populates the cache for a fresh attachment.
+	 * Cron handler extracts and populates the cache for a fresh attachment.
 	 */
 	public function test_run_extracts_and_caches() {
 		$fake      = $this->register_counting_fake();
@@ -226,9 +226,9 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	}
 
 	/**
-	 * run() writes the dispatching extractor's identity alongside the text
-	 * so a later WP-CLI backfill can target everything produced by an
-	 * outdated tool.
+	 * Cron handler records the dispatching extractor's identity alongside
+	 * the text so a later WP-CLI backfill can target everything produced
+	 * by an outdated tool.
 	 */
 	public function test_run_records_extractor_identity() {
 		$this->register_counting_fake();
@@ -243,7 +243,8 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	}
 
 	/**
-	 * run() is a no-op when the file is already cached against the current hash.
+	 * Cron handler is a no-op when the file is already cached against the
+	 * current hash.
 	 */
 	public function test_run_skips_when_cache_already_populated() {
 		$fake      = $this->register_counting_fake();
@@ -323,9 +324,9 @@ class Test_WP_Document_Revisions_Text_Extractor_Scheduler extends Test_Common_WP
 	}
 
 	/**
-	 * wpdr_extract_text() observes extractor throws on the sync path and
-	 * marks the file failed so subsequent sync reads return '' from cache
-	 * without re-invoking the extractor.
+	 * Synchronous wpdr_extract_text() observes extractor throws on the sync
+	 * path and marks the file failed so subsequent sync reads return '' from
+	 * cache without re-invoking the extractor.
 	 */
 	public function test_sync_extract_text_marks_failed_on_throw() {
 		$throwing  = $this->register_throwing_fake();

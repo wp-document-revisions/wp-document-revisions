@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WP_Document_Revisions_Text_Extractor_Scheduler {
 
 	/**
-	 * wp-cron action fired to run extraction for a single attachment.
+	 * Cron action name fired to run extraction for a single attachment.
 	 *
 	 * @var string
 	 */

@@ -249,7 +249,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * identity_for() returns the bare class name for an extractor with no
+	 * Identity helper returns the bare class name for an extractor with no
 	 * VERSION constant — graceful degradation for third-party impls.
 	 */
 	public function test_identity_for_returns_class_when_no_version_constant() {
@@ -262,8 +262,8 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * identity_for() suffixes the class name with @<version> when the class
-	 * defines a public VERSION constant.
+	 * Identity helper suffixes the class name with @<version> when the
+	 * class defines a public VERSION constant.
 	 */
 	public function test_identity_for_includes_version_constant_when_present() {
 		$pdf = new WP_Document_Revisions_PDF_Text_Extractor();
@@ -278,7 +278,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * set() with an explicit identity writes the META_KEY_EXTRACTOR meta.
+	 * Cache write with an explicit identity populates the META_KEY_EXTRACTOR meta.
 	 */
 	public function test_set_writes_extractor_identity_meta() {
 		$attach_id = $this->create_text_attachment();
@@ -298,9 +298,9 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * set() with a null identity clears any stale identity meta — so a caller
-	 * that downgrades to "I don't know which tool produced this" cannot leave
-	 * the previous tool's identity in place.
+	 * Cache write with a null identity clears any stale identity meta — so a
+	 * caller that downgrades to "I don't know which tool produced this"
+	 * cannot leave the previous tool's identity in place.
 	 */
 	public function test_set_with_null_identity_clears_existing_extractor_meta() {
 		$attach_id = $this->create_text_attachment();
@@ -321,7 +321,7 @@ class Test_WP_Document_Revisions_Text_Extractor_Cache extends Test_Common_WPDR {
 	}
 
 	/**
-	 * wpdr_extract_text() records the dispatching extractor's identity in
+	 * Synchronous extraction records the dispatching extractor's identity in
 	 * post meta so a WP-CLI backfill can target outdated tooling.
 	 */
 	public function test_wpdr_extract_text_records_extractor_identity() {
