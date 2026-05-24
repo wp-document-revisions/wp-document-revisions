@@ -87,6 +87,15 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 			return '';
 		}
 
+		// Phase 8: honour the sitewide kill switch and the per-document
+		// opt-out flag. A cached value from before the opt-out was set is
+		// already cleared on the save handler that flipped the flag; this
+		// check stops a fresh extraction from running.
+		$parent_id = (int) wp_get_post_parent_id( $revision_id );
+		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
+			return '';
+		}
+
 		$file_path = get_attached_file( $revision_id );
 		if ( ! is_string( $file_path ) || '' === $file_path || ! is_readable( $file_path ) ) {
 			// Unreadable file: do NOT invalidate or overwrite the cache —

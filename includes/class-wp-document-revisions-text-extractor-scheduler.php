@@ -13,10 +13,11 @@
  * the cron handler refuses to re-run for the same content. Replacing the
  * file (which changes the hash) cleanly retries.
  *
- * Phase 7 of issue #514. The site-level kill switch (full constant +
- * per-document opt-out UI) lands in Phase 8; this class honours only the
- * `WPDR_TEXT_EXTRACTION` constant so sites that need to disable extraction
- * before Phase 8 ships are not forced to live with cron events firing.
+ * Phase 7 of issue #514. Phase 8 layered the per-document opt-out on
+ * top: this class delegates the "should we run extraction at all" check
+ * to {@see WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document()},
+ * which honours both the `WPDR_TEXT_EXTRACTION` sitewide constant and
+ * the per-document `_wpdr_no_text_extraction` flag.
  *
  * @since 4.1.0
  * @package WP_Document_Revisions
@@ -90,15 +91,14 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 			return;
 		}
 
-		// Honour the site-level kill switch. Phase 8 expands this with a
-		// per-document opt-out and a cache-clearing pass on flip; for now
-		// the constant simply suppresses scheduling.
-		if ( defined( 'WPDR_TEXT_EXTRACTION' ) && false === WPDR_TEXT_EXTRACTION ) {
+		$parent_id = wp_get_post_parent_id( $attachment_id );
+		if ( ! $parent_id || 'document' !== get_post_type( $parent_id ) ) {
 			return;
 		}
 
-		$parent_id = wp_get_post_parent_id( $attachment_id );
-		if ( ! $parent_id || 'document' !== get_post_type( $parent_id ) ) {
+		// Phase 8: honour the sitewide kill switch and the per-document
+		// opt-out via the single opt-out predicate.
+		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
 			return;
 		}
 
@@ -134,7 +134,10 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 			return;
 		}
 
-		if ( defined( 'WPDR_TEXT_EXTRACTION' ) && false === WPDR_TEXT_EXTRACTION ) {
+		// Phase 8: re-check opt-out at cron time in case the document was
+		// opted out between scheduling and pickup.
+		$parent_id = (int) wp_get_post_parent_id( $attachment_id );
+		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
 			return;
 		}
 
