@@ -6,19 +6,47 @@
  */
 
 /**
- * Fake extractor that claims to support every MIME type and always throws on extract().
+ * Fake extractor that always throws on extract().
+ *
+ * Default-constructed it claims every MIME type (the original Phase 1 usage);
+ * with a MIME passed in it restricts itself to that type so Phase 7 scheduler
+ * tests can register it alongside the built-ins without intercepting their
+ * dispatches.
  */
 class WPDR_Test_Throwing_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
 
 	/**
-	 * Supports any MIME type.
+	 * Number of times extract() has been called on this instance.
 	 *
-	 * @param string $mime_type MIME type (ignored).
+	 * @var int
+	 */
+	public $calls = 0;
+
+	/**
+	 * MIME type this fake claims to support, or null to support everything.
+	 *
+	 * @var string|null
+	 */
+	private $supported_mime;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string|null $supported_mime MIME type this fake claims, or null
+	 *                                    to claim every MIME (default).
+	 */
+	public function __construct( ?string $supported_mime = null ) {
+		$this->supported_mime = $supported_mime;
+	}
+
+	/**
+	 * Supports check.
+	 *
+	 * @param string $mime_type MIME type to check.
 	 * @return bool
 	 */
 	public function supports( string $mime_type ): bool {
-		unset( $mime_type );
-		return true;
+		return null === $this->supported_mime || $mime_type === $this->supported_mime;
 	}
 
 	/**
@@ -33,6 +61,7 @@ class WPDR_Test_Throwing_Text_Extractor implements WP_Document_Revisions_Text_Ex
 	 */
 	public function extract( string $file_path, string $mime_type ): string {
 		unset( $file_path, $mime_type );
+		++$this->calls;
 		$this->fail_with_extraction_exception();
 		return '';
 	}

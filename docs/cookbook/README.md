@@ -24,6 +24,10 @@ Each recipe is self-contained and includes:
 
 - **[PublishPress Revisions Integration](publishpress-revisions-integration.md)** - Enable scheduling of document revision publications with workflow management
 
+### Text Extraction & AI
+
+- **[Text Extraction & AI Summaries](text-extraction-and-ai-summaries.md)** - Register custom extractors, customize the AI summary prompt, plug in an alternative AI provider, backfill an existing library with WP-CLI, and consume the cached summary from REST
+
 ## Contributing Your Own Recipes
 
 Have you created a useful integration or customization? We'd love to include it in the cookbook!

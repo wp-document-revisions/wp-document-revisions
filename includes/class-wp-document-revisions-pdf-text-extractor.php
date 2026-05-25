@@ -7,7 +7,7 @@
  * cannot interrupt a check-in. Scanned PDFs (no embedded text layer) also
  * return empty — see the OCR follow-up in issue #514 for that path.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -20,6 +20,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * PDF text extractor.
  */
 class WP_Document_Revisions_PDF_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
+
+	/**
+	 * Extractor identity version, recorded alongside cached text via
+	 * {@see WP_Document_Revisions_Text_Extractor_Cache::identity_for()}. Bump
+	 * when the extraction logic or the underlying library version changes
+	 * meaningfully, so a WP-CLI reprocess can target everything produced by
+	 * an outdated build.
+	 *
+	 * @var string
+	 */
+	const VERSION = '1.0.0';
 
 	/**
 	 * Whether this extractor can handle the given MIME type.

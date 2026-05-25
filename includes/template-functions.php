@@ -71,7 +71,7 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 	 * same file return the cached text without re-running the extractor. The
 	 * cache invalidates automatically whenever the file content changes.
 	 *
-	 * @since 4.1.0
+	 * @since 5.0.0
 	 *
 	 * @param int $revision_id the attachment/revision post ID.
 	 * @return string extracted text, or empty string.
@@ -84,6 +84,15 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 		// Cache lives on the attachment post; bail (without touching the
 		// cache) if someone passes a parent document or another post type.
 		if ( 'attachment' !== get_post_type( $revision_id ) ) {
+			return '';
+		}
+
+		// Phase 8: honour the sitewide kill switch and the per-document
+		// opt-out flag. A cached value from before the opt-out was set is
+		// already cleared on the save handler that flipped the flag; this
+		// check stops a fresh extraction from running.
+		$parent_id = (int) wp_get_post_parent_id( $revision_id );
+		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
 			return '';
 		}
 
@@ -105,8 +114,25 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 			return '';
 		}
 
-		$text = WP_Document_Revisions_Text_Extractor_Registry::extract( $file_path, $mime_type );
-		WP_Document_Revisions_Text_Extractor_Cache::set( $revision_id, $file_path, $text );
+		// Bypass the lenient Registry::extract() dispatcher so we can observe
+		// extractor throws here and mark the file as failed — otherwise a
+		// malformed PDF would be retried on every read.
+		$extractor = WP_Document_Revisions_Text_Extractor_Registry::find_for( $mime_type );
+		if ( null === $extractor ) {
+			return '';
+		}
+
+		try {
+			$text = $extractor->extract( $file_path, $mime_type );
+		} catch ( Throwable $e ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'WP Document Revisions: text extraction failed for ' . $file_path . ': ' . $e->getMessage() );
+			WP_Document_Revisions_Text_Extractor_Cache::mark_failed( $revision_id, $file_path );
+			return '';
+		}
+
+		$identity = WP_Document_Revisions_Text_Extractor_Cache::identity_for( $extractor );
+		WP_Document_Revisions_Text_Extractor_Cache::set( $revision_id, $file_path, $text, $identity );
 		return $text;
 	}
 }

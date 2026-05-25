@@ -2,6 +2,23 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.0.0
+
+Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.
+
+**Breaking changes:** raises the minimum PHP from 7.4 to 8.0 and the minimum WordPress from 5.0 to 5.9 to match what CI actually exercises. Sites on older PHP or WP will no longer see updates to this plugin until they upgrade their runtime. The composer floor was already at PHP 7.4, so install on PHP < 7.4 was already failing; this commit bumps the same constraint to 8.0 and brings the readme.txt declaration in line with what the test matrix verifies. WordPress 5.0–5.8 were never in CI's matrix; that floor's bump is similarly a "claim what we test" cleanup. PHP 7.4 has been EOL since November 2022 and WP 5.0 is from December 2018, so the practical population affected is small.
+
+#### Features
+
+* #514: Native text extraction from PDF (via `smalot/pdfparser`), DOCX, and ODT (via `phpoffice/phpword`). Extraction runs out-of-band via wp-cron after a revision is uploaded; results are SHA-256-keyed against the file's contents and stored as post meta on the attachment so re-extracting unchanged content is a no-op. New `wpdr_text_extractors` filter lets a site register custom extractors for additional formats (see the [cookbook recipe](cookbook/text-extraction-and-ai-summaries.md#recipe-1-register-a-custom-extractor)).
+* #514: AI-generated revision summaries via the [WordPress 7.0 AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/). After extraction completes, a second cron event computes a unified diff between the new revision's text and the prior revision's, sends it to the AI Client with a filterable prompt, and stores the 1–3-sentence summary as post meta on the attachment. Falls back gracefully to summarising the new document directly when the diff is too large or the prior revision has no extractable text. Skips silently when the AI Client is unavailable (older WordPress) or `WP_AI_SUPPORT` is `false`.
+* #514: Admin-editor JS pre-fills the AI summary into the revision log textarea on the document edit screen, with a dismiss link. Never clobbers user-typed content. Per-document opt-out ("Do not pre-fill the revision log with AI suggestions") in a new "Text Extraction & AI" sidebar meta box; sitewide opt-out via the `WPDR_AI_SUMMARY_PREFILL` constant.
+* #514: Per-document and sitewide opt-outs for text extraction itself ("Skip text extraction for this document" checkbox, `WPDR_TEXT_EXTRACTION` constant). Flipping the per-document opt-out on clears every cache-managed meta key on the document's revision attachments and unschedules pending cron events.
+* #514: WP-CLI `document-revisions extract-text` command for backfilling the extraction cache across an existing library. Selectors: `--all`, `--missing` (excludes failure-list entries to prevent infinite retry on malformed files), `--id=<id>`. Modifiers: `--extractor=<class>` to target reprocessing by tool identity, `--force` to bypass cache + failure list, `--dry-run`.
+* #514: Read + review REST endpoints under `wpdr/v1`. `GET /documents/<doc>/revisions/<rev>/summary` returns the cached summary with a `status` envelope (`pending` / `ready` / `unavailable`); `read_document` capability. `POST .../summary/review` marks a summary as human-reviewed; `edit_document` capability. Capability mapping by [@NeilWJames](https://github.com/NeilWJames).
+* #514: New action `wpdr_text_extracted` fires after extracted text is cached, so third-party search-indexing or embedding consumers can hook without monkey-patching the cache class.
+* Adds a [Text Extraction & AI Summaries cookbook recipe](cookbook/text-extraction-and-ai-summaries.md) covering custom extractors, prompt customization, the four opt-out switches, the WP-CLI backfill, alternative AI providers, and the REST surface.
+
 ### 4.0.7
 
 #### Bug Fixes

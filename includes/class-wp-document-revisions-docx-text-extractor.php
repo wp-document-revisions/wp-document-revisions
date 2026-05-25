@@ -12,7 +12,7 @@
  * string rather than throwing, so a single bad file cannot interrupt a
  * check-in.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
@@ -25,6 +25,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * DOCX/ODT text extractor.
  */
 class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions_Text_Extractor {
+
+	/**
+	 * Extractor identity version, recorded alongside cached text via
+	 * {@see WP_Document_Revisions_Text_Extractor_Cache::identity_for()}. Bump
+	 * when the extraction logic or the underlying library version changes
+	 * meaningfully, so a WP-CLI reprocess can target everything produced by
+	 * an outdated build.
+	 *
+	 * @var string
+	 */
+	const VERSION = '1.0.0';
 
 	/**
 	 * MIME types this extractor accepts.

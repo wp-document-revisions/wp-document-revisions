@@ -3,9 +3,9 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 4.0.7
-Requires at least: 5.0
-Requires PHP: 7.4
+Version: 5.0.0
+Requires at least: 5.9
+Requires PHP: 8.0
 Author: Ben Balter
 Author URI: https://ben.balter.com
 License: GPL-3.0-or-later
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  @copyright 2011-2025
  *  @license GPL-3.0-or-later
- *  @version 4.0.7
+ *  @version 5.0.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // parsed by WordPress from the file header itself and must remain literal; this
 // constant is the canonical value for runtime PHP code (cache busters, etc.).
 if ( ! defined( 'WPDR_VERSION' ) ) {
-	define( 'WPDR_VERSION', '4.0.7' );
+	define( 'WPDR_VERSION', '5.0.0' );
 }
 
 // Composer autoloader for production dependencies.
@@ -97,6 +97,12 @@ require_once __DIR__ . '/includes/interface-wp-document-revisions-text-extractor
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-exception.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-registry.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-cache.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extractor-scheduler.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-opt-out.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-text-diff.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary-rest.php';
+require_once __DIR__ . '/includes/class-wp-document-revisions-ai-summary-prefill.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-pdf-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions-docx-text-extractor.php';
 require_once __DIR__ . '/includes/class-wp-document-revisions.php';
@@ -119,6 +125,39 @@ add_filter(
 		return $extractors;
 	}
 );
+
+// Wire up async extraction: schedule a wp-cron event on each revision
+// attachment insert, and register the worker that runs extraction off the
+// request thread.
+WP_Document_Revisions_Text_Extractor_Scheduler::init();
+
+// Register the per-document opt-out meta box and save handler (admin only).
+WP_Document_Revisions_Text_Extraction_Opt_Out::init();
+
+// Register the AI summary cron handler (hooks wpdr_text_extracted →
+// queues a single cron event to generate the summary off the request
+// thread). Generation skips silently when the WP 7.0 AI Client is not
+// available; the cron event is still scheduled so a future site
+// upgrade does not require re-extracting historical content.
+WP_Document_Revisions_AI_Summary::init();
+
+// Register the read + review REST endpoints. Generation is intentionally
+// NOT exposed over REST — cron drives it after extraction completes.
+WP_Document_Revisions_AI_Summary_REST::init();
+
+// Register the admin-editor JS enqueue for the AI revision-log pre-fill.
+// Only fires on the document edit screen; gated on the per-document and
+// sitewide pre-fill opt-out so opted-out documents pay no enqueue cost.
+WP_Document_Revisions_AI_Summary_Prefill::init();
+
+// Register the WP-CLI backfill command when running under WP-CLI.
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once __DIR__ . '/includes/class-wp-document-revisions-text-extraction-cli-command.php';
+	WP_CLI::add_command(
+		'document-revisions extract-text',
+		array( 'WP_Document_Revisions_Text_Extraction_CLI_Command', 'extract_text' )
+	);
+}
 
 // $wpdr is a global reference to the class.
 global $wpdr;

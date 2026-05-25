@@ -8,7 +8,7 @@
  * these and returns an empty string so a single bad file does not break the
  * caller, but the exception message reaches the error log first.
  *
- * @since 4.1.0
+ * @since 5.0.0
  * @package WP_Document_Revisions
  */
 
