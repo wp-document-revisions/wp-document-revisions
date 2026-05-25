@@ -30,6 +30,14 @@
 		"vendor-dir": "vendor",
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"policy": {
+			"abandoned": {
+				"ignore": {
+					"sebastian/code-unit": "Marked abandoned with no replacement May 25 2026",
+					"sebastian/code-unit-reverse-lookup": "Ditto"
+				}
+			}
 		}
 	},
 	"scripts": {
