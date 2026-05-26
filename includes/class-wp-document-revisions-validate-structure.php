@@ -172,6 +172,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( null === $instance ) {
 			global $wpdr;
 			if ( ! $wpdr ) {
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 				$wpdr = new WP_Document_Revisions();
 			}
 			self::$parent = $wpdr;

@@ -166,6 +166,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( is_numeric( $post->post_content ) ) {
 			$post->post_content = $this->format_doc_id( $post->post_content );
 		}
+		// put the document id in metadata.
+		$wpdr   = self::$parent;
+		$attach = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
 		?>
 		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $post->post_content ); ?>" />
 		<input type="hidden" id="curr_content" name="curr_content" value="Unset" />
@@ -354,7 +357,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param array $postarr Raw post data passed to wp_insert_post.
 	 * @return array Post data, with post_content restored if needed.
 	 */
-	public function restore_document_attachment_id( array $data, array $postarr ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function restore_document_attachment_id( array $data, array $postarr ): array {
 		if ( 'document' !== $data['post_type'] ) {
 			return $data;
 		}
@@ -363,28 +366,37 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
-		// Already has an attachment ID — nothing to fix.
-		if ( $this->extract_document_id( $data['post_content'] ) ) {
+		// Get the document id.
+		$doc_id = $postarr['ID'];
+
+		// Find the meta data value.
+		$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+
+		// Already has an attachment ID, see if it is the stored one so nothing to fix.
+		if ( $attach_id && $attach_id === $this->extract_document_id( $data['post_content'] ) ) {
 			return $data;
 		}
 
-		// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
-		// still in $_POST['post_content'] (unfiltered superglobal).
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_content'] ) ) {
-			return $data;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
-		$raw_posted = wp_unslash( $_POST['post_content'] );
-		$attach_id  = $this->extract_document_id( $raw_posted );
-
+		// Believe the meta value if it's there.
 		if ( ! $attach_id ) {
-			return $data;
+			// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
+			// still in $_POST['post_content'] (unfiltered superglobal).
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( ! isset( $_POST['post_content'] ) ) {
+				return $data;
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized 
+			$raw_posted = wp_unslash( $_POST['post_content'] );
+			$attach_id  = $this->extract_document_id( $raw_posted );
+
+			if ( ! $attach_id ) {
+				return $data;
+			}
 		}
 
 		// Rebuild: attachment ID comment + any description that survived kses.
-		$description          = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $data['post_content'] );
+		$description          = preg_replace( '/<!-- WPDR \s*\d+\s*-->/i', '', $data['post_content'] );
 		$data['post_content'] = $this->format_doc_id( $attach_id ) . $description;
 
 		return $data;

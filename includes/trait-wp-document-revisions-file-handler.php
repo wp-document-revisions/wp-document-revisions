@@ -627,6 +627,25 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Populates the document_attachment_id meta from post_content if empty.
+	 *
+	 * @since 3.9.1
+	 * @param int    $post_id      Post id.
+	 * @param string $post_content Post_content.
+	 * @return int The attachment ID, or 0 if none found.
+	 */
+	public function populate_attachment_meta( $post_id, $post_content ) {
+		$meta      = absint( get_post_meta( $post_id, '_document_attachment_id', true ) );
+		$attach_id = absint( $this->extract_document_id( $post_content ) );
+		if ( $attach_id !== $meta ) {
+			update_post_meta( $post_id, '_document_attachment_id', $attach_id );
+		}
+
+		return $attach_id;
+	}
+
+
+	/**
 	 * Renames the generated attachment meta data file names to hide the attachment slug.
 	 *
 	 * If the generated images are used as images, their name would display the slug.
@@ -704,6 +723,9 @@ trait WP_Document_Revisions_File_Handler {
 
 		// have finished loading the attachment into the upload directory, so remove it.
 		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
+
+		// store the attachment in postmeta for fallback on initial file load.
+		update_post_meta( $attach->post_parent, '_document_attachment_id', $attachment_id );
 
 		return $metadata;
 	}
@@ -1208,7 +1230,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// run through standard permalink filters and return.
-		return get_permalink( $revision_id );
+		return get_permalink( absint( $revision_id ) );
 	}
 
 	/**

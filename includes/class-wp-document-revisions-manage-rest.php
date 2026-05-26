@@ -98,7 +98,7 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Check for valid document editing.
 		if ( 'edit' === $request['context'] ) {
-			if ( isset( $params['id'] ) && current_user_can( 'edit_post', $params['id'] ) ) {
+			if ( isset( $params['id'] ) && current_user_can( 'edit_document', $params['id'] ) ) {
 				return $response;
 			}
 			return new WP_Error(
@@ -120,12 +120,15 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		// does user require read_documents and not just read to read document.
-		if ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_documents' ) ) {
-			return new WP_Error(
-				'rest_cannot_read',
-				__( 'Sorry, you are not allowed to read documents.', 'wp-document-revisions' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+		if ( ! apply_filters( 'document_read_uses_read', true ) ) {
+			// read_document test depends on whether we have a specific id.
+			if ( ! ( isset( $params['id'] ) ? current_user_can( 'read_document', $params['id'] ) : current_user_can( 'read_documents' ) ) ) {
+				return new WP_Error(
+					'rest_cannot_read',
+					__( 'Sorry, you are not allowed to read documents.', 'wp-document-revisions' ),
+					array( 'status' => rest_authorization_required_code() )
+				);
+			}
 		}
 
 		// Check methods.
@@ -150,6 +153,14 @@ class WP_Document_Revisions_Manage_Rest {
 			}
 		}
 
+		// route is for a document. Make sure the document_attachment meta is set.
+		if ( isset( $params['id'] ) ) {
+			$wpdr    = self::$parent;
+			$post_id = absint( $params['id'] );
+			$content = get_post_field( 'post_content', $post_id );
+			$attach  = $wpdr->populate_attachment_meta( $post_id, $content );
+		}
+
 		return $response;
 	}
 
@@ -163,6 +174,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Request  $request  Request object.
 	 */
 	public function doc_clean_document( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
+		// Already filtered to an error response.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document.
 		if ( 'document' !== get_post_type( $post->ID ) ) {
 			return $response;
@@ -180,25 +196,26 @@ class WP_Document_Revisions_Manage_Rest {
 
 			// Hide attachment ID meta from non-editors to prevent attachment enumeration.
 			$data = $response->get_data();
-			if ( isset( $data['meta']['document_attachment_id'] ) ) {
-				$data['meta']['document_attachment_id'] = 0;
+			if ( isset( $data['meta']['_document_attachment_id'] ) ) {
+				$data['meta']['_document_attachment_id'] = 0;
 				$response->set_data( $data );
 			}
 		}
 
 		// Block editor: sync meta from content and strip WPDR comment from raw content.
 		if ( apply_filters( 'document_use_block_editor', false ) && 'edit' === $request['context'] ) {
-			$attach_id = $this->populate_attachment_meta( $post );
+			$wpdr = self::$parent;
+			$attach_id = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
 			$data      = $response->get_data();
 
 			// Update meta in response if we populated it from content.
 			if ( $attach_id && isset( $data['meta'] ) ) {
-				$data['meta']['document_attachment_id'] = $attach_id;
+				$data['meta']['_document_attachment_id'] = $attach_id;
 			}
 
 			// Strip WPDR comment so block editor only sees description content.
 			if ( isset( $data['content']['raw'] ) ) {
-				$data['content']['raw'] = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $data['content']['raw'] );
+				$data['content']['raw'] = preg_replace( '/<!-- WPDR \d+\s*-->/', '', $data['content']['raw'] );
 			}
 
 			$response->set_data( $data );
@@ -217,6 +234,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Request  $request  Request object.
 	 */
 	public function doc_clean_revision( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// Already filtered to an error response.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document revision.
 		$parent = $post->post_parent;
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
@@ -227,7 +249,7 @@ class WP_Document_Revisions_Manage_Rest {
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			return new WP_Error(
 				'rest_cannot_read',
-				__( 'Sorry, you are not allowed to view revisions.', 'wp-document-revisions' ),
+				__( 'Sorry, you are not allowed to view this revision.', 'wp-document-revisions' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -235,7 +257,7 @@ class WP_Document_Revisions_Manage_Rest {
 		// Strip internal WPDR attachment comment from revision content.
 		$data = $response->get_data();
 		if ( isset( $data['content']['raw'] ) ) {
-			$data['content']['raw'] = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $data['content']['raw'] );
+			$data['content']['raw'] = preg_replace( '/<!-- WPDR \d+\s*-->/', '', $data['content']['raw'] );
 			$response->set_data( $data );
 		}
 
@@ -252,6 +274,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Request  $request  Request object.
 	 */
 	public function doc_clean_attachment( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// Already filtered to an error response.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
@@ -267,49 +294,35 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// media always thinks that the attachments are in media directory. We may need to change it.
 		// protect various fields — prevent leaking MD5-hashed filenames, file paths, and URLs.
-		$protected                                 = __( '<!-- protected -->', 'wp-document-revisions' );
-		$response->data['slug']                    = $protected;
-		$response->data['source_url']              = '';
-		$response->data['title']['rendered']       = $protected;
-		$response->data['title']['raw']            = $protected;
-		$response->data['description']['rendered'] = $protected;
-		$response->data['description']['raw']      = $protected;
-		if ( isset( $response->data['guid']['rendered'] ) ) {
-			$response->data['guid']['rendered'] = '';
+		$data                            = $response->get_data();
+		$protected                       = __( '<!-- protected -->', 'wp-document-revisions' );
+		$data['slug']                    = $protected;
+		$data['source_url']              = '';
+		$data['title']['rendered']       = $protected;
+		$data['title']['raw']            = $protected;
+		$data['description']['rendered'] = $protected;
+		$data['description']['raw']      = $protected;
+		if ( isset( $data['guid']['rendered'] ) ) {
+			$data['guid']['rendered'] = '';
 		}
-		if ( isset( $response->data['guid']['raw'] ) ) {
-			$response->data['guid']['raw'] = '';
+		if ( isset( $data['guid']['raw'] ) ) {
+			$data['guid']['raw'] = '';
 		}
-		$response->data['link'] = '';
+		$data['link'] = '';
 
 		// For non-editors, strip all media details to prevent file path leakage.
-		$response->data['media_details'] = new stdClass();
+		$data['filename']      = $protected;
+		$data['filesize']      = $protected;
+		$data['media_details'] = new stdClass();
+		$data['mime_type']     = $protected;
+
+		$response->set_data( $data );
+		// if can't read the document, then remove the reference to the parent.
+		if ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_document', $parent ) ) {
+			$response->remove_link( 'https://api.w.org/attached-to' );
+		}
 
 		return $response;
-	}
-
-
-	/**
-	 * Populates the document_attachment_id meta from post_content if empty.
-	 *
-	 * @since 3.9.1
-	 * @param WP_Post $post Post object.
-	 * @return int|false The attachment ID, or false if none found.
-	 */
-	private function populate_attachment_meta( WP_Post $post ) {
-		$meta = absint( get_post_meta( $post->ID, 'document_attachment_id', true ) );
-		if ( $meta ) {
-			return $meta;
-		}
-
-		$wpdr      = self::$parent;
-		$attach_id = $wpdr->extract_document_id( $post->post_content );
-		if ( $attach_id ) {
-			update_post_meta( $post->ID, 'document_attachment_id', $attach_id );
-			return $attach_id;
-		}
-
-		return false;
 	}
 
 
@@ -322,15 +335,22 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @return stdClass Modified post object.
 	 */
 	public function sync_meta_to_content( $prepared_post, WP_REST_Request $request ) {
-		// Get attachment ID: prefer request meta, fall back to DB.
-		$attach_id = 0;
-		$meta      = $request->get_param( 'meta' );
-		if ( isset( $meta['document_attachment_id'] ) ) {
-			$attach_id = absint( $meta['document_attachment_id'] );
-		} elseif ( ! empty( $prepared_post->ID ) ) {
-			$attach_id = absint( get_post_meta( $prepared_post->ID, 'document_attachment_id', true ) );
+		$wpdr = self::$parent;
+		// Get attachment ID: prefer DB, fall back to request meta.
+		$attach_id = absint( get_post_meta( $prepared_post->ID, '_document_attachment_id', true ) );
+		if ( ! $attach_id ) {
+			$meta = $request->get_param( 'meta' );
+			if ( isset( $meta['_document_attachment_id'] ) ) {
+				$attach_id = absint( $meta['_document_attachment_id'] );
+			}
+			if ( ! $attach_id ) {
+				// look if there is an existing value on the record (not the input as it may have been removed).
+				$content   = get_post_field( 'post_content', $prepared_post->ID );
+				$attach_id = absint( $wpdr->extract_document_id( $content ) );
+			}
 		}
 
+		// check the attachment data.
 		if ( $attach_id ) {
 			// Validate the attachment exists and is actually an attachment.
 			$attachment = get_post( $attach_id );
@@ -343,9 +363,8 @@ class WP_Document_Revisions_Manage_Rest {
 				return $prepared_post;
 			}
 
-			$wpdr    = self::$parent;
 			$content = isset( $prepared_post->post_content ) ? $prepared_post->post_content : '';
-			// Strip any existing WPDR comment to avoid duplicates.
+			// Strip any existing WPDR comment to avoid multiple.
 			$content = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $content );
 			// Prepend the WPDR comment.
 			$prepared_post->post_content = $wpdr->format_doc_id( $attach_id ) . $content;

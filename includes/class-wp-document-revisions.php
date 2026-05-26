@@ -775,7 +775,7 @@ class WP_Document_Revisions {
 		// Register meta for block editor attachment ID management.
 		register_post_meta(
 			'document',
-			'document_attachment_id',
+			'_document_attachment_id',
 			array(
 				'show_in_rest'      => true,
 				'single'            => true,

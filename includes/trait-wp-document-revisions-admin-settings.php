@@ -240,10 +240,11 @@ trait WP_Document_Revisions_Admin_Settings {
 				add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 				add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 				foreach ( self::$attachmts as $id => $value ) {
+					$post_id = absint( $id );
 					// delete_attachment does not delete the attachment if document is outside uploads directory.
-					$file = get_attached_file( $id );
+					$file = get_attached_file( $post_id );
 
-					wp_delete_attachment( $id, true );
+					wp_delete_attachment( $post_id, true );
 
 					// ensure attachment deleted.
 					wp_delete_file( $file );
