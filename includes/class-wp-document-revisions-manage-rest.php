@@ -169,11 +169,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_document( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
+	public function doc_clean_document( $response, WP_Post $post, WP_REST_Request $request ) {
 		// Already filtered to an error response.
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -229,11 +229,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_revision( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_revision( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// Already filtered to an error response.
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -269,11 +269,11 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_attachment( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_attachment( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// Already filtered to an error response.
 		if ( is_wp_error( $response ) ) {
 			return $response;

@@ -262,7 +262,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 *
 	 * @param WP_REST_Request $request the arguments to pass to the function.
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 *
 	 * @global $wpdb Database object.
 	 */
@@ -734,7 +734,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 *
 	 * @param int    $doc_id            ID of a post object.
-	 * @param string $attach_id         attachment id from post content field.
+	 * @param int    $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
 	 * @return array|false
 	 */
@@ -816,7 +816,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $post_date   post date field.
 	 * @param string $post_name   post name field.
 	 * @param string $guid        post guid field.
-	 * @return array|false
+	 * @return array|bool
 	 */
 	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
@@ -895,6 +895,9 @@ class WP_Document_Revisions_Validate_Structure {
 				'parm'  => $doc_id,
 			);
 		}
+
+		// no problem found.
+		return false;
 	}
 
 	/**
