@@ -1090,7 +1090,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 	
 		/**
-		 * Filters the list of orphan attachmnt records found for a document.
+		 * Filters the list of orphan attachment records found for a document.
 		 *
 		 * @param array $attachs Array of attachments that are orphans.
 		 * @param int   $doc_id  Document post ID.
