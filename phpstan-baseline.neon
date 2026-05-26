@@ -199,24 +199,6 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:correct_document\(\) should return WP_REST_Response but returns WP_Error\.$#'
-			identifier: return.type
-			count: 5
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:validate_guid\(\) should return array\|false but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:validate_guid\(\) should return array\|false but returns true\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
