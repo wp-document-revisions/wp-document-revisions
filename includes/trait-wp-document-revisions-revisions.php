@@ -16,6 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait WP_Document_Revisions_Revisions {
 
 	/**
+	 * List of document revisions to keep (used to keep them if other processes would delete them).
+	 *
+	 * @var int[][]
+	 *
+	 * @since 3.7.0
+	 */
+	private static $revns = array();
+
+	/**
 	 * Retrieves all revisions for a given post (including the current post)
 	 * Workaround for #16215 to ensure revision author is accurate
 	 * http://core.trac.wordpress.org/ticket/16215.

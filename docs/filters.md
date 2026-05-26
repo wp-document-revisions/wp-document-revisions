@@ -113,7 +113,7 @@ Filters the post-thumbnail size parameters (used only if this image size has not
 
 In: class-wp-document-revisions.php, class-wp-document-revisions-front-end.php, class-wp-document-revisions-manage-rest.php, trait-wp-document-revisions-file-handler.php
 
-Filters the users capacities to require read (or read_document) capability.
+Filters the users capacities to require read (default) (or read_document) capability to read a document.
 
 ## Filter document_revision_query
 

@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait WP_Document_Revisions_File_Handler {
 
 	/**
+	 * Length of feed key.
+	 *
+	 * @var int
+	 */
+	private static $key_length = 32;
+
+	/**
+	 * User meta key used auth feeds.
+	 *
+	 * @var string
+	 */
+	private static $meta_key = 'document_revisions_feed_key';
+
+	/**
 	 * Serves document files.
 	 *
 	 * @since 0.5

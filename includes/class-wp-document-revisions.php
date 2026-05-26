@@ -28,20 +28,6 @@ class WP_Document_Revisions {
 	public static $instance;
 
 	/**
-	 * Length of feed key.
-	 *
-	 * @var int
-	 */
-	public static $key_length = 32;
-
-	/**
-	 * User meta key used auth feeds.
-	 *
-	 * @var string
-	 */
-	public static $meta_key = 'document_revisions_feed_key';
-
-	/**
 	 * The plugin version.
 	 *
 	 * Sourced from the WPDR_VERSION constant defined in the main plugin file
@@ -117,15 +103,6 @@ class WP_Document_Revisions {
 	public static function taxonomy_key(): string {
 		return self::$taxonomy_key_val;
 	}
-
-	/**
-	 * List of document revisions to keep (used to keep them if other processes would delete them).
-	 *
-	 * @var int[][]
-	 *
-	 * @since 3.7.0
-	 */
-	private static $revns = array();
 
 	/**
 	 * Initiates an instance of the class and adds hooks.
@@ -768,7 +745,7 @@ class WP_Document_Revisions {
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.
 		/**
-		 * Filters the users capacities to require read (or read_document) capability.
+		 * Filters the users capacities to require read (default) (or read_document) capability to read a document.
 		 *
 		 * @since 3.3
 		 *

@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait WP_Document_Revisions_Admin_Settings {
 
 	/**
+	 * Length of feed key.
+	 *
+	 * @var int
+	 */
+	private static $key_length = 32;
+
+	/**
+	 * User meta key used auth feeds.
+	 *
+	 * @var string
+	 */
+	private static $meta_key = 'document_revisions_feed_key';
+
+	/**
 	 * Sanitize link_date option prior to saving.
 	 *
 	 * @since 3.5.0
@@ -98,7 +112,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * @return string the feed key
 	 */
 	public function get_feed_key( ?int $user = null ): string {
-		$key = get_user_option( $this->meta_key, $user );
+		$key = get_user_option( self::$meta_key, $user );
 
 		if ( ! $key ) {
 			$key = $this->generate_new_feed_key();
@@ -630,8 +644,8 @@ trait WP_Document_Revisions_Admin_Settings {
 			$user = get_current_user_id();
 		}
 
-		$key = wp_generate_password( $this->key_length, false, false );
-		update_user_option( $user, $this->meta_key, $key );
+		$key = wp_generate_password( self::$key_length, false, false );
+		update_user_option( $user, self::$meta_key, $key );
 
 		return $key;
 	}
