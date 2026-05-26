@@ -122,7 +122,7 @@ trait WP_Document_Revisions_Query {
 		if ( empty( $post_content ) ) {
 			return false;
 		} elseif ( is_numeric( $post_content ) ) {
-			return (int) $post_content;
+			return absint( $post_content );
 		} else {
 			// Early return if content doesn't contain WPDR marker to avoid regex cost.
 			if ( false === stripos( $post_content, 'WPDR' ) ) {
@@ -132,7 +132,7 @@ trait WP_Document_Revisions_Query {
 			preg_match( '/<!-- WPDR \s*(\d+) -->/i', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id (Zero will be no document attached - WPML scenario).
-				return (int) $id[1];
+				return absint( $id[1] );
 			}
 		}
 		// no document found.
@@ -283,39 +283,6 @@ trait WP_Document_Revisions_Query {
 
 
 	/**
-	 * Extends the modified term_count_cb to all custom taxonomies associated with documents
-	 * Unless taxonomy already has a custom callback.
-	 *
-	 * @since 1.2.1
-	 */
-	public function register_term_count_cb(): void {
-		// This will return only taxonomies for documents only, e.g. ignore those for documents AND another.
-		$taxs = get_taxonomies(
-			array(
-				'object_type'           => array( 'document' ),
-				'update_count_callback' => '',
-			),
-			'names'
-		);
-
-		/**
-		 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
-		 *
-		 * @param array $taxs document taxonomies .
-		 */
-		$taxs = apply_filters( 'document_taxonomy_term_count', $taxs );
-
-		if ( ! empty( $taxs ) ) {
-			global $wp_taxonomies;
-
-			foreach ( $taxs as $tax ) {
-					$wp_taxonomies[ $tax ]->update_count_callback = array( $this, 'term_count_cb' );
-			}
-		}
-	}
-
-
-	/**
 	 * Filters the term_count post_statuses for all custom taxonomies associated with documents
 	 * Unless taxonomy already has a custom callback.
 	 *
@@ -435,6 +402,8 @@ trait WP_Document_Revisions_Query {
 			if ( ! $attachment ) {
 				return '';
 			}
+		} else {
+			return '';
 		}
 
 		// no need to get the correct directory as we just want the extension.
@@ -468,32 +437,6 @@ trait WP_Document_Revisions_Query {
 		 * @param mixed[] $size default values for the image size.
 		 */
 		return apply_filters( 'document_post_thumbnail', $size );
-	}
-
-	/**
-	 * Term Count Callback that applies custom filter
-	 * Allows Workflow State counts to include non-published posts.
-	 *
-	 * @since 1.2.1
-	 * @param Array       $terms the terms to filter.
-	 * @param WP_Taxonomy $taxonomy the taxonomy object.
-	 */
-	public function term_count_cb( array $terms, WP_Taxonomy $taxonomy ): void {
-		add_filter( 'query', array( $this, 'term_count_query_filter' ) );
-		_update_post_term_count( $terms, $taxonomy );
-		remove_filter( 'query', array( $this, 'term_count_query_filter' ) );
-	}
-
-	/**
-	 * Alters term count query to include all non-trashed posts.
-	 * See generally, #17548
-	 *
-	 * @since 1.2.1
-	 * @param string $query the query string.
-	 * @return string the modified query
-	 */
-	public function term_count_query_filter( string $query ): string {
-		return str_replace( "= 'publish'", "!= 'trash'", $query );
 	}
 
 	/**
