@@ -11,7 +11,7 @@
 .gitlab-ci.yml
 .npmrc
 .prettierignore
-.prettier.json
+.prettierrc.json
 .travis.yml
 .wp-env.json
 .DS_Store
@@ -32,6 +32,7 @@ docker-compose.yml
 Gruntfile.js
 JS_TESTS_SUMMARY.md
 package.json
+package-lock.json
 phpunit.xml
 phpunit.xml.dist
 phpunit9.xml
