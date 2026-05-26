@@ -219,6 +219,14 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.x.x =
+
+* Extend Validation structure process to identify inaccessible document files and potentially delete them.
+* Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible.
+* Review REST processing to further protect attachment details.
+* Make use of a (temporary) postmeta value to keep track of the current document attachment.
+* Refactor to include class variables in trait files if only used there.
+
 = 5.0.0 =
 
 Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.

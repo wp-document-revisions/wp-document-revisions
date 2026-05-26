@@ -472,7 +472,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// orphans found.
 			$attach  = $parm;
 			$orphans = self::identify_orphans( $attach, $id );
-			foreach( $orphans as $orphan ) {
+			foreach ( $orphans as $orphan ) {
 				// get name of file to ensure we don't delete a used file (WPML can do this).
 				$filename = get_post_meta( $orphan, '_wp_attached_file', true );
 				global $wpdb;
@@ -497,7 +497,7 @@ class WP_Document_Revisions_Validate_Structure {
 					// change file name held in metadata so no file deletion.
 					update_post_meta( $orphan, '_wp_attached_file', $filename . 'txt' );
 				}
-	
+
 				wp_delete_attachment( $orphan, true );
 			}
 
@@ -1026,12 +1026,12 @@ class WP_Document_Revisions_Validate_Structure {
 		$orphans = self::identify_orphans( $attach_id, $doc_id );
 		if ( $orphans ) {
 			return array(
-					'code'  => 14,
-					'error' => 0,
-					'msg'   => __( 'The document contains additional document files that are inaccessible. They should be deleted to reduce storage.', 'wp-document-revisions' ),
-					'fix'   => 1,
-					'parm'  => $attach_id,
-				);
+				'code'  => 14,
+				'error' => 0,
+				'msg'   => __( 'The document contains additional document files that are inaccessible. They should be deleted to reduce storage.', 'wp-document-revisions' ),
+				'fix'   => 1,
+				'parm'  => $attach_id,
+			);
 		}
 
 		return false;
@@ -1084,13 +1084,13 @@ class WP_Document_Revisions_Validate_Structure {
 		$revns = wp_list_pluck( $revns, 'post_content' );
 
 		$wpdr = self::$parent;
-		foreach( $revns as $revn ) {
+		foreach ( $revns as $revn ) {
 			$id = $wpdr->extract_document_id( $revn );
 			unset( $attachs[ $id ] );
 		}
-	
+
 		/**
-		 * Filters the list of orphan attachment records found for a document.
+		 * Filters the list of orphan attachmnt records found for a document.
 		 *
 		 * @param array $attachs Array of attachments that are orphans.
 		 * @param int   $doc_id  Document post ID.

@@ -204,7 +204,7 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Block editor: sync meta from content and strip WPDR comment from raw content.
 		if ( apply_filters( 'document_use_block_editor', false ) && 'edit' === $request['context'] ) {
-			$wpdr = self::$parent;
+			$wpdr      = self::$parent;
 			$attach_id = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
 			$data      = $response->get_data();
 
