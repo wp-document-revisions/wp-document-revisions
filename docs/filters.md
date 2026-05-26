@@ -273,6 +273,12 @@ In: class-wp-document-revisions-validate-structure.php
 
 Filter to switch off md5 format attachment validation.
 
+## Filter document_validate_orphans
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the list of orphan attachment records found for a document.
+
 ## Filter document_verify_feed_key
 
 In: trait-wp-document-revisions-file-handler.php
