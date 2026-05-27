@@ -1045,6 +1045,195 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Build a self-contained document fixture (parent post + one attachment) and
+	 * return [doc_id, old_attach_id].  Used by the upload-new-version regression
+	 * tests below so they do not mutate the class-level $editor_public_post used
+	 * by test_structure().
+	 *
+	 * @return array{0:int,1:int} Document ID, old attachment ID.
+	 */
+	private function create_update_scenario_fixture(): array {
+		global $wpdr;
+
+		$doc_id = self::factory()->post->create(
+			array(
+				'post_title'   => 'Update Scenario - ' . microtime( true ),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_excerpt' => 'Update Scenario',
+				'post_type'    => 'document',
+			)
+		);
+		self::assertGreaterThan( 0, $doc_id, 'fixture document created' );
+
+		$old_file   = self::create_file_copy( $doc_id, self::$test_file );
+		$filetype   = wp_check_filetype( basename( $old_file ), null );
+		$upload_dir = wp_upload_dir();
+		$old_attach = self::factory()->attachment->create(
+			array(
+				'guid'           => $upload_dir['url'] . '/' . basename( $old_file ),
+				'post_mime_type' => $filetype['type'],
+				'post_title'     => 'old version',
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+				'post_parent'    => $doc_id,
+				'file'           => $old_file,
+			)
+		);
+		self::assertGreaterThan( 0, $old_attach, 'old attachment created' );
+
+		wp_update_post(
+			array(
+				'ID'           => $doc_id,
+				'post_content' => $wpdr->format_doc_id( $old_attach ),
+			)
+		);
+		wp_cache_flush();
+		clean_post_cache( $doc_id );
+
+		self::assertSame(
+			$old_attach,
+			$wpdr->extract_document_id( get_post_field( 'post_content', $doc_id ) ),
+			'fixture starts with old WPDR ID in post_content'
+		);
+
+		return array( $doc_id, $old_attach );
+	}
+
+	/**
+	 * Create a fresh attachment parented to $doc_id and return its ID.  Simulates
+	 * the server-side result of the user uploading a new version via ThickBox.
+	 *
+	 * @param int $doc_id Parent document ID.
+	 * @return int Newly created attachment ID.
+	 */
+	private function upload_new_version_attachment( int $doc_id ): int {
+		$new_file   = self::create_file_copy( $doc_id, self::$test_file2 );
+		$filetype   = wp_check_filetype( basename( $new_file ), null );
+		$upload_dir = wp_upload_dir();
+		$new_attach = self::factory()->attachment->create(
+			array(
+				'guid'           => $upload_dir['url'] . '/' . basename( $new_file ),
+				'post_mime_type' => $filetype['type'],
+				'post_title'     => 'new version',
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+				'post_parent'    => $doc_id,
+				'file'           => $new_file,
+			)
+		);
+		self::assertGreaterThan( 0, $new_attach, 'new attachment created' );
+		return $new_attach;
+	}
+
+	/**
+	 * Regression: editing an existing document with a new file version must update
+	 * post_content to the new WPDR attachment ID.
+	 *
+	 * Mirrors the classic-editor save: $_POST['post_content'] carries the NEW WPDR
+	 * comment (set by the JS hidden-field update after upload), $_POST['content']
+	 * is unset (the editor textarea is renamed to 'doc_descr' by
+	 * document_editor_setting), so WP forwards post_content as ''.  The
+	 * restore_document_attachment_id filter must patch the new ID in.
+	 *
+	 * See: https://wordpress.org/support/topic/upload-document-error-after-update-to-4-0-4/#post-18920956
+	 */
+	public function test_update_existing_document_with_new_version() {
+		global $wpdr;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		list( $doc_id, $old_attach ) = $this->create_update_scenario_fixture();
+		$new_attach                  = $this->upload_new_version_attachment( $doc_id );
+		self::assertNotSame( $old_attach, $new_attach, 'IDs must differ' );
+
+		// Simulate the classic-editor form submission.  textarea_name=doc_descr
+		// means $_POST['content'] is unset; WP then forwards post_content as ''.
+		// The hidden #post_content field carries the new WPDR comment.
+		$saved_post = $_POST;
+		try {
+			unset( $_POST['content'] );
+			$_POST['post_content']         = $wpdr->format_doc_id( $new_attach );
+			$_POST['doc_descr']            = $wpdr->format_doc_id( $new_attach );
+			$_POST['workflow_state_nonce'] = wp_create_nonce( 'wp-document-revisions' );
+
+			wp_update_post(
+				array(
+					'ID'           => $doc_id,
+					'post_content' => '',
+				)
+			);
+		} finally {
+			$_POST = $saved_post;
+		}
+
+		wp_cache_flush();
+		clean_post_cache( $doc_id );
+
+		$final_attach = $wpdr->extract_document_id( get_post_field( 'post_content', $doc_id ) );
+		wp_delete_post( $doc_id, true );
+
+		self::assertSame(
+			$new_attach,
+			$final_attach,
+			'post_content must carry the new WPDR ID after a classic-editor update'
+		);
+	}
+
+	/**
+	 * Regression (advisor hypothesis): if the OLD WPDR comment survives into
+	 * $data['post_content'] at the wp_insert_post_data filter (e.g. when a caller
+	 * does wp_update_post() without supplying post_content, so array_merge
+	 * preserves the existing value), $_POST['post_content'] carrying the NEW
+	 * WPDR ID must still win.
+	 *
+	 * The current early-return on `$this->extract_document_id( $data['post_content'] )`
+	 * would short-circuit and discard the user's new selection.  This test pins
+	 * that behaviour so the support-thread scenario can be reproduced (or, if it
+	 * already passes, the failure must be elsewhere — JS-side or environmental).
+	 */
+	public function test_update_preserves_new_wpdr_id_when_old_id_survives_in_data() {
+		global $wpdr;
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+
+		list( $doc_id, $old_attach ) = $this->create_update_scenario_fixture();
+		$new_attach                  = $this->upload_new_version_attachment( $doc_id );
+		self::assertNotSame( $old_attach, $new_attach, 'IDs must differ' );
+
+		$saved_post = $_POST;
+		try {
+			unset( $_POST['content'] );
+			$_POST['post_content']         = $wpdr->format_doc_id( $new_attach );
+			$_POST['workflow_state_nonce'] = wp_create_nonce( 'wp-document-revisions' );
+
+			// Caller does NOT supply post_content — array_merge in wp_update_post
+			// will preserve the OLD WPDR comment, so the filter sees old-ID data.
+			wp_update_post(
+				array(
+					'ID'         => $doc_id,
+					'post_title' => 'Title change forcing a revision ' . time(),
+				)
+			);
+		} finally {
+			$_POST = $saved_post;
+		}
+
+		wp_cache_flush();
+		clean_post_cache( $doc_id );
+
+		$final_attach = $wpdr->extract_document_id( get_post_field( 'post_content', $doc_id ) );
+		wp_delete_post( $doc_id, true );
+
+		self::assertSame(
+			$new_attach,
+			$final_attach,
+			'$_POST[post_content] must override an old WPDR ID that survived into $data'
+		);
+	}
+
+	/**
 	 * Test revision summary.
 	 */
 	public function test_revision_summary_cb() {
