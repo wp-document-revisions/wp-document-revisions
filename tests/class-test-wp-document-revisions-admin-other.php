@@ -1151,6 +1151,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// Simulate the classic-editor form submission.  textarea_name=doc_descr
 		// means $_POST['content'] is unset; WP then forwards post_content as ''.
 		// The hidden #post_content field carries the new WPDR comment.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- snapshotting superglobal for test isolation; no form data is being acted upon here.
 		$saved_post = $_POST;
 		try {
 			unset( $_POST['content'] );
@@ -1165,6 +1166,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 				)
 			);
 		} finally {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- restoring snapshot taken above.
 			$_POST = $saved_post;
 		}
 
@@ -1202,6 +1204,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new_attach                  = $this->upload_new_version_attachment( $doc_id );
 		self::assertNotSame( $old_attach, $new_attach, 'IDs must differ' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- snapshotting superglobal for test isolation; no form data is being acted upon here.
 		$saved_post = $_POST;
 		try {
 			unset( $_POST['content'] );
@@ -1217,6 +1220,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 				)
 			);
 		} finally {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- restoring snapshot taken above.
 			$_POST = $saved_post;
 		}
 
