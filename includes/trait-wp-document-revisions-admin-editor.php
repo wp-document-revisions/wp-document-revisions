@@ -343,11 +343,22 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Restores the WPDR attachment ID comment to post_content when it has been stripped
-	 * by wp_kses_post (applied via content_save_pre for users without unfiltered_html).
+	 * Restores the WPDR attachment ID comment to post_content on a document save.
 	 *
-	 * This filter runs after content_save_pre but before the DB write, so it can patch
-	 * the data in-place without a secondary wp_update_post call.
+	 * Runs after content_save_pre but before the DB write, so it can patch the
+	 * data in-place without a secondary wp_update_post call.
+	 *
+	 * Two failure modes are handled:
+	 *
+	 * 1. wp_kses_post (applied via content_save_pre for users without
+	 *    unfiltered_html) strips the `<!-- WPDR N -->` comment, leaving
+	 *    $data['post_content'] without an attachment ID.
+	 *
+	 * 2. The caller of wp_update_post does not supply post_content (e.g. REST
+	 *    update of post_title only), so array_merge() preserves the OLD WPDR
+	 *    comment in $data['post_content'], even though the user uploaded a new
+	 *    version and the hidden form field carries the NEW ID.  In this case
+	 *    $_POST['post_content'] is the authoritative source and must win.
 	 *
 	 * @since 4.0.8
 	 * @param array $data    Sanitized post data about to be inserted.
@@ -363,29 +374,30 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
-		// Already has an attachment ID — nothing to fix.
-		if ( $this->extract_document_id( $data['post_content'] ) ) {
-			return $data;
-		}
-
-		// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
-		// still in $_POST['post_content'] (unfiltered superglobal).
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['post_content'] ) ) {
+			// Nothing to restore from — accept whatever survived into $data.
 			return $data;
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
 		$raw_posted = wp_unslash( $_POST['post_content'] );
-		$attach_id  = $this->extract_document_id( $raw_posted );
+		$posted_id  = $this->extract_document_id( $raw_posted );
 
-		if ( ! $attach_id ) {
+		if ( ! $posted_id ) {
 			return $data;
 		}
 
-		// Rebuild: attachment ID comment + any description that survived kses.
+		$existing_id = $this->extract_document_id( $data['post_content'] );
+		if ( $existing_id === $posted_id ) {
+			// Already correct — nothing to fix.
+			return $data;
+		}
+
+		// Rebuild: posted attachment ID comment + any description that survived kses
+		// (with any stale WPDR comment stripped out).
 		$description          = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $data['post_content'] );
-		$data['post_content'] = $this->format_doc_id( $attach_id ) . $description;
+		$data['post_content'] = $this->format_doc_id( $posted_id ) . $description;
 
 		return $data;
 	}
