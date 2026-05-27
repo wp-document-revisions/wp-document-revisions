@@ -129,10 +129,6 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr->disable_workflow_states();
 		self::assertTrue( true, 'disable_workflow_states' );
 
-		// test register_term_count_cb.
-		$wpdr->register_term_count_cb();
-		self::assertTrue( true, 'register_term_count_cb' );
-
 		// test manage_rest.
 		$wpdr->manage_rest();
 		self::assertTrue( true, 'manage_rest' );

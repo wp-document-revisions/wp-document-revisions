@@ -98,7 +98,12 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Check for valid document editing.
 		if ( 'edit' === $request['context'] ) {
+			// standard route for document.
 			if ( isset( $params['id'] ) && current_user_can( 'edit_document', $params['id'] ) ) {
+				return $response;
+			}
+			// route for revisions and autosaves.
+			if ( isset( $params['parent'] ) && current_user_can( 'edit_document', $params['parent'] ) ) {
 				return $response;
 			}
 			return new WP_Error(

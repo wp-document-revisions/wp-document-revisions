@@ -168,19 +168,3 @@ require_once __DIR__ . '/includes/template-functions.php';
 // Activation and deactivation hooks must be relative to the main plugin file.
 register_activation_hook( __FILE__, array( $wpdr, 'activation_hook' ) );
 register_deactivation_hook( __FILE__, array( $wpdr, 'deactivation_hook' ) );
-
-// polyfill for str_contains.
-if ( ! function_exists( 'str_contains' ) ) {
-	/**
-	 * Provides str_contains function.
-	 *
-	 * @since 3.5.0
-	 *
-	 * @param string $haystack the text to be searched.
-	 * @param string $needle   the text to search.
-	 * @return bool
-	 */
-	function str_contains( string $haystack, string $needle ): bool {
-		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
-	}
-}
