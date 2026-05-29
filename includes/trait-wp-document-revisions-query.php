@@ -141,6 +141,39 @@ trait WP_Document_Revisions_Query {
 
 
 	/**
+	 * Ensures the document_attachment_id meta is populated from post_content.
+	 *
+	 * Used when opening the editor (classic or block) so the meta becomes the
+	 * server-side source of truth for the current document file. Only writes the
+	 * meta when it is currently empty, so an uploaded-but-unsaved version (where
+	 * the meta has already advanced past post_content) is never clobbered.
+	 *
+	 * @since 5.0.0
+	 * @param WP_Post|int $post document post object or id.
+	 * @return int the attachment id stored in meta (0 if none could be determined).
+	 */
+	public function populate_document_attachment_meta( $post ): int {
+		$post = get_post( $post );
+		if ( ! $post instanceof WP_Post || 'document' !== $post->post_type ) {
+			return 0;
+		}
+
+		$meta = absint( get_post_meta( $post->ID, 'document_attachment_id', true ) );
+		if ( $meta ) {
+			return $meta;
+		}
+
+		$attach_id = $this->extract_document_id( $post->post_content );
+		if ( $attach_id ) {
+			update_post_meta( $post->ID, 'document_attachment_id', $attach_id );
+			return $attach_id;
+		}
+
+		return 0;
+	}
+
+
+	/**
 	 * Checks if a given post is a document.
 	 *
 	 * When called with `false`, will look to other available global data to determine whether

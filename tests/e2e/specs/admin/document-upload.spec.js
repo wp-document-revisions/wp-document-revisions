@@ -93,9 +93,10 @@ test.describe( 'Document Upload Callback', () => {
 		// After the event, hasUpload should be true (callback fired).
 		expect( result.hasUploadAfter ).toBe( true );
 
-		// post_content should contain the WPDR comment with the attachment ID.
-		expect( result.postContentValue ).toContain( '<!-- WPDR' );
-		expect( result.postContentValue ).toContain( '999' );
+		// The attachment id is now recorded server-side (document_attachment_id meta)
+		// via the add_attachment hook, so the callback no longer writes the WPDR
+		// comment into post_content.
+		expect( result.postContentValue ).not.toContain( '<!-- WPDR' );
 	} );
 
 	test( 'submit buttons are enabled after upload callback', async ( {

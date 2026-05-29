@@ -338,23 +338,14 @@
 		}
 
 		buildContent = () => {
-			// Create the desired content for post_content.
-			// Will be the combination of document id from field post_content and description from content.
+			// Sync the description into post_content. The attachment id is managed
+			// server-side (stored in the document_attachment_id meta on upload and
+			// reintegrated into post_content on save), so the client only carries the
+			// user-facing description here.
 			const postContentEl = document.getElementById('post_content');
 			const content = postContentEl ? postContentEl.value : '';
-			let newtext = this.getDescr();
-			let attach;
-			if ('' === content) {
-				attach = [''];
-			} else if (/^\d+$/.test(content)) {
-				attach = [`<!-- WPDR ${content} -->`];
-			} else {
-				// match returns array or null, so ensure all return array.
-				attach = content.match(/<!-- WPDR \s*\d+ -->/) || [''];
-			}
-			// might have an extra space includes in the id provided.
-			newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '');
-			newtext = attach[0] + newtext;
+			// Strip any legacy WPDR comment that may survive from older content.
+			const newtext = this.getDescr().replace(/<!-- WPDR \s*\d+ -->/, '');
 			if (content !== newtext) {
 				this.enableSubmit();
 			}
@@ -421,7 +412,9 @@
 				}
 				return;
 			}
-			// On upload set the document identifier in the new format.
+			// Validate that the upload produced an attachment id. The id itself is
+			// recorded server-side (document_attachment_id meta) via the add_attachment
+			// hook, so the client no longer writes it into post_content.
 			const docID = /\d+$/.exec(attachmentID);
 			if (!docID) {
 				this.window.tb_remove();
@@ -430,10 +423,6 @@
 			}
 			const wDoc = this.window.document;
 			this.clearUploadNotices();
-			const postContent = wDoc.getElementById('post_content');
-			if (postContent) {
-				postContent.value = `<!-- WPDR ${docID} -->`;
-			}
 			const message = wDoc.getElementById('message');
 			if (message) {
 				message.style.display = 'none';

@@ -613,6 +613,47 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Records a newly uploaded attachment as the document's current file id.
+	 *
+	 * Hooked on `add_attachment`. When the attachment is parented to a document
+	 * (the classic media-upload flow sets `post_parent` to the document), its id
+	 * is stored in the `document_attachment_id` meta. This makes the meta the
+	 * server-side source of truth for the current document file during editing,
+	 * so the client no longer needs to manage the attachment id. The value is
+	 * reintegrated into post_content on save (for revisioning) by
+	 * restore_document_attachment_id().
+	 *
+	 * A document's featured image is also parented to the document (save_document
+	 * later un-parents it), so the document-file discriminator self::$doc_image —
+	 * set to false by filename_rewrite() during a genuine document-file upload,
+	 * which runs on wp_handle_upload_prefilter before this add_attachment hook — is
+	 * used to skip featured-image and thumbnail uploads.
+	 *
+	 * @since 5.0.0
+	 * @param int $attachment_id the id of the attachment just added.
+	 * @return void
+	 */
+	public function update_document_attachment_id_meta( int $attachment_id ): void {
+		// Only a document-file upload should advance the current-file pointer.
+		if ( self::$doc_image ) {
+			return;
+		}
+
+		$attachment = get_post( $attachment_id );
+		if ( ! $attachment instanceof WP_Post ) {
+			return;
+		}
+
+		$parent = (int) $attachment->post_parent;
+		if ( $parent <= 0 || 'document' !== get_post_type( $parent ) ) {
+			return;
+		}
+
+		update_post_meta( $parent, 'document_attachment_id', $attachment_id );
+	}
+
+
+	/**
 	 * Renames the generated attachment meta data file names to hide the attachment slug.
 	 *
 	 * If the generated images are used as images, their name would display the slug.
