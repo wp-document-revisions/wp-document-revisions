@@ -242,22 +242,22 @@
 			const d = new Date();
 			to = to || d.getTime() / 1000 + parseInt(wp_document_revisions.offset);
 			const diff = Math.abs(to - from);
-			if (diff <= 3600) {
-				const mins = this.roundUp(Math.floor(diff / 60));
+			if (diff < 3600) {
+				const mins = this.roundUp(diff / 60);
 				if (mins === 1) {
 					return wp_document_revisions.minute.replace('%d', mins);
 				} else {
 					return wp_document_revisions.minutes.replace('%d', mins);
 				}
-			} else if (diff <= 86400 && diff > 3600) {
-				const hours = this.roundUp(Math.floor(diff / 3600));
+			} else if (diff < 86400 && diff >= 3600) {
+				const hours = this.roundUp(diff / 3600);
 				if (hours === 1) {
 					return wp_document_revisions.hour.replace('%d', hours);
 				} else {
 					return wp_document_revisions.hours.replace('%d', hours);
 				}
 			} else if (diff >= 86400) {
-				const days = this.roundUp(Math.floor(diff / 86400));
+				const days = this.roundUp(diff / 86400);
 				if (days === 1) {
 					return wp_document_revisions.day.replace('%d', days);
 				} else {
@@ -270,7 +270,7 @@
 			if (n < 1) {
 				n = 1;
 			}
-			return n;
+			return Math.round(n);
 		}
 
 		bindPostDocumentUploadCB = () => {
@@ -306,7 +306,8 @@
 
 		updateTimestamps = () => {
 			document.querySelectorAll('.timestamp').forEach((el) => {
-				el.textContent = this.human_time_diff(el.id);
+				const from = new Date(el.title.replace( " ", "T" ) + "Z");
+				el.textContent = this.human_time_diff(from / 1000);
 			});
 		};
 
@@ -332,7 +333,7 @@
 				return content;
 			}
 			text = text.replace(/<br data-mce-bogus="1">/g, '');
-			text = text.replace(/<br><\/p>/g, '</p>');
+			text = text.replace(/<br>\s*<\/p>/g, '</p>');
 			text = text.replace(/<p>\s*<\/p>/g, '');
 			return text;
 		}

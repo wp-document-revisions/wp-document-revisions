@@ -346,6 +346,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
+	 *
 	 * Restores the WPDR attachment ID comment to post_content when it has been stripped
 	 * by wp_kses_post (applied via content_save_pre for users without unfiltered_html).
 	 *
@@ -366,14 +367,22 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
+		$wpdr = self::$parent;
 		// Get the document id.
 		$doc_id = $postarr['ID'];
+		check_admin_referer( 'update-post_' . $doc_id );
 
 		// Find the meta data value.
-		$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		// For revision restores need to get it from the post_content, normally from post_meta.
+		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
+			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
+			update_post_meta( $doc_id, '_document_attachment_id', $attach_id );
+		} else {
+			$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		}
 
 		// Already has an attachment ID, see if it is the stored one so nothing to fix.
-		if ( $attach_id && $attach_id === $this->extract_document_id( $data['post_content'] ) ) {
+		if ( $attach_id && $attach_id === $wpdr->extract_document_id( $data['post_content'] ) ) {
 			return $data;
 		}
 
@@ -388,7 +397,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized 
 			$raw_posted = wp_unslash( $_POST['post_content'] );
-			$attach_id  = $this->extract_document_id( $raw_posted );
+			$attach_id  = $wpdr->extract_document_id( $raw_posted );
 
 			if ( ! $attach_id ) {
 				return $data;
@@ -397,7 +406,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		// Rebuild: attachment ID comment + any description that survived kses.
 		$description          = preg_replace( '/<!-- WPDR \s*\d+\s*-->/i', '', $data['post_content'] );
-		$data['post_content'] = $this->format_doc_id( $attach_id ) . $description;
+		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $description;
 
 		return $data;
 	}
@@ -911,8 +920,10 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post the post object.
 	 */
 	public function revision_metabox( WP_Post $post ): void {
+		global $wpdr;
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
-		$revisions    = $this->get_revisions( $post->ID );
+		$attach_id    = $wpdr->extract_document_id( $post->post_content );
+		$revisions    = $wpdr->get_revisions( $post->ID );
 		$key          = $this->get_feed_key();
 		?>
 		<table id="document-revisions">
@@ -931,15 +942,13 @@ trait WP_Document_Revisions_Admin_Editor {
 			<tbody>
 		<?php
 
-		$i = 0;
 		foreach ( $revisions as $revision ) {
-			++$i;
 			if ( ! current_user_can( 'read_document', $revision->ID ) ) {
 				continue;
 			}
 			// preserve original file extension on revision links.
 			// this will prevent mime/ext security conflicts in IE when downloading.
-			$attach = $this->get_document( $revision->ID );
+			$attach = $wpdr->get_document( $revision->ID );
 
 			if ( $attach ) {
 				$fn   = get_post_meta( $attach->ID, '_wp_attached_file', true );
@@ -958,7 +967,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach_id !== $attach->ID ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -982,7 +991,14 @@ trait WP_Document_Revisions_Admin_Editor {
 		?>
 		</tbody>
 		</table>
-		<p style="padding-top: 10px;"><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
+		<div class="footer_cols">
+		<div class="footer_left">
+		<p><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
+		</div>
+		<div class="footer_right">
+		<p><?php echo wp_kses_post( 'Restoring earlier revisions will also restore the description.<br/>If the current one wis anted, copy it first.', 'wp-document-revisions' ); ?></p>
+		</div>
+		</div>
 		<?php
 	}
 
