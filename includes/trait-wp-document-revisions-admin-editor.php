@@ -343,18 +343,22 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Restores the WPDR attachment ID comment to post_content when it has been stripped
-	 * by wp_kses_post (applied via content_save_pre for users without unfiltered_html).
+	 * Reintegrates the current document attachment id into post_content before save.
 	 *
-	 * This filter runs after content_save_pre but before the DB write, so it can patch
-	 * the data in-place without a secondary wp_update_post call.
+	 * During editing the attachment id lives in the `document_attachment_id` meta
+	 * (the server-side source of truth, updated on upload), while post_content holds
+	 * only the user-facing description. This filter rebuilds post_content as
+	 * `<!-- WPDR id -->description` before the DB write so the at-rest format — on
+	 * which file serving and revisioning depend — is restored. It runs after
+	 * content_save_pre but before the DB write, so it can patch the data in-place
+	 * without a secondary wp_update_post call.
 	 *
 	 * @since 4.0.8
 	 * @param array $data    Sanitized post data about to be inserted.
 	 * @param array $postarr Raw post data passed to wp_insert_post.
 	 * @return array Post data, with post_content restored if needed.
 	 */
-	public function restore_document_attachment_id( array $data, array $postarr ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function restore_document_attachment_id( array $data, array $postarr ): array {
 		if ( 'document' !== $data['post_type'] ) {
 			return $data;
 		}
@@ -363,21 +367,26 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
-		// Already has an attachment ID — nothing to fix.
+		// Already has an attachment ID — nothing to fix (e.g. the block editor REST
+		// path, which reintegrates the id via sync_meta_to_content beforehand).
 		if ( $this->extract_document_id( $data['post_content'] ) ) {
 			return $data;
 		}
 
-		// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
-		// still in $_POST['post_content'] (unfiltered superglobal).
+		$attach_id = 0;
+
+		// Back-compat: a legacy client may still carry the WPDR comment in the raw
+		// form value even when wp_kses_post stripped it from $data.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_content'] ) ) {
-			return $data;
+		if ( isset( $_POST['post_content'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
+			$attach_id = (int) $this->extract_document_id( wp_unslash( $_POST['post_content'] ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
-		$raw_posted = wp_unslash( $_POST['post_content'] );
-		$attach_id  = $this->extract_document_id( $raw_posted );
+		// Primary source: the meta updated server-side on upload.
+		if ( ! $attach_id && ! empty( $postarr['ID'] ) ) {
+			$attach_id = absint( get_post_meta( (int) $postarr['ID'], 'document_attachment_id', true ) );
+		}
 
 		if ( ! $attach_id ) {
 			return $data;
@@ -458,6 +467,11 @@ trait WP_Document_Revisions_Admin_Editor {
 				clean_post_cache( $doc_id );
 				$attach_id = $latest_attach->ID;
 			}
+		}
+
+		// Keep the server-side source of truth in sync with what reached post_content.
+		if ( $attach_id ) {
+			update_post_meta( $doc_id, 'document_attachment_id', $attach_id );
 		}
 
 		// Let's work on Workflow state, Verify nonce.
@@ -758,6 +772,14 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( is_numeric( $post->post_content ) ) {
 			$post->post_content = $this->format_doc_id( $post->post_content );
 		}
+
+		// Move the attachment id into meta (the server-side source of truth while
+		// editing) and strip the WPDR comment so the editor — and the document
+		// metabox hidden field, which both read this same global $post object — only
+		// carry the user-facing description. The id is reintegrated on save.
+		// This hook fires immediately before the content editor is rendered.
+		self::$parent->populate_document_attachment_meta( $post );
+		$post->post_content = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $post->post_content );
 	}
 
 	/**

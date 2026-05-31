@@ -218,6 +218,8 @@ class WP_Document_Revisions {
 		add_filter( 'get_attached_file', array( $this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( $this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 2 );
+		// Record the current document file attachment id server-side on upload.
+		add_action( 'add_attachment', array( $this, 'update_document_attachment_id_meta' ) );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
 		// initialise document directory (will itself populate cache).

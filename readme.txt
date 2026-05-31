@@ -235,6 +235,7 @@ Adds native text extraction and AI-generated revision summaries for document lib
 * #514: Read + review REST endpoints under `wpdr/v1`. `GET /documents/<doc>/revisions/<rev>/summary` returns the cached summary with a `status` envelope (`pending` / `ready` / `unavailable`); `read_document` capability. `POST .../summary/review` marks a summary as human-reviewed; `edit_document` capability. Capability mapping by [@NeilWJames](https://github.com/NeilWJames).
 * #514: New action `wpdr_text_extracted` fires after extracted text is cached, so third-party search-indexing or embedding consumers can hook without monkey-patching the cache class.
 * Adds a [Text Extraction & AI Summaries cookbook recipe](https://wp-document-revisions.github.io/wp-document-revisions/cookbook/text-extraction-and-ai-summaries/) covering custom extractors, prompt customization, the four opt-out switches, the WP-CLI backfill, alternative AI providers, and the REST surface.
+* #539: Manage the current document file id server-side. The `document_attachment_id` post meta is now the source of truth for the current file while editing (classic and block editors): it is recorded on upload via the `add_attachment` hook and reintegrated into `post_content` on save for revisioning. The classic editor no longer manages the attachment id client-side, fixing flaky uploads where the id failed to reach `post_content`.
 
 = 4.0.7 =
 

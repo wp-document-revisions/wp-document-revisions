@@ -182,7 +182,7 @@ test.describe( 'Upload Flow Enhancements', () => {
 		}
 	} );
 
-	test( 'upload sets post_content with WPDR comment', async ( {
+	test( 'upload does not write the WPDR comment into post_content', async ( {
 		admin,
 		page,
 		requestUtils,
@@ -214,12 +214,13 @@ test.describe( 'Upload Flow Enhancements', () => {
 			);
 		} );
 
-		// Verify post_content contains the WPDR attachment comment.
+		// The attachment id is managed server-side (document_attachment_id meta,
+		// reintegrated into post_content on save), so the upload callback must not
+		// write the WPDR comment into post_content.
 		const content = await page.evaluate( () => {
 			return document.getElementById( 'post_content' )?.value ?? '';
 		} );
-		expect( content ).toMatch( /<!-- WPDR \d+ -->/ );
-		expect( content ).toContain( '42' );
+		expect( content ).not.toMatch( /<!-- WPDR \d+ -->/ );
 
 		// Clean up.
 		await requestUtils.rest( {

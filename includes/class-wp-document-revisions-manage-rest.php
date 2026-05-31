@@ -294,22 +294,10 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.9.1
 	 * @param WP_Post $post Post object.
-	 * @return int|false The attachment ID, or false if none found.
+	 * @return int The attachment ID, or 0 if none found.
 	 */
-	private function populate_attachment_meta( WP_Post $post ) {
-		$meta = absint( get_post_meta( $post->ID, 'document_attachment_id', true ) );
-		if ( $meta ) {
-			return $meta;
-		}
-
-		$wpdr      = self::$parent;
-		$attach_id = $wpdr->extract_document_id( $post->post_content );
-		if ( $attach_id ) {
-			update_post_meta( $post->ID, 'document_attachment_id', $attach_id );
-			return $attach_id;
-		}
-
-		return false;
+	private function populate_attachment_meta( WP_Post $post ): int {
+		return self::$parent->populate_document_attachment_meta( $post );
 	}
 
 

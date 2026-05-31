@@ -438,7 +438,7 @@ describe('WPDocumentRevisions', () => {
 			expect(WPDocumentRevisions.getDescr).toHaveBeenCalled();
 		});
 
-		test('should wrap numeric content in WPDR comment', () => {
+		test('should set description only, leaving the attachment id to the server', () => {
 			document.getElementById = jest.fn((id) => {
 				if (id === 'post_content') return { value: '123' };
 				return null;
@@ -462,10 +462,12 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.buildContent();
 
-			expect(currContentEl.value).toBe('<!-- WPDR 123 -->Description text');
+			// No WPDR comment is added client-side anymore.
+			expect(currContentEl.value).toBe('Description text');
+			expect(postContentEl.value).toBe('Description text');
 		});
 
-		test('should extract existing WPDR comment from content', () => {
+		test('should strip any legacy WPDR comment from the description', () => {
 			document.getElementById = jest.fn((id) => {
 				if (id === 'post_content') return { value: '<!-- WPDR 456 -->some text' };
 				return null;
@@ -484,12 +486,12 @@ describe('WPDocumentRevisions', () => {
 					}),
 				},
 			};
-			WPDocumentRevisions.getDescr = jest.fn(() => 'New description');
+			WPDocumentRevisions.getDescr = jest.fn(() => '<!-- WPDR 456 -->New description');
 			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.buildContent();
 
-			expect(currContentEl.value).toBe('<!-- WPDR 456 -->New description');
+			expect(currContentEl.value).toBe('New description');
 		});
 
 		test('should call enableSubmit when content changes', () => {
@@ -590,7 +592,7 @@ describe('WPDocumentRevisions', () => {
 			expect(WPDocumentRevisions.showUploadError).toHaveBeenCalledWith('error: Upload failed');
 		});
 
-		test('should set post_content to WPDR comment format on upload', () => {
+		test('should not modify post_content on upload (id managed server-side)', () => {
 			WPDocumentRevisions.hasUpload = false;
 
 			const postContentEl = { value: '' };
@@ -609,7 +611,9 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.postDocumentUpload('doc', '456');
 
-			expect(postContentEl.value).toBe('<!-- WPDR 456 -->');
+			// The attachment id is recorded server-side, not written into post_content.
+			expect(postContentEl.value).toBe('');
+			expect(WPDocumentRevisions.hasUpload).toBe(true);
 		});
 
 		test('should parse JSON success response from WordPress 6.9+ async-upload', () => {
@@ -632,7 +636,7 @@ describe('WPDocumentRevisions', () => {
 			const jsonResponse = JSON.stringify({ success: true, data: { id: 789, title: 'test-file' } });
 			WPDocumentRevisions.postDocumentUpload('doc.pdf', jsonResponse);
 
-			expect(postContentEl.value).toBe('<!-- WPDR 789 -->');
+			expect(postContentEl.value).toBe('');
 			expect(WPDocumentRevisions.hasUpload).toBe(true);
 		});
 
@@ -656,7 +660,8 @@ describe('WPDocumentRevisions', () => {
 			const jsonResponse = '  \n' + JSON.stringify({ success: true, data: { id: 42 } }) + '  \n';
 			WPDocumentRevisions.postDocumentUpload('doc.pdf', jsonResponse);
 
-			expect(postContentEl.value).toBe('<!-- WPDR 42 -->');
+			expect(postContentEl.value).toBe('');
+			expect(WPDocumentRevisions.hasUpload).toBe(true);
 		});
 
 		test('should display error for JSON error response', () => {
@@ -709,7 +714,7 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.postDocumentUpload('doc.pdf', '123');
 
-			expect(postContentEl.value).toBe('<!-- WPDR 123 -->');
+			expect(postContentEl.value).toBe('');
 			expect(WPDocumentRevisions.hasUpload).toBe(true);
 		});
 	});
