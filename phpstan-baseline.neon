@@ -45,7 +45,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:verify_post_type\(\)\.$#'
 			identifier: method.notFound
-			count: 5
+			count: 4
 			path: includes/class-wp-document-revisions-admin.php
 
 		-

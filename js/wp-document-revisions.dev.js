@@ -306,7 +306,7 @@
 
 		updateTimestamps = () => {
 			document.querySelectorAll('.timestamp').forEach((el) => {
-				const from = new Date(el.title.replace( " ", "T" ) + "Z");
+				const from = new Date(String(el.title));
 				el.textContent = this.human_time_diff(from / 1000);
 			});
 		};

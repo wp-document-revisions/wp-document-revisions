@@ -375,7 +375,6 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		// Find the meta data value.
 		// For revision restores need to get it from the post_content, normally from post_meta.
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
 			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
 			update_post_meta( $doc_id, '_document_attachment_id', $attach_id );
@@ -462,7 +461,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		// wp_kses_post stripped the WPDR comment for low-privilege users), try to recover from
 		// the most recently uploaded attachment for this document.
 		if ( ! $attach_id ) {
-			$latest_attach = $this->get_latest_attachment( $doc_id );
+			$latest_attach = $wpdr->get_latest_attachment( $doc_id );
 			if ( $latest_attach ) {
 				// Preserve any existing description text, but restore the attachment ID comment.
 				$description = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $content );
@@ -973,7 +972,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				$fn = get_permalink( $revision->ID );
 			}
 			// cast the modified date into js format to simplify updating.
-			$mod_date = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $revision->post_modified ) );
+			$mod_date = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $revision->post_modified_gmt ) ); 
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
