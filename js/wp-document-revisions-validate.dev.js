@@ -22,6 +22,11 @@
 		const td = line.getElementsByTagName('td');
 		td[3].innerHTML = processed;
 		td[4].innerHTML = '';
+		// may not match.
+		const on_ = document.getElementById(`on_${id}`);
+		on_ && (on_.style.display = 'none');
+		const off = document.getElementById(`off${id}`);
+		off && (off.style.display = 'block');
 	};
 
 	window.hide_show = function hide_show(id) {
