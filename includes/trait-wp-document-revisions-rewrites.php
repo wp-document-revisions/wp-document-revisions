@@ -258,7 +258,7 @@ trait WP_Document_Revisions_Rewrites {
 	 */
 	public function rewrite_file_url( array $file ): array {
 		// verify this is a document load as self::$doc_image has been set false if a WPDR document.
-		check_admin_referer( 'upload-attachment' ); 
+		check_admin_referer( 'upload-attachment' );
 		if ( self::$doc_image ) {
 			// not a WPDR Document.
 			return $file;

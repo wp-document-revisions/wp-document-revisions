@@ -571,7 +571,7 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	public function filename_rewrite( array $file ): array {
 		// verify this is a document load.
-		check_admin_referer( 'upload-attachment' ); 
+		check_admin_referer( 'upload-attachment' );
 		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
 			// default - not a WPDR Document.
 			self::$doc_image = true;
@@ -580,6 +580,7 @@ trait WP_Document_Revisions_File_Handler {
 
 		// Document uploads have an additional parameter for the document load.
 		self::$doc_image = false;
+
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
 		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.

@@ -4,6 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 5.x.x
 
+* Upload document files using wp.media rather than the thickbox process simplifying internal processing.
 * Extend Validation structure process to identify inaccessible document files and potentially delete them.
 * Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible.
 * Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink.
