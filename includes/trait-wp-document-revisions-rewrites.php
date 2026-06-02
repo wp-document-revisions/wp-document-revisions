@@ -265,8 +265,7 @@ trait WP_Document_Revisions_Rewrites {
 		}
 
 		global $post;
-		$file['url'] = get_permalink( $post->ID );
-		write_log( 'Document upload' . $file['url'] );
+		$file['url'] = get_permalink( $post );
 
 		return $file;
 	}

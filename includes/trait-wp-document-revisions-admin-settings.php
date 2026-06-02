@@ -214,10 +214,11 @@ trait WP_Document_Revisions_Admin_Settings {
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
+		$wpdr = self::$parent;
 		if ( '1' === $doc_link ) {
 			// have to access the document upload directory, so add it. Also on delete file. Make sure we use it.
-			self::$doc_image = false;
-			add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+			$wpdr::$doc_image = false;
+			add_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 			add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
 			// delete_attachment does not delete the attachment if document is outside uploads directory.
@@ -228,8 +229,8 @@ trait WP_Document_Revisions_Admin_Settings {
 			wp_delete_file( $file );
 
 			// have looked for the upload directory, so remove it.
-			self::$doc_image = true;
-			remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+			$wpdr::$doc_image = true;
+			remove_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 			remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
 			// remove attachment ID from list.
@@ -239,8 +240,8 @@ trait WP_Document_Revisions_Admin_Settings {
 		// If multiple files have been uploaded between saves then there will be attached files left [Edge case].
 		if ( 'document' === $record->post_type ) {
 			if ( ! empty( self::$attachmts ) ) {
-				self::$doc_image = false;
-				add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+				$wpdr::$doc_image = false;
+				add_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 				add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 				foreach ( self::$attachmts as $id => $value ) {
 					$post_id = absint( $id );
@@ -252,8 +253,8 @@ trait WP_Document_Revisions_Admin_Settings {
 					// ensure attachment deleted.
 					wp_delete_file( $file );
 				}
-				self::$doc_image = true;
-				remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+				$wpdr::$doc_image = true;
+				remove_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 				remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 			}
 			// set the attachmts to null, so that being null means we are not deleting a document.
