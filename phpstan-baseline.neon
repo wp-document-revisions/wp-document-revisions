@@ -247,12 +247,6 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Parameter \#1 \$post of function wp_check_post_lock expects int\|WP_Post, string given\.$#'
 			identifier: argument.type
 			count: 1

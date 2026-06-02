@@ -374,6 +374,7 @@
 							if ( data?.success && data?.data?.id ) {
 								this.onSelectMedia( data.data );
 								this.frameRef.close();
+								this.hasUpload = true;
 								this.enableSubmit();
 							}
 						} catch ( e ) {

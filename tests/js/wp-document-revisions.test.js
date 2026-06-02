@@ -593,6 +593,7 @@ describe('WPDocumentRevisions', () => {
 			// extension maps to file (1st arg), attachmentID maps to attachmentID (2nd arg)
 			expect(WPDocumentRevisions.postDocumentUpload).toHaveBeenCalledWith('.pdf', '789');
 		});
+	});
 
 	describe('clearUploadNotices', () => {
 		test('should remove all upload notice elements', () => {
