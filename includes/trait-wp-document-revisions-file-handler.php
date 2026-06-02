@@ -570,39 +570,15 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return array $file file with new filename
 	 */
 	public function filename_rewrite( array $file ): array {
-		// verify this is a document.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
+		// verify this is a document load.
+		check_admin_referer( 'upload-attachment' ); 
+		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
+			// default - not a WPDR Document.
 			self::$doc_image = true;
 			return $file;
 		}
 
-		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
-			self::$doc_image = true;
-			return $file;
-		}
-
-		global $pagenow;
-
-		if ( 'async-upload.php' === $pagenow ) {
-			// got past cookie, but may be in thumbnail code.
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
-			$functions = array(
-				'wp_ajax_get_post_thumbnail_html',
-				'_wp_post_thumbnail_html',
-				'post_thumbnail_meta_box',
-			);
-			foreach ( $trace as $traceline ) {
-				if ( in_array( $traceline['function'], $functions, true ) ) {
-					self::$doc_image = true;
-					return $file;
-				}
-			}
-		}
-
+		// Document uploads have an additional parameter for the document load.
 		self::$doc_image = false;
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
@@ -635,7 +611,13 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return int The attachment ID, or 0 if none found.
 	 */
 	public function populate_attachment_meta( $post_id, $post_content ) {
-		$meta      = absint( get_post_meta( $post_id, '_document_attachment_id', true ) );
+		// if there is a value, return it.
+		$meta = absint( get_post_meta( $post_id, '_document_attachment_id', true ) );
+		if ( $meta ) {
+			return $meta;
+		}
+
+		// get the value from post_content, and if different update the meta.
 		$attach_id = absint( $this->extract_document_id( $post_content ) );
 		if ( $attach_id !== $meta ) {
 			update_post_meta( $post_id, '_document_attachment_id', $attach_id );
@@ -664,7 +646,7 @@ trait WP_Document_Revisions_File_Handler {
 			return $metadata;
 		}
 
-		// ensure we use the document upload directory.
+		// ensure we use the document upload directory (belt and braces - was set earlier).
 		self::$doc_image = false;
 
 		if ( array_key_exists( 'sizes', $metadata ) ) {
@@ -726,6 +708,9 @@ trait WP_Document_Revisions_File_Handler {
 
 		// store the attachment in postmeta for fallback on initial file load.
 		update_post_meta( $attach->post_parent, '_document_attachment_id', $attachment_id );
+
+		// revert to default..
+		self::$doc_image = true;
 
 		return $metadata;
 	}
@@ -969,39 +954,9 @@ trait WP_Document_Revisions_File_Handler {
 			return $dir;
 		}
 
-		// Ignore if dealing with thumbnail on document page (Document upload has type set as 'file').
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
-			self::$doc_image = true;
+		// Ignore if not loading a document. [self::$doc_image set false while loading a document].
+		if ( self::$doc_image ) {
 			return $dir;
-		}
-
-		global $pagenow;
-
-		// got past cookie check (could be initial display), but may be in thumbnail code
-		// Set image directory if dealing with thumbnail on document page.
-		$pages = array(
-			'admin-ajax.php',
-			'async-upload.php',
-			'edit.php',
-			'media-upload.php',
-			'post.php',
-			'post-new.php',
-		);
-		if ( in_array( $pagenow, $pages, true ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
-			$functions = array(
-				'wp_ajax_get_post_thumbnail_html',
-				'_wp_post_thumbnail_html',
-				'post_thumbnail_meta_box',
-			);
-			foreach ( $trace as $traceline ) {
-				if ( in_array( $traceline['function'], $functions, true ) ) {
-					self::$doc_image = true;
-					return $dir;
-				}
-			}
 		}
 
 		// set the document directory.
@@ -1122,6 +1077,9 @@ trait WP_Document_Revisions_File_Handler {
 		$meta['wpdr_hidden'] = 1;
 
 		update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
+
+		// revert to media upload directory.
+		self::$doc_image = true;
 	}
 
 	/**

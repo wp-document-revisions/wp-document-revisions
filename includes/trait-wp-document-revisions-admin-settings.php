@@ -215,7 +215,8 @@ trait WP_Document_Revisions_Admin_Settings {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
 		if ( '1' === $doc_link ) {
-			// have to access the document upload directory, so add it. Also on delete file.
+			// have to access the document upload directory, so add it. Also on delete file. Make sure we use it.
+			self::$doc_image = false;
 			add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 			add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
@@ -227,6 +228,7 @@ trait WP_Document_Revisions_Admin_Settings {
 			wp_delete_file( $file );
 
 			// have looked for the upload directory, so remove it.
+			self::$doc_image = true;
 			remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 			remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
@@ -237,6 +239,7 @@ trait WP_Document_Revisions_Admin_Settings {
 		// If multiple files have been uploaded between saves then there will be attached files left [Edge case].
 		if ( 'document' === $record->post_type ) {
 			if ( ! empty( self::$attachmts ) ) {
+				self::$doc_image = false;
 				add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 				add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 				foreach ( self::$attachmts as $id => $value ) {
@@ -249,6 +252,7 @@ trait WP_Document_Revisions_Admin_Settings {
 					// ensure attachment deleted.
 					wp_delete_file( $file );
 				}
+				self::$doc_image = true;
 				remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
 				remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 			}
@@ -601,36 +605,6 @@ trait WP_Document_Revisions_Admin_Settings {
 		<?php esc_html_e( 'The delivered rewrite rules support both formats.', 'wp-document-revisions' ); ?>
 		</span>
 		<?php
-	}
-
-	/**
-	 * Binds our post-upload javascript callback to the plupload event
-	 *
-	 * Note: in footer because it has to be called after handler.js is loaded and initialized.
-	 *
-	 * @since 1.2.1
-	 */
-	public function bind_upload_cb(): void {
-		global $pagenow;
-
-		if ( 'media-upload.php' === $pagenow ) {
-			// Change event to load to let all js get loaded/initialised.
-			?>
-			<script type="text/javascript">
-				window.addEventListener('load', function() {
-					if ( typeof window.WPDocumentRevisions === "undefined" ) {
-						var WPDRClass = window.WPDocumentRevisionsClass || (window.parent && window.parent.WPDocumentRevisionsClass);
-						if ( typeof WPDRClass === "function" ) {
-							window.WPDocumentRevisions = new WPDRClass();
-						}
-					}
-					if ( window.WPDocumentRevisions && typeof window.WPDocumentRevisions.bindPostDocumentUploadCB === "function" ) {
-						window.WPDocumentRevisions.bindPostDocumentUploadCB();
-					}
-				});
-			</script>
-			<?php
-		}
 	}
 
 	/**

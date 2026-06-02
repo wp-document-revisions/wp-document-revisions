@@ -829,11 +829,11 @@ class WP_Document_Revisions_Validate_Structure {
 		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
 		global $wp_rewrite;
 		$permalink1 = site_url( '?post_type=document&p=' . (string) $doc_id );
-		$permalink2 = str_replace( '/?', '?', $permalink1 );
+		$permalink2 = str_replace( '&p=', '&#038;p=', $permalink1 );
+		$permalink3 = str_replace( '/?', '?', $permalink1 );
+		$in_ugly    = in_array( $guid, array( $permalink1, $permalink2, $permalink3 ), true );
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
-			$permalink1 = site_url( '?post_type=document&p=' . $doc_id );
-			$permalink2 = str_replace( '/?', '?', $permalink1 );
-			if ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+			if ( ! $in_ugly ) {
 				return array(
 					'code'  => 9,
 					'error' => 0,
@@ -878,7 +878,7 @@ class WP_Document_Revisions_Validate_Structure {
 					'parm'  => $doc_id,
 				);
 			}
-		} elseif ( $guid !== $permalink1 && $guid !== $permalink2 ) {
+		} elseif ( ! $in_ugly ) {
 			// Ugly one is accepable as it is unique.
 
 			if ( '' !== $year_mth ) {

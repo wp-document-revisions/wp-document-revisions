@@ -169,9 +169,11 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 		// put the document id in metadata.
 		$attach = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
+
+		// set the description field.
+		$descr = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post->post_content );
 		?>
-		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $post->post_content ); ?>" />
-		<input type="hidden" id="curr_content" name="curr_content" value="Unset" />
+		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $descr ); ?>" />
 		<?php
 		$lock_holder = $wpdr->get_document_lock( $post );
 		if ( $lock_holder ) {
@@ -188,9 +190,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
-				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
-			</a>
+			<button id="add-document-file" class="button"><?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?></button>
 		</div>
 		<?php
 		$latest_version = $wpdr->get_latest_revision( $post->ID );
@@ -240,6 +240,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		// ThickBox and media-upload are only needed for the classic editor.
 		$post_id = get_the_ID();
 		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
+			// for the document upload.
+			wp_enqueue_media();
+			// for the features image.
 			add_thickbox();
 			wp_enqueue_script( 'media-upload' );
 		}
@@ -835,6 +838,22 @@ trait WP_Document_Revisions_Admin_Editor {
 	}
 
 	/**
+	 * Filter the post_content field to remove the attachment_id before editing.
+	 *
+	 * @param String $post_content the post content field.
+	 * @return string
+	 */
+	public function remove_attachment_id( string $post_content ) {
+		global $post;
+		$wpdr = self::$parent;
+
+		if ( $wpdr->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
+			$post_content = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post_content );
+		}
+		return $post_content;
+	}
+
+	/**
 	 * Filter the admin body class to add additional classes which we can use conditionally
 	 * to style the page (e.g., when the document is locked).
 	 *
@@ -1008,10 +1027,25 @@ trait WP_Document_Revisions_Admin_Editor {
 		<p><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
 		</div>
 		<div class="footer_right">
-		<p><?php echo wp_kses_post( __( 'Restoring earlier revisions will also restore the description.<br/>If the current one is wanted, copy it first.', 'wp-document-revisions' ) ); ?></p>
+		<p><?php echo wp_kses_post( __( 'Restoring earlier revisions will also restore that description.<br/>If the current one is wanted, copy it first.', 'wp-document-revisions' ) ); ?></p>
 		</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Only allow a single document file upload at a time.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param array $plupload_init An array of default settings used by Plupload.
+	 */
+	public function plupload_init( array $plupload_init ) {
+		$wpdr = self::$parent;
+		if ( $wpdr->verify_post_type() ) {
+			$plupload_init['multi_selection'] = false;
+		}
+		return $plupload_init;
 	}
 
 	/**

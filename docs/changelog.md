@@ -6,10 +6,12 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 * Extend Validation structure process to identify inaccessible document files and potentially delete them.
 * Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible.
-* Review the revision log metabox to only permit restore of revisions that link to a different document file.
-* Fix the update to the age of revisions being displayed in the revision log.
+* Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink.
+* Review the revision log metabox to only permit the restore of revisions that link to a different document file.
 * Review REST processing to further protect attachment details.
-* Make use of a (temporary) postmeta value to keep track of the current document attachment.
+* Make use of a (temporary) postmeta value to keep track of the current document attachment during editing.
+* Fix the update to the age of revisions being displayed in the revision log.
+* Fix to ensure that only one document file can be loaded at a time. 
 * Refactor to include class variables in trait files if only used there.
 
 ### 5.0.0

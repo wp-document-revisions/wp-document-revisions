@@ -12,6 +12,9 @@
 		secure = 'https:' === window.location.protocol;
 		window = window.dialogArguments || opener || parent || top;
 		_uploadProgressShown = false;
+		firstcheck = true;
+		// Custom media frame that auto-closes after a fresh upload.
+		frameRef = null;
 
 		constructor() {
 			document.querySelectorAll('.revision').forEach((el) => {
@@ -22,7 +25,6 @@
 				el.addEventListener('click', this.requestPermission);
 			});
 			document.addEventListener('autosaveComplete', this.postAutosaveCallback);
-			document.addEventListener('documentUpload', this.legacyPostDocumentUpload);
 			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
 				el.disabled = true;
 			});
@@ -36,25 +38,12 @@
 				el.addEventListener('keyup', this.enableSubmit);
 			});
 			document.getElementById('sample-permalink')?.addEventListener('change', this.enableSubmit);
-			document.getElementById('content-add_media')?.addEventListener('click', this.cookieFalse);
-			document.querySelector('#postimagediv .inside')?.addEventListener('click', this.cookieTrue);
-			document.getElementById('publishing-action')?.addEventListener('click', this.buildContent);
-			document.querySelector('#submitdiv .inside')?.addEventListener('click', this.cookieDelete);
-			document.getElementById('adminmenumain')?.addEventListener('click', this.cookieDelete);
-			document.getElementById('wpadminbar')?.addEventListener('click', this.cookieDelete);
-			const docEl = document.getElementById('document');
-			if (docEl) {
-				docEl.style.display = '';
-			}
-			const revLog = document.getElementById('revision-log');
-			if (revLog) {
-				revLog.style.display = '';
-			}
-			const revSummary = document.getElementById('revision-summary');
-			if (revSummary) {
-				revSummary.style.display = 'none';
-			}
-			this.bindPostDocumentUploadCB();
+			document.getElementById('add-document-file')?.addEventListener('click', this.openMediaFrame);
+			document.getElementById('document')?.style.display;
+			document.getElementById('revision-log')?.style.display;
+			const el = document.getElementById('revision-summary');
+			el && (el.style.display = 'none');
+
 			this.hijackAutosave();
 			this.checkUpdate();
 			setInterval(this.updateTimestamps, 60000);
@@ -232,12 +221,6 @@
 			}
 		};
 
-		legacyPostDocumentUpload = (e) => {
-			const attachmentID = e && e.detail ? e.detail.attachmentID : undefined;
-			const extension = e && e.detail ? e.detail.extension : undefined;
-			return this.postDocumentUpload(extension, attachmentID);
-		};
-
 		human_time_diff = (from, to) => {
 			const d = new Date();
 			to = to || d.getTime() / 1000 + parseInt(wp_document_revisions.offset);
@@ -273,37 +256,6 @@
 			return Math.round(n);
 		}
 
-		bindPostDocumentUploadCB = () => {
-			if (this._uploaderBound) {
-				return;
-			}
-			if (typeof uploader === 'undefined' || uploader === null) {
-				return;
-			}
-			this._uploaderBound = true;
-			uploader.bind('UploadFile', () => {
-				this.showUploadProgress();
-			});
-			return uploader.bind('FileUploaded', (up, file, response) => {
-				return this.postDocumentUpload(file.name, response.response);
-			});
-		}
-
-		cookieFalse = () => {
-			wpCookies.set('doc_image', 'false', 60 * 60, '/wp-admin', false, this.secure);
-		};
-
-		cookieTrue = () => {
-			wpCookies.set('doc_image', 'true', 60 * 60, '/wp-admin', false, this.secure);
-			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
-				el.removeAttribute('disabled');
-			});
-		};
-
-		cookieDelete = () => {
-			wpCookies.set('doc_image', 'true', -60, '/wp-admin', false, this.secure);
-		};
-
 		updateTimestamps = () => {
 			document.querySelectorAll('.timestamp').forEach((el) => {
 				const from = new Date(String(el.title));
@@ -318,18 +270,12 @@
 			if (null === iframe) {
 				const el = document.getElementById('post_content');
 				const content = el ? el.value : '';
-				if (undefined === content || '' === content || /^\d+$/.test(content)) {
-					return '';
-				}
 				return content;
 			}
 			let text = iframe.contentWindow.document.getElementById('tinymce').innerHTML;
 			if (undefined === text) {
 				const el = document.getElementById('post_content');
 				const content = el ? el.value : '';
-				if ('' === content || /^\d+$/.test(content)) {
-					return '';
-				}
 				return content;
 			}
 			text = text.replace(/<br data-mce-bogus="1">/g, '');
@@ -338,164 +284,108 @@
 			return text;
 		}
 
-		buildContent = () => {
-			// Create the desired content for post_content.
-			// Will be the combination of document id from field post_content and description from content.
-			const postContentEl = document.getElementById('post_content');
-			const content = postContentEl ? postContentEl.value : '';
-			let newtext = this.getDescr();
-			let attach;
-			if ('' === content) {
-				attach = [''];
-			} else if (/^\d+$/.test(content)) {
-				attach = [`<!-- WPDR ${content} -->`];
+		checkUpdate = () => {
+			const el = document.getElementById('post_content');
+			if (el == null) {
+				return;
+			}
+			const tinymce = this.getDescr();
+			if (this.firstcheck) {
+				el.value = tinymce;
+				this.firstcheck = false;
 			} else {
-				// match returns array or null, so ensure all return array.
-				attach = content.match(/<!-- WPDR \s*\d+ -->/) || [''];
-			}
-			// might have an extra space includes in the id provided.
-			newtext = newtext.replace(/<!-- WPDR \s*\d+ -->/, '');
-			newtext = attach[0] + newtext;
-			if (content !== newtext) {
-				this.enableSubmit();
-			}
-			// Set the desired text in the parent window fields.
-			const wDoc = this.window.document;
-			const currContent = wDoc.getElementById('curr_content');
-			if (currContent) {
-				currContent.value = newtext;
-			}
-			const postContent = wDoc.getElementById('post_content');
-			if (postContent) {
-				postContent.value = newtext;
-			}
-			const contentEl = wDoc.getElementById('content');
-			if (contentEl) {
-				contentEl.value = newtext;
+				// Check whether an update happened - via a temporary field.
+				const content = el ? el.value : '';
+				if (tinymce !== content) {
+					this.enableSubmit();
+				}
 			}
 		};
 
-		postDocumentUpload = (file, attachmentID) => {
-			this._uploadProgressShown = false;
-
-			// Normalize JSON responses from WordPress 6.9+ async-upload.php.
-			if (typeof attachmentID === 'string') {
-				const trimmed = attachmentID.trim();
-				if (trimmed.charAt(0) === '{') {
-					try {
-						const json = JSON.parse(trimmed);
-						if (json.success && json.data && json.data.id) {
-							attachmentID = String(json.data.id);
-						} else {
-							const msg = (json.data && json.data.message) || json.data || '';
-							this.window.tb_remove();
-							this.showUploadError(String(msg));
-							return;
-						}
-					} catch (e) {
-						// Not valid JSON, fall through to legacy handling.
-					}
-				}
-			}
-
-			if (typeof attachmentID === 'string' && attachmentID.indexOf('error') !== -1) {
-				this.window.tb_remove();
-				this.showUploadError(attachmentID);
-				return;
-			}
-			if (file instanceof Object) {
-				file = file.name.split('.').pop();
-			}
-			// Check both local and parent instance — hasUpload on the iframe instance
-			// is lost when ThickBox closes and reopens, so also check the parent.
-			const parentWPDR = this.window.WPDocumentRevisions;
-			const alreadyUploaded = this.hasUpload || (parentWPDR && parentWPDR.hasUpload);
-			if (alreadyUploaded) {
-				this.window.tb_remove();
-				this.clearUploadNotices();
-				const wDoc = this.window.document;
-				const post = wDoc.getElementById('post');
-				if (post) {
-					post.insertAdjacentHTML('beforebegin',
-						wp_document_revisions.saveFirstNotice ||
-						'<div id="wpdr-save-first-notice" class="error"><p>Please save the current version before uploading another.</p></div>');
-				}
-				return;
-			}
-			// On upload set the document identifier in the new format.
-			const docID = /\d+$/.exec(attachmentID);
-			if (!docID) {
-				this.window.tb_remove();
-				this.showUploadError('');
-				return;
-			}
-			const wDoc = this.window.document;
-			this.clearUploadNotices();
-			const postContent = wDoc.getElementById('post_content');
-			if (postContent) {
-				postContent.value = `<!-- WPDR ${docID} -->`;
-			}
-			const message = wDoc.getElementById('message');
-			if (message) {
-				message.style.display = 'none';
-			}
-			this.hasUpload = true;
-			// Mirror to parent so reopening ThickBox still blocks second uploads.
-			if (parentWPDR) {
-				parentWPDR.hasUpload = true;
-			}
-			this.window.tb_remove();
-			const post = wDoc.getElementById('post');
-			if (post) {
-				post.insertAdjacentHTML('beforebegin', wp_document_revisions.postUploadNotice);
-			}
-			// Show upload confirmation in the document metabox.
-			const docMetabox = typeof wDoc.querySelector === 'function'
-				? wDoc.querySelector('#document .inside')
-				: null;
-			if (docMetabox) {
-				const uploadConfirm = wDoc.createElement('p');
-				uploadConfirm.id = 'wpdr-upload-confirm';
-				uploadConfirm.innerHTML = '<strong>&#10003; ' +
-					(wp_document_revisions.uploadConfirmation || 'New version uploaded.') +
-					'</strong>';
-				uploadConfirm.style.cssText = 'color:#00a32a;margin:8px 0;';
-				const clearDiv = docMetabox.querySelector('.clear');
-				if (clearDiv) {
-					docMetabox.insertBefore(uploadConfirm, clearDiv);
-				} else {
-					docMetabox.appendChild(uploadConfirm);
-				}
-			}
-			this.enableSubmit();
+		onSelectMedia = (media) => {
+			console.log( media );
 		}
 
-		checkUpdate = () => {
-			// Check whether an update is needed - via a 3rd field as amalgam of two input fields.
-			const currContentEl = document.getElementById('curr_content');
-			if (!currContentEl) {
+		openMediaFrame = (e) => {
+			e.preventDefault();
+			// Reuse existing frame if already created.
+			if ( this.frameRef ) {
+				this.frameRef.open();
 				return;
 			}
-			const curr_content = currContentEl.value;
-			if (undefined === curr_content) {
-				return;
-			}
-			const postContentEl = document.getElementById('post_content');
-			const post_content = postContentEl ? postContentEl.value : '';
-			if (curr_content === 'Unset') {
-				// Clunky process to miss the first update (and keep the save button inactive).
-				document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
-					el.disabled = true;
-				});
-				currContentEl.value = post_content;
-				return;
-			}
-			const curr_text = this.getDescr();
-			if (curr_text !== curr_content || post_content !== curr_content) {
-				this.buildContent();
-				this.enableSubmit();
-			}
-		};
+
+			// this is for a document, set cookieFalse.
+			this.cookieFalse;
+
+			// Don't have the existing as an option and only allow one file to be loaded.
+			const frame = window.wp.media( {
+				title: 'Upload Document',
+				library: { type: '' },
+				multiple: false,
+				button: {
+					text: 'Select Document',
+				},
+			});
+
+			// add an indicator that this is for a document (if not present, then a featured image).
+			frame.on('uploader:ready', () => {
+				const uploader = frame.uploader?.uploader?.uploader;
+
+				if (uploader && uploader.settings && uploader.settings.multipart_params) {
+					uploader.settings.multipart_params.upload_source = 'wp-document-revisions';
+			
+				}
+			});
+
+			// Remove the library tab.
+			frame.on('menu:render:default', menu => {
+ 			   menu.unset('library'); // remove the library tab
+			});
+
+			// Open on upload tab.
+			frame.on('open', () => {
+  				frame.content.mode('upload'); // jump directly to upload tab#.
+				const el = document.getElementById('menu-item-browse');
+				el && (el.style.display = 'none');
+
+			});
+
+			// Standard select handler (user clicks "Select" button).
+			frame.on( 'select', () => {
+				const selected = frame
+					.state()
+					.get( 'selection' )
+					.first()
+					?.toJSON();
+				if ( selected ) {
+					this.onSelectMedia( selected );
+				}
+			});
+
+			// Auto-close: when a file finishes uploading, select it and close.
+			frame.on( 'content:activate:upload', () => {
+				const uploader = frame.uploader?.uploader?.uploader;
+
+				if (uploader) {
+					uploader.bind( 'FileUploaded', ( up, file, response ) => {
+						try {
+							const data = JSON.parse( response.response );
+							console.log( response );
+							if ( data?.success && data?.data?.id ) {
+								this.onSelectMedia( data.data );
+								this.frameRef.close();
+								this.enableSubmit();
+							}
+						} catch ( e ) {
+							// Fall through to manual selection.
+						}
+					} );
+				}
+			} );
+
+			this.frameRef = frame;
+			frame.open();
+		}
 	}
 
 	window.WPDocumentRevisionsClass = WPDocumentRevisions;
