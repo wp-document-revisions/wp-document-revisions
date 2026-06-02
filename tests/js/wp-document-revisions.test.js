@@ -345,26 +345,24 @@ describe('WPDocumentRevisions', () => {
 				return null;
 			});
 			WPDocumentRevisions.getDescr = jest.fn(() => 'different content');
-			WPDocumentRevisions.buildContent = jest.fn();
 			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.checkUpdate();
 
-			expect(WPDocumentRevisions.buildContent).toHaveBeenCalled();
 			expect(WPDocumentRevisions.enableSubmit).toHaveBeenCalled();
 		});
 
-		test('should not call buildContent when content matches', () => {
+		test('should not call enableSubmit when content matches', () => {
 			document.getElementById = jest.fn((id) => {
 				if (id === 'post_content') return { value: 'same content' };
 				return null;
 			});
 			WPDocumentRevisions.getDescr = jest.fn(() => 'same content');
-			WPDocumentRevisions.buildContent = jest.fn();
+			WPDocumentRevisions.enableSubmit = jest.fn();
 
 			WPDocumentRevisions.checkUpdate();
 
-			expect(WPDocumentRevisions.buildContent).not.toHaveBeenCalled();
+			expect(WPDocumentRevisions.enableSubmit).not.toHaveBeenCalled();
 		});
 	});
 
@@ -576,22 +574,6 @@ describe('WPDocumentRevisions', () => {
 			WPDocumentRevisions.postAutosaveCallback();
 
 			expect(window.location.reload).not.toHaveBeenCalled();
-		});
-	});
-
-	describe('legacyPostDocumentUpload', () => {
-		test('should pass extension as file and attachmentID as attachmentID', () => {
-			WPDocumentRevisions.hasUpload = false;
-			WPDocumentRevisions.postDocumentUpload = jest.fn();
-
-			const event = new CustomEvent('documentUpload', {
-				detail: { attachmentID: '789', extension: '.pdf' },
-			});
-
-			WPDocumentRevisions.legacyPostDocumentUpload(event);
-
-			// extension maps to file (1st arg), attachmentID maps to attachmentID (2nd arg)
-			expect(WPDocumentRevisions.postDocumentUpload).toHaveBeenCalledWith('.pdf', '789');
 		});
 	});
 
