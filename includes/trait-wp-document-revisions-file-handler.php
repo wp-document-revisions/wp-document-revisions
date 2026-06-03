@@ -570,15 +570,15 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return array $file file with new filename
 	 */
 	public function filename_rewrite( array $file ): array {
-		// verify this is a document load.
-		check_admin_referer( 'upload-attachment' );
+		// verify if this is a document load as they have an additional parameter.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
 		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
 			// default - not a WPDR Document.
 			self::$doc_image = true;
 			return $file;
 		}
 
-		// Document uploads have an additional parameter for the document load.
+		// Parameter found, so is a document load.
 		self::$doc_image = false;
 
 		// we are going to load the attachment into the upload directory, so invoke filter.

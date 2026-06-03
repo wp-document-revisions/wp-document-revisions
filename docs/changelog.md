@@ -7,7 +7,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Upload document files using wp.media rather than the thickbox process simplifying internal processing.
 * Extend Validation structure process to identify inaccessible document files and potentially delete them.
 * Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible.
-* Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink.
+* Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink for validation.
 * Review the revision log metabox to only permit the restore of revisions that link to a different document file.
 * Review REST processing to further protect attachment details.
 * Make use of a (temporary) postmeta value to keep track of the current document attachment during editing.

@@ -10,7 +10,7 @@
 	class WPDocumentRevisions {
 		hasUpload = false;
 		secure = 'https:' === window.location.protocol;
-		window = window.dialogArguments || opener || parent || top;
+		windowRef = window.dialogArguments || opener || parent || top || window;
 		_uploadProgressShown = false;
 		firstcheck = true;
 		// Custom media frame that auto-closes after a fresh upload.
@@ -42,10 +42,12 @@
 			document.getElementById('document')?.style.display;
 			document.getElementById('revision-log')?.style.display;
 			const el = document.getElementById('revision-summary');
-			el && (el.style.display = 'none');
+			if (el) el.style.display = 'none';
+			document.querySelectorAll('#postimagediv .inside').forEach((el) => {
+				el.addEventListener('click', this.enableSubmit);
+			});
 
 			this.hijackAutosave();
-			this.checkUpdate();
 			setInterval(this.updateTimestamps, 60000);
 			setInterval(this.checkUpdate, 1000);
 		}
@@ -63,30 +65,18 @@
 		};
 
 		enableSubmit = () => {
-			const revSummary = document.getElementById('revision-summary');
-			if (revSummary) {
-				revSummary.style.display = '';
-			}
+			document.getElementById('revision-summary')?.style.display;
 			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
 				el.removeAttribute('disabled');
 			});
-			const lockOverride = document.getElementById('lock_override');
-			if (lockOverride) {
-				const prev = lockOverride.previousElementSibling;
-				if (prev) {
-					prev.style.display = '';
-				}
-			}
+			document.getElementById('lock_override')?.previousElementSibling?.style.display;
 		};
 
 		clearUploadNotices = () => {
 			const wDoc = this.window.document;
 			const ids = ['wpdr-upload-confirm', 'wpdr-upload-progress', 'wpdr-save-first-notice', 'wpdr-upload-error', 'message'];
 			ids.forEach((id) => {
-				const el = wDoc.getElementById(id);
-				if (el) {
-					el.parentNode.removeChild(el);
-				}
+				wDoc.getElementById(id)?.parentNode.removeChild(el);
 			});
 		};
 
@@ -163,10 +153,8 @@
 				.then((response) => response.text())
 				.then((data) => {
 					if (data.trim() === '1') {
-						const lockOverride = document.getElementById('lock_override');
-						if (lockOverride) {
-							lockOverride.style.display = 'none';
-						}
+						const el = document.getElementById('lock_override');
+						el && (el.style.display = 'none');
 						document.querySelectorAll('.error:not(#lock-notice)').forEach((el) => {
 							el.style.display = 'none';
 						});
@@ -266,7 +254,7 @@
 		getDescr = () => {
 			// Extract data from TinyMCE window and clean up text.
 			// On starting, the post_content is set to BOTH fields content and post_content.
-			const iframe = this.window.document.getElementById('content_ifr');
+			const iframe = this.windowRef.document.getElementById('content_ifr');
 			if (null === iframe) {
 				const el = document.getElementById('post_content');
 				const content = el ? el.value : '';
@@ -314,17 +302,20 @@
 				return;
 			}
 
-			// this is for a document, set cookieFalse.
-			this.cookieFalse;
-
 			// Don't have the existing as an option and only allow one file to be loaded.
-			const frame = window.wp.media( {
+			const frame = top.wp.media.frames.customUploader = wp.media({
 				title: 'Upload Document',
-				library: { type: '' },
 				multiple: false,
 				button: {
 					text: 'Select Document',
 				},
+				states: [
+					new wp.media.controller.Library({
+						title:      'Upload Document',
+						filterable: 'uploaded',
+						multiple:   false
+					})
+				]
 			});
 
 			// add an indicator that this is for a document (if not present, then a featured image).
@@ -345,9 +336,7 @@
 			// Open on upload tab.
 			frame.on('open', () => {
   				frame.content.mode('upload'); // jump directly to upload tab#.
-				const el = document.getElementById('menu-item-browse');
-				el && (el.style.display = 'none');
-
+				frame.$el.find('.media-router').addClass('hidden'); // Hide tab bar
 			});
 
 			// Standard select handler (user clicks "Select" button).
@@ -370,7 +359,6 @@
 					uploader.bind( 'FileUploaded', ( up, file, response ) => {
 						try {
 							const data = JSON.parse( response.response );
-							console.log( response );
 							if ( data?.success && data?.data?.id ) {
 								this.onSelectMedia( data.data );
 								this.frameRef.close();

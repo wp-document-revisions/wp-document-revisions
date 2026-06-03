@@ -224,32 +224,6 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Forces autosave to load
-	 * By default, if there's a lock on the post, auto save isn't loaded; we want it in case lock is overridden.
-	 *
-	 * @since 0.5
-	 */
-	public function enqueue_edit_scripts(): void {
-		$wpdr = self::$parent;
-		if ( ! $wpdr->verify_post_type() ) {
-			return;
-		}
-
-		wp_enqueue_script( 'autosave' );
-
-		// ThickBox and media-upload are only needed for the classic editor.
-		$post_id = get_the_ID();
-		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
-			// for the document upload.
-			wp_enqueue_media();
-			// for the features image.
-			add_thickbox();
-			wp_enqueue_script( 'media-upload' );
-		}
-	}
-
-
-	/**
 	 * Callback to generate metabox for workflow state.
 	 *
 	 * @since 0.5
@@ -409,9 +383,14 @@ trait WP_Document_Revisions_Admin_Editor {
 			}
 		}
 
+		// Clean the text from odd spurious tinymce pieces.
+		$text = $data['post_content'];
+		$text = str_replace( '<br data-mce-bogus="1">', '', $text );
+		$text = preg_replace( '/<br>\s*<\/p>/', '', $text );
+		$text = preg_replace( '/<p>\s*<\/p>//', '', $text );
+
 		// Rebuild: attachment ID comment + any description that survived kses.
-		$description          = preg_replace( '/<!-- WPDR \s*\d+\s*-->/i', '', $data['post_content'] );
-		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $description;
+		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $text;
 
 		return $data;
 	}
@@ -555,16 +534,24 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Enqueue admin JS and CSS files.
+	 * Enqueue admin scripts, JS and CSS files.
 	 */
-	public function enqueue(): void {
+	public function enqueue_edit_scripts(): void {
 		$wpdr = self::$parent;
 		// only include JS on document pages.
 		if ( ! $wpdr->verify_post_type() ) {
 			return;
 		}
 
-		$wpdr = self::$parent;
+		// Forces autosave to load. By default, if there's a lock on the post, auto save isn't loaded; we want it in case lock is overridden.
+		wp_enqueue_script( 'autosave' );
+
+		// ThickBox and media-upload are only needed for the classic editor.
+		$post_id = get_the_ID();
+		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
+			// for the document upload.
+			wp_enqueue_media( array( 'post' => $post_id ) );
+		}
 
 		// Check if block editor is active for this document.
 		$post_id          = get_the_ID();
@@ -1031,42 +1018,6 @@ trait WP_Document_Revisions_Admin_Editor {
 		</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Only allow a single document file upload at a time.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @param array $plupload_init An array of default settings used by Plupload.
-	 */
-	public function plupload_init( array $plupload_init ) {
-		$wpdr = self::$parent;
-		if ( $wpdr->verify_post_type() ) {
-			$plupload_init['multi_selection'] = false;
-		}
-		return $plupload_init;
-	}
-
-	/**
-	 * Only load documents from Computer.
-	 *
-	 * @since 3.3
-	 *
-	 * @param string[] $_default_tabs An array of media tabs.
-	 */
-	public function media_upload_tabs_computer( array $_default_tabs ) {
-		$wpdr = self::$parent;
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( $wpdr->verify_post_type() && isset( $_GET['action'] ) ) {
-			// keep just load from computer for the document (but not the thumbnail).
-			unset( $_default_tabs['type_url'] );
-			unset( $_default_tabs['gallery'] );
-			unset( $_default_tabs['library'] );
-		}
-
-		return $_default_tabs;
 	}
 
 	/**
