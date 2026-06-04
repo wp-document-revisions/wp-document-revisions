@@ -39,10 +39,12 @@
 			});
 			document.getElementById('sample-permalink')?.addEventListener('change', this.enableSubmit);
 			document.getElementById('add-document-file')?.addEventListener('click', this.openMediaFrame);
-			document.getElementById('document')?.style.display;
-			document.getElementById('revision-log')?.style.display;
-			const el = document.getElementById('revision-summary');
-			if (el) el.style.display = 'none';
+			const doc = document.getElementById('document');
+			if (doc) doc.style.display = 'block';
+			const log = document.getElementById('revision-log');
+			if (log) log.style.display = 'block';
+			const sum = document.getElementById('revision-summary');
+			if (sum) sum.style.display = 'none';
 			document.querySelectorAll('#postimagediv .inside').forEach((el) => {
 				el.addEventListener('click', this.enableSubmit);
 			});
@@ -65,18 +67,23 @@
 		};
 
 		enableSubmit = () => {
-			document.getElementById('revision-summary')?.style.display;
+			const sum = document.getElementById('revision-summary');
+			if (sum) sum.style.display = 'block';
 			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
 				el.removeAttribute('disabled');
 			});
-			document.getElementById('lock_override')?.previousElementSibling?.style.display;
+			const lck = document.getElementById('lock_override')?.previousElementSibling;
+			if (lck) lck.style.display = '';
 		};
 
 		clearUploadNotices = () => {
 			const wDoc = this.window.document;
 			const ids = ['wpdr-upload-confirm', 'wpdr-upload-progress', 'wpdr-save-first-notice', 'wpdr-upload-error', 'message'];
 			ids.forEach((id) => {
-				wDoc.getElementById(id)?.parentNode.removeChild(el);
+				const el = wDoc.getElementById(id);
+				if (el) {
+					el.parentNode.removeChild(el);
+				}
 			});
 		};
 
@@ -302,6 +309,11 @@
 				return;
 			}
 
+			// define a library with no content so no download or display.
+			const restrictedLibrary = new wp.media.model.Attachments([], {
+				props: { orderby: 'date', order: 'DESC', query: true, uploadedTo: -1 }
+			});
+
 			// Don't have the existing as an option and only allow one file to be loaded.
 			const frame = top.wp.media.frames.customUploader = wp.media({
 				title: 'Upload Document',
@@ -313,7 +325,8 @@
 					new wp.media.controller.Library({
 						title:      'Upload Document',
 						filterable: 'uploaded',
-						multiple:   false
+						multiple:   false,
+						library:    restrictedLibrary
 					})
 				]
 			});

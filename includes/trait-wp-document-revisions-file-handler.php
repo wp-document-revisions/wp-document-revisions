@@ -58,6 +58,13 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
+		/*
+		 * Filters the http response code when a document or revision (attachment) is not found.
+		 *
+		 * @param int 403 The default respnse code when the file cannot be served.
+		 */
+		$response = apply_filters( 'document_no_document_response_code', 403 );
+
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
 			$revn = $this->get_latest_revision( $post->ID );
@@ -66,7 +73,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => 403 )
+					array( 'response' => $response )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
@@ -100,7 +107,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				null,
-				array( 'response' => 403 )
+				array( 'response' => $response )
 			);
 			// for unit testing.
 			$wp_query->is_404 = true;

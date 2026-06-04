@@ -85,6 +85,18 @@ In: trait-wp-document-revisions-revisions.php
 
 Filters the lost lock document email text.
 
+## Filter document_no_document_response_code
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the http response code when a document or revision (attachment) is not found.
+
+> [!WARNING]  
+> Modifying the response code from the default value of 403 may introduce an existence vulnerability.
+> 
+> By comparing 403 responses (revision found but not authorized) to 404 responses (revision not found)
+> a non-authorized user can determine if a document exists or not.
+
 ## Filter document_output_sent_is_ok
 
 In: trait-wp-document-revisions-file-handler.php

@@ -340,7 +340,6 @@ describe('WPDocumentRevisions', () => {
 	describe('checkUpdate', () => {
 		test('should call buildContent when content differs', () => {
 			document.getElementById = jest.fn((id) => {
-				if (id === 'curr_content') return { value: 'old content' };
 				if (id === 'post_content') return { value: 'new content' };
 				return null;
 			});

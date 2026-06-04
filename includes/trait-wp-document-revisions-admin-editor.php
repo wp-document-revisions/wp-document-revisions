@@ -112,7 +112,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		add_meta_box( 'revision-summary', __( 'Revision Summary', 'wp-document-revisions' ), array( $this, 'revision_summary_cb' ), 'document', 'normal', 'default' );
 		add_meta_box( 'document', __( 'Document', 'wp-document-revisions' ), array( $this, 'document_metabox' ), 'document', 'normal', 'high' );
 
-		if ( ! empty( $post->post_content ) ) {
+		// $post object has the document id stripped out for editing, so check meta data.
+		if ( absint( get_post_meta( $post->ID, '_document_attachment_id', true ) ) > 0 ) {
 			add_meta_box( 'revision-log', __( 'Revision Log', 'wp-document-revisions' ), array( $this, 'revision_metabox' ), 'document', 'normal', 'low' );
 		}
 
@@ -387,7 +388,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		$text = $data['post_content'];
 		$text = str_replace( '<br data-mce-bogus="1">', '', $text );
 		$text = preg_replace( '/<br>\s*<\/p>/', '', $text );
-		$text = preg_replace( '/<p>\s*<\/p>//', '', $text );
+		$text = preg_replace( '/<p>\s*<\/p>/', '', $text );
 
 		// Rebuild: attachment ID comment + any description that survived kses.
 		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $text;
@@ -1058,7 +1059,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 */
 	public function enqueue_js(): void {
 		_deprecated_function( __FUNCTION__, '1.3.2 of WP Document Revisions', 'enqueue' );
-		$this->enqueue();
+		$this->enqueue_edit_scripts();
 	}
 
 	/**
