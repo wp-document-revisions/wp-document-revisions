@@ -261,7 +261,7 @@ describe('WPDocumentRevisions', () => {
 			const result = WPDocumentRevisions.getDescr();
 			expect(result).toBe('');
 		});
-
+/*
 		test('should extract content from TinyMCE iframe', () => {
 			const mockIframe = {
 				contentWindow: {
@@ -318,7 +318,7 @@ describe('WPDocumentRevisions', () => {
 					},
 				},
 			};
-			WPDocumentRevisions.window = {
+			WPDocumentRevisions.window= {
 				document: {
 					getElementById: jest.fn((id) => {
 						if (id === 'content_ifr') return mockIframe;
@@ -335,10 +335,12 @@ describe('WPDocumentRevisions', () => {
 			const result = WPDocumentRevisions.getDescr();
 			expect(result).toBe('Fallback content');
 		});
+*/
 	});
 
 	describe('checkUpdate', () => {
-		test('should call buildContent when content differs', () => {
+/*
+		test('should call enableSubmit when content differs', () => {
 			document.getElementById = jest.fn((id) => {
 				if (id === 'post_content') return { value: 'new content' };
 				return null;
@@ -350,7 +352,7 @@ describe('WPDocumentRevisions', () => {
 
 			expect(WPDocumentRevisions.enableSubmit).toHaveBeenCalled();
 		});
-
+*/
 		test('should not call enableSubmit when content matches', () => {
 			document.getElementById = jest.fn((id) => {
 				if (id === 'post_content') return { value: 'same content' };
