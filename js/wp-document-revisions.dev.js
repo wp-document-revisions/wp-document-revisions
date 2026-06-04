@@ -273,11 +273,26 @@
 			return n;
 		}
 
-		bindPostDocumentUploadCB = () => {
+		bindPostDocumentUploadCB = (attempt = 0) => {
 			if (this._uploaderBound) {
 				return;
 			}
+			// WordPress's media-upload script creates the plupload `uploader`
+			// global, but on newer WordPress it is not ready when this first runs
+			// (from the constructor and from the bind_upload_cb window.load hook).
+			// Binding once and bailing leaves WordPress's native FileUploaded
+			// handler in charge, which renders the attachment-details panel
+			// ("Insert into post" / "Save all changes") instead of closing the
+			// modal. Retry on a short interval until `uploader` appears — but only
+			// inside the upload iframe, whose plupload UI is server-rendered from
+			// the start, so the main edit screen (no upload UI) never polls.
 			if (typeof uploader === 'undefined' || uploader === null) {
+				const inUploadFrame =
+					document.getElementById('plupload-upload-ui') ||
+					document.getElementById('async-upload');
+				if (inUploadFrame && attempt < 40) {
+					setTimeout(() => this.bindPostDocumentUploadCB(attempt + 1), 250);
+				}
 				return;
 			}
 			this._uploaderBound = true;

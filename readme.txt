@@ -219,6 +219,10 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.0.1 =
+
+* Fixes the classic-editor "Upload New Version" modal staying open and showing WordPress's attachment-details panel ("Insert into post" / "Save all changes") instead of closing after an upload on WordPress 6.9+/7.0. The plugin's upload interceptor was bound once on `window.load`, before plupload's `uploader` global was ready, and never retried; it now retries until the uploader is available. Adds an end-to-end test that drives a real file through the upload modal.
+
 = 5.0.0 =
 
 Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.
