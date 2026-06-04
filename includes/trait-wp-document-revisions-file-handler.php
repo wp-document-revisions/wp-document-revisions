@@ -73,7 +73,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => $response )
+					array( 'response' => absint( $response ) )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
@@ -107,7 +107,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				null,
-				array( 'response' => $response )
+				array( 'response' => absint( $response ) )
 			);
 			// for unit testing.
 			$wp_query->is_404 = true;

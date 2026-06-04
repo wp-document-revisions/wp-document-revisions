@@ -68,7 +68,7 @@
 
 		enableSubmit = () => {
 			const sum = document.getElementById('revision-summary');
-			if (sum) sum.style.display = 'block';
+			if (sum) sum.style.display = '';
 			document.querySelectorAll(SUBMIT_BUTTONS).forEach((el) => {
 				el.removeAttribute('disabled');
 			});
