@@ -79,6 +79,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Message  Attachment found for document, but not currently linked
  * Fixable  Yes
  * Cause    Post_content does not contain an attachment post belonging to the document, but there is one there so we could link to it.
+ *          This can also occur if a document file is uploaded, but the document is not saved.
  *
  * Code     5
  * Type     Error
@@ -766,7 +767,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		// attachment found, is it valid.
-		$att_error = self::check_attachment( $attach_id, $doc_id );
+		$att_error = self::check_attachment( $attach_id, $doc_id, $post_modified_gmt );
 
 		// fixing the post_content structure takes precedence.
 		if ( ! $valid_att ) {
@@ -779,7 +780,7 @@ class WP_Document_Revisions_Validate_Structure {
 				'code'  => 4,
 				'error' => 1,
 				'msg'   => ( $meta_id === $attach_id ) ?
-					__( 'Attachment recently uploaded for document, but not currently linked', 'wp-document-revisions' ) :
+					__( 'Attachment recently uploaded for document, but not currently linked to document', 'wp-document-revisions' ) :
 					__( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
 				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
@@ -944,11 +945,12 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param int $attach_id id of an attachment post object.
-	 * @param int $doc_id    id of the document post object.
+	 * @param int    $attach_id         id of an attachment post object.
+	 * @param int    $doc_id            id of the document post object.
+	 * @param string $post_modified_gmt post modified field.
 	 * @return mixed[]|false
 	 */
-	private static function check_attachment( $attach_id, $doc_id ) {
+	private static function check_attachment( $attach_id, $doc_id, string $post_modified_gmt ) {
 		$attach = get_post( $attach_id );
 		if ( ( ! is_object( $attach ) ) || 'attachment' !== $attach->post_type || $doc_id !== $attach->post_parent ) {
 			// post_content points to an invalid attachment.
@@ -957,6 +959,21 @@ class WP_Document_Revisions_Validate_Structure {
 				'error' => 1,
 				'msg'   => __( 'Document links to an invalid attachment record', 'wp-document-revisions' ),
 				'fix'   => 0,
+			);
+		}
+
+		$meta_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		if ( $meta_id === $attach_id ) {
+			$post_date   = get_date_from_gmt( $post_modified_gmt );
+			$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
+			return array(
+				'code'  => 4,
+				'error' => 1,
+				'msg'   => __( 'Attachment recently uploaded for document, but not currently linked to document', 'wp-document-revisions' ),
+				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
+				'fix'   => 1,
+				'parm'  => $attach_id,
 			);
 		}
 
