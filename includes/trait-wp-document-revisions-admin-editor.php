@@ -937,7 +937,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post the post object.
 	 */
 	public function revision_metabox( WP_Post $post ): void {
-		// post_content has had the document attachment number removed so we need to get it from post meta. 
+		// post_content has had the document attachment number removed so we need to get it from post meta.
 		global $wpdr;
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
 		$attach_id    = absint( get_post_meta( $post->ID, '_document_attachment_id', true ) );
