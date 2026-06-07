@@ -301,6 +301,9 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			// update the post_meta.
+			update_post_meta( $$id, '_document_attachment_id', $parm );
+
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
@@ -329,6 +332,9 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			// update the post_meta.
+			update_post_meta( $id, '_document_attachment_id', $parm );
+
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
@@ -765,12 +771,16 @@ class WP_Document_Revisions_Validate_Structure {
 		// fixing the post_content structure takes precedence.
 		if ( ! $valid_att ) {
 			// there is an attachment out there, but not linked.
-				$post_date   = get_date_from_gmt( $post_modified_gmt );
-				$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
+			// has one been uploaded.
+			$meta_id     = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+			$post_date   = get_date_from_gmt( $post_modified_gmt );
+			$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
+				'msg'   => ( $meta_id === $attach_id ) ?
+					__( 'Attachment recently uploaded for document, but not currently linked', 'wp-document-revisions' ) :
+					__( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
 				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,

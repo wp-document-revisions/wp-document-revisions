@@ -11,7 +11,6 @@
 		hasUpload = false;
 		secure = 'https:' === window.location.protocol;
 		windowRef = window.dialogArguments || opener || parent || top || window;
-		_uploadProgressShown = false;
 		firstcheck = true;
 		// Custom media frame that auto-closes after a fresh upload.
 		frameRef = null;
@@ -77,46 +76,18 @@
 		};
 
 		clearUploadNotices = () => {
-			const wDoc = this.window.document;
-			const ids = ['wpdr-upload-confirm', 'wpdr-upload-progress', 'wpdr-save-first-notice', 'wpdr-upload-error', 'message'];
+			const ids = ['wpdr-upload-confirm', 'wpdr-upload-error', 'message'];
 			ids.forEach((id) => {
-				const el = wDoc.getElementById(id);
+				const el = document.getElementById(id);
 				if (el) {
 					el.parentNode.removeChild(el);
 				}
 			});
 		};
 
-		showUploadProgress = () => {
-			if (this._uploadProgressShown) {
-				return;
-			}
-			this._uploadProgressShown = true;
-			const wDoc = this.window.document;
-			const docMetabox = typeof wDoc.querySelector === 'function'
-				? wDoc.querySelector('#document .inside')
-				: null;
-			if (docMetabox) {
-				this.clearUploadNotices();
-				const progress = wDoc.createElement('p');
-				progress.id = 'wpdr-upload-progress';
-				progress.innerHTML = '<span class="spinner is-active" style="float:none;margin:0 4px 0 0;"></span>' +
-					(wp_document_revisions.uploadProgress || 'Uploading…');
-				progress.style.cssText = 'color:#646970;margin:8px 0;';
-				const clearDiv = docMetabox.querySelector('.clear');
-				if (clearDiv) {
-					docMetabox.insertBefore(progress, clearDiv);
-				} else {
-					docMetabox.appendChild(progress);
-				}
-			}
-		};
-
 		showUploadError = (errorText) => {
-			const wDoc = this.window.document;
 			this.clearUploadNotices();
-			this._uploadProgressShown = false;
-			const post = wDoc.getElementById('post');
+			const post = document.getElementById('post');
 			if (post) {
 				const safeText = errorText ? String(errorText).replace(/[<>&"]/g, (c) => ({
 					'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;',
@@ -131,6 +102,40 @@
 				post.insertAdjacentHTML('beforebegin', html);
 			}
 		};
+
+		documentUpload = ( attachmentId, extension ) => {
+			this.hasUpload = true;
+			this.clearUploadNotices();
+
+			const message = document.getElementById('message');
+			if (message) {
+				message.style.display = 'none';
+			}
+
+			const post = document.getElementById('post');
+			if (post) {
+				post.insertAdjacentHTML('beforebegin', wp_document_revisions.postUploadNotice);
+			}
+			// Show upload confirmation in the document metabox.
+			const docMetabox = typeof document.querySelector === 'function'
+				? document.querySelector('#document .inside')
+				: null;
+			if (docMetabox) {
+				const uploadConfirm = document.createElement('p');
+				uploadConfirm.id = 'wpdr-upload-confirm';
+				uploadConfirm.innerHTML = '<strong>&#10003; ' +
+					(wp_document_revisions.uploadConfirmation || 'New version uploaded.') +
+					'</strong>';
+				uploadConfirm.style.cssText = 'color:#00a32a;margin:8px 0;';
+				const clearDiv = docMetabox.querySelector('.clear');
+				if (clearDiv) {
+					docMetabox.insertBefore(uploadConfirm, clearDiv);
+				} else {
+					docMetabox.appendChild(uploadConfirm);
+				}
+			}
+			this.enableSubmit();
+		}
 
 		restoreRevision = (e) => {
 			e.preventDefault();
@@ -264,14 +269,12 @@
 			const iframe = this.windowRef.document.getElementById('content_ifr');
 			if (null === iframe) {
 				const el = document.getElementById('post_content');
-				const content = el ? el.value : '';
-				return content;
+				return el ? el.value : '';
 			}
 			let text = iframe.contentWindow.document.getElementById('tinymce').innerHTML;
 			if (undefined === text) {
 				const el = document.getElementById('post_content');
-				const content = el ? el.value : '';
-				return content;
+				return el ? el.value : '';
 			}
 			text = text.replace(/<br data-mce-bogus="1">/g, '');
 			text = text.replace(/<br>\s*<\/p>/g, '</p>');
@@ -290,8 +293,8 @@
 				this.firstcheck = false;
 			} else {
 				// Check whether an update happened - via a temporary field.
-				const content = el ? el.value : '';
-				if (tinymce !== content) {
+				if (tinymce !== el.value) {
+					el.value = tinymce;
 					this.enableSubmit();
 				}
 			}
@@ -375,8 +378,11 @@
 							if ( data?.success && data?.data?.id ) {
 								this.onSelectMedia( data.data );
 								this.frameRef.close();
-								this.hasUpload = true;
-								this.enableSubmit();
+								// use legacy callback.
+								const ext = data.data.filename
+									? '.' + data.data.filename.split( '.' ).pop()
+									: '';
+								this.documentUpload( data.data.id, ext );
 							}
 						} catch ( e ) {
 							// Fall through to manual selection.

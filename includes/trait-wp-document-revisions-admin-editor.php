@@ -352,7 +352,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		$doc_id = $postarr['ID'];
 
 		// Find the meta data value.
-		// For revision restores need to get it from the post_content, normally from post_meta.
+		// For revision restores need to get attachment id from the post_content, normally from post_meta.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
 			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
@@ -438,8 +438,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		$wpdr = self::$parent;
 		// find the attachment id now (as content might be cached) and we might delete the cache.
-		$content   = get_post_field( 'post_content', $doc_id );
-		$attach_id = $wpdr->extract_document_id( $content );
+		$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
 
 		// Fallback: if no attachment ID reached the DB (JS failed to set the hidden field, or
 		// wp_kses_post stripped the WPDR comment for low-privilege users), try to recover from
@@ -450,6 +449,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				// Preserve any existing description text, but restore the attachment ID comment.
 				$description = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $content );
 				$new_content = $wpdr->format_doc_id( $latest_attach->ID ) . $description;
+				update_post_meta( $doc_id, '_document_attachment_id', $latest_attach->ID );
 				global $wpdb;
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 				$post_table = "{$wpdb->prefix}posts";
@@ -478,7 +478,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		// is the permalink useful.
 		$doc_post = get_post( $doc_id );
-		$new_guid = self::$parent->permalink( $doc_post->guid, $doc_post, false, '' );
+		$new_guid = $wpdr->permalink( $doc_post->guid, $doc_post, false, '' );
 		if ( $new_guid !== $doc_post->guid ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -937,9 +937,10 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post the post object.
 	 */
 	public function revision_metabox( WP_Post $post ): void {
+		// post_content has had the document attachment number removed so we need to get it from post meta. 
 		global $wpdr;
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
-		$attach_id    = $wpdr->extract_document_id( $post->post_content );
+		$attach_id    = absint( get_post_meta( $post->ID, '_document_attachment_id', true ) );
 		$revisions    = $wpdr->get_revisions( $post->ID );
 		$key          = $this->get_feed_key();
 		?>
