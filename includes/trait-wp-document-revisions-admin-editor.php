@@ -447,6 +447,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			$latest_attach = $this->get_latest_attachment( $doc_id );
 			if ( $latest_attach ) {
 				// Preserve any existing description text, but restore the attachment ID comment.
+				$content     = get_post_field( 'post_content', $doc_id );
 				$description = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $content );
 				$new_content = $wpdr->format_doc_id( $latest_attach->ID ) . $description;
 				update_post_meta( $doc_id, '_document_attachment_id', $latest_attach->ID );
