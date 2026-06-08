@@ -361,7 +361,7 @@ trait WP_Document_Revisions_Query {
 	 * @return string
 	 */
 	public function format_doc_id( int $post_id ): string {
-		return '<!-- WPDR ' . trim( $post_id ) . ' -->';
+		return '<!-- WPDR ' . trim( (string) $post_id ) . ' -->';
 	}
 
 
