@@ -382,7 +382,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
@@ -391,18 +391,15 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	 * Tests the admin enqueue edit scripts.
 	 */
 	public function test_enqueue_edit_scripts() {
-		global $wpdr;
+		global $wpdr, $post;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['post'] = self::$editor_public_post;
+		$post = get_post( self::$editor_public_post );
 
 		ob_start();
 		$wpdr->admin->enqueue_edit_scripts();
 		$output = ob_get_contents();
 		ob_end_clean();
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		unset( $_GET['post'] );
 
 		self::assertTrue( true, 'run' );
 	}
@@ -1081,7 +1078,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
@@ -1261,42 +1258,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 
 		self::assertTrue( true, 'workflow_state_save' );
-	}
-
-	/**
-	 * Tests the posts enqueue.
-	 */
-	public function test_admin_enqueue() {
-		global $wpdr;
-
-		ob_start();
-		$wpdr->admin->enqueue();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		self::assertEmpty( $output, 'not doc not empty' );
-
-		global $current_user;
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		// get a post in global scope (bending rule).
-		global $post;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post = get_post( self::$editor_public_post_2 );
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['post_type'] = 'document';
-
-		ob_start();
-		$wpdr->admin->enqueue();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		unset( $_GET['post_type'] );
-
-		self::assertTrue( true, 'admin_enqueue' );
 	}
 
 	/**

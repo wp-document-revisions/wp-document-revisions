@@ -522,6 +522,10 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
+		global $post;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post );
+
 		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.

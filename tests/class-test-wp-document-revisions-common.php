@@ -200,6 +200,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$post_id,
 			array(
 				'post_content' => $attach_id,
+				'meta_input'   => array(
+					'_document_attachment_id' => $attach_id,
+				),
 			)
 		);
 
@@ -261,6 +264,9 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 			$post_id,
 			array(
 				'post_content' => $attch,
+				'meta_input'   => array(
+					'_document_attachment_id' => $attach_id,
+				),
 			)
 		);
 
@@ -676,6 +682,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 				console_log( $file . ' | ' . file_exists( $file ) );
 			}
 		}
+
+		console_log( '_document_attachment_id: ' . absint( get_post_meta( $doc_id, '_document_attachment_id', true ) ) );
 
 		console_log( '' );
 	}

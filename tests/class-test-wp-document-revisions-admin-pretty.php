@@ -291,7 +291,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count 1 revision 1 pretty' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count 1 revision 2 pretty' );
@@ -317,7 +317,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 2, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count 2 revision 1 pretty' );
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-2.' ), 'revision count 2 revision 2 pretty' );

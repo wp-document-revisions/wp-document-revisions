@@ -556,8 +556,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// Check if block editor is active for this document.
-		$post_id          = get_the_ID();
-		$use_block_editor = $post_id
+		$use_block_editor = (bool) $post_id
 			&& function_exists( 'use_block_editor_for_post' )
 			&& use_block_editor_for_post( $post_id );
 

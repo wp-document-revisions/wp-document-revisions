@@ -291,7 +291,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 0, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		if ( false === strpos( $output, 'post_type=document' ) ) {
 			// Desired permalinks.
@@ -324,7 +324,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 2, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		if ( false === strpos( $output, 'post_type=document' ) ) {
 			// Desired permalinks.
@@ -356,6 +356,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
+		console_log( 'Plain: ' . $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink_ms' );

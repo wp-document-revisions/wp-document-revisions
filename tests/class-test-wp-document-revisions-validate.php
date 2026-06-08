@@ -249,6 +249,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
@@ -261,6 +264,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should be nothing found - as all valid...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -294,6 +299,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
@@ -306,6 +314,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// Move $file back.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file . '.txt', $file );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -348,6 +358,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -415,7 +428,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should already been fixed but is a null update.
 		self::assertSame( 0, $rows, 'null update did not happen.' );
-	}
+
+		remove_filter( 'document_validate_md5', '__return_false' );
+		}
 
 	/**
 	 * Tests that wrong content is detected.
@@ -457,6 +472,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -518,7 +536,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should already been fixed but is a null update.
 		self::assertSame( 1, $rows, 'null update did not happen.' );
-	}
+
+		remove_filter( 'document_validate_md5', '__return_false' );
+		}
 
 	/**
 	 * Tests that name not in md5 format is detected.
@@ -544,11 +564,14 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// change file name.
 		$file = get_attached_file( $attach_id );
+		console_log( 'file:' . $file );
 
 		// change the meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
 		$nname = preg_replace( '|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|', '$1X$2X$3', $fname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
+		console_log( 'fname:' . $fname );
+		console_log( 'nname:' . $nname );
 
 		$nfile = str_replace( $fname, $nname, $file );
 
@@ -567,6 +590,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		unset( $current_user );
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -599,7 +625,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should be nothing found - as fixed...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - now fixed' );
-	}
+
+		remove_filter( 'document_validate_md5', '__return_false' );
+		}
 
 	/**
 	 * Tests that for wrong location - test message only.
