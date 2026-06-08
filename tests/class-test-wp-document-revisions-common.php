@@ -212,7 +212,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content, "Latest revision post_content does not match attachment ID for post $post_id" );
+		$latest = $wpdr->get_latest_revision( $post_id )->post_content;
+		self::assertEquals( $attach_id, $wpdr->extract_document_id( $latest ), "Latest revision post_content does not match attachment ID for post $post_id" );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 		self::verify_attachment_matches_file( $post_id, $new_file, 'File Loaded' );
 	}
