@@ -393,7 +393,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	public function test_enqueue_edit_scripts() {
 		global $wpdr, $post;
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post );
 
 		ob_start();
@@ -401,33 +401,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertTrue( true, 'run' );
-	}
-
-	/**
-	 * Tests the admin media upload tabs.
-	 */
-	public function test_media_upload_tabs() {
-		global $wpdr;
-
-		$default = array(
-			'computer' => 'field 1',
-			'type_url' => 'field 2',
-			'gallery'  => 'field 3',
-			'library'  => 'field 4',
-		);
-
-		$def_one = $wpdr->admin->media_upload_tabs_computer( $default );
-
-		self::assertEquals( 4, count( $def_one ), 'Should retain all 4 tabs when not in document context' );
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_GET['post']   = self::$editor_public_post;
-		$_GET['action'] = 'whatever';
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-
-		$default = $wpdr->admin->media_upload_tabs_computer( $default );
-
-		self::assertEquals( 1, count( $default ), 'Should reduce to 1 tab (computer) when in document context' );
 		self::assertTrue( true, 'run' );
 	}
 

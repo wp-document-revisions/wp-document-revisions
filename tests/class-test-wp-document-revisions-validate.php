@@ -430,7 +430,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertSame( 0, $rows, 'null update did not happen.' );
 
 		remove_filter( 'document_validate_md5', '__return_false' );
-		}
+	}
 
 	/**
 	 * Tests that wrong content is detected.
@@ -538,7 +538,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertSame( 1, $rows, 'null update did not happen.' );
 
 		remove_filter( 'document_validate_md5', '__return_false' );
-		}
+	}
 
 	/**
 	 * Tests that name not in md5 format is detected.
@@ -627,7 +627,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - now fixed' );
 
 		remove_filter( 'document_validate_md5', '__return_false' );
-		}
+	}
 
 	/**
 	 * Tests that for wrong location - test message only.
