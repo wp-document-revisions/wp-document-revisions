@@ -200,7 +200,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$updt = $factory->post->update_object(
 			$post_id,
 			array(
-				'meta_input'   => array(
+				'meta_input' => array(
 					'_document_attachment_id' => $attach_id,
 				),
 			)
@@ -273,7 +273,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$updt = $factory->post->update_object(
 			$post_id,
 			array(
-				'meta_input'   => array(
+				'meta_input' => array(
 					'_document_attachment_id' => $attach_id,
 				),
 			)
