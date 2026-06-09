@@ -92,7 +92,6 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// ensure that rename function will be called.
 		$_POST['post_id'] = $post_id;
-		$_POST['type']    = 'file';
 		$wpdr::$doc_image = false;
 
 		// create file structure.
@@ -283,7 +282,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		$updt = $factory->post->update_object(
 			$post_id,
 			array(
-				'post_content' => $attach_id,
+				'post_content' => $attch,
 			)
 		);
 

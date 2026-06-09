@@ -539,15 +539,15 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		);
 
 		// straight return.
-		$wpdr->rewrite_file_url( $file );
 		$wpdr->filename_rewrite( $file );
+		$wpdr->rewrite_file_url( $file );
 
 		$_POST['post_id'] = self::$editor_public_post;
 
 		// possibly image.
-		$_POST['type'] = 'file';
-		$wpdr->rewrite_file_url( $file );
+		$wpdr::$doc_image = false;
 		$wpdr->filename_rewrite( $file );
+		$wpdr->rewrite_file_url( $file );
 
 		// set pagenow.
 		global $pagenow;

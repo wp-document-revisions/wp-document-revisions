@@ -536,8 +536,6 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		// default widget - one public post.
 		$atts   = array();
 		$output = $wpdr_widget->wpdr_documents_widget_display( $atts );
-		console_log( 'Block widget' );
-		console_log( $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, '<li' ), 'block_publish_1' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$users['author']->ID ) ), 'block_publish_auth_1' );
