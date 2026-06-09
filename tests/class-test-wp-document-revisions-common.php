@@ -196,13 +196,21 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
 
 		// now link the attachment, it'll create a revision.
+		// stage one - create the post meta (no revision).
+		$updt = $factory->post->update_object(
+			$post_id,
+			array(
+				'meta_input'   => array(
+					'_document_attachment_id' => $attach_id,
+				),
+			)
+		);
+
+		// stage two - update the content (revision created).
 		$updt = $factory->post->update_object(
 			$post_id,
 			array(
 				'post_content' => $attach_id,
-				'meta_input'   => array(
-					'_document_attachment_id' => $attach_id,
-				),
 			)
 		);
 
@@ -261,13 +269,21 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// now link the attachment, it'll create a revision.
 		$attch = $wpdr->format_doc_id( $attach_id );
-		$updt  = $factory->post->update_object(
+		// stage one - create the post meta (no revision).
+		$updt = $factory->post->update_object(
 			$post_id,
 			array(
-				'post_content' => $attch,
 				'meta_input'   => array(
 					'_document_attachment_id' => $attach_id,
 				),
+			)
+		);
+
+		// stage two - update the content (revision created).
+		$updt = $factory->post->update_object(
+			$post_id,
+			array(
+				'post_content' => $attach_id,
 			)
 		);
 
