@@ -381,7 +381,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		global $wp_version;
 		$vers = strpos( $wp_version, '-' );
 		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		console_log( 'version: ' . $vers );
 		if ( 'latest' === $vers || version_compare( $vers, '6.9' ) >= 0 ) {
 			$lower = 27;
 			$upper = 29;

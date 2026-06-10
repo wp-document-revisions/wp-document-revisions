@@ -963,7 +963,7 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		$meta_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
-		if ( $attach_id !== $meta_id ) {
+		if ( (int) $attach_id !== $meta_id ) {
 			$post_date   = get_date_from_gmt( $post_modified_gmt );
 			$attach_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
 			return array(

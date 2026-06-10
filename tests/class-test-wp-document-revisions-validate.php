@@ -245,7 +245,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// dump document data.
 		self::dump_document( self::$editor_public_post_2 );
-		console_log( $output );
 
 		// should be nothing found - as all valid...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
@@ -362,7 +361,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
@@ -550,14 +548,11 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// change file name.
 		$file = get_attached_file( $attach_id );
-		console_log( 'file:' . $file );
 
 		// change the file meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
 		$nname = preg_replace( '|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|', '$1X$2X$3', $fname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
-		console_log( 'fname:' . $fname );
-		console_log( 'nname:' . $nname );
 
 		$nfile = str_replace( $fname, $nname, $file );
 
@@ -583,7 +578,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
