@@ -271,11 +271,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
 		$file = get_attached_file( $attach->ID );
 
-		console_log( 'std call: ' . $file );
-		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
-		console_log( 'filtered: ' . get_attached_file( $attach->ID ) );
-		remove_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10 );
-
 		// Move $file.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $file . '.txt' );
@@ -300,7 +295,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 
 		// should have two rows - the header row.
-		console_log( $output );
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file_cnt' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment exists but related file not found' ), 'test_struct_missing_file_msg' );
 
@@ -370,6 +364,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
+		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
@@ -559,7 +554,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$file = get_attached_file( $attach_id );
 		console_log( 'file:' . $file );
 
-		// change the meta data.
+		// change the file meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
 		$nname = preg_replace( '|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|', '$1X$2X$3', $fname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
@@ -571,6 +566,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// Move $file.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $nfile );
+
+		// clean cache.
+		wp_cache_flush();
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -590,6 +588,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
+		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
