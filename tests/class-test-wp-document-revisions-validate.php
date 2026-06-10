@@ -244,8 +244,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 
 		// dump document data.
-		self::dump_document( self::$editor_public_post );
-		self::dump_document( self::$editor_private_post );
 		self::dump_document( self::$editor_public_post_2 );
 		console_log( $output );
 
@@ -582,9 +580,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
-		// switch off md5 checks.
-		add_filter( 'document_validate_md5', '__return_false' );
-
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
@@ -594,6 +589,16 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment does not appear to be md5 encoded' ), 'message not found' );
 		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as no MD5 check...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no MD5 check' );
 
 		// will be a row like wpdr_valid_fix(106,6,109). - Can use it to mend document.
 		$request = new WP_REST_Request(
