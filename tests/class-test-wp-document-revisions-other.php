@@ -547,7 +547,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// ensure that rename function will be called.
 		$_POST['upload_source'] = 'wp-document-revisions';
 		$wpdr::$doc_image       = false;
-		$file = $wpdr->rewrite_file_url( $file );
+		$file                   = $wpdr->rewrite_file_url( $file );
 
 		self::assertTrue( str_contains( $file['url'], 'editor-public' ), 'post title' );
 		self::assertTrue( str_contains( $file['url'], '.txt' ), 'file type' );
