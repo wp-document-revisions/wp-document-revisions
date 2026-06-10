@@ -239,9 +239,9 @@ trait WP_Document_Revisions_Query {
 	 * @param int    $post_id The ID of the post for which the title is being generated.
 	 * @return string the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( string $title, ?int $post_id = null ): string {
+	public function add_revision_num_to_title( string $title, $post_id = null ): string {
 		// If a post ID is not provided, do not attempt to filter the title.
-		if ( is_null( $post_id ) ) {
+		if ( ! is_numeric( $post_id ) ) {
 			return $title;
 		}
 

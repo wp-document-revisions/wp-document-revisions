@@ -526,7 +526,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$post = get_post( self::$editor_public_post );
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -538,22 +538,17 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			'error'    => 0,
 		);
 
-		// straight return.
+		// featured image.
+		$wpdr::$doc_image = true;
 		$wpdr->filename_rewrite( $file );
 		$wpdr->rewrite_file_url( $file );
 
-		$_POST['post_id'] = self::$editor_public_post;
+		// not an image.
+		// ensure that rename function will be called.
+		$_POST['upload_source'] = 'wp-document-revisions';
+		$wpdr::$doc_image       = false;
+		$file = $wpdr->rewrite_file_url( $file );
 
-		// possibly image.
-		$wpdr::$doc_image = false;
-		$wpdr->filename_rewrite( $file );
-		$wpdr->rewrite_file_url( $file );
-
-		// set pagenow.
-		global $pagenow;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$pagenow = 'async-upload.php';
-		$file    = $wpdr->rewrite_file_url( $file );
 		self::assertTrue( str_contains( $file['url'], 'editor-public' ), 'post title' );
 		self::assertTrue( str_contains( $file['url'], '.txt' ), 'file type' );
 

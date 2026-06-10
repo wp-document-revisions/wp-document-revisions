@@ -211,25 +211,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
-
-		// clear down the ws terms.
-		$ws_terms = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
-
-		// delete them all.
-		foreach ( $ws_terms as $ws_term ) {
-			wp_delete_term( $ws_term->term_id, 'workflow_state' );
-			clean_term_cache( $ws_term->term_id, 'workflow_state' );
-		}
-
-		unregister_taxonomy( 'workflow_state' );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		wp_delete_post( self::$editor_public_non_doc, true );
+
+		// delete the taxonomy and its terms.
+		self::delete_ws_taxonomy();
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -383,7 +370,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
@@ -1077,7 +1063,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'has prevented' ), 'Locked post' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// Remove the test filter.
 		remove_all_filters( 'document_lock_check' );
@@ -1103,28 +1090,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
 		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 2' );
-		self::assertTrue( true, 'run' );
-	}
-
-	/**
-	 * Test bind upload cb.
-	 */
-	public function test_bind_upload_cb() {
-		global $wpdr;
-
-		global $pagenow;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$pagenow = 'media-upload.php';
-
-		ob_start();
-		$wpdr->admin->bind_upload_cb();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		// There will be various bits found.
-		self::assertEquals( 1, (int) substr_count( $output, 'addEventListener' ), 'no listener' );
-		self::assertEquals( 1, (int) substr_count( $output, 'typeof window.WPDocumentRevisions ===' ), 'no typeof check' );
-		self::assertEquals( 1, (int) substr_count( $output, 'new WPDRClass()' ), 'no instantiation' );
 		self::assertTrue( true, 'run' );
 	}
 

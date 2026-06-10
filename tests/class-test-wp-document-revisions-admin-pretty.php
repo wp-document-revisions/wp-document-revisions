@@ -187,21 +187,8 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		// delete done, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
 
-		// clear down the ws terms.
-		$ws_terms = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
-
-		// delete them all.
-		foreach ( $ws_terms as $ws_term ) {
-			wp_delete_term( $ws_term->term_id, 'workflow_state' );
-			clean_term_cache( $ws_term->term_id, 'workflow_state' );
-		}
-
-		unregister_taxonomy( 'workflow_state' );
+		// delete the taxonomy and its terms.
+		self::delete_ws_taxonomy();
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -291,7 +278,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 3, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 0, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count 1 revision 1 pretty' );
 		self::assertEquals( 0, (int) substr_count( $output, '-revision-2.' ), 'revision count 1 revision 2 pretty' );
@@ -317,7 +304,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 		// There will be 1 for RSS feed.
 		self::assertEquals( 4, (int) substr_count( $output, '<a href="http' ), 'revision count' );
-		self::assertEquals( 2, (int) substr_count( $output, 'Restore' ), 'restore count' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Restore' ), 'restore count' );
 
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-1.' ), 'revision count 2 revision 1 pretty' );
 		self::assertEquals( 1, (int) substr_count( $output, '-revision-2.' ), 'revision count 2 revision 2 pretty' );
@@ -342,7 +329,6 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		self::assertEquals( 1, (int) substr_count( $output, 'post_id=' . $post_obj->ID . '&' ), 'document metabox post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink pretty' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
 	}

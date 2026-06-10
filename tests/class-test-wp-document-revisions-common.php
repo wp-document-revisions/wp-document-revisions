@@ -79,6 +79,27 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Remove all the terms and delete the taxonomy.
+	 */
+	public static function delete_ws_taxonomy() {
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
+
+		unregister_taxonomy( 'workflow_state' );
+	}
+
+	/**
 	 * Prepare a copy of the input file with encoded name...
 	 *
 	 * N.B. Delete tests will delete this file.
@@ -91,8 +112,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wpdr;
 
 		// ensure that rename function will be called.
-		$_POST['post_id'] = $post_id;
-		$wpdr::$doc_image = false;
+		$_POST['post_id']       = $post_id;
+		$_POST['upload_source'] = 'wp-document-revisions';
 
 		// create file structure.
 		$file_name = array( 'name' => basename( $file ) );
