@@ -709,7 +709,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	public function dump_document( $doc_id ): void {
 		$document = get_post( $doc_id );
 
-		console_log( (string) $doc_id . '/' . $document->post_type . '/' . $document->post_content );
+		console_log( (string) $doc_id . '/' . $document->post_type . '/' . $document->post_title . '/' . $document->post_content );
 
 		$children = get_children( array( 'post_parent' => $doc_id ) );
 		foreach ( $children as $child ) {

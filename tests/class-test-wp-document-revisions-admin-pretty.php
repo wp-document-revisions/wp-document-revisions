@@ -185,7 +185,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// delete the taxonomy and its terms.
 		self::delete_ws_taxonomy();
@@ -376,7 +376,7 @@ class Test_WP_Document_Revisions_Admin_Pretty extends Test_Common_WPDR {
 
 		$wpdr->admin->make_private();
 
-		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
+		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10 );
 
 		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
 	}

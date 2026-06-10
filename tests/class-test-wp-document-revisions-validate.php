@@ -151,7 +151,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_private_post, self::$test_file );
 
 		// Editor Public 2.
 		self::$editor_public_post_2 = $factory->post->create(
@@ -270,6 +270,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$attach = $wpdr->get_document( self::$editor_public_post_2 );
 		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
 		$file = get_attached_file( $attach->ID );
+
+		console_log( 'std call: ' . $file );
+		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
+		console_log( 'filtered: ' . get_attached_file( $attach->ID ) );
+		remove_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10 );
+
 		// Move $file.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $file . '.txt' );

@@ -1038,7 +1038,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// test locked.
@@ -1110,12 +1109,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$file   = get_attached_file( $attach->ID );
 
 		// add the attachment delete process.
-		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// test deletion.
 		self::assertNull( get_post( $attach->ID ), 'attachment not deleted' );

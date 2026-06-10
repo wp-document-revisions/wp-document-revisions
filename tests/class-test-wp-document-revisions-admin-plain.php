@@ -185,7 +185,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// delete the taxonomy and its terms.
 		self::delete_ws_taxonomy();
@@ -343,7 +343,6 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 		$wpdr->admin->document_metabox( $post_obj );
 		$output = ob_get_contents();
 		ob_end_clean();
-		console_log( 'Plain: ' . $output );
 
 		self::assertEquals( 1, (int) substr_count( $output, esc_url( get_permalink( $post_obj->ID ) ) ), 'document metabox permalink_ms' );
 		self::assertEquals( 1, (int) substr_count( $output, get_the_author_meta( 'display_name', self::$editor_user_id ) ), 'document metabox author' );
@@ -392,7 +391,7 @@ class Test_WP_Document_Revisions_Admin_Plain extends Test_Common_WPDR {
 
 		$wpdr->admin->make_private();
 
-		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10, 2 );
+		remove_filter( 'document_to_private', array( $this, 'make_public' ), 10 );
 
 		self::assertEquals( 'publish', $post->post_status, 'status not changed to publish' );
 	}
