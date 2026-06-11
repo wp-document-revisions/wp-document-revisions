@@ -303,7 +303,7 @@ class WP_Document_Revisions_Validate_Structure {
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 			// update the post_meta.
-			update_post_meta( $$id, '_document_attachment_id', $parm );
+			update_post_meta( $id, '_document_attachment_id', $parm );
 
 			wp_cache_delete( $id, 'posts' );
 			wp_cache_delete( $id, 'document_revisions' );
