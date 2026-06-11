@@ -36,6 +36,12 @@ In: class-wp-document-revisions.php
 Filters the default capabilities provided by the plugin.
 Note that by default all custom roles will have the default Subscriber access.
 
+## Filter document_check_orphans
+
+In: class-wp-document-revisionsvalidate-structure.php
+
+Filter to Switch off checking for orphan documents.
+
 ## Filter document_content_disposition_inline
 
 In: trait-wp-document-revisions-file-handler.php

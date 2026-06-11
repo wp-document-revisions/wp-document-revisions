@@ -808,7 +808,17 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		// if otherwise no error, look for orphan documents.
-		if ( ! $att_error ) {
+		/**
+		 * Filter to Switch off checking for orphan documents.
+		 *
+		 * Whilst basically an on/off switch, it is called for each document.
+		 * Adding the document id allows only a segment of documents to be checked. 
+		 *
+		 * @since 5.1
+		 * @param bool $check  Whether to check for orphan records (default true).
+		 * @param ?int $doc_id Document post id.
+		 */
+		if ( ! $att_error && apply_filters( 'document_check_orphans', true, $doc_id ) ) {
 			$att_error = self::check_for_orphans( $attach_id, $doc_id );
 		}
 
