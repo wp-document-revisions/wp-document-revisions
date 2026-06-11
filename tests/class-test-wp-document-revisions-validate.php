@@ -361,6 +361,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
+		console_log( $output );
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );

@@ -969,7 +969,7 @@ class WP_Document_Revisions_Validate_Structure {
 			return array(
 				'code'  => 4,
 				'error' => 1,
-				'msg'   => __( 'Attachment recently uploaded for document, but not currently linked to document', 'wp-document-revisions' ),
+				'msg'   => __( 'Attachment recently uploaded for document, but not currently linked to it', 'wp-document-revisions' ),
 				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
