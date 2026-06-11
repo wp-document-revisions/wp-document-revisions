@@ -113,7 +113,7 @@ jobs:
               run: npm test -- --ci --coverage --maxWorkers=2
 
             - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v6
+              uses: codecov/codecov-action@v7
               with:
                   files: ./coverage/lcov.info
                   flags: javascript
@@ -189,7 +189,7 @@ jobs:
 
             - name: Upload coverage to Codecov
               if: matrix.coverage
-              uses: codecov/codecov-action@v6
+              uses: codecov/codecov-action@v7
               with:
                   flags: php
                   name: php-coverage
