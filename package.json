@@ -36,7 +36,7 @@
     "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@wordpress/e2e-test-utils-playwright": "^1.47.0",
-    "@wordpress/env": "^11.6.0",
+    "@wordpress/env": "^11.8.0",
     "@wordpress/scripts": "^32.3.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "~29.7.0",
