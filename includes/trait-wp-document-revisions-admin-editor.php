@@ -836,7 +836,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		$wpdr = self::$parent;
 
 		if ( $wpdr->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
-			$post_content = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post_content );
+			$post_content = ( is_numeric( $post_content ) ? '' : preg_replace( '/<!-- WPDR \d+\s* -->/', '', $post_content ) );
 		}
 		return $post_content;
 	}

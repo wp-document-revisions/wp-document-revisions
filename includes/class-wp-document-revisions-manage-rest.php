@@ -220,7 +220,7 @@ class WP_Document_Revisions_Manage_Rest {
 
 			// Strip WPDR comment so block editor only sees description content.
 			if ( isset( $data['content']['raw'] ) ) {
-				$data['content']['raw'] = preg_replace( '/<!-- WPDR \d+\s*-->/', '', $data['content']['raw'] );
+				$data['content']['raw'] = ( is_numeric( $data['content']['raw'] ) ? '' : preg_replace( '/<!-- WPDR \d+\s*-->/', '', $data['content']['raw'] ) );
 			}
 
 			$response->set_data( $data );
@@ -369,8 +369,8 @@ class WP_Document_Revisions_Manage_Rest {
 			}
 
 			$content = isset( $prepared_post->post_content ) ? $prepared_post->post_content : '';
-			// Strip any existing WPDR comment to avoid multiple.
-			$content = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $content );
+			// Strip any existing WPDR comment to avoid multiple. (Legacy format is numeric only).
+			$content = ( is_numeric( $content ) ? '' : preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $content ) );
 			// Prepend the WPDR comment.
 			$prepared_post->post_content = $wpdr->format_doc_id( $attach_id ) . $content;
 		}
