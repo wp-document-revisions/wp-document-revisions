@@ -24,3 +24,11 @@ updates:
       ignore:
           - dependency-name: 'jest-environment-jsdom'
             update-types: ['version-update:semver-major']
+          # @wordpress/e2e-test-utils-playwright 1.47.0+ points its package
+          # `exports` at raw TypeScript (src/index.ts) with no compiled-JS
+          # condition. Under Node 22's default type stripping, requiring a
+          # .ts file from node_modules is unsupported, so every E2E spec
+          # fails to load. Hold at 1.46.0 (last version shipping build/
+          # index.cjs) until upstream restores a compiled entry point.
+          - dependency-name: '@wordpress/e2e-test-utils-playwright'
+            versions: ['>=1.47.0']
