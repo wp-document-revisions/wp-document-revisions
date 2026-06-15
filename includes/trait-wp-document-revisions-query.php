@@ -236,12 +236,15 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 1.0
 	 * @param string $title   the title.
-	 * @param int    $post_id The ID of the post for which the title is being generated.
+	 * @param mixed  $post_id The ID of the post for which the title is being generated.
 	 * @return string the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( string $title, ?int $post_id = null ): string {
-		// If a post ID is not provided, do not attempt to filter the title.
-		if ( is_null( $post_id ) ) {
+	public function add_revision_num_to_title( string $title, $post_id = null ): string {
+		// If a usable post ID is not provided, do not attempt to filter the title.
+		// The `the_title` filter can be called with non-integer values (e.g. an empty
+		// string), so accept any type and guard with is_numeric() rather than a strict
+		// `?int` hint, which would throw a TypeError and crash the request.
+		if ( ! is_numeric( $post_id ) ) {
 			return $title;
 		}
 
