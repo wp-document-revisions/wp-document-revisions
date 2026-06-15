@@ -11,7 +11,7 @@
  * @see includes/class-wp-document-revisions-manage-rest.php
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-const path = require( 'path' );
+import path from 'path';
 
 /**
  * Helper: open the Document upload panel in the Settings sidebar.
