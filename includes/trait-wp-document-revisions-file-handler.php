@@ -55,7 +55,7 @@ trait WP_Document_Revisions_File_Handler {
 		 *
 		 * @param int $response_code The default response code (403).
 		 */
-		$response_code = absint( apply_filters( 'document_no_document_response_code', 403 ) );
+		$response_code = apply_filters( 'document_no_document_response_code', 403 );
 
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
@@ -65,7 +65,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => $response_code )
+					array( 'response' => absint( $response_code ) )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
@@ -99,7 +99,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				null,
-				array( 'response' => $response_code )
+				array( 'response' => absint( $response_code ) )
 			);
 			// for unit testing.
 			$wp_query->is_404 = true;
