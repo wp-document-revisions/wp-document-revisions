@@ -44,6 +44,19 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
+		/**
+		 * Filters the HTTP response code returned when a document (or revision) file cannot be served.
+		 *
+		 * Defaults to 403. Note that changing this to 404 can leak the existence of documents:
+		 * comparing a 403 (file exists but not authorized) against a 404 (file not found) lets an
+		 * unauthorized visitor probe whether a given document exists.
+		 *
+		 * @since 5.0.1
+		 *
+		 * @param int $response_code The default response code (403).
+		 */
+		$response_code = apply_filters( 'document_no_document_response_code', 403 );
+
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
 			$revn = $this->get_latest_revision( $post->ID );
@@ -52,7 +65,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => 403 )
+					array( 'response' => absint( $response_code ) )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
@@ -86,7 +99,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				null,
-				array( 'response' => 403 )
+				array( 'response' => absint( $response_code ) )
 			);
 			// for unit testing.
 			$wp_query->is_404 = true;
