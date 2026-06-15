@@ -98,7 +98,12 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Check for valid document editing.
 		if ( 'edit' === $request['context'] ) {
-			if ( isset( $params['id'] ) && current_user_can( 'edit_post', $params['id'] ) ) {
+			// Standard route for a document (identified by id).
+			if ( isset( $params['id'] ) && current_user_can( 'edit_document', $params['id'] ) ) {
+				return $response;
+			}
+			// WP-standard route for revisions and autosaves (identified by parent).
+			if ( isset( $params['parent'] ) && current_user_can( 'edit_document', $params['parent'] ) ) {
 				return $response;
 			}
 			return new WP_Error(
@@ -284,6 +289,22 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// For non-editors, strip all media details to prevent file path leakage.
 		$response->data['media_details'] = new stdClass();
+
+		// Also protect the file name, size and mime type, which can leak the
+		// (hashed) filename, reveal file size, or fingerprint the document type.
+		$response->data['mime_type'] = $protected;
+		if ( isset( $response->data['filename'] ) ) {
+			$response->data['filename'] = $protected;
+		}
+		if ( isset( $response->data['filesize'] ) ) {
+			$response->data['filesize'] = $protected;
+		}
+
+		// If the user cannot read the document at all, also drop the link back to
+		// the parent document so the relationship can't be enumerated.
+		if ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_document', $parent ) ) {
+			$response->remove_link( 'https://api.w.org/attached-to' );
+		}
 
 		return $response;
 	}
