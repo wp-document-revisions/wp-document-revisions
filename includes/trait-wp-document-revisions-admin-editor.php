@@ -175,6 +175,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		$descr = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post->post_content );
 		?>
 		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $descr ); ?>" />
+		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( $attach ); ?>" />
+		<input type="hidden" id="attach_ext" name="attach_ext" value="" />
 		<?php
 		$lock_holder = $wpdr->get_document_lock( $post );
 		if ( $lock_holder ) {

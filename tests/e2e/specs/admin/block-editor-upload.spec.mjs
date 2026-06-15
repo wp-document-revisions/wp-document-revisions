@@ -12,6 +12,8 @@
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname( fileURLToPath( import.meta.url ) );
 
 /**
  * Helper: open the Document upload panel in the Settings sidebar.

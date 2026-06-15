@@ -144,7 +144,6 @@ test.describe( 'Upload Flow Enhancements', () => {
 		await page.evaluate( () => {
 			const ids = [
 				'wpdr-upload-confirm',
-				'wpdr-upload-progress',
 				'wpdr-save-first-notice',
 				'wpdr-upload-error',
 			];
@@ -159,7 +158,6 @@ test.describe( 'Upload Flow Enhancements', () => {
 		// All notices should be present.
 		for ( const id of [
 			'wpdr-upload-confirm',
-			'wpdr-upload-progress',
 			'wpdr-save-first-notice',
 			'wpdr-upload-error',
 		] ) {
@@ -174,7 +172,6 @@ test.describe( 'Upload Flow Enhancements', () => {
 		// All notices should be removed.
 		for ( const id of [
 			'wpdr-upload-confirm',
-			'wpdr-upload-progress',
 			'wpdr-save-first-notice',
 			'wpdr-upload-error',
 		] ) {
@@ -214,12 +211,17 @@ test.describe( 'Upload Flow Enhancements', () => {
 			);
 		} );
 
-		// Verify post_content contains the WPDR attachment comment.
-		const content = await page.evaluate( () => {
-			return document.getElementById( 'post_content' )?.value ?? '';
+		// Verify curr_attach contains the attachment id.
+		const attach = await page.evaluate( () => {
+			return document.getElementById( 'curr_attach' )?.value ?? '';
 		} );
-		expect( content ).toMatch( /<!-- WPDR \d+ -->/ );
-		expect( content ).toContain( '42' );
+		expect( attach ).toContain( '42' );
+
+		// Verify attach_ext contains the attachment extension.
+		const extens = await page.evaluate( () => {
+			return document.getElementById( 'attach_ext' )?.value ?? '';
+		} );
+		expect( extens ).toContain( '.txt' );
 
 		// Clean up.
 		await requestUtils.rest( {
@@ -262,7 +264,7 @@ test.describe( 'Upload Flow Enhancements', () => {
 		} );
 
 		// The extension display element should show the new extension.
-		const extEl = page.locator( '#document_extension' );
+		const extEl = page.locator( '#attach_ext' );
 		if ( await extEl.isVisible().catch( () => false ) ) {
 			await expect( extEl ).toHaveValue( '.pdf' );
 		}

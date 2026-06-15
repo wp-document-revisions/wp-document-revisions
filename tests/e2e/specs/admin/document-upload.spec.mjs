@@ -44,7 +44,7 @@ test.describe( 'Document Upload Callback', () => {
 		);
 
 		// The document metabox should render with the upload button.
-		const uploadButton = page.locator( '#content-add_media' );
+		const uploadButton = page.locator( '#add-document-file' );
 		await expect( uploadButton ).toBeVisible( { timeout: 10000 } );
 		await expect( uploadButton ).toContainText( /[Uu]pload/ );
 

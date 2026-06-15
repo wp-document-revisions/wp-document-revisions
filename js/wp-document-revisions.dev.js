@@ -106,6 +106,9 @@
 		documentUpload = ( attachmentId, extension ) => {
 			this.hasUpload = true;
 			this.clearUploadNotices();
+			// Fields used only for test purposes with no functional use. 
+			document.getElementById('curr_attach').value = attachmentId;
+			document.getElementById('attach_ext').value = extension;
 
 			const message = document.getElementById('message');
 			if (message) {
