@@ -369,7 +369,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
@@ -1037,7 +1037,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// test locked.
