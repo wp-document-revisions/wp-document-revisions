@@ -4,8 +4,8 @@
  * Uses axe-core via @axe-core/playwright to check for WCAG 2.1 AA violations.
  * Excludes known WordPress core violations that are not caused by this plugin.
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
-const AxeBuilder = require( '@axe-core/playwright' ).default;
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 // Known WordPress core a11y issues to exclude from our tests.
 const WP_CORE_RULES_TO_DISABLE = [

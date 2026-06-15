@@ -10,7 +10,7 @@
  * @see src/editor-document-upload/index.js
  * @see includes/class-wp-document-revisions-manage-rest.php
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 const path = require( 'path' );
 
 /**

@@ -6,7 +6,7 @@
  *
  * @see js/wp-document-revisions.dev.js
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Document Management', () => {
 	test( 'document post type CRUD via REST API', async ( {

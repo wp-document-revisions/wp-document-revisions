@@ -3,7 +3,7 @@
  *
  * @see src/blocks/revisions-shortcode/
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Revisions Shortcode Block', () => {
 	test( 'can be inserted, configured, and previewed in editor', async ( {
