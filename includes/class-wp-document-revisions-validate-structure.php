@@ -812,7 +812,7 @@ class WP_Document_Revisions_Validate_Structure {
 		 * Filter to Switch off checking for orphan documents.
 		 *
 		 * Whilst basically an on/off switch, it is called for each document.
-		 * Adding the document id allows only a segment of documents to be checked. 
+		 * Adding the document id allows only a segment of documents to be checked.
 		 *
 		 * @since 5.1
 		 * @param bool $check  Whether to check for orphan records (default true).
