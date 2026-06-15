@@ -1062,7 +1062,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'has prevented' ), 'Locked post' );
-		self::assertEquals( 1, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// Remove the test filter.
