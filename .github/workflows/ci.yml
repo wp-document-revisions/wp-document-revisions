@@ -358,7 +358,6 @@ jobs:
             - name: Run E2E tests
               env:
                   WP_BASE_URL: http://localhost:8888
-                  NODE_OPTIONS: --experimental-strip-types
               run: npm run test:e2e
 
             - name: Upload test artifacts

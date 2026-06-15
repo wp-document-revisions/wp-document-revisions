@@ -15,8 +15,8 @@
     "build:admin": "node script/build.js",
     "build:check": "node -e \"const fs=require('fs'); const devFiles=fs.readdirSync('js').filter(f=>f.endsWith('.dev.js')); devFiles.forEach(f=>{const min=f.replace('.dev.js','.js'); if(!fs.existsSync('js/'+min)){console.error('Missing: '+min);process.exit(1);}; console.log('OK: '+f+' -> '+min);})\"",
     "start": "wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks",
-    "test:e2e": "NODE_OPTIONS=--experimental-strip-types npx playwright test --config=playwright.config.mjs",
-    "test:e2e:ui": "NODE_OPTIONS=--experimental-strip-types npx playwright test --config=playwright.config.mjs --ui",
+    "test:e2e": "npx playwright test --config=playwright.config.mjs",
+    "test:e2e:ui": "npx playwright test --config=playwright.config.mjs --ui",
     "wp-env": "wp-env"
   },
   "repository": {
@@ -35,7 +35,7 @@
     "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@wordpress/e2e-test-utils-playwright": "^1.47.0",
+    "@wordpress/e2e-test-utils-playwright": "1.40.0",
     "@wordpress/env": "^11.8.0",
     "@wordpress/scripts": "^32.4.0",
     "jest": "^30.3.0",
