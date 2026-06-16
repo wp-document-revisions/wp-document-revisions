@@ -238,4 +238,65 @@ class Test_WP_Document_Revisions_AI_Summary_REST extends Test_Common_WPDR {
 
 		self::assertSame( 404, $response->get_status() );
 	}
+
+	/**
+	 * Build a relative REST route for the diff endpoint.
+	 *
+	 * @param int $doc_id document post ID.
+	 * @param int $rev_id revision attachment ID.
+	 * @return string the full route path.
+	 */
+	private function diff_route( int $doc_id, int $rev_id ): string {
+		return sprintf( '/wpdr/v1/documents/%d/revisions/%d/diff', $doc_id, $rev_id );
+	}
+
+	/**
+	 * GET diff reports `no_prior` for a document's first (initial) revision,
+	 * since there is nothing preceding it to diff against. (#531)
+	 */
+	public function test_diff_returns_no_prior_for_initial_revision() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
+
+		$response = $this->server->dispatch(
+			new WP_REST_Request( 'GET', $this->diff_route( $doc_id, $attach_id ) )
+		);
+
+		self::assertSame( 200, $response->get_status() );
+		$data = $response->get_data();
+		self::assertSame( 'no_prior', $data['status'] );
+		self::assertSame( '', $data['diff'] );
+		self::assertSame( 0, $data['prior_revision'] );
+	}
+
+	/**
+	 * GET diff returns 404 when the revision does not belong to the claimed
+	 * document — same probe-resistance as the summary routes. (#531)
+	 */
+	public function test_diff_returns_404_when_revision_does_not_match_document() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		list( $doc_a, )  = $this->create_document_with_attachment();
+		list( , $rev_b ) = $this->create_document_with_attachment();
+
+		$response = $this->server->dispatch(
+			new WP_REST_Request( 'GET', $this->diff_route( $doc_a, $rev_b ) )
+		);
+
+		self::assertSame( 404, $response->get_status() );
+	}
+
+	/**
+	 * GET diff is rejected for a user who can read the document but lacks
+	 * the `read_document_revisions` capability (e.g. a subscriber). (#531)
+	 */
+	public function test_diff_requires_read_document_revisions_capability() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
+		list( $doc_id, $attach_id ) = $this->create_document_with_attachment();
+
+		$response = $this->server->dispatch(
+			new WP_REST_Request( 'GET', $this->diff_route( $doc_id, $attach_id ) )
+		);
+
+		self::assertContains( $response->get_status(), array( 401, 403 ) );
+	}
 }
