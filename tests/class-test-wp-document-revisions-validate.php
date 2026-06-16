@@ -215,6 +215,80 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Migration of the legacy public `document_attachment_id` meta key to the
+	 * protected `_document_attachment_id` key on first access. (#570)
+	 */
+	public function test_populate_attachment_meta_migrates_legacy_key() {
+		global $wpdr;
+
+		// Simulate a pre-5.1 install: a document carrying only the legacy public key.
+		$doc_id = self::factory()->post->create(
+			array(
+				'post_title'   => 'Legacy Meta Doc - ' . time(),
+				'post_status'  => 'private',
+				'post_author'  => self::$editor_user_id,
+				'post_content' => '',
+				'post_type'    => 'document',
+			)
+		);
+		self::assertFalse( is_wp_error( $doc_id ), 'Failed inserting legacy-meta document' );
+
+		delete_post_meta( $doc_id, '_document_attachment_id' );
+		update_post_meta( $doc_id, 'document_attachment_id', 4242 );
+
+		$result = $wpdr->populate_attachment_meta( $doc_id, get_post_field( 'post_content', $doc_id ) );
+
+		self::assertEquals( 4242, $result, 'returns the migrated attachment id' );
+		self::assertEquals( 4242, absint( get_post_meta( $doc_id, '_document_attachment_id', true ) ), 'new protected key populated' );
+		self::assertEmpty( get_post_meta( $doc_id, 'document_attachment_id', true ), 'legacy public key removed' );
+
+		wp_delete_post( $doc_id, true );
+	}
+
+	/**
+	 * Orphan attachment detection (code 14) and the document_check_orphans
+	 * filter that disables it. (#571)
+	 */
+	public function test_orphan_detection_and_filter() {
+		global $current_user;
+
+		// Add an orphan: an attachment parented to the document but not referenced
+		// by its post_content nor by any revision.
+		$orphan_id = self::factory()->attachment->create(
+			array(
+				'post_parent'    => self::$editor_public_post,
+				'post_mime_type' => 'text/plain',
+				'post_status'    => 'inherit',
+				'post_title'     => 'orphan - ' . time(),
+			)
+		);
+		self::assertGreaterThan( 0, $orphan_id, 'Failed creating orphan attachment' );
+
+		unset( $current_user );
+		wp_set_current_user( self::$editor_user_id );
+		wp_cache_flush();
+		add_filter( 'document_validate_md5', '__return_false' );
+
+		$needle = 'additional document files that are inaccessible';
+
+		// With orphan checking on (default) the validator reports the orphan.
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+		self::assertGreaterThan( 0, substr_count( $output, $needle ), 'orphan attachment reported' );
+
+		// The document_check_orphans filter suppresses the check.
+		add_filter( 'document_check_orphans', '__return_false' );
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+		remove_filter( 'document_check_orphans', '__return_false' );
+		self::assertEquals( 0, substr_count( $output, $needle ), 'orphan check disabled by filter' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
+	}
+
+	/**
 	 * Tests that the test Document structures are valid.
 	 */
 	public function test_structure_OK() {
