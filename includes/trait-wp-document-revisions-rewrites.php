@@ -263,8 +263,17 @@ trait WP_Document_Revisions_Rewrites {
 			return $file;
 		}
 
-		global $post;
-		$file['url'] = get_permalink( $post );
+		// Resolve the parent document for the public URL. During an (async) upload the
+		// global $post is not reliably the parent document, so prefer the explicit
+		// upload target sent with the request and fall back to the global only if absent.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$parent = isset( $_REQUEST['post_id'] ) ? absint( wp_unslash( $_REQUEST['post_id'] ) ) : 0;
+		if ( ! $parent ) {
+			global $post;
+			$parent = $post;
+		}
+
+		$file['url'] = get_permalink( $parent );
 
 		return $file;
 	}
