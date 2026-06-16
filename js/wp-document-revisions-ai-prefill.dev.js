@@ -45,7 +45,7 @@
 					return;
 				}
 				if ( 'ready' === response.status && response.summary ) {
-					applyPrefill( textarea, response.summary );
+					applyPrefill( textarea, response );
 				} else if ( 'pending' === response.status ) {
 					showPendingHint( textarea );
 				}
@@ -58,16 +58,16 @@
 			} );
 	}
 
-	function applyPrefill( textarea, summary ) {
-		textarea.value = summary;
-		addHint( textarea, config.i18n && config.i18n.hint, true );
+	function applyPrefill( textarea, response ) {
+		textarea.value = response.summary;
+		addHint( textarea, config.i18n && config.i18n.hint, true, response );
 	}
 
 	function showPendingHint( textarea ) {
 		addHint( textarea, config.i18n && config.i18n.pending, false );
 	}
 
-	function addHint( textarea, message, withDismiss ) {
+	function addHint( textarea, message, withDismiss, response ) {
 		if ( ! message || ! textarea.parentNode ) {
 			return;
 		}
@@ -100,7 +100,58 @@
 			hint.appendChild( dismiss );
 		}
 
+		if ( withDismiss && config.i18n && config.i18n.review ) {
+			addReviewAction( hint, response );
+		}
+
 		textarea.parentNode.insertBefore( hint, textarea );
+	}
+
+	// Append a "Mark reviewed" control to a hint. POSTs to the summary
+	// review endpoint and, on success, swaps the link for a static
+	// "reviewed" label. If the summary is already reviewed, shows the
+	// label directly with no link.
+	function addReviewAction( hint, response ) {
+		const reviewedLabel = ( config.i18n && config.i18n.reviewed ) || config.i18n.review;
+
+		function showReviewed() {
+			const done = document.createElement( 'span' );
+			done.className = 'wpdr-ai-prefill-reviewed';
+			done.style.marginLeft = '8px';
+			done.textContent = reviewedLabel;
+			return done;
+		}
+
+		if ( response && response.reviewed_by ) {
+			hint.appendChild( showReviewed() );
+			return;
+		}
+
+		const review = document.createElement( 'a' );
+		review.href = '#';
+		review.className = 'wpdr-ai-prefill-review';
+		review.style.marginLeft = '8px';
+		review.textContent = config.i18n.review;
+		review.addEventListener( 'click', function ( event ) {
+			event.preventDefault();
+			if ( ! window.wp || ! window.wp.apiFetch ) {
+				return;
+			}
+			window.wp.apiFetch( {
+				path: config.restPath + '/review',
+				method: 'POST',
+				data: { reviewed: true },
+			} )
+				.then( function () {
+					if ( review.parentNode ) {
+						review.parentNode.replaceChild( showReviewed(), review );
+					}
+				} )
+				.catch( function () {
+					// Leave the link in place so the editor can retry.
+				} );
+		} );
+		hint.appendChild( review );
 	}
 
 	// Expose for direct invocation from Jest. Production code always

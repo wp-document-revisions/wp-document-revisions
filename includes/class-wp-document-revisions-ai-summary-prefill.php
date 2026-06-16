@@ -125,9 +125,11 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			'fieldId'        => 'excerpt',
 			'initialDelayMs' => 10000,
 			'i18n'           => array(
-				'hint'    => __( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
-				'dismiss' => __( 'Dismiss', 'wp-document-revisions' ),
-				'pending' => __( '✨ AI summary will be available shortly — refresh this page to see it.', 'wp-document-revisions' ),
+				'hint'     => __( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
+				'dismiss'  => __( 'Dismiss', 'wp-document-revisions' ),
+				'pending'  => __( '✨ AI summary will be available shortly — refresh this page to see it.', 'wp-document-revisions' ),
+				'review'   => __( 'Mark reviewed', 'wp-document-revisions' ),
+				'reviewed' => __( 'Reviewed ✓', 'wp-document-revisions' ),
 			),
 		);
 
