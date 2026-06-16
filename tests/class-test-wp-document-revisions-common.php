@@ -79,6 +79,27 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Remove all the terms and delete the taxonomy.
+	 */
+	public static function delete_ws_taxonomy() {
+		// clear down the ws terms.
+		$ws_terms = get_terms(
+			array(
+				'taxonomy'   => 'workflow_state',
+				'hide_empty' => false,
+			)
+		);
+
+		// delete them all.
+		foreach ( $ws_terms as $ws_term ) {
+			wp_delete_term( $ws_term->term_id, 'workflow_state' );
+			clean_term_cache( $ws_term->term_id, 'workflow_state' );
+		}
+
+		unregister_taxonomy( 'workflow_state' );
+	}
+
+	/**
 	 * Prepare a copy of the input file with encoded name...
 	 *
 	 * N.B. Delete tests will delete this file.
@@ -91,9 +112,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		global $wpdr;
 
 		// ensure that rename function will be called.
-		$_POST['post_id'] = $post_id;
-		$_POST['type']    = 'file';
-		$wpdr::$doc_image = false;
+		$_POST['post_id']       = $post_id;
+		$_POST['upload_source'] = 'wp-document-revisions';
 
 		// create file structure.
 		$file_name = array( 'name' => basename( $file ) );
@@ -196,6 +216,17 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		self::assertGreaterThan( 0, $attach_id, 'Cannot create attachment' );
 
 		// now link the attachment, it'll create a revision.
+		// stage one - create the post meta (no revision).
+		$updt = $factory->post->update_object(
+			$post_id,
+			array(
+				'meta_input' => array(
+					'_document_attachment_id' => $attach_id,
+				),
+			)
+		);
+
+		// stage two - update the content (revision created).
 		$updt = $factory->post->update_object(
 			$post_id,
 			array(
@@ -209,7 +240,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		global $wpdr;
 
-		self::assertEquals( $attach_id, $wpdr->get_latest_revision( $post_id )->post_content, "Latest revision post_content does not match attachment ID for post $post_id" );
+		$latest = $wpdr->get_latest_revision( $post_id )->post_content;
+		self::assertEquals( $attach_id, $wpdr->extract_document_id( $latest ), "Latest revision post_content does not match attachment ID for post $post_id" );
 		self::verify_attachment_matches_file( $post_id, $filename, 'Initial Upload' );
 		self::verify_attachment_matches_file( $post_id, $new_file, 'File Loaded' );
 	}
@@ -257,7 +289,18 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 
 		// now link the attachment, it'll create a revision.
 		$attch = $wpdr->format_doc_id( $attach_id );
-		$updt  = $factory->post->update_object(
+		// stage one - create the post meta (no revision).
+		$updt = $factory->post->update_object(
+			$post_id,
+			array(
+				'meta_input' => array(
+					'_document_attachment_id' => $attach_id,
+				),
+			)
+		);
+
+		// stage two - update the content (revision created).
+		$updt = $factory->post->update_object(
 			$post_id,
 			array(
 				'post_content' => $attch,
@@ -666,7 +709,7 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 	public function dump_document( $doc_id ): void {
 		$document = get_post( $doc_id );
 
-		console_log( (string) $doc_id . '/' . $document->post_type . '/' . $document->post_content );
+		console_log( (string) $doc_id . '/' . $document->post_type . '/' . $document->post_title . '/' . $document->post_content );
 
 		$children = get_children( array( 'post_parent' => $doc_id ) );
 		foreach ( $children as $child ) {
@@ -676,6 +719,8 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 				console_log( $file . ' | ' . file_exists( $file ) );
 			}
 		}
+
+		console_log( '_document_attachment_id: ' . absint( get_post_meta( $doc_id, '_document_attachment_id', true ) ) );
 
 		console_log( '' );
 	}

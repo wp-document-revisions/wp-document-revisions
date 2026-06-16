@@ -1,13 +1,13 @@
 /**
  * E2E tests for the document upload callback in the classic editor.
  *
- * Verifies that the legacyPostDocumentUpload event handler fires correctly
- * when a documentUpload CustomEvent is dispatched, testing the arrow-function
- * this-binding fix and CustomEvent.detail argument extraction.
+ * Verifies that the documentUpload() handler records the new attachment and
+ * enables the submit buttons. The upload now runs through wp.media, so the
+ * callback is invoked directly rather than via a CustomEvent.
  *
  * @see js/wp-document-revisions.dev.js
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Document Upload Callback', () => {
 	let documentId;
@@ -44,7 +44,7 @@ test.describe( 'Document Upload Callback', () => {
 		);
 
 		// The document metabox should render with the upload button.
-		const uploadButton = page.locator( '#content-add_media' );
+		const uploadButton = page.locator( '#add-document-file' );
 		await expect( uploadButton ).toBeVisible( { timeout: 10000 } );
 		await expect( uploadButton ).toContainText( /[Uu]pload/ );
 
@@ -53,7 +53,7 @@ test.describe( 'Document Upload Callback', () => {
 		await expect( postContent ).toBeAttached();
 	} );
 
-	test( 'documentUpload event fires postDocumentUpload callback', async ( {
+	test( 'documentUpload() records the upload', async ( {
 		admin,
 		page,
 	} ) => {
@@ -68,16 +68,12 @@ test.describe( 'Document Upload Callback', () => {
 			{ timeout: 10000 }
 		);
 
-		// Dispatch a documentUpload CustomEvent (the path fixed by the arrow-function conversion).
+		// Invoke the upload callback directly (wp.media calls this on FileUploaded).
 		const result = await page.evaluate( () => {
 			const instance = window.WPDocumentRevisions;
 			const hadUploadBefore = instance.hasUpload;
 
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '999', extension: '.txt' },
-				} )
-			);
+			instance.documentUpload( '999', '.txt' );
 
 			return {
 				hadUploadBefore,
@@ -93,9 +89,8 @@ test.describe( 'Document Upload Callback', () => {
 		// After the event, hasUpload should be true (callback fired).
 		expect( result.hasUploadAfter ).toBe( true );
 
-		// post_content should contain the WPDR comment with the attachment ID.
-		expect( result.postContentValue ).toContain( '<!-- WPDR' );
-		expect( result.postContentValue ).toContain( '999' );
+		// post_content should not contain the WPDR comment with the attachment ID as now done server side.
+		expect( result.postContentValue ).not.toContain( '<!-- WPDR' );
 	} );
 
 	test( 'submit buttons are enabled after upload callback', async ( {
@@ -126,13 +121,9 @@ test.describe( 'Document Upload Callback', () => {
 		const publishButton = page.locator( '#publish' );
 		await expect( publishButton ).toBeDisabled();
 
-		// Dispatch the upload event.
+		// Invoke the upload callback.
 		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '888', extension: '.pdf' },
-				} )
-			);
+			window.WPDocumentRevisions.documentUpload( '888', '.pdf' );
 		} );
 
 		// Submit button should now be enabled.

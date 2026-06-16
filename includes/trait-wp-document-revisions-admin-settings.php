@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait WP_Document_Revisions_Admin_Settings {
 
 	/**
+	 * Length of feed key.
+	 *
+	 * @var int
+	 */
+	private static $key_length = 32;
+
+	/**
+	 * User meta key used auth feeds.
+	 *
+	 * @var string
+	 */
+	private static $meta_key = 'document_revisions_feed_key';
+
+	/**
 	 * Sanitize link_date option prior to saving.
 	 *
 	 * @since 3.5.0
@@ -98,7 +112,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * @return string the feed key
 	 */
 	public function get_feed_key( ?int $user = null ): string {
-		$key = get_user_option( $this->meta_key, $user );
+		$key = get_user_option( self::$meta_key, $user );
 
 		if ( ! $key ) {
 			$key = $this->generate_new_feed_key();
@@ -200,9 +214,11 @@ trait WP_Document_Revisions_Admin_Settings {
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 
+		$wpdr = self::$parent;
 		if ( '1' === $doc_link ) {
-			// have to access the document upload directory, so add it. Also on delete file.
-			add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+			// have to access the document upload directory, so add it. Also on delete file. Make sure we use it.
+			$wpdr::$doc_image = false;
+			add_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 			add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
 			// delete_attachment does not delete the attachment if document is outside uploads directory.
@@ -213,7 +229,8 @@ trait WP_Document_Revisions_Admin_Settings {
 			wp_delete_file( $file );
 
 			// have looked for the upload directory, so remove it.
-			remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+			$wpdr::$doc_image = true;
+			remove_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 			remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 
 			// remove attachment ID from list.
@@ -223,18 +240,21 @@ trait WP_Document_Revisions_Admin_Settings {
 		// If multiple files have been uploaded between saves then there will be attached files left [Edge case].
 		if ( 'document' === $record->post_type ) {
 			if ( ! empty( self::$attachmts ) ) {
-				add_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+				$wpdr::$doc_image = false;
+				add_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 				add_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 				foreach ( self::$attachmts as $id => $value ) {
+					$post_id = absint( $id );
 					// delete_attachment does not delete the attachment if document is outside uploads directory.
-					$file = get_attached_file( $id );
+					$file = get_attached_file( $post_id );
 
-					wp_delete_attachment( $id, true );
+					wp_delete_attachment( $post_id, true );
 
 					// ensure attachment deleted.
 					wp_delete_file( $file );
 				}
-				remove_filter( 'upload_dir', array( self::$parent, 'document_upload_dir_filter' ) );
+				$wpdr::$doc_image = true;
+				remove_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
 				remove_filter( 'wp_delete_file', array( $this, 'wp_delete_file' ) );
 			}
 			// set the attachmts to null, so that being null means we are not deleting a document.
@@ -589,36 +609,6 @@ trait WP_Document_Revisions_Admin_Settings {
 	}
 
 	/**
-	 * Binds our post-upload javascript callback to the plupload event
-	 *
-	 * Note: in footer because it has to be called after handler.js is loaded and initialized.
-	 *
-	 * @since 1.2.1
-	 */
-	public function bind_upload_cb(): void {
-		global $pagenow;
-
-		if ( 'media-upload.php' === $pagenow ) {
-			// Change event to load to let all js get loaded/initialised.
-			?>
-			<script type="text/javascript">
-				window.addEventListener('load', function() {
-					if ( typeof window.WPDocumentRevisions === "undefined" ) {
-						var WPDRClass = window.WPDocumentRevisionsClass || (window.parent && window.parent.WPDocumentRevisionsClass);
-						if ( typeof WPDRClass === "function" ) {
-							window.WPDocumentRevisions = new WPDRClass();
-						}
-					}
-					if ( window.WPDocumentRevisions && typeof window.WPDocumentRevisions.bindPostDocumentUploadCB === "function" ) {
-						window.WPDocumentRevisions.bindPostDocumentUploadCB();
-					}
-				});
-			</script>
-			<?php
-		}
-	}
-
-	/**
 	 * Generates, saves, and returns new feed key.
 	 *
 	 * @since 0.5
@@ -630,8 +620,8 @@ trait WP_Document_Revisions_Admin_Settings {
 			$user = get_current_user_id();
 		}
 
-		$key = wp_generate_password( $this->key_length, false, false );
-		update_user_option( $user, $this->meta_key, $key );
+		$key = wp_generate_password( self::$key_length, false, false );
+		update_user_option( $user, self::$meta_key, $key );
 
 		return $key;
 	}

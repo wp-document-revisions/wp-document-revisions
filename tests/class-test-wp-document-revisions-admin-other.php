@@ -211,25 +211,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
-
-		// clear down the ws terms.
-		$ws_terms = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
-
-		// delete them all.
-		foreach ( $ws_terms as $ws_term ) {
-			wp_delete_term( $ws_term->term_id, 'workflow_state' );
-			clean_term_cache( $ws_term->term_id, 'workflow_state' );
-		}
-
-		unregister_taxonomy( 'workflow_state' );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		wp_delete_post( self::$editor_public_non_doc, true );
+
+		// delete the taxonomy and its terms.
+		self::delete_ws_taxonomy();
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -382,8 +369,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 	}
 
@@ -391,46 +377,16 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	 * Tests the admin enqueue edit scripts.
 	 */
 	public function test_enqueue_edit_scripts() {
-		global $wpdr;
+		global $wpdr, $post;
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['post'] = self::$editor_public_post;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post );
 
 		ob_start();
 		$wpdr->admin->enqueue_edit_scripts();
 		$output = ob_get_contents();
 		ob_end_clean();
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		unset( $_GET['post'] );
-
-		self::assertTrue( true, 'run' );
-	}
-
-	/**
-	 * Tests the admin media upload tabs.
-	 */
-	public function test_media_upload_tabs() {
-		global $wpdr;
-
-		$default = array(
-			'computer' => 'field 1',
-			'type_url' => 'field 2',
-			'gallery'  => 'field 3',
-			'library'  => 'field 4',
-		);
-
-		$def_one = $wpdr->admin->media_upload_tabs_computer( $default );
-
-		self::assertEquals( 4, count( $def_one ), 'Should retain all 4 tabs when not in document context' );
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$_GET['post']   = self::$editor_public_post;
-		$_GET['action'] = 'whatever';
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-
-		$default = $wpdr->admin->media_upload_tabs_computer( $default );
-
-		self::assertEquals( 1, count( $default ), 'Should reduce to 1 tab (computer) when in document context' );
 		self::assertTrue( true, 'run' );
 	}
 
@@ -1081,8 +1037,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		// There will be various bits found.
-		self::assertEquals( 2, (int) substr_count( $output, '<input' ), 'input count' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
 		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// test locked.
@@ -1107,7 +1062,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		ob_end_clean();
 
 		self::assertEquals( 1, (int) substr_count( $output, 'has prevented' ), 'Locked post' );
-		self::assertEquals( 1, (int) substr_count( $output, '?post_id=' . self::$editor_public_post . '&' ), 'post_id' );
+		self::assertEquals( 3, (int) substr_count( $output, '<input' ), 'input count' );
+		self::assertEquals( 1, (int) substr_count( $output, get_permalink( self::$editor_public_post ) ), 'permalink' );
 
 		// Remove the test filter.
 		remove_all_filters( 'document_lock_check' );
@@ -1137,28 +1093,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Test bind upload cb.
-	 */
-	public function test_bind_upload_cb() {
-		global $wpdr;
-
-		global $pagenow;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$pagenow = 'media-upload.php';
-
-		ob_start();
-		$wpdr->admin->bind_upload_cb();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		// There will be various bits found.
-		self::assertEquals( 1, (int) substr_count( $output, 'addEventListener' ), 'no listener' );
-		self::assertEquals( 1, (int) substr_count( $output, 'typeof window.WPDocumentRevisions ===' ), 'no typeof check' );
-		self::assertEquals( 1, (int) substr_count( $output, 'new WPDRClass()' ), 'no instantiation' );
-		self::assertTrue( true, 'run' );
-	}
-
-	/**
 	 * Test document delete.
 	 *
 	 * This code is called in Teardown but codecov does not appear to include it.
@@ -1175,12 +1109,12 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$file   = get_attached_file( $attach->ID );
 
 		// add the attachment delete process.
-		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		add_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// test deletion.
 		self::assertNull( get_post( $attach->ID ), 'attachment not deleted' );
@@ -1261,42 +1195,6 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$terms = wp_set_post_terms( self::$editor_public_post_2, array( self::$ws_term_id ), 'workflow_state' );
 
 		self::assertTrue( true, 'workflow_state_save' );
-	}
-
-	/**
-	 * Tests the posts enqueue.
-	 */
-	public function test_admin_enqueue() {
-		global $wpdr;
-
-		ob_start();
-		$wpdr->admin->enqueue();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		self::assertEmpty( $output, 'not doc not empty' );
-
-		global $current_user;
-		wp_set_current_user( self::$editor_user_id );
-		wp_cache_flush();
-
-		// get a post in global scope (bending rule).
-		global $post;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$post = get_post( self::$editor_public_post_2 );
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$_GET['post_type'] = 'document';
-
-		ob_start();
-		$wpdr->admin->enqueue();
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		unset( $_GET['post_type'] );
-
-		self::assertTrue( true, 'admin_enqueue' );
 	}
 
 	/**

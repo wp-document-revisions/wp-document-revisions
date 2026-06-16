@@ -3,7 +3,7 @@
  *
  * @see src/blocks/documents-widget/
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Documents Widget Block', () => {
 	test( 'can be inserted, configured, and previewed in editor', async ( {

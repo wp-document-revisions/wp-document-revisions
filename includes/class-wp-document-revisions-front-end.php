@@ -485,9 +485,9 @@ class WP_Document_Revisions_Front_End {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $image . '<br />';
 			}
-			// is_numeric is old format.
+			// is_numeric is old format. WPDR comment will be stripped by wp_kses_post.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( preg_replace( '/<!--\s*WPDR \s*\d+ -->/', '', $document->post_content ) ) . '</div>' : '';
+			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
 			?>
 			</li>
 		<?php } ?>
@@ -783,7 +783,7 @@ class WP_Document_Revisions_Front_End {
 
 		// sanity check.
 		// do not show output to users that do not have the read_documents capability and don't get it via read.
-		if ( ( ! current_user_can( 'read_documents' ) ) && ! apply_filters( 'document_read_uses_read', true ) ) {
+		if ( ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_documents' ) ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 

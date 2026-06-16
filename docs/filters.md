@@ -36,6 +36,12 @@ In: class-wp-document-revisions.php
 Filters the default capabilities provided by the plugin.
 Note that by default all custom roles will have the default Subscriber access.
 
+## Filter document_check_orphans
+
+In: class-wp-document-revisionsvalidate-structure.php
+
+Filter to Switch off checking for orphan documents.
+
 ## Filter document_content_disposition_inline
 
 In: trait-wp-document-revisions-file-handler.php
@@ -89,12 +95,13 @@ Filters the lost lock document email text.
 
 In: trait-wp-document-revisions-file-handler.php
 
-Filters the HTTP response code returned when a document or revision file cannot be served (default 403).
+Filters the http response code when a document or revision (attachment) is not found.
 
-> [!WARNING]
-> Changing the response code from the default of 403 may introduce an existence vulnerability.
-> Comparing a 403 (file exists but not authorized) against a 404 (file not found) lets an
-> unauthorized visitor probe whether a given document exists.
+> [!WARNING]  
+> Modifying the response code from the default value of 403 may introduce an existence vulnerability.
+> 
+> By comparing 403 responses (revision found but not authorized) to 404 responses (revision not found)
+> a non-authorized user can determine if a document exists or not.
 
 ## Filter document_output_sent_is_ok
 
@@ -124,7 +131,7 @@ Filters the post-thumbnail size parameters (used only if this image size has not
 
 In: class-wp-document-revisions.php, class-wp-document-revisions-front-end.php, class-wp-document-revisions-manage-rest.php, trait-wp-document-revisions-file-handler.php
 
-Filters the users capacities to require read (or read_document) capability.
+Filters the users capacities to require read (default) (or read_document) capability to read a document.
 
 ## Filter document_revision_query
 
@@ -283,6 +290,12 @@ Filter whether to validate the document structure for a documrnt.
 In: class-wp-document-revisions-validate-structure.php
 
 Filter to switch off md5 format attachment validation.
+
+## Filter document_validate_orphans
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the list of orphan attachment records found for a document.
 
 ## Filter document_verify_feed_key
 

@@ -1,18 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Access to an undefined property WP_Document_Revisions_Admin\:\:\$key_length\.$#'
-			identifier: property.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Access to an undefined property WP_Document_Revisions_Admin\:\:\$meta_key\.$#'
-			identifier: property.notFound
-			count: 2
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:document_slug\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -25,19 +13,7 @@ parameters:
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:extract_document_id\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:format_doc_id\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_attachments\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
@@ -45,29 +21,17 @@ parameters:
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document_lock\(\)\.$#'
 			identifier: method.notFound
-			count: 3
+			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_documents\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_latest_revision\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_revisions\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
@@ -81,7 +45,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:verify_post_type\(\)\.$#'
 			identifier: method.notFound
-			count: 14
+			count: 4
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
@@ -211,12 +175,6 @@ parameters:
 			path: includes/class-wp-document-revisions-validate-structure.php
 
 		-
-			message: '#^Method WP_Document_Revisions_Validate_Structure\:\:correct_document\(\) should return WP_REST_Response but returns WP_Error\.$#'
-			identifier: return.type
-			count: 5
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
 			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -289,12 +247,6 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Parameter \#1 \$post of function wp_check_post_lock expects int\|WP_Post, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -346,12 +298,6 @@ parameters:
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Variable \$attachment might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: includes/class-wp-document-revisions.php
 
 		-

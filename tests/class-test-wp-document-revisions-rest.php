@@ -224,23 +224,10 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_public_post_2, true );
 
 		// delete done, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
-		// clear down the ws terms.
-		$ws_terms = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
-
-		// delete them all.
-		foreach ( $ws_terms as $ws_term ) {
-			wp_delete_term( $ws_term->term_id, 'workflow_state' );
-			clean_term_cache( $ws_term->term_id, 'workflow_state' );
-		}
-
-		unregister_taxonomy( 'workflow_state' );
+		// delete the taxonomy and its terms.
+		self::delete_ws_taxonomy();
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -391,9 +378,20 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment' );
 		$response = $response->get_data();
 
+		global $wp_version;
+		$vers = strpos( $wp_version, '-' );
+		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
+		if ( 'latest' === $vers || version_compare( $vers, '6.9' ) >= 0 ) {
+			$lower = 27;
+			$upper = 29;
+		} else {
+			$lower = 24;
+			$upper = 26;
+		}
+
 		// Additional items in newer rest.
-		self::assertGreaterThanOrEqual( 24, count( $response ), 'not single response 1 >=' );
-		self::assertLessThanOrEqual( 26, count( $response ), 'not single response 1 <=' );
+		self::assertGreaterThanOrEqual( $lower, count( $response ), 'not single response 1 >=' );
+		self::assertLessThanOrEqual( $upper, count( $response ), 'not single response 1 <=' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 
@@ -499,6 +497,7 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment 2' );
 		$response = $response->get_data();
 
+		// Additional items in newer rest.
 		self::assertGreaterThanOrEqual( 24, count( $response ), 'not single response 2 >=' );
 		self::assertLessThanOrEqual( 26, count( $response ), 'not single response 2 <=' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );

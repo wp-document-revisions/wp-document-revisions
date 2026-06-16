@@ -3,7 +3,7 @@
  *
  * @see src/blocks/documents-shortcode/
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Documents Shortcode Block', () => {
 	test( 'can be inserted with defaults, configured, and previewed', async ( {

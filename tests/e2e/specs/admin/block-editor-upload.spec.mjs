@@ -10,8 +10,10 @@
  * @see src/editor-document-upload/index.js
  * @see includes/class-wp-document-revisions-manage-rest.php
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
-const path = require( 'path' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname( fileURLToPath( import.meta.url ) );
 
 /**
  * Helper: open the Document upload panel in the Settings sidebar.
@@ -82,7 +84,7 @@ test.describe( 'Block Editor Document Upload', () => {
 				title: 'Meta Sync Test',
 				status: 'draft',
 				meta: {
-					document_attachment_id: media.id,
+					_document_attachment_id: media.id,
 				},
 			},
 		} );
@@ -101,7 +103,7 @@ test.describe( 'Block Editor Document Upload', () => {
 		} );
 
 		// The meta should be populated in the response.
-		expect( raw.meta.document_attachment_id ).toBe( media.id );
+		expect( raw.meta._document_attachment_id ).toBe( media.id );
 
 		// The raw content should have WPDR stripped (for block editor display).
 		expect( raw.content.raw ).not.toContain( '<!-- WPDR' );
@@ -212,7 +214,7 @@ test.describe( 'Block Editor Document Upload', () => {
 		await page.evaluate( ( attachId ) => {
 			wp.data
 				.dispatch( 'core/editor' )
-				.editPost( { meta: { document_attachment_id: attachId } } );
+				.editPost( { meta: { _document_attachment_id: attachId } } );
 		}, media.id );
 
 		// Save the document via keyboard shortcut.
@@ -234,7 +236,7 @@ test.describe( 'Block Editor Document Upload', () => {
 			} );
 
 			// The document should have the attachment meta set.
-			expect( saved.meta.document_attachment_id ).toBe( media.id );
+			expect( saved.meta._document_attachment_id ).toBe( media.id );
 		}
 
 		// Clean up uploaded media.

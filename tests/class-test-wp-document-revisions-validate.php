@@ -151,7 +151,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// add term and attachment.
 		$terms = wp_set_post_terms( self::$editor_private_post, array( self::$ws_term_id ), 'workflow_state' );
-		self::add_document_attachment( $factory, self::$editor_private_post, self::$test_file );
+		self::add_document_attachment_new( $factory, self::$editor_private_post, self::$test_file );
 
 		// Editor Public 2.
 		self::$editor_public_post_2 = $factory->post->create(
@@ -197,21 +197,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// delete done, remove the attachment delete process.
 		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
-		// clear down the ws terms.
-		$ws_terms = get_terms(
-			array(
-				'taxonomy'   => 'workflow_state',
-				'hide_empty' => false,
-			)
-		);
-
-		// delete them all.
-		foreach ( $ws_terms as $ws_term ) {
-			wp_delete_term( $ws_term->term_id, 'workflow_state' );
-			clean_term_cache( $ws_term->term_id, 'workflow_state' );
-		}
-
-		unregister_taxonomy( 'workflow_state' );
+		// delete the taxonomy and its terms.
+		self::delete_ws_taxonomy();
 
 		// reset permalink structure.
 		global $wp_rewrite, $orig;
@@ -249,18 +236,20 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
 
 		// dump document data.
-		self::dump_document( self::$editor_public_post );
-		self::dump_document( self::$editor_private_post );
 		self::dump_document( self::$editor_public_post_2 );
-		console_log( $output );
 
 		// should be nothing found - as all valid...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -278,6 +267,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$attach = $wpdr->get_document( self::$editor_public_post_2 );
 		self::assertTrue( $attach instanceof WP_Post, 'struct_missing_file_attach' );
 		$file = get_attached_file( $attach->ID );
+
 		// Move $file.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $file . '.txt' );
@@ -294,18 +284,22 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_set_current_user( self::$editor_user_id );
 		wp_cache_flush();
 
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
 
 		// should have two rows - the header row.
-		console_log( $output );
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_file_cnt' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment exists but related file not found' ), 'test_struct_missing_file_msg' );
 
 		// Move $file back.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file . '.txt', $file );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -349,6 +343,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
 
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
@@ -367,7 +364,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should have two rows - the header row.
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
-		self::assertEquals( 1, (int) substr_count( $output, 'Attachment found for document, but not currently linked' ), 'message not found' );
+		self::assertEquals( 1, (int) substr_count( $output, 'Attachment recently uploaded for document' ), 'message not found' );
 		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
 
 		// will be a row like wpdr_valid_fix(106,4,109). - Can use it to mend document.
@@ -415,6 +412,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should already been fixed but is a null update.
 		self::assertSame( 0, $rows, 'null update did not happen.' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -457,6 +456,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		self::assertEquals( 1, $rows, 'test_struct_missing_rows_1' );
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -518,6 +520,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should already been fixed but is a null update.
 		self::assertSame( 1, $rows, 'null update did not happen.' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**
@@ -545,7 +549,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// change file name.
 		$file = get_attached_file( $attach_id );
 
-		// change the meta data.
+		// change the file meta data.
 		$fname = get_post_meta( $attach_id, '_wp_attached_file', true );
 		$nname = preg_replace( '|^([0-9]{4}/[0-9]{2}/)([a-f0-9]{32})(.{4})$|', '$1X$2X$3', $fname );
 		update_post_meta( $attach_id, '_wp_attached_file', $nname, $fname );
@@ -555,6 +559,9 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		// Move $file.
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
 		rename( $file, $nfile );
+
+		// clean cache.
+		wp_cache_flush();
 
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
@@ -576,6 +583,16 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 2, (int) substr_count( $output, '<tr' ), 'test_struct_missing_cnt' );
 		self::assertEquals( 1, (int) substr_count( $output, 'Document attachment does not appear to be md5 encoded' ), 'message not found' );
 		self::assertEquals( 1, (int) substr_count( $output, $fix_parms ), 'fix parms not found' );
+
+		// switch off md5 checks.
+		add_filter( 'document_validate_md5', '__return_false' );
+
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+
+		// should be nothing found - as no MD5 check...
+		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - no MD5 check' );
 
 		// will be a row like wpdr_valid_fix(106,6,109). - Can use it to mend document.
 		$request = new WP_REST_Request(
@@ -599,6 +616,8 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// should be nothing found - as fixed...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'none - now fixed' );
+
+		remove_filter( 'document_validate_md5', '__return_false' );
 	}
 
 	/**

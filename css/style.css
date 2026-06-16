@@ -49,6 +49,23 @@
 #autosave-alert {
 	display: none;
 }
+
+/* Footer information of Revision Log */
+.footer_cols {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 10px;
+}
+
+.footer_left {
+	width: calc(30% - 10px);
+}
+
+.footer_right {
+	width: calc(70% - 10px);
+	text-align: right;
+}
+
 /* When documents are locked, hide notices and publish button, etc. */
 .document-locked #lock-notice,
 .document-locked #publish,

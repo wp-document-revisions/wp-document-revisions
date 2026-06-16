@@ -28,20 +28,6 @@ class WP_Document_Revisions {
 	public static $instance;
 
 	/**
-	 * Length of feed key.
-	 *
-	 * @var int
-	 */
-	public static $key_length = 32;
-
-	/**
-	 * User meta key used auth feeds.
-	 *
-	 * @var string
-	 */
-	public static $meta_key = 'document_revisions_feed_key';
-
-	/**
 	 * The plugin version.
 	 *
 	 * Sourced from the WPDR_VERSION constant defined in the main plugin file
@@ -119,15 +105,6 @@ class WP_Document_Revisions {
 	}
 
 	/**
-	 * List of document revisions to keep (used to keep them if other processes would delete them).
-	 *
-	 * @var int[][]
-	 *
-	 * @since 3.7.0
-	 */
-	private static $revns = array();
-
-	/**
 	 * Initiates an instance of the class and adds hooks.
 	 *
 	 * @since 0.5
@@ -151,16 +128,8 @@ class WP_Document_Revisions {
 		// Abilities API (WP 6.9+).
 		add_action( 'wp_abilities_api_categories_init', array( $this, 'register_ability_category' ) );
 		add_action( 'wp_abilities_api_init', array( $this, 'register_abilities' ) );
-		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
-		global $wp_version;
-		$vers = strpos( $wp_version, '-' );
-		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		if ( version_compare( $vers, '5.7' ) >= 0 ) {
-			// core method introduced with version 5.7.
-			add_filter( 'update_post_term_count_statuses', array( $this, 'review_count_statuses' ), 30, 2 );
-		} else {
-			add_action( 'admin_init', array( $this, 'register_term_count_cb' ), 2000 ); // note: late and low priority to allow for all taxonomies.
-		}
+
+		add_filter( 'update_post_term_count_statuses', array( $this, 'review_count_statuses' ), 30, 2 );
 		add_filter( 'the_content', array( $this, 'content_filter' ), 1 );
 
 		// filter the queries to ensure readable.
@@ -776,7 +745,7 @@ class WP_Document_Revisions {
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.
 		/**
-		 * Filters the users capacities to require read (or read_document) capability.
+		 * Filters the users capacities to require read (default) (or read_document) capability to read a document.
 		 *
 		 * @since 3.3
 		 *
@@ -806,7 +775,7 @@ class WP_Document_Revisions {
 		// Register meta for block editor attachment ID management.
 		register_post_meta(
 			'document',
-			'document_attachment_id',
+			'_document_attachment_id',
 			array(
 				'show_in_rest'      => true,
 				'single'            => true,

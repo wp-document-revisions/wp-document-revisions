@@ -112,7 +112,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		add_meta_box( 'revision-summary', __( 'Revision Summary', 'wp-document-revisions' ), array( $this, 'revision_summary_cb' ), 'document', 'normal', 'default' );
 		add_meta_box( 'document', __( 'Document', 'wp-document-revisions' ), array( $this, 'document_metabox' ), 'document', 'normal', 'high' );
 
-		if ( ! empty( $post->post_content ) ) {
+		// $post object has the document id stripped out for editing, so check meta data.
+		if ( absint( get_post_meta( $post->ID, '_document_attachment_id', true ) ) > 0 ) {
 			add_meta_box( 'revision-log', __( 'Revision Log', 'wp-document-revisions' ), array( $this, 'revision_metabox' ), 'document', 'normal', 'low' );
 		}
 
@@ -162,15 +163,22 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post the post object.
 	 */
 	public function document_metabox( WP_Post $post ): void {
+		$wpdr = self::$parent;
 		// convert old format to new.
 		if ( is_numeric( $post->post_content ) ) {
-			$post->post_content = $this->format_doc_id( $post->post_content );
+			$post->post_content = $wpdr->format_doc_id( $post->post_content );
 		}
+		// put the document id in metadata.
+		$attach = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
+
+		// set the description field.
+		$descr = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post->post_content );
 		?>
-		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $post->post_content ); ?>" />
-		<input type="hidden" id="curr_content" name="curr_content" value="Unset" />
+		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $descr ); ?>" />
+		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( $attach ); ?>" />
+		<input type="hidden" id="attach_ext" name="attach_ext" value="" />
 		<?php
-		$lock_holder = $this->get_document_lock( $post );
+		$lock_holder = $wpdr->get_document_lock( $post );
 		if ( $lock_holder ) {
 			?>
 			<div id="lock_override" class="hide-if-no-js">
@@ -185,12 +193,10 @@ trait WP_Document_Revisions_Admin_Editor {
 			</div>
 		<?php } ?>
 		<div id="lock_override">
-			<a href="media-upload.php?post_id=<?php echo intval( $post->ID ); ?>&TB_iframe=1" id="content-add_media" class="thickbox add_media button" title="<?php esc_attr_e( 'Upload Document', 'wp-document-revisions' ); ?>" onclick="return false;" >
-				<?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?>
-			</a>
+			<button id="add-document-file" class="button"><?php esc_html_e( 'Upload New Version', 'wp-document-revisions' ); ?></button>
 		</div>
 		<?php
-		$latest_version = $this->get_latest_revision( $post->ID );
+		$latest_version = $wpdr->get_latest_revision( $post->ID );
 		if ( is_object( $latest_version ) ) {
 			?>
 			<p>
@@ -217,28 +223,6 @@ trait WP_Document_Revisions_Admin_Editor {
 		<?php } ?>
 		<div class="clear"></div>
 		<?php
-	}
-
-
-	/**
-	 * Forces autosave to load
-	 * By default, if there's a lock on the post, auto save isn't loaded; we want it in case lock is overridden.
-	 *
-	 * @since 0.5
-	 */
-	public function enqueue_edit_scripts(): void {
-		if ( ! $this->verify_post_type() ) {
-			return;
-		}
-
-		wp_enqueue_script( 'autosave' );
-
-		// ThickBox and media-upload are only needed for the classic editor.
-		$post_id = get_the_ID();
-		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
-			add_thickbox();
-			wp_enqueue_script( 'media-upload' );
-		}
 	}
 
 
@@ -307,7 +291,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// verify CPT.
-		if ( ! $this->verify_post_type( $doc_id ) ) {
+		$wpdr = self::$parent;
+		if ( ! $wpdr->verify_post_type( $doc_id ) ) {
 			return;
 		}
 
@@ -343,6 +328,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
+	 *
 	 * Restores the WPDR attachment ID comment to post_content when it has been stripped
 	 * by wp_kses_post (applied via content_save_pre for users without unfiltered_html).
 	 *
@@ -354,7 +340,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param array $postarr Raw post data passed to wp_insert_post.
 	 * @return array Post data, with post_content restored if needed.
 	 */
-	public function restore_document_attachment_id( array $data, array $postarr ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function restore_document_attachment_id( array $data, array $postarr ): array {
 		if ( 'document' !== $data['post_type'] ) {
 			return $data;
 		}
@@ -363,29 +349,51 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $data;
 		}
 
-		// Already has an attachment ID — nothing to fix.
-		if ( $this->extract_document_id( $data['post_content'] ) ) {
+		$wpdr = self::$parent;
+		// Get the document id.
+		$doc_id = $postarr['ID'];
+
+		// Find the meta data value.
+		// For revision restores need to get attachment id from the post_content, normally from post_meta.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
+			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
+			update_post_meta( $doc_id, '_document_attachment_id', $attach_id );
+		} else {
+			$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		}
+
+		// Already has an attachment ID, see if it is the stored one so nothing to fix.
+		if ( $attach_id && $attach_id === $wpdr->extract_document_id( $data['post_content'] ) ) {
 			return $data;
 		}
 
-		// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
-		// still in $_POST['post_content'] (unfiltered superglobal).
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_content'] ) ) {
-			return $data;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw value needed; wp_kses_post() strips the HTML comment we're extracting. Only an integer is extracted from this string.
-		$raw_posted = wp_unslash( $_POST['post_content'] );
-		$attach_id  = $this->extract_document_id( $raw_posted );
-
+		// Believe the meta value if it's there.
 		if ( ! $attach_id ) {
-			return $data;
+			// The WPDR comment may have been stripped by wp_kses_post.  The raw form value is
+			// still in $_POST['post_content'] (unfiltered superglobal).
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( ! isset( $_POST['post_content'] ) ) {
+				return $data;
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized 
+			$raw_posted = wp_unslash( $_POST['post_content'] );
+			$attach_id  = $wpdr->extract_document_id( $raw_posted );
+
+			if ( ! $attach_id ) {
+				return $data;
+			}
 		}
+
+		// Clean the text from odd spurious tinymce pieces.
+		$text = $data['post_content'];
+		$text = str_replace( '<br data-mce-bogus="1">', '', $text );
+		$text = preg_replace( '/<br>\s*<\/p>/', '', $text );
+		$text = preg_replace( '/<p>\s*<\/p>/', '', $text );
 
 		// Rebuild: attachment ID comment + any description that survived kses.
-		$description          = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $data['post_content'] );
-		$data['post_content'] = $this->format_doc_id( $attach_id ) . $description;
+		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $text;
 
 		return $data;
 	}
@@ -430,9 +438,9 @@ trait WP_Document_Revisions_Admin_Editor {
 			clean_post_cache( $thumb );
 		}
 
+		$wpdr = self::$parent;
 		// find the attachment id now (as content might be cached) and we might delete the cache.
-		$content   = get_post_field( 'post_content', $doc_id );
-		$attach_id = $this->extract_document_id( $content );
+		$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
 
 		// Fallback: if no attachment ID reached the DB (JS failed to set the hidden field, or
 		// wp_kses_post stripped the WPDR comment for low-privilege users), try to recover from
@@ -441,8 +449,10 @@ trait WP_Document_Revisions_Admin_Editor {
 			$latest_attach = $this->get_latest_attachment( $doc_id );
 			if ( $latest_attach ) {
 				// Preserve any existing description text, but restore the attachment ID comment.
-				$description = preg_replace( '/<!--\s*WPDR\s*\d+\s*-->/i', '', $content );
-				$new_content = $this->format_doc_id( $latest_attach->ID ) . $description;
+				$content     = get_post_field( 'post_content', $doc_id );
+				$description = ( is_numeric( $content ) ) ? '' : preg_replace( '/<!-- WPDR\s*\d+\s*-->/i', '', $content );
+				$new_content = $wpdr->format_doc_id( $latest_attach->ID ) . $description;
+				update_post_meta( $doc_id, '_document_attachment_id', $latest_attach->ID );
 				global $wpdb;
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 				$post_table = "{$wpdb->prefix}posts";
@@ -471,7 +481,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		// is the permalink useful.
 		$doc_post = get_post( $doc_id );
-		$new_guid = self::$parent->permalink( $doc_post->guid, $doc_post, false, '' );
+		$new_guid = $wpdr->permalink( $doc_post->guid, $doc_post, false, '' );
 		if ( $new_guid !== $doc_post->guid ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -528,19 +538,29 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Enqueue admin JS and CSS files.
+	 * Enqueue admin scripts, JS and CSS files.
 	 */
-	public function enqueue(): void {
+	public function enqueue_edit_scripts(): void {
+		$wpdr = self::$parent;
 		// only include JS on document pages.
-		if ( ! $this->verify_post_type() ) {
+		if ( ! $wpdr->verify_post_type() ) {
 			return;
 		}
 
-		$wpdr = self::$parent;
+		// Forces autosave to load. By default, if there's a lock on the post, auto save isn't loaded; we want it in case lock is overridden.
+		wp_enqueue_script( 'autosave' );
+
+		// ThickBox and media-upload are only needed for the classic editor.
+		$post_id = get_the_ID();
+		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
+			// For the document upload. Only pass a 'post' when we actually have one:
+			// on the documents list screen get_the_ID() is false, and passing that to
+			// wp_enqueue_media() makes core read ->ID on a null post (PHP warning).
+			wp_enqueue_media( $post_id ? array( 'post' => $post_id ) : array() );
+		}
 
 		// Check if block editor is active for this document.
-		$post_id          = get_the_ID();
-		$use_block_editor = $post_id
+		$use_block_editor = (bool) $post_id
 			&& function_exists( 'use_block_editor_for_post' )
 			&& use_block_editor_for_post( $post_id );
 
@@ -639,9 +659,10 @@ trait WP_Document_Revisions_Admin_Editor {
 	 */
 	public function make_private(): void {
 		global $post;
+		$wpdr = self::$parent;
 
 		// verify that this is a new document.
-		if ( ! isset( $post ) || ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || strlen( $post->post_content ) > 0 ) {
+		if ( ! isset( $post ) || ! $wpdr->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) || strlen( $post->post_content ) > 0 ) {
 			return;
 		}
 
@@ -726,8 +747,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post             The post being checked.
 	 */
 	public function no_use_block_editor( bool $use_block_editor, WP_Post $post ) {
+		$wpdr = self::$parent;
 		// switch off for documents unless document_use_block_editor filter is true.
-		if ( $this->verify_post_type( $post ) ) {
+		if ( $wpdr->verify_post_type( $post ) ) {
 			/**
 			 * Filters whether documents should use the block editor.
 			 *
@@ -754,9 +776,10 @@ trait WP_Document_Revisions_Admin_Editor {
 
 		echo '<h2>' . esc_html__( 'Document Description', 'wp-document-revisions' ) . '</h2>';
 
+		$wpdr = self::$parent;
 		// convert old format to new.
 		if ( is_numeric( $post->post_content ) ) {
-			$post->post_content = $this->format_doc_id( $post->post_content );
+			$post->post_content = $wpdr->format_doc_id( $post->post_content );
 		}
 	}
 
@@ -776,7 +799,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		global $post;
-		if ( 'document' === $post->post_type || $this->verify_post_type( $post->ID ) ) {
+		$wpdr = self::$parent;
+		if ( 'document' === $post->post_type || $wpdr->verify_post_type( $post->ID ) ) {
 			// restricted capacity for document content.
 			return array(
 				'wpautop'       => false,
@@ -806,6 +830,22 @@ trait WP_Document_Revisions_Admin_Editor {
 	}
 
 	/**
+	 * Filter the post_content field to remove the attachment_id before editing.
+	 *
+	 * @param String $post_content the post content field.
+	 * @return string
+	 */
+	public function remove_attachment_id( string $post_content ) {
+		global $post;
+		$wpdr = self::$parent;
+
+		if ( $wpdr->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
+			$post_content = ( is_numeric( $post_content ) ? '' : preg_replace( '/<!-- WPDR \d+\s* -->/', '', $post_content ) );
+		}
+		return $post_content;
+	}
+
+	/**
 	 * Filter the admin body class to add additional classes which we can use conditionally
 	 * to style the page (e.g., when the document is locked).
 	 *
@@ -813,14 +853,15 @@ trait WP_Document_Revisions_Admin_Editor {
 	 */
 	public function admin_body_class_filter( string $body_class ) {
 		global $post;
+		$wpdr = self::$parent;
 
-		if ( ! $this->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
+		if ( ! $wpdr->verify_post_type( ( isset( $post->ID ) ? $post : false ) ) ) {
 			return $body_class;
 		}
 
 		$body_class .= ' document';
 
-		if ( $this->get_document_lock( $post ) ) {
+		if ( $wpdr->get_document_lock( $post ) ) {
 			$body_class .= ' document-locked';
 		}
 
@@ -836,9 +877,10 @@ trait WP_Document_Revisions_Admin_Editor {
 	 */
 	public function hide_upload_header(): void {
 		global $pagenow;
+		$wpdr = self::$parent;
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
+		if ( 'media-upload.php' === $pagenow && ( isset( $_GET['post_id'] ) ? $wpdr->verify_post_type( (int) sanitize_text_field( wp_unslash( $_GET['post_id'] ) ) ) : false ) ) {
 			?>
 			<style>
 				#media-upload-header {display:none;}
@@ -899,8 +941,11 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post the post object.
 	 */
 	public function revision_metabox( WP_Post $post ): void {
+		// post_content has had the document attachment number removed so we need to get it from post meta.
+		global $wpdr;
 		$can_edit_doc = current_user_can( 'edit_document', $post->ID );
-		$revisions    = $this->get_revisions( $post->ID );
+		$attach_id    = absint( get_post_meta( $post->ID, '_document_attachment_id', true ) );
+		$revisions    = $wpdr->get_revisions( $post->ID );
 		$key          = $this->get_feed_key();
 		?>
 		<table id="document-revisions">
@@ -919,15 +964,13 @@ trait WP_Document_Revisions_Admin_Editor {
 			<tbody>
 		<?php
 
-		$i = 0;
 		foreach ( $revisions as $revision ) {
-			++$i;
 			if ( ! current_user_can( 'read_document', $revision->ID ) ) {
 				continue;
 			}
 			// preserve original file extension on revision links.
 			// this will prevent mime/ext security conflicts in IE when downloading.
-			$attach = $this->get_document( $revision->ID );
+			$attach = $wpdr->get_document( $revision->ID );
 
 			if ( $attach ) {
 				$fn   = get_post_meta( $attach->ID, '_wp_attached_file', true );
@@ -941,12 +984,14 @@ trait WP_Document_Revisions_Admin_Editor {
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
+			// cast the modified date into js format to simplify updating.
+			$mod_date = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $revision->post_modified ) );
 			?>
 			<tr>
-				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $revision->post_modified ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
+				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $i > 2 ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach && $attach_id !== $attach->ID ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
@@ -970,27 +1015,15 @@ trait WP_Document_Revisions_Admin_Editor {
 		?>
 		</tbody>
 		</table>
-		<p style="padding-top: 10px;"><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
+		<div class="footer_cols">
+		<div class="footer_left">
+		<p><a href="<?php echo esc_url( add_query_arg( 'key', $key, get_post_comments_feed_link( $post->ID ) ) ); ?>"><?php esc_html_e( 'RSS Feed', 'wp-document-revisions' ); ?></a></p>
+		</div>
+		<div class="footer_right">
+		<p><?php echo wp_kses_post( __( 'Restoring earlier revisions will also restore that description.<br/>If the current one is wanted, copy it first.', 'wp-document-revisions' ) ); ?></p>
+		</div>
+		</div>
 		<?php
-	}
-
-	/**
-	 * Only load documents from Computer.
-	 *
-	 * @since 3.3
-	 *
-	 * @param string[] $_default_tabs An array of media tabs.
-	 */
-	public function media_upload_tabs_computer( array $_default_tabs ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( $this->verify_post_type() && isset( $_GET['action'] ) ) {
-			// keep just load from computer for the document (but not the thumbnail).
-			unset( $_default_tabs['type_url'] );
-			unset( $_default_tabs['gallery'] );
-			unset( $_default_tabs['library'] );
-		}
-
-		return $_default_tabs;
 	}
 
 	/**
@@ -1001,7 +1034,8 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @return object the attachment object
 	 */
 	public function get_latest_attachment( int $post_id ) {
-		$attachments = $this->get_attachments( $post_id );
+		$wpdr        = self::$parent;
+		$attachments = $wpdr->get_attachments( $post_id );
 
 		return reset( $attachments );
 	}
@@ -1030,7 +1064,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 */
 	public function enqueue_js(): void {
 		_deprecated_function( __FUNCTION__, '1.3.2 of WP Document Revisions', 'enqueue' );
-		$this->enqueue();
+		$this->enqueue_edit_scripts();
 	}
 
 	/**
@@ -1047,8 +1081,9 @@ trait WP_Document_Revisions_Admin_Editor {
 			return $post_has_changed;
 		}
 
+		$wpdr = self::$parent;
 		// verify post type.
-		if ( ! $this->verify_post_type( $post->ID ) ) {
+		if ( ! $wpdr->verify_post_type( $post->ID ) ) {
 			return $post_has_changed;
 		}
 
@@ -1057,7 +1092,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
 			return true;
 		}
-		global $wpdr;
+
 		// Cache extract_document_id results to avoid duplicate regex operations.
 		$post_doc_id          = $wpdr->extract_document_id( $post->post_content );
 		$last_revision_doc_id = $wpdr->extract_document_id( $last_revision->post_content );

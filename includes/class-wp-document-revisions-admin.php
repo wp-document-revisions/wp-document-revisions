@@ -74,19 +74,17 @@ class WP_Document_Revisions_Admin {
 		add_action( 'set_object_terms', array( $this, 'workflow_state_save' ), 10, 6 );
 		add_action( 'save_post_document', array( $this, 'save_document' ) );
 		add_filter( 'wp_insert_post_data', array( $this, 'restore_document_attachment_id' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'enqueue_edit_scripts' ) );
 		add_action( '_wp_put_post_revision', array( $this, 'revision_filter' ), 10, 1 );
 		add_filter( 'wp_save_post_revision_post_has_changed', array( $this, 'identify_last_but_one' ), 10, 3 );
 		add_filter( 'default_hidden_meta_boxes', array( $this, 'hide_postcustom_metabox' ), 10, 2 );
-		add_action( 'admin_print_footer_scripts', array( $this, 'bind_upload_cb' ), 99 );
 		add_action( 'admin_head', array( $this, 'hide_upload_header' ) );
 		add_action( 'admin_head', array( $this, 'check_upload_files' ) );
-		add_filter( 'media_upload_tabs', array( $this, 'media_upload_tabs_computer' ) );
 		// Although the Post Type Supports Editor, don't use block editor.
 		add_filter( 'use_block_editor_for_post', array( $this, 'no_use_block_editor' ), 10, 2 );
 		add_action( 'edit_form_after_title', array( $this, 'prepare_editor' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'document_editor_setting' ), 10, 2 );
 		add_filter( 'tiny_mce_before_init', array( $this, 'modify_content_class' ) );
+		add_filter( 'content_edit_pre', array( $this, 'remove_attachment_id' ) );
 
 		// document list.
 		add_filter( 'manage_document_posts_columns', array( $this, 'rename_author_column' ) );
@@ -111,7 +109,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'edit_user_profile_update', array( $this, 'profile_update_cb' ) );
 
 		// Queue up JS.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_edit_scripts' ) );
 
 		// media filters.
 		add_action( 'admin_init', array( $this, 'filter_from_media' ) );

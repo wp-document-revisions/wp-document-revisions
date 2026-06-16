@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait WP_Document_Revisions_File_Handler {
 
 	/**
+	 * Length of feed key.
+	 *
+	 * @var int
+	 */
+	private static $key_length = 32;
+
+	/**
+	 * User meta key used auth feeds.
+	 *
+	 * @var string
+	 */
+	private static $meta_key = 'document_revisions_feed_key';
+
+	/**
 	 * Serves document files.
 	 *
 	 * @since 0.5
@@ -44,18 +58,12 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
-		/**
-		 * Filters the HTTP response code returned when a document (or revision) file cannot be served.
+		/*
+		 * Filters the http response code when a document or revision (attachment) is not found.
 		 *
-		 * Defaults to 403. Note that changing this to 404 can leak the existence of documents:
-		 * comparing a 403 (file exists but not authorized) against a 404 (file not found) lets an
-		 * unauthorized visitor probe whether a given document exists.
-		 *
-		 * @since 5.0.1
-		 *
-		 * @param int $response_code The default response code (403).
+		 * @param int 403 The default respnse code when the file cannot be served.
 		 */
-		$response_code = apply_filters( 'document_no_document_response_code', 403 );
+		$response = apply_filters( 'document_no_document_response_code', 403 );
 
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
@@ -65,7 +73,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					null,
-					array( 'response' => absint( $response_code ) )
+					array( 'response' => absint( $response ) )
 				);
 				// for unit testing.
 				$wp_query->is_404 = true;
@@ -99,7 +107,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				null,
-				array( 'response' => absint( $response_code ) )
+				array( 'response' => absint( $response ) )
 			);
 			// for unit testing.
 			$wp_query->is_404 = true;
@@ -569,40 +577,17 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return array $file file with new filename
 	 */
 	public function filename_rewrite( array $file ): array {
-		// verify this is a document.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['post_id'] ) || ! $this->verify_post_type( (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) ) {
+		// verify if this is a document load as they have an additional parameter.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
+		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
+			// default - not a WPDR Document.
 			self::$doc_image = true;
 			return $file;
 		}
 
-		// Ignore if dealing with thumbnail on document page (File upload has type set as 'file').
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
-			self::$doc_image = true;
-			return $file;
-		}
-
-		global $pagenow;
-
-		if ( 'async-upload.php' === $pagenow ) {
-			// got past cookie, but may be in thumbnail code.
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
-			$functions = array(
-				'wp_ajax_get_post_thumbnail_html',
-				'_wp_post_thumbnail_html',
-				'post_thumbnail_meta_box',
-			);
-			foreach ( $trace as $traceline ) {
-				if ( in_array( $traceline['function'], $functions, true ) ) {
-					self::$doc_image = true;
-					return $file;
-				}
-			}
-		}
-
+		// Parameter found, so is a document load.
 		self::$doc_image = false;
+
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
 		// it will be removed in "generate_metadata" processing - at end of media_handle_upload.
@@ -626,6 +611,40 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Populates the document_attachment_id meta from post_content if empty.
+	 *
+	 * @since 3.9.1
+	 * @param int    $post_id      Post id.
+	 * @param string $post_content Post_content.
+	 * @return int The attachment ID, or 0 if none found.
+	 */
+	public function populate_attachment_meta( $post_id, $post_content ) {
+		// if there is a value, return it.
+		$meta = absint( get_post_meta( $post_id, '_document_attachment_id', true ) );
+		if ( $meta ) {
+			return $meta;
+		}
+
+		// Migrate the legacy public meta key (registered as 'document_attachment_id'
+		// in 5.0.0) to the protected key. Carry the value over and drop the old row.
+		$legacy = absint( get_post_meta( $post_id, 'document_attachment_id', true ) );
+		if ( $legacy ) {
+			update_post_meta( $post_id, '_document_attachment_id', $legacy );
+			delete_post_meta( $post_id, 'document_attachment_id' );
+			return $legacy;
+		}
+
+		// get the value from post_content, and if different update the meta.
+		$attach_id = absint( $this->extract_document_id( $post_content ) );
+		if ( $attach_id !== $meta ) {
+			update_post_meta( $post_id, '_document_attachment_id', $attach_id );
+		}
+
+		return $attach_id;
+	}
+
+
+	/**
 	 * Renames the generated attachment meta data file names to hide the attachment slug.
 	 *
 	 * If the generated images are used as images, their name would display the slug.
@@ -644,7 +663,7 @@ trait WP_Document_Revisions_File_Handler {
 			return $metadata;
 		}
 
-		// ensure we use the document upload directory.
+		// ensure we use the document upload directory (belt and braces - was set earlier).
 		self::$doc_image = false;
 
 		if ( array_key_exists( 'sizes', $metadata ) ) {
@@ -703,6 +722,12 @@ trait WP_Document_Revisions_File_Handler {
 
 		// have finished loading the attachment into the upload directory, so remove it.
 		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
+
+		// store the attachment in postmeta for fallback on initial file load.
+		update_post_meta( $attach->post_parent, '_document_attachment_id', $attachment_id );
+
+		// revert to default..
+		self::$doc_image = true;
 
 		return $metadata;
 	}
@@ -946,39 +971,9 @@ trait WP_Document_Revisions_File_Handler {
 			return $dir;
 		}
 
-		// Ignore if dealing with thumbnail on document page (Document upload has type set as 'file').
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( ! isset( $_POST['type'] ) || 'file' !== $_POST['type'] ) {
-			self::$doc_image = true;
+		// Ignore if not loading a document. [self::$doc_image set false while loading a document].
+		if ( self::$doc_image ) {
 			return $dir;
-		}
-
-		global $pagenow;
-
-		// got past cookie check (could be initial display), but may be in thumbnail code
-		// Set image directory if dealing with thumbnail on document page.
-		$pages = array(
-			'admin-ajax.php',
-			'async-upload.php',
-			'edit.php',
-			'media-upload.php',
-			'post.php',
-			'post-new.php',
-		);
-		if ( in_array( $pagenow, $pages, true ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
-			$trace     = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
-			$functions = array(
-				'wp_ajax_get_post_thumbnail_html',
-				'_wp_post_thumbnail_html',
-				'post_thumbnail_meta_box',
-			);
-			foreach ( $trace as $traceline ) {
-				if ( in_array( $traceline['function'], $functions, true ) ) {
-					self::$doc_image = true;
-					return $dir;
-				}
-			}
 		}
 
 		// set the document directory.
@@ -1099,6 +1094,9 @@ trait WP_Document_Revisions_File_Handler {
 		$meta['wpdr_hidden'] = 1;
 
 		update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta );
+
+		// revert to media upload directory.
+		self::$doc_image = true;
 	}
 
 	/**
@@ -1207,7 +1205,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// run through standard permalink filters and return.
-		return get_permalink( $revision_id );
+		return get_permalink( absint( $revision_id ) );
 	}
 
 	/**

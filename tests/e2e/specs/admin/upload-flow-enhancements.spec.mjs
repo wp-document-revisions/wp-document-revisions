@@ -2,12 +2,12 @@
  * E2E tests for document upload flow enhancements.
  *
  * Verifies upload feedback UI: confirmation notice after upload,
- * save-first notice on duplicate upload, error notice rendering,
- * and progress indicator display.
+ * the test-only attachment/extension fields, and clearUploadNotices().
+ * Uploads now run through wp.media, so documentUpload() is invoked directly.
  *
  * @see js/wp-document-revisions.dev.js
  */
-const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
+import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test.describe( 'Upload Flow Enhancements', () => {
 	let documentId;
@@ -50,78 +50,15 @@ test.describe( 'Upload Flow Enhancements', () => {
 			{ timeout: 10000 }
 		);
 
-		// Dispatch the upload event to trigger post-upload feedback.
+		// Invoke the upload callback to trigger post-upload feedback.
 		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '100', extension: '.pdf' },
-				} )
-			);
+			window.WPDocumentRevisions.documentUpload( '100', '.pdf' );
 		} );
 
 		// The confirmation notice should appear.
 		const notice = page.locator( '#wpdr-upload-confirm' );
 		await expect( notice ).toBeVisible( { timeout: 5000 } );
 		await expect( notice ).toContainText( /[Uu]pload/ );
-	} );
-
-	test( 'save-first notice appears on duplicate upload without saving', async ( {
-		admin,
-		page,
-		requestUtils,
-	} ) => {
-		// Create a fresh document for clean state.
-		const freshDoc = await requestUtils.rest( {
-			method: 'POST',
-			path: '/wp/v2/documents',
-			data: { title: 'Save First Test', status: 'draft' },
-		} );
-
-		await admin.visitAdminPage(
-			'post.php',
-			`post=${ freshDoc.id }&action=edit&classic=1`
-		);
-
-		await page.waitForFunction(
-			() =>
-				window.WPDocumentRevisions &&
-				window.WPDocumentRevisions.hasUpload !== undefined,
-			{ timeout: 10000 }
-		);
-
-		// First upload — should succeed.
-		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '200', extension: '.docx' },
-				} )
-			);
-		} );
-
-		// Confirm first upload was accepted.
-		expect(
-			await page.evaluate( () => window.WPDocumentRevisions.hasUpload )
-		).toBe( true );
-
-		// Second upload without saving — should show save-first notice.
-		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '201', extension: '.docx' },
-				} )
-			);
-		} );
-
-		const saveNotice = page.locator( '#wpdr-save-first-notice' );
-		await expect( saveNotice ).toBeVisible( { timeout: 5000 } );
-		await expect( saveNotice ).toContainText( /save/i );
-
-		// Clean up.
-		await requestUtils.rest( {
-			method: 'DELETE',
-			path: `/wp/v2/documents/${ freshDoc.id }`,
-			params: { force: true },
-		} );
 	} );
 
 	test( 'clearUploadNotices removes all notice elements', async ( {
@@ -144,8 +81,7 @@ test.describe( 'Upload Flow Enhancements', () => {
 		await page.evaluate( () => {
 			const ids = [
 				'wpdr-upload-confirm',
-				'wpdr-upload-progress',
-				'wpdr-save-first-notice',
+				'message',
 				'wpdr-upload-error',
 			];
 			for ( const id of ids ) {
@@ -159,8 +95,7 @@ test.describe( 'Upload Flow Enhancements', () => {
 		// All notices should be present.
 		for ( const id of [
 			'wpdr-upload-confirm',
-			'wpdr-upload-progress',
-			'wpdr-save-first-notice',
+			'message',
 			'wpdr-upload-error',
 		] ) {
 			await expect( page.locator( `#${ id }` ) ).toBeAttached();
@@ -174,8 +109,7 @@ test.describe( 'Upload Flow Enhancements', () => {
 		// All notices should be removed.
 		for ( const id of [
 			'wpdr-upload-confirm',
-			'wpdr-upload-progress',
-			'wpdr-save-first-notice',
+			'message',
 			'wpdr-upload-error',
 		] ) {
 			await expect( page.locator( `#${ id }` ) ).not.toBeAttached();
@@ -205,21 +139,22 @@ test.describe( 'Upload Flow Enhancements', () => {
 			{ timeout: 10000 }
 		);
 
-		// Dispatch upload event with known attachment ID.
+		// Invoke the upload callback with a known attachment ID.
 		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '42', extension: '.txt' },
-				} )
-			);
+			window.WPDocumentRevisions.documentUpload( '42', '.txt' );
 		} );
 
-		// Verify post_content contains the WPDR attachment comment.
-		const content = await page.evaluate( () => {
-			return document.getElementById( 'post_content' )?.value ?? '';
+		// Verify curr_attach contains the attachment id.
+		const attach = await page.evaluate( () => {
+			return document.getElementById( 'curr_attach' )?.value ?? '';
 		} );
-		expect( content ).toMatch( /<!-- WPDR \d+ -->/ );
-		expect( content ).toContain( '42' );
+		expect( attach ).toContain( '42' );
+
+		// Verify attach_ext contains the attachment extension.
+		const extens = await page.evaluate( () => {
+			return document.getElementById( 'attach_ext' )?.value ?? '';
+		} );
+		expect( extens ).toContain( '.txt' );
 
 		// Clean up.
 		await requestUtils.rest( {
@@ -252,17 +187,13 @@ test.describe( 'Upload Flow Enhancements', () => {
 			{ timeout: 10000 }
 		);
 
-		// Dispatch upload with a PDF extension.
+		// Invoke the upload callback with a PDF extension.
 		await page.evaluate( () => {
-			document.dispatchEvent(
-				new CustomEvent( 'documentUpload', {
-					detail: { attachmentID: '50', extension: '.pdf' },
-				} )
-			);
+			window.WPDocumentRevisions.documentUpload( '50', '.pdf' );
 		} );
 
 		// The extension display element should show the new extension.
-		const extEl = page.locator( '#document_extension' );
+		const extEl = page.locator( '#attach_ext' );
 		if ( await extEl.isVisible().catch( () => false ) ) {
 			await expect( extEl ).toHaveValue( '.pdf' );
 		}

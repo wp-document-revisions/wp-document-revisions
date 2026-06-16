@@ -122,7 +122,7 @@ trait WP_Document_Revisions_Query {
 		if ( empty( $post_content ) ) {
 			return false;
 		} elseif ( is_numeric( $post_content ) ) {
-			return (int) $post_content;
+			return absint( $post_content );
 		} else {
 			// Early return if content doesn't contain WPDR marker to avoid regex cost.
 			if ( false === stripos( $post_content, 'WPDR' ) ) {
@@ -132,7 +132,7 @@ trait WP_Document_Revisions_Query {
 			preg_match( '/<!-- WPDR \s*(\d+) -->/i', $post_content, $id );
 			if ( isset( $id[1] ) ) {
 				// if a match return the id (Zero will be no document attached - WPML scenario).
-				return (int) $id[1];
+				return absint( $id[1] );
 			}
 		}
 		// no document found.
@@ -236,14 +236,11 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 1.0
 	 * @param string $title   the title.
-	 * @param mixed  $post_id The ID of the post for which the title is being generated.
+	 * @param int    $post_id The ID of the post for which the title is being generated.
 	 * @return string the title possibly with the revision number
 	 */
 	public function add_revision_num_to_title( string $title, $post_id = null ): string {
-		// If a usable post ID is not provided, do not attempt to filter the title.
-		// The `the_title` filter can be called with non-integer values (e.g. an empty
-		// string), so accept any type and guard with is_numeric() rather than a strict
-		// `?int` hint, which would throw a TypeError and crash the request.
+		// If a post ID is not provided, do not attempt to filter the title.
 		if ( ! is_numeric( $post_id ) ) {
 			return $title;
 		}
@@ -282,39 +279,6 @@ trait WP_Document_Revisions_Query {
 		// add title, apply filters, and return.
 		// translators: %1$s is the document title, %2$d is the revision ID.
 		return apply_filters( 'document_title', sprintf( __( '%1$s - Revision %2$d', 'wp-document-revisions' ), $title, $revision_num ) );
-	}
-
-
-	/**
-	 * Extends the modified term_count_cb to all custom taxonomies associated with documents
-	 * Unless taxonomy already has a custom callback.
-	 *
-	 * @since 1.2.1
-	 */
-	public function register_term_count_cb(): void {
-		// This will return only taxonomies for documents only, e.g. ignore those for documents AND another.
-		$taxs = get_taxonomies(
-			array(
-				'object_type'           => array( 'document' ),
-				'update_count_callback' => '',
-			),
-			'names'
-		);
-
-		/**
-		 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
-		 *
-		 * @param array $taxs document taxonomies .
-		 */
-		$taxs = apply_filters( 'document_taxonomy_term_count', $taxs );
-
-		if ( ! empty( $taxs ) ) {
-			global $wp_taxonomies;
-
-			foreach ( $taxs as $tax ) {
-					$wp_taxonomies[ $tax ]->update_count_callback = array( $this, 'term_count_cb' );
-			}
-		}
 	}
 
 
@@ -397,7 +361,7 @@ trait WP_Document_Revisions_Query {
 	 * @return string
 	 */
 	public function format_doc_id( int $post_id ): string {
-		return '<!-- WPDR ' . (string) $post_id . ' -->';
+		return '<!-- WPDR ' . trim( (string) $post_id ) . ' -->';
 	}
 
 
@@ -438,6 +402,8 @@ trait WP_Document_Revisions_Query {
 			if ( ! $attachment ) {
 				return '';
 			}
+		} else {
+			return '';
 		}
 
 		// no need to get the correct directory as we just want the extension.
@@ -471,32 +437,6 @@ trait WP_Document_Revisions_Query {
 		 * @param mixed[] $size default values for the image size.
 		 */
 		return apply_filters( 'document_post_thumbnail', $size );
-	}
-
-	/**
-	 * Term Count Callback that applies custom filter
-	 * Allows Workflow State counts to include non-published posts.
-	 *
-	 * @since 1.2.1
-	 * @param Array       $terms the terms to filter.
-	 * @param WP_Taxonomy $taxonomy the taxonomy object.
-	 */
-	public function term_count_cb( array $terms, WP_Taxonomy $taxonomy ): void {
-		add_filter( 'query', array( $this, 'term_count_query_filter' ) );
-		_update_post_term_count( $terms, $taxonomy );
-		remove_filter( 'query', array( $this, 'term_count_query_filter' ) );
-	}
-
-	/**
-	 * Alters term count query to include all non-trashed posts.
-	 * See generally, #17548
-	 *
-	 * @since 1.2.1
-	 * @param string $query the query string.
-	 * @return string the modified query
-	 */
-	public function term_count_query_filter( string $query ): string {
-		return str_replace( "= 'publish'", "!= 'trash'", $query );
 	}
 
 	/**

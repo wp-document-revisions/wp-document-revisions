@@ -2,6 +2,22 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.x.x
+
+* Upload document files using wp.media rather than the thickbox process simplifying internal processing. (#539)
+* Extend Validation structure process to identify inaccessible document files and potentially delete them. (#551)
+* Provide a filter 'document_no_document_response_code' to modify the response code when there is no document to serve. (#453)
+* Provide a filter 'document_check_orphans' to control whether to check a document for orphans, i.e inaccessible document files. (#551)
+* Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible for a document. (#551)
+* Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink for validation. (#549)
+* Review the revision log metabox to only permit the restore of revisions that link to a different document file. (#553)
+* Review REST processing to further protect attachment details. (#554)
+* Make use of a (temporary) postmeta value to keep track of the current document attachment during editing. (#547)
+* Fix the update to the age of revisions being displayed in the revision log. (#548)
+* Fix to ensure that only one document file can be loaded at a time. (#539)
+* Refactor to include class variables in trait files if only used there. (#547)
+* Remove type definition from the_title filter causing PHP crash due to invalid parameter being passed. (#550)
+
 ### 5.0.0
 
 Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.

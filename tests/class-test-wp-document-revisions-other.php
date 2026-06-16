@@ -85,7 +85,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -126,7 +126,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_private_post, true );
 
 		// delete successful, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 	}
 
 	/**
@@ -185,7 +185,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -233,7 +233,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_private_post, true );
 
 		// delete successful, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// Exercise other paths.
 		$edit_flow->custom_status->module->options->post_types['document'] = 'off';
@@ -299,7 +299,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -347,7 +347,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		wp_delete_post( self::$editor_private_post, true );
 
 		// delete successful, remove the attachment delete process.
-		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10, 1 );
+		remove_action( 'delete_post', array( $wpdr->admin, 'delete_attachments_with_document' ), 10 );
 
 		// Exercise other paths.
 		PublishPress_Statuses::instance()->options->enabled = 'off';
@@ -400,7 +400,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -462,7 +462,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		$document = get_post( self::$editor_public_post );
 
@@ -522,7 +522,11 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		global $post;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( self::$editor_public_post );
+
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -534,22 +538,17 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			'error'    => 0,
 		);
 
-		// straight return.
-		$wpdr->rewrite_file_url( $file );
+		// featured image.
+		$wpdr::$doc_image = true;
 		$wpdr->filename_rewrite( $file );
-
-		$_POST['post_id'] = self::$editor_public_post;
-
-		// possibly image.
-		$_POST['type'] = 'file';
 		$wpdr->rewrite_file_url( $file );
-		$wpdr->filename_rewrite( $file );
 
-		// set pagenow.
-		global $pagenow;
-		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$pagenow = 'async-upload.php';
-		$file    = $wpdr->rewrite_file_url( $file );
+		// not an image.
+		// ensure that rename function will be called.
+		$_POST['upload_source'] = 'wp-document-revisions';
+		$wpdr::$doc_image       = false;
+		$file                   = $wpdr->rewrite_file_url( $file );
+
 		self::assertTrue( str_contains( $file['url'], 'editor-public' ), 'post title' );
 		self::assertTrue( str_contains( $file['url'], '.txt' ), 'file type' );
 
@@ -599,7 +598,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -673,7 +672,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 			)
 		);
 
-		self::assertFalse( is_wp_error( self::factory(), self::$editor_public_post ), 'Failed inserting document Editor Public' );
+		self::assertFalse( is_wp_error( self::$editor_public_post ), 'Failed inserting document Editor Public' );
 
 		// add attachment.
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file );
@@ -692,7 +691,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 
 		$ret = $wpdr->send_override_notice( self::$editor_public_post, self::$users['editor']->ID, self::$users['author']->ID );
 
-		remove_filter( 'pre_wp_mail', '__return_false', 10, 3 );
+		remove_filter( 'pre_wp_mail', '__return_false', 10 );
 		self::assertFalse( $ret, 'lock message' );
 	}
 }
