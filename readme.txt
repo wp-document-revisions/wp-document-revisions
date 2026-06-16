@@ -239,7 +239,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 Adds native text extraction and AI-generated revision summaries for document libraries. The full design and the twelve PRs that implemented it are tracked in #514; a smaller set of deferred follow-ups is in #531.
 
-**Breaking changes:** raises the minimum PHP from 7.4 to 8.0 and the minimum WordPress from 5.0 to 5.9 to match what CI actually exercises. Sites on older PHP or WP will no longer see updates to this plugin until they upgrade their runtime. The composer floor was already at PHP 7.4, so install on PHP < 7.4 was already failing; this commit bumps the same constraint to 8.0 and brings the readme.txt declaration in line with what the test matrix verifies. WordPress 5.0 -5.8 were never in CI's matrix; that floor's bump is similarly a "claim what we test" cleanup. PHP 7.4 has been EOL since November 2022 and WP 5.0 is from December 2018, so the practical population affected is small.
+**Breaking changes:** raises the minimum PHP from 7.4 to 8.0 and the minimum WordPress from 5.0 to 5.9 to match what CI actually exercises. Sites on older PHP or WP will no longer see updates to this plugin until they upgrade their runtime. The composer floor was already at PHP 7.4, so install on PHP < 7.4 was already failing; this commit bumps the same constraint to 8.0 and brings the readme.txt declaration in line with what the test matrix verifies. WordPress 5.0–5.8 were never in CI's matrix; that floor's bump is similarly a "claim what we test" cleanup. PHP 7.4 has been EOL since November 2022 and WP 5.0 is from December 2018, so the practical population affected is small.
 
 = # Features =
 
@@ -253,18 +253,5 @@ Adds native text extraction and AI-generated revision summaries for document lib
 * Adds a [Text Extraction & AI Summaries cookbook recipe](https://wp-document-revisions.github.io/wp-document-revisions/cookbook/text-extraction-and-ai-summaries/) covering custom extractors, prompt customization, the four opt-out switches, the WP-CLI backfill, alternative AI providers, and the REST surface.
 
 = 4.0.7 =
-
-= # Bug Fixes =
-
-* Fix #494: restore attachment ID in `post_content` when classic-editor upload save fails. Two root causes addressed: `wp_kses_post` stripping the `<!-- WPDR N -->` HTML comment for users without `unfiltered_html` (fixed via `restore_document_attachment_id` on `wp_insert_post_data`), and JS upload callback not firing leaving `post_content` empty (fixed via `save_document` fallback to `get_latest_attachment()`).
-* Fix PHP `TypeError` in `filter_from_media_grid()`: the `ajax_query_attachments_args` filter passes an `array`, not a `WP_Query` object, so the incorrect type hint caused a fatal error that prevented media library items from loading in the block editor.
-* Add WP Plugin Check compliance: phpcs ignore directives for non-prefixed hook names and other plugin-check messages.
-* Remove 252 PHPStan baseline suppressions by resolving the underlying type errors.
-* Update filter/action documentation to reflect file-splitting of trait files.
-* Exclude build artifacts from distributed plugin package via `.distignore`.
-* Add `npm ci && npm run build` step to deploy workflow so compiled block JS is included in the WordPress.org distribution.
-* Exclude `src/` (uncompiled JSX source) from the WordPress.org distribution via `.distignore`.
-
-= 4.0.6 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
