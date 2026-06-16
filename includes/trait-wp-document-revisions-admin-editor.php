@@ -553,8 +553,10 @@ trait WP_Document_Revisions_Admin_Editor {
 		// ThickBox and media-upload are only needed for the classic editor.
 		$post_id = get_the_ID();
 		if ( ! $post_id || ! function_exists( 'use_block_editor_for_post' ) || ! use_block_editor_for_post( $post_id ) ) {
-			// for the document upload.
-			wp_enqueue_media( array( 'post' => $post_id ) );
+			// For the document upload. Only pass a 'post' when we actually have one:
+			// on the documents list screen get_the_ID() is false, and passing that to
+			// wp_enqueue_media() makes core read ->ID on a null post (PHP warning).
+			wp_enqueue_media( $post_id ? array( 'post' => $post_id ) : array() );
 		}
 
 		// Check if block editor is active for this document.
