@@ -234,6 +234,11 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Fix to ensure that only one document file can be loaded at a time. (#539)
 * Refactor to include class variables in trait files if only used there. (#547)
 * Remove type definition from the_title filter causing PHP crash due to invalid parameter being passed. (#550)
+* Migrate the legacy 'document_attachment_id' post meta to the protected '_document_attachment_id' key on access. (#547)
+* Provide a 'wpdr/v1/documents/.../revisions/.../diff' REST endpoint returning the per-revision text diff that drives the AI summary, gated on read_document_revisions. (#531)
+* Add a "Mark reviewed" action to the AI revision-summary suggestion banner so an editor can record that a summary has been human-reviewed. (#531)
+* Resolve the uploaded document file URL from the upload request rather than the global post object. (#569)
+* Fix duplicate upload handling so reopening the media frame no longer fires the upload callback more than once. (#568)
 
 = 5.0.0 =
 
