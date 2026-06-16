@@ -14,6 +14,9 @@
 		firstcheck = true;
 		// Custom media frame that auto-closes after a fresh upload.
 		frameRef = null;
+		// The plupload instance we've already bound FileUploaded to (avoids
+		// re-binding when a cached frame's upload tab is re-activated).
+		_boundUploader = null;
 
 		constructor() {
 			document.querySelectorAll('.revision').forEach((el) => {
@@ -377,7 +380,11 @@
 			frame.on( 'content:activate:upload', () => {
 				const uploader = frame.uploader?.uploader?.uploader;
 
-				if (uploader) {
+				// Bind once per uploader instance. This event can fire again when a
+				// cached frame is reopened; without the guard the FileUploaded
+				// handlers stack up and documentUpload() fires multiple times.
+				if ( uploader && this._boundUploader !== uploader ) {
+					this._boundUploader = uploader;
 					uploader.bind( 'FileUploaded', ( up, file, response ) => {
 						try {
 							const data = JSON.parse( response.response );
