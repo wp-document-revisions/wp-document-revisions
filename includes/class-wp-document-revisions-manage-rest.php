@@ -163,11 +163,16 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if a prior filter set one).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_document( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
+	public function doc_clean_document( $response, WP_Post $post, WP_REST_Request $request ) {
+		// A prior filter already produced an error response — pass it through untouched.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document.
 		if ( 'document' !== get_post_type( $post->ID ) ) {
 			return $response;
@@ -217,11 +222,16 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if a prior filter set one).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_revision( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_revision( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// A prior filter already produced an error response — pass it through untouched.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document revision.
 		$parent = $post->post_parent;
 		if ( 0 === $parent || 'document' !== get_post_type( $parent ) ) {
@@ -252,11 +262,16 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_Post          $post     Post object.
-	 * @param WP_REST_Request  $request  Request object.
+	 * @param WP_REST_Response|WP_Error $response The response object (or error if a prior filter set one).
+	 * @param WP_Post                   $post     Post object.
+	 * @param WP_REST_Request           $request  Request object.
 	 */
-	public function doc_clean_attachment( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function doc_clean_attachment( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// A prior filter already produced an error response — pass it through untouched.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// is it a document attachment. (featured images have parent set to 0).
 		$parent = $post->post_parent;
 		if ( 0 < $parent && 'document' === get_post_type( $parent ) ) {
