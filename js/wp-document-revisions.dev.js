@@ -303,8 +303,11 @@
 			}
 		};
 
-		onSelectMedia = (media) => {
-			console.log( media );
+		onSelectMedia = ( media ) => {
+			// Placeholder hook for an explicitly selected attachment. The functional
+			// upload handling is performed in documentUpload(); kept so the frame's
+			// 'select' and post-upload handlers have a single extension point.
+			void media;
 		}
 
 		openMediaFrame = (e) => {

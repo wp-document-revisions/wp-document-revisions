@@ -625,6 +625,15 @@ trait WP_Document_Revisions_File_Handler {
 			return $meta;
 		}
 
+		// Migrate the legacy public meta key (registered as 'document_attachment_id'
+		// in 5.0.0) to the protected key. Carry the value over and drop the old row.
+		$legacy = absint( get_post_meta( $post_id, 'document_attachment_id', true ) );
+		if ( $legacy ) {
+			update_post_meta( $post_id, '_document_attachment_id', $legacy );
+			delete_post_meta( $post_id, 'document_attachment_id' );
+			return $legacy;
+		}
+
 		// get the value from post_content, and if different update the meta.
 		$attach_id = absint( $this->extract_document_id( $post_content ) );
 		if ( $attach_id !== $meta ) {

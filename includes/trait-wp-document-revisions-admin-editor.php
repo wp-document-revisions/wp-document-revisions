@@ -991,7 +991,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
 				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
-				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach_id !== $attach->ID ) { ?>
+				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach && $attach_id !== $attach->ID ) { ?>
 					<td><a href="
 					<?php
 					echo esc_url(
