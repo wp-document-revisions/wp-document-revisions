@@ -266,7 +266,9 @@ trait WP_Document_Revisions_Rewrites {
 		// Resolve the parent document for the public URL. During an (async) upload the
 		// global $post is not reliably the parent document, so prefer the explicit
 		// upload target sent with the request and fall back to the global only if absent.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// The upload is itself nonce-verified by core/media_handle_upload; this is a
+		// read-only lookup of the upload target, so the nonce sniff is suppressed.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$parent = isset( $_REQUEST['post_id'] ) ? absint( wp_unslash( $_REQUEST['post_id'] ) ) : 0;
 		if ( ! $parent ) {
 			global $post;
