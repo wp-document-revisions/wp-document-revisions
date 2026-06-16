@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  @copyright 2011-2026
  *  @license GPL-3.0-or-later
- *  @version 5.0.0
+ *  @version 5.1.0
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
