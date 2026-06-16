@@ -814,7 +814,7 @@ class WP_Document_Revisions_Validate_Structure {
 		 * Whilst basically an on/off switch, it is called for each document.
 		 * Adding the document id allows only a segment of documents to be checked.
 		 *
-		 * @since 5.1
+		 * @since 5.1.0
 		 * @param bool $check  Whether to check for orphan records (default true).
 		 * @param ?int $doc_id Document post id.
 		 */

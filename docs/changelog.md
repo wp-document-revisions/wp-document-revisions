@@ -2,7 +2,7 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
-### 5.x.x
+### 5.1.0
 
 * Upload document files using wp.media rather than the thickbox process simplifying internal processing. (#539)
 * Extend Validation structure process to identify inaccessible document files and potentially delete them. (#551)
