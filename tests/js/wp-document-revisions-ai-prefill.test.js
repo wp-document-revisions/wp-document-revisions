@@ -119,6 +119,77 @@ describe('wp-document-revisions-ai-prefill', () => {
 		expect(hint.querySelector('.wpdr-ai-prefill-dismiss')).not.toBeNull();
 	});
 
+	test('marks the summary reviewed via the review link', async () => {
+		setupDom({
+			i18n: {
+				hint: '✨ AI suggestion — edit before saving.',
+				dismiss: 'Dismiss',
+				pending: 'pending',
+				review: 'Mark reviewed',
+				reviewed: 'Reviewed ✓',
+			},
+		});
+		global.wp.apiFetch = jest.fn(() =>
+			Promise.resolve({
+				status: 'ready',
+				summary: 'Section 4.2 updated.',
+				kind: 'change',
+				reviewed_by: 0,
+			})
+		);
+
+		await loadModule();
+
+		const reviewLink = document.querySelector('.wpdr-ai-prefill-review');
+		expect(reviewLink).not.toBeNull();
+
+		// The click handler POSTs to the review endpoint.
+		global.wp.apiFetch = jest.fn(() =>
+			Promise.resolve({ reviewed_by: 7, reviewed_at: 123 })
+		);
+		reviewLink.click();
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(global.wp.apiFetch).toHaveBeenCalledWith({
+			path: 'wpdr/v1/documents/1/revisions/2/summary/review',
+			method: 'POST',
+			data: { reviewed: true },
+		});
+		// Link is swapped for a static "reviewed" label.
+		expect(
+			document.querySelector('.wpdr-ai-prefill-reviewed')
+		).not.toBeNull();
+		expect(document.querySelector('.wpdr-ai-prefill-review')).toBeNull();
+	});
+
+	test('shows the reviewed label (no link) when already reviewed', async () => {
+		setupDom({
+			i18n: {
+				hint: '✨ AI suggestion — edit before saving.',
+				dismiss: 'Dismiss',
+				pending: 'pending',
+				review: 'Mark reviewed',
+				reviewed: 'Reviewed ✓',
+			},
+		});
+		global.wp.apiFetch = jest.fn(() =>
+			Promise.resolve({
+				status: 'ready',
+				summary: 'Already reviewed change.',
+				kind: 'change',
+				reviewed_by: 5,
+			})
+		);
+
+		await loadModule();
+
+		expect(
+			document.querySelector('.wpdr-ai-prefill-reviewed')
+		).not.toBeNull();
+		expect(document.querySelector('.wpdr-ai-prefill-review')).toBeNull();
+	});
+
 	test('respects user-typed content and does not pre-fill', async () => {
 		setupDom();
 		document.getElementById('excerpt').value =

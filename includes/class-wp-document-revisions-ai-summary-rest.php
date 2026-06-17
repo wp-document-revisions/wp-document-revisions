@@ -14,15 +14,21 @@
  *       Marks (or un-marks) the cached summary as human-reviewed by the
  *       current user. Capability: `edit_document` on the document.
  *
+ *   GET  /wpdr/v1/documents/<doc_id>/revisions/<rev_id>/diff
+ *       Returns the unified diff between the revision and the one that
+ *       precedes it — the same change signal that drives the summary.
+ *       Capability: `read_document` on the document AND
+ *       `read_document_revisions` (revisions are more sensitive than the
+ *       current file, so this mirrors the revision-listing gate).
+ *
  * Generation itself is NOT exposed over REST — it runs on cron after
  * extraction completes (see {@see WP_Document_Revisions_AI_Summary}).
  * The capability mapping mirrors @NeilWJames's input on issue #514:
  * reading a summary is gated like reading the document file, marking
- * reviewed is gated like editing, and the per-revision diff record
- * (which would require `read_document_revisions`) is intentionally
- * not exposed in this phase.
+ * reviewed is gated like editing, and the per-revision diff record is
+ * gated like listing revisions (`read_document_revisions`).
  *
- * Phase 11 of issue #514.
+ * Phase 11 of issue #514 (diff route added as a #531 follow-up).
  *
  * @since 5.0.0
  * @package WP_Document_Revisions
@@ -89,6 +95,16 @@ class WP_Document_Revisions_AI_Summary_REST {
 				),
 			)
 		);
+		register_rest_route(
+			self::ROUTE_NAMESPACE,
+			'/documents/(?P<doc_id>\d+)/revisions/(?P<rev_id>\d+)/diff',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( __CLASS__, 'get_diff' ),
+				'permission_callback' => array( __CLASS__, 'can_read_diff' ),
+				'args'                => self::id_args(),
+			)
+		);
 	}
 
 	/**
@@ -131,6 +147,29 @@ class WP_Document_Revisions_AI_Summary_REST {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Insufficient permission to mark this summary reviewed.', 'wp-document-revisions' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+		return true;
+	}
+
+	/**
+	 * Permission callback for the diff route: caller must be able to read
+	 * the document AND have the `read_document_revisions` capability, AND
+	 * the claimed revision must be an attachment of that document.
+	 *
+	 * @param WP_REST_Request $request incoming request.
+	 * @return true|WP_Error
+	 */
+	public static function can_read_diff( WP_REST_Request $request ) {
+		$ids = self::resolve_ids( $request );
+		if ( is_wp_error( $ids ) ) {
+			return $ids;
+		}
+		if ( ! current_user_can( 'read_document', $ids['doc_id'] ) || ! current_user_can( 'read_document_revisions' ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'Insufficient permission to read this document revision diff.', 'wp-document-revisions' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -182,6 +221,49 @@ class WP_Document_Revisions_AI_Summary_REST {
 				'generated_at' => $stored['generated_at'],
 				'reviewed_by'  => $stored['reviewed_by'],
 				'reviewed_at'  => $stored['reviewed_at'],
+			),
+			200
+		);
+	}
+
+	/**
+	 * GET handler — return the unified diff between the revision and the
+	 * one that precedes it within the same document.
+	 *
+	 * Response shape (always includes `status`):
+	 *
+	 *   { "status": "no_prior", "diff": "", "prior_revision": 0 }
+	 *   { "status": "identical"|"too_large"|"old_text_missing"|"new_text_missing",
+	 *     "diff": "", "prior_revision": 123 }
+	 *   { "status": "ok", "diff": "@@ ...", "prior_revision": 123 }
+	 *
+	 * @param WP_REST_Request $request incoming request.
+	 * @return WP_REST_Response
+	 */
+	public static function get_diff( WP_REST_Request $request ): WP_REST_Response {
+		$ids = self::resolve_ids( $request );
+		// resolve_ids() already validated for the permission callback.
+
+		$prior_id = WP_Document_Revisions_AI_Summary::prior_revision_id( $ids['rev_id'], $ids['doc_id'] );
+		if ( 0 === $prior_id ) {
+			// Initial upload — nothing precedes it to diff against.
+			return new WP_REST_Response(
+				array(
+					'status'         => 'no_prior',
+					'diff'           => '',
+					'prior_revision' => 0,
+				),
+				200
+			);
+		}
+
+		$result = WP_Document_Revisions_Text_Diff::diff_revisions( $prior_id, $ids['rev_id'] );
+
+		return new WP_REST_Response(
+			array(
+				'status'         => $result['status'],
+				'diff'           => $result['diff'],
+				'prior_revision' => $prior_id,
 			),
 			200
 		);
