@@ -1,0 +1,32 @@
+name: Deploy assets to WordPress.org
+
+# The WordPress.org plugin directory `assets/` folder (icon, banner,
+# screenshots) is NOT tied to a plugin version, so it can be updated on its
+# own without cutting a release. This syncs `.wordpress-org/` to SVN whenever
+# those files change on main, and can also be run manually.
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - '.wordpress-org/**'
+    workflow_dispatch:
+
+jobs:
+    assets:
+        name: Update directory assets
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: WordPress.org plugin asset update
+              uses: 10up/action-wordpress-plugin-asset-update@stable
+              env:
+                  SLUG: wp-document-revisions
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
