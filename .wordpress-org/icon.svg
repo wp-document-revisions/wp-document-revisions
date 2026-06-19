@@ -1,0 +1,35 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WP Document Revisions">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5A93D4"/>
+      <stop offset="1" stop-color="#3C72BC"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#23415F" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+
+  <!-- App tile -->
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#tile)"/>
+
+  <!-- Revision pages stacked behind (version history) -->
+  <g filter="url(#shadow)">
+    <rect x="66" y="54" width="104" height="146" rx="10" fill="#FFFFFF" opacity="0.40"/>
+    <rect x="73" y="59" width="104" height="146" rx="10" fill="#FFFFFF" opacity="0.65"/>
+
+    <!-- Front document -->
+    <rect x="80" y="64" width="104" height="146" rx="10" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Bulleted list (the document's contents) -->
+  <g>
+    <circle cx="102" cy="100" r="6.5" fill="#4E84C4"/>
+    <rect x="116" y="94" width="50" height="11" rx="5.5" fill="#C6D8ED"/>
+
+    <circle cx="102" cy="132" r="6.5" fill="#4E84C4"/>
+    <rect x="116" y="126" width="50" height="11" rx="5.5" fill="#C6D8ED"/>
+
+    <circle cx="102" cy="164" r="6.5" fill="#4E84C4"/>
+    <rect x="116" y="158" width="38" height="11" rx="5.5" fill="#C6D8ED"/>
+  </g>
+</svg>
