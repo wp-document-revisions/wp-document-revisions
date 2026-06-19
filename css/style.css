@@ -39,6 +39,12 @@
 	margin-top: -2px;
 }
 
+/* Contain the right-floated select so it doesn't spill below the meta box. */
+#workflow-state .inside,
+#authordiv .inside {
+	overflow: hidden;
+}
+
 #lock_override {
 	float: right;
 	text-align: right;
