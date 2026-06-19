@@ -28,5 +28,9 @@ jobs:
               uses: 10up/action-wordpress-plugin-asset-update@stable
               env:
                   SLUG: wp-document-revisions
+                  # We don't commit build artifacts (vendor/, build/) to git, so the
+                  # default "verify only readme/assets changed" check sees them as
+                  # deletions and fails. This scopes the action to readme + assets only.
+                  IGNORE_OTHER_FILES: true
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
