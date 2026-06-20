@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.1.1
+
+* Fix an attachment IDOR where a document editor could forge the attachment marker when saving a document to point it at, and serve, another document's file. The attachment is now verified to belong to the document being saved, matching the check already enforced on the REST save path. Reported via the WordPress.org automated security review. (#584)
+
 ### 5.1.0
 
 * Upload document files using wp.media rather than the thickbox process simplifying internal processing. (#539)
