@@ -1099,6 +1099,60 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * When a forged marker is rejected, a document that owns a real attachment must keep
+	 * that attachment rather than be saved with no attachment reference at all (the marker
+	 * is stripped before reaching the client, so an early return would drop it).
+	 */
+	public function test_restore_document_attachment_id_recovers_real_attachment_on_forged_marker() {
+		global $wpdr;
+
+		// Ensure we exercise the $_POST (normal save) branch, not the restore branch.
+		unset( $_GET['action'] );
+
+		// A real attachment belonging to a *different* document (the forgery target).
+		$victim_attach_id = (int) $wpdr->extract_document_id( get_post_field( 'post_content', self::$editor_public_post_2 ) );
+		self::assertGreaterThan( 0, $victim_attach_id, 'Victim attachment not found' );
+
+		// Attacker-owned document that DOES own an attachment, but with the meta not yet
+		// stored (legacy / unmigrated state), so the forgeable $_POST branch runs.
+		$doc = self::factory()->post->create(
+			array(
+				'post_title'   => 'Recover doc - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_type'    => 'document',
+				'post_content' => '',
+			)
+		);
+		$own_attach_id = self::factory()->attachment->create(
+			array(
+				'post_parent' => $doc,
+				'post_status' => 'inherit',
+			)
+		);
+		delete_post_meta( $doc, '_document_attachment_id' );
+
+		$_POST['post_content'] = $wpdr->format_doc_id( $victim_attach_id );
+
+		$data    = array(
+			'post_type'    => 'document',
+			'post_content' => '',
+		);
+		$postarr = array(
+			'ID'           => $doc,
+			'post_content' => '',
+		);
+
+		$result   = $wpdr->admin->restore_document_attachment_id( $data, $postarr );
+		$resolved = (int) $wpdr->extract_document_id( $result['post_content'] );
+
+		unset( $_POST['post_content'] );
+
+		self::assertNotEquals( $victim_attach_id, $resolved, 'Forged foreign attachment must not be used' );
+		self::assertEquals( $own_attach_id, $resolved, "Document's own attachment must be recovered, not dropped" );
+	}
+
+	/**
 	 * Test revision summary.
 	 */
 	public function test_revision_summary_cb() {
