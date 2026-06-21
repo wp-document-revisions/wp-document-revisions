@@ -1001,6 +1001,104 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Security regression: a forged WPDR marker in the classic-editor POST body must not
+	 * be able to point a document at another document's attachment (Attachment IDOR).
+	 *
+	 * Report ID 571d4b0b-3a4e-496b-a023-5180afb0c770.
+	 */
+	public function test_restore_document_attachment_id_rejects_forged_marker() {
+		global $wpdr;
+
+		// A real attachment belonging to a *different* document (the victim).
+		$victim_attach_id = (int) $wpdr->extract_document_id( get_post_field( 'post_content', self::$editor_public_post_2 ) );
+		self::assertGreaterThan( 0, $victim_attach_id, 'Victim attachment not found' );
+
+		// A fresh attacker-owned document with no stored attachment meta yet (the only
+		// state in which the forgeable $_POST fallback branch runs).
+		$attacker_doc = self::factory()->post->create(
+			array(
+				'post_title'   => 'Attacker doc - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_type'    => 'document',
+				'post_content' => '',
+			)
+		);
+		delete_post_meta( $attacker_doc, '_document_attachment_id' );
+
+		// Forge the classic-editor POST body to point at the victim's attachment, simulating
+		// the WPDR marker having been stripped from the saved content by wp_kses_post.
+		$_POST['post_content'] = $wpdr->format_doc_id( $victim_attach_id );
+
+		$data    = array(
+			'post_type'    => 'document',
+			'post_content' => '',
+		);
+		$postarr = array(
+			'ID'           => $attacker_doc,
+			'post_content' => '',
+		);
+
+		$result = $wpdr->admin->restore_document_attachment_id( $data, $postarr );
+
+		unset( $_POST['post_content'] );
+
+		self::assertNotEquals(
+			$victim_attach_id,
+			$wpdr->extract_document_id( $result['post_content'] ),
+			'Forged cross-document attachment marker must not be stored'
+		);
+	}
+
+	/**
+	 * A legitimate WPDR marker (an attachment parented to the document being saved) must
+	 * still be restored to post_content via the $_POST fallback branch.
+	 */
+	public function test_restore_document_attachment_id_accepts_owned_marker() {
+		global $wpdr;
+
+		$doc = self::factory()->post->create(
+			array(
+				'post_title'   => 'Owned doc - ' . time(),
+				'post_status'  => 'publish',
+				'post_author'  => self::$editor_user_id,
+				'post_type'    => 'document',
+				'post_content' => '',
+			)
+		);
+
+		// An attachment that genuinely belongs to this document.
+		$attach_id = self::factory()->attachment->create(
+			array(
+				'post_parent' => $doc,
+				'post_status' => 'inherit',
+			)
+		);
+		delete_post_meta( $doc, '_document_attachment_id' );
+
+		$_POST['post_content'] = $wpdr->format_doc_id( $attach_id );
+
+		$data    = array(
+			'post_type'    => 'document',
+			'post_content' => '',
+		);
+		$postarr = array(
+			'ID'           => $doc,
+			'post_content' => '',
+		);
+
+		$result = $wpdr->admin->restore_document_attachment_id( $data, $postarr );
+
+		unset( $_POST['post_content'] );
+
+		self::assertEquals(
+			$attach_id,
+			(int) $wpdr->extract_document_id( $result['post_content'] ),
+			'Legitimate owned attachment marker must be restored'
+		);
+	}
+
+	/**
 	 * Test revision summary.
 	 */
 	public function test_revision_summary_cb() {

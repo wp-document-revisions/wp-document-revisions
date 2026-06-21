@@ -358,6 +358,11 @@ trait WP_Document_Revisions_Admin_Editor {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
 			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
+			// The attachment id comes from (forgeable) post_content here, so if one is present
+			// confirm it actually belongs to this document before trusting it.
+			if ( $attach_id > 0 && ! $this->attachment_belongs_to_document( $attach_id, $doc_id ) ) {
+				return $data;
+			}
 			update_post_meta( $doc_id, '_document_attachment_id', $attach_id );
 		} else {
 			$attach_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
@@ -377,11 +382,14 @@ trait WP_Document_Revisions_Admin_Editor {
 				return $data;
 			}
 
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$raw_posted = wp_unslash( $_POST['post_content'] );
-			$attach_id  = $wpdr->extract_document_id( $raw_posted );
+			$attach_id  = absint( $wpdr->extract_document_id( $raw_posted ) );
 
-			if ( ! $attach_id ) {
+			// The id is taken from forgeable POST data, so confirm the attachment actually
+			// belongs to this document before storing it as the document's marker. Without this
+			// an editor could point their document at another document's attachment (IDOR).
+			if ( ! $this->attachment_belongs_to_document( $attach_id, $doc_id ) ) {
 				return $data;
 			}
 		}
@@ -396,6 +404,31 @@ trait WP_Document_Revisions_Admin_Editor {
 		$data['post_content'] = $wpdr->format_doc_id( $attach_id ) . $text;
 
 		return $data;
+	}
+
+
+	/**
+	 * Confirms an attachment id (taken from untrusted input) belongs to a document.
+	 *
+	 * Used to prevent a document editor from forging the WPDR attachment marker so that
+	 * their document points at, and can therefore serve, another document's attachment.
+	 * Mirrors the ownership check on the REST save path (sync_meta_to_content).
+	 *
+	 * @since 5.1.1
+	 * @param int $attach_id the attachment id extracted from forgeable input.
+	 * @param int $doc_id    the id of the document being saved.
+	 * @return bool true if the attachment exists, is an attachment, and is parented to the document.
+	 */
+	private function attachment_belongs_to_document( int $attach_id, int $doc_id ): bool {
+		if ( $attach_id <= 0 || $doc_id <= 0 ) {
+			return false;
+		}
+
+		$attachment = get_post( $attach_id );
+
+		return ( $attachment instanceof WP_Post
+			&& 'attachment' === $attachment->post_type
+			&& (int) $attachment->post_parent === $doc_id );
 	}
 
 
