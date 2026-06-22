@@ -219,6 +219,7 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+
 * Ensure that Live Review document upload works and the media window autocloses after successful upload. (#588)
 
 = 5.1.1 =
