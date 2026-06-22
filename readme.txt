@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 5.1.1
+Stable tag: 5.1.2
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -219,34 +219,15 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.1.2 =
 
 * Ensure that Live Review document upload works and the media window autocloses after successful upload. (#588)
+* Recover the document's own attachment instead of dropping it when a forged or foreign attachment marker is rejected, preserving the legitimate attachment. Follow-up to the 5.1.1 security fix. (#587)
 
 = 5.1.1 =
 
 * Fix an attachment IDOR where a document editor could forge the attachment marker when saving a document to point it at, and serve, another document's file. The attachment is now verified to belong to the document being saved, matching the check already enforced on the REST save path. Reported via the WordPress.org automated security review. (#584)
 
 = 5.1.0 =
-
-* Upload document files using wp.media rather than the thickbox process simplifying internal processing. (#539)
-* Extend Validation structure process to identify inaccessible document files and potentially delete them. (#551)
-* Provide a filter 'document_no_document_response_code' to modify the response code when there is no document to serve. (#453)
-* Provide a filter 'document_check_orphans' to control whether to check a document for orphans, i.e inaccessible document files. (#551)
-* Provide a filter 'document_validate_orphans' to control the list of attachments considered inaccessible for a document. (#551)
-* Allow /?post_type=document&#038;p= as a valid variant of an "ugly" guid permalink for validation. (#549)
-* Review the revision log metabox to only permit the restore of revisions that link to a different document file. (#553)
-* Review REST processing to further protect attachment details. (#554)
-* Make use of a (temporary) postmeta value to keep track of the current document attachment during editing. (#547)
-* Fix the update to the age of revisions being displayed in the revision log. (#548)
-* Fix to ensure that only one document file can be loaded at a time. (#539)
-* Refactor to include class variables in trait files if only used there. (#547)
-* Remove type definition from the_title filter causing PHP crash due to invalid parameter being passed. (#550)
-* Migrate the legacy 'document_attachment_id' post meta to the protected '_document_attachment_id' key on access. (#547)
-* Provide a 'wpdr/v1/documents/.../revisions/.../diff' REST endpoint returning the per-revision text diff that drives the AI summary, gated on read_document_revisions. (#531)
-* Add a "Mark reviewed" action to the AI revision-summary suggestion banner so an editor can record that a summary has been human-reviewed. (#531)
-* Resolve the uploaded document file URL from the upload request rather than the global post object. (#569)
-* Fix duplicate upload handling so reopening the media frame no longer fires the upload callback more than once. (#568)
-
-= 5.0.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
