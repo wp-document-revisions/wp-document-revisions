@@ -641,12 +641,14 @@ trait WP_Document_Revisions_Admin_Editor {
 				'uploadConfirmation'  => __( 'New version uploaded. Press Update to save.', 'wp-document-revisions' ),
 				'uploadErrorNotice'   => '<div id="wpdr-upload-error" class="error"><p>' . __( 'Upload failed.', 'wp-document-revisions' ) . '</p></div>',
 				'saveFirstNotice'     => '<div id="wpdr-save-first-notice" class="error"><p>' . __( 'Please save the current version before uploading another.', 'wp-document-revisions' ) . '</p></div>',
-				'uploadProgress'      => __( 'Uploading…', 'wp-document-revisions' ),
 				// translators: %s is the title of the document.
 				'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
 				'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
 				'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
 				'lostLockNoticeLogo'  => admin_url( 'images/logo.gif' ),
+				// Text for Document Uploads.
+				'uploadTitle'         => __( 'Upload Document', 'wp-document-revisions' ),
+				'uploadSelect'        => __( 'Select Document', 'wp-document-revisions' ),
 				// translators: %d is the numeric minutes, when singular.
 				'minute'              => __( '%d mins', 'wp-document-revisions' ),
 				// translators: %d is the numeric minutes, when plural.

@@ -9,12 +9,10 @@
 
 	class WPDocumentRevisions {
 		hasUpload = false;
-		secure = 'https:' === window.location.protocol;
-		windowRef = window.dialogArguments || opener || parent || top || window;
 		firstcheck = true;
 		// Custom media frame that auto-closes after a fresh upload.
 		frameRef = null;
-		// The plupload instance we've already bound FileUploaded to (avoids
+		// The plupload instance we've already bound FileUploaded to avoid
 		// re-binding when a cached frame's upload tab is re-activated).
 		_boundUploader = null;
 
@@ -272,7 +270,7 @@
 		getDescr = () => {
 			// Extract data from TinyMCE window and clean up text.
 			// On starting, the post_content is set to BOTH fields content and post_content.
-			const iframe = this.windowRef.document.getElementById('content_ifr');
+			const iframe = document.getElementById('content_ifr');
 			if (null === iframe) {
 				const el = document.getElementById('post_content');
 				return el ? el.value : '';
@@ -326,31 +324,21 @@
 				props: { orderby: 'date', order: 'DESC', query: true, uploadedTo: -1 }
 			});
 
-			// Don't have the existing as an option and only allow one file to be loaded.
-			const frame = top.wp.media.frames.customUploader = wp.media({
-				title: 'Upload Document',
+			// Media upload with no existing uploads as an option and only allow one file to be loaded.
+			const frame = wp.media({
+				title: wp_document_revisions.uploadTitle,
 				multiple: false,
 				button: {
-					text: 'Select Document',
+					text: wp_document_revisions.uploadSelect,
 				},
 				states: [
 					new wp.media.controller.Library({
-						title:      'Upload Document',
+						title:      wp_document_revisions.uploadTitle,
 						filterable: 'uploaded',
 						multiple:   false,
 						library:    restrictedLibrary
 					})
 				]
-			});
-
-			// add an indicator that this is for a document (if not present, then a featured image).
-			frame.on('uploader:ready', () => {
-				const uploader = frame.uploader?.uploader?.uploader;
-
-				if (uploader && uploader.settings && uploader.settings.multipart_params) {
-					uploader.settings.multipart_params.upload_source = 'wp-document-revisions';
-			
-				}
 			});
 
 			// Remove the library tab.
@@ -360,7 +348,7 @@
 
 			// Open on upload tab.
 			frame.on('open', () => {
-  				frame.content.mode('upload'); // jump directly to upload tab#.
+				frame.content.mode('upload'); // jump directly to upload tab#.
 				frame.$el.find('.media-router').addClass('hidden'); // Hide tab bar
 			});
 
@@ -376,10 +364,14 @@
 				}
 			});
 
-			// Auto-close: when a file finishes uploading, select it and close.
-			frame.on( 'content:activate:upload', () => {
+			// When the uploader is ready, bind to uploader to auto-close and send an identifier for document.
+			frame.on( 'uploader:ready', () => {
 				const uploader = frame.uploader?.uploader?.uploader;
 
+				// add an indicator that this is for a document (if not present, then a featured image).
+				if (uploader && uploader.settings && uploader.settings.multipart_params) {
+					uploader.settings.multipart_params.upload_source = 'wp-document-revisions';
+				}
 				// Bind once per uploader instance. This event can fire again when a
 				// cached frame is reopened; without the guard the FileUploaded
 				// handlers stack up and documentUpload() fires multiple times.
@@ -404,8 +396,8 @@
 				}
 			} );
 
-			this.frameRef = frame;
 			frame.open();
+			this.frameRef = frame;
 		}
 	}
 

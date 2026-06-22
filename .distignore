@@ -41,7 +41,7 @@ multisite.xml.dist
 phpcs.ruleset.xml
 phpstan.neon.dist
 phpstan-baseline.neon
-playwright.config.js
+playwright.config.mjs
 scoper.inc.php
 vendor-bin/
 README.md

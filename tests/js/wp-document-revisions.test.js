@@ -84,12 +84,6 @@ describe('WPDocumentRevisions', () => {
 			expect(WPDocumentRevisions.hasUpload).toBe(false);
 		});
 
-		test('should detect secure protocol', () => {
-			window.location.protocol = 'https:';
-			const instance = new window.WPDocumentRevisions();
-			expect(instance.secure).toBe(true);
-		});
-
 		test('should set up intervals for updates', () => {
 			expect(global.setInterval).toHaveBeenCalledTimes(2);
 		});
