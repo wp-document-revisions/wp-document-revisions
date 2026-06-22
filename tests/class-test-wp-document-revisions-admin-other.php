@@ -1115,7 +1115,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		// Attacker-owned document that DOES own an attachment, but with the meta not yet
 		// stored (legacy / unmigrated state), so the forgeable $_POST branch runs.
-		$doc = self::factory()->post->create(
+		$doc           = self::factory()->post->create(
 			array(
 				'post_title'   => 'Recover doc - ' . time(),
 				'post_status'  => 'publish',
