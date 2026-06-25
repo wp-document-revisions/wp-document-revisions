@@ -359,9 +359,10 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( isset( $_GET['action'] ) && 'restore' === $_GET['action'] ) {
 			$attach_id = absint( $wpdr->extract_document_id( $postarr['post_content'] ) );
 			// The attachment id comes from (forgeable) post_content here, so if one is present
-			// confirm it actually belongs to this document before trusting it.
+			// confirm it actually belongs to this document. If it does not, don't trust it, but
+			// don't drop the document's real attachment either — recover the authoritative one.
 			if ( $attach_id > 0 && ! $this->attachment_belongs_to_document( $attach_id, $doc_id ) ) {
-				return $data;
+				$attach_id = $this->authoritative_attachment_id( $doc_id );
 			}
 			update_post_meta( $doc_id, '_document_attachment_id', $attach_id );
 		} else {
@@ -386,11 +387,14 @@ trait WP_Document_Revisions_Admin_Editor {
 			$raw_posted = wp_unslash( $_POST['post_content'] );
 			$attach_id  = absint( $wpdr->extract_document_id( $raw_posted ) );
 
-			// The id is taken from forgeable POST data, so confirm the attachment actually
-			// belongs to this document before storing it as the document's marker. Without this
-			// an editor could point their document at another document's attachment (IDOR).
+			// The id is forgeable POST data. Rather than trust a foreign attachment (IDOR) or
+			// drop the document's real attachment by saving the kses-stripped content, recover
+			// the authoritative attachment that is actually parented to this document.
 			if ( ! $this->attachment_belongs_to_document( $attach_id, $doc_id ) ) {
-				return $data;
+				$attach_id = $this->authoritative_attachment_id( $doc_id );
+				if ( ! $attach_id ) {
+					return $data;
+				}
 			}
 		}
 
@@ -429,6 +433,30 @@ trait WP_Document_Revisions_Admin_Editor {
 		return ( $attachment instanceof WP_Post
 			&& 'attachment' === $attachment->post_type
 			&& (int) $attachment->post_parent === $doc_id );
+	}
+
+
+	/**
+	 * Returns the attachment id that legitimately belongs to a document, or 0 if none.
+	 *
+	 * Used to recover the correct attachment when an extracted or forged id fails the
+	 * ownership check, so a save can never drop the document's real attachment reference
+	 * (nor substitute another document's attachment). Scoped to attachments parented to
+	 * the document, so the result is owned by construction. This is the same authoritative
+	 * source that save_document() falls back to.
+	 *
+	 * @since 5.1.2
+	 * @param int $doc_id the id of the document being saved.
+	 * @return int the id of the document's most recent attachment, or 0 if it has none.
+	 */
+	private function authoritative_attachment_id( int $doc_id ): int {
+		if ( $doc_id <= 0 ) {
+			return 0;
+		}
+
+		$latest = $this->get_latest_attachment( $doc_id );
+
+		return ( $latest instanceof WP_Post ? (int) $latest->ID : 0 );
 	}
 
 

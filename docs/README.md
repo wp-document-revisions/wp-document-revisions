@@ -1,4 +1,4 @@
-![WP Document Revisions header logo](https://user-images.githubusercontent.com/282759/120903696-a46aaf00-c615-11eb-947e-60554e9fff95.png)
+![WP Document Revisions](https://ps.w.org/wp-document-revisions/assets/banner-1544x500.png)
 
 # WP Document Revisions
 

@@ -2,8 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.1.2
 
 * Ensure that Live Review document upload works and the media window autocloses after successful upload. (#588)
+* Recover the document's own attachment instead of dropping it when a forged or foreign attachment marker is rejected, preserving the legitimate attachment. Follow-up to the 5.1.1 security fix. (#587)
 
 ### 5.1.1
 
