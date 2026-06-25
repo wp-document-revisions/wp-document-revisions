@@ -16,7 +16,7 @@ jobs:
         env:
             TRAVIS_BUILD_DIR: ${{ github.workspace }}
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -56,7 +56,7 @@ jobs:
             contents: read
         name: Scoper pipeline smoke test
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -88,7 +88,7 @@ jobs:
             contents: read
         name: JavaScript Tests
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Setup Node.js
               uses: actions/setup-node@v6
@@ -144,7 +144,7 @@ jobs:
               run: sudo systemctl start mysql
 
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -229,7 +229,7 @@ jobs:
               run: sudo systemctl start mysql
 
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -281,7 +281,7 @@ jobs:
         name: E2E Tests
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Setup Node.js
               uses: actions/setup-node@v6
