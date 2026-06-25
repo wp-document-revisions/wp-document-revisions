@@ -25,7 +25,7 @@ jobs:
                   extensions: mysqli
 
             - name: Cache Composer packages
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-8.2-${{ hashFiles('**/composer.lock') }}
@@ -96,7 +96,7 @@ jobs:
                   node-version: 22
 
             - name: Cache Node modules
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
@@ -157,7 +157,7 @@ jobs:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Cache Composer packages
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
@@ -168,7 +168,7 @@ jobs:
               run: composer install --optimize-autoloader --prefer-dist --no-progress
 
             - name: Cache WordPress test framework
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: |
                       /tmp/wordpress
@@ -242,7 +242,7 @@ jobs:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Cache Composer packages
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
@@ -253,7 +253,7 @@ jobs:
               run: composer install --optimize-autoloader --prefer-dist --no-progress
 
             - name: Cache WordPress test framework
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: |
                       /tmp/wordpress
@@ -289,7 +289,7 @@ jobs:
                   node-version: 22
 
             - name: Cache Node modules
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
@@ -308,7 +308,7 @@ jobs:
 
             - name: Cache Playwright browsers
               id: playwright-cache
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: ~/.cache/ms-playwright
                   key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
