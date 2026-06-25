@@ -32,7 +32,7 @@
   "author": "WP Document Revisions Contributors",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.1",
+    "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.61.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@wordpress/e2e-test-utils-playwright": "1.46.0",
