@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Filter callback return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Parameter \#1 \$args of function wp_dropdown_users expects array\{show_option_all\?\: string, show_option_none\?\: string, option_none_value\?\: int\|string, hide_if_only_one_author\?\: string, orderby\?\: array\|string, order\?\: string, include\?\: array\<int\>\|string, exclude\?\: array\<int\>\|string, \.\.\.\}, array\{name\: ''author'', show_option_all\: string, value_field\: ''slug'', selected\: string\|false\|null, orderby\: ''name'', order\: ''ASC'', wpdr_added\: ''list'', has_published_posts\: array\{''document''\}\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19,86 +13,8 @@ parameters:
 			path: includes/class-wp-document-revisions-front-end.php
 
 		-
-			message: '#^Parameter \#1 \$text of function esc_html expects string, \(int\|false\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
-			message: '#^Expected 3 @param tags, found 2\.$#'
-			identifier: paramTag.count
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Action callback returns string but should not return anything\.$#'
-			identifier: return.void
-			count: 2
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Call to function is_array\(\) with list\<mixed\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Callback expects 1 parameter, \$accepted_args is set to 2\.$#'
-			identifier: arguments.count
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$document_or_attachment \(string\) of method WP_Document_Revisions\:\:get_file_type\(\) is incompatible with type int\|object\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_revision_number\(\) should return int but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Method WP_Document_Revisions\:\:get_revisions\(\) should return array but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\<0, max\>\|string\|false\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between null and \*NEVER\* will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: includes/class-wp-document-revisions.php
 
@@ -106,10 +22,4 @@ parameters:
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 3
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Variable \$comp_type might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: includes/class-wp-document-revisions.php

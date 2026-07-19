@@ -232,6 +232,10 @@ trait WP_Document_Revisions_File_Handler {
 		// Will we use gzip or deflate output? Do this early as can impact headers and these need outputting before any output.
 		// Does the user accept gzip or deflate?
 		$gzip_dflt = false;
+		// Default so $comp_type is always defined: the document_serve_use_gzip
+		// filter can force compression even when the client advertised no
+		// encoding (in which case the gzip/deflate branches below never run).
+		$comp_type = 'deflate';
 		if ( isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) ) {
 			// phpcs:ignore
 			$encoding = strtolower( $_SERVER['HTTP_ACCEPT_ENCODING'] );
@@ -256,7 +260,7 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		$compress = apply_filters( 'document_serve_use_gzip', $gzip_dflt, $mimetype, $filesize );
 
-		$headers['Content-Length'] = $filesize;
+		$headers['Content-Length'] = (string) $filesize;
 		if ( $compress ) {
 			// request compression. Remove Length as possibly wrong and HTTP/2 fails if length wrong.
 			// phpcs:ignore
@@ -415,7 +419,7 @@ trait WP_Document_Revisions_File_Handler {
 			$headers['Content-Encoding'] = ( 'gzip' === $comp_type ) ? 'gzip' : 'deflate';
 			if ( array_key_exists( 'Content-Length', $headers ) ) {
 				// only update to the correct value.
-				$headers['Content-Length'] = ob_get_length();
+				$headers['Content-Length'] = (string) ob_get_length();
 			}
 			// only know the length after writing to buffer, so only output headers now.
 			$this->serve_headers( $headers, $file );

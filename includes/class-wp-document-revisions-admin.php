@@ -104,7 +104,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'manage_document_posts_columns', array( $this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( $this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( $this, 'filter_documents_list' ) );
-		add_filter( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
+		add_action( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
 		add_filter( 'wp_dropdown_users_args', array( $this, 'filter_user_dropdown' ), 10, 2 );
 
 		// settings.

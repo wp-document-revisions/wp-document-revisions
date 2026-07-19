@@ -38,7 +38,7 @@ trait WP_Document_Revisions_Revisions {
 		$document = get_post( $post_id );
 
 		if ( ! $document || 'document' !== $document->post_type ) {
-			return false;
+			return array();
 		}
 
 		$cache = wp_cache_get( $post_id, 'document_revisions' );
@@ -164,7 +164,7 @@ trait WP_Document_Revisions_Revisions {
 	 *
 	 * @since 0.5
 	 * @param int $revision_id the revision ID.
-	 * @return int revision number
+	 * @return int|false revision number, or false if the revision has no parent.
 	 */
 	public function get_revision_number( int $revision_id ) {
 		$revision = get_post( $revision_id );

@@ -369,7 +369,7 @@ trait WP_Document_Revisions_Query {
 	 * Gets a file extension from a post.
 	 *
 	 * @since 0.5
-	 * @param object|int $document_or_attachment document or attachment.
+	 * @param object|int|string $document_or_attachment document or attachment.
 	 * @return string the extension to the latest revision
 	 */
 	public function get_file_type( $document_or_attachment = '' ): string {
@@ -502,14 +502,12 @@ trait WP_Document_Revisions_Query {
 	 */
 	public function posts_results( array $results, WP_Query $query_object ): array {
 		$match = false;
-		if ( is_array( $results ) ) {
-			foreach ( $results as $key => $result ) {
-				// confirm a document.
-				if ( $this->verify_post_type( $result ) ) {
-					// user has no access, remove from result.
-					unset( $results[ $key ] );
-					$match = true;
-				}
+		foreach ( $results as $key => $result ) {
+			// confirm a document.
+			if ( $this->verify_post_type( $result ) ) {
+				// user has no access, remove from result.
+				unset( $results[ $key ] );
+				$match = true;
 			}
 		}
 		// re-evaluate count.
@@ -517,17 +515,9 @@ trait WP_Document_Revisions_Query {
 			// reindex array.
 			$results = array_values( $results );
 
-			if ( is_array( $results ) ) {
-				$query_object->post_count  = count( $results );
-				$query_object->found_posts = $query_object->post_count;
-				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
-			} elseif ( null === $results ) {
-				$query_object->post_count  = 0;
-				$query_object->found_posts = 0;
-				$query_object->is_404      = true;
-			} else {
-				$query_object->found_posts = 1;
-			}
+			$query_object->post_count  = count( $results );
+			$query_object->found_posts = $query_object->post_count;
+			$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
 		}
 
 		return $results;

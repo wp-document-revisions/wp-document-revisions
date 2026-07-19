@@ -183,7 +183,7 @@ class WP_Document_Revisions_Front_End {
 			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
 				<?php
 				// html - string not to be translated.
-				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( strtotime( $revision->post_modified ) ) );
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( (string) strtotime( $revision->post_modified ) ) );
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
 				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
