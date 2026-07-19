@@ -48,7 +48,7 @@ trait WP_Document_Revisions_Revisions {
 
 		// Before post is saved GMT fields are zero.
 		if ( '0000-00-00 00:00:00' === $document->post_modified_gmt ) {
-			$document->post_modified_gmt = current_time( 'mysql', 1 );
+			$document->post_modified_gmt = current_time( 'mysql', true );
 		}
 		// correct the modified date.
 		$document->post_date = gmdate( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $post_id ) );

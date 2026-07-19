@@ -682,6 +682,19 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// grant super_admin (will include 'manage_network_options').
 		grant_super_admin( self::$editor_user_id );
 
+		// grant_super_admin() does not surface manage_network_options to
+		// current_user_can() in the test harness, so force the capability via a
+		// filter to actually exercise the authorized save path.
+		$grant_network = static function ( $allcaps ) {
+			$allcaps['manage_network_options'] = true;
+			return $allcaps;
+		};
+		add_filter( 'user_has_cap', $grant_network );
+
+		// Re-issue the nonce as the current user (the nonce set earlier was
+		// created before wp_set_current_user(), so it is tied to a different user).
+		$_POST['document_link_date_nonce'] = wp_create_nonce( 'network_document_link_date' );
+
 		$exception = null;
 		try {
 			ob_start();
@@ -693,10 +706,14 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 			ob_end_clean();
 		}
 
-		// Should not fail with exception (but does).
-		// self::assertNull( $exception, 'exception' );.
-		// self::assertEmpty( $output, 'output' );.
-		self::assertNotNull( $exception, 'no exception' );
+		remove_filter( 'user_has_cap', $grant_network );
+
+		// Authorized: the save now completes without dying, stores the option,
+		// and emits no output. Previously this path called an undefined
+		// sanitize_document_link_date() and threw a fatal error (#612).
+		self::assertNull( $exception, 'exception' );
+		self::assertEmpty( $output, 'output' );
+		self::assertTrue( (bool) get_site_option( 'document_link_date' ), 'option saved' );
 
 		// repeat to exercise other paths - Invalid nonce.
 		$_POST['document_link_date_nonce'] = 'rubbish';

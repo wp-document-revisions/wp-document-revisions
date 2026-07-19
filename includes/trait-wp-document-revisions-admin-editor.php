@@ -558,9 +558,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// can we merge the revisions.
-		if ( is_null( self::$last_revn ) || is_null( self::$last_but_one_revn ) ) {
-			null;
-		} else {
+		if ( ! is_null( self::$last_revn ) && ! is_null( self::$last_but_one_revn ) ) {
 			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
 			// Remove our filter so that we can delete the revision.
 			global $wpdr;

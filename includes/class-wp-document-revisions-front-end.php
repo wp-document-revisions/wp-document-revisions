@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * WP Document Revisions Front End.
+ *
+ * Methods of the parent {@see WP_Document_Revisions} instance are callable on
+ * this class natively via {@see WP_Document_Revisions_Front_End::__call()}, which
+ * forwards to the parent. The `@method` tag below documents that forwarding so
+ * static analysis can resolve the call; it adds no runtime behavior.
+ *
+ * @method array get_revisions( ?int $post_id )
  */
 class WP_Document_Revisions_Front_End {
 
@@ -849,9 +856,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// Deal with explicit taxonomomies. Note taxonomy_i is query_var, not slug.
-		if ( empty( $atts['taxonomy_0'] ) || empty( $atts['term_0'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_0'] ) && ! empty( $atts['term_0'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[0]['query'] ) && $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
@@ -865,9 +870,7 @@ class WP_Document_Revisions_Front_End {
 		unset( $atts['taxonomy_0'] );
 		unset( $atts['term_0'] );
 
-		if ( empty( $atts['taxonomy_1'] ) || empty( $atts['term_1'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_1'] ) && ! empty( $atts['term_1'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[1]['query'] ) && $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
@@ -881,9 +884,7 @@ class WP_Document_Revisions_Front_End {
 		unset( $atts['taxonomy_1'] );
 		unset( $atts['term_1'] );
 
-		if ( empty( $atts['taxonomy_2'] ) || empty( $atts['term_2'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_2'] ) && ! empty( $atts['term_2'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[2]['query'] ) && $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug).

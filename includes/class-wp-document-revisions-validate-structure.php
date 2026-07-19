@@ -432,9 +432,7 @@ class WP_Document_Revisions_Validate_Structure {
 				wp_delete_file( $orig );
 				// get attachment metadata.
 				$meta = get_post_meta( $attach, '_wp_attachment_metadata', true );
-				if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
-					null;
-				} else {
+				if ( is_array( $meta ) && isset( $meta['sizes'] ) ) {
 					// image name contains only file name and extension.
 					$orig_dir = trailingslashit( dirname( $orig ) );
 					$file_dir = trailingslashit( $file_dir );

@@ -35,9 +35,9 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * @since 3.5.0
 	 *
 	 * @param ?string $link_date value to represent whether to add the year/month into the permalink.
-	 * @return string sanitized value
+	 * @return bool sanitized value (true to add the year/month into the permalink)
 	 */
-	public function sanitize_link_date( ?string $link_date ) {
+	public function sanitize_link_date( ?string $link_date ): bool {
 		return (bool) $link_date;
 	}
 
@@ -508,7 +508,7 @@ trait WP_Document_Revisions_Admin_Settings {
 
 		// get link date value.
 		$link_date = ( isset( $_POST['document_link_date'] ) ? sanitize_text_field( wp_unslash( $_POST['document_link_date'] ) ) : '' );
-		$link_date = $this->sanitize_document_link_date( $link_date );
+		$link_date = $this->sanitize_link_date( $link_date );
 
 		// because there's a redirect, and there's no Settings API, force settings errors into a transient.
 		global $wp_settings_errors;
