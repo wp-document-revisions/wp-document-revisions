@@ -7,8 +7,16 @@ on:
     pull_request:
         branches: [main]
 
+# Cancel superseded runs on the same ref (e.g. rapid pushes to a PR) so
+# runners are freed for the latest commit instead of finishing stale runs.
+concurrency:
+    group: ci-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
-    # Stage 1: Fast checks — lint, audit, and JS tests run first
+    # Lint, audit, and static analysis. All jobs below run in parallel from
+    # the start (no cross-job gating) so the slowest job — E2E — is the only
+    # thing on the critical path rather than lint + E2E in series.
     code-quality:
         runs-on: ubuntu-latest
         permissions:
@@ -104,7 +112,7 @@ jobs:
                       ${{ runner.os }}-node-22-
 
             - name: Install dependencies
-              run: npm install
+              run: npm ci
 
             - name: Audit dependencies
               run: npm audit --omit=dev
@@ -119,9 +127,8 @@ jobs:
                   flags: javascript
                   name: javascript-coverage
 
-    # Stage 2: PHPUnit tests — only run after Stage 1 passes
+    # PHPUnit tests (PR matrix).
     phpunit:
-        needs: [code-quality, jest]
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -196,7 +203,6 @@ jobs:
 
     # Extended PHPUnit matrix — push to main only
     phpunit-extended:
-        needs: [code-quality, jest]
         if: github.event_name == 'push'
         runs-on: ubuntu-latest
         permissions:
@@ -274,7 +280,6 @@ jobs:
 
     # E2E tests — Playwright against a real WordPress instance
     e2e:
-        needs: [code-quality, jest]
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -297,7 +302,7 @@ jobs:
                       ${{ runner.os }}-node-22-
 
             - name: Install dependencies
-              run: npm install
+              run: npm ci
 
             - name: Build blocks
               run: npm run build:blocks && npm run build:editor
