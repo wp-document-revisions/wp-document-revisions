@@ -497,9 +497,20 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 200, $response->get_status(), 'cannot read attachment 2' );
 		$response = $response->get_data();
 
+		global $wp_version;
+		$vers = strpos( $wp_version, '-' );
+		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
+		if ( 'latest' === $vers || version_compare( $vers, '6.9' ) >= 0 ) {
+			$lower = 27;
+			$upper = 29;
+		} else {
+			$lower = 24;
+			$upper = 26;
+		}
+
 		// Additional items in newer rest.
-		self::assertGreaterThanOrEqual( 24, count( $response ), 'not single response 2 >=' );
-		self::assertLessThanOrEqual( 26, count( $response ), 'not single response 2 <=' );
+		self::assertGreaterThanOrEqual( $lower, count( $response ), 'not single response 2 >=' );
+		self::assertLessThanOrEqual( $upper, count( $response ), 'not single response 2 <=' );
 		self::assertEquals( $response['id'], $attach->ID, 'wrong attachment 2' );
 		self::assertSame( $response['type'], 'attachment', 'wrong type attachment 2' );
 
