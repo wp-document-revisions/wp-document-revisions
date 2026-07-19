@@ -151,8 +151,8 @@ trait WP_Document_Revisions_Rewrites {
 	 * Tells WP to recognize document query vars.
 	 *
 	 * @since 0.5
-	 * @param array $vars the query vars.
-	 * @return array the modified query vars
+	 * @param string[] $vars the query vars.
+	 * @return string[] the modified query vars
 	 */
 	public function add_query_var( array $vars ): array {
 		$vars[] = 'revision';
@@ -253,8 +253,8 @@ trait WP_Document_Revisions_Rewrites {
 	 * Rewrites a file URL to its public URL.
 	 *
 	 * @since 0.5
-	 * @param array $file file object from WP.
-	 * @return array modified file array
+	 * @param array<string, mixed> $file file object from WP.
+	 * @return array<string, mixed> modified file array
 	 */
 	public function rewrite_file_url( array $file ): array {
 		// verify this is a document load as self::$doc_image has been set false if a WPDR document.
@@ -284,8 +284,8 @@ trait WP_Document_Revisions_Rewrites {
 	 * Tells WP to recognize workflow_state as a query vars.
 	 *
 	 * @since 3.3.0
-	 * @param array $vars the query vars.
-	 * @return array the modified query vars
+	 * @param string[] $vars the query vars.
+	 * @return string[] the modified query vars
 	 */
 	public function add_qv_workflow_state( array $vars ): array {
 		$vars[] = 'workflow_state';
