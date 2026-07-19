@@ -563,6 +563,7 @@ class WP_Document_Revisions_Validate_Structure {
 			/**
 			 * Filters whether to validate the document structure for a document.
 			 *
+			 * @param bool   $valid   Whether to validate the document (default true).
 			 * @param int    $doc_id  Document post ID.
 			 * @param string $content Document post content.
 			 */
@@ -874,7 +875,7 @@ class WP_Document_Revisions_Validate_Structure {
 				// post name without extension is OK.
 				if ( $guid !== $permalink && $guid !== $p2 ) {
 					// get the extension.
-					$file       = get_post_meta( $attach_id, '_wp_attached_file', true );
+					$file       = get_post_meta( (int) $attach_id, '_wp_attached_file', true );
 					$permalink .= self::$parent->get_extension( $file );
 					$p2         = $permalink . '/';
 					if ( $guid !== $permalink && $guid !== $p2 ) {
