@@ -241,7 +241,7 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\|string\|false\> given\.$#'
+			message: '#^Parameter \#1 \$headers of method WP_Document_Revisions\:\:serve_headers\(\) expects array\<string\>, array\<string, int\|string\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions.php
