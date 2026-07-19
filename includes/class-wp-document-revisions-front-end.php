@@ -514,7 +514,7 @@ class WP_Document_Revisions_Front_End {
 		$wpdr = self::$parent;
 
 		// enqueue CSS for shortcode.
-		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), array(), $wpdr->version );
 	}
 
 

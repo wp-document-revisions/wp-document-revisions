@@ -13,18 +13,6 @@ parameters:
 			path: includes/class-wp-document-revisions-admin.php
 
 		-
-			message: '#^Parameter \#1 \$post of function clean_post_cache expects int\|WP_Post, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Parameter \#1 \$term of function get_term expects int\|object, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -32,12 +20,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$text of function esc_html expects string, \(int\|false\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
-			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions-front-end.php
@@ -95,12 +77,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^@param string \$user does not accept actual type of parameter\: int\<min, \-1\>\|int\<1, max\>\|false\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: includes/class-wp-document-revisions.php
 
 		-
 			message: '#^Action callback returns string but should not return anything\.$#'
@@ -163,36 +139,6 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#1 \$post of function wp_check_post_lock expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$post of function wp_set_post_lock expects int\|WP_Post, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$post_id of method WP_Document_Revisions\:\:send_override_notice\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$user_id of function get_userdata expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#2 \$gmt of function get_post_modified_time expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and \*NEVER\* will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -209,9 +155,3 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#1 \$timezone of function get_lastpostmodified expects ''blog''\|''gmt''\|''server'', ''GMT'' given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/revision-feed.php

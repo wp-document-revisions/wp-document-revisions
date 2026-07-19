@@ -580,7 +580,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
 			wp_cache_delete( self::$last_revn, 'posts' );
 			wp_cache_delete( $doc_id, 'posts' );
-			clean_post_cache( self::$last_revn_excerpt );
+			clean_post_cache( $doc_id );
 			clean_post_cache( self::$last_revn );
 		}
 
@@ -709,7 +709,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// enqueue CSS.
-		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), array(), $wpdr->version );
 	}
 
 
