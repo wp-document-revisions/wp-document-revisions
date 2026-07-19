@@ -1,20 +1,8 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:sanitize_document_link_date\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Filter callback return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Method WP_Document_Revisions_Admin\:\:sanitize_link_date\(\) should return string but returns bool\.$#'
-			identifier: return.type
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
