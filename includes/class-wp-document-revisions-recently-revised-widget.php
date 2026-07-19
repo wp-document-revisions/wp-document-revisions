@@ -48,7 +48,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * Generate widget contents.
 	 *
 	 * @param mixed[] $args the widget arguments.
-	 * @param Object  $instance the WP Document Revisions instance.
+	 * @param array   $instance the WP Document Revisions instance.
 	 */
 	public function widget_gen( array $args, $instance ) {
 		global $wpdr;
@@ -171,8 +171,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Callback to display widget contents in classic widget.
 	 *
-	 * @param Array  $args the widget arguments.
-	 * @param Object $instance the WP Document Revisions instance.
+	 * @param array $args the widget arguments.
+	 * @param array $instance the WP Document Revisions instance.
 	 */
 	public function widget( $args, $instance ) {
 
@@ -185,7 +185,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Callback to display widget options form.
 	 *
-	 * @param Object $instance the WP Document Revisions instance.
+	 * @param array $instance the WP Document Revisions instance.
 	 */
 	public function form( $instance ) {
 
@@ -237,8 +237,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Sanitizes options and saves.
 	 *
-	 * @param Object $new_instance the new instance.
-	 * @param Object $old_instance the old instance.
+	 * @param array $new_instance the new instance.
+	 * @param array $old_instance the old instance.
 	 */
 	public function update( $new_instance, $old_instance ) {
 

@@ -25,48 +25,6 @@ parameters:
 			path: includes/class-wp-document-revisions-front-end.php
 
 		-
-			message: '#^Method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should return array but returns ArrayAccess\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#1 \$instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:form\(\) should be compatible with parameter \$instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:form\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#1 \$new_instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should be compatible with parameter \$new_instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:update\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#2 \$instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget\(\) should be compatible with parameter \$instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:widget\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#2 \$instance of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget_gen\(\) expects object, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#2 \$instance of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget_gen\(\) expects object, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
-			message: '#^Parameter \#2 \$old_instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:update\(\) should be compatible with parameter \$old_instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:update\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
 			message: '#^Expected 3 @param tags, found 2\.$#'
 			identifier: paramTag.count
 			count: 1
