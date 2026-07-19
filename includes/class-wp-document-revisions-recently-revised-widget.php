@@ -122,7 +122,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			}
 			?>
 			<li>
-				<h<?php echo esc_attr( $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( $h_n ); ?>>
+				<h<?php echo esc_attr( (string) $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( (string) $h_n ); ?>>
 				<?php
 				if ( (bool) $instance['show_thumb'] ) {
 					$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';

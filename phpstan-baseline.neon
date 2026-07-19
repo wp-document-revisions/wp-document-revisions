@@ -1,56 +1,8 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:document_slug\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:document_upload_dir\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:format_doc_id\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_document_lock\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:get_documents\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
 			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:sanitize_document_link_date\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Admin\:\:verify_post_type\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
-			identifier: expr.resultUnused
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
 
@@ -83,18 +35,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: includes/class-wp-document-revisions-admin.php
-
-		-
-			message: '#^Call to an undefined method WP_Document_Revisions_Front_End\:\:get_revisions\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/class-wp-document-revisions-front-end.php
-
-		-
-			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
-			identifier: expr.resultUnused
-			count: 3
-			path: includes/class-wp-document-revisions-front-end.php
 
 		-
 			message: '#^Parameter \#1 \$term of function get_term expects int\|object, string given\.$#'
@@ -133,12 +73,6 @@ parameters:
 			path: includes/class-wp-document-revisions-recently-revised-widget.php
 
 		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wp-document-revisions-recently-revised-widget.php
-
-		-
 			message: '#^Parameter \#2 \$instance \(object\) of method WP_Document_Revisions_Recently_Revised_Widget\:\:widget\(\) should be compatible with parameter \$instance \(array\<string, mixed\>\) of method WP_Widget\<array\<string, mixed\>\>\:\:widget\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -165,12 +99,6 @@ parameters:
 		-
 			message: '#^Expected 3 @param tags, found 2\.$#'
 			identifier: paramTag.count
-			count: 1
-			path: includes/class-wp-document-revisions-validate-structure.php
-
-		-
-			message: '#^Expression "\\null" on a separate line does not do anything\.$#'
-			identifier: expr.resultUnused
 			count: 1
 			path: includes/class-wp-document-revisions-validate-structure.php
 
@@ -271,21 +199,9 @@ parameters:
 			path: includes/class-wp-document-revisions.php
 
 		-
-			message: '#^Parameter \#2 \$gmt of function current_time expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
 			message: '#^Parameter \#2 \$gmt of function get_post_modified_time expects bool, null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: includes/class-wp-document-revisions.php
-
-		-
-			message: '#^Parameter \#2 \$title of function wp_die expects int\|string, null given\.$#'
-			identifier: argument.type
-			count: 3
 			path: includes/class-wp-document-revisions.php
 
 		-

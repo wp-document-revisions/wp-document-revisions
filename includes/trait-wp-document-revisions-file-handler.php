@@ -72,7 +72,7 @@ trait WP_Document_Revisions_File_Handler {
 				// no revision.
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
-					null,
+					'',
 					array( 'response' => absint( $response ) )
 				);
 				// for unit testing.
@@ -106,7 +106,7 @@ trait WP_Document_Revisions_File_Handler {
 			$msg = ( $exists ? __( 'Document is not available.', 'wp-document-revisions' ) : __( 'No document file is attached.', 'wp-document-revisions' ) );
 			wp_die(
 				esc_html( $msg ),
-				null,
+				'',
 				array( 'response' => absint( $response ) )
 			);
 			// for unit testing.
@@ -154,7 +154,7 @@ trait WP_Document_Revisions_File_Handler {
 			if ( false === $serve_file ) {
 				wp_die(
 					esc_html__( 'You are not authorized to access that file.', 'wp-document-revisions' ),
-					null,
+					'',
 					array( 'response' => 403 )
 				);
 				// for unit testing.

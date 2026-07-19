@@ -12,7 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The WP Admin backend object
+ * The WP Admin backend object.
+ *
+ * Methods of the parent {@see WP_Document_Revisions} instance are callable on
+ * this class natively via {@see WP_Document_Revisions_Admin::__call()}, which
+ * forwards to `self::$parent`. The `@method` tags below document that forwarding
+ * so static analysis can resolve the calls; they add no runtime behavior.
+ *
+ * @method bool verify_post_type( $documentish = false )
+ * @method WP_Post|false get_document( $post_id )
+ * @method array get_documents( ?array $args = array(), bool $return_attachments = false )
+ * @method string format_doc_id( int $post_id )
+ * @method string document_upload_dir()
+ * @method string document_slug()
+ * @method string|false get_document_lock( $document )
  */
 class WP_Document_Revisions_Admin {
 
