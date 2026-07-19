@@ -577,8 +577,8 @@ trait WP_Document_Revisions_File_Handler {
 	 * Rewrites uploaded revisions filename with secure hash to mask true location.
 	 *
 	 * @since 0.5
-	 * @param array $file file data from WP.
-	 * @return array $file file with new filename
+	 * @param array<string, mixed> $file file data from WP.
+	 * @return array<string, mixed> file with new filename
 	 */
 	public function filename_rewrite( array $file ): array {
 		// verify if this is a document load as they have an additional parameter.
@@ -655,10 +655,11 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.4.0.
 	 *
-	 * @param array  $metadata      An array of attachment meta data.
-	 * @param int    $attachment_id Current attachment ID.
-	 * @param string $context       Additional context. Can be 'create' when metadata was initially created for new attachment
-	 *                              or 'update' when the metadata was updated.
+	 * @param array<string, mixed> $metadata      An array of attachment meta data.
+	 * @param int                  $attachment_id Current attachment ID.
+	 * @param string               $context       Additional context. Can be 'create' when metadata was initially created for new attachment
+	 *                                             or 'update' when the metadata was updated.
+	 * @return array<string, mixed> the (possibly modified) attachment metadata.
 	 */
 	public function hide_doc_attach_slug( array $metadata, int $attachment_id, string $context ): array {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// check that for a document.
@@ -965,8 +966,8 @@ trait WP_Document_Revisions_File_Handler {
 	 * Modifies location of uploaded document revisions.
 	 *
 	 * @since 0.5
-	 * @param array $dir defaults passed from WP.
-	 * @return array $dir modified directory
+	 * @param array<string, mixed> $dir defaults passed from WP.
+	 * @return array<string, mixed> modified directory
 	 */
 	public function document_upload_dir_filter( array $dir ): array {
 		if ( ! $this->verify_post_type() ) {
@@ -989,8 +990,8 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param array $dir defaults passed from WP.
-	 * @return array $dir document directory
+	 * @param array<string, mixed> $dir defaults passed from WP.
+	 * @return array<string, mixed> document directory
 	 */
 	public function document_upload_dir_set( array $dir ): array {
 
@@ -1232,10 +1233,10 @@ trait WP_Document_Revisions_File_Handler {
 	 * Will also check to make sure the returned image doesn't leak the file's true path.
 	 *
 	 * @since 1.2.2
-	 * @param bool|array $downsize Whether to short-circuit the image downsize.
-	 * @param int        $id       the ID of the attachment.
-	 * @param string     $size     the size requested.
-	 * @return bool|array false or the image array to be returned from image_downsize()
+	 * @param bool|array<int, mixed> $downsize Whether to short-circuit the image downsize.
+	 * @param int                    $id       the ID of the attachment.
+	 * @param string                 $size     the size requested.
+	 * @return bool|array<int, mixed> false or the image array to be returned from image_downsize()
 	 */
 	public function image_downsize( $downsize, $id, $size ) {
 		$id = (int) $id;

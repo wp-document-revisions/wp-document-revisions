@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @method bool verify_post_type( $documentish = false )
  * @method WP_Post|false get_document( $post_id )
- * @method array get_documents( ?array $args = array(), bool $return_attachments = false )
+ * @method WP_Post[] get_documents( ?array<string, mixed> $args = array(), bool $return_attachments = false )
  * @method string format_doc_id( int $post_id )
  * @method string document_upload_dir()
  * @method string document_slug()
@@ -146,8 +146,8 @@ class WP_Document_Revisions_Admin {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.0
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, array $args ) {

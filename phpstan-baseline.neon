@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Action callback returns bool but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/class-wp-document-revisions-admin.php
+
+		-
 			message: '#^Parameter \#1 \$args of function wp_dropdown_users expects array\{show_option_all\?\: string, show_option_none\?\: string, option_none_value\?\: int\|string, hide_if_only_one_author\?\: string, orderby\?\: array\|string, order\?\: string, include\?\: array\<int\>\|string, exclude\?\: array\<int\>\|string, \.\.\.\}, array\{name\: ''author'', show_option_all\: string, value_field\: ''slug'', selected\: string\|false\|null, orderby\: ''name'', order\: ''ASC'', wpdr_added\: ''list'', has_published_posts\: array\{''document''\}\} given\.$#'
 			identifier: argument.type
 			count: 1

@@ -66,8 +66,8 @@ class WP_Document_Revisions_Manage_Rest {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
 	public function __call( string $funct, array $args ) {
@@ -80,8 +80,9 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @since 3.4.0
 	 * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
 	 *                                                                   Usually a WP_REST_Response or WP_Error.
-	 * @param array                                            $handler  Route handler used for the request.
+	 * @param array<string, mixed>                             $handler  Route handler used for the request.
 	 * @param WP_REST_Request                                  $request  Request used to generate the response.
+	 * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed the (possibly modified) response.
 	 **/
 	public static function document_validation( $response, array $handler, WP_REST_Request $request ) {
 		if ( is_wp_error( $response ) ) {
@@ -177,6 +178,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
 	 * @param WP_Post                   $post     Post object.
 	 * @param WP_REST_Request           $request  Request object.
+	 * @return WP_REST_Response|WP_Error the cleaned response.
 	 */
 	public function doc_clean_document( $response, WP_Post $post, WP_REST_Request $request ) {
 		// Already filtered to an error response.
@@ -237,6 +239,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
 	 * @param WP_Post                   $post     Post object.
 	 * @param WP_REST_Request           $request  Request object.
+	 * @return WP_REST_Response|WP_Error the cleaned response.
 	 */
 	public function doc_clean_revision( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// Already filtered to an error response.
@@ -277,6 +280,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Response|WP_Error $response The response object (or error if found).
 	 * @param WP_Post                   $post     Post object.
 	 * @param WP_REST_Request           $request  Request object.
+	 * @return WP_REST_Response|WP_Error the cleaned response.
 	 */
 	public function doc_clean_attachment( $response, WP_Post $post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// Already filtered to an error response.

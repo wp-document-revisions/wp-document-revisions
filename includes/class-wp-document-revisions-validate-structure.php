@@ -198,8 +198,8 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, array $args ) {
@@ -742,7 +742,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param int    $doc_id            ID of a post object.
 	 * @param int    $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
-	 * @return array|false
+	 * @return array<int|string, mixed>|false
 	 */
 	private static function validate_document( $doc_id, $attach_id, string $post_modified_gmt ) {
 		global $wpdb;
@@ -836,7 +836,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $post_date   post date field.
 	 * @param string $post_name   post name field.
 	 * @param string $guid        post guid field.
-	 * @return array|bool
+	 * @return array<int|string, mixed>|bool
 	 */
 	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
