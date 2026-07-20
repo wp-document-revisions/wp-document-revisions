@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * WP Document Revisions Front End.
+ *
+ * Methods of the parent {@see WP_Document_Revisions} instance are callable on
+ * this class natively via {@see WP_Document_Revisions_Front_End::__call()}, which
+ * forwards to the parent. The `@method` tag below documents that forwarding so
+ * static analysis can resolve the call; it adds no runtime behavior.
+ *
+ * @method WP_Post[] get_revisions( ?int $post_id )
  */
 class WP_Document_Revisions_Front_End {
 
@@ -33,7 +40,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Array of accepted shortcode keys and default values.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $shortcode_defaults = array(
 		'id'          => null,
@@ -75,8 +82,8 @@ class WP_Document_Revisions_Front_End {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.2
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function
 	 */
 	public function __call( string $funct, array $args ) {
@@ -99,7 +106,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Callback to display revisions.
 	 *
-	 * @param array $atts attributes passed via short code.
+	 * @param array<string, mixed> $atts attributes passed via short code.
 	 * @return string a UL with the revisions
 	 * @since 1.2
 	 */
@@ -173,14 +180,14 @@ class WP_Document_Revisions_Front_End {
 		foreach ( $revisions as $revision ) {
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
-			<li class="revision revision-<?php echo esc_attr( $revision->ID ); ?>" >
+			<li class="revision revision-<?php echo esc_attr( (string) $revision->ID ); ?>" >
 				<?php
 				// html - string not to be translated.
-				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( strtotime( $revision->post_modified ) ) );
+				printf( '<a href="%1$s" title="%2$s" id="%3$s" class="timestamp"', esc_url( get_permalink( $revision->ID ) ), esc_attr( $revision->post_modified ), esc_html( (string) strtotime( $revision->post_modified ) ) );
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
 				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
-				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ) );
+				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', (int) $revision->post_author ) ) );
 				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
 				?>
 			</li>
@@ -200,7 +207,7 @@ class WP_Document_Revisions_Front_End {
 	 * Called from shortcode sirectly.
 	 *
 	 * @since 3.3
-	 * @param array $atts shortcode attributes.
+	 * @param array<string, mixed> $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
 	public function documents_shortcode( $atts ): string {
@@ -231,7 +238,7 @@ class WP_Document_Revisions_Front_End {
 	 * reuse of workflow_state when EditLlow or PublishPressi is used.
 	 *
 	 * @since 1.2
-	 * @param array $atts shortcode attributes.
+	 * @param array<string, mixed> $atts shortcode attributes.
 	 * @return string the shortcode output
 	 */
 	private function documents_shortcode_int( array $atts ): string {
@@ -507,7 +514,7 @@ class WP_Document_Revisions_Front_End {
 		$wpdr = self::$parent;
 
 		// enqueue CSS for shortcode.
-		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), array(), $wpdr->version );
 	}
 
 
@@ -545,6 +552,7 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 * @param mixed[]                  $categories           Block categories available.
 	 * @param ?WP_Block_Editor_Context $block_editor_context The current block editor context.
+	 * @return mixed[] the (possibly extended) block categories.
 	 */
 	public function wpdr_block_categories( array $categories, ?WP_Block_Editor_Context $block_editor_context = null ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
@@ -641,7 +649,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Flattened taxonomy term list.
 	 *
-	 * @var array $tax_terms array of terms.
+	 * @var array<int|string, mixed> $tax_terms array of terms.
 	 */
 	private static $tax_terms = array();
 
@@ -773,7 +781,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Server side block to render the documents list.
 	 *
-	 * @param array $atts shortcode attributes.
+	 * @param array<string, mixed> $atts shortcode attributes.
 	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
@@ -849,9 +857,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// Deal with explicit taxonomomies. Note taxonomy_i is query_var, not slug.
-		if ( empty( $atts['taxonomy_0'] ) || empty( $atts['term_0'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_0'] ) && ! empty( $atts['term_0'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[0]['query'] ) && $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
@@ -865,9 +871,7 @@ class WP_Document_Revisions_Front_End {
 		unset( $atts['taxonomy_0'] );
 		unset( $atts['term_0'] );
 
-		if ( empty( $atts['taxonomy_1'] ) || empty( $atts['term_1'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_1'] ) && ! empty( $atts['term_1'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[1]['query'] ) && $atts['taxonomy_1'] === $curr_taxos[1]['query'] ? $curr_taxos[1]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
@@ -881,9 +885,7 @@ class WP_Document_Revisions_Front_End {
 		unset( $atts['taxonomy_1'] );
 		unset( $atts['term_1'] );
 
-		if ( empty( $atts['taxonomy_2'] ) || empty( $atts['term_2'] ) ) {
-			null;
-		} else {
+		if ( ! empty( $atts['taxonomy_2'] ) && ! empty( $atts['term_2'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[2]['query'] ) && $atts['taxonomy_2'] === $curr_taxos[2]['query'] ? $curr_taxos[2]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug).
@@ -921,7 +923,7 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Server side block to render the revisions list.
 	 *
-	 * @param array $atts shortcode attributes.
+	 * @param array<string, mixed> $atts shortcode attributes.
 	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */

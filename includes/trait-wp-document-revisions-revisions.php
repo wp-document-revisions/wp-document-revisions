@@ -32,13 +32,13 @@ trait WP_Document_Revisions_Revisions {
 	 *
 	 * @since 1.0
 	 * @param ?int $post_id the post ID.
-	 * @return array array of post objects
+	 * @return WP_Post[] array of post objects
 	 */
 	public function get_revisions( ?int $post_id ) {
 		$document = get_post( $post_id );
 
 		if ( ! $document || 'document' !== $document->post_type ) {
-			return false;
+			return array();
 		}
 
 		$cache = wp_cache_get( $post_id, 'document_revisions' );
@@ -48,10 +48,10 @@ trait WP_Document_Revisions_Revisions {
 
 		// Before post is saved GMT fields are zero.
 		if ( '0000-00-00 00:00:00' === $document->post_modified_gmt ) {
-			$document->post_modified_gmt = current_time( 'mysql', 1 );
+			$document->post_modified_gmt = current_time( 'mysql', true );
 		}
 		// correct the modified date.
-		$document->post_date = gmdate( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', null, $post_id ) );
+		$document->post_date = gmdate( 'Y-m-d H:i:s', (int) get_post_modified_time( 'U', false, $post_id ) );
 
 		// fix for Quotes in the most recent post because it comes from get_post.
 		$document->post_excerpt = html_entity_decode( $document->post_excerpt );
@@ -149,7 +149,7 @@ trait WP_Document_Revisions_Revisions {
 
 			$latest_attachment = reset( $attachments );
 			if ( is_numeric( $revisions[0]->post_content ) ) {
-				$revisions[0]->post_content = $this->format_doc_id( $revisions[0]->post_content );
+				$revisions[0]->post_content = $this->format_doc_id( (int) $revisions[0]->post_content );
 			} elseif ( empty( $revisions[0]->post_content ) ) {
 				$revisions[0]->post_content = $this->format_doc_id( $latest_attachment->ID );
 			}
@@ -164,7 +164,7 @@ trait WP_Document_Revisions_Revisions {
 	 *
 	 * @since 0.5
 	 * @param int $revision_id the revision ID.
-	 * @return int revision number
+	 * @return int|false revision number, or false if the revision has no parent.
 	 */
 	public function get_revision_number( int $revision_id ) {
 		$revision = get_post( $revision_id );
@@ -188,7 +188,7 @@ trait WP_Document_Revisions_Revisions {
 	public function override_lock( bool $send_notice = true ): void {
 		check_ajax_referer( 'wp-document-revisions', 'nonce' );
 
-		$post_id = ( isset( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : false );
+		$post_id = ( isset( $_POST['post_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : false );
 
 		// verify current user can edit
 		// consider a specific permission check here.
@@ -314,8 +314,8 @@ trait WP_Document_Revisions_Revisions {
 		/**
 		 * Filters the user locking the document file.
 		 *
-		 * @param string  $user     user locking the document.
-		 * @param WP_Post $document Post object.
+		 * @param int|false $user     user ID locking the document, or false if none.
+		 * @param WP_Post   $document Post object.
 		 */
 		$user = apply_filters( 'document_lock_check', $user, $document );
 
@@ -333,7 +333,7 @@ trait WP_Document_Revisions_Revisions {
 	 *
 	 * @since 0.5
 	 * @param int $post_id the parent post id.
-	 * @return array array of revisions
+	 * @return int[] 1-indexed array of revision post IDs
 	 */
 	public function get_revision_indices( int $post_id ): array {
 		$cache = wp_cache_get( $post_id, 'document_revision_indices' );

@@ -198,8 +198,8 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, array $args ) {
@@ -432,9 +432,7 @@ class WP_Document_Revisions_Validate_Structure {
 				wp_delete_file( $orig );
 				// get attachment metadata.
 				$meta = get_post_meta( $attach, '_wp_attachment_metadata', true );
-				if ( ! is_array( $meta ) || ! isset( $meta['sizes'] ) ) {
-					null;
-				} else {
+				if ( is_array( $meta ) && isset( $meta['sizes'] ) ) {
 					// image name contains only file name and extension.
 					$orig_dir = trailingslashit( dirname( $orig ) );
 					$file_dir = trailingslashit( $file_dir );
@@ -565,6 +563,7 @@ class WP_Document_Revisions_Validate_Structure {
 			/**
 			 * Filters whether to validate the document structure for a document.
 			 *
+			 * @param bool   $valid   Whether to validate the document (default true).
 			 * @param int    $doc_id  Document post ID.
 			 * @param string $content Document post content.
 			 */
@@ -743,7 +742,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param int    $doc_id            ID of a post object.
 	 * @param int    $attach_id         attachment id from post content field.
 	 * @param string $post_modified_gmt post modified field.
-	 * @return array|false
+	 * @return array<int|string, mixed>|false
 	 */
 	private static function validate_document( $doc_id, $attach_id, string $post_modified_gmt ) {
 		global $wpdb;
@@ -837,7 +836,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @param string $post_date   post date field.
 	 * @param string $post_name   post name field.
 	 * @param string $guid        post guid field.
-	 * @return array|bool
+	 * @return array<int|string, mixed>|bool
 	 */
 	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
@@ -876,7 +875,7 @@ class WP_Document_Revisions_Validate_Structure {
 				// post name without extension is OK.
 				if ( $guid !== $permalink && $guid !== $p2 ) {
 					// get the extension.
-					$file       = get_post_meta( $attach_id, '_wp_attached_file', true );
+					$file       = get_post_meta( (int) $attach_id, '_wp_attached_file', true );
 					$permalink .= self::$parent->get_extension( $file );
 					$p2         = $permalink . '/';
 					if ( $guid !== $permalink && $guid !== $p2 ) {

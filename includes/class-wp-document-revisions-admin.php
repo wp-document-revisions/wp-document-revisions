@@ -12,7 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The WP Admin backend object
+ * The WP Admin backend object.
+ *
+ * Methods of the parent {@see WP_Document_Revisions} instance are callable on
+ * this class natively via {@see WP_Document_Revisions_Admin::__call()}, which
+ * forwards to `self::$parent`. The `@method` tags below document that forwarding
+ * so static analysis can resolve the calls; they add no runtime behavior.
+ *
+ * @method bool verify_post_type( $documentish = false )
+ * @method WP_Post|false get_document( $post_id )
+ * @method WP_Post[] get_documents( ?array<string, mixed> $args = array(), bool $return_attachments = false )
+ * @method string format_doc_id( int $post_id )
+ * @method string document_upload_dir()
+ * @method string document_slug()
+ * @method string|false get_document_lock( $document )
  */
 class WP_Document_Revisions_Admin {
 
@@ -91,7 +104,7 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'manage_document_posts_columns', array( $this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( $this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( $this, 'filter_documents_list' ) );
-		add_filter( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
+		add_action( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
 		add_filter( 'wp_dropdown_users_args', array( $this, 'filter_user_dropdown' ), 10, 2 );
 
 		// settings.
@@ -133,8 +146,8 @@ class WP_Document_Revisions_Admin {
 	 * Provides support to call functions of the parent class natively.
 	 *
 	 * @since 1.0
-	 * @param string $funct the function to call.
-	 * @param array  $args  the arguments to pass to the function.
+	 * @param string  $funct the function to call.
+	 * @param mixed[] $args  the arguments to pass to the function.
 	 * @return mixed the result of the function.
 	 */
 	public function __call( $funct, array $args ) {

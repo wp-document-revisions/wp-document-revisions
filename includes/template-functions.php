@@ -19,9 +19,9 @@ if ( ! function_exists( 'get_documents' ) ) {
 	 * Takes standard WP_Query parameters
 	 * See in-line documentation in wp-document-revisions.php for more information ( function get_documents() )
 	 *
-	 * @param array $args WP_Query parameters.
-	 * @param bool  $return_attachments whether to return attachment or revisions objects.
-	 * @return array array of post objects
+	 * @param array<string, mixed> $args WP_Query parameters.
+	 * @param bool                 $return_attachments whether to return attachment or revisions objects.
+	 * @return WP_Post[] array of post objects
 	 */
 	function get_documents( array $args = array(), bool $return_attachments = false ): array { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 
@@ -42,7 +42,7 @@ if ( ! function_exists( 'get_document_revisions' ) ) {
 	 * See in-line documentation in wp-document-revisions.php for more information ( function get_revisions() )
 	 *
 	 * @param int $document_id the ID of the document.
-	 * @return array array of revision-post objects
+	 * @return WP_Post[] array of revision-post objects
 	 */
 	function get_document_revisions( int $document_id ): array { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 

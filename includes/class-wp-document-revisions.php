@@ -40,7 +40,7 @@ class WP_Document_Revisions {
 	/**
 	 * The WP default upload directory cache.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 *
 	 * @since 3.2
 	 */
@@ -161,8 +161,8 @@ class WP_Document_Revisions {
 		add_filter( 'rewrite_rules_array', array( $this, 'revision_rewrite' ) );
 		add_filter( 'transient_rewrite_rules', array( $this, 'revision_rewrite' ) );
 		add_action( 'init', array( $this, 'inject_rules' ) );
-		add_action( 'post_type_link', array( $this, 'permalink' ), 10, 3 );
-		add_action( 'post_link', array( $this, 'permalink' ), 10, 3 );
+		add_filter( 'post_type_link', array( $this, 'permalink' ), 10, 3 );
+		add_filter( 'post_link', array( $this, 'permalink' ), 10, 3 );
 		add_filter( 'template_include', array( $this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( $this, 'serve_document_auth' ), 10, 3 );
 		add_action( 'parse_request', array( $this, 'ie_cache_fix' ) );
@@ -186,7 +186,7 @@ class WP_Document_Revisions {
 		add_filter( 'attachment_link', array( $this, 'attachment_link_filter' ), 10, 2 );
 		add_filter( 'get_attached_file', array( $this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( $this, 'filename_rewrite' ) );
-		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 2 );
+		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
 		// initialise document directory (will itself populate cache).
@@ -451,8 +451,8 @@ class WP_Document_Revisions {
 	 * Ability callback: Check if the current user can perform an action on a document.
 	 *
 	 * @since 3.9.1
-	 * @param array $input Input containing document_id and action.
-	 * @return array Result with 'allowed' boolean.
+	 * @param array<string, mixed> $input Input containing document_id and action.
+	 * @return array<string, mixed> Result with 'allowed' boolean.
 	 */
 	public function ability_check_document_access( array $input ): array {
 		$document_id = (int) $input['document_id'];
@@ -486,8 +486,8 @@ class WP_Document_Revisions {
 	 * Ability callback: Get document metadata.
 	 *
 	 * @since 3.9.1
-	 * @param array $input Input containing document_id.
-	 * @return array|WP_Error Document info or error.
+	 * @param array<string, mixed> $input Input containing document_id.
+	 * @return array<string, mixed>|WP_Error Document info or error.
 	 */
 	public function ability_get_document_info( array $input ) {
 		$document_id = (int) $input['document_id'];
@@ -526,8 +526,8 @@ class WP_Document_Revisions {
 	 * Ability callback: Get document revision history.
 	 *
 	 * @since 3.9.1
-	 * @param array $input Input containing document_id.
-	 * @return array|WP_Error Revision list or error.
+	 * @param array<string, mixed> $input Input containing document_id.
+	 * @return array<string, mixed>|WP_Error Revision list or error.
 	 */
 	public function ability_get_document_revisions( array $input ) {
 		$document_id = (int) $input['document_id'];
@@ -562,7 +562,7 @@ class WP_Document_Revisions {
 
 		if ( is_array( $revisions ) ) {
 			foreach ( $revisions as $revision ) {
-				$author   = get_userdata( $revision->post_author );
+				$author   = get_userdata( (int) $revision->post_author );
 				$result[] = array(
 					'id'     => $revision->ID,
 					'date'   => $revision->post_date,
@@ -579,8 +579,8 @@ class WP_Document_Revisions {
 	 * Ability callback: Override a document lock.
 	 *
 	 * @since 3.9.1
-	 * @param array $input Input containing document_id.
-	 * @return array|WP_Error Result or error.
+	 * @param array<string, mixed> $input Input containing document_id.
+	 * @return array<string, mixed>|WP_Error Result or error.
 	 */
 	public function ability_override_document_lock( array $input ) {
 		$document_id = (int) $input['document_id'];

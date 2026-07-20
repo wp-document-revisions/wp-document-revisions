@@ -35,9 +35,9 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * @since 3.5.0
 	 *
 	 * @param ?string $link_date value to represent whether to add the year/month into the permalink.
-	 * @return string sanitized value
+	 * @return bool sanitized value (true to add the year/month into the permalink)
 	 */
-	public function sanitize_link_date( ?string $link_date ) {
+	public function sanitize_link_date( ?string $link_date ): bool {
 		return (bool) $link_date;
 	}
 
@@ -323,7 +323,7 @@ trait WP_Document_Revisions_Admin_Settings {
 				printf(
 					esc_html( $format_string ),
 					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ), time() ) ),
-					esc_html( get_the_author_meta( 'display_name', $document->post_author ) ),
+					esc_html( get_the_author_meta( 'display_name', (int) $document->post_author ) ),
 					esc_html( ucwords( $document->post_status ) )
 				);
 				?>
@@ -508,7 +508,7 @@ trait WP_Document_Revisions_Admin_Settings {
 
 		// get link date value.
 		$link_date = ( isset( $_POST['document_link_date'] ) ? sanitize_text_field( wp_unslash( $_POST['document_link_date'] ) ) : '' );
-		$link_date = $this->sanitize_document_link_date( $link_date );
+		$link_date = $this->sanitize_link_date( $link_date );
 
 		// because there's a redirect, and there's no Settings API, force settings errors into a transient.
 		global $wp_settings_errors;
@@ -719,8 +719,8 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Filters documents from the media grid view when queried via Ajax. This uses
 	 * the same filters from the list view applied in `filter_from_media()`.
 	 *
-	 * @param array $query the attachment query arguments.
-	 * @return array
+	 * @param array<string, mixed> $query the attachment query arguments.
+	 * @return array<string, mixed>
 	 */
 	public function filter_from_media_grid( array $query ) {
 		// note: hook late so that unattached filter can hook in, if necessary.
@@ -771,6 +771,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	 *
 	 * @since 0.5
 	 * @param string $file Path to the file to delete.
+	 * @return string the (possibly remapped) file path.
 	 */
 	public function wp_delete_file( string $file ) {
 		global $wpdr;
@@ -785,6 +786,8 @@ trait WP_Document_Revisions_Admin_Settings {
 	/**
 	 * Remove all hooks that activate workflow state support
 	 * use filter `document_use_workflow_states` to disable.
+	 *
+	 * @return bool false if workflow states remain enabled, true once disabled.
 	 */
 	public function disable_workflow_states() {
 		if ( self::$parent->use_workflow_states() ) {

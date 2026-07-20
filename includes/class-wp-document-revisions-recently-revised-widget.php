@@ -18,7 +18,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * The default data
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $defaults = array(
 		'title'       => '',
@@ -47,8 +47,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Generate widget contents.
 	 *
-	 * @param mixed[] $args the widget arguments.
-	 * @param Object  $instance the WP Document Revisions instance.
+	 * @param mixed[]              $args the widget arguments.
+	 * @param array<string, mixed> $instance the WP Document Revisions instance.
+	 * @return string|false the widget markup, or false on buffering failure.
 	 */
 	public function widget_gen( array $args, $instance ) {
 		global $wpdr;
@@ -122,7 +123,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			}
 			?>
 			<li>
-				<h<?php echo esc_attr( $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( $h_n ); ?>>
+				<h<?php echo esc_attr( (string) $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( (string) $h_n ); ?>>
 				<?php
 				if ( (bool) $instance['show_thumb'] ) {
 					$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
@@ -171,8 +172,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Callback to display widget contents in classic widget.
 	 *
-	 * @param Array  $args the widget arguments.
-	 * @param Object $instance the WP Document Revisions instance.
+	 * @param array<string, mixed> $args the widget arguments.
+	 * @param array<string, mixed> $instance the WP Document Revisions instance.
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
 
@@ -185,7 +187,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Callback to display widget options form.
 	 *
-	 * @param Object $instance the WP Document Revisions instance.
+	 * @param array<string, mixed> $instance the WP Document Revisions instance.
 	 */
 	public function form( $instance ) {
 
@@ -237,8 +239,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Sanitizes options and saves.
 	 *
-	 * @param Object $new_instance the new instance.
-	 * @param Object $old_instance the old instance.
+	 * @param array<string, mixed> $new_instance the new instance.
+	 * @param array<string, mixed> $old_instance the old instance.
+	 * @return array<string, mixed> the sanitized instance to save.
 	 */
 	public function update( $new_instance, $old_instance ) {
 
@@ -327,9 +330,10 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	/**
 	 * Render widget block server side.
 	 *
-	 * @param array  $atts     block attributes coming from block.
-	 * @param string $content  Optional. Block content. Default empty string.
+	 * @param array<string, mixed> $atts     block attributes coming from block.
+	 * @param string               $content  Optional. Block content. Default empty string.
 	 * @since 3.3.0
+	 * @return string the rendered block markup.
 	 */
 	public function wpdr_documents_widget_display( array $atts, string $content = '' ) {
 		// Create the two parameter sets.

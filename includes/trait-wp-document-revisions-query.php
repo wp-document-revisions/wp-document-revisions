@@ -40,9 +40,9 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * See https://developer.wordpress.org/reference/classes/wp_query/ for more information on potential parameters
 	 *
-	 * @param ?array  $args (optional) an array of WP_Query arguments.
-	 * @param boolean $return_attachments (optional).
-	 * @return array an array of post objects
+	 * @param ?array<string, mixed> $args (optional) an array of WP_Query arguments.
+	 * @param boolean               $return_attachments (optional).
+	 * @return WP_Post[] an array of post objects
 	 */
 	public function get_documents( ?array $args = array(), bool $return_attachments = false ): array {
 		$args              = (array) $args;
@@ -289,6 +289,7 @@ trait WP_Document_Revisions_Query {
 	 * @since 3.3.0
 	 * @param string[]    $statuses  List of post statuses to include in the count. Default is 'publish'.
 	 * @param WP_Taxonomy $taxonomy  Current taxonomy object.
+	 * @return string[] the (possibly modified) list of post statuses.
 	 */
 	public function review_count_statuses( array $statuses, WP_Taxonomy $taxonomy ): array {
 		$tax_name   = $taxonomy->name;
@@ -369,7 +370,7 @@ trait WP_Document_Revisions_Query {
 	 * Gets a file extension from a post.
 	 *
 	 * @since 0.5
-	 * @param object|int $document_or_attachment document or attachment.
+	 * @param object|int|string $document_or_attachment document or attachment.
 	 * @return string the extension to the latest revision
 	 */
 	public function get_file_type( $document_or_attachment = '' ): string {
@@ -418,6 +419,7 @@ trait WP_Document_Revisions_Query {
 	 * @param string|int[] $size    Requested image size. Can be any registered image size name, or
 	 *                              an array of width and height values in pixels (in that order).
 	 * @param int          $post_id The post ID.
+	 * @return string|array<int, mixed> the (possibly overridden) image size.
 	 */
 	public function document_featured_image_size( $size, int $post_id ) {
 		if ( 'post-thumbnail' !== $size || ! $this->verify_post_type( $post_id ) ) {
@@ -472,7 +474,7 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @param string       $where          The `WHERE` clause in the SQL.
 	 * @param bool         $in_same_term   Whether post should be in a same taxonomy term.
-	 * @param array|string $excluded_terms Array of excluded term IDs, or comma-separated string.
+	 * @param int[]|string $excluded_terms Array of excluded term IDs, or comma-separated string.
 	 * @param string       $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
 	 * @param WP_Post      $post           WP_Post object.
 	 *
@@ -502,14 +504,12 @@ trait WP_Document_Revisions_Query {
 	 */
 	public function posts_results( array $results, WP_Query $query_object ): array {
 		$match = false;
-		if ( is_array( $results ) ) {
-			foreach ( $results as $key => $result ) {
-				// confirm a document.
-				if ( $this->verify_post_type( $result ) ) {
-					// user has no access, remove from result.
-					unset( $results[ $key ] );
-					$match = true;
-				}
+		foreach ( $results as $key => $result ) {
+			// confirm a document.
+			if ( $this->verify_post_type( $result ) ) {
+				// user has no access, remove from result.
+				unset( $results[ $key ] );
+				$match = true;
 			}
 		}
 		// re-evaluate count.
@@ -517,17 +517,9 @@ trait WP_Document_Revisions_Query {
 			// reindex array.
 			$results = array_values( $results );
 
-			if ( is_array( $results ) ) {
-				$query_object->post_count  = count( $results );
-				$query_object->found_posts = $query_object->post_count;
-				$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
-			} elseif ( null === $results ) {
-				$query_object->post_count  = 0;
-				$query_object->found_posts = 0;
-				$query_object->is_404      = true;
-			} else {
-				$query_object->found_posts = 1;
-			}
+			$query_object->post_count  = count( $results );
+			$query_object->found_posts = $query_object->post_count;
+			$query_object->is_404      = (bool) ( 0 === $query_object->post_count );
 		}
 
 		return $results;
@@ -554,8 +546,8 @@ trait WP_Document_Revisions_Query {
 	 * Adds EditFlow / PublishPress Status support for post status to the admin table.
 	 *
 	 * @since 3.3.0
-	 * @param array $defaults the column chosen of the all documents list.
-	 * @return array the updated column list.
+	 * @param array<string, string> $defaults the column chosen of the all documents list.
+	 * @return array<string, string> the updated column list.
 	 */
 	public function add_post_status_column( array $defaults ): array {
 		// find place to slice (after author).

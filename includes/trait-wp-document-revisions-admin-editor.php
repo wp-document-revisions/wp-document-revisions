@@ -33,8 +33,8 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Registers update messages
 	 *
 	 * @since 0.5
-	 * @param array $messages messages array.
-	 * @return array messages array with doc. messages
+	 * @param array<string, mixed> $messages messages array.
+	 * @return array<string, mixed> messages array with doc. messages
 	 */
 	public function update_messages( array $messages ): array {
 		global $post, $post_id;
@@ -143,9 +143,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * Forces postcustom metabox to be hidden by default, despite the fact that the CPT creates it.
 	 *
 	 * @since 1.0
-	 * @param array      $hidden the default hidden metaboxes.
+	 * @param string[]   $hidden the default hidden metaboxes.
 	 * @param ?WP_Screen $screen the current screen.
-	 * @return array defaults with postcustom
+	 * @return string[] defaults with postcustom
 	 */
 	public function hide_postcustom_metabox( array $hidden, ?WP_Screen $screen ): array {
 		if ( $screen && 'document' === $screen->id ) {
@@ -268,12 +268,12 @@ trait WP_Document_Revisions_Admin_Editor {
 	 *
 	 * @since 0.5
 	 *
-	 * @param int    $doc_id     the document ID.
-	 * @param array  $terms      the new terms.
-	 * @param array  $tt_ids     the new term IDs.
-	 * @param string $taxonomy   the taxonomy being changed.
-	 * @param bool   $append     whether it is being appended or replaced.
-	 * @param array  $old_tt_ids term taxonomy ID array before the change.
+	 * @param int     $doc_id     the document ID.
+	 * @param mixed[] $terms      the new terms.
+	 * @param int[]   $tt_ids     the new term IDs.
+	 * @param string  $taxonomy   the taxonomy being changed.
+	 * @param bool    $append     whether it is being appended or replaced.
+	 * @param int[]   $old_tt_ids term taxonomy ID array before the change.
 	 */
 	public function workflow_state_save( int $doc_id, array $terms, array $tt_ids, string $taxonomy, bool $append, array $old_tt_ids ): void {
 		// Only interested in replacement to this taxonomy, so if not, bail early.
@@ -336,9 +336,9 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * the data in-place without a secondary wp_update_post call.
 	 *
 	 * @since 4.0.8
-	 * @param array $data    Sanitized post data about to be inserted.
-	 * @param array $postarr Raw post data passed to wp_insert_post.
-	 * @return array Post data, with post_content restored if needed.
+	 * @param array<string, mixed> $data    Sanitized post data about to be inserted.
+	 * @param array<string, mixed> $postarr Raw post data passed to wp_insert_post.
+	 * @return array<string, mixed> Post data, with post_content restored if needed.
 	 */
 	public function restore_document_attachment_id( array $data, array $postarr ): array {
 		if ( 'document' !== $data['post_type'] ) {
@@ -558,9 +558,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// can we merge the revisions.
-		if ( is_null( self::$last_revn ) || is_null( self::$last_but_one_revn ) ) {
-			null;
-		} else {
+		if ( ! is_null( self::$last_revn ) && ! is_null( self::$last_but_one_revn ) ) {
 			// Yes. Need to delete the last_but one revision and update the excerpt on the last revision and the post to keep timestamps.
 			// Remove our filter so that we can delete the revision.
 			global $wpdr;
@@ -582,7 +580,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
 			wp_cache_delete( self::$last_revn, 'posts' );
 			wp_cache_delete( $doc_id, 'posts' );
-			clean_post_cache( self::$last_revn_excerpt );
+			clean_post_cache( $doc_id );
 			clean_post_cache( self::$last_revn );
 		}
 
@@ -711,7 +709,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// enqueue CSS.
-		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), null, $wpdr->version );
+		wp_enqueue_style( 'wp-document-revisions', plugins_url( '/css/style.css', __DIR__ ), array(), $wpdr->version );
 	}
 
 
@@ -752,7 +750,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 *
 	 * @since 1.1
 	 * @param WP_Screen $screen (optional) the current screen.
-	 * @return array the help text
+	 * @return array<string, mixed> the help text
 	 */
 	public function get_help_text( ?WP_Screen $screen = null ): array {
 		if ( is_null( $screen ) ) {
@@ -808,6 +806,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 *
 	 * @param bool    $use_block_editor Whether the post can be edited or not.
 	 * @param WP_Post $post             The post being checked.
+	 * @return bool whether the post can use the block editor.
 	 */
 	public function no_use_block_editor( bool $use_block_editor, WP_Post $post ) {
 		$wpdr = self::$parent;
@@ -851,9 +850,10 @@ trait WP_Document_Revisions_Admin_Editor {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array  $settings  Array of editor arguments.
-	 * @param string $editor_id Unique editor identifier, e.g. 'content'. Accepts 'classic-block'
-	 *                          when called from block editor's Classic block.
+	 * @param array<string, mixed> $settings  Array of editor arguments.
+	 * @param string               $editor_id Unique editor identifier, e.g. 'content'. Accepts 'classic-block'
+	 *                                         when called from block editor's Classic block.
+	 * @return array<string, mixed> the (possibly modified) editor settings.
 	 */
 	public function document_editor_setting( array $settings, string $editor_id ) {
 		// only interested in content.
@@ -882,7 +882,8 @@ trait WP_Document_Revisions_Admin_Editor {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $settings  Array of tiny_mce arguments.
+	 * @param array<string, mixed> $settings  Array of tiny_mce arguments.
+	 * @return array<string, mixed> the (possibly modified) tiny_mce arguments.
 	 */
 	public function modify_content_class( array $settings ) {
 		// check on document only affects these.
@@ -913,6 +914,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * to style the page (e.g., when the document is locked).
 	 *
 	 * @param String $body_class the existing body class(es).
+	 * @return string the (possibly modified) body class(es).
 	 */
 	public function admin_body_class_filter( string $body_class ) {
 		global $post;

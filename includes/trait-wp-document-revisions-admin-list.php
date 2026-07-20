@@ -67,8 +67,9 @@ trait WP_Document_Revisions_Admin_List {
 	 * Filter the user dropdown args to add additional arguments that are normally filtered out. .
 	 *
 	 * @since 3.6
-	 * @param array $query_args  The query arguments for get_users().
-	 * @param array $parsed_args The arguments passed to wp_dropdown_users() combined with the defaults.
+	 * @param array<string, mixed> $query_args  The query arguments for get_users().
+	 * @param array<string, mixed> $parsed_args The arguments passed to wp_dropdown_users() combined with the defaults.
+	 * @return array<string, mixed> the (possibly modified) query arguments.
 	 */
 	public function filter_user_dropdown( array $query_args, array $parsed_args ) {
 		if ( array_key_exists( 'wpdr_added', $parsed_args ) ) {
@@ -112,8 +113,8 @@ trait WP_Document_Revisions_Admin_List {
 	 * Renames author column on document list to "owner".
 	 *
 	 * @since 1.0.4
-	 * @param array $defaults the default column labels.
-	 * @return array the modified column labels
+	 * @param array<string, string> $defaults the default column labels.
+	 * @return array<string, string> the modified column labels
 	 */
 	public function rename_author_column( array $defaults ): array {
 		if ( isset( $defaults['author'] ) ) {
@@ -127,8 +128,8 @@ trait WP_Document_Revisions_Admin_List {
 	 * Splices in Currently Editing column to document list.
 	 *
 	 * @since 1.1
-	 * @param array $defaults the original columns.
-	 * @return array our spliced columns
+	 * @param array<string, string> $defaults the original columns.
+	 * @return array<string, string> our spliced columns
 	 */
 	public function add_currently_editing_column( array $defaults ): array {
 		// get checkbox and title.

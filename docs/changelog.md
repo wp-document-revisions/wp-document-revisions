@@ -2,6 +2,12 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.1.3
+
+* Fix stale document data after consecutive revisions are merged on save: the document's object cache is now cleared correctly (previously the cache was keyed on the revision excerpt text rather than the document ID, so it was never invalidated). (#613)
+* Fix a fatal error when saving the Document Link Date option on the multisite network settings screen, caused by a call to an undefined sanitization method. (#611)
+* Avoid a PHP warning when serving a document with gzip compression forced via the `document_serve_use_gzip` filter for a client that did not advertise encoding support. (#613)
+
 ### 5.1.2
 
 * Ensure that Live Review document upload works and the media window autocloses after successful upload. (#588)

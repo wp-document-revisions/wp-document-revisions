@@ -45,7 +45,7 @@ echo '<?xml version="1.0" encoding="' . ent2ncr( esc_attr( get_option( 'blog_cha
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 	<link><?php bloginfo_rss( 'url' ); ?></link>
 	<description><?php bloginfo_rss( 'description' ); ?></description>
-	<lastBuildDate><?php echo ent2ncr( esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'GMT' ), false ) ) ); ?></lastBuildDate>
+	<lastBuildDate><?php echo ent2ncr( esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'gmt' ), false ) ) ); ?></lastBuildDate>
 	<language><?php echo ent2ncr( esc_html( get_option( 'rss_language' ) ) ); ?></language>
 	<sy:updatePeriod><?php echo ent2ncr( esc_html( apply_filters( 'rss_update_period', 'hourly' ) ) ); ?></sy:updatePeriod>
 	<sy:updateFrequency><?php echo ent2ncr( esc_html( apply_filters( 'rss_update_frequency', '1' ) ) ); ?></sy:updateFrequency>
