@@ -6,16 +6,21 @@ name: "WP Document Revisions CodeQL Config"
 # Disable default language detection to prevent Ruby analysis
 disable-default-queries: false
 
-# Explicitly define paths to analyze
+# Explicitly define paths to analyze.
+# JavaScript sources live under src/ (block editor + classic-admin scripts);
+# includes/ and the main file are PHP and are retained here for when CodeQL
+# gains PHP support. The build/ output and node_modules are ignored below.
 paths:
   - includes/
-  - js/
+  - src/
   - wp-document-revisions.php
 
 # Paths to ignore during analysis
 paths-ignore:
   - vendor/
+  - vendor-prefixed/
   - node_modules/
+  - build/
   - tests/
   - script/
   - docs/

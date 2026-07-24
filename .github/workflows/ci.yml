@@ -133,13 +133,21 @@ jobs:
                   name: javascript-coverage
 
     # WordPress.org Plugin Check — validates the plugin against the plugin
-    # directory guidelines and best practices. Fails on errors only; warnings
-    # are reported but non-blocking so the gate stays actionable.
+    # directory guidelines and best practices.
+    #
+    # Advisory (continue-on-error) for now: run against the raw repo it reports
+    # false positives that don't apply to the actual distribution — dev-only
+    # hidden/dev files that .distignore strips at release, and WP-version
+    # requirements for functions (wp_register_ability*, wp_ai_client_prompt)
+    # that are already guarded by function_exists(). Hardening this into a
+    # blocking gate (scan a built, .distignore-filtered copy + suppress the
+    # guarded-function codes) is tracked as a follow-up.
     plugin-check:
         runs-on: ubuntu-latest
         permissions:
             contents: read
-        name: Plugin Check
+        name: Plugin Check (advisory)
+        continue-on-error: true
         steps:
             - uses: actions/checkout@v7
 
