@@ -117,6 +117,11 @@ jobs:
             - name: Audit dependencies
               run: npm audit --omit=dev
 
+            # Lint all first-party JavaScript sources under src/ (block editor
+            # and classic-admin scripts).
+            - name: Lint JavaScript (src/)
+              run: npm run lint-js
+
             - name: Run Jest tests
               run: npm test -- --ci --coverage --maxWorkers=2
 
@@ -126,6 +131,23 @@ jobs:
                   files: ./coverage/lcov.info
                   flags: javascript
                   name: javascript-coverage
+
+    # WordPress.org Plugin Check — validates the plugin against the plugin
+    # directory guidelines and best practices. Fails on errors only; warnings
+    # are reported but non-blocking so the gate stays actionable.
+    plugin-check:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Plugin Check
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Run Plugin Check
+              uses: wordpress/plugin-check-action@v1.1.7
+              with:
+                  ignore-warnings: true
+                  exclude-directories: 'node_modules,vendor,vendor-bin,vendor-prefixed,tests,docs,script,bin'
 
     # PHPUnit tests (PR matrix).
     phpunit:

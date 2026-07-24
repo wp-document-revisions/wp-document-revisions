@@ -715,15 +715,17 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return void
 	 */
 	public static function enqueue_scripts(): void {
-		$suffix = ( WP_DEBUG ) ? '.dev' : '';
-		$path   = '/js/wp-document-revisions-validate' . $suffix . '.js';
-		$vers   = ( WP_DEBUG ) ? filemtime( plugin_dir_path( __DIR__ ) . $path ) : self::$parent->version;
+		$asset_file = plugin_dir_path( __DIR__ ) . 'build/admin/wp-document-revisions-validate.asset.php';
+		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
+			'dependencies' => array(),
+			'version'      => self::$parent->version,
+		);
 
 		wp_enqueue_script(
 			'wpdr_validate',
-			plugins_url( $path, __DIR__ ),
-			array( 'wp-api-fetch' ),
-			$vers,
+			plugins_url( '/build/admin/wp-document-revisions-validate.js', __DIR__ ),
+			array_merge( array( 'wp-api-fetch' ), $asset['dependencies'] ),
+			$asset['version'],
 			true
 		);
 		// phpcs:disable Squiz.Strings.DoubleQuoteUsage

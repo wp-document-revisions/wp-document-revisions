@@ -13,18 +13,14 @@
  * - Upload success/error snackbar notices
  * - Save lock for new documents without a file
  *
- * @see js/wp-document-revisions.dev.js (classic editor equivalent)
- * @package WP_Document_Revisions
+ * @see src/admin/wp-document-revisions.js (classic editor equivalent)
+ * @package
  */
 
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { MediaUploadCheck } from '@wordpress/block-editor';
-import {
-	Button,
-	Spinner,
-	TextareaControl,
-} from '@wordpress/components';
+import { Button, Spinner, TextareaControl } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useState, useCallback, useRef } from '@wordpress/element';
@@ -63,12 +59,10 @@ function getFileExtension( media ) {
 		const mimeMap = {
 			pdf: 'PDF',
 			msword: 'DOC',
-			'vnd.openxmlformats-officedocument.wordprocessingml.document':
-				'DOCX',
+			'vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
 			'vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
 			'vnd.ms-excel': 'XLS',
-			'vnd.openxmlformats-officedocument.presentationml.presentation':
-				'PPTX',
+			'vnd.openxmlformats-officedocument.presentationml.presentation': 'PPTX',
 			'vnd.ms-powerpoint': 'PPT',
 			plain: 'TXT',
 			csv: 'CSV',
@@ -82,36 +76,37 @@ function getFileExtension( media ) {
 }
 
 function DocumentUploadPanel() {
-	const postType = useSelect(
-		( select ) => select( 'core/editor' ).getCurrentPostType(),
-		[]
-	);
+	const postType = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostType(), [] );
 
 	if ( postType !== 'document' ) {
 		return null;
 	}
 
+	return <DocumentUploadPanelContent />;
+}
+
+/**
+ * Inner body of the document upload panel.
+ *
+ * Split out from the guard component above so that every hook runs
+ * unconditionally, satisfying the Rules of Hooks. The parent renders this only
+ * for the `document` post type, so these hooks (and their effects) still only
+ * run for documents — behaviour is unchanged from the previous single-function
+ * implementation that early-returned before its hooks.
+ */
+function DocumentUploadPanelContent() {
 	const [ meta, setMeta ] = useEntityProp( 'postType', 'document', 'meta' );
 	const attachmentId = meta?.document_attachment_id || 0;
 
-	const [ excerpt, setExcerpt ] = useEntityProp(
-		'postType',
-		'document',
-		'excerpt'
-	);
+	const [ excerpt, setExcerpt ] = useEntityProp( 'postType', 'document', 'excerpt' );
 
-	const isNewPost = useSelect(
-		( select ) => select( 'core/editor' ).isEditedPostNew(),
-		[]
-	);
+	const isNewPost = useSelect( ( select ) => select( 'core/editor' ).isEditedPostNew(), [] );
 
 	const { lockPostSaving, unlockPostSaving } = useDispatch( 'core/editor' );
-	const { createSuccessNotice, createErrorNotice } =
-		useDispatch( noticesStore );
+	const { createSuccessNotice, createErrorNotice } = useDispatch( noticesStore );
 
 	// Track whether a new upload happened this session (for success notice).
-	const [ previousAttachmentId, setPreviousAttachmentId ] =
-		useState( attachmentId );
+	const [ previousAttachmentId, setPreviousAttachmentId ] = useState( attachmentId );
 
 	// Lock saving when a new document has no file attached.
 	useEffect( () => {
@@ -138,9 +133,7 @@ function DocumentUploadPanel() {
 			if ( ! attachmentId ) {
 				return false;
 			}
-			return select( 'core/data' ).isResolving( 'core', 'getMedia', [
-				attachmentId,
-			] );
+			return select( 'core/data' ).isResolving( 'core', 'getMedia', [ attachmentId ] );
 		},
 		[ attachmentId ]
 	);
@@ -149,12 +142,8 @@ function DocumentUploadPanel() {
 	const { isLocked, lockUser } = useSelect( ( select ) => {
 		const editorSelect = select( 'core/editor' );
 		return {
-			isLocked: editorSelect.isPostLocked
-				? editorSelect.isPostLocked()
-				: false,
-			lockUser: editorSelect.getPostLockUser
-				? editorSelect.getPostLockUser()
-				: null,
+			isLocked: editorSelect.isPostLocked ? editorSelect.isPostLocked() : false,
+			lockUser: editorSelect.getPostLockUser ? editorSelect.getPostLockUser() : null,
 		};
 	}, [] );
 
@@ -174,13 +163,9 @@ function DocumentUploadPanel() {
 	const onSelectMedia = useCallback(
 		( media ) => {
 			if ( ! media?.id ) {
-				createErrorNotice(
-					__(
-						'Document selection failed.',
-						'wp-document-revisions'
-					),
-					{ isDismissible: true }
-				);
+				createErrorNotice( __( 'Document selection failed.', 'wp-document-revisions' ), {
+					isDismissible: true,
+				} );
 				return;
 			}
 
@@ -190,23 +175,15 @@ function DocumentUploadPanel() {
 
 			// Show appropriate success notice.
 			const message = oldId
-				? __(
-						'New version selected. Press Update to save.',
-						'wp-document-revisions'
-				  )
-				: __(
-						'Document selected. Press Update to save.',
-						'wp-document-revisions'
-				  );
+				? __( 'New version selected. Press Update to save.', 'wp-document-revisions' )
+				: __( 'Document selected. Press Update to save.', 'wp-document-revisions' );
 			createSuccessNotice( message, {
 				type: 'snackbar',
 				isDismissible: true,
 			} );
 
 			// Fire legacy CustomEvent for backward compatibility.
-			const ext = media.filename
-				? '.' + media.filename.split( '.' ).pop()
-				: '';
+			const ext = media.filename ? '.' + media.filename.split( '.' ).pop() : '';
 			document.dispatchEvent(
 				new CustomEvent( 'documentUpload', {
 					detail: {
@@ -241,11 +218,7 @@ function DocumentUploadPanel() {
 
 		// Standard select handler (user clicks "Select" button).
 		frame.on( 'select', () => {
-			const selected = frame
-				.state()
-				.get( 'selection' )
-				.first()
-				?.toJSON();
+			const selected = frame.state().get( 'selection' ).first()?.toJSON();
 			if ( selected ) {
 				onSelectMedia( selected );
 			}
@@ -262,7 +235,7 @@ function DocumentUploadPanel() {
 							onSelectMedia( data.data );
 							frame.close();
 						}
-					} catch ( e ) {
+					} catch {
 						// Fall through to manual selection.
 					}
 				} );
@@ -326,10 +299,7 @@ function DocumentUploadPanel() {
 									'%s is currently editing this document.',
 									'wp-document-revisions'
 							  ).replace( '%s', lockUser.name )
-							: __(
-									'This document is currently locked.',
-									'wp-document-revisions'
-							  ) }
+							: __( 'This document is currently locked.', 'wp-document-revisions' ) }
 					</span>
 				</div>
 			) }
@@ -365,11 +335,7 @@ function DocumentUploadPanel() {
 						<strong>{ getFileName() }</strong>
 					</div>
 					<p style={ { margin: 0 } }>
-						<a
-							href={ attachment.source_url }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
+						<a href={ attachment.source_url } target="_blank" rel="noopener noreferrer">
 							{ __( 'Download', 'wp-document-revisions' ) }
 						</a>
 					</p>
@@ -379,20 +345,10 @@ function DocumentUploadPanel() {
 			{ /* Upload / Replace button */ }
 			{ ! isResolving && (
 				<MediaUploadCheck>
-					<Button
-						variant="secondary"
-						onClick={ openMediaFrame }
-						disabled={ isLocked }
-					>
+					<Button variant="secondary" onClick={ openMediaFrame } disabled={ isLocked }>
 						{ attachmentId
-							? __(
-									'Upload New Version',
-									'wp-document-revisions'
-							  )
-							: __(
-									'Upload Document',
-									'wp-document-revisions'
-							  ) }
+							? __( 'Upload New Version', 'wp-document-revisions' )
+							: __( 'Upload Document', 'wp-document-revisions' ) }
 					</Button>
 				</MediaUploadCheck>
 			) }
@@ -400,10 +356,7 @@ function DocumentUploadPanel() {
 			{ /* Revision summary (post_excerpt) */ }
 			<div style={ { marginTop: '16px' } }>
 				<TextareaControl
-					label={ __(
-						'Revision Summary',
-						'wp-document-revisions'
-					) }
+					label={ __( 'Revision Summary', 'wp-document-revisions' ) }
 					help={ __(
 						'A brief description of the changes in this version.',
 						'wp-document-revisions'
@@ -425,28 +378,34 @@ function DocumentUploadPanel() {
  * in a table matching the classic editor's Revision Log metabox.
  */
 function RevisionLogPanel() {
-	const postType = useSelect(
-		( select ) => select( 'core/editor' ).getCurrentPostType(),
-		[]
-	);
+	const postType = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostType(), [] );
 
-	const postId = useSelect(
-		( select ) => select( 'core/editor' ).getCurrentPostId(),
-		[]
-	);
+	const postId = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostId(), [] );
 
 	if ( postType !== 'document' || ! postId ) {
 		return null;
 	}
 
+	return <RevisionLogPanelContent postId={ postId } />;
+}
+
+/**
+ * Inner body of the revision log panel.
+ *
+ * Split out from the guard component above so that every hook runs
+ * unconditionally, satisfying the Rules of Hooks. The parent renders this only
+ * once it has a `document` post with a valid id, so the fetch effects keep the
+ * same run conditions as the previous single-function implementation.
+ *
+ * @param {Object} props        Component props.
+ * @param {number} props.postId Current document post id.
+ */
+function RevisionLogPanelContent( { postId } ) {
 	const [ revisions, setRevisions ] = useState( null );
 	const [ loading, setLoading ] = useState( true );
 
 	// Refresh revision list when post is saved.
-	const isSaving = useSelect(
-		( select ) => select( 'core/editor' ).isSavingPost(),
-		[]
-	);
+	const isSaving = useSelect( ( select ) => select( 'core/editor' ).isSavingPost(), [] );
 	const wasSaving = useRef( false );
 
 	useEffect( () => {
@@ -460,8 +419,7 @@ function RevisionLogPanel() {
 
 	const fetchRevisions = useCallback( () => {
 		setLoading( true );
-		const restBase =
-			window.wpDocumentRevisions?.restBase || 'documents';
+		const restBase = window.wpDocumentRevisions?.restBase || 'documents';
 		window.wp
 			.apiFetch( {
 				path: `/wp/v2/${ restBase }/${ postId }/revisions?per_page=20&context=edit`,
@@ -542,10 +500,7 @@ function RevisionLogPanel() {
 			{ loading && <Spinner /> }
 			{ ! loading && ( ! revisions || revisions.length === 0 ) && (
 				<p style={ { color: '#757575', fontStyle: 'italic' } }>
-					{ __(
-						'No revisions yet.',
-						'wp-document-revisions'
-					) }
+					{ __( 'No revisions yet.', 'wp-document-revisions' ) }
 				</p>
 			) }
 			{ ! loading && revisions && revisions.length > 0 && (
@@ -600,22 +555,15 @@ function RevisionLogPanel() {
 									{ formatDate( rev.date ) }
 								</td>
 								<td style={ { padding: '4px' } }>
-									{ authorNames[ rev.author ] ||
-										'—' }
+									{ authorNames[ rev.author ] || '—' }
 								</td>
 								<td
 									style={ {
 										padding: '4px',
-										color: rev.excerpt?.raw
-											? 'inherit'
-											: '#757575',
+										color: rev.excerpt?.raw ? 'inherit' : '#757575',
 									} }
 								>
-									{ rev.excerpt?.raw ||
-										__(
-											'—',
-											'wp-document-revisions'
-										) }
+									{ rev.excerpt?.raw || __( '—', 'wp-document-revisions' ) }
 								</td>
 							</tr>
 						) ) }

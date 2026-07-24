@@ -4,7 +4,7 @@
  * Tests the core user journey: creating documents, uploading files,
  * and managing revisions through the WordPress admin interface.
  *
- * @see js/wp-document-revisions.dev.js
+ * @see src/admin/wp-document-revisions.js
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
