@@ -147,6 +147,8 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
             contents: read
+            # Allow the action to post its findings as a PR comment.
+            pull-requests: write
         name: Plugin Check
         steps:
             - uses: actions/checkout@v7
@@ -174,6 +176,10 @@ jobs:
               uses: wordpress/plugin-check-action@v1.1.7
               with:
                   build-dir: ./plugin-dist
+                  # The plugin is assembled into ./plugin-dist, so pin the slug
+                  # explicitly — otherwise the directory name is used and the
+                  # text-domain check flags every string as mismatched.
+                  slug: wp-document-revisions
                   ignore-warnings: true
                   # False positive: these functions are called only behind
                   # function_exists() guards (WP 6.9/7.0 progressive enhancement).
