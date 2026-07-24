@@ -36,6 +36,13 @@
 
 	<rule ref="WordPress">
 		<exclude name="Squiz.Commenting.VariableComment.SinceTagNotAllowed"/>
+		<!--
+			Conflicts with annotation comments such as `// @phpstan-ignore
+			identifier (reason)`, which PHPStan requires to end at the closing
+			parenthesis (a trailing "." is a parse error). Excluding the
+			end-char check lets those directives coexist with WPCS.
+		-->
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
 	</rule>
 
 	<rule ref="PHPCompatibilityWP">

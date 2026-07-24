@@ -861,7 +861,7 @@ class WP_Document_Revisions_Front_End {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[0]['query'] ) && $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
 			// create atts in the appropriate form tax->query_var = term slug.
-			// @phpstan-ignore argument.type (term_0 is a numeric term-ID string from the shortcode/block, which get_term() int-casts; a non-matching value falls through to the error branch below).
+			// @phpstan-ignore argument.type (term_0 is a numeric term-ID string from the shortcode/block, which get_term() int-casts; a non-matching value falls through to the error branch below)
 			$term = get_term( $atts['term_0'], $taxo );
 			if ( $term instanceof WP_Term ) {
 				$atts[ $atts['taxonomy_0'] ] = $term->slug;
