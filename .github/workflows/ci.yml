@@ -147,11 +147,13 @@ jobs:
         permissions:
             contents: read
         name: Plugin Check (advisory)
-        continue-on-error: true
         steps:
             - uses: actions/checkout@v7
 
             - name: Run Plugin Check
+              # Advisory: swallow the exit code so findings surface in the log
+              # and PR comment without failing the check (see rationale above).
+              continue-on-error: true
               uses: wordpress/plugin-check-action@v1.1.7
               with:
                   ignore-warnings: true
