@@ -76,7 +76,7 @@ trait WP_Document_Revisions_File_Handler {
 					array( 'response' => absint( $response ) )
 				);
 				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
+				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there).
 				$wp_query->is_404 = true;
 				return false;
 			}
@@ -111,7 +111,7 @@ trait WP_Document_Revisions_File_Handler {
 				array( 'response' => absint( $response ) )
 			);
 			// for unit testing.
-			// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
+			// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there).
 			$wp_query->is_404 = true;
 			return false;
 		}
@@ -160,7 +160,7 @@ trait WP_Document_Revisions_File_Handler {
 					array( 'response' => 403 )
 				);
 				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
+				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there).
 				$wp_query->is_404 = true;
 				return false;
 			} else {
@@ -562,7 +562,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// make site specific on multisite.
-		// @phpstan-ignore booleanAnd.leftAlwaysTrue (phpstan-wordpress remembers an earlier is_multisite() result and treats this defensive re-check as constant; it is a genuine runtime guard)
+		// @phpstan-ignore booleanAnd.leftAlwaysTrue (phpstan-wordpress remembers an earlier is_multisite() result and treats this defensive re-check as constant; it is a genuine runtime guard).
 		if ( is_multisite() && ! is_network_admin() ) {
 			if ( is_main_site() && get_current_network_id() === get_main_network_id() ) {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );

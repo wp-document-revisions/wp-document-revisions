@@ -58,7 +58,7 @@ trait WP_Document_Revisions_Admin_List {
 				'wpdr_added'          => 'list',
 				'has_published_posts' => array( 'document' ),
 			);
-			// @phpstan-ignore argument.type ($args carry the custom 'wpdr_added' marker consumed by our pre_user_query filter; wp_dropdown_users() ignores keys it does not recognise)
+			// @phpstan-ignore argument.type ($args carry the custom 'wpdr_added' marker consumed by our pre_user_query filter; wp_dropdown_users() ignores keys it does not recognise).
 			wp_dropdown_users( $args );
 			remove_action( 'pre_user_query', array( $this, 'pre_user_query' ) );
 		}
