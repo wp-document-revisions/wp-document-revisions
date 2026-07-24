@@ -5,7 +5,7 @@
  * enables the submit buttons. The upload now runs through wp.media, so the
  * callback is invoked directly rather than via a CustomEvent.
  *
- * @see js/wp-document-revisions.dev.js
+ * @see src/admin/wp-document-revisions.js
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 

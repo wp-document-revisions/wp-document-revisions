@@ -117,6 +117,11 @@ jobs:
             - name: Audit dependencies
               run: npm audit --omit=dev
 
+            # Lint all first-party JavaScript sources under src/ (block editor
+            # and classic-admin scripts).
+            - name: Lint JavaScript (src/)
+              run: npm run lint-js
+
             - name: Run Jest tests
               run: npm test -- --ci --coverage --maxWorkers=2
 
@@ -126,6 +131,33 @@ jobs:
                   files: ./coverage/lcov.info
                   flags: javascript
                   name: javascript-coverage
+
+    # WordPress.org Plugin Check — validates the plugin against the plugin
+    # directory guidelines and best practices.
+    #
+    # Advisory (continue-on-error) for now: run against the raw repo it reports
+    # false positives that don't apply to the actual distribution — dev-only
+    # hidden/dev files that .distignore strips at release, and WP-version
+    # requirements for functions (wp_register_ability*, wp_ai_client_prompt)
+    # that are already guarded by function_exists(). Hardening this into a
+    # blocking gate (scan a built, .distignore-filtered copy + suppress the
+    # guarded-function codes) is tracked as a follow-up.
+    plugin-check:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Plugin Check (advisory)
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Run Plugin Check
+              # Advisory: swallow the exit code so findings surface in the log
+              # and PR comment without failing the check (see rationale above).
+              continue-on-error: true
+              uses: wordpress/plugin-check-action@v1.1.7
+              with:
+                  ignore-warnings: true
+                  exclude-directories: 'node_modules,vendor,vendor-bin,vendor-prefixed,tests,docs,script,bin'
 
     # PHPUnit tests (PR matrix).
     phpunit:
@@ -304,8 +336,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Build blocks
-              run: npm run build:blocks && npm run build:editor
+            - name: Build assets
+              # Full build (blocks + editor + admin). The classic-admin scripts
+              # are enqueued from build/admin/, so they must be built for the
+              # admin upload E2E specs to load them.
+              run: npm run build
 
             - name: Get Playwright version
               id: playwright-version

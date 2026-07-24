@@ -5,7 +5,7 @@
  * the test-only attachment/extension fields, and clearUploadNotices().
  * Uploads now run through wp.media, so documentUpload() is invoked directly.
  *
- * @see js/wp-document-revisions.dev.js
+ * @see src/admin/wp-document-revisions.js
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 

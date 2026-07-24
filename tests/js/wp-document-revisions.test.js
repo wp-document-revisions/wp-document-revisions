@@ -1,13 +1,13 @@
 /**
- * Tests for wp-document-revisions.dev.js
- * 
+ * Tests for src/admin/wp-document-revisions.js
+ *
  * This file tests the main WPDocumentRevisions class that handles
  * document management functionality in the WordPress admin.
  */
 
 const path = require('path');
 
-const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions.dev.js');
+const MODULE_PATH = path.resolve(__dirname, '../../src/admin/wp-document-revisions.js');
 
 describe('WPDocumentRevisions', () => {
 	let WPDocumentRevisions;

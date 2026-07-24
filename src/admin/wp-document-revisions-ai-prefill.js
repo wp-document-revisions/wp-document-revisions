@@ -18,7 +18,7 @@
  * includes/class-wp-document-revisions-ai-summary-prefill.php.
  */
 
-(function () {
+( function () {
 	'use strict';
 
 	const config = window.wpdrAISummaryPrefill;
@@ -39,7 +39,8 @@
 			return;
 		}
 
-		window.wp.apiFetch( { path: config.restPath } )
+		window.wp
+			.apiFetch( { path: config.restPath } )
 			.then( function ( response ) {
 				if ( ! response ) {
 					return;
@@ -137,11 +138,12 @@
 			if ( ! window.wp || ! window.wp.apiFetch ) {
 				return;
 			}
-			window.wp.apiFetch( {
-				path: config.restPath + '/review',
-				method: 'POST',
-				data: { reviewed: true },
-			} )
+			window.wp
+				.apiFetch( {
+					path: config.restPath + '/review',
+					method: 'POST',
+					data: { reviewed: true },
+				} )
 				.then( function () {
 					if ( review.parentNode ) {
 						review.parentNode.replaceChild( showReviewed(), review );
@@ -159,9 +161,7 @@
 	// PrefillRun() to skip the wait.
 	window.wpdrAISummaryPrefillRun = run;
 
-	const delay = typeof config.initialDelayMs === 'number'
-		? config.initialDelayMs
-		: 10000;
+	const delay = typeof config.initialDelayMs === 'number' ? config.initialDelayMs : 10000;
 	if ( delay <= 0 ) {
 		run();
 	} else {

@@ -11,8 +11,6 @@ import { useEffect } from '@wordpress/element';
 import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
 
-/* global wpdr_data */
-
 // Attribute name maps keyed by taxonomy index.
 const TAXONOMY_KEYS = [ 'taxonomy_0', 'taxonomy_1', 'taxonomy_2' ];
 const TERM_KEYS = [ 'term_0', 'term_1', 'term_2' ];
@@ -45,6 +43,10 @@ export default function Edit( { attributes, setAttributes } ) {
 		if ( Object.keys( updates ).length ) {
 			setAttributes( updates );
 		}
+		// Intentionally keyed only on the taxonomy/term selections; depending on
+		// the whole `attributes` object or the per-render `idToSlug`/`taxo`
+		// values would re-run this sync on every edit.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		attributes.taxonomy_0,
 		attributes.taxonomy_1,
@@ -52,7 +54,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		attributes.term_0,
 		attributes.term_1,
 		attributes.term_2,
-	] ); // eslint-disable-line react-hooks/exhaustive-deps
+	] );
 
 	function idToSlug( n, tax, val ) {
 		for ( let i = 0; i < wpdr_data.stmax; i++ ) {
@@ -71,14 +73,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	function taxonomies() {
 		if ( wpdr_data.stmax === 0 ) {
-			return (
-				<p>
-					{ __(
-						'There are no taxonomies defined.',
-						'wp-document-revisions'
-					) }
-				</p>
-			);
+			return <p>{ __( 'There are no taxonomies defined.', 'wp-document-revisions' ) }</p>;
 		}
 
 		return taxo.slice( 0, wpdr_data.stmax ).map( ( tax, i ) => {
@@ -90,10 +85,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			return (
 				<PanelBody
 					key={ tax.query }
-					title={
-						__( 'Taxonomy: ', 'wp-document-revisions' ) +
-						tax.label
-					}
+					title={ __( 'Taxonomy:', 'wp-document-revisions' ) + ' ' + tax.label }
 					initialOpen={ false }
 				>
 					<RadioControl
@@ -128,18 +120,12 @@ export default function Edit( { attributes, setAttributes } ) {
 				/>
 				{ taxonomies() }
 				<PanelBody
-					title={ __(
-						'Display Settings',
-						'wp-document-revisions'
-					) }
+					title={ __( 'Display Settings', 'wp-document-revisions' ) }
 					initialOpen={ false }
 				>
 					<RangeControl
 						value={ attributes.numberposts }
-						label={ __(
-							'Number of documents to display',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Number of documents to display', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
 							setAttributes( {
 								numberposts: parseInt( val ),
@@ -151,10 +137,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TextControl
 						type="string"
 						value={ attributes.orderby }
-						label={ __(
-							'List ordering Field',
-							'wp-document-revisions'
-						) }
+						label={ __( 'List ordering Field', 'wp-document-revisions' ) }
 						help={ __(
 							'Example fields are post_title, post_date and post_modified.',
 							'wp-document-revisions'
@@ -168,17 +151,11 @@ export default function Edit( { attributes, setAttributes } ) {
 						selected={ attributes.order }
 						options={ [
 							{
-								label: __(
-									'Ascending',
-									'wp-document-revisions'
-								),
+								label: __( 'Ascending', 'wp-document-revisions' ),
 								value: 'ASC',
 							},
 							{
-								label: __(
-									'Descending',
-									'wp-document-revisions'
-								),
+								label: __( 'Descending', 'wp-document-revisions' ),
 								value: 'DESC',
 							},
 						] }
@@ -187,10 +164,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<RadioControl
-						label={ __(
-							'Show Edit link',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Show Edit link', 'wp-document-revisions' ) }
 						help={ __(
 							'Show Edit link allows the list to have a link to the Edit function. A choice made here will over-ride the system-configured settings. Links will only appear if the user can edit the document.',
 							'wp-document-revisions'
@@ -198,24 +172,15 @@ export default function Edit( { attributes, setAttributes } ) {
 						selected={ attributes.show_edit }
 						options={ [
 							{
-								label: __(
-									'Default',
-									'wp-document-revisions'
-								),
+								label: __( 'Default', 'wp-document-revisions' ),
 								value: '',
 							},
 							{
-								label: __(
-									'No Edit link',
-									'wp-document-revisions'
-								),
+								label: __( 'No Edit link', 'wp-document-revisions' ),
 								value: '0',
 							},
 							{
-								label: __(
-									'Edit link',
-									'wp-document-revisions'
-								),
+								label: __( 'Edit link', 'wp-document-revisions' ),
 								value: '1',
 							},
 						] }
@@ -226,10 +191,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ToggleControl
 						type="boolean"
 						checked={ attributes.show_thumb }
-						label={ __(
-							'Show featured image?',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Show featured image?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
 							setAttributes( { show_thumb: val } );
 						} }
@@ -237,10 +199,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ToggleControl
 						type="boolean"
 						checked={ attributes.show_descr }
-						label={ __(
-							'Show document description?',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Show document description?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
 							setAttributes( { show_descr: val } );
 						} }
@@ -248,10 +207,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ToggleControl
 						type="boolean"
 						checked={ attributes.show_pdf }
-						label={ __(
-							'Show PDF File indication?',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Show PDF File indication?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
 							setAttributes( { show_pdf: val } );
 						} }
@@ -259,10 +215,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<ToggleControl
 						type="boolean"
 						checked={ attributes.new_tab }
-						label={ __(
-							'Open documents in new tab?',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Open documents in new tab?', 'wp-document-revisions' ) }
 						help={ __(
 							'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
 							'wp-document-revisions'
@@ -273,20 +226,14 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __(
-						'Free Form Settings',
-						'wp-document-revisions'
-					) }
+					title={ __( 'Free Form Settings', 'wp-document-revisions' ) }
 					initialOpen={ false }
 				>
 					<TextareaControl
 						type="string"
 						rows={ 8 }
 						value={ attributes.freeform }
-						label={ __(
-							'Free-form parameters',
-							'wp-document-revisions'
-						) }
+						label={ __( 'Free-form parameters', 'wp-document-revisions' ) }
 						help={ __(
 							'The query parameters can be very extensive. enter any other parameters required here.',
 							'wp-document-revisions'
