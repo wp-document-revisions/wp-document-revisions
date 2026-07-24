@@ -133,31 +133,58 @@ jobs:
                   name: javascript-coverage
 
     # WordPress.org Plugin Check — validates the plugin against the plugin
-    # directory guidelines and best practices.
+    # directory guidelines and best practices. Blocking (fails on errors).
     #
-    # Advisory (continue-on-error) for now: run against the raw repo it reports
-    # false positives that don't apply to the actual distribution — dev-only
-    # hidden/dev files that .distignore strips at release, and WP-version
-    # requirements for functions (wp_register_ability*, wp_ai_client_prompt)
-    # that are already guarded by function_exists(). Hardening this into a
-    # blocking gate (scan a built, .distignore-filtered copy + suppress the
-    # guarded-function codes) is tracked as a follow-up.
+    # The check runs against a .distignore-filtered copy of the plugin — the
+    # same file set that ships to WordPress.org — so dev-only files never
+    # produce findings (hidden dotfiles, phpstan.neon.dist, scoper.inc.php,
+    # tests/, src/, etc.). The only remaining findings in shipped code are the
+    # wp_register_ability*/wp_ai_client_prompt WP-version warnings, which are
+    # false positives: every call is guarded by function_exists() (the plugin
+    # supports WP 5.9+ and progressively enhances on 6.9/7.0), so that specific
+    # code is ignored.
     plugin-check:
         runs-on: ubuntu-latest
         permissions:
             contents: read
-        name: Plugin Check (advisory)
+            # Allow the action to post its findings as a PR comment.
+            pull-requests: write
+        name: Plugin Check
         steps:
             - uses: actions/checkout@v7
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 22
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Assemble distribution copy
+              # Mirror the WordPress.org distribution by applying .distignore,
+              # so Plugin Check sees only the files that actually ship.
+              run: |
+                  mkdir -p plugin-dist
+                  rsync -a --exclude='.git' --exclude='/plugin-dist' \
+                      --exclude-from=.distignore ./ plugin-dist/
+
             - name: Run Plugin Check
-              # Advisory: swallow the exit code so findings surface in the log
-              # and PR comment without failing the check (see rationale above).
-              continue-on-error: true
               uses: wordpress/plugin-check-action@v1.1.7
               with:
+                  build-dir: ./plugin-dist
+                  # The plugin is assembled into ./plugin-dist, so pin the slug
+                  # explicitly — otherwise the directory name is used and the
+                  # text-domain check flags every string as mismatched.
+                  slug: wp-document-revisions
                   ignore-warnings: true
-                  exclude-directories: 'node_modules,vendor,vendor-bin,vendor-prefixed,tests,docs,script,bin'
+                  # False positive: these functions are called only behind
+                  # function_exists() guards (WP 6.9/7.0 progressive enhancement).
+                  ignore-codes: 'wp_function_not_compatible_with_requires_wp'
+                  exclude-directories: 'vendor,vendor-bin,vendor-prefixed'
 
     # PHPUnit tests (PR matrix).
     phpunit:

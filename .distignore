@@ -45,7 +45,10 @@ playwright.config.mjs
 scoper.inc.php
 vendor-bin/
 README.md
-docs/_config.yml
+# Jekyll documentation site + cookbook examples — GitHub-facing reference
+# material, not plugin runtime, so it is not shipped to the WordPress.org
+# directory (it also contains example plugin files Plugin Check flags).
+docs/
 script/
 TEST_IMPROVEMENTS.md
 wp-cli.local.yml
