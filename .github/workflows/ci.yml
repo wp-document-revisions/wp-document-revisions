@@ -336,8 +336,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Build blocks
-              run: npm run build:blocks && npm run build:editor
+            - name: Build assets
+              # Full build (blocks + editor + admin). The classic-admin scripts
+              # are enqueued from build/admin/, so they must be built for the
+              # admin upload E2E specs to load them.
+              run: npm run build
 
             - name: Get Playwright version
               id: playwright-version
