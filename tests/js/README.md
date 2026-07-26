@@ -45,7 +45,7 @@ Coverage reports are generated in the `coverage/` directory.
 
 The test suite includes **181 tests** covering:
 
-### Main Admin Functionality (wp-document-revisions.dev.js)
+### Main Admin Functionality (wp-document-revisions.js (src/admin/))
 - Constructor and initialization
 - Autosave hijacking and button management
 - Revision restoration with confirmation
@@ -57,7 +57,7 @@ The test suite includes **181 tests** covering:
 - Timestamp updates
 - Helper functions (roundUp)
 
-### Validation Functionality (wp-document-revisions-validate.dev.js)
+### Validation Functionality (wp-document-revisions-validate.js (src/admin/))
 - REST API interaction for validation fixes
 - DOM manipulation for validation status display
 - Toggle visibility for validation types

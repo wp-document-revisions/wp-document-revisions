@@ -1,5 +1,4 @@
 import { createBlock, registerBlockType } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
 import Edit from './edit';
 
@@ -36,13 +35,9 @@ registerBlockType( metadata, {
 						const parm = arg.split( '=' );
 						if (
 							parm.length > 1 &&
-							( parm[ 1 ].indexOf( "'" ) === 0 ||
-								parm[ 1 ].indexOf( '"' ) === 0 )
+							( parm[ 1 ].indexOf( "'" ) === 0 || parm[ 1 ].indexOf( '"' ) === 0 )
 						) {
-							parm[ 1 ] = parm[ 1 ].slice(
-								1,
-								parm[ 1 ].length - 1
-							);
+							parm[ 1 ] = parm[ 1 ].slice( 1, parm[ 1 ].length - 1 );
 						}
 						if ( parm[ 0 ] === 'id' ) {
 							sid = Number( parm[ 1 ] );
@@ -54,41 +49,29 @@ registerBlockType( metadata, {
 							snumberposts = Number( parm[ 1 ] );
 						}
 						if ( parm[ 0 ] === 'summary' ) {
-							if (
-								parm.length === 1 ||
-								parm[ 1 ] === 'true'
-							) {
+							if ( parm.length === 1 || parm[ 1 ] === 'true' ) {
 								ssummary = true;
 							}
 						}
 						if ( parm[ 0 ] === 'show_pdf' ) {
-							if (
-								parm.length === 1 ||
-								parm[ 1 ] === 'true'
-							) {
+							if ( parm.length === 1 || parm[ 1 ] === 'true' ) {
 								sshow_pdf = true;
 							}
 						}
 						if ( parm[ 0 ] === 'new_tab' ) {
-							if (
-								parm.length === 1 ||
-								parm[ 1 ] === 'false'
-							) {
+							if ( parm.length === 1 || parm[ 1 ] === 'false' ) {
 								snew_tab = false;
 							}
 						}
 					}
 
-					return createBlock(
-						'wp-document-revisions/revisions-shortcode',
-						{
-							id: sid,
-							numberposts: snumberposts,
-							summary: ssummary,
-							show_pdf: sshow_pdf,
-							new_tab: snew_tab,
-						}
-					);
+					return createBlock( 'wp-document-revisions/revisions-shortcode', {
+						id: sid,
+						numberposts: snumberposts,
+						summary: ssummary,
+						show_pdf: sshow_pdf,
+						new_tab: snew_tab,
+					} );
 				},
 			},
 		],

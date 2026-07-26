@@ -132,8 +132,16 @@ class WP_Document_Revisions_Admin {
 		add_action( 'before_delete_post', array( $this, 'list_attachments_with_document' ) );
 		add_action( 'delete_post', array( $this, 'delete_attachments_with_document' ) );
 
-		// edit flow or publishpress support.
-		add_action( 'init', array( $this, 'disable_workflow_states' ), 1901 );  // After main class called.
+		// edit flow or publishpress support. disable_workflow_states() returns a
+		// bool for the editor guard that also calls it; as an init action the
+		// return value is unused, so wrap it to honour the void callback contract.
+		add_action(
+			'init',
+			function () {
+				$this->disable_workflow_states();
+			},
+			1901
+		);  // After main class called.
 
 		// admin css.
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class_filter' ) );

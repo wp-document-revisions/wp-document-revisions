@@ -691,14 +691,16 @@ trait WP_Document_Revisions_Admin_Editor {
 				'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
 			);
 
-			$suffix = ( WP_DEBUG ) ? '.dev' : '';
-			$path   = '/js/wp-document-revisions' . $suffix . '.js';
-			$vers   = ( WP_DEBUG ) ? filemtime( dirname( __DIR__ ) . $path ) : $wpdr->version;
+			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
+			$asset      = file_exists( $asset_file ) ? require $asset_file : array(
+				'dependencies' => array(),
+				'version'      => $wpdr->version,
+			);
 			wp_enqueue_script(
 				'wp_document_revisions',
-				plugins_url( $path, __DIR__ ),
-				array( 'wp-api-fetch' ),
-				$vers,
+				plugins_url( '/build/admin/wp-document-revisions.js', __DIR__ ),
+				array_merge( array( 'wp-api-fetch' ), $asset['dependencies'] ),
+				$asset['version'],
 				false
 			);
 			wp_add_inline_script(

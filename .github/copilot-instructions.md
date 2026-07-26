@@ -61,7 +61,7 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 ### Build and Release
 
 - Build Gutenberg blocks: `npm run build:blocks` (compiles `src/blocks/` → `build/blocks/`)
-- Build admin JS: `npm run build:admin` (minifies `js/*.dev.js` → `js/*.js`)
+- Build admin JS: `npm run build:admin` (compiles `src/admin/` → `build/admin/`)
 - Build all: `npm run build`
 - Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
 - The `build/` directory is gitignored; blocks must be built before E2E tests or distribution
@@ -124,6 +124,7 @@ wp-document-revisions/
 │   ├── documents-shortcode/  # Documents list block
 │   ├── documents-widget/     # Recently revised widget block
 │   └── revisions-shortcode/  # Document revisions block
+├── src/admin/              # Classic-admin JS source (compiled via wp-scripts)
 ├── build/blocks/           # Compiled block output (gitignored, run npm run build)
 ├── tests/                  # Test files
 │   ├── class-test-*.php    # PHPUnit test files
@@ -132,7 +133,7 @@ wp-document-revisions/
 │       ├── config/         # Global setup and auth state
 │       ├── fixtures/       # Test upload files
 │       └── specs/          # Test specs (blocks/, admin/)
-├── js/                     # Admin JavaScript (*.dev.js source, *.js minified)
+├── build/admin/            # Compiled admin JS output (gitignored, run npm run build)
 ├── css/                    # Stylesheets
 ├── script/                 # Development automation scripts
 ├── wp-document-revisions.php # Main plugin file

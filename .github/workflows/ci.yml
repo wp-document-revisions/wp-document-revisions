@@ -117,6 +117,11 @@ jobs:
             - name: Audit dependencies
               run: npm audit --omit=dev
 
+            # Lint all first-party JavaScript sources under src/ (block editor
+            # and classic-admin scripts).
+            - name: Lint JavaScript (src/)
+              run: npm run lint-js
+
             - name: Run Jest tests
               run: npm test -- --ci --coverage --maxWorkers=2
 
@@ -126,6 +131,60 @@ jobs:
                   files: ./coverage/lcov.info
                   flags: javascript
                   name: javascript-coverage
+
+    # WordPress.org Plugin Check — validates the plugin against the plugin
+    # directory guidelines and best practices. Blocking (fails on errors).
+    #
+    # The check runs against a .distignore-filtered copy of the plugin — the
+    # same file set that ships to WordPress.org — so dev-only files never
+    # produce findings (hidden dotfiles, phpstan.neon.dist, scoper.inc.php,
+    # tests/, src/, etc.). The only remaining findings in shipped code are the
+    # wp_register_ability*/wp_ai_client_prompt WP-version warnings, which are
+    # false positives: every call is guarded by function_exists() (the plugin
+    # supports WP 5.9+ and progressively enhances on 6.9/7.0), so that specific
+    # code is ignored.
+    plugin-check:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            # Allow the action to post its findings as a PR comment.
+            pull-requests: write
+        name: Plugin Check
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 22
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Assemble distribution copy
+              # Mirror the WordPress.org distribution by applying .distignore,
+              # so Plugin Check sees only the files that actually ship.
+              run: |
+                  mkdir -p plugin-dist
+                  rsync -a --exclude='.git' --exclude='/plugin-dist' \
+                      --exclude-from=.distignore ./ plugin-dist/
+
+            - name: Run Plugin Check
+              uses: wordpress/plugin-check-action@v1.1.7
+              with:
+                  build-dir: ./plugin-dist
+                  # The plugin is assembled into ./plugin-dist, so pin the slug
+                  # explicitly — otherwise the directory name is used and the
+                  # text-domain check flags every string as mismatched.
+                  slug: wp-document-revisions
+                  ignore-warnings: true
+                  # False positive: these functions are called only behind
+                  # function_exists() guards (WP 6.9/7.0 progressive enhancement).
+                  ignore-codes: 'wp_function_not_compatible_with_requires_wp'
+                  exclude-directories: 'vendor,vendor-bin,vendor-prefixed'
 
     # PHPUnit tests (PR matrix).
     phpunit:
@@ -304,8 +363,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Build blocks
-              run: npm run build:blocks && npm run build:editor
+            - name: Build assets
+              # Full build (blocks + editor + admin). The classic-admin scripts
+              # are enqueued from build/admin/, so they must be built for the
+              # admin upload E2E specs to load them.
+              run: npm run build
 
             - name: Get Playwright version
               id: playwright-version

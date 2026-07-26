@@ -1,13 +1,13 @@
 /**
- * Tests for wp-document-revisions-validate.dev.js
- * 
+ * Tests for src/admin/wp-document-revisions-validate.js
+ *
  * This file tests the validation functionality that allows fixing
  * document validation issues via REST API calls.
  */
 
 const path = require('path');
 
-const MODULE_PATH = path.resolve(__dirname, '../../js/wp-document-revisions-validate.dev.js');
+const MODULE_PATH = path.resolve(__dirname, '../../src/admin/wp-document-revisions-validate.js');
 
 describe('wp-document-revisions-validate', () => {
 	beforeEach(() => {

@@ -30,4 +30,3 @@ parameters:
 
 includes:
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
-    - phpstan-baseline.neon

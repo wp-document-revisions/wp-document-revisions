@@ -9,12 +9,14 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "lint-js": "wp-scripts lint-js src",
+    "lint-js:fix": "wp-scripts lint-js src --fix",
     "build": "npm run build:blocks && npm run build:editor && npm run build:admin",
     "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
     "build:editor": "wp-scripts build src/editor-document-upload/index.js --output-path=build/editor-document-upload",
-    "build:admin": "node script/build.js",
-    "build:check": "node -e \"const fs=require('fs'); const devFiles=fs.readdirSync('js').filter(f=>f.endsWith('.dev.js')); devFiles.forEach(f=>{const min=f.replace('.dev.js','.js'); if(!fs.existsSync('js/'+min)){console.error('Missing: '+min);process.exit(1);}; console.log('OK: '+f+' -> '+min);})\"",
+    "build:admin": "wp-scripts build src/admin/wp-document-revisions.js src/admin/wp-document-revisions-validate.js src/admin/wp-document-revisions-ai-prefill.js --output-path=build/admin",
     "start": "wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks",
+    "start:admin": "wp-scripts start src/admin/wp-document-revisions.js src/admin/wp-document-revisions-validate.js src/admin/wp-document-revisions-ai-prefill.js --output-path=build/admin",
     "test:e2e": "npx playwright test --config=playwright.config.mjs",
     "test:e2e:ui": "npx playwright test --config=playwright.config.mjs --ui",
     "wp-env": "wp-env"
@@ -34,7 +36,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.61.1",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.0",
     "@wordpress/e2e-test-utils-playwright": "1.46.0",
     "@wordpress/env": "^11.11.0",
     "@wordpress/scripts": "^33.0.0",
@@ -51,10 +53,8 @@
       "**/tests/js/**/*.test.js"
     ],
     "collectCoverageFrom": [
-      "js/**/*.dev.js",
-      "src/blocks/**/*.js",
-      "!js/**/*.coffee",
-      "!js/**/*.coffee2"
+      "src/admin/**/*.js",
+      "src/blocks/**/*.js"
     ],
     "coverageDirectory": "coverage",
     "coverageReporters": [

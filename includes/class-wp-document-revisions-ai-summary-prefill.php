@@ -102,16 +102,17 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			return;
 		}
 
-		$suffix = defined( 'WP_DEBUG' ) && WP_DEBUG ? '.dev' : '';
-		$path   = '/js/wp-document-revisions-ai-prefill' . $suffix . '.js';
-		$abs    = dirname( __DIR__ ) . $path;
-		$vers   = file_exists( $abs ) ? (string) filemtime( $abs ) : '5.0.0';
+		$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions-ai-prefill.asset.php';
+		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
+			'dependencies' => array(),
+			'version'      => '5.0.0',
+		);
 
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
-			plugins_url( $path, __DIR__ ),
-			array( 'wp-api-fetch' ),
-			$vers,
+			plugins_url( '/build/admin/wp-document-revisions-ai-prefill.js', __DIR__ ),
+			array_merge( array( 'wp-api-fetch' ), $asset['dependencies'] ),
+			$asset['version'],
 			true
 		);
 

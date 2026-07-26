@@ -1,5 +1,5 @@
 /**
- * Tests for wp-document-revisions-ai-prefill.dev.js
+ * Tests for src/admin/wp-document-revisions-ai-prefill.js
  *
  * Phase 12 of issue #514: verifies the one-shot pre-fill behaviour,
  * the empty-textarea precondition, the pending-status fallback hint,
@@ -11,7 +11,7 @@ const path = require('path');
 
 const MODULE_PATH = path.resolve(
 	__dirname,
-	'../../js/wp-document-revisions-ai-prefill.dev.js'
+	'../../src/admin/wp-document-revisions-ai-prefill.js'
 );
 
 /**
