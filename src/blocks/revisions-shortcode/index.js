@@ -1,3 +1,4 @@
+// @ts-check
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';

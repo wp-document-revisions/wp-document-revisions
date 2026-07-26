@@ -1,5 +1,5 @@
 {
-	"//": "Editor-time type checking for the classic-admin scripts only. Not part of the build or CI (no tsc step); wp-scripts handles bundling. checkJs is false so only files with an explicit `// @ts-check` pragma are checked; all three src/admin scripts opt in. Types for the PHP-injected config objects and WP/browser globals come from globals.d.ts. Run `npx -y --package typescript tsc -p jsconfig.json` to check manually.",
+	"//": "Editor-time / CI type checking for the src JavaScript. Not part of the webpack build (wp-scripts handles bundling). checkJs is false so only files with an explicit `// @ts-check` pragma are checked; the src/admin scripts and the non-JSX block transform/helper files opt in. JSX edit panels are parsed (jsx: preserve) but not checked. Types for the PHP-injected config objects and WP/browser globals come from the globals.d.ts files. Run `npx -y --package typescript tsc -p jsconfig.json`.",
 	"compilerOptions": {
 		"checkJs": false,
 		"noEmit": true,
@@ -7,10 +7,17 @@
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"target": "es2020",
+		"jsx": "preserve",
+		"resolveJsonModule": true,
 		"lib": [ "es2020", "dom", "dom.iterable" ],
 		"strict": false,
 		"skipLibCheck": true,
 		"types": []
 	},
-	"include": [ "src/admin/**/*.js", "src/admin/globals.d.ts" ]
+	"include": [
+		"src/admin/**/*.js",
+		"src/admin/globals.d.ts",
+		"src/blocks/**/*.js",
+		"src/blocks/globals.d.ts"
+	]
 }
