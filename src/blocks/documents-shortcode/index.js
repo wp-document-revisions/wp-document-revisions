@@ -1,6 +1,7 @@
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
+import { parseShortcodeParams } from '../shared/parse-shortcode';
 
 registerBlockType( metadata, {
 	edit: Edit,
@@ -32,13 +33,8 @@ registerBlockType( metadata, {
 					let snew_tab = true;
 					let sfreeform = '';
 
-					// prepare text string.
-					let iput = text.toLowerCase();
-					if ( iput.indexOf( '[' ) === 0 ) {
-						iput = iput.slice( 1, iput.length - 1 );
-					}
-					const args = iput.split( ' ' );
-					args.shift();
+					// Tokenize the raw shortcode into parameter pairs.
+					const params = parseShortcodeParams( text );
 
 					const taxo = wpdr_data.taxos;
 					const wf_efpp = wpdr_data.wf_efpp;
@@ -54,18 +50,8 @@ registerBlockType( metadata, {
 						return 0;
 					}
 
-					for ( const i of args ) {
-						if ( i.length === 0 ) {
-							continue;
-						}
+					for ( const parm of params ) {
 						let used = false;
-						const parm = i.split( '=' );
-						if (
-							parm.length > 1 &&
-							( parm[ 1 ].indexOf( "'" ) === 0 || parm[ 1 ].indexOf( '"' ) === 0 )
-						) {
-							parm[ 1 ] = parm[ 1 ].slice( 1, parm[ 1 ].length - 1 );
-						}
 						// existing parameter may be wf_state - convert to post_status.
 						if ( wf_efpp === '1' && parm[ 0 ] === 'workflow_state' ) {
 							parm[ 0 ] = 'post_status';
@@ -131,7 +117,7 @@ registerBlockType( metadata, {
 						}
 						if ( ! used ) {
 							// other parameter, add to freeform one.
-							sfreeform += ` ${ i }`;
+							sfreeform += ` ${ parm.join( '=' ) }`;
 						}
 					}
 
