@@ -30,6 +30,52 @@ import { store as noticesStore } from '@wordpress/notices';
 const LOCK_NAME = 'wp-document-revisions-upload';
 
 /**
+ * Format a revision timestamp as a short relative-time string
+ * ("just now", "5 min ago", "1 hour ago", …), falling back to a
+ * locale date string for anything 30+ days old.
+ *
+ * `now` is injectable so the branching can be unit-tested deterministically;
+ * production callers rely on the default (current time).
+ *
+ * @param {string} dateStr Revision date, parseable by the Date constructor.
+ * @param {Date}   [now]   Reference "now" (defaults to the current time).
+ * @return {string} Human-readable relative time.
+ */
+export function formatDate( dateStr, now = new Date() ) {
+	const date = new Date( dateStr );
+	const diffMs = now - date;
+	const diffMins = Math.floor( diffMs / 60000 );
+
+	if ( diffMins < 1 ) {
+		return __( 'just now', 'wp-document-revisions' );
+	}
+	if ( diffMins < 60 ) {
+		return diffMins + ' ' + __( 'min ago', 'wp-document-revisions' );
+	}
+	const diffHours = Math.floor( diffMins / 60 );
+	if ( diffHours < 24 ) {
+		return (
+			diffHours +
+			' ' +
+			( diffHours === 1
+				? __( 'hour ago', 'wp-document-revisions' )
+				: __( 'hours ago', 'wp-document-revisions' ) )
+		);
+	}
+	const diffDays = Math.floor( diffHours / 24 );
+	if ( diffDays < 30 ) {
+		return (
+			diffDays +
+			' ' +
+			( diffDays === 1
+				? __( 'day ago', 'wp-document-revisions' )
+				: __( 'days ago', 'wp-document-revisions' ) )
+		);
+	}
+	return date.toLocaleDateString();
+}
+
+/**
  * Extract file extension from a media object.
  *
  * Prefers the filename property (most reliable), falls back to
@@ -38,7 +84,7 @@ const LOCK_NAME = 'wp-document-revisions-upload';
  * @param {Object} media Media object from WordPress.
  * @return {string} Uppercase file extension (e.g. "PDF") or empty string.
  */
-function getFileExtension( media ) {
+export function getFileExtension( media ) {
 	if ( media?.filename ) {
 		const ext = media.filename.split( '.' ).pop();
 		if ( ext ) {
@@ -456,40 +502,6 @@ function RevisionLogPanelContent( { postId } ) {
 		},
 		[ revisions ]
 	);
-	const formatDate = ( dateStr ) => {
-		const date = new Date( dateStr );
-		const now = new Date();
-		const diffMs = now - date;
-		const diffMins = Math.floor( diffMs / 60000 );
-
-		if ( diffMins < 1 ) {
-			return __( 'just now', 'wp-document-revisions' );
-		}
-		if ( diffMins < 60 ) {
-			return diffMins + ' ' + __( 'min ago', 'wp-document-revisions' );
-		}
-		const diffHours = Math.floor( diffMins / 60 );
-		if ( diffHours < 24 ) {
-			return (
-				diffHours +
-				' ' +
-				( diffHours === 1
-					? __( 'hour ago', 'wp-document-revisions' )
-					: __( 'hours ago', 'wp-document-revisions' ) )
-			);
-		}
-		const diffDays = Math.floor( diffHours / 24 );
-		if ( diffDays < 30 ) {
-			return (
-				diffDays +
-				' ' +
-				( diffDays === 1
-					? __( 'day ago', 'wp-document-revisions' )
-					: __( 'days ago', 'wp-document-revisions' ) )
-			);
-		}
-		return date.toLocaleDateString();
-	};
 
 	return (
 		<PluginDocumentSettingPanel

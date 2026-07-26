@@ -54,7 +54,8 @@
     ],
     "collectCoverageFrom": [
       "src/admin/**/*.js",
-      "src/blocks/**/*.js"
+      "src/blocks/**/*.js",
+      "src/editor-document-upload/**/*.js"
     ],
     "coverageDirectory": "coverage",
     "coverageReporters": [
