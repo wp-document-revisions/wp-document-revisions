@@ -30,6 +30,7 @@ composer.lock
 crowdin.yml
 docker-compose.yml
 Gruntfile.js
+jsconfig.json
 JS_TESTS_SUMMARY.md
 package.json
 package-lock.json

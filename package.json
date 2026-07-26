@@ -69,7 +69,9 @@
       "\\.[jt]sx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "<rootDir>/tests/js/__mocks__/styleMock.js"
+      "\\.(css|less|scss|sass)$": "<rootDir>/tests/js/__mocks__/styleMock.js",
+      "^@wordpress/api-fetch$": "<rootDir>/tests/js/__mocks__/wordpress-api-fetch.js",
+      "^@wordpress/dom-ready$": "<rootDir>/tests/js/__mocks__/wordpress-dom-ready.js"
     }
   }
 }

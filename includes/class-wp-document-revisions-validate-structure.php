@@ -717,14 +717,14 @@ class WP_Document_Revisions_Validate_Structure {
 	public static function enqueue_scripts(): void {
 		$asset_file = plugin_dir_path( __DIR__ ) . 'build/admin/wp-document-revisions-validate.asset.php';
 		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
-			'dependencies' => array(),
+			'dependencies' => array( 'wp-api-fetch' ),
 			'version'      => self::$parent->version,
 		);
 
 		wp_enqueue_script(
 			'wpdr_validate',
 			plugins_url( '/build/admin/wp-document-revisions-validate.js', __DIR__ ),
-			array_merge( array( 'wp-api-fetch' ), $asset['dependencies'] ),
+			$asset['dependencies'],
 			$asset['version'],
 			true
 		);

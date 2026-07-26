@@ -1,0 +1,16 @@
+{
+	"//": "Editor-time type checking for the classic-admin scripts only. Not part of the build or CI (no tsc step); wp-scripts handles bundling. checkJs is false so only files with an explicit `// @ts-check` pragma are checked; all three src/admin scripts opt in. Types for the PHP-injected config objects and WP/browser globals come from globals.d.ts. Run `npx -y --package typescript tsc -p jsconfig.json` to check manually.",
+	"compilerOptions": {
+		"checkJs": false,
+		"noEmit": true,
+		"allowJs": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"target": "es2020",
+		"lib": [ "es2020", "dom", "dom.iterable" ],
+		"strict": false,
+		"skipLibCheck": true,
+		"types": []
+	},
+	"include": [ "src/admin/**/*.js", "src/admin/globals.d.ts" ]
+}

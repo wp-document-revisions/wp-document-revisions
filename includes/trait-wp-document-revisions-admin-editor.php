@@ -692,14 +692,17 @@ trait WP_Document_Revisions_Admin_Editor {
 			);
 
 			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
-			$asset      = file_exists( $asset_file ) ? require $asset_file : array(
-				'dependencies' => array(),
+			// The build's DependencyExtractionWebpackPlugin records the script
+			// dependencies (wp-api-fetch, wp-dom-ready) from the source imports;
+			// the fallback mirrors them for the rare unbuilt-source case.
+			$asset = file_exists( $asset_file ) ? require $asset_file : array(
+				'dependencies' => array( 'wp-api-fetch', 'wp-dom-ready' ),
 				'version'      => $wpdr->version,
 			);
 			wp_enqueue_script(
 				'wp_document_revisions',
 				plugins_url( '/build/admin/wp-document-revisions.js', __DIR__ ),
-				array_merge( array( 'wp-api-fetch' ), $asset['dependencies'] ),
+				$asset['dependencies'],
 				$asset['version'],
 				false
 			);
