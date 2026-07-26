@@ -11,6 +11,7 @@
     "test:coverage": "jest --coverage",
     "lint-js": "wp-scripts lint-js src",
     "lint-js:fix": "wp-scripts lint-js src --fix",
+    "type-check": "tsc -p jsconfig.json",
     "build": "npm run build:blocks && npm run build:editor && npm run build:admin",
     "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
     "build:editor": "wp-scripts build src/editor-document-upload/index.js --output-path=build/editor-document-upload",
@@ -42,7 +43,8 @@
     "@wordpress/scripts": "^33.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "~29.7.0",
-    "terser": "^5.49.0"
+    "terser": "^5.49.0",
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "jest-mock": "^30"
