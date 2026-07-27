@@ -1,0 +1,66 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-document-revisions/document-preview",
+	"version": "3.9.0",
+	"title": "Document Preview",
+	"category": "wpdr-category",
+	"icon": "media-document",
+	"description": "Embed an inline preview of a document's latest revision.",
+	"textdomain": "wp-document-revisions",
+	"editorScript": "file:./index.js",
+	"attributes": {
+		"id": {
+			"type": "number",
+			"default": 0
+		},
+		"height": {
+			"type": "number",
+			"default": 600
+		},
+		"show_title": {
+			"type": "boolean",
+			"default": false
+		},
+		"show_download": {
+			"type": "boolean",
+			"default": true
+		},
+		"align": {
+			"type": "string"
+		},
+		"backgroundColor": {
+			"type": "string"
+		},
+		"linkColor": {
+			"type": "string"
+		},
+		"textColor": {
+			"type": "string"
+		},
+		"gradient": {
+			"type": "string"
+		},
+		"fontSize": {
+			"type": "string"
+		},
+		"style": {
+			"type": "object"
+		}
+	},
+	"supports": {
+		"align": true,
+		"color": {
+			"gradients": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	}
+}
