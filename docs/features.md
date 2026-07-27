@@ -33,7 +33,7 @@
 - Multisite and Windows (XAMPP) support
 - Multiple language support including French, Spanish and German (easily translated to your language)
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
-- Opt-in [Block Editor (Gutenberg) support](block-editor.md) with document sidebar panel (experimental)
+- Opt-in [Block Editor (Gutenberg) support](block-editor.md) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
 - WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use

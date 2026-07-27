@@ -219,8 +219,6 @@ Filters the controlling option to display an edit option against each document.
 
 ## Filter document_show_in_rest
 
-⚠️ **Experimental** — This feature is under active development and may change in future releases.
-
 In: class-wp-document-revisions.php
 
 Filters the show_in_rest parameter from its default value of false. Must be set to true to enable the block editor or REST API access for documents. Enabling this exposes document data via the WordPress REST API using document permissions. See [Block Editor Support](block-editor.md).
@@ -265,7 +263,7 @@ Filters setting the new document status to private.
 
 In: class-wp-document-revisions.php, class-wp-document-revisions-manage-rest.php, trait-wp-document-revisions-admin-editor.php
 
-Filters whether to enable experimental block editor (Gutenberg) support for documents. Default is false. When set to true, enables REST API write methods, registers post meta for REST, adds excerpt support to the document post type, and hides the main editor canvas. Must be used together with `document_show_in_rest` filter. See [Block Editor Support](block-editor.md).
+Filters whether to enable opt-in block editor (Gutenberg) support for documents. Default is false. When set to true, enables REST API write methods, registers post meta for REST, adds excerpt support to the document post type, and hides the main editor canvas. Must be used together with `document_show_in_rest` filter. See [Block Editor Support](block-editor.md).
 
 ## Filter document_use_workflow_states
 

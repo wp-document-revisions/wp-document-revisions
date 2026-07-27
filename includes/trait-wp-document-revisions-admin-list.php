@@ -65,6 +65,150 @@ trait WP_Document_Revisions_Admin_List {
 	}
 
 	/**
+	 * Displays a first-run call to action on the documents list when no documents exist yet.
+	 *
+	 * Keeps the empty state actionable instead of showing a blank table, reducing the friction
+	 * new users (and WordPress Playground "Live Preview" visitors) hit before their first upload.
+	 *
+	 * @since 5.3
+	 */
+	public function empty_state_notice(): void {
+		$screen = get_current_screen();
+		if ( is_null( $screen ) || 'edit-document' !== $screen->id ) {
+			return;
+		}
+
+		// Only a genuine first-run state: skip when searching or filtering, where an empty list means "no matches" rather than "no documents".
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['s'] ) || isset( $_GET['post_status'] ) || isset( $_GET['workflow_state'] ) || isset( $_GET['author'] ) ) {
+			return;
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// No point prompting a user who cannot create documents.
+		if ( ! current_user_can( 'edit_documents' ) ) {
+			return;
+		}
+
+		// Bail if any documents already exist (in any status).
+		$counts = array_map( 'intval', (array) wp_count_posts( 'document' ) );
+		if ( array_sum( $counts ) > 0 ) {
+			return;
+		}
+
+		$add_link  = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'post-new.php?post_type=document' ) ),
+			esc_html__( 'Add your first document', 'wp-document-revisions' )
+		);
+		$docs_link = sprintf(
+			'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+			esc_url( 'https://wp-document-revisions.github.io/wp-document-revisions/' ),
+			esc_html__( 'read the documentation', 'wp-document-revisions' )
+		);
+		?>
+		<div class="notice notice-info">
+			<p>
+				<strong><?php esc_html_e( 'Welcome to WP Document Revisions!', 'wp-document-revisions' ); ?></strong>
+				<?php
+				printf(
+					/* translators: 1: link to add a new document, 2: link to the documentation */
+					esc_html__( 'You have not added any documents yet. %1$s to start tracking revisions and workflow, or %2$s.', 'wp-document-revisions' ),
+					$add_link, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
+					$docs_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
+				);
+				?>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Invites engaged, successful users to leave a WordPress.org review.
+	 *
+	 * Shown only on the documents list screen (so it never coincides with the upload/lock
+	 * error notices that appear on the document edit screen) and only once the user has a
+	 * real, working library. Every document save creates a revision in this plugin, so a
+	 * healthy document count implies a meaningful revision history. Dismissal is remembered
+	 * per user, and the prompt never nags again.
+	 *
+	 * @since 5.3
+	 */
+	public function review_prompt(): void {
+		$screen = get_current_screen();
+		if ( is_null( $screen ) || 'edit-document' !== $screen->id ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_documents' ) ) {
+			return;
+		}
+
+		// Never ask again once the user has responded.
+		if ( get_user_meta( get_current_user_id(), self::REVIEW_DISMISSED_META, true ) ) {
+			return;
+		}
+
+		// Engagement gate: only ask users with a real, successful library.
+		$counts = array_map( 'intval', (array) wp_count_posts( 'document' ) );
+		if ( array_sum( $counts ) < self::REVIEW_MIN_DOCS ) {
+			return;
+		}
+
+		$review_url  = wp_nonce_url(
+			add_query_arg(
+				array(
+					'wpdr_review_dismiss' => 1,
+					'wpdr_review_go'      => 1,
+				)
+			),
+			'wpdr_review_dismiss',
+			'wpdr_review_nonce'
+		);
+		$dismiss_url = wp_nonce_url( add_query_arg( 'wpdr_review_dismiss', 1 ), 'wpdr_review_dismiss', 'wpdr_review_nonce' );
+		?>
+		<div class="notice notice-info">
+			<p><?php esc_html_e( 'You have been managing your documents with WP Document Revisions — thank you! If it has been useful, would you consider leaving a quick review? It genuinely helps other teams discover the plugin.', 'wp-document-revisions' ); ?></p>
+			<p>
+				<a href="<?php echo esc_url( $review_url ); ?>" class="button button-primary" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Leave a review', 'wp-document-revisions' ); ?></a>
+				<a href="<?php echo esc_url( $dismiss_url ); ?>" class="button-link"><?php esc_html_e( 'No thanks', 'wp-document-revisions' ); ?></a>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Records dismissal of the review prompt and, when the user chose to leave a review,
+	 * forwards them to the WordPress.org review page.
+	 *
+	 * @since 5.3
+	 */
+	public function handle_review_dismissal(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['wpdr_review_dismiss'] ) ) {
+			return;
+		}
+		$nonce = isset( $_GET['wpdr_review_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['wpdr_review_nonce'] ) ) : '';
+		$go    = isset( $_GET['wpdr_review_go'] );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( ! wp_verify_nonce( $nonce, 'wpdr_review_dismiss' ) ) {
+			return;
+		}
+
+		update_user_meta( get_current_user_id(), self::REVIEW_DISMISSED_META, 1 );
+
+		if ( $go ) {
+			// External redirect to the review page is intentional.
+			wp_redirect( 'https://wordpress.org/support/plugin/wp-document-revisions/reviews/#new-post' ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
+			exit;
+		}
+
+		wp_safe_redirect( remove_query_arg( array( 'wpdr_review_dismiss', 'wpdr_review_nonce', 'wpdr_review_go' ) ) );
+		exit;
+	}
+
+	/**
 	 * Filter the user dropdown args to add additional arguments that are normally filtered out. .
 	 *
 	 * @since 3.6
