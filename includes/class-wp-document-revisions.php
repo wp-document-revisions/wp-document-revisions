@@ -238,6 +238,10 @@ class WP_Document_Revisions {
 		require_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
+		// load email notifications.
+		require_once __DIR__ . '/class-wp-document-revisions-notifications.php';
+		new WP_Document_Revisions_Notifications();
+
 		// Manage REST interface for documents (include code).
 		add_action( 'rest_api_init', array( $this, 'manage_rest' ) );
 	}
