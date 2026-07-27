@@ -37,7 +37,9 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.61.1",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
     "@wordpress/e2e-test-utils-playwright": "1.46.0",
     "@wordpress/env": "^11.11.0",
     "@wordpress/scripts": "^33.0.0",
