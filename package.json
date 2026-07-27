@@ -11,6 +11,7 @@
     "test:coverage": "jest --coverage",
     "lint-js": "wp-scripts lint-js src",
     "lint-js:fix": "wp-scripts lint-js src --fix",
+    "type-check": "tsc -p jsconfig.json",
     "build": "npm run build:blocks && npm run build:editor && npm run build:admin",
     "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
     "build:editor": "wp-scripts build src/editor-document-upload/index.js --output-path=build/editor-document-upload",
@@ -36,13 +37,16 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.61.1",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
     "@wordpress/e2e-test-utils-playwright": "1.46.0",
     "@wordpress/env": "^11.11.0",
     "@wordpress/scripts": "^33.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "~29.7.0",
-    "terser": "^5.49.0"
+    "terser": "^5.49.0",
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "jest-mock": "^30"
@@ -54,7 +58,8 @@
     ],
     "collectCoverageFrom": [
       "src/admin/**/*.js",
-      "src/blocks/**/*.js"
+      "src/blocks/**/*.js",
+      "src/editor-document-upload/**/*.js"
     ],
     "coverageDirectory": "coverage",
     "coverageReporters": [
@@ -69,7 +74,9 @@
       "\\.[jt]sx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "<rootDir>/tests/js/__mocks__/styleMock.js"
+      "\\.(css|less|scss|sass)$": "<rootDir>/tests/js/__mocks__/styleMock.js",
+      "^@wordpress/api-fetch$": "<rootDir>/tests/js/__mocks__/wordpress-api-fetch.js",
+      "^@wordpress/dom-ready$": "<rootDir>/tests/js/__mocks__/wordpress-dom-ready.js"
     }
   }
 }

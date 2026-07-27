@@ -155,8 +155,10 @@ describe('WPDocumentRevisions', () => {
 			
 			WPDocumentRevisions.restoreRevision(mockEvent);
 			expect(mockEvent.preventDefault).toHaveBeenCalled();
+			// Strings now come from @wordpress/i18n __(); the untranslated test
+			// environment returns the English msgid verbatim.
 			expect(global.confirm).toHaveBeenCalledWith(
-				wp_document_revisions.restoreConfirmation
+				'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.'
 			);
 		});
 
@@ -178,17 +180,19 @@ describe('WPDocumentRevisions', () => {
 		test('should return singular minute for 60 seconds', () => {
 			const now = 1609459200; // Base time in seconds
 			const oneMinuteAgo = now - 60;
-			
+
+			// Singular and plural share the "%d mins" msgid (as the prior
+			// localized strings did).
 			const result = WPDocumentRevisions.human_time_diff(oneMinuteAgo, now);
-			expect(result).toBe('1 minute');
+			expect(result).toBe('1 mins');
 		});
 
 		test('should return plural minutes for multiple minutes', () => {
 			const now = 1609459200;
 			const fiveMinutesAgo = now - 300;
-			
+
 			const result = WPDocumentRevisions.human_time_diff(fiveMinutesAgo, now);
-			expect(result).toBe('5 minutes');
+			expect(result).toBe('5 mins');
 		});
 
 		test('should return plural hours for multiple hours', () => {
@@ -222,7 +226,7 @@ describe('WPDocumentRevisions', () => {
 		test('should handle from greater than to (reversed arguments)', () => {
 			const now = 1609459200;
 			const result = WPDocumentRevisions.human_time_diff(now + 120, now);
-			expect(result).toBe('2 minutes');
+			expect(result).toBe('2 mins');
 		});
 	});
 
@@ -475,7 +479,9 @@ describe('WPDocumentRevisions', () => {
 			);
 
 			await WPDocumentRevisions.overrideLock();
-			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+			expect(global.alert).toHaveBeenCalledWith(
+				'An error has occurred, please try reloading the page.'
+			);
 		});
 
 		test('should alert lockError on non-1 response (e.g. -1)', async () => {
@@ -484,7 +490,9 @@ describe('WPDocumentRevisions', () => {
 			);
 
 			await WPDocumentRevisions.overrideLock();
-			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+			expect(global.alert).toHaveBeenCalledWith(
+				'An error has occurred, please try reloading the page.'
+			);
 		});
 
 		test('should alert lockError on network error', async () => {
@@ -493,7 +501,9 @@ describe('WPDocumentRevisions', () => {
 			);
 
 			await WPDocumentRevisions.overrideLock();
-			expect(global.alert).toHaveBeenCalledWith('Unable to override lock');
+			expect(global.alert).toHaveBeenCalledWith(
+				'An error has occurred, please try reloading the page.'
+			);
 		});
 	});
 

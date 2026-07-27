@@ -1,0 +1,102 @@
+name: Machine-translate missing strings
+
+# Fills untranslated gettext entries with machine translations and opens a PR.
+# Runs where the toolchain exists (WP-CLI, gettext, translate-shell), since it
+# isn't available on every dev host. Triggered manually, or automatically after
+# the POT is refreshed on main (i.e. once the "Update POT file" PR from pot.yml
+# merges), so newly-extracted JS strings get translated.
+#
+# Engine: set the repo secret GOOGLE_TRANSLATE_API_KEY to use Google Cloud
+# Translation (reliable, covers every locale, free at this volume). Without it,
+# the script falls back to keyless translate-shell, which is best-effort and
+# often rate-limited from CI. (To swap to DeepL later, add a DEEPL_API_KEY
+# branch to script/fill-machine-translations.py.)
+#
+# Machine translations are written as final (not fuzzy) per project decision,
+# but only when they preserve every printf placeholder / HTML tag from the
+# source (see script/fill-machine-translations.py); unsafe ones are left
+# untranslated. The result is proposed as a PR, not pushed directly.
+
+on:
+    workflow_dispatch: {}
+    push:
+        branches:
+            - main
+            - master
+        paths:
+            - 'languages/wp-document-revisions.pot'
+
+# Only one translation pass at a time; a newer trigger supersedes an older run.
+concurrency:
+    group: machine-translate
+    cancel-in-progress: true
+
+jobs:
+    machine-translate:
+        name: Machine-translate PO files
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Setup PHP + WP-CLI
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: wp-cli
+
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+
+            - name: Install tooling (gettext, translate-shell, polib)
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y gettext translate-shell
+                  pip install --quiet polib
+
+            - name: Refresh POT (scans PHP + src/ JS)
+              run: script/generate-pot
+
+            - name: Merge new strings into each PO
+              run: |
+                  set -euo pipefail
+                  shopt -s nullglob
+                  for po in languages/*.po; do
+                    msgmerge --update --backup=none --no-fuzzy-matching "$po" \
+                      languages/wp-document-revisions.pot >/dev/null 2>&1 || true
+                  done
+
+            - name: Fill untranslated entries with machine translations
+              env:
+                  # Optional: when set, uses Google Cloud Translation instead of
+                  # the keyless translate-shell fallback.
+                  GOOGLE_TRANSLATE_API_KEY: ${{ secrets.GOOGLE_TRANSLATE_API_KEY }}
+              run: python3 script/fill-machine-translations.py
+
+            - name: Compile MO files
+              run: |
+                  set -euo pipefail
+                  shopt -s nullglob
+                  for po in languages/*.po; do
+                    msgfmt -o "${po%.po}.mo" "$po" || true
+                  done
+
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v8
+              with:
+                  commit-message: 'Machine-translate missing strings'
+                  branch: update-pull-request/machine-translations
+                  title: 'Machine-translate missing i18n strings'
+                  body: |
+                      Automated machine translations for previously-untranslated
+                      strings (via translate-shell), plus refreshed POT/PO
+                      references and recompiled MO files.
+
+                      Translations that would not preserve their printf
+                      placeholders or HTML tags were skipped and left
+                      untranslated. Review before merge.

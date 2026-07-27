@@ -122,6 +122,12 @@ jobs:
             - name: Lint JavaScript (src/)
               run: npm run lint-js
 
+            # Type-check the // @ts-check-annotated sources against the
+            # JSDoc types in the globals.d.ts files (jsconfig.json). Catches
+            # config-object / wpdr_data property typos that lint cannot.
+            - name: Type-check JavaScript (tsc)
+              run: npm run type-check
+
             - name: Run Jest tests
               run: npm test -- --ci --coverage --maxWorkers=2
 

@@ -26,9 +26,19 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.2'
+                  tools: wp-cli
 
             - name: Build assets
               run: npm ci && npm run build
+
+            - name: Install gettext (msgmerge)
+              run: sudo apt-get update && sudo apt-get install -y gettext
+
+            # Emit build/-path-hashed script-translation JSON so
+            # wp_set_script_translations() finds it at runtime (see the script
+            # header and .github/workflows/i18n-verify.yml).
+            - name: Build script-translation JSON
+              run: script/build-script-translations
 
             - name: Install production composer dependencies
               # Production deps only — no dev tools in the release artifact.

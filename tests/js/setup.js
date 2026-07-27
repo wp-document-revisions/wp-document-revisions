@@ -4,6 +4,10 @@
  * This file sets up the testing environment with WordPress and browser globals
  */
 
+// Extend expect() with @testing-library/jest-dom matchers (toBeInTheDocument,
+// toHaveValue, toBeDisabled, …) used by the React component tests.
+require( '@testing-library/jest-dom' );
+
 // Mock WordPress globals
 global.wp = {
 	blocks: {
@@ -160,7 +164,6 @@ global.ajaxurl = '/wp-admin/admin-ajax.php';
 // Mock nonce and user for validation script
 global.nonce = 'test-nonce';
 global.user = 1;
-global.processed = 'Processed';
 
 // Mock autosave functions
 global.autosave = jest.fn();

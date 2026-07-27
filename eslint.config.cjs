@@ -14,6 +14,16 @@ const wpScriptsConfig = require( '@wordpress/scripts/config/eslint.config.cjs' )
 module.exports = [
 	...wpScriptsConfig,
 
+	// TypeScript declaration files (globals.d.ts) are ambient type-only
+	// declarations, not runtime code: `declare var` and the PHP-mirrored
+	// snake_case config names deliberately violate the JS style rules, and
+	// they are checked by tsc (jsconfig.json), not ESLint. Ignore them here.
+	// (Only linted once `typescript` is installed and @typescript-eslint can
+	// parse them; the ignore keeps behavior stable either way.)
+	{
+		ignores: [ '**/*.d.ts' ],
+	},
+
 	// Only the modern block-editor sources are linted (and gated in CI).
 	{
 		files: [ 'src/**/*.js' ],
@@ -65,7 +75,6 @@ module.exports = [
 				wp_document_revisions: 'readonly',
 				lock_override_notice: 'readonly',
 				user: 'readonly',
-				processed: 'readonly',
 				// Standard WordPress admin globals.
 				ajaxurl: 'readonly',
 				autosave: 'readonly',

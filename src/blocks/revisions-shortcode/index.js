@@ -1,6 +1,8 @@
+// @ts-check
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
+import { parseShortcodeParams } from '../shared/parse-shortcode';
 
 registerBlockType( metadata, {
 	edit: Edit,
@@ -14,13 +16,8 @@ registerBlockType( metadata, {
 					return /^\[?document_revisions\b\s*/.test( text );
 				},
 				transform: ( { text } ) => {
-					// prepare text string.
-					let iput = text.toLowerCase();
-					if ( iput.indexOf( '[' ) === 0 ) {
-						iput = iput.slice( 1, iput.length - 1 );
-					}
-					const args = iput.split( ' ' );
-					args.shift();
+					// Tokenize the raw shortcode into parameter pairs.
+					const params = parseShortcodeParams( text );
 
 					// defaults.
 					let sid = 1;
@@ -28,17 +25,7 @@ registerBlockType( metadata, {
 					let ssummary = false;
 					let sshow_pdf = false;
 					let snew_tab = true;
-					for ( const arg of args ) {
-						if ( arg.length === 0 ) {
-							continue;
-						}
-						const parm = arg.split( '=' );
-						if (
-							parm.length > 1 &&
-							( parm[ 1 ].indexOf( "'" ) === 0 || parm[ 1 ].indexOf( '"' ) === 0 )
-						) {
-							parm[ 1 ] = parm[ 1 ].slice( 1, parm[ 1 ].length - 1 );
-						}
+					for ( const parm of params ) {
 						if ( parm[ 0 ] === 'id' ) {
 							sid = Number( parm[ 1 ] );
 						}

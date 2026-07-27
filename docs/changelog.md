@@ -2,6 +2,19 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.3.0
+
+* The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
+* Add a first-run prompt on the Documents screen that points new users (and Live Preview visitors) to add their first document, replacing the blank empty-state table. (#632)
+* Occasionally invite established users to leave a WordPress.org review — shown only after real, successful use, dismissible, and never repeated once dismissed. (#632)
+* Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
+
+### 5.2.0
+
+* The classic-editor admin and block-editor sidebar (document upload and revision log) interface strings are now fully translatable via WordPress's JavaScript internationalization. Previously a number of the plugin's script-side strings could not be translated and always appeared in English regardless of the site language. (#628)
+* Add or refresh translations for 31 languages covering the newly-translatable admin and block-editor strings. (#628)
+* Under the hood: the plugin's admin JavaScript is now built as ES modules through `@wordpress/scripts`, with static type-checking and expanded unit and component test coverage in CI. No change to functionality.
+
 ### 5.1.3
 
 * Fix stale document data after consecutive revisions are merged on save: the document's object cache is now cleared correctly (previously the cache was keyed on the revision excerpt text rather than the document ID, so it was never invalidated). (#613)

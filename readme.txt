@@ -5,11 +5,11 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 5.1.3
+Stable tag: 5.3.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
+Document management and version control for WordPress. Collaborate on files, track every revision, and auto-generate change summaries with AI.
 
 == Description ==
 
@@ -22,6 +22,15 @@ A document management and version control plugin for WordPress that allows teams
 1. **📁 Document Management System (DMS)** - Track, store, and organize files of any format
 2. **👥 Collaboration Tool** - Empower teams to collaboratively draft, edit, and refine documents
 3. **🔒 File Hosting Solution** - Publish and securely deliver files to teams, clients, or the public
+
+= ✨ Modern and AI-ready =
+
+WP Document Revisions keeps pace with modern WordPress:
+
+- **🔍 Full-text search inside your files** — native text extraction from PDF, DOCX, and ODT documents (pluggable for more formats) makes document *contents* searchable, not just their titles.
+- **🤖 AI-generated revision summaries** — powered by the [WordPress 7.0 AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), each new revision can be summarized automatically from a diff against the prior version and pre-filled into the revision log for your review (opt-in, with per-document and sitewide opt-outs).
+- **🧱 Block editor support** — an opt-in Gutenberg editing experience with a document sidebar panel for uploads, revision summaries, and lock status.
+- **🔌 REST API & WP-CLI** — manage documents headlessly and backfill the search/AI cache across your whole library from the command line.
 
 See [**the full list of features**](https://wp-document-revisions.github.io/wp-document-revisions/features/) for more information.
 
@@ -38,7 +47,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 = 📖 User Documentation =
 
 - **[Frequently Asked Questions](https://wp-document-revisions.github.io/wp-document-revisions/frequently-asked-questions/)** - Common questions answered
-- **[Block Editor Support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/)** - ⚠️ Experimental Gutenberg support (opt-in)
+- **[Block Editor Support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/)** - Opt-in Gutenberg editing for documents
 - **[Plugin Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/)** - Available WordPress actions
 - **[Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)** - Available WordPress filters
 - **[Plugin Shortcodes and Widget](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/)** - Display documents on your site
@@ -89,7 +98,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Multisite and Windows (XAMPP) support
 - Multiple language support including French, Spanish and German (easily translated to your language)
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
-- Opt-in [Block Editor (Gutenberg) support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) with document sidebar panel (experimental)
+- Opt-in [Block Editor (Gutenberg) support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
 - WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use
@@ -219,17 +228,19 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.3.0 =
+
+* The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
+* Add a first-run prompt on the Documents screen that points new users (and Live Preview visitors) to add their first document, replacing the blank empty-state table. (#632)
+* Occasionally invite established users to leave a WordPress.org review — shown only after real, successful use, dismissible, and never repeated once dismissed. (#632)
+* Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
+
+= 5.2.0 =
+
+* The classic-editor admin and block-editor sidebar (document upload and revision log) interface strings are now fully translatable via WordPress's JavaScript internationalization. Previously a number of the plugin's script-side strings could not be translated and always appeared in English regardless of the site language. (#628)
+* Add or refresh translations for 31 languages covering the newly-translatable admin and block-editor strings. (#628)
+* Under the hood: the plugin's admin JavaScript is now built as ES modules through `@wordpress/scripts`, with static type-checking and expanded unit and component test coverage in CI. No change to functionality.
+
 = 5.1.3 =
-
-* Fix stale document data after consecutive revisions are merged on save: the document's object cache is now cleared correctly (previously the cache was keyed on the revision excerpt text rather than the document ID, so it was never invalidated). (#613)
-* Fix a fatal error when saving the Document Link Date option on the multisite network settings screen, caused by a call to an undefined sanitization method. (#611)
-* Avoid a PHP warning when serving a document with gzip compression forced via the `document_serve_use_gzip` filter for a client that did not advertise encoding support. (#613)
-
-= 5.1.2 =
-
-* Ensure that Live Review document upload works and the media window autocloses after successful upload. (#588)
-* Recover the document's own attachment instead of dropping it when a forged or foreign attachment marker is rejected, preserving the legitimate attachment. Follow-up to the 5.1.1 security fix. (#587)
-
-= 5.1.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

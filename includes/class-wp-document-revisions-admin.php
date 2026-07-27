@@ -62,6 +62,20 @@ class WP_Document_Revisions_Admin {
 	private static $attachmts = null;
 
 	/**
+	 * User meta key recording that a user dismissed (or acted on) the review prompt.
+	 *
+	 * @var string
+	 */
+	const REVIEW_DISMISSED_META = 'wpdr_review_dismissed';
+
+	/**
+	 * Minimum number of documents (any status) before the review prompt is shown.
+	 *
+	 * @var int
+	 */
+	const REVIEW_MIN_DOCS = 5;
+
+	/**
 	 * Register's admin hooks
 	 * Note: we are at auth_redirect, first possible hook is admin_menu
 	 *
@@ -106,6 +120,9 @@ class WP_Document_Revisions_Admin {
 		add_action( 'restrict_manage_posts', array( $this, 'filter_documents_list' ) );
 		add_action( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
 		add_filter( 'wp_dropdown_users_args', array( $this, 'filter_user_dropdown' ), 10, 2 );
+		add_action( 'admin_notices', array( $this, 'empty_state_notice' ) );
+		add_action( 'admin_notices', array( $this, 'review_prompt' ) );
+		add_action( 'admin_init', array( $this, 'handle_review_dismissal' ) );
 
 		// settings.
 		add_action( 'admin_init', array( $this, 'settings_fields' ) );
