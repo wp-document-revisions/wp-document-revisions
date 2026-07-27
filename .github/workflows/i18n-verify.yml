@@ -97,23 +97,26 @@ jobs:
             - name: Install gettext (msgmerge)
               run: sudo apt-get update && sudo apt-get install -y gettext
 
-            - name: Diagnostic — script-translation JSON hash vs enqueued path
+            # Run the exact deploy-time step and confirm it emits JSON hashed on
+            # the ENQUEUED build/ path (what wp_set_script_translations loads),
+            # not the src/ path make-pot references.
+            - name: Build script-translation JSON (deploy-time step)
+              run: script/build-script-translations
+
+            - name: Assert build/-path-hashed JSON is produced for fr_FR
               run: |
                   set -euo pipefail
-                  PO=languages/wp-document-revisions-fr_FR.po
-                  # Refresh the fr_FR PO against the freshly-scanned POT so the JS
-                  # references (and thus JSON generation) are present.
-                  if [ -f "$PO" ]; then
-                    msgmerge --update --backup=none "$PO" languages/wp-document-revisions.pot || true
-                    wp i18n make-json "$PO" --no-purge --pretty-print || true
+                  build_hash=$( printf '%s' 'build/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1 )
+                  src_hash=$( printf '%s' 'src/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1 )
+                  want="languages/wp-document-revisions-fr_FR-${build_hash}.json"
+                  echo "build/ hash = $build_hash (this is what the runtime loads)"
+                  echo "src/   hash = $src_hash (what make-pot references, pre-rewrite)"
+                  echo "--- generated fr_FR JSON ---"
+                  ls -1 languages/*fr_FR*.json 2>/dev/null || echo "(none)"
+                  if [ ! -f "$want" ]; then
+                    echo "::error::Expected build/-hashed JSON not found: $want"
+                    echo "::error::Script translations would not load at runtime."
+                    exit 1
                   fi
-                  echo "--- generated *fr_FR*.json files ---"
-                  ls -1 languages/*fr_FR*.json 2>/dev/null || echo "(none generated)"
-                  echo "--- expected runtime hash is md5 of the ENQUEUED (build/) path ---"
-                  printf 'md5(build/admin/wp-document-revisions.js) = %s\n' \
-                    "$(printf '%s' 'build/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1)"
-                  printf 'md5(src/admin/wp-document-revisions.js)   = %s\n' \
-                    "$(printf '%s' 'src/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1)"
-                  echo "If no *fr_FR*.json filename contains the build/ hash above, self-generated"
-                  echo "JSON would not load at runtime — production then relies on the"
-                  echo "wordpress.org language pack (built from the deployed build/ code)."
+                  echo "OK: build/-path-hashed script-translation JSON produced ($want)."
+                  echo "Sample:"; head -c 300 "$want"; echo

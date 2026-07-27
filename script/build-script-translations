@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Build Jed-format script-translation JSON for the *deployed* scripts.
+#
+# The problem: `wp i18n make-pot` can only extract strings from the readable
+# src/ JavaScript, so its file references point at src/. But at runtime
+# wp_set_script_translations() loads the JSON by a hash of the *enqueued*
+# build/ path — and md5(src/…) != md5(build/…), so src-referenced JSON never
+# loads. (Confirmed by .github/workflows/i18n-verify.yml.)
+#
+# The fix, run at deploy time after `npm run build`: extract from src/, rewrite
+# the file references to their build/ equivalents (the block edit/index sources
+# both bundle into build/blocks/<block>/index.js), then make-json. The result
+# is JSON whose filenames are hashed on the build/ paths WP actually looks for.
+#
+# Requires: wp-cli (`wp`) and gettext (`msgmerge`). Ships the JSON in
+# languages/ (not excluded by .distignore); the enqueues pass the plugin
+# languages dir as the third wp_set_script_translations() argument so WP finds
+# it, falling back to wordpress.org language packs for locales we don't emit.
+
+set -euo pipefail
+
+POT=languages/wp-document-revisions.pot
+BUILD_POT="$(mktemp)"
+trap 'rm -f "$BUILD_POT"' EXIT
+
+# 1. Fresh POT (scans PHP + src/ JS).
+script/generate-pot
+
+# 2. Rewrite src/ references to the build/ files that actually ship + enqueue.
+sed -E \
+	-e 's#src/admin/#build/admin/#g' \
+	-e 's#src/editor-document-upload/#build/editor-document-upload/#g' \
+	-e 's#src/blocks/([^/]+)/(index|edit)\.js#build/blocks/\1/index.js#g' \
+	"$POT" >"$BUILD_POT"
+
+# 3. For every locale PO, sync references from the build POT and emit JSON.
+shopt -s nullglob
+count=0
+for po in languages/*.po; do
+	msgmerge --update --backup=none --no-fuzzy-matching "$po" "$BUILD_POT" >/dev/null 2>&1 || true
+	wp i18n make-json "$po" --no-purge --pretty-print >/dev/null 2>&1 || true
+	count=$((count + 1))
+done
+
+echo "Processed $count locale PO files; script-translation JSON written to languages/."

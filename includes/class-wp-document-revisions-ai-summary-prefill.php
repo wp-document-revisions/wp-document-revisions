@@ -133,7 +133,7 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			'before'
 		);
 		// UI strings now come from @wordpress/i18n __() in the script.
-		wp_set_script_translations( self::SCRIPT_HANDLE, 'wp-document-revisions' );
+		wp_set_script_translations( self::SCRIPT_HANDLE, 'wp-document-revisions', dirname( __DIR__ ) . '/languages' );
 	}
 
 	/**

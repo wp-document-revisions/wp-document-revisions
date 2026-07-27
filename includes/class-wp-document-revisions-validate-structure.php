@@ -735,7 +735,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$script = "var user  = '" . get_current_user_id() . "';";
 		// phpcs:enable Squiz.Strings.DoubleQuoteUsage
 		wp_add_inline_script( 'wpdr_validate', $script, 'before' );
-		wp_set_script_translations( 'wpdr_validate', 'wp-document-revisions' );
+		wp_set_script_translations( 'wpdr_validate', 'wp-document-revisions', dirname( __DIR__ ) . '/languages' );
 	}
 
 	/**

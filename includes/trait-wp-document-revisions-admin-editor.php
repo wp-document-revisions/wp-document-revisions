@@ -688,7 +688,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				'var wp_document_revisions = ' . wp_json_encode( $data ) . ';',
 				'before'
 			);
-			wp_set_script_translations( 'wp_document_revisions', 'wp-document-revisions' );
+			wp_set_script_translations( 'wp_document_revisions', 'wp-document-revisions', dirname( __DIR__ ) . '/languages' );
 		}
 
 		// enqueue CSS.
