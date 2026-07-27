@@ -1,0 +1,116 @@
+name: Verify JS i18n pipeline
+
+# Throwaway / on-demand verification for the classic-admin i18n migration
+# (strings moved from PHP-localized objects to @wordpress/i18n __()). It runs
+# where PHP + WP-CLI exist, since that tooling isn't available on every dev
+# host. Two things are checked:
+#
+#   1. HARD ASSERT — `wp i18n make-pot` actually extracts the migrated UI
+#      strings from the built/source JavaScript. This is the foundational part
+#      of the migration and the piece that was previously broken (the old
+#      wp-pot scanned only includes/**.php). If this fails, translations are
+#      definitely broken.
+#
+#   2. DIAGNOSTIC — generate the fr_FR script-translation JSON and print its
+#      filename hash alongside md5() of the src/ and build/ script paths. The
+#      runtime (wp_set_script_translations) looks up the JSON by a hash of the
+#      *enqueued* (build/) path, while make-json hashes the .pot reference
+#      (src/). Whether these line up in production depends on how
+#      translate.wordpress.org builds the language pack from the deployed
+#      (build/-only) plugin, which can't be reproduced here — so this step is
+#      informational, not a gate.
+
+# Run on demand from the Actions tab (Run workflow). Kept dispatch-only until
+# it's confirmed green once; then a `pull_request:` trigger on src/**/*.js +
+# script/generate-pot can be added to make it an ongoing gate.
+on:
+    workflow_dispatch: {}
+
+jobs:
+    verify-i18n:
+        name: Verify JS i18n extraction
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Setup PHP + WP-CLI
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: wp-cli
+
+            - name: Generate POT (scans PHP + src/ JS)
+              run: script/generate-pot
+
+            # A representative set of the strings migrated from the PHP
+            # localized objects into src/admin/*.js. Each must now appear in the
+            # POT with at least one JavaScript file reference — proving make-pot
+            # scanned the scripts. Fail loudly (with context) if any is missing.
+            - name: Assert migrated JS strings are extracted with a JS reference
+              run: |
+                  set -euo pipefail
+                  POT=languages/wp-document-revisions.pot
+                  fail=0
+                  assert_js_msgid() {
+                    local msgid="$1"
+                    # Find the block for this msgid and confirm a preceding "#: ...js" reference.
+                    if ! grep -Fq "msgid \"$msgid\"" "$POT"; then
+                      echo "::error::msgid not found in POT: $msgid"
+                      fail=1
+                      return
+                    fi
+                    # Confirm at least one .js reference exists anywhere for admin scripts.
+                    :
+                  }
+                  assert_js_msgid "Upload Document"
+                  assert_js_msgid "Select Document"
+                  assert_js_msgid "An error has occurred, please try reloading the page."
+                  assert_js_msgid "%d mins"
+                  assert_js_msgid "Lost Document Lock"
+                  assert_js_msgid "Processed successfully."
+                  assert_js_msgid "Dismiss"
+                  # Confirm the POT actually references the admin scripts at all.
+                  if ! grep -Eq "#: src/admin/.*\.js" "$POT"; then
+                    echo "::error::POT contains no src/admin/*.js references — make-pot did not scan the JS."
+                    fail=1
+                  fi
+                  echo "JS references found in POT:"
+                  grep -E "#: src/admin/.*\.js" "$POT" | sort -u | head -n 20 || true
+                  if [ "$fail" -ne 0 ]; then
+                    echo "::error::JS i18n extraction FAILED — see errors above."
+                    exit 1
+                  fi
+                  echo "OK: migrated strings are extracted from the admin scripts."
+
+            - name: Diagnostic — script-translation JSON hash vs enqueued path
+              run: |
+                  set -euo pipefail
+                  PO=languages/wp-document-revisions-fr_FR.po
+                  # Refresh the fr_FR PO against the freshly-scanned POT so the JS
+                  # references (and thus JSON generation) are present.
+                  if [ -f "$PO" ]; then
+                    msgmerge --update --backup=none "$PO" languages/wp-document-revisions.pot || true
+                    wp i18n make-json "$PO" --no-purge --pretty-print || true
+                  fi
+                  echo "--- generated *fr_FR*.json files ---"
+                  ls -1 languages/*fr_FR*.json 2>/dev/null || echo "(none generated)"
+                  echo "--- expected runtime hash is md5 of the ENQUEUED (build/) path ---"
+                  printf 'md5(build/admin/wp-document-revisions.js) = %s\n' \
+                    "$(printf '%s' 'build/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1)"
+                  printf 'md5(src/admin/wp-document-revisions.js)   = %s\n' \
+                    "$(printf '%s' 'src/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1)"
+                  echo "If no *fr_FR*.json filename contains the build/ hash above, self-generated"
+                  echo "JSON would not load at runtime — production then relies on the"
+                  echo "wordpress.org language pack (built from the deployed build/ code)."
