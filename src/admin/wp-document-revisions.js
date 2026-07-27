@@ -1,6 +1,7 @@
 // @ts-check
 import apiFetch from '@wordpress/api-fetch';
 import domReady from '@wordpress/dom-ready';
+import { __, sprintf } from '@wordpress/i18n';
 
 const SUBMIT_BUTTONS =
 	'#submitpost button, #submitpost [type="submit"], #submitpost [type="button"]';
@@ -122,8 +123,9 @@ class WPDocumentRevisions {
 				  )
 				: '';
 			const notice =
-				wp_document_revisions.uploadErrorNotice ||
-				'<div id="wpdr-upload-error" class="error"><p>Upload failed.</p></div>';
+				'<div id="wpdr-upload-error" class="error"><p>' +
+				__( 'Upload failed.', 'wp-document-revisions' ) +
+				'</p></div>';
 			// Insert localized notice, appending escaped error detail if available.
 			let html = notice;
 			if ( safeText ) {
@@ -149,7 +151,14 @@ class WPDocumentRevisions {
 
 		const post = document.getElementById( 'post' );
 		if ( post ) {
-			post.insertAdjacentHTML( 'beforebegin', wp_document_revisions.postUploadNotice );
+			const postUploadNotice =
+				'<div id="message" class="updated"><p>' +
+				__(
+					'File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes.',
+					'wp-document-revisions'
+				) +
+				'</p></div>';
+			post.insertAdjacentHTML( 'beforebegin', postUploadNotice );
 		}
 		// Show upload confirmation in the document metabox.
 		const docMetabox =
@@ -161,7 +170,7 @@ class WPDocumentRevisions {
 			uploadConfirm.id = 'wpdr-upload-confirm';
 			uploadConfirm.innerHTML =
 				'<strong>&#10003; ' +
-				( wp_document_revisions.uploadConfirmation || 'New version uploaded.' ) +
+				__( 'New version uploaded. Press Update to save.', 'wp-document-revisions' ) +
 				'</strong>';
 			uploadConfirm.style.cssText = 'color:#00a32a;margin:8px 0;';
 			const clearDiv = docMetabox.querySelector( '.clear' );
@@ -176,7 +185,14 @@ class WPDocumentRevisions {
 
 	restoreRevision = ( e ) => {
 		e.preventDefault();
-		if ( confirm( wp_document_revisions.restoreConfirmation ) ) {
+		if (
+			confirm(
+				__(
+					'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.',
+					'wp-document-revisions'
+				)
+			)
+		) {
 			window.location.href = e.target.getAttribute( 'href' );
 		}
 	};
@@ -220,11 +236,21 @@ class WPDocumentRevisions {
 						} );
 					autosave();
 				} else {
-					alert( wp_document_revisions.lockError );
+					alert(
+						__(
+							'An error has occurred, please try reloading the page.',
+							'wp-document-revisions'
+						)
+					);
 				}
 			} )
 			.catch( () => {
-				alert( wp_document_revisions.lockError );
+				alert(
+					__(
+						'An error has occurred, please try reloading the page.',
+						'wp-document-revisions'
+					)
+				);
 			} );
 	};
 
@@ -241,7 +267,7 @@ class WPDocumentRevisions {
 		return window.webkitNotifications
 			.createNotification(
 				wp_document_revisions.lostLockNoticeLogo,
-				wp_document_revisions.lostLockNoticeTitle,
+				__( 'Lost Document Lock', 'wp-document-revisions' ),
 				notice
 			)
 			.show();
@@ -254,14 +280,18 @@ class WPDocumentRevisions {
 			const title = /** @type {HTMLInputElement | null} */ (
 				document.getElementById( 'title' )
 			);
-			wp_document_revisions.lostLockNotice = wp_document_revisions.lostLockNotice.replace(
-				'%s',
+			const lostLockNotice = sprintf(
+				// translators: %s is the title of the document.
+				__(
+					'Your lock on the document %s has been overridden. Any changes will be lost.',
+					'wp-document-revisions'
+				),
 				title ? title.value : ''
 			);
 			if ( window.webkitNotifications ) {
-				lock_override_notice( wp_document_revisions.lostLockNotice );
+				lock_override_notice( lostLockNotice );
 			} else {
-				alert( wp_document_revisions.lostLockNotice );
+				alert( lostLockNotice );
 			}
 			// The legacy forceReload arg is a no-op in modern browsers; the DOM
 			// typings declare reload() as zero-arg, so cast to preserve the call.
@@ -274,23 +304,27 @@ class WPDocumentRevisions {
 		to = to || d.getTime() / 1000 + parseInt( String( wp_document_revisions.offset ), 10 );
 		const diff = Math.abs( to - from );
 		if ( diff < 3600 ) {
+			// Singular and plural share the "%d mins" msgid (matches the prior
+			// localized strings), so a single form covers both.
 			const mins = this.roundUp( diff / 60 );
-			if ( mins === 1 ) {
-				return wp_document_revisions.minute.replace( '%d', String( mins ) );
-			}
-			return wp_document_revisions.minutes.replace( '%d', String( mins ) );
+			// translators: %d is the number of minutes.
+			return sprintf( __( '%d mins', 'wp-document-revisions' ), mins );
 		} else if ( diff < 86400 && diff >= 3600 ) {
 			const hours = this.roundUp( diff / 3600 );
 			if ( hours === 1 ) {
-				return wp_document_revisions.hour.replace( '%d', String( hours ) );
+				// translators: %d is the number of hours (singular).
+				return sprintf( __( '%d hour', 'wp-document-revisions' ), hours );
 			}
-			return wp_document_revisions.hours.replace( '%d', String( hours ) );
+			// translators: %d is the number of hours (plural).
+			return sprintf( __( '%d hours', 'wp-document-revisions' ), hours );
 		} else if ( diff >= 86400 ) {
 			const days = this.roundUp( diff / 86400 );
 			if ( days === 1 ) {
-				return wp_document_revisions.day.replace( '%d', String( days ) );
+				// translators: %d is the number of days (singular).
+				return sprintf( __( '%d day', 'wp-document-revisions' ), days );
 			}
-			return wp_document_revisions.days.replace( '%d', String( days ) );
+			// translators: %d is the number of days (plural).
+			return sprintf( __( '%d days', 'wp-document-revisions' ), days );
 		}
 	};
 
@@ -373,14 +407,14 @@ class WPDocumentRevisions {
 
 		// Media upload with no existing uploads as an option and only allow one file to be loaded.
 		const frame = wp.media( {
-			title: wp_document_revisions.uploadTitle,
+			title: __( 'Upload Document', 'wp-document-revisions' ),
 			multiple: false,
 			button: {
-				text: wp_document_revisions.uploadSelect,
+				text: __( 'Select Document', 'wp-document-revisions' ),
 			},
 			states: [
 				new wp.media.controller.Library( {
-					title: wp_document_revisions.uploadTitle,
+					title: __( 'Upload Document', 'wp-document-revisions' ),
 					filterable: 'uploaded',
 					multiple: false,
 					library: restrictedLibrary,

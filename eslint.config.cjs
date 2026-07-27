@@ -75,7 +75,6 @@ module.exports = [
 				wp_document_revisions: 'readonly',
 				lock_override_notice: 'readonly',
 				user: 'readonly',
-				processed: 'readonly',
 				// Standard WordPress admin globals.
 				ajaxurl: 'readonly',
 				autosave: 'readonly',

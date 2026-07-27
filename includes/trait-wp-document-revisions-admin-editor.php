@@ -658,37 +658,14 @@ trait WP_Document_Revisions_Admin_Editor {
 				);
 			}
 		} else {
-			// Classic editor: enqueue the existing admin JS with localized strings.
+			// Classic editor: enqueue the admin JS. UI strings now live in the
+			// script itself via @wordpress/i18n __() and are served through
+			// wp_set_script_translations() below; only non-translatable runtime
+			// config is passed through the localized object.
 			$data = array(
-				'restoreConfirmation' => __( 'Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision.', 'wp-document-revisions' ),
-				'lockNeedle'          => __( 'is currently editing this', 'wp-document-revisions' ),
-				'postUploadNotice'    => '<div id="message" class="updated"><p>' . __( 'File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes.', 'wp-document-revisions' ) . '</p></div>',
-				'postDesktopNotice'   => '<div id="message" class="update-nag"><p>' . __( 'After you have saved your document in your office software, <a href="#" onClick="location.reload();">reload this page</a> to see your changes.', 'wp-document-revisions' ) . '</p></div>',
-				'uploadConfirmation'  => __( 'New version uploaded. Press Update to save.', 'wp-document-revisions' ),
-				'uploadErrorNotice'   => '<div id="wpdr-upload-error" class="error"><p>' . __( 'Upload failed.', 'wp-document-revisions' ) . '</p></div>',
-				'saveFirstNotice'     => '<div id="wpdr-save-first-notice" class="error"><p>' . __( 'Please save the current version before uploading another.', 'wp-document-revisions' ) . '</p></div>',
-				// translators: %s is the title of the document.
-				'lostLockNotice'      => __( 'Your lock on the document %s has been overridden. Any changes will be lost.', 'wp-document-revisions' ),
-				'lockError'           => __( 'An error has occurred, please try reloading the page.', 'wp-document-revisions' ),
-				'lostLockNoticeTitle' => __( 'Lost Document Lock', 'wp-document-revisions' ),
-				'lostLockNoticeLogo'  => admin_url( 'images/logo.gif' ),
-				// Text for Document Uploads.
-				'uploadTitle'         => __( 'Upload Document', 'wp-document-revisions' ),
-				'uploadSelect'        => __( 'Select Document', 'wp-document-revisions' ),
-				// translators: %d is the numeric minutes, when singular.
-				'minute'              => __( '%d mins', 'wp-document-revisions' ),
-				// translators: %d is the numeric minutes, when plural.
-				'minutes'             => __( '%d mins', 'wp-document-revisions' ),
-				// translators: %d is the numeric hour, when singular.
-				'hour'                => __( '%d hour', 'wp-document-revisions' ),
-				// translators: %d is the numeric hour, when plural.
-				'hours'               => __( '%d hours', 'wp-document-revisions' ),
-				// translators: %d is the numeric day, when singular.
-				'day'                 => __( '%d day', 'wp-document-revisions' ),
-				// translators: %d is the numeric days, when plural.
-				'days'                => __( '%d days', 'wp-document-revisions' ),
-				'offset'              => get_option( 'gmt_offset' ) * 3600,
-				'nonce'               => wp_create_nonce( 'wp-document-revisions' ),
+				'lostLockNoticeLogo' => admin_url( 'images/logo.gif' ),
+				'offset'             => get_option( 'gmt_offset' ) * 3600,
+				'nonce'              => wp_create_nonce( 'wp-document-revisions' ),
 			);
 
 			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
@@ -711,6 +688,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				'var wp_document_revisions = ' . wp_json_encode( $data ) . ';',
 				'before'
 			);
+			wp_set_script_translations( 'wp_document_revisions', 'wp-document-revisions' );
 		}
 
 		// enqueue CSS.

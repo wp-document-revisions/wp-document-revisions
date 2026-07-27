@@ -1,5 +1,6 @@
 // @ts-check
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 window.wpdr_valid_fix = function wpdr_valid_fix( id, code, parm ) {
 	return apiFetch( {
@@ -20,7 +21,7 @@ window.clear_line = function clear_line( id, code ) {
 	// remove the class so that hide_show doesn't touch it.
 	line.classList.remove( `wpdr_${ code }` );
 	const td = line.getElementsByTagName( 'td' );
-	td[ 3 ].innerHTML = processed;
+	td[ 3 ].innerHTML = __( 'Processed successfully.', 'wp-document-revisions' );
 	td[ 4 ].innerHTML = '';
 	// may not match.
 	const on_ = document.getElementById( `on_${ id }` );

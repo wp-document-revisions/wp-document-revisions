@@ -4,9 +4,14 @@ set -e
 
 VERSION=$(grep -i "Stable tag:" docs/header.md | awk -F' ' '{print $NF}' | tr -d '\r')
 
-wp-pot \
-  --domain wp-document-revisions \
-  --dest-file languages/wp-document-revisions.pot \
-  --src "includes/**.php" \
-  --package "WP Document Revisions $VERSION" --relative-to "." \
-  --comment-keyword "translators:"
+# Use WP-CLI's make-pot so BOTH PHP (includes/) and the first-party
+# JavaScript sources (src/) are scanned. The classic-admin and block-editor
+# scripts translate their UI strings via @wordpress/i18n __(); make-pot records
+# the src/*.js references translate.wordpress.org needs to build the Jed-format
+# script-translation language packs. build/ (minified duplicates), vendor, and
+# tooling dirs are excluded.
+wp i18n make-pot . languages/wp-document-revisions.pot \
+  --slug=wp-document-revisions \
+  --domain=wp-document-revisions \
+  --package-name="WP Document Revisions $VERSION" \
+  --exclude=build,node_modules,vendor,vendor-bin,vendor-prefixed,tests,coverage,docs,script,bin

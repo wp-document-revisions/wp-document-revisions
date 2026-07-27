@@ -20,6 +20,7 @@
 
 // @ts-check
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 const config = window.wpdrAISummaryPrefill;
 
@@ -55,11 +56,23 @@ function run() {
 
 function applyPrefill( textarea, response ) {
 	textarea.value = response.summary;
-	addHint( textarea, config.i18n && config.i18n.hint, true, response );
+	addHint(
+		textarea,
+		__( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
+		true,
+		response
+	);
 }
 
 function showPendingHint( textarea ) {
-	addHint( textarea, config.i18n && config.i18n.pending, false );
+	addHint(
+		textarea,
+		__(
+			'✨ AI summary will be available shortly — refresh this page to see it.',
+			'wp-document-revisions'
+		),
+		false
+	);
 }
 
 function addHint( textarea, message, withDismiss, response ) {
@@ -79,12 +92,12 @@ function addHint( textarea, message, withDismiss, response ) {
 	text.textContent = message;
 	hint.appendChild( text );
 
-	if ( withDismiss && config.i18n && config.i18n.dismiss ) {
+	if ( withDismiss ) {
 		const dismiss = document.createElement( 'a' );
 		dismiss.href = '#';
 		dismiss.className = 'wpdr-ai-prefill-dismiss';
 		dismiss.style.marginLeft = '8px';
-		dismiss.textContent = config.i18n.dismiss;
+		dismiss.textContent = __( 'Dismiss', 'wp-document-revisions' );
 		dismiss.addEventListener( 'click', function ( event ) {
 			event.preventDefault();
 			textarea.value = '';
@@ -95,7 +108,7 @@ function addHint( textarea, message, withDismiss, response ) {
 		hint.appendChild( dismiss );
 	}
 
-	if ( withDismiss && config.i18n && config.i18n.review ) {
+	if ( withDismiss ) {
 		addReviewAction( hint, response );
 	}
 
@@ -107,7 +120,7 @@ function addHint( textarea, message, withDismiss, response ) {
 // "reviewed" label. If the summary is already reviewed, shows the
 // label directly with no link.
 function addReviewAction( hint, response ) {
-	const reviewedLabel = ( config.i18n && config.i18n.reviewed ) || config.i18n.review;
+	const reviewedLabel = __( 'Reviewed ✓', 'wp-document-revisions' );
 
 	function showReviewed() {
 		const done = document.createElement( 'span' );
@@ -126,7 +139,7 @@ function addReviewAction( hint, response ) {
 	review.href = '#';
 	review.className = 'wpdr-ai-prefill-review';
 	review.style.marginLeft = '8px';
-	review.textContent = config.i18n.review;
+	review.textContent = __( 'Mark reviewed', 'wp-document-revisions' );
 	review.addEventListener( 'click', function ( event ) {
 		event.preventDefault();
 		apiFetch( {

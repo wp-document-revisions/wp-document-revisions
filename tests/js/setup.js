@@ -160,7 +160,6 @@ global.ajaxurl = '/wp-admin/admin-ajax.php';
 // Mock nonce and user for validation script
 global.nonce = 'test-nonce';
 global.user = 1;
-global.processed = 'Processed';
 
 // Mock autosave functions
 global.autosave = jest.fn();

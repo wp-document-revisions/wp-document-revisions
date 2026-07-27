@@ -125,13 +125,6 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			),
 			'fieldId'        => 'excerpt',
 			'initialDelayMs' => 10000,
-			'i18n'           => array(
-				'hint'     => __( '✨ AI suggestion — edit before saving.', 'wp-document-revisions' ),
-				'dismiss'  => __( 'Dismiss', 'wp-document-revisions' ),
-				'pending'  => __( '✨ AI summary will be available shortly — refresh this page to see it.', 'wp-document-revisions' ),
-				'review'   => __( 'Mark reviewed', 'wp-document-revisions' ),
-				'reviewed' => __( 'Reviewed ✓', 'wp-document-revisions' ),
-			),
 		);
 
 		wp_add_inline_script(
@@ -139,6 +132,8 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			'var ' . self::JS_OBJECT . ' = ' . wp_json_encode( $data ) . ';',
 			'before'
 		);
+		// UI strings now come from @wordpress/i18n __() in the script.
+		wp_set_script_translations( self::SCRIPT_HANDLE, 'wp-document-revisions' );
 	}
 
 	/**

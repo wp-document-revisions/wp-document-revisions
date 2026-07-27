@@ -26,38 +26,15 @@ declare module '@wordpress/dom-ready' {
 	export default domReady;
 }
 
-/** The `wp_document_revisions` object localized by the classic-editor enqueue. */
+/**
+ * The `wp_document_revisions` object localized by the classic-editor enqueue.
+ * UI strings moved to @wordpress/i18n __(); only non-translatable runtime
+ * config remains here.
+ */
 interface WpdrClassicConfig {
-	restoreConfirmation: string;
-	lockNeedle: string;
-	postUploadNotice: string;
-	postDesktopNotice: string;
-	uploadConfirmation: string;
-	uploadErrorNotice: string;
-	saveFirstNotice: string;
-	lostLockNotice: string;
-	lockError: string;
-	lostLockNoticeTitle: string;
 	lostLockNoticeLogo: string;
-	uploadTitle: string;
-	uploadSelect: string;
-	minute: string;
-	minutes: string;
-	hour: string;
-	hours: string;
-	day: string;
-	days: string;
 	offset: number;
 	nonce: string;
-}
-
-/** i18n strings for the AI revision-log pre-fill hint. */
-interface WpdrAiPrefillI18n {
-	hint?: string;
-	pending?: string;
-	dismiss?: string;
-	review?: string;
-	reviewed?: string;
 }
 
 /** The `wpdrAISummaryPrefill` object localized by the AI pre-fill enqueue. */
@@ -65,7 +42,6 @@ interface WpdrAiPrefillConfig {
 	restPath: string;
 	fieldId: string;
 	initialDelayMs?: number;
-	i18n?: WpdrAiPrefillI18n;
 }
 
 // PHP-injected config object the classic-admin script is built around.
@@ -91,9 +67,8 @@ declare var ajaxurl: string;
 declare function autosave(): void;
 declare function lock_override_notice( notice?: string ): void;
 
-// Validate-structure inline-script globals.
+// Validate-structure inline-script global (the current user id).
 declare var user: number;
-declare var processed: string;
 
 // The global WP JS namespace. `apiFetch`/`domReady` are imported now; only
 // the broad `wp.media` API is still reached through it, so leave it `any`.

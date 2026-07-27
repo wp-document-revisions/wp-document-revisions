@@ -78,8 +78,9 @@ describe('wp-document-revisions-validate', () => {
 
 			await wpdr_valid_fix(123, 'type1', 456);
 
-			// Verify clear_line was executed by checking its side effects
-			expect(mockTds[3].innerHTML).toBe('Processed');
+			// Verify clear_line was executed by checking its side effects.
+			// The label now comes from @wordpress/i18n __() (English msgid).
+			expect(mockTds[3].innerHTML).toBe('Processed successfully.');
 			expect(mockTds[4].innerHTML).toBe('');
 		});
 
@@ -191,11 +192,9 @@ describe('wp-document-revisions-validate', () => {
 				if (id === 'Line123') return mockLine;
 				return { style: { display: '' } };
 			});
-			global.processed = 'PROCESSED';
-
 			clear_line(123, 'type1');
 
-			expect(mockTds[3].innerHTML).toBe('PROCESSED');
+			expect(mockTds[3].innerHTML).toBe('Processed successfully.');
 		});
 
 		test('should clear fifth td content', () => {
@@ -430,7 +429,6 @@ describe('wp-document-revisions-validate', () => {
 				return { style: { display: '' } };
 			});
 
-			global.processed = 'Fixed';
 
 			await wpdr_valid_fix(456, 'wpdr_type', 789);
 
@@ -461,7 +459,6 @@ describe('wp-document-revisions-validate', () => {
 				return null;
 			});
 
-			global.processed = 'Fixed';
 
 			await wpdr_valid_fix(100, 'wpdr_orphan', 200);
 
