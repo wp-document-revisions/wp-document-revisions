@@ -43,6 +43,7 @@
 - Clean uninstall: options, user meta, and capabilities removed on plugin deletion
 - Deactivation hook flushes rewrite rules for clean deactivation
 - Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
+- Opt-in email notifications when a document changes workflow state or gains a new revision, with a configurable recipient list (see [Document Notifications](notifications.md))
 
 ### Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
 
@@ -50,7 +51,6 @@
 - **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
 - **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
 - **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
-- **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
 - **Bulk Import** - how to batch import a directory (or other list) of files as documents
 - **Filetype Taxonomy** - Adds support to filter by filetype
 - **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
