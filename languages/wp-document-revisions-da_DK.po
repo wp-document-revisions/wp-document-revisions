@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-26 11:39\n"
 "Language-Team: Danish\n"
 "Language: da_DK\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -44,8 +47,8 @@ msgid ""
 "A document management and version control plugin for WordPress that allows "
 "teams of any size to collaboratively edit files and manage their workflow."
 msgstr ""
-"Et plugin til dokumenthåndtering og versionskontrol til WordPress, der giver"
-" teams af enhver størrelse mulighed for at redigere filer og administrere "
+"Et plugin til dokumenthåndtering og versionskontrol til WordPress, der giver "
+"teams af enhver størrelse mulighed for at redigere filer og administrere "
 "deres arbejdsgang i fællesskab."
 
 #. Author of the plugin
@@ -235,8 +238,8 @@ msgid ""
 "revision log field when a new file is uploaded. Extraction (and summary "
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
-"Når denne knap er markeret, vil AI-genererede revisionsoversigter ikke blive"
-" indsat i revisionslogfeltet, når en ny fil uploades. Udtrækning (og "
+"Når denne knap er markeret, vil AI-genererede revisionsoversigter ikke blive "
+"indsat i revisionslogfeltet, når en ny fil uploades. Udtrækning (og "
 "generering af oversigter, hvis aktiveret) kører stadig – kun editorens "
 "forudfyldning undertrykkes."
 
@@ -367,8 +370,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Vedhæftet fil fundet til dokument, men ikke linket i øjeblikket"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -411,8 +413,8 @@ msgid ""
 "The document contains additional document files that are inaccessible. They "
 "should be deleted to reduce storage."
 msgstr ""
-"Dokumentet indeholder yderligere dokumentfiler, der ikke er tilgængelige. De"
-" bør slettes for at reducere lagerpladsen."
+"Dokumentet indeholder yderligere dokumentfiler, der ikke er tilgængelige. De "
+"bør slettes for at reducere lagerpladsen."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1182
 msgid "Overview"
@@ -442,8 +444,8 @@ msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
-"Hvis du har fået rapporteret en fejl her, vil du få en \"Fejl 404 - Dokument"
-" ikke fundet\" (eller tilsvarende) besked, når du forsøger at se dokumentet."
+"Hvis du har fået rapporteret en fejl her, vil du få en \"Fejl 404 - Dokument "
+"ikke fundet\" (eller tilsvarende) besked, når du forsøger at se dokumentet."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
 msgid ""
@@ -535,8 +537,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Som en variant af dette sidste tilfælde har du muligvis konfigureret "
 "plugin'et, så dokumentfillageret er et af dine valgfrie og ikke "
@@ -564,8 +565,8 @@ msgstr "Advarsler"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Webteknologien, der bruges til at levere WordPress, betyder, at hvis du "
@@ -574,8 +575,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Det er en designfunktion i dette plugin, at du kun skal kunne tilgå et "
 "dokument, hvis du går via selve WordPress."
@@ -615,8 +616,7 @@ msgstr "Dokumentets post-ID, der skal kontrolleres adgang til."
 
 #: includes/class-wp-document-revisions.php:324
 msgid "The action to check: read, edit, delete, or publish."
-msgstr ""
-"Handlingen der skal kontrolleres: læse, redigere, slette eller udgive."
+msgstr "Handlingen der skal kontrolleres: læse, redigere, slette eller udgive."
 
 #: includes/class-wp-document-revisions.php:335
 msgid "Whether the user can perform the action."
@@ -896,8 +896,10 @@ msgstr "Dokument er gemt."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument er indsendt. <a target=\"_blank\" href=\"%s\">Download dokument</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Dokument er indsendt. <a target=\"_blank\" href=\"%s\">Download dokument</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -919,7 +921,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Dokumentkladde er opdateret. <a target=\"_blank\" href=\"%s\">Download "
 "dokument</a>"
@@ -981,17 +985,15 @@ msgstr "Seneste version af dokumentet"
 msgid "Download"
 msgstr "Download"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"Tjekket ind for <abbr class=\"timestamp\" title=\"%1$s\" "
-"id=\"A%2$s\">%3$s</abbr> siden af %4$s"
+"Tjekket ind for <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
+"abbr> siden af %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1004,23 +1006,22 @@ msgstr "Grundlæggende brug"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Denne skærm giver brugerne mulighed for at redigere dokumenter i fællesskab "
 "og spore deres revisionshistorik. For at starte skal du indtaste en titel "
-"til dokumentet, eventuelt indtaste en beskrivelse, klikke på <code>Upload ny"
-" version</code> og vælge filen fra din computer."
+"til dokumentet, eventuelt indtaste en beskrivelse, klikke på <code>Upload ny "
+"version</code> og vælge filen fra din computer."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "Når uploaden er vellykket, kan du indtaste en revisionslogmeddelelse, "
-"tildele dokumentet en forfatter og beskrive dets aktuelle "
-"arbejdsgangsstatus."
+"tildele dokumentet en forfatter og beskrive dets aktuelle arbejdsgangsstatus."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -1052,8 +1053,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "Revisionsloggen giver et kort resumé af de ændringer, der afspejles i en "
 "bestemt revision. Den bruges bredt i open source-fællesskabet og giver et "
@@ -1071,9 +1072,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Feltet Workflowstatus kan bruges til at hjælpe teammedlemmer med at forstå, "
@@ -1094,8 +1095,8 @@ msgid ""
 "proper URL."
 msgstr ""
 "Som standard er uploadede dokumenter kun tilgængelige for brugere, der er "
-"logget ind. Dokumenter kan publiceres, og dermed gøres tilgængelige for hele"
-" verden, ved at slå deres synlighed til/fra i feltet \"Udgiv\" i øverste "
+"logget ind. Dokumenter kan publiceres, og dermed gøres tilgængelige for hele "
+"verden, ved at slå deres synlighed til/fra i feltet \"Udgiv\" i øverste "
 "højre hjørne. Ethvert dokument, der er markeret som publiceret, vil være "
 "tilgængeligt for alle med den korrekte URL."
 
@@ -1113,13 +1114,13 @@ msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
 msgstr ""
-"For at tilføje et nyt dokument skal du klikke på <strong>Tilføj "
-"dokument</strong> i venstre side."
+"For at tilføje et nyt dokument skal du klikke på <strong>Tilføj dokument</"
+"strong> i venstre side."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "For at se alle dokumenter i en bestemt arbejdsgangstilstand skal du klikke "
 "på <strong>Arbejdsgangstilstande</strong> i menuen til venstre."
@@ -1143,8 +1144,8 @@ msgstr "Du vil ikke kunne uploade nogen dokumenter."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Revisionsresuméer er valgfrie noter, der kan gemmes sammen med denne "
@@ -1252,8 +1253,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Generer ny nøgle"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1274,8 +1274,8 @@ msgstr "Dokumentmappen er ikke skrivbar. Kontroller venligst tilladelserne."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "Dokumentuploadmappen er ændret, men eksisterende uploads skal muligvis "
 "flyttes til den nye mappe for at sikre, at de forbliver tilgængelige."
@@ -1312,8 +1312,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "Du kan eventuelt inkludere strengen <code>%site_id%</code> i stien for at "
 "adskille filer efter websted."
@@ -1331,14 +1331,11 @@ msgstr ""
 "dokumentarkivet). Standard er <code>dokumenter</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
-msgstr ""
-"Fjern år- og månedselementet /yyyy/mm fra dokumentets permanente link."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
+msgstr "Fjern år- og månedselementet /yyyy/mm fra dokumentets permanente link."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "Som standard vil dokumentets permalink indeholde opslagets år og måned."
 
@@ -1448,8 +1445,7 @@ msgstr "Skrald"
 msgid "Somebody"
 msgstr "Nogen"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1461,8 +1457,7 @@ msgstr "%1$s: %2$s har tilsidesat din lås på %3$s"
 msgid "Dear %s:"
 msgstr "Kære %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1518,8 +1513,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"Filen er uploadet. Tilføj et revisionsresumé nedenfor (valgfrit), og tryk på"
-" <strong>Opdater</strong> for at gemme dine ændringer."
+"Filen er uploadet. Tilføj et revisionsresumé nedenfor (valgfrit), og tryk på "
+"<strong>Opdater</strong> for at gemme dine ændringer."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1628,8 +1623,8 @@ msgstr "Vis redigeringslink"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Vis redigeringslink tillader, at listen har et link til "
@@ -1696,8 +1691,8 @@ msgid ""
 "The query parameters can be very extensive. enter any other parameters "
 "required here."
 msgstr ""
-"Forespørgselsparametrene kan være meget omfattende. Indtast eventuelle andre"
-" nødvendige parametre her."
+"Forespørgselsparametrene kan være meget omfattende. Indtast eventuelle andre "
+"nødvendige parametre her."
 
 #: src/blocks/documents-widget/edit.js:23
 msgid "Latest Documents Settings"
@@ -1780,8 +1775,7 @@ msgstr "dage siden"
 msgid ""
 "The attached document file could not be found. It may have been deleted."
 msgstr ""
-"Den vedhæftede dokumentfil kunne ikke findes. Den er muligvis blevet "
-"slettet."
+"Den vedhæftede dokumentfil kunne ikke findes. Den er muligvis blevet slettet."
 
 #: src/editor-document-upload/index.js:212
 msgid "Document selection failed."

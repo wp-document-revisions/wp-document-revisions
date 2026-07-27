@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -236,8 +239,8 @@ msgid ""
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
 "Khi được chọn, các bản tóm tắt sửa đổi do AI tạo ra sẽ không được chèn vào "
-"trường nhật ký sửa đổi khi tải lên tệp mới. Quá trình trích xuất (và tạo bản"
-" tóm tắt, nếu được bật) vẫn diễn ra — chỉ có tính năng điền trước của trình "
+"trường nhật ký sửa đổi khi tải lên tệp mới. Quá trình trích xuất (và tạo bản "
+"tóm tắt, nếu được bật) vẫn diễn ra — chỉ có tính năng điền trước của trình "
 "soạn thảo bị vô hiệu hóa."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
@@ -368,8 +371,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Đã tìm thấy tệp đính kèm cho tài liệu, nhưng hiện chưa được liên kết."
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -392,8 +394,8 @@ msgstr "Tài liệu liên kết đến bản ghi tệp đính kèm không hợp 
 #: includes/class-wp-document-revisions-validate-structure.php:1011
 msgid "Document attachment exists but related file not in document location"
 msgstr ""
-"Tệp đính kèm tài liệu tồn tại nhưng tệp liên quan không có trong thư mục tài"
-" liệu."
+"Tệp đính kèm tài liệu tồn tại nhưng tệp liên quan không có trong thư mục tài "
+"liệu."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1019
 msgid "Document attachment exists but related file not found"
@@ -509,8 +511,8 @@ msgid ""
 "This is done by updating the document record so that the content contains "
 "the attachment identifier."
 msgstr ""
-"Việc này được thực hiện bằng cách cập nhật bản ghi tài liệu sao cho nội dung"
-" chứa mã định danh tệp đính kèm."
+"Việc này được thực hiện bằng cách cập nhật bản ghi tài liệu sao cho nội dung "
+"chứa mã định danh tệp đính kèm."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1197
 msgid "There is no attachment associated with the document."
@@ -521,8 +523,8 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"Trong tài liệu có một mã định danh nhưng hoặc là không có tệp đính kèm, hoặc"
-" mã định danh đó không liên quan đến tài liệu này."
+"Trong tài liệu có một mã định danh nhưng hoặc là không có tệp đính kèm, hoặc "
+"mã định danh đó không liên quan đến tài liệu này."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -535,8 +537,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Một biến thể của trường hợp cuối cùng này là bạn có thể đã thiết lập plugin "
 "sao cho kho lưu trữ tệp tài liệu là một kho do bạn lựa chọn chứ không phải "
@@ -564,18 +565,18 @@ msgstr "Cảnh báo"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Bản chất của công nghệ web được sử dụng để cung cấp WordPress có nghĩa là "
-"nếu bạn biết tên của tệp được lưu trữ trên máy chủ, bạn có thể truy cập trực"
-" tiếp vào tệp đó."
+"nếu bạn biết tên của tệp được lưu trữ trên máy chủ, bạn có thể truy cập trực "
+"tiếp vào tệp đó."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Một trong những đặc điểm thiết kế của plugin này là bạn chỉ có thể truy cập "
 "tài liệu thông qua chính WordPress."
@@ -630,8 +631,8 @@ msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
 msgstr ""
-"Truy xuất siêu dữ liệu cho một tài liệu, bao gồm loại tệp, số lần sửa đổi và"
-" trạng thái khóa."
+"Truy xuất siêu dữ liệu cho một tài liệu, bao gồm loại tệp, số lần sửa đổi và "
+"trạng thái khóa."
 
 #: includes/class-wp-document-revisions.php:358
 #: includes/class-wp-document-revisions.php:392
@@ -693,8 +694,8 @@ msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
 msgstr ""
-"Bạn không có quyền chỉnh sửa tài liệu, có thể do xung đột nhiều vai trò hoặc"
-" do sử dụng vai trò tùy chỉnh!"
+"Bạn không có quyền chỉnh sửa tài liệu, có thể do xung đột nhiều vai trò hoặc "
+"do sử dụng vai trò tùy chỉnh!"
 
 #: includes/class-wp-document-revisions.php:642
 msgid ""
@@ -894,8 +895,10 @@ msgstr "Tài liệu đã được lưu."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Tài liệu đã được gửi. <a target=\"_blank\" href=\"%s\">Tải xuống tài liệu</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Tài liệu đã được gửi. <a target=\"_blank\" href=\"%s\">Tải xuống tài liệu</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -917,7 +920,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Bản thảo tài liệu đã được cập nhật. <a target=\"_blank\" href=\"%s\">Tải "
 "xuống tài liệu</a>"
@@ -979,17 +984,15 @@ msgstr "Phiên bản mới nhất của tài liệu"
 msgid "Download"
 msgstr "Tải xuống"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"Đã nhận phòng <abbr class=\"timestamp\" title=\"%1$s\" "
-"id=\"A%2$s\">%3$s</abbr> trước bởi %4$s"
+"Đã nhận phòng <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
+"abbr> trước bởi %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1002,19 +1005,19 @@ msgstr "Cách sử dụng cơ bản"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Màn hình này cho phép người dùng cùng nhau chỉnh sửa tài liệu và theo dõi "
 "lịch sử sửa đổi của chúng. Để bắt đầu, hãy nhập tiêu đề cho tài liệu, nhập "
-"mô tả (nếu muốn) và nhấp vào <code>Tải lên phiên bản mới</code> rồi chọn tệp"
-" từ máy tính của bạn."
+"mô tả (nếu muốn) và nhấp vào <code>Tải lên phiên bản mới</code> rồi chọn tệp "
+"từ máy tính của bạn."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "Sau khi tải lên thành công, bạn có thể nhập thông báo nhật ký sửa đổi, chỉ "
 "định tác giả cho tài liệu và mô tả trạng thái quy trình làm việc hiện tại "
@@ -1023,8 +1026,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
-"Sau khi hoàn tất, chỉ cần nhấp vào <code>Cập nhật</code> để lưu các thay đổi"
-" của bạn."
+"Sau khi hoàn tất, chỉ cần nhấp vào <code>Cập nhật</code> để lưu các thay đổi "
+"của bạn."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:752
 #: includes/trait-wp-document-revisions-admin-editor.php:822
@@ -1050,8 +1053,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "Nhật ký sửa đổi cung cấp bản tóm tắt ngắn gọn về những thay đổi được phản "
 "ánh trong một phiên bản sửa đổi cụ thể. Được sử dụng rộng rãi trong cộng "
@@ -1065,20 +1068,20 @@ msgid ""
 "the <code>restore</code> button beside the revision."
 msgstr ""
 "Bạn có thể tải xuống và xem các phiên bản trước của tài liệu bằng cách nhấp "
-"vào dấu thời gian trong nhật ký sửa đổi. Bạn cũng có thể khôi phục các phiên"
-" bản bằng cách nhấp vào nút <code>khôi phục</code> bên cạnh phiên bản đó."
+"vào dấu thời gian trong nhật ký sửa đổi. Bạn cũng có thể khôi phục các phiên "
+"bản bằng cách nhấp vào nút <code>khôi phục</code> bên cạnh phiên bản đó."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Trường trạng thái quy trình công việc có thể được sử dụng để giúp các thành "
 "viên nhóm hiểu được tài liệu đang ở giai đoạn nào trong quy trình công việc "
-"của một tổ chức cụ thể. Trường này là tùy chọn và có thể được tùy chỉnh hoặc"
-" truy vấn bằng cách nhấp vào <code>Trạng thái quy trình công việc</code> ở "
+"của một tổ chức cụ thể. Trường này là tùy chọn và có thể được tùy chỉnh hoặc "
+"truy vấn bằng cách nhấp vào <code>Trạng thái quy trình công việc</code> ở "
 "phía bên trái."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
@@ -1104,24 +1107,24 @@ msgid ""
 "Below is a list of all documents to which you have access. Click the "
 "document title to edit the document or download the latest version."
 msgstr ""
-"Dưới đây là danh sách tất cả các tài liệu mà bạn có quyền truy cập. Nhấp vào"
-" tiêu đề tài liệu để chỉnh sửa hoặc tải xuống phiên bản mới nhất."
+"Dưới đây là danh sách tất cả các tài liệu mà bạn có quyền truy cập. Nhấp vào "
+"tiêu đề tài liệu để chỉnh sửa hoặc tải xuống phiên bản mới nhất."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:766
 msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
 msgstr ""
-"Để thêm tài liệu mới, hãy nhấp vào <strong>Thêm tài liệu</strong> ở phía bên"
-" trái."
+"Để thêm tài liệu mới, hãy nhấp vào <strong>Thêm tài liệu</strong> ở phía bên "
+"trái."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
-"Để xem tất cả tài liệu ở một trạng thái quy trình công việc cụ thể, hãy nhấp"
-" vào <strong>Trạng thái quy trình công việc</strong> trong menu bên trái."
+"Để xem tất cả tài liệu ở một trạng thái quy trình công việc cụ thể, hãy nhấp "
+"vào <strong>Trạng thái quy trình công việc</strong> trong menu bên trái."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963
@@ -1142,8 +1145,8 @@ msgstr "Bạn sẽ không thể tải lên bất kỳ tài liệu nào."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Tóm tắt chỉnh sửa là những ghi chú tùy chọn được lưu trữ cùng với bản chỉnh "
@@ -1182,8 +1185,8 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"Khôi phục các phiên bản trước đó cũng sẽ khôi phục mô tả đó.<br/>Nếu muốn sử"
-" dụng phiên bản hiện tại, hãy sao chép nó trước."
+"Khôi phục các phiên bản trước đó cũng sẽ khôi phục mô tả đó.<br/>Nếu muốn sử "
+"dụng phiên bản hiện tại, hãy sao chép nó trước."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
@@ -1244,15 +1247,14 @@ msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
 msgstr ""
-"Để bảo vệ quyền riêng tư của bạn, bạn cần thêm một khóa vào các nguồn cấp dữ"
-" liệu để sử dụng trong các trình đọc nguồn cấp dữ liệu."
+"Để bảo vệ quyền riêng tư của bạn, bạn cần thêm một khóa vào các nguồn cấp dữ "
+"liệu để sử dụng trong các trình đọc nguồn cấp dữ liệu."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:97
 msgid "Generate New Key"
 msgstr "Tạo khóa mới"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1272,12 +1274,12 @@ msgstr "Thư mục tài liệu không thể ghi. Vui lòng kiểm tra quyền tr
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
-"Thư mục tải lên tài liệu đã thay đổi, nhưng các tài liệu đã tải lên trước đó"
-" có thể cần được chuyển sang thư mục mới để đảm bảo chúng vẫn có thể truy "
-"cập được."
+"Thư mục tải lên tài liệu đã thay đổi, nhưng các tài liệu đã tải lên trước đó "
+"có thể cần được chuyển sang thư mục mới để đảm bảo chúng vẫn có thể truy cập "
+"được."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:429
 msgid ""
@@ -1303,16 +1305,16 @@ msgid ""
 msgstr ""
 "Thư mục lưu trữ các tài liệu đã tải lên. Theo mặc định, thư mục này nằm "
 "trong thư mục `<code>wp-content/uploads</code>` (hoặc một thư mục tải lên "
-"mặc định khác được định nghĩa ở nơi khác), nhưng bạn có thể di chuyển nó đến"
-" một thư mục bên ngoài thư mục `<code>htdocs</code>` hoặc "
-"`<code>public_html</code>` để tăng cường bảo mật."
+"mặc định khác được định nghĩa ở nơi khác), nhưng bạn có thể di chuyển nó đến "
+"một thư mục bên ngoài thư mục `<code>htdocs</code>` hoặc `<code>public_html</"
+"code>` để tăng cường bảo mật."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "Bạn có thể tùy chọn thêm chuỗi <code>%site_id%</code> vào đường dẫn để phân "
 "tách các tệp theo trang web."
@@ -1330,14 +1332,12 @@ msgstr ""
 "tài liệu). Mặc định là <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Xóa phần năm và tháng /yyyy/mm khỏi đường dẫn thường trực của tài liệu."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "Theo mặc định, đường dẫn thường trực của tài liệu sẽ chứa năm và tháng đăng "
 "bài."
@@ -1351,8 +1351,8 @@ msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
 msgstr ""
-"Số lần chỉnh sửa tài liệu tối đa được đặt về 0 bằng cách sử dụng bộ lọc. Hãy"
-" kiểm tra cấu hình của bạn."
+"Số lần chỉnh sửa tài liệu tối đa được đặt về 0 bằng cách sử dụng bộ lọc. Hãy "
+"kiểm tra cấu hình của bạn."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid ""
@@ -1367,8 +1367,8 @@ msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
 msgstr ""
-"Đã đạt đến số lần chỉnh sửa tối đa cho tài liệu này. Việc thực hiện thay đổi"
-" sẽ xóa dữ liệu."
+"Đã đạt đến số lần chỉnh sửa tối đa cho tài liệu này. Việc thực hiện thay đổi "
+"sẽ xóa dữ liệu."
 
 #: includes/trait-wp-document-revisions-file-handler.php:74
 #: includes/trait-wp-document-revisions-file-handler.php:107
@@ -1395,8 +1395,7 @@ msgstr "Rất tiếc, bộ đệm đầu ra đã có dữ liệu. Quá trình gh
 #: includes/trait-wp-document-revisions-file-handler.php:351
 msgid ""
 "Sorry, Output has already been written, so your file cannot be downloaded."
-msgstr ""
-"Rất tiếc, dữ liệu đầu ra đã được ghi xong nên không thể tải xuống tệp."
+msgstr "Rất tiếc, dữ liệu đầu ra đã được ghi xong nên không thể tải xuống tệp."
 
 #: includes/trait-wp-document-revisions-file-handler.php:1165
 msgid "Sorry, this is a private feed."
@@ -1448,8 +1447,7 @@ msgstr "Rác"
 msgid "Somebody"
 msgstr "Ai đó"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1461,8 +1459,7 @@ msgstr "%1$s: %2$s đã ghi đè lên khóa của bạn trên %3$s"
 msgid "Dear %s:"
 msgstr "Kính gửi %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1530,8 +1527,7 @@ msgid ""
 "be lost. This revision will be copied and become the most recent revision."
 msgstr ""
 "Bạn có chắc chắn muốn khôi phục phiên bản này không? Nếu có, lịch sử sẽ "
-"không bị mất. Phiên bản này sẽ được sao chép và trở thành phiên bản mới "
-"nhất."
+"không bị mất. Phiên bản này sẽ được sao chép và trở thành phiên bản mới nhất."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1611,8 +1607,7 @@ msgstr "Sắp xếp danh sách trường"
 
 #: src/blocks/documents-shortcode/edit.js:141
 msgid "Example fields are post_title, post_date and post_modified."
-msgstr ""
-"Ví dụ về các trường dữ liệu là post_title, post_date và post_modified."
+msgstr "Ví dụ về các trường dữ liệu là post_title, post_date và post_modified."
 
 #: src/blocks/documents-shortcode/edit.js:154
 msgid "Ascending"
@@ -1628,14 +1623,14 @@ msgstr "Hiển thị liên kết Chỉnh sửa"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Tùy chọn \"Hiển thị liên kết Chỉnh sửa\" cho phép danh sách có liên kết đến "
-"chức năng Chỉnh sửa. Lựa chọn được thực hiện ở đây sẽ ghi đè lên các cài đặt"
-" do hệ thống cấu hình. Liên kết chỉ hiển thị nếu người dùng có thể chỉnh sửa"
-" tài liệu."
+"chức năng Chỉnh sửa. Lựa chọn được thực hiện ở đây sẽ ghi đè lên các cài đặt "
+"do hệ thống cấu hình. Liên kết chỉ hiển thị nếu người dùng có thể chỉnh sửa "
+"tài liệu."
 
 #: src/blocks/documents-shortcode/edit.js:175
 msgid "Default"
@@ -1678,9 +1673,9 @@ msgid ""
 "whilst editing the page using this block as clicking on a link whilst "
 "editing will force the current page to be left."
 msgstr ""
-"Việc bật tùy chọn này sẽ mở tài liệu trong một tab mới. Bạn nên bật tùy chọn"
-" này khi đang chỉnh sửa trang bằng khối này, vì việc nhấp vào liên kết trong"
-" khi chỉnh sửa sẽ buộc bạn phải rời khỏi trang hiện tại."
+"Việc bật tùy chọn này sẽ mở tài liệu trong một tab mới. Bạn nên bật tùy chọn "
+"này khi đang chỉnh sửa trang bằng khối này, vì việc nhấp vào liên kết trong "
+"khi chỉnh sửa sẽ buộc bạn phải rời khỏi trang hiện tại."
 
 #: src/blocks/documents-shortcode/edit.js:229
 msgid "Free Form Settings"

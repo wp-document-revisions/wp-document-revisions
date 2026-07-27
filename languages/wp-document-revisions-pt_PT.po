@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -221,8 +224,8 @@ msgid ""
 msgstr ""
 "Quando selecionada, essa opção impede a extração de texto simples dos "
 "arquivos enviados para este documento, e qualquer texto extraído "
-"anteriormente será apagado. Útil para documentos confidenciais cujo conteúdo"
-" não deve ser armazenado em cache para pesquisa, resumos de IA ou outros "
+"anteriormente será apagado. Útil para documentos confidenciais cujo conteúdo "
+"não deve ser armazenado em cache para pesquisa, resumos de IA ou outros "
 "recursos baseados em texto."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
@@ -362,15 +365,13 @@ msgstr "Não existe nenhum registro de anexo para este documento."
 msgid ""
 "Attachment recently uploaded for document, but not currently linked to it"
 msgstr ""
-"Anexo carregado recentemente para o documento, mas ainda não vinculado a "
-"ele."
+"Anexo carregado recentemente para o documento, mas ainda não vinculado a ele."
 
 #: includes/class-wp-document-revisions-validate-structure.php:787
 msgid "Attachment found for document, but not currently linked"
 msgstr "Anexo encontrado para o documento, mas ainda não vinculado."
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -443,9 +444,8 @@ msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
-"Se ocorrer um erro relatado aqui, você receberá uma mensagem de \"Erro 404 -"
-" Documento não encontrado\" (ou equivalente) ao tentar visualizar o "
-"documento."
+"Se ocorrer um erro relatado aqui, você receberá uma mensagem de \"Erro 404 - "
+"Documento não encontrado\" (ou equivalente) ao tentar visualizar o documento."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
 msgid ""
@@ -460,8 +460,8 @@ msgid ""
 "When they cannot be fixed, the resolution is normally either to delete the "
 "document or to load a new version of the document."
 msgstr ""
-"Quando não é possível corrigir os problemas, a solução normalmente é excluir"
-" o documento ou carregar uma nova versão do mesmo."
+"Quando não é possível corrigir os problemas, a solução normalmente é excluir "
+"o documento ou carregar uma nova versão do mesmo."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1190
 msgid ""
@@ -532,18 +532,17 @@ msgid ""
 "There is an identifier that links to a document attachment but there is no "
 "underlying file."
 msgstr ""
-"Existe um identificador que direciona para um anexo de documento, mas não há"
-" nenhum arquivo subjacente."
+"Existe um identificador que direciona para um anexo de documento, mas não há "
+"nenhum arquivo subjacente."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
-"Como uma variante deste último caso, você pode ter configurado o plugin para"
-" que o armazenamento de arquivos de documentos seja um de sua escolha e não "
-"o armazenamento de mídia padrão."
+"Como uma variante deste último caso, você pode ter configurado o plugin para "
+"que o armazenamento de arquivos de documentos seja um de sua escolha e não o "
+"armazenamento de mídia padrão."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1201
 msgid ""
@@ -567,8 +566,8 @@ msgstr "Avisos"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "A natureza da tecnologia web usada para fornecer o WordPress significa que, "
@@ -577,8 +576,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "É uma característica deste plugin que o acesso a um documento só seja "
 "possível através do próprio WordPress."
@@ -656,8 +655,7 @@ msgstr "Ignorar bloqueio de documento"
 #: includes/class-wp-document-revisions.php:422
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
-"Substitua o bloqueio de outro usuário em um documento para permitir a "
-"edição."
+"Substitua o bloqueio de outro usuário em um documento para permitir a edição."
 
 #: includes/class-wp-document-revisions.php:433
 msgid "The document post ID to unlock."
@@ -714,8 +712,8 @@ msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
 msgstr ""
-"Primeiramente, você deve verificar se possui múltiplas funções e se cada uma"
-" delas tem a capacidade de editar documentos."
+"Primeiramente, você deve verificar se possui múltiplas funções e se cada uma "
+"delas tem a capacidade de editar documentos."
 
 #: includes/class-wp-document-revisions.php:690
 msgctxt "post type general name"
@@ -899,8 +897,10 @@ msgstr "Documento salvo."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Documento enviado. <a target=\"_blank\" href=\"%s\">Baixar documento</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Documento enviado. <a target=\"_blank\" href=\"%s\">Baixar documento</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -922,7 +922,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Rascunho do documento atualizado. <a target=\"_blank\" href=\"%s\">Baixar "
 "documento</a>"
@@ -985,14 +987,12 @@ msgstr "Última versão do documento"
 msgid "Download"
 msgstr "Download"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 "Check-in realizado há <abbr class=\"timestamp\" title=\"%1$s\" "
 "id=\"A%2$s\">%3$s</abbr> por %4$s"
@@ -1008,9 +1008,9 @@ msgstr "Uso básico"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Esta tela permite que os usuários editem documentos colaborativamente e "
 "acompanhem o histórico de revisões. Para começar, insira um título para o "
@@ -1019,12 +1019,12 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
-"Após o carregamento bem-sucedido, você pode inserir uma mensagem no registro"
-" de revisões, atribuir um autor ao documento e descrever seu estado atual de"
-" fluxo de trabalho."
+"Após o carregamento bem-sucedido, você pode inserir uma mensagem no registro "
+"de revisões, atribuir um autor ao documento e descrever seu estado atual de "
+"fluxo de trabalho."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -1042,8 +1042,8 @@ msgid ""
 "The document description provides a short user-oriented summary of the "
 "document."
 msgstr ""
-"A descrição do documento fornece um breve resumo do documento voltado para o"
-" usuário."
+"A descrição do documento fornece um breve resumo do documento voltado para o "
+"usuário."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:754
 msgid ""
@@ -1056,12 +1056,12 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "O registro de revisões fornece um breve resumo das alterações refletidas em "
-"uma revisão específica. Amplamente utilizado na comunidade de código aberto,"
-" ele oferece um histórico completo do documento em um relance."
+"uma revisão específica. Amplamente utilizado na comunidade de código aberto, "
+"ele oferece um histórico completo do documento em um relance."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
 msgid ""
@@ -1075,9 +1075,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 
@@ -1113,13 +1113,13 @@ msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
 msgstr ""
-"Para adicionar um novo documento, clique em <strong>Adicionar "
-"Documento</strong> no lado esquerdo."
+"Para adicionar um novo documento, clique em <strong>Adicionar Documento</"
+"strong> no lado esquerdo."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "Para visualizar todos os documentos em um determinado estado do fluxo de "
 "trabalho, clique em <strong>Estados do Fluxo de Trabalho</strong> no menu à "
@@ -1144,8 +1144,8 @@ msgstr "Você não poderá enviar nenhum documento."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Os resumos de revisão são notas opcionais armazenadas junto com esta "
@@ -1253,8 +1253,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Gerar nova chave"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1278,8 +1277,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "O diretório de upload de documentos foi alterado, mas os uploads existentes "
 "podem precisar ser movidos para a nova pasta para garantir que permaneçam "
@@ -1316,8 +1315,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "Opcionalmente, você pode incluir a string <code>%site_id%</code> no caminho "
 "para separar os arquivos por site."
@@ -1335,14 +1334,12 @@ msgstr ""
 "documentos). O padrão é <code>documentos</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Remova o elemento de ano e mês /aaaa/mm do link permanente do documento."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "Por padrão, o link permanente do documento conterá o ano e o mês da "
 "publicação."
@@ -1457,8 +1454,7 @@ msgstr "Lixo"
 msgid "Somebody"
 msgstr "Alguém"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1470,8 +1466,7 @@ msgstr "%1$s: %2$s anulou seu bloqueio em %3$s"
 msgid "Dear %s:"
 msgstr ""
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1637,8 +1632,8 @@ msgstr "Mostrar link de edição"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "A opção \"Mostrar link Editar\" permite que a lista exiba um link para a "
@@ -1731,8 +1726,8 @@ msgid ""
 "Under certain conditons WordPress can generate an image for Page 1 of PDF "
 "documents. If created this will be used as the Featured Image."
 msgstr ""
-"Em determinadas condições, o WordPress pode gerar uma imagem para a página 1"
-" de documentos PDF. Se criada, essa imagem será usada como imagem destacada."
+"Em determinadas condições, o WordPress pode gerar uma imagem para a página 1 "
+"de documentos PDF. Se criada, essa imagem será usada como imagem destacada."
 
 #: src/blocks/documents-widget/edit.js:98
 msgid "Show author name?"

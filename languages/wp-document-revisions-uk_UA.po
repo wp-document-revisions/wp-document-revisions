@@ -3,22 +3,27 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Ukrainian\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 "
+"&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
+"&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: uk\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -368,8 +373,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Вкладення для документа знайдено, але наразі посилання не додано"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -523,8 +527,8 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"У документі є ідентифікатор, але або немає вкладення, або воно не стосується"
-" цього документа."
+"У документі є ідентифікатор, але або немає вкладення, або воно не стосується "
+"цього документа."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -537,8 +541,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Як варіант цього останнього випадку, ви могли налаштувати плагін так, щоб "
 "сховище файлів документів було одним із ваших вибраних, а не стандартним "
@@ -566,8 +569,8 @@ msgstr "Попередження"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Характер веб-технології, що використовується для роботи WordPress, означає, "
@@ -576,8 +579,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Особливістю цього плагіна є те, що ви повинні мати можливість отримати "
 "доступ до документа, лише якщо ви заходите на нього через сам WordPress."
@@ -587,8 +590,8 @@ msgid ""
 "So to deliver this the plugin changes the file name to an md5-encoded file "
 "name and then hides it from you when using the application."
 msgstr ""
-"Отже, щоб забезпечити це, плагін змінює ім'я файлу на ім'я файлу в кодуванні"
-" md5, а потім приховує його від вас під час використання програми."
+"Отже, щоб забезпечити це, плагін змінює ім'я файлу на ім'я файлу в кодуванні "
+"md5, а потім приховує його від вас під час використання програми."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1207
 msgid "The fix is therefore to md5-encode the file name."
@@ -898,8 +901,10 @@ msgstr "Документ збережено."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Документ надіслано. <a target=\"_blank\" href=\"%s\">Завантажити документ</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Документ надіслано. <a target=\"_blank\" href=\"%s\">Завантажити документ</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -921,7 +926,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Чернетку документа оновлено. <a target=\"_blank\" href=\"%s\">Завантажити "
 "документ</a>"
@@ -984,17 +991,15 @@ msgstr "Остання версія документа"
 msgid "Download"
 msgstr "Завантажити"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"Зареєструвався <abbr class=\"timestamp\" title=\"%1$s\" "
-"id=\"A%2$s\">%3$s</abbr> тому користувачем %4$s"
+"Зареєструвався <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
+"abbr> тому користувачем %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1007,19 +1012,19 @@ msgstr "Базове використання"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
-"Цей екран дозволяє користувачам спільно редагувати документи та відстежувати"
-" історію їхніх редагувань. Щоб почати, введіть назву документа, за потреби "
+"Цей екран дозволяє користувачам спільно редагувати документи та відстежувати "
+"історію їхніх редагувань. Щоб почати, введіть назву документа, за потреби "
 "введіть опис, натисніть <code>Завантажити нову версію</code> та виберіть "
 "файл зі свого комп’ютера."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "Після успішного завантаження ви можете ввести повідомлення журналу "
 "редагувань, призначити документу автора та описати його поточний стан "
@@ -1040,8 +1045,7 @@ msgid ""
 "The document description provides a short user-oriented summary of the "
 "document."
 msgstr ""
-"Опис документа містить короткий огляд документа, орієнтований на "
-"користувача."
+"Опис документа містить короткий огляд документа, орієнтований на користувача."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:754
 msgid ""
@@ -1054,11 +1058,11 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
-"Журнал редакцій містить короткий огляд змін, відображених у певній редакції."
-" Він широко використовується у спільноті відкритого коду та надає повну "
+"Журнал редакцій містить короткий огляд змін, відображених у певній редакції. "
+"Він широко використовується у спільноті відкритого коду та надає повну "
 "історію документа з першого погляду."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
@@ -1073,9 +1077,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Поле стану робочого процесу можна використовувати, щоб допомогти членам "
@@ -1106,8 +1110,8 @@ msgid ""
 "Below is a list of all documents to which you have access. Click the "
 "document title to edit the document or download the latest version."
 msgstr ""
-"Нижче наведено список усіх документів, до яких ви маєте доступ. Натисніть на"
-" назву документа, щоб редагувати його або завантажити останню версію."
+"Нижче наведено список усіх документів, до яких ви маєте доступ. Натисніть на "
+"назву документа, щоб редагувати його або завантажити останню версію."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:766
 msgid ""
@@ -1119,8 +1123,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "Щоб переглянути всі документи в певному стані робочого процесу, натисніть "
 "<strong>Стани робочого процесу</strong> у меню ліворуч."
@@ -1144,8 +1148,8 @@ msgstr "Ви не зможете завантажити жодних докум�
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Зведення редакцій – це додаткові нотатки, які можна зберігати разом із цією "
@@ -1246,15 +1250,14 @@ msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
 msgstr ""
-"Щоб захистити вашу конфіденційність, вам потрібно додати ключ до стрічок для"
-" використання в програмах для читання стрічок."
+"Щоб захистити вашу конфіденційність, вам потрібно додати ключ до стрічок для "
+"використання в програмах для читання стрічок."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:97
 msgid "Generate New Key"
 msgstr "Згенерувати новий ключ"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1274,8 +1277,8 @@ msgstr "Каталог документів недоступний для зап
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "Каталог для завантаження документів змінено, але наявні завантаження, "
 "можливо, потрібно перемістити до нової папки, щоб забезпечити до них доступ."
@@ -1303,17 +1306,17 @@ msgid ""
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
 "Директорія для зберігання завантажених документів. За замовчуванням вона "
-"знаходиться у вашій папці <code>wp-content/uploads</code> (або в іншій папці"
-" завантажень за замовчуванням, визначеній деінде), але для додаткової "
-"безпеки її можна перемістити до папки поза папкою <code>htdocs</code> або "
+"знаходиться у вашій папці <code>wp-content/uploads</code> (або в іншій папці "
+"завантажень за замовчуванням, визначеній деінде), але для додаткової безпеки "
+"її можна перемістити до папки поза папкою <code>htdocs</code> або "
 "<code>public_html</code>."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "За потреби ви можете включити рядок <code>%site_id%</code> у шлях, щоб "
 "розділити файли за сайтами."
@@ -1331,14 +1334,12 @@ msgstr ""
 "документів). За замовчуванням використовується <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Видаліть елемент року та місяця /yyyy/mm з постійного посилання документа."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "За замовчуванням постійне посилання на документ міститиме рік і місяць "
 "публікації."
@@ -1368,8 +1369,8 @@ msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
 msgstr ""
-"Для цього документа досягнуто максимальної кількості редакцій. Внесення змін"
-" призведе до видалення даних."
+"Для цього документа досягнуто максимальної кількості редакцій. Внесення змін "
+"призведе до видалення даних."
 
 #: includes/trait-wp-document-revisions-file-handler.php:74
 #: includes/trait-wp-document-revisions-file-handler.php:107
@@ -1449,8 +1450,7 @@ msgstr "Сміття"
 msgid "Somebody"
 msgstr "Хтось"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1462,8 +1462,7 @@ msgstr "%1$s: %2$s скасував ваше блокування на %3$s"
 msgid "Dear %s:"
 msgstr "Шановний %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1629,8 +1628,8 @@ msgstr "Показати посилання для редагування"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "«Показати посилання для редагування» дозволяє списку мати посилання на "

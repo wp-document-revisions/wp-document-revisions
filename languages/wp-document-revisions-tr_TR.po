@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -316,8 +319,8 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:629
 msgid "They can be displayed or hidden as wished by checking the options:"
 msgstr ""
-"İsteğe bağlı olarak, seçenekleri işaretleyerek bunları görüntüleyebilir veya"
-" gizleyebilirsiniz:"
+"İsteğe bağlı olarak, seçenekleri işaretleyerek bunları görüntüleyebilir veya "
+"gizleyebilirsiniz:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:640
 msgid "See the Help pulldown for detailed Help information"
@@ -368,8 +371,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Belge için ek bulundu, ancak şu anda bağlantı verilmemiş."
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -532,8 +534,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Bu son durumun bir varyantı olarak, eklentiyi, belge dosyası deposunu "
 "standart Medya deposu yerine sizin seçtiğiniz bir depo olacak şekilde "
@@ -552,8 +553,8 @@ msgid ""
 "If found there it will offer you a fix which is to move the file from the "
 "Media store to the document store."
 msgstr ""
-"Eğer orada bulunursa, size dosyayı Medya deposundan Belge deposuna taşımanız"
-" şeklinde bir çözüm sunacaktır."
+"Eğer orada bulunursa, size dosyayı Medya deposundan Belge deposuna taşımanız "
+"şeklinde bir çözüm sunacaktır."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1203
 msgid "Warnings"
@@ -561,8 +562,8 @@ msgstr "Uyarılar"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "WordPress'in sunduğu web teknolojisinin doğası gereği, sunucuda bulunan "
@@ -570,8 +571,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Bu eklentinin tasarım özelliklerinden biri, belgelere yalnızca WordPress "
 "üzerinden erişebilmenizdir."
@@ -602,8 +603,8 @@ msgstr "Belgeye Erişimi Kontrol Et"
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr ""
-"Mevcut kullanıcının bir belge üzerinde belirli bir işlemi gerçekleştirebilme"
-" yetkisine sahip olup olmadığını kontrol edin."
+"Mevcut kullanıcının bir belge üzerinde belirli bir işlemi gerçekleştirebilme "
+"yetkisine sahip olup olmadığını kontrol edin."
 
 #: includes/class-wp-document-revisions.php:320
 msgid "The document post ID to check access for."
@@ -707,8 +708,8 @@ msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
 msgstr ""
-"Öncelikle birden fazla rolünüz olup olmadığını ve her birinin edit_documents"
-" yeteneğine sahip olup olmadığını kontrol etmelisiniz."
+"Öncelikle birden fazla rolünüz olup olmadığını ve her birinin edit_documents "
+"yeteneğine sahip olup olmadığını kontrol etmelisiniz."
 
 #: includes/class-wp-document-revisions.php:690
 msgctxt "post type general name"
@@ -892,7 +893,8 @@ msgstr "Belge kaydedildi."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Belge gönderildi. <a target=\"_blank\" href=\"%s\">Belgeyi indir</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -915,8 +917,11 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Belge taslağı güncellendi. <a target=\"_blank\" href=\"%s\">Belgeyi indir</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
+msgstr ""
+"Belge taslağı güncellendi. <a target=\"_blank\" href=\"%s\">Belgeyi indir</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
 #: includes/trait-wp-document-revisions-admin-editor.php:979
@@ -973,14 +978,12 @@ msgstr "Belgenin En Son Sürümü"
 msgid "Download"
 msgstr "İndirmek"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 "<abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> önce %4$s "
 "tarafından kontrol edildi"
@@ -996,9 +999,9 @@ msgstr "Temel Kullanım"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Bu ekran, kullanıcıların belgeleri birlikte düzenlemelerine ve revizyon "
 "geçmişlerini takip etmelerine olanak tanır. Başlamak için, belgeye bir "
@@ -1007,8 +1010,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "Yükleme başarıyla tamamlandıktan sonra, bir revizyon günlüğü mesajı "
 "girebilir, belgeye bir yazar atayabilir ve mevcut iş akışı durumunu "
@@ -1017,8 +1020,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
-"İşlem tamamlandığında, değişikliklerinizi kaydetmek için "
-"<code>Güncelle</code> düğmesine tıklamanız yeterlidir."
+"İşlem tamamlandığında, değişikliklerinizi kaydetmek için <code>Güncelle</"
+"code> düğmesine tıklamanız yeterlidir."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:752
 #: includes/trait-wp-document-revisions-admin-editor.php:822
@@ -1042,12 +1045,12 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "Revizyon günlüğü, belirli bir revizyonda yapılan değişikliklerin kısa bir "
-"özetini sunar. Açık kaynak topluluğunda yaygın olarak kullanılan bu özellik,"
-" belgenin kapsamlı geçmişini bir bakışta gösterir."
+"özetini sunar. Açık kaynak topluluğunda yaygın olarak kullanılan bu özellik, "
+"belgenin kapsamlı geçmişini bir bakışta gösterir."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
 msgid ""
@@ -1055,20 +1058,20 @@ msgid ""
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
 msgstr ""
-"Revizyon günlüğündeki zaman damgasına tıklayarak belgenin önceki sürümlerini"
-" indirebilir ve görüntüleyebilirsiniz. Ayrıca, revizyonun yanındaki "
+"Revizyon günlüğündeki zaman damgasına tıklayarak belgenin önceki sürümlerini "
+"indirebilir ve görüntüleyebilirsiniz. Ayrıca, revizyonun yanındaki "
 "<code>geri yükle</code> düğmesine tıklayarak revizyonları geri "
 "yükleyebilirsiniz."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
-"İş akışı durumu alanı, ekip üyelerinin bir belgenin belirli bir kuruluşun iş"
-" akışında hangi aşamada olduğunu anlamalarına yardımcı olmak için "
+"İş akışı durumu alanı, ekip üyelerinin bir belgenin belirli bir kuruluşun iş "
+"akışında hangi aşamada olduğunu anlamalarına yardımcı olmak için "
 "kullanılabilir. Bu alan isteğe bağlıdır ve sol taraftaki <code>İş Akışı "
 "Durumları</code> seçeneğine tıklanarak özelleştirilebilir veya "
 "sorgulanabilir."
@@ -1087,8 +1090,8 @@ msgid ""
 msgstr ""
 "Varsayılan olarak, yüklenen belgelere yalnızca giriş yapmış kullanıcılar "
 "erişebilir. Belgeler, sağ üst köşedeki \"Yayınla\" kutusunda "
-"görünürlüklerini değiştirerek yayınlanabilir ve böylece dünyaya erişilebilir"
-" hale getirilebilir. Yayınlanmış olarak işaretlenen herhangi bir belgeye, "
+"görünürlüklerini değiştirerek yayınlanabilir ve böylece dünyaya erişilebilir "
+"hale getirilebilir. Yayınlanmış olarak işaretlenen herhangi bir belgeye, "
 "uygun URL'ye sahip herkes erişebilir."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
@@ -1109,8 +1112,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "Belirli bir iş akışı durumundaki tüm belgeleri görüntülemek için soldaki "
 "menüde <strong>İş Akışı Durumları</strong> seçeneğine tıklayın."
@@ -1132,8 +1135,8 @@ msgstr "Herhangi bir belge yükleyemezsiniz."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Revizyon özetleri, diğer kullanıcıların dosyayı açmaya gerek kalmadan "
@@ -1172,16 +1175,16 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"Önceki revizyonları geri yüklemek, o açıklamayı da geri "
-"yükleyecektir.<br/>Mevcut olanı istiyorsanız, önce kopyalayın."
+"Önceki revizyonları geri yüklemek, o açıklamayı da geri yükleyecektir.<br/"
+">Mevcut olanı istiyorsanız, önce kopyalayın."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
 "You currently have this file checked out. No other user can edit this "
 "document so long as you remain on this page."
 msgstr ""
-"Şu anda bu dosyayı siz kontrol ediyorsunuz. Siz bu sayfada kaldığınız sürece"
-" başka hiçbir kullanıcı bu belgeyi düzenleyemez."
+"Şu anda bu dosyayı siz kontrol ediyorsunuz. Siz bu sayfada kaldığınız sürece "
+"başka hiçbir kullanıcı bu belgeyi düzenleyemez."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1187
 msgid "Document Owner"
@@ -1241,8 +1244,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Yeni Anahtar Oluştur"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1262,8 +1264,8 @@ msgstr "Belge dizini yazılabilir değil. Lütfen izinleri kontrol edin."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "Belge yükleme dizini değişti, ancak erişilebilirliğin devam etmesi için "
 "mevcut yüklemelerin yeni klasöre taşınması gerekebilir."
@@ -1290,18 +1292,17 @@ msgid ""
 "defined elsewhere), but it may be moved to a folder outside of the "
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
-"Yüklenen belgelerin saklanacağı dizin. Varsayılan olarak <code>wp-"
-"content/uploads</code> klasörünüzdedir (veya başka bir yerde tanımlanmış "
-"varsayılan yükleme klasöründedir), ancak ek güvenlik için "
-"<code>htdocs</code> veya <code>public_html</code> klasörünün dışındaki bir "
-"klasöre taşınabilir."
+"Yüklenen belgelerin saklanacağı dizin. Varsayılan olarak <code>wp-content/"
+"uploads</code> klasörünüzdedir (veya başka bir yerde tanımlanmış varsayılan "
+"yükleme klasöründedir), ancak ek güvenlik için <code>htdocs</code> veya "
+"<code>public_html</code> klasörünün dışındaki bir klasöre taşınabilir."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "İsteğe bağlı olarak, dosyaları siteye göre ayırmak için dosya yoluna "
 "<code>%site_id%</code> dizesini ekleyebilirsiniz."
@@ -1319,16 +1320,13 @@ msgstr ""
 "\"Slug\". Varsayılan değer <code>documents</code>'tur."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "Belge kalıcı bağlantısından yıl ve ay öğesini /yyyy/mm kaldırın."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
-"Varsayılan olarak, belge kalıcı bağlantısı yayın yılını ve ayını "
-"içerecektir."
+"Varsayılan olarak, belge kalıcı bağlantısı yayın yılını ve ayını içerecektir."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:606
 msgid "The delivered rewrite rules support both formats."
@@ -1379,8 +1377,7 @@ msgstr "-revizyon-"
 #: includes/trait-wp-document-revisions-file-handler.php:345
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
-"Üzgünüz, çıktı arabelleği zaten veri içeriyor. Dosya yazma işlemi "
-"engellendi."
+"Üzgünüz, çıktı arabelleği zaten veri içeriyor. Dosya yazma işlemi engellendi."
 
 #: includes/trait-wp-document-revisions-file-handler.php:351
 msgid ""
@@ -1437,8 +1434,7 @@ msgstr "Çöp"
 msgid "Somebody"
 msgstr "Birisi"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1450,13 +1446,11 @@ msgstr "%1$s: %2$s, %3$s üzerindeki kilidinizi geçersiz kıldı."
 msgid "Dear %s:"
 msgstr "Sevgili %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr ""
-"%1$s (%2$s), %3$s (%4$s) belgesi üzerindeki kilidinizi geçersiz kıldı."
+msgstr "%1$s (%2$s), %3$s (%4$s) belgesi üzerindeki kilidinizi geçersiz kıldı."
 
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
@@ -1522,8 +1516,8 @@ msgid ""
 "be lost. This revision will be copied and become the most recent revision."
 msgstr ""
 "Bu sürümü geri yüklemek istediğinizden emin misiniz? Eğer istiyorsanız, "
-"hiçbir geçmiş verisi kaybolmayacaktır. Bu sürüm kopyalanacak ve en son sürüm"
-" haline gelecektir."
+"hiçbir geçmiş verisi kaybolmayacaktır. Bu sürüm kopyalanacak ve en son sürüm "
+"haline gelecektir."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1539,8 +1533,8 @@ msgstr "Kayıp Belge Kilidi"
 msgid ""
 "Your lock on the document %s has been overridden. Any changes will be lost."
 msgstr ""
-"Belge %s üzerindeki kilidiniz geçersiz kılındı. Yaptığınız tüm değişiklikler"
-" kaybolacak."
+"Belge %s üzerindeki kilidiniz geçersiz kılındı. Yaptığınız tüm değişiklikler "
+"kaybolacak."
 
 #. translators: %d is the number of minutes.
 #: src/admin/wp-document-revisions.js:311
@@ -1605,8 +1599,7 @@ msgstr "Liste sıralama alanı"
 #: src/blocks/documents-shortcode/edit.js:141
 msgid "Example fields are post_title, post_date and post_modified."
 msgstr ""
-"Örnek alanlar arasında post_title, post_date ve post_modified yer "
-"almaktadır."
+"Örnek alanlar arasında post_title, post_date ve post_modified yer almaktadır."
 
 #: src/blocks/documents-shortcode/edit.js:154
 msgid "Ascending"
@@ -1622,8 +1615,8 @@ msgstr "Düzenle bağlantısını göster"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "\"Düzenle bağlantısını göster\" seçeneği, listenin düzenleme işlevine bir "
@@ -1672,8 +1665,8 @@ msgid ""
 "whilst editing the page using this block as clicking on a link whilst "
 "editing will force the current page to be left."
 msgstr ""
-"Bu seçeneği etkinleştirmek, belgeyi yeni bir sekmede açacaktır. Bu seçeneği,"
-" bu bloğu kullanarak sayfayı düzenlerken etkinleştirmeniz gerekir, çünkü "
+"Bu seçeneği etkinleştirmek, belgeyi yeni bir sekmede açacaktır. Bu seçeneği, "
+"bu bloğu kullanarak sayfayı düzenlerken etkinleştirmeniz gerekir, çünkü "
 "düzenleme sırasında bir bağlantıya tıklamak mevcut sayfanın kapatılmasına "
 "neden olur."
 

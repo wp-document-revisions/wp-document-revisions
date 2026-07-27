@@ -3,22 +3,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Romanian\n"
 "Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && "
+"n%100<20)) ? 1 : 2);\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: ro\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -223,8 +227,8 @@ msgid ""
 msgstr ""
 "Când este bifată, textul simplu nu va fi extras din fișierele încărcate "
 "pentru acest document, iar orice text extras anterior va fi șters. Util "
-"pentru documentele sensibile al căror conținut nu ar trebui memorat în cache"
-" pentru căutare, rezumate AI sau alte funcții bazate pe text."
+"pentru documentele sensibile al căror conținut nu ar trebui memorat în cache "
+"pentru căutare, rezumate AI sau alte funcții bazate pe text."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
 msgid "Do not pre-fill the revision log with AI suggestions"
@@ -239,9 +243,9 @@ msgid ""
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
 "Când este bifată, rezumatele de revizii generate de inteligența artificială "
-"nu vor fi inserate în câmpul jurnalului de revizii atunci când este încărcat"
-" un fișier nou. Extragerea (și generarea rezumatului, dacă este activată) se"
-" execută în continuare — doar pre-umplerea editorului este suprimată."
+"nu vor fi inserate în câmpul jurnalului de revizii atunci când este încărcat "
+"un fișier nou. Extragerea (și generarea rezumatului, dacă este activată) se "
+"execută în continuare — doar pre-umplerea editorului este suprimată."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
 msgid "Validate Structure"
@@ -371,8 +375,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Atașament găsit pentru document, dar în prezent nu este conectat."
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -462,8 +465,8 @@ msgid ""
 "When they cannot be fixed, the resolution is normally either to delete the "
 "document or to load a new version of the document."
 msgstr ""
-"Când acestea nu pot fi remediate, soluția este, în mod normal, fie ștergerea"
-" documentului, fie încărcarea unei noi versiuni a documentului."
+"Când acestea nu pot fi remediate, soluția este, în mod normal, fie ștergerea "
+"documentului, fie încărcarea unei noi versiuni a documentului."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1190
 msgid ""
@@ -526,8 +529,8 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"Există un identificator în document, dar fie nu există nicio atașare, fie nu"
-" are legătură cu acest document."
+"Există un identificator în document, dar fie nu există nicio atașare, fie nu "
+"are legătură cu acest document."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -540,8 +543,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Ca o variantă a acestui ultim caz, este posibil să fi configurat pluginul "
 "astfel încât depozitul de fișiere cu documente să fie unul la alegere și nu "
@@ -569,8 +571,8 @@ msgstr "Avertismente"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Natura tehnologiei web utilizată pentru a livra WordPress înseamnă că, dacă "
@@ -578,11 +580,11 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
-"O caracteristică de design a acestui plugin este că ar trebui să poți accesa"
-" un document doar dacă folosești WordPress-ul în sine."
+"O caracteristică de design a acestui plugin este că ar trebui să poți accesa "
+"un document doar dacă folosești WordPress-ul în sine."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1206
 msgid ""
@@ -901,8 +903,10 @@ msgstr "Document salvat."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Document trimis. <a target=\"_blank\" href=\"%s\">Descărcați documentul</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Document trimis. <a target=\"_blank\" href=\"%s\">Descărcați documentul</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -924,7 +928,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Schiță document actualizată. <a target=\"_blank\" href=\"%s\">Descărcați "
 "documentul</a>"
@@ -969,8 +975,7 @@ msgid ""
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 "<br />Dacă credeți că este o eroare, puteți <a href=\"#\" "
-"id=\"override_link\">să anulați blocarea</a>, dar modificările se vor "
-"pierde."
+"id=\"override_link\">să anulați blocarea</a>, dar modificările se vor pierde."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -987,14 +992,12 @@ msgstr "Cea mai recentă versiune a documentului"
 msgid "Download"
 msgstr "Descărcare"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 "Înregistrare efectuată acum <abbr class=\"timestamp\" title=\"%1$s\" "
 "id=\"A%2$s\">%3$s</abbr> de către %4$s"
@@ -1010,22 +1013,22 @@ msgstr "Utilizare de bază"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Acest ecran permite utilizatorilor să editeze documente în mod colaborativ "
-"și să urmărească istoricul reviziilor. Pentru a începe, introduceți un titlu"
-" pentru document, introduceți opțional o descriere, apoi faceți clic pe "
+"și să urmărească istoricul reviziilor. Pentru a începe, introduceți un titlu "
+"pentru document, introduceți opțional o descriere, apoi faceți clic pe "
 "<code>Încărcați versiunea nouă</code> și selectați fișierul de pe computer."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
-"După încărcarea cu succes, puteți introduce un mesaj în jurnalul de revizii,"
-" puteți atribui documentului un autor și puteți descrie starea curentă a "
+"După încărcarea cu succes, puteți introduce un mesaj în jurnalul de revizii, "
+"puteți atribui documentului un autor și puteți descrie starea curentă a "
 "fluxului de lucru."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
@@ -1058,11 +1061,11 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
-"Jurnalul de revizii oferă un scurt rezumat al modificărilor reflectate "
-"într-o anumită revizie. Utilizat pe scară largă în comunitatea open-source, "
+"Jurnalul de revizii oferă un scurt rezumat al modificărilor reflectate într-"
+"o anumită revizie. Utilizat pe scară largă în comunitatea open-source, "
 "acesta oferă o imagine de ansamblu asupra istoricului documentului dintr-o "
 "privire."
 
@@ -1075,9 +1078,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Câmpul „Stare flux de lucru” poate fi utilizat pentru a ajuta membrii "
@@ -1121,8 +1124,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "Pentru a vizualiza toate documentele aflate într-o anumită stare a fluxului "
 "de lucru, faceți clic pe <strong>Stări flux de lucru</strong> în meniul din "
@@ -1147,8 +1150,8 @@ msgstr "Nu veți putea încărca niciun document."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Rezumatele reviziilor sunt note opționale care pot fi stocate împreună cu "
@@ -1187,8 +1190,8 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"Restaurarea reviziilor anterioare va restaura și descrierea "
-"respectivă.<br/>Dacă este dorită cea curentă, copiați-o mai întâi."
+"Restaurarea reviziilor anterioare va restaura și descrierea respectivă.<br/"
+">Dacă este dorită cea curentă, copiați-o mai întâi."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
@@ -1256,8 +1259,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Generați o cheie nouă"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1280,8 +1282,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "Directorul de încărcare a documentelor a fost modificat, dar încărcările "
 "existente ar putea necesita mutarea în noul folder pentru a le asigura "
@@ -1319,11 +1321,11 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
-"Opțional, puteți include șirul de caractere `<code>%site_id%</code>` în cale"
-" pentru a separa fișierele după site."
+"Opțional, puteți include șirul de caractere `<code>%site_id%</code>` în cale "
+"pentru a separa fișierele după site."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:585
 msgid "example-document-title"
@@ -1338,14 +1340,11 @@ msgstr ""
 "(și arhiva documentelor). Implicit este <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
-msgstr ""
-"Eliminați elementele an și lună /yyyy/mm din permalinkul documentului."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
+msgstr "Eliminați elementele an și lună /yyyy/mm din permalinkul documentului."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "În mod implicit, permalinkul documentului va conține anul și luna postării."
 
@@ -1366,8 +1365,8 @@ msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
 msgstr ""
-"Există mai multe revizii pentru acest document decât este permis. Efectuarea"
-" modificărilor va șterge datele."
+"Există mai multe revizii pentru acest document decât este permis. Efectuarea "
+"modificărilor va șterge datele."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:681
 msgid ""
@@ -1405,8 +1404,7 @@ msgstr ""
 msgid ""
 "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
-"Ne pare rău, ieșirea a fost deja scrisă, deci fișierul nu poate fi "
-"descărcat."
+"Ne pare rău, ieșirea a fost deja scrisă, deci fișierul nu poate fi descărcat."
 
 #: includes/trait-wp-document-revisions-file-handler.php:1165
 msgid "Sorry, this is a private feed."
@@ -1458,8 +1456,7 @@ msgstr "Gunoi"
 msgid "Somebody"
 msgstr "Cineva"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1471,8 +1468,7 @@ msgstr "%1$s: %2$s a anulat blocarea ta pentru %3$s"
 msgid "Dear %s:"
 msgstr "Dragă %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1639,12 +1635,12 @@ msgstr "Afișează linkul de editare"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
-"Opțiunea „Afișare link editare” permite listei să aibă un link către funcția"
-" Editare. O alegere făcută aici va anula setările configurate de sistem. "
+"Opțiunea „Afișare link editare” permite listei să aibă un link către funcția "
+"Editare. O alegere făcută aici va anula setările configurate de sistem. "
 "Linkurile vor apărea numai dacă utilizatorul poate edita documentul."
 
 #: src/blocks/documents-shortcode/edit.js:175
@@ -1689,8 +1685,8 @@ msgid ""
 "editing will force the current page to be left."
 msgstr ""
 "Setarea acestei opțiuni va deschide documentul într-o filă nouă. Această "
-"opțiune ar trebui activată la editarea paginii folosind acest bloc, deoarece"
-" dacă dați clic pe un link în timpul editării, pagina curentă va fi forțată "
+"opțiune ar trebui activată la editarea paginii folosind acest bloc, deoarece "
+"dacă dați clic pe un link în timpul editării, pagina curentă va fi forțată "
 "să fie părăsită."
 
 #: src/blocks/documents-shortcode/edit.js:229

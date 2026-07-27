@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Swedish\n"
 "Language: sv_SE\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -220,8 +223,8 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"När detta alternativ är markerat extraheras inte vanlig text från uppladdade"
-" filer för detta dokument, och all tidigare extraherad text rensas. "
+"När detta alternativ är markerat extraheras inte vanlig text från uppladdade "
+"filer för detta dokument, och all tidigare extraherad text rensas. "
 "Användbart för känsliga dokument vars innehåll inte ska cachas för sökning, "
 "AI-sammanfattningar eller andra textbaserade funktioner."
 
@@ -369,8 +372,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Bilaga hittades för dokumentet, men är för närvarande inte länkad"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -391,8 +393,7 @@ msgstr "Dokumentlänkar till en ogiltig bilaga"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1011
 msgid "Document attachment exists but related file not in document location"
-msgstr ""
-"Dokumentbilaga finns men relaterad fil finns inte på dokumentets plats"
+msgstr "Dokumentbilaga finns men relaterad fil finns inte på dokumentets plats"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1019
 msgid "Document attachment exists but related file not found"
@@ -456,8 +457,8 @@ msgid ""
 "When they cannot be fixed, the resolution is normally either to delete the "
 "document or to load a new version of the document."
 msgstr ""
-"När de inte kan åtgärdas är lösningen normalt antingen att radera dokumentet"
-" eller att ladda en ny version av dokumentet."
+"När de inte kan åtgärdas är lösningen normalt antingen att radera dokumentet "
+"eller att ladda en ny version av dokumentet."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1190
 msgid ""
@@ -532,8 +533,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Som en variant av det sista fallet kan du ha konfigurerat plugin-programmet "
 "så att dokumentfilsarkivet är ett du väljer och inte standardmediearkivet."
@@ -560,8 +560,8 @@ msgstr "Varningar"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Webbtekniken som används för att leverera WordPress innebär att om du vet "
@@ -569,8 +569,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Det är en designfunktion i detta plugin att du bara ska kunna komma åt ett "
 "dokument om du går via själva WordPress."
@@ -580,8 +580,8 @@ msgid ""
 "So to deliver this the plugin changes the file name to an md5-encoded file "
 "name and then hides it from you when using the application."
 msgstr ""
-"Så för att leverera detta ändrar plugin-programmet filnamnet till ett "
-"md5-kodat filnamn och döljer det sedan för dig när du använder programmet."
+"Så för att leverera detta ändrar plugin-programmet filnamnet till ett md5-"
+"kodat filnamn och döljer det sedan för dig när du använder programmet."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1207
 msgid "The fix is therefore to md5-encode the file name."
@@ -648,8 +648,7 @@ msgstr "Åsidosätt dokumentlås"
 #: includes/class-wp-document-revisions.php:422
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
-"Åsidosätt en annan användares lås på ett dokument för att tillåta "
-"redigering."
+"Åsidosätt en annan användares lås på ett dokument för att tillåta redigering."
 
 #: includes/class-wp-document-revisions.php:433
 msgid "The document post ID to unlock."
@@ -891,8 +890,10 @@ msgstr "Dokumentet sparat."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Dokument skapat. <a target=\"_blank\" href=\"%s\">Ladda ner dokumentet</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Dokument skapat. <a target=\"_blank\" href=\"%s\">Ladda ner dokumentet</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -914,7 +915,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Dokumentets utkast uppdaterat. <a target=\"_blank\" href=\"%s\">Ladda ner "
 "dokumentet</a>"
@@ -959,8 +962,7 @@ msgid ""
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 "< br / > Ifall du tror att det har blivit fel kan du <a href=\"#\" "
-"id=\"override_link\"> låsa upp </a>, observera att ändringarna går "
-"förlorade."
+"id=\"override_link\"> låsa upp </a>, observera att ändringarna går förlorade."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -977,17 +979,15 @@ msgstr "Senaste versionen av Dokumentet"
 msgid "Download"
 msgstr "Ladda ner"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"Incheckad för <abbr class=\"timestamp\" title=\"%1$s\" "
-"id=\"A%2$s\">%3$s</abbr> sedan av %4$s"
+"Incheckad för <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
+"abbr> sedan av %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1000,9 +1000,9 @@ msgstr "Grundläggande användning"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Den här skärmen låter användare redigera dokument tillsammans och spåra sin "
 "revisionshistorik. Börja med att ange en titel för dokumentet, ange "
@@ -1011,8 +1011,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "När du har laddat upp en fil kan du skriva ett meddelande i loggboken och "
 "tillägna dokumentet till en författare och beskriva status för dokumentet."
@@ -1020,8 +1020,7 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
-"När du är klar, klicka på <code>Uppdatera</code> för att spara dina "
-"ändringar"
+"När du är klar, klicka på <code>Uppdatera</code> för att spara dina ändringar"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:752
 #: includes/trait-wp-document-revisions-admin-editor.php:822
@@ -1047,8 +1046,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "I versionsloggen kan du se en kort översikt över de versioner och ändringar "
 "som tillhör varje dokument. Denna visar en mycket omfattande översikt över "
@@ -1060,16 +1059,15 @@ msgid ""
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
 msgstr ""
-"Du kan ladda ner och se tidigare versioner av dokumentet genom att klicka på"
-" tidpunkten på samma rad som versionen. Du kan också återställa en tidigare "
-"version genom att klicka på knappen \"Återställ\" på samma rad som "
-"versionen."
+"Du kan ladda ner och se tidigare versioner av dokumentet genom att klicka på "
+"tidpunkten på samma rad som versionen. Du kan också återställa en tidigare "
+"version genom att klicka på knappen \"Återställ\" på samma rad som versionen."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Dokumentet historia kan användas till ökad förståelse av arbetsteamet för "
@@ -1091,8 +1089,8 @@ msgid ""
 msgstr ""
 "Standardval för uppladdade dokument är bara nödvändigt för inloggade "
 "användare. Dokument kan publiceras, då visas de publikt genom att ändra "
-"synbarhet. <code>Obs! Alla dokument som publiseras kan vem som helst som har"
-" länken ladda ner!</code>"
+"synbarhet. <code>Obs! Alla dokument som publiseras kan vem som helst som har "
+"länken ladda ner!</code>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
@@ -1111,8 +1109,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "För att visa alla dokument i ett speciellt skede så kan du klicka på "
 "<strong>Status</status> i menyn till vänster."
@@ -1136,8 +1134,8 @@ msgstr "Du kommer inte att kunna ladda upp några dokument."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Versionsnoteringar är helt frivilliga noteringar som skrives in när varje "
@@ -1176,9 +1174,8 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"Om du återställer tidigare versioner återställs även den "
-"beskrivningen.<br/>Om du vill ha den nuvarande beskrivningen, kopiera den "
-"först."
+"Om du återställer tidigare versioner återställs även den beskrivningen.<br/"
+">Om du vill ha den nuvarande beskrivningen, kopiera den först."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
@@ -1246,8 +1243,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Skapa ny nyckel"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1267,8 +1263,8 @@ msgstr "Dokumentkatalogen är inte skrivbar. Kontrollera behörigheterna."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "Dokumentets uppladdningsmapp är ändrad, alla befintliga uppladdningar "
 "behöver flyttas till den nya mappen för att säkerhetsställa nåbarhet."
@@ -1295,18 +1291,17 @@ msgid ""
 "defined elsewhere), but it may be moved to a folder outside of the "
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
-"Katalog där uppladdade dokument ska lagras. Standardmappen är i din "
-"<code>wp-content/uploads</code>-mapp (eller en annan standardmapp för "
-"uppladdningar som definierats någon annanstans), men den kan flyttas till en"
-" mapp utanför <code>htdocs</code>- eller <code>public_html</code>-mappen för"
-" ökad säkerhet."
+"Katalog där uppladdade dokument ska lagras. Standardmappen är i din <code>wp-"
+"content/uploads</code>-mapp (eller en annan standardmapp för uppladdningar "
+"som definierats någon annanstans), men den kan flyttas till en mapp utanför "
+"<code>htdocs</code>- eller <code>public_html</code>-mappen för ökad säkerhet."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "Du kan lägga till strängen <code>%site_id%</code> i adressen för att "
 "separera filerna fördelat på sitenamn."
@@ -1324,14 +1319,12 @@ msgstr ""
 "dokumentarkivet). Standardinställningen är <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Ta bort elementet /yyyy/mm för år och månad från dokumentets permalänk."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr "Som standard innehåller dokumentets permalänk inläggets år och månad."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:606
@@ -1439,8 +1432,7 @@ msgstr "Skräp"
 msgid "Somebody"
 msgstr "Någon"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1452,8 +1444,7 @@ msgstr "%1$s: %2$s har öppnat ditt dokument %3$s"
 msgid "Dear %s:"
 msgstr "Kära %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1509,8 +1500,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"Filen har laddats upp. Lägg till en revisionssammanfattning nedan (valfritt)"
-" och tryck på <strong>Uppdatera</strong> för att spara dina ändringar."
+"Filen har laddats upp. Lägg till en revisionssammanfattning nedan (valfritt) "
+"och tryck på <strong>Uppdatera</strong> för att spara dina ändringar."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1522,8 +1513,8 @@ msgid ""
 "be lost. This revision will be copied and become the most recent revision."
 msgstr ""
 "Är du säker på att du vill återställa den här versionen? Om du gör det "
-"kommer ingen historik att gå förlorad. Den här versionen kommer att kopieras"
-" och bli den senaste versionen."
+"kommer ingen historik att gå förlorad. Den här versionen kommer att kopieras "
+"och bli den senaste versionen."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1622,8 +1613,8 @@ msgstr "Visa redigeringslänk"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Visa redigeringslänk gör att listan kan ha en länk till "
@@ -1846,11 +1837,11 @@ msgid "Display a list of revisions for your document."
 msgstr "Visa en lista över revisioner för ditt dokument."
 
 #~ msgid ""
-#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
-#~ "ago by %4$s"
+#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</"
+#~ "abbr> ago by %4$s"
 #~ msgstr ""
-#~ "Utcheckat <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ "
-#~ "s</abbr>, %4$ s sedan"
+#~ "Utcheckat <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ s</"
+#~ "abbr>, %4$ s sedan"
 
 #~ msgid ""
 #~ "Directory in which to store uploaded documents. The default is in your "
@@ -1860,5 +1851,5 @@ msgstr "Visa en lista över revisioner för ditt dokument."
 #~ msgstr ""
 #~ "Sökväg till mappen där ni kommer att förvara era dokument. Standard är "
 #~ "<code>Sidans plats/wp_content/uploads</code> men denna sökväg kan ändras "
-#~ "till valfri. Du kan även flytta denna mapp till en plats som ej är publikt "
-#~ "så som under htdocs eller public_html för ökad säkerhet."
+#~ "till valfri. Du kan även flytta denna mapp till en plats som ej är "
+#~ "publikt så som under htdocs eller public_html för ökad säkerhet."

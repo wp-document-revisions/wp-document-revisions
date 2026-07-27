@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Korean\n"
 "Language: ko_KR\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -44,7 +47,8 @@ msgid ""
 "A document management and version control plugin for WordPress that allows "
 "teams of any size to collaboratively edit files and manage their workflow."
 msgstr ""
-"워드프레스용 문서 관리 및 버전 관리 플러그인으로, 모든 규모의 팀이 공동으로 파일을 편집하고 워크플로를 관리할 수 있도록 지원합니다."
+"워드프레스용 문서 관리 및 버전 관리 플러그인으로, 모든 규모의 팀이 공동으로 "
+"파일을 편집하고 워크플로를 관리할 수 있도록 지원합니다."
 
 #. Author of the plugin
 #: wp-document-revisions.php
@@ -217,8 +221,9 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"이 옵션을 선택하면 업로드된 파일에서 해당 문서의 일반 텍스트가 추출되지 않으며, 이전에 추출된 텍스트는 모두 삭제됩니다. 검색, AI "
-"요약 또는 기타 텍스트 기반 기능을 위해 내용이 캐시되지 않아야 하는 민감한 문서에 유용합니다."
+"이 옵션을 선택하면 업로드된 파일에서 해당 문서의 일반 텍스트가 추출되지 않으"
+"며, 이전에 추출된 텍스트는 모두 삭제됩니다. 검색, AI 요약 또는 기타 텍스트 기"
+"반 기능을 위해 내용이 캐시되지 않아야 하는 민감한 문서에 유용합니다."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
 msgid "Do not pre-fill the revision log with AI suggestions"
@@ -230,8 +235,9 @@ msgid ""
 "revision log field when a new file is uploaded. Extraction (and summary "
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
-"이 옵션을 선택하면 새 파일을 업로드할 때 AI가 생성한 수정 요약이 수정 로그 필드에 삽입되지 않습니다. 추출(및 요약 생성(활성화된 "
-"경우))은 계속 실행되지만 편집기 사전 입력 기능만 비활성화됩니다."
+"이 옵션을 선택하면 새 파일을 업로드할 때 AI가 생성한 수정 요약이 수정 로그 필"
+"드에 삽입되지 않습니다. 추출(및 요약 생성(활성화된 경우))은 계속 실행되지만 "
+"편집기 사전 입력 기능만 비활성화됩니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
 msgid "Validate Structure"
@@ -351,14 +357,14 @@ msgstr "해당 문서에 대한 첨부 파일 기록이 없습니다."
 #: includes/class-wp-document-revisions-validate-structure.php:985
 msgid ""
 "Attachment recently uploaded for document, but not currently linked to it"
-msgstr "문서에 최근 첨부 파일이 업로드되었지만 현재 문서와 연결되어 있지 않습니다."
+msgstr ""
+"문서에 최근 첨부 파일이 업로드되었지만 현재 문서와 연결되어 있지 않습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:787
 msgid "Attachment found for document, but not currently linked"
 msgstr "문서에 첨부 파일이 발견되었지만 현재 연결되어 있지 않습니다."
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -370,7 +376,9 @@ msgstr "[수정일: 문서 - %1$s, 첨부파일 - %2$s]"
 msgid ""
 "Document links to invalid attachment. An attachment exists and can replace "
 "link"
-msgstr "문서 링크가 유효하지 않은 첨부 파일로 연결됩니다. 첨부 파일이 존재하므로 링크를 대체할 수 있습니다."
+msgstr ""
+"문서 링크가 유효하지 않은 첨부 파일로 연결됩니다. 첨부 파일이 존재하므로 링크"
+"를 대체할 수 있습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:973
 msgid "Document links to an invalid attachment record"
@@ -396,7 +404,9 @@ msgstr "첨부 파일이 MD5로 인코딩되지 않은 것 같습니다."
 msgid ""
 "The document contains additional document files that are inaccessible. They "
 "should be deleted to reduce storage."
-msgstr "이 문서에는 접근할 수 없는 추가 문서 파일이 포함되어 있습니다. 저장 공간을 확보하기 위해 해당 파일들을 삭제해야 합니다."
+msgstr ""
+"이 문서에는 접근할 수 없는 추가 문서 파일이 포함되어 있습니다. 저장 공간을 확"
+"보하기 위해 해당 파일들을 삭제해야 합니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1182
 msgid "Overview"
@@ -423,27 +433,33 @@ msgstr "두 가지 유형의 문제를 식별할 수 있습니다. 오류와 경
 msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
-msgstr "여기에 오류가 보고되면 문서를 보려고 할 때 \"오류 404 - 문서를 찾을 수 없음\"(또는 이와 유사한 메시지)이 표시됩니다."
+msgstr ""
+"여기에 오류가 보고되면 문서를 보려고 할 때 \"오류 404 - 문서를 찾을 수 없음"
+"\"(또는 이와 유사한 메시지)이 표시됩니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
 msgid ""
 "Some of these can be fixed using data from within the system - and a button "
 "is available to fix the issue, but others cannot."
 msgstr ""
-"이러한 문제 중 일부는 시스템 내부의 데이터를 사용하여 해결할 수 있으며, 문제를 해결하는 버튼이 제공되지만, 다른 문제는 해결할 수 "
-"없습니다."
+"이러한 문제 중 일부는 시스템 내부의 데이터를 사용하여 해결할 수 있으며, 문제"
+"를 해결하는 버튼이 제공되지만, 다른 문제는 해결할 수 없습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1189
 msgid ""
 "When they cannot be fixed, the resolution is normally either to delete the "
 "document or to load a new version of the document."
-msgstr "문제를 해결할 수 없는 경우, 일반적으로 문서를 삭제하거나 새 버전의 문서를 불러오는 것이 해결책입니다."
+msgstr ""
+"문제를 해결할 수 없는 경우, 일반적으로 문서를 삭제하거나 새 버전의 문서를 불"
+"러오는 것이 해결책입니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1190
 msgid ""
 "This resolution process will, of course, also address unfixed, but fixable, "
 "issues as well."
-msgstr "물론, 이러한 해결 과정에서는 해결되지 않았지만 해결 가능한 문제들도 다룰 것입니다."
+msgstr ""
+"물론, 이러한 해결 과정에서는 해결되지 않았지만 해결 가능한 문제들도 다룰 것입"
+"니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1191
 msgid "Errors"
@@ -453,31 +469,38 @@ msgstr "오류"
 msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
-msgstr "다음은 프런트엔드에서 문서를 표시하지 못하게 하는 문제들입니다. 문제점은 다음과 같습니다."
+msgstr ""
+"다음은 프런트엔드에서 문서를 표시하지 못하게 하는 문제들입니다. 문제점은 다음"
+"과 같습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
 "The identifier of the latest attachment (i.e. the current document) is held "
 "in the post content field."
-msgstr "최신 첨부 파일(즉, 현재 문서)의 식별자는 게시물 내용 필드에 저장됩니다."
+msgstr ""
+"최신 첨부 파일(즉, 현재 문서)의 식별자는 게시물 내용 필드에 저장됩니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
 "If this is missing or points to a non-existant one then the document cannot "
 "be viewed."
-msgstr "이 항목이 없거나 존재하지 않는 항목을 가리키는 경우 문서를 볼 수 없습니다."
+msgstr ""
+"이 항목이 없거나 존재하지 않는 항목을 가리키는 경우 문서를 볼 수 없습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1195
 msgid ""
 "However if there are any attachments attached to the document then we can "
 "display the latest one."
-msgstr "하지만 문서에 첨부 파일이 있는 경우 가장 최근 파일을 표시할 수 있습니다."
+msgstr ""
+"하지만 문서에 첨부 파일이 있는 경우 가장 최근 파일을 표시할 수 있습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1196
 msgid ""
 "This is done by updating the document record so that the content contains "
 "the attachment identifier."
-msgstr "이는 문서 레코드를 업데이트하여 내용에 첨부 파일 식별자가 포함되도록 함으로써 이루어집니다."
+msgstr ""
+"이는 문서 레코드를 업데이트하여 내용에 첨부 파일 식별자가 포함되도록 함으로"
+"써 이루어집니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1197
 msgid "There is no attachment associated with the document."
@@ -493,28 +516,33 @@ msgstr "문서에 식별자가 있지만 첨부 파일이 없거나 이 문서�
 msgid ""
 "There is an identifier that links to a document attachment but there is no "
 "underlying file."
-msgstr "문서 첨부 파일을 연결하는 식별자는 있지만, 해당 첨부 파일은 존재하지 않습니다."
+msgstr ""
+"문서 첨부 파일을 연결하는 식별자는 있지만, 해당 첨부 파일은 존재하지 않습니"
+"다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
-"이 마지막 경우의 변형으로, 문서 파일 저장소를 표준 미디어 저장소가 아닌 사용자가 선택한 저장소로 설정하도록 플러그인을 구성했을 수도 "
-"있습니다."
+"이 마지막 경우의 변형으로, 문서 파일 저장소를 표준 미디어 저장소가 아닌 사용"
+"자가 선택한 저장소로 설정하도록 플러그인을 구성했을 수도 있습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1201
 msgid ""
 "In this very specific case, when it has been unable to find the file in the "
 "document store, it will look for it in the Media store."
-msgstr "이 특별한 경우에, 문서 저장소에서 파일을 찾을 수 없으면 미디어 저장소에서 파일을 찾습니다."
+msgstr ""
+"이 특별한 경우에, 문서 저장소에서 파일을 찾을 수 없으면 미디어 저장소에서 파"
+"일을 찾습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1202
 msgid ""
 "If found there it will offer you a fix which is to move the file from the "
 "Media store to the document store."
-msgstr "해당 위치에서 파일을 발견하면 미디어 저장소에서 문서 저장소로 파일을 이동하는 해결 방법을 제시합니다."
+msgstr ""
+"해당 위치에서 파일을 발견하면 미디어 저장소에서 문서 저장소로 파일을 이동하"
+"는 해결 방법을 제시합니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1203
 msgid "Warnings"
@@ -522,24 +550,28 @@ msgstr "경고"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
-"워드프레스를 제공하는 데 사용되는 웹 기술의 특성상 서버에 저장된 파일 이름을 알고 있다면 해당 파일에 직접 접근할 수 있습니다."
+"워드프레스를 제공하는 데 사용되는 웹 기술의 특성상 서버에 저장된 파일 이름을 "
+"알고 있다면 해당 파일에 직접 접근할 수 있습니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
-msgstr "이 플러그인의 설계 특징 중 하나는 워드프레스 자체를 통해서만 문서에 접근할 수 있도록 되어 있다는 점입니다."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
+msgstr ""
+"이 플러그인의 설계 특징 중 하나는 워드프레스 자체를 통해서만 문서에 접근할 "
+"수 있도록 되어 있다는 점입니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1206
 msgid ""
 "So to deliver this the plugin changes the file name to an md5-encoded file "
 "name and then hides it from you when using the application."
 msgstr ""
-"이를 위해 플러그인은 파일 이름을 MD5로 인코딩된 파일 이름으로 변경한 다음 애플리케이션 사용 시 사용자에게 표시되지 않도록 숨깁니다."
+"이를 위해 플러그인은 파일 이름을 MD5로 인코딩된 파일 이름으로 변경한 다음 애"
+"플리케이션 사용 시 사용자에게 표시되지 않도록 숨깁니다."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1207
 msgid "The fix is therefore to md5-encode the file name."
@@ -580,7 +612,8 @@ msgstr "문서 정보 가져오기"
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
-msgstr "문서의 파일 형식, 수정 횟수 및 잠금 상태를 포함한 메타데이터를 검색합니다."
+msgstr ""
+"문서의 파일 형식, 수정 횟수 및 잠금 상태를 포함한 메타데이터를 검색합니다."
 
 #: includes/class-wp-document-revisions.php:358
 #: includes/class-wp-document-revisions.php:392
@@ -641,19 +674,25 @@ msgstr "WP Document Revisions 플러그인을 활성화했습니다."
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
-msgstr "여러 역할이 충돌하거나 사용자 지정 역할을 사용하고 있기 때문에 문서 편집 권한이 없을 수 있습니다!"
+msgstr ""
+"여러 역할이 충돌하거나 사용자 지정 역할을 사용하고 있기 때문에 문서 편집 권한"
+"이 없을 수 있습니다!"
 
 #: includes/class-wp-document-revisions.php:642
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
-msgstr "문서 메뉴가 완전히 표시되지 않고 \"모든 문서\" 및 \"문서 추가\" 옵션이 누락될 수 있습니다."
+msgstr ""
+"문서 메뉴가 완전히 표시되지 않고 \"모든 문서\" 및 \"문서 추가\" 옵션이 누락"
+"될 수 있습니다."
 
 #: includes/class-wp-document-revisions.php:644
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
-msgstr "먼저 여러 역할이 있는지, 그리고 각 역할에 문서 편집 권한이 있는지 확인해야 합니다."
+msgstr ""
+"먼저 여러 역할이 있는지, 그리고 각 역할에 문서 편집 권한이 있는지 확인해야 합"
+"니다."
 
 #: includes/class-wp-document-revisions.php:690
 msgctxt "post type general name"
@@ -837,8 +876,10 @@ msgstr "문서가 저장되었습니다."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "문서가 제출되었습니다. <a target=\"_blank\" href=\"%s\">문서 다운로드</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"문서가 제출되었습니다. <a target=\"_blank\" href=\"%s\">문서 다운로드</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -847,8 +888,8 @@ msgid ""
 "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview document</a>"
 msgstr ""
-"문서 작성 예정 시간: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">문서 "
-"미리보기</a>"
+"문서 작성 예정 시간: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">문서 미리보기</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -860,8 +901,12 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "문서 초안이 업데이트되었습니다. <a target=\"_blank\" href=\"%s\">문서 다운로드</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
+msgstr ""
+"문서 초안이 업데이트되었습니다. <a target=\"_blank\" href=\"%s\">문서 다운로"
+"드</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
 #: includes/trait-wp-document-revisions-admin-editor.php:979
@@ -902,8 +947,8 @@ msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
-"<br />이것이 오류라고 생각되면 <a href=\"#\" id=\"override_link\">잠금 해제</a>를 할 수 있지만, "
-"변경 사항은 손실됩니다."
+"<br />이것이 오류라고 생각되면 <a href=\"#\" id=\"override_link\">잠금 해제</"
+"a>를 할 수 있지만, 변경 사항은 손실됩니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -920,17 +965,15 @@ msgstr "문서의 최신 버전"
 msgid "Download"
 msgstr "다운로드"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"%4$s님이 <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> 전에 "
-"체크인했습니다."
+"%4$s님이 <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> 전"
+"에 체크인했습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -943,18 +986,21 @@ msgstr "기본 사용법"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
-"이 화면에서는 사용자들이 문서를 공동으로 편집하고 수정 내역을 확인할 수 있습니다. 시작하려면 문서 제목을 입력하고, 선택적으로 설명을 "
-"입력한 다음 <code>새 버전 업로드</code>를 클릭하고 컴퓨터에서 파일을 선택하세요."
+"이 화면에서는 사용자들이 문서를 공동으로 편집하고 수정 내역을 확인할 수 있습"
+"니다. 시작하려면 문서 제목을 입력하고, 선택적으로 설명을 입력한 다음 <code>"
+"새 버전 업로드</code>를 클릭하고 컴퓨터에서 파일을 선택하세요."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
-msgstr "업로드가 완료되면 수정 로그 메시지를 입력하고, 문서 작성자를 지정하고, 현재 워크플로 상태를 설명할 수 있습니다."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
+msgstr ""
+"업로드가 완료되면 수정 로그 메시지를 입력하고, 문서 작성자를 지정하고, 현재 "
+"워크플로 상태를 설명할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -969,22 +1015,27 @@ msgstr "문서 설명"
 msgid ""
 "The document description provides a short user-oriented summary of the "
 "document."
-msgstr "문서 설명은 사용자가 쉽게 이해할 수 있도록 문서에 대한 간략한 요약을 제공합니다."
+msgstr ""
+"문서 설명은 사용자가 쉽게 이해할 수 있도록 문서에 대한 간략한 요약을 제공합니"
+"다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:754
 msgid ""
 "This can be used with the Document List or Latest Documents blocks or their "
 "shortcode or widget equivalents."
-msgstr "이 기능은 문서 목록 또는 최신 문서 블록이나 해당 단축 코드 또는 위젯과 함께 사용할 수 있습니다."
+msgstr ""
+"이 기능은 문서 목록 또는 최신 문서 블록이나 해당 단축 코드 또는 위젯과 함께 "
+"사용할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
-"개정 로그는 특정 개정판에 반영된 변경 사항을 간략하게 요약하여 보여줍니다. 오픈 소스 커뮤니티에서 널리 사용되는 이 로그는 문서의 "
-"전체적인 변경 이력을 한눈에 파악할 수 있도록 해줍니다."
+"개정 로그는 특정 개정판에 반영된 변경 사항을 간략하게 요약하여 보여줍니다. 오"
+"픈 소스 커뮤니티에서 널리 사용되는 이 로그는 문서의 전체적인 변경 이력을 한눈"
+"에 파악할 수 있도록 해줍니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
 msgid ""
@@ -992,18 +1043,20 @@ msgid ""
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
 msgstr ""
-"수정 기록에서 타임스탬프를 클릭하면 문서의 이전 버전을 다운로드하고 볼 수 있습니다. 또한 수정본 옆에 있는 <code>복원</code>"
-" 버튼을 클릭하여 수정본을 복원할 수 있습니다."
+"수정 기록에서 타임스탬프를 클릭하면 문서의 이전 버전을 다운로드하고 볼 수 있"
+"습니다. 또한 수정본 옆에 있는 <code>복원</code> 버튼을 클릭하여 수정본을 복원"
+"할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
-"워크플로 상태 필드는 팀 구성원이 특정 조직의 워크플로 내에서 문서가 어떤 단계에 있는지 이해하는 데 도움이 됩니다. 이 필드는 선택 "
-"사항이며, 왼쪽의 <code>워크플로 상태</code>를 클릭하여 사용자 지정하거나 조회할 수 있습니다."
+"워크플로 상태 필드는 팀 구성원이 특정 조직의 워크플로 내에서 문서가 어떤 단계"
+"에 있는지 이해하는 데 도움이 됩니다. 이 필드는 선택 사항이며, 왼쪽의 <code>워"
+"크플로 상태</code>를 클릭하여 사용자 지정하거나 조회할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1017,15 +1070,18 @@ msgid ""
 "Any document marked as published will be accessible to anyone with the "
 "proper URL."
 msgstr ""
-"기본적으로 업로드된 문서는 로그인한 사용자만 접근할 수 있습니다. 문서의 공개 여부를 오른쪽 상단의 \"게시\" 상자에서 설정하여 전 "
-"세계 누구나 접근할 수 있도록 게시할 수 있습니다. 게시된 문서는 올바른 URL만 있으면 누구나 접속할 수 있습니다."
+"기본적으로 업로드된 문서는 로그인한 사용자만 접근할 수 있습니다. 문서의 공개 "
+"여부를 오른쪽 상단의 \"게시\" 상자에서 설정하여 전 세계 누구나 접근할 수 있도"
+"록 게시할 수 있습니다. 게시된 문서는 올바른 URL만 있으면 누구나 접속할 수 있"
+"습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
 "Below is a list of all documents to which you have access. Click the "
 "document title to edit the document or download the latest version."
 msgstr ""
-"아래는 사용자가 접근 권한을 가진 모든 문서 목록입니다. 문서 제목을 클릭하면 문서를 편집하거나 최신 버전을 다운로드할 수 있습니다."
+"아래는 사용자가 접근 권한을 가진 모든 문서 목록입니다. 문서 제목을 클릭하면 "
+"문서를 편집하거나 최신 버전을 다운로드할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:766
 msgid ""
@@ -1035,9 +1091,11 @@ msgstr "새 문서를 추가하려면 왼쪽의 <strong>문서 추가</strong>�
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
-msgstr "특정 워크플로 상태의 모든 문서를 보려면 왼쪽 메뉴에서 <strong>워크플로 상태</strong>를 클릭하십시오."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
+msgstr ""
+"특정 워크플로 상태의 모든 문서를 보려면 왼쪽 메뉴에서 <strong>워크플로 상태</"
+"strong>를 클릭하십시오."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963
@@ -1056,12 +1114,13 @@ msgstr "문서를 업로드할 수 없습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
-"수정 요약은 해당 수정본과 함께 저장할 수 있는 선택적 메모로, 다른 사용자가 실제 파일을 열지 않고도 어떤 변경 사항이 있는지 빠르고 "
-"쉽게 확인할 수 있도록 해줍니다."
+"수정 요약은 해당 수정본과 함께 저장할 수 있는 선택적 메모로, 다른 사용자가 실"
+"제 파일을 열지 않고도 어떤 변경 사항이 있는지 빠르고 쉽게 확인할 수 있도록 해"
+"줍니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1002
 #: src/editor-document-upload/index.js:536
@@ -1094,13 +1153,17 @@ msgstr "RSS 피드"
 msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
-msgstr "이전 버전을 복원하면 해당 설명도 복원됩니다.<br/>현재 설명을 사용하려면 먼저 복사하세요."
+msgstr ""
+"이전 버전을 복원하면 해당 설명도 복원됩니다.<br/>현재 설명을 사용하려면 먼저 "
+"복사하세요."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
 "You currently have this file checked out. No other user can edit this "
 "document so long as you remain on this page."
-msgstr "현재 이 파일을 체크아웃한 상태입니다. 이 페이지에 머무르는 동안 다른 사용자는 이 문서를 편집할 수 없습니다."
+msgstr ""
+"현재 이 파일을 체크아웃한 상태입니다. 이 페이지에 머무르는 동안 다른 사용자"
+"는 이 문서를 편집할 수 없습니다."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1187
 msgid "Document Owner"
@@ -1152,14 +1215,15 @@ msgstr "비밀 피드 키"
 msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
-msgstr "개인 정보를 보호하려면 피드 리더에서 사용할 수 있도록 피드에 키를 추가해야 합니다."
+msgstr ""
+"개인 정보를 보호하려면 피드 리더에서 사용할 수 있도록 피드에 키를 추가해야 합"
+"니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:97
 msgid "Generate New Key"
 msgstr "새 키 생성"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1179,14 +1243,18 @@ msgstr "문서 디렉토리에 쓰기 권한이 없습니다. 권한을 확인�
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
-msgstr "문서 업로드 디렉터리가 변경되었습니다. 기존에 업로드된 파일은 새 폴더로 이동해야 계속 사용할 수 있습니다."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
+msgstr ""
+"문서 업로드 디렉터리가 변경되었습니다. 기존에 업로드된 파일은 새 폴더로 이동"
+"해야 계속 사용할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:429
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
-msgstr "문서 슬러그가 변경되었지만, 이전에 게시된 일부 URL이 더 이상 작동하지 않을 수 있습니다."
+msgstr ""
+"문서 슬러그가 변경되었지만, 이전에 게시된 일부 URL이 더 이상 작동하지 않을 "
+"수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:447
 #: includes/trait-wp-document-revisions-admin-settings.php:478
@@ -1203,17 +1271,20 @@ msgid ""
 "defined elsewhere), but it may be moved to a folder outside of the "
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
-"업로드된 문서를 저장할 디렉터리입니다. 기본값은 `<code>wp-content/uploads</code>` 폴더(또는 다른 위치에 "
-"정의된 기본 업로드 폴더)이지만, 보안 강화를 위해 `<code>htdocs</code>` 또는 "
-"`<code>public_html</code>` 폴더 외부의 폴더로 이동할 수 있습니다."
+"업로드된 문서를 저장할 디렉터리입니다. 기본값은 `<code>wp-content/uploads</"
+"code>` 폴더(또는 다른 위치에 정의된 기본 업로드 폴더)이지만, 보안 강화를 위"
+"해 `<code>htdocs</code>` 또는 `<code>public_html</code>` 폴더 외부의 폴더로 "
+"이동할 수 있습니다."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
-msgstr "파일을 사이트별로 구분하려면 경로에 <code>%site_id%</code> 문자열을 선택적으로 포함할 수 있습니다."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
+msgstr ""
+"파일을 사이트별로 구분하려면 경로에 <code>%site_id%</code> 문자열을 선택적으"
+"로 포함할 수 있습니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:585
 msgid "example-document-title"
@@ -1223,16 +1294,16 @@ msgstr "예시 문서 제목"
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
-msgstr "문서(및 문서 아카이브)의 모든 URL 앞에 붙일 \"슬러그\"입니다. 기본값은 <code>documents</code>입니다."
+msgstr ""
+"문서(및 문서 아카이브)의 모든 URL 앞에 붙일 \"슬러그\"입니다. 기본값은 "
+"<code>documents</code>입니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "문서 고유 링크에서 연도와 월 요소(/yyyy/mm)를 제거하세요."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr "기본적으로 문서의 영구 링크에는 게시물의 연도와 월이 포함됩니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:606
@@ -1243,13 +1314,17 @@ msgstr "제공된 재작성 규칙은 두 가지 형식을 모두 지원합니�
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
-msgstr "필터를 사용하여 문서 수정 횟수의 최대치가 0으로 설정되었습니다. 설정을 확인하십시오."
+msgstr ""
+"필터를 사용하여 문서 수정 횟수의 최대치가 0으로 설정되었습니다. 설정을 확인하"
+"십시오."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
-msgstr "이 문서에는 허용된 수정 횟수보다 더 많은 수정 내역이 있습니다. 수정하면 데이터가 삭제됩니다."
+msgstr ""
+"이 문서에는 허용된 수정 횟수보다 더 많은 수정 내역이 있습니다. 수정하면 데이"
+"터가 삭제됩니다."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:681
 msgid ""
@@ -1277,7 +1352,8 @@ msgstr "-개정-"
 
 #: includes/trait-wp-document-revisions-file-handler.php:345
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
-msgstr "죄송합니다. 출력 버퍼에 이미 데이터가 있습니다. 파일 쓰기가 억제되었습니다."
+msgstr ""
+"죄송합니다. 출력 버퍼에 이미 데이터가 있습니다. 파일 쓰기가 억제되었습니다."
 
 #: includes/trait-wp-document-revisions-file-handler.php:351
 msgid ""
@@ -1334,8 +1410,7 @@ msgstr "쓰레기"
 msgid "Somebody"
 msgstr "어떤 사람"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1347,8 +1422,7 @@ msgstr "%1$s: %2$s가 %3$s에 대한 잠금을 해제했습니다."
 msgid "Dear %s:"
 msgstr "%s님께:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1375,7 +1449,9 @@ msgstr "✨ AI 제안 - 저장하기 전에 수정하세요."
 
 #: src/admin/wp-document-revisions-ai-prefill.js:70
 msgid "✨ AI summary will be available shortly — refresh this page to see it."
-msgstr "✨ AI 요약 정보는 곧 제공될 예정입니다. 페이지를 새로고침하시면 확인하실 수 있습니다."
+msgstr ""
+"✨ AI 요약 정보는 곧 제공될 예정입니다. 페이지를 새로고침하시면 확인하실 수 "
+"있습니다."
 
 #: src/admin/wp-document-revisions-ai-prefill.js:100
 msgid "Dismiss"
@@ -1402,8 +1478,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"파일이 성공적으로 업로드되었습니다. 아래에 수정 요약을 추가하고(선택 사항) <strong>업데이트</strong>를 눌러 변경 사항을 "
-"저장하세요."
+"파일이 성공적으로 업로드되었습니다. 아래에 수정 요약을 추가하고(선택 사항) "
+"<strong>업데이트</strong>를 눌러 변경 사항을 저장하세요."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1413,7 +1489,9 @@ msgstr "새 버전이 업로드되었습니다. 저장하려면 '업데이트'�
 msgid ""
 "Are you sure you want to restore this revision? If you do, no history will "
 "be lost. This revision will be copied and become the most recent revision."
-msgstr "이 버전을 복원하시겠습니까? 복원하셔도 이전 기록은 손실되지 않습니다. 이 버전은 복사되어 최신 버전이 됩니다."
+msgstr ""
+"이 버전을 복원하시겠습니까? 복원하셔도 이전 기록은 손실되지 않습니다. 이 버전"
+"은 복사되어 최신 버전이 됩니다."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1508,12 +1586,13 @@ msgstr "편집 링크 표시"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
-"'편집 링크 표시'를 선택하면 목록에 편집 기능 링크를 추가할 수 있습니다. 이 설정은 시스템 구성 설정을 재정의합니다. 링크는 사용자가"
-" 문서를 편집할 수 있는 경우에만 표시됩니다."
+"'편집 링크 표시'를 선택하면 목록에 편집 기능 링크를 추가할 수 있습니다. 이 설"
+"정은 시스템 구성 설정을 재정의합니다. 링크는 사용자가 문서를 편집할 수 있는 "
+"경우에만 표시됩니다."
 
 #: src/blocks/documents-shortcode/edit.js:175
 msgid "Default"
@@ -1556,8 +1635,9 @@ msgid ""
 "whilst editing the page using this block as clicking on a link whilst "
 "editing will force the current page to be left."
 msgstr ""
-"이 옵션을 켜면 문서가 새 탭에서 열립니다. 이 블록을 사용하여 페이지를 편집하는 동안에는 이 옵션을 켜두어야 합니다. 그렇지 않으면 "
-"편집 중에 링크를 클릭했을 때 현재 페이지를 벗어나게 됩니다."
+"이 옵션을 켜면 문서가 새 탭에서 열립니다. 이 블록을 사용하여 페이지를 편집하"
+"는 동안에는 이 옵션을 켜두어야 합니다. 그렇지 않으면 편집 중에 링크를 클릭했"
+"을 때 현재 페이지를 벗어나게 됩니다."
 
 #: src/blocks/documents-shortcode/edit.js:229
 msgid "Free Form Settings"
@@ -1571,7 +1651,9 @@ msgstr "자유 형식 매개변수"
 msgid ""
 "The query parameters can be very extensive. enter any other parameters "
 "required here."
-msgstr "쿼리 매개변수는 매우 광범위할 수 있습니다. 필요한 다른 매개변수를 여기에 입력하십시오."
+msgstr ""
+"쿼리 매개변수는 매우 광범위할 수 있습니다. 필요한 다른 매개변수를 여기에 입력"
+"하십시오."
 
 #: src/blocks/documents-widget/edit.js:23
 msgid "Latest Documents Settings"
@@ -1598,8 +1680,8 @@ msgid ""
 "Under certain conditons WordPress can generate an image for Page 1 of PDF "
 "documents. If created this will be used as the Featured Image."
 msgstr ""
-"특정 조건에서 WordPress는 PDF 문서의 1페이지에 사용할 이미지를 생성할 수 있습니다. 생성된 이미지는 대표 이미지로 "
-"사용됩니다."
+"특정 조건에서 WordPress는 PDF 문서의 1페이지에 사용할 이미지를 생성할 수 있습"
+"니다. 생성된 이미지는 대표 이미지로 사용됩니다."
 
 #: src/blocks/documents-widget/edit.js:98
 msgid "Show author name?"
