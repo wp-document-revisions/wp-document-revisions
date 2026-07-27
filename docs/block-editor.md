@@ -84,11 +84,12 @@ POST, PUT, and DELETE methods are allowed when the block editor is enabled. All 
 
 ### Blocks
 
-WP Document Revisions also provides three Gutenberg blocks for displaying documents on the front end, available regardless of whether the document post type uses the block editor:
+WP Document Revisions also provides four Gutenberg blocks for displaying documents on the front end, available regardless of whether the document post type uses the block editor:
 
 - **Documents List** (`wp-document-revisions/documents-shortcode`) — Displays a list of documents, equivalent to the `[documents]` shortcode
 - **Recently Revised Documents** (`wp-document-revisions/documents-widget`) — Shows recently updated documents, equivalent to the sidebar widget
 - **Document Revisions** (`wp-document-revisions/revisions-shortcode`) — Shows the revision history for a specific document, equivalent to the `[document_revisions]` shortcode
+- **Document Preview** (`wp-document-revisions/document-preview`) — Embeds an inline preview of a document's latest revision, equivalent to the `[document_preview]` shortcode
 
 ## Known Limitations
 

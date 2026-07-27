@@ -100,6 +100,32 @@ When using the block version of the shortcode called `Document Revisions`, a cha
 
 Since the block is dynamically displayed as parameters are entered, if the post number entered is not a document, then an appropriate message will be entered.
 
+## Document Preview Shortcode
+
+In a post or page, type `[document_preview id="100"]` where ID is the ID of the document you would like to preview. This embeds an inline preview of the document's _latest revision_ directly in the page, so visitors can read it without downloading it first.
+
+You can find the ID in the URL of the edit document page.
+
+The preview always tracks the latest revision: because it is served through the document's permalink, the embedded file is subject to the same access control as the document itself. If a visitor is not permitted to read the document, the file is not served and the preview shows an authorization message instead. In particular, published documents are previewable by anyone who can read them (public by default), while private or otherwise restricted documents are only previewable by authorized users.
+
+PDF documents are embedded inline (with a download link shown as a fallback where the browser cannot render them). Image documents are shown directly. For all other file types — which browsers cannot preview natively — a download link is displayed instead.
+
+### Display parameters
+
+It is also possible to add formatting parameters:
+
+`height` (with a number parameter) sets the height of the preview area in pixels. The default is `600`.
+
+`show_title` (with a true/false parameter) that will display the document's title as a heading above the preview. The default is false.
+
+`show_download` (with a true/false parameter) that will display a download link below the preview. The default is true. (A download link is always shown as a fallback when the file type cannot be previewed inline.)
+
+These boolean variables can be entered without a value (with default value true).
+
+### Block Usage
+
+The block version of the shortcode is called `Document Preview`. It renders the same inline preview and can be converted to and from a shortcode block. The `id`, `height`, `show_title` and `show_download` parameters are all supported directly in the block's settings.
+
 ## Latest Documents Widget
 
 Go to your theme's widgets page (if your theme supports widgets), and drag the widget to a sidebar of you choice. Once in a sidebar, you will be presented with options to customize the widget's functionality.
