@@ -3,22 +3,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: he\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -218,9 +222,9 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"כאשר האפשרות מסומנת, טקסט רגיל לא יחולץ מקבצים שהועלו עבור מסמך זה, וכל טקסט"
-" שחולץ בעבר ינוקה. שימושי עבור מסמכים רגישים שאת תוכנם לא צריך להישמר במטמון"
-" עבור חיפוש, תקצירי בינה מלאכותית או תכונות מבוססות טקסט אחרות."
+"כאשר האפשרות מסומנת, טקסט רגיל לא יחולץ מקבצים שהועלו עבור מסמך זה, וכל טקסט "
+"שחולץ בעבר ינוקה. שימושי עבור מסמכים רגישים שאת תוכנם לא צריך להישמר במטמון "
+"עבור חיפוש, תקצירי בינה מלאכותית או תכונות מבוססות טקסט אחרות."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
 msgid "Do not pre-fill the revision log with AI suggestions"
@@ -360,8 +364,7 @@ msgstr "קובץ מצורף שהועלה לאחרונה למסמך, אך אינ�
 msgid "Attachment found for document, but not currently linked"
 msgstr "נמצא קובץ מצורף למסמך, אך הוא אינו מקושר כרגע"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -462,8 +465,7 @@ msgstr "שגיאות"
 msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
-msgstr ""
-"אלו הן בעיות שמונעות ממך להציג את המסמך שלך בקצה הקדמי. הבעיות כוללות:"
+msgstr "אלו הן בעיות שמונעות ממך להציג את המסמך שלך בקצה הקדמי. הבעיות כוללות:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
@@ -510,19 +512,18 @@ msgstr "ישנו מזהה המקשר למסמך מצורף, אך אין קובץ
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
-"כגרסה אחרת של המקרה האחרון, ייתכן שהגדרת את התוסף כך שמאגר קבצי המסמכים יהיה"
-" לבחירתך ולא מאגר המדיה הסטנדרטי."
+"כגרסה אחרת של המקרה האחרון, ייתכן שהגדרת את התוסף כך שמאגר קבצי המסמכים יהיה "
+"לבחירתך ולא מאגר המדיה הסטנדרטי."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1201
 msgid ""
 "In this very specific case, when it has been unable to find the file in the "
 "document store, it will look for it in the Media store."
 msgstr ""
-"במקרה הספציפי הזה, כאשר לא הצליח למצוא את הקובץ במאגר המסמכים, הוא יחפש אותו"
-" במאגר המדיה."
+"במקרה הספציפי הזה, כאשר לא הצליח למצוא את הקובץ במאגר המסמכים, הוא יחפש אותו "
+"במאגר המדיה."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1202
 msgid ""
@@ -538,8 +539,8 @@ msgstr "אזהרות"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "אופי טכנולוגיית האינטרנט המשמשת לאספקת וורדפרס פירושו שאם אתם יודעים את שם "
@@ -547,8 +548,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "תכונה עיצובית של תוסף זה היא שתוכלו לגשת למסמך רק אם תעברו דרך וורדפרס עצמה."
 
@@ -862,7 +863,8 @@ msgstr "המסמך נשמר."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "המסמך הוגש. <a target=\"_blank\" href=\"%s\">הורד את המסמך</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -885,7 +887,9 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr "טיוטת המסמך עודכנה. <a target=\"_blank\" href=\"%s\">הורד את המסמך</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
@@ -943,14 +947,12 @@ msgstr "הגרסה האחרונה של המסמך"
 msgid "Download"
 msgstr "הורדה"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 "בוצע צ'ק-אין לפני <abbr class=\"timestamp\" title=\"%1$s\" "
 "id=\"A%2$s\">%3$s</abbr> על ידי %4$s"
@@ -966,21 +968,21 @@ msgstr "שימוש בסיסי"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
-"מסך זה מאפשר למשתמשים לערוך מסמכים בשיתוף פעולה ולעקוב אחר היסטוריית הגרסאות"
-" שלהם. כדי להתחיל, הזינו כותרת למסמך, אופציונלית הזינו תיאור, ולחצו על "
+"מסך זה מאפשר למשתמשים לערוך מסמכים בשיתוף פעולה ולעקוב אחר היסטוריית הגרסאות "
+"שלהם. כדי להתחיל, הזינו כותרת למסמך, אופציונלית הזינו תיאור, ולחצו על "
 "<code>העלה גרסה חדשה</code> ובחרו את הקובץ מהמחשב שלכם."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
-"לאחר העלאה מוצלחת, תוכלו להזין הודעת יומן גרסאות, להקצות למסמך מחבר ולתאר את"
-" מצב זרימת העבודה הנוכחי שלו."
+"לאחר העלאה מוצלחת, תוכלו להזין הודעת יומן גרסאות, להקצות למסמך מחבר ולתאר את "
+"מצב זרימת העבודה הנוכחי שלו."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -1008,8 +1010,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
 "יומן הגרסאות מספק סיכום קצר של השינויים המשתקפים בגרסה מסוימת. הוא נמצא "
 "בשימוש נרחב בקהילת הקוד הפתוח, ומספק סקירה מקיפה של המסמך במבט חטוף."
@@ -1026,13 +1028,13 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
-"ניתן להשתמש בשדה מצב זרימת העבודה כדי לעזור לחברי הצוות להבין באיזה שלב נמצא"
-" מסמך בתהליך העבודה של ארגון מסוים. השדה הוא אופציונלי, וניתן להתאים אותו "
+"ניתן להשתמש בשדה מצב זרימת העבודה כדי לעזור לחברי הצוות להבין באיזה שלב נמצא "
+"מסמך בתהליך העבודה של ארגון מסוים. השדה הוא אופציונלי, וניתן להתאים אותו "
 "אישית או לבצע שאילתה עליו על ידי לחיצה על <code>מצבי זרימת עבודה</code> בצד "
 "שמאל."
 
@@ -1050,8 +1052,8 @@ msgid ""
 msgstr ""
 "כברירת מחדל, מסמכים שהועלו נגישים רק למשתמשים מחוברים. ניתן לפרסם מסמכים, "
 "ובכך להפוך אותם לנגישים לעולם, על ידי הפעלה/כיבוי של הנראות שלהם בתיבה "
-"\"פרסם\" בפינה הימנית העליונה. כל מסמך המסומן כפורסם יהיה נגיש לכל מי שיש לו"
-" את כתובת ה-URL המתאימה."
+"\"פרסם\" בפינה הימנית העליונה. כל מסמך המסומן כפורסם יהיה נגיש לכל מי שיש לו "
+"את כתובת ה-URL המתאימה."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
@@ -1069,8 +1071,8 @@ msgstr "כדי להוסיף מסמך חדש, לחץ על <strong>הוסף מסמ
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "כדי להציג את כל המסמכים במצב זרימת עבודה מסוים, לחץ על <strong>מצבי זרימת "
 "עבודה</strong> בתפריט משמאל."
@@ -1092,8 +1094,8 @@ msgstr "לא תוכל להעלות מסמכים כלשהם."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "סיכומי גרסאות הם הערות אופציונליות לאחסון יחד עם גרסה זו, המאפשרות למשתמשים "
@@ -1198,8 +1200,7 @@ msgstr "כדי להגן על פרטיותך, עליך לצרף מפתח לעדכ
 msgid "Generate New Key"
 msgstr "צור מפתח חדש"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1219,11 +1220,11 @@ msgstr "ספריית המסמכים אינה ניתנת לכתיבה. אנא ב�
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
-"תיקיית העלאת המסמכים שונתה, אך ייתכן שיהיה צורך להעביר העלאות קיימות לתיקייה"
-" החדשה כדי להבטיח שהן יישארו נגישות."
+"תיקיית העלאת המסמכים שונתה, אך ייתכן שיהיה צורך להעביר העלאות קיימות לתיקייה "
+"החדשה כדי להבטיח שהן יישארו נגישות."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:429
 msgid ""
@@ -1246,17 +1247,17 @@ msgid ""
 "defined elsewhere), but it may be moved to a folder outside of the "
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
-"ספרייה לאחסון מסמכים שהועלו. ברירת המחדל היא בתיקייה <code>wp-"
-"content/uploads</code> שלך (או בתיקיית העלאות אחרת המוגדרת כברירת מחדל במקום"
-" אחר), אך ניתן להעביר אותה לתיקייה מחוץ לתיקיות <code>htdocs</code> או "
+"ספרייה לאחסון מסמכים שהועלו. ברירת המחדל היא בתיקייה <code>wp-content/"
+"uploads</code> שלך (או בתיקיית העלאות אחרת המוגדרת כברירת מחדל במקום אחר), "
+"אך ניתן להעביר אותה לתיקייה מחוץ לתיקיות <code>htdocs</code> או "
 "<code>public_html</code> לצורך אבטחה נוספת."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "באפשרותך לכלול באופן אופציונלי את המחרוזת <code>%site_id%</code> בתוך הנתיב "
 "כדי להפריד קבצים לפי אתר."
@@ -1270,17 +1271,15 @@ msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
 msgstr ""
-"\"Slug\" (קידומת) שאליה יש להוסיף קידומת לכל כתובות ה-URL של מסמכים (וארכיון"
-" המסמכים). ברירת המחדל היא <code>documents</code>."
+"\"Slug\" (קידומת) שאליה יש להוסיף קידומת לכל כתובות ה-URL של מסמכים (וארכיון "
+"המסמכים). ברירת המחדל היא <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "הסר את רכיב השנה והחודש /yyyy/mm מהקישור הקבוע של המסמך."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr "כברירת מחדל, קישור קבוע למסמך יכיל את שנת הפוסט והחודש."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:606
@@ -1383,8 +1382,7 @@ msgstr "אַשׁפָּה"
 msgid "Somebody"
 msgstr "מִישֶׁהוּ"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1396,8 +1394,7 @@ msgstr "%1$s: %2$s ביטל את הנעילה שלך ב- %3$s"
 msgid "Dear %s:"
 msgstr "%s היקר/ה:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1451,8 +1448,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"הקובץ הועלה בהצלחה. הוסף סיכום גרסאות למטה (אופציונלי) ולחץ על "
-"<strong>עדכן</strong> כדי לשמור את השינויים שלך."
+"הקובץ הועלה בהצלחה. הוסף סיכום גרסאות למטה (אופציונלי) ולחץ על <strong>עדכן</"
+"strong> כדי לשמור את השינויים שלך."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1559,8 +1556,8 @@ msgstr "הצג קישור עריכה"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "\"הצג קישור עריכה\" מאפשר לרשימה לכלול קישור לפונקציית העריכה. בחירה שתבוצע "

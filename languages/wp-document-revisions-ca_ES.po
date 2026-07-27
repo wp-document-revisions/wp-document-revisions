@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -18,7 +19,9 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -220,9 +223,9 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"Quan està marcat, no s'extreurà text sense format dels fitxers carregats per"
-" a aquest document i s'esborrarà qualsevol text extret prèviament. Útil per "
-"a documents sensibles el contingut dels quals no s'ha de desar a la memòria "
+"Quan està marcat, no s'extreurà text sense format dels fitxers carregats per "
+"a aquest document i s'esborrarà qualsevol text extret prèviament. Útil per a "
+"documents sensibles el contingut dels quals no s'ha de desar a la memòria "
 "cau per a la cerca, els resums d'IA o altres funcions basades en text."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
@@ -360,8 +363,7 @@ msgstr "No hi ha cap registre adjunt per al document"
 msgid ""
 "Attachment recently uploaded for document, but not currently linked to it"
 msgstr ""
-"Adjunt penjat recentment per al document, però actualment no hi està "
-"vinculat"
+"Adjunt penjat recentment per al document, però actualment no hi està vinculat"
 
 #: includes/class-wp-document-revisions-validate-structure.php:787
 msgid "Attachment found for document, but not currently linked"
@@ -369,8 +371,7 @@ msgstr ""
 "S'ha trobat un fitxer adjunt per al document, però actualment no està "
 "enllaçat"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -383,8 +384,8 @@ msgid ""
 "Document links to invalid attachment. An attachment exists and can replace "
 "link"
 msgstr ""
-"El document enllaça a un fitxer adjunt no vàlid. Existeix un fitxer adjunt i"
-" pot substituir l'enllaç."
+"El document enllaça a un fitxer adjunt no vàlid. Existeix un fitxer adjunt i "
+"pot substituir l'enllaç."
 
 #: includes/class-wp-document-revisions-validate-structure.php:973
 msgid "Document links to an invalid attachment record"
@@ -503,8 +504,7 @@ msgid ""
 "However if there are any attachments attached to the document then we can "
 "display the latest one."
 msgstr ""
-"Tanmateix, si hi ha fitxers adjunts al document, podem mostrar el més "
-"recent."
+"Tanmateix, si hi ha fitxers adjunts al document, podem mostrar el més recent."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1196
 msgid ""
@@ -523,8 +523,8 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"Hi ha un identificador al document però o bé no hi ha cap fitxer adjunt o bé"
-" no està relacionat amb aquest document."
+"Hi ha un identificador al document però o bé no hi ha cap fitxer adjunt o bé "
+"no està relacionat amb aquest document."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -537,8 +537,7 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "Com a variant d'aquest darrer cas, podeu haver configurat el connector de "
 "manera que l'emmagatzematge de fitxers de documents sigui un de la vostra "
@@ -566,18 +565,18 @@ msgstr "Avisos"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
-"La naturalesa de la tecnologia web utilitzada per oferir WordPress significa"
-" que si coneixeu el nom del fitxer que es troba al servidor, podeu accedir-"
-"hi directament."
+"La naturalesa de la tecnologia web utilitzada per oferir WordPress significa "
+"que si coneixeu el nom del fitxer que es troba al servidor, podeu accedir-hi "
+"directament."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "Una característica de disseny d'aquest complement és que només hauríeu de "
 "poder accedir a un document si aneu a través del mateix WordPress."
@@ -655,8 +654,7 @@ msgstr "Anul·la el bloqueig de documents"
 #: includes/class-wp-document-revisions.php:422
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
-"Anul·la el bloqueig d'un altre usuari en un document per permetre'n "
-"l'edició."
+"Anul·la el bloqueig d'un altre usuari en un document per permetre'n l'edició."
 
 #: includes/class-wp-document-revisions.php:433
 msgid "The document post ID to unlock."
@@ -697,8 +695,8 @@ msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
 msgstr ""
-"No tens la capacitat d'edit_documents, possiblement a causa de diversos rols"
-" contradictoris o de l'ús d'un rol personalitzat!"
+"No tens la capacitat d'edit_documents, possiblement a causa de diversos rols "
+"contradictoris o de l'ús d'un rol personalitzat!"
 
 #: includes/class-wp-document-revisions.php:642
 msgid ""
@@ -898,8 +896,10 @@ msgstr "Document desat."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "Document enviat. <a target=\"_blank\" href=\"%s\">Baixa el document</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Document enviat. <a target=\"_blank\" href=\"%s\">Baixa el document</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -921,7 +921,9 @@ msgstr "%1$s a %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
 msgstr ""
 "Esborrany del document actualitzat. <a target=\"_blank\" href=\"%s\">Baixa "
 "el document</a>"
@@ -984,17 +986,15 @@ msgstr "Darrera versió del document"
 msgid "Download"
 msgstr "Descarrega"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
-"Registrat fa <abbr class=\"timestamp\" title=\"%1$s\" "
-"id=\"A%2$s\">%3$s</abbr> per %4$s"
+"Registrat fa <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
+"abbr> per %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1007,9 +1007,9 @@ msgstr "Ús bàsic"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 "Aquesta pantalla permet als usuaris editar documents de manera "
 "col·laborativa i fer un seguiment del seu historial de revisions. Per "
@@ -1019,12 +1019,12 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "Un cop carregat correctament, podeu introduir un missatge de registre de "
-"revisions, assignar un autor al document i descriure el seu estat actual del"
-" flux de treball."
+"revisions, assignar un autor al document i descriure el seu estat actual del "
+"flux de treball."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -1042,25 +1042,25 @@ msgid ""
 "The document description provides a short user-oriented summary of the "
 "document."
 msgstr ""
-"La descripció del document proporciona un breu resum del document orientat a"
-" l'usuari."
+"La descripció del document proporciona un breu resum del document orientat a "
+"l'usuari."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:754
 msgid ""
 "This can be used with the Document List or Latest Documents blocks or their "
 "shortcode or widget equivalents."
 msgstr ""
-"Això es pot utilitzar amb els blocs Llista de documents o Últims documents o"
-" els seus equivalents de codi curt o widget."
+"Això es pot utilitzar amb els blocs Llista de documents o Últims documents o "
+"els seus equivalents de codi curt o widget."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
-"El registre de revisions proporciona un breu resum dels canvis reflectits en"
-" una revisió concreta. Ampliament utilitzat a la comunitat de codi obert, "
+"El registre de revisions proporciona un breu resum dels canvis reflectits en "
+"una revisió concreta. Ampliament utilitzat a la comunitat de codi obert, "
 "proporciona un historial complet del document d'un cop d'ull."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
@@ -1076,16 +1076,16 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "El camp d'estat del flux de treball es pot utilitzar per ajudar els membres "
 "de l'equip a entendre en quina etapa es troba un document dins del flux de "
 "treball d'una organització en particular. El camp és opcional i es pot "
-"personalitzar o consultar fent clic a <code>Estats del flux de "
-"treball</code> a la part esquerra."
+"personalitzar o consultar fent clic a <code>Estats del flux de treball</"
+"code> a la part esquerra."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1101,8 +1101,8 @@ msgid ""
 msgstr ""
 "Per defecte, els documents carregats només són accessibles per als usuaris "
 "que hagin iniciat sessió. Els documents es poden publicar, fent-los "
-"accessibles a tot el món, activant-ne la visibilitat al quadre \"Publica\" a"
-" la cantonada superior dreta. Qualsevol document marcat com a publicat serà "
+"accessibles a tot el món, activant-ne la visibilitat al quadre \"Publica\" a "
+"la cantonada superior dreta. Qualsevol document marcat com a publicat serà "
 "accessible per a qualsevol persona amb l'URL correcta."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
@@ -1124,8 +1124,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
 "Per veure tots els documents en un estat de flux de treball concret, feu "
 "clic a <strong>Estats del flux de treball</strong> al menú de l'esquerra."
@@ -1149,8 +1149,8 @@ msgstr "No podràs penjar cap document."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Els resums de revisió són notes opcionals que es poden emmagatzemar "
@@ -1259,8 +1259,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Genera una nova clau"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1282,19 +1281,19 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
-"El directori de càrrega de documents ha canviat, però és possible que calgui"
-" moure les càrregues existents a la carpeta nova per garantir que continuïn "
+"El directori de càrrega de documents ha canviat, però és possible que calgui "
+"moure les càrregues existents a la carpeta nova per garantir que continuïn "
 "sent accessibles."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:429
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
-"El slug del document ha canviat, però és possible que algunes URL publicades"
-" anteriorment ara no estiguin vàlides."
+"El slug del document ha canviat, però és possible que algunes URL publicades "
+"anteriorment ara no estiguin vàlides."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:447
 #: includes/trait-wp-document-revisions-admin-settings.php:478
@@ -1312,17 +1311,17 @@ msgid ""
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
 "Directori on s'han d'emmagatzemar els documents carregats. El valor per "
-"defecte és a la carpeta <code>wp-content/uploads</code> (o una altra carpeta"
-" de carregaments per defecte definida en un altre lloc), però es pot moure a"
-" una carpeta fora de la carpeta <code>htdocs</code> o "
-"<code>public_html</code> per a més seguretat."
+"defecte és a la carpeta <code>wp-content/uploads</code> (o una altra carpeta "
+"de carregaments per defecte definida en un altre lloc), però es pot moure a "
+"una carpeta fora de la carpeta <code>htdocs</code> o <code>public_html</"
+"code> per a més seguretat."
 
 #. translators: %site_id% is not interpolated and should not be translated.
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
 "Opcionalment, podeu incloure la cadena <code>%site_id%</code> dins de la "
 "ruta per separar els fitxers per lloc."
@@ -1340,14 +1339,12 @@ msgstr ""
 "de l'arxiu de documents). El valor per defecte és <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Elimina l'element d'any i mes /yyyy/mm de l'enllaç permanent del document."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 "Per defecte, l'enllaç permanent del document contindrà l'any i el mes de la "
 "publicació."
@@ -1461,8 +1458,7 @@ msgstr "Escombraries"
 msgid "Somebody"
 msgstr "Algú"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1474,8 +1470,7 @@ msgstr "%1$s: %2$s ha anul·lat el bloqueig de %3$s"
 msgid "Dear %s:"
 msgstr "Benvolgut/da %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1544,8 +1539,8 @@ msgid ""
 "Are you sure you want to restore this revision? If you do, no history will "
 "be lost. This revision will be copied and become the most recent revision."
 msgstr ""
-"Esteu segur que voleu restaurar aquesta revisió? Si ho feu, no es perdrà cap"
-" historial. Aquesta revisió es copiarà i esdevindrà la revisió més recent."
+"Esteu segur que voleu restaurar aquesta revisió? Si ho feu, no es perdrà cap "
+"historial. Aquesta revisió es copiarà i esdevindrà la revisió més recent."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1640,8 +1635,8 @@ msgstr "Mostra l'enllaç Edita"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Mostra l'enllaç d'edició permet que la llista tingui un enllaç a la funció "
@@ -1706,8 +1701,8 @@ msgid ""
 "The query parameters can be very extensive. enter any other parameters "
 "required here."
 msgstr ""
-"Els paràmetres de consulta poden ser molt extensos. Introduïu aquí qualsevol"
-" altre paràmetre necessari."
+"Els paràmetres de consulta poden ser molt extensos. Introduïu aquí qualsevol "
+"altre paràmetre necessari."
 
 #: src/blocks/documents-widget/edit.js:23
 msgid "Latest Documents Settings"

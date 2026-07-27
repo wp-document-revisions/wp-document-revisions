@@ -3,22 +3,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
-"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
+"revisions\n"
+"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: ar\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -219,9 +223,9 @@ msgid ""
 "summaries, or other text-based features."
 msgstr ""
 "عند تحديد هذا الخيار، لن يتم استخراج النص العادي من الملفات المرفوعة لهذا "
-"المستند، وسيتم مسح أي نص تم استخراجه مسبقًا. يُعد هذا الخيار مفيدًا "
-"للمستندات الحساسة التي لا ينبغي تخزين محتوياتها مؤقتًا لأغراض البحث أو "
-"ملخصات الذكاء الاصطناعي أو غيرها من الميزات النصية."
+"المستند، وسيتم مسح أي نص تم استخراجه مسبقًا. يُعد هذا الخيار مفيدًا للمستندات "
+"الحساسة التي لا ينبغي تخزين محتوياتها مؤقتًا لأغراض البحث أو ملخصات الذكاء "
+"الاصطناعي أو غيرها من الميزات النصية."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
 msgid "Do not pre-fill the revision log with AI suggestions"
@@ -361,8 +365,7 @@ msgstr "تم تحميل المرفق مؤخراً للمستند، ولكنه غ
 msgid "Attachment found for document, but not currently linked"
 msgstr "تم العثور على مرفق للمستند، ولكنه غير مرتبط حاليًا"
 
-#. translators: %1$s is the document last modified date, %2$s is its
-#. attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -430,8 +433,8 @@ msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
-"إذا تم الإبلاغ عن خطأ هنا، فستتلقى رسالة \"خطأ 404 - المستند غير موجود\" (أو"
-" ما يعادلها) عند محاولة عرض المستند."
+"إذا تم الإبلاغ عن خطأ هنا، فستتلقى رسالة \"خطأ 404 - المستند غير موجود\" (أو "
+"ما يعادلها) عند محاولة عرض المستند."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
 msgid ""
@@ -446,8 +449,7 @@ msgid ""
 "When they cannot be fixed, the resolution is normally either to delete the "
 "document or to load a new version of the document."
 msgstr ""
-"عندما يتعذر إصلاحها، يكون الحل عادةً إما حذف المستند أو تحميل نسخة جديدة "
-"منه."
+"عندما يتعذر إصلاحها، يكون الحل عادةً إما حذف المستند أو تحميل نسخة جديدة منه."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1190
 msgid ""
@@ -472,8 +474,7 @@ msgstr ""
 msgid ""
 "The identifier of the latest attachment (i.e. the current document) is held "
 "in the post content field."
-msgstr ""
-"يتم الاحتفاظ بمعرف أحدث مرفق (أي المستند الحالي) في حقل محتوى المنشور."
+msgstr "يتم الاحتفاظ بمعرف أحدث مرفق (أي المستند الحالي) في حقل محتوى المنشور."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
@@ -492,8 +493,7 @@ msgstr "لكن إذا كانت هناك أي مرفقات مرفقة بالمس�
 msgid ""
 "This is done by updating the document record so that the content contains "
 "the attachment identifier."
-msgstr ""
-"يتم ذلك عن طريق تحديث سجل المستند بحيث يحتوي المحتوى على مُعرّف المرفق."
+msgstr "يتم ذلك عن طريق تحديث سجل المستند بحيث يحتوي المحتوى على مُعرّف المرفق."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1197
 msgid "There is no attachment associated with the document."
@@ -504,8 +504,7 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"يوجد مُعرّف في المستند، ولكن إما أنه لا يوجد مرفق أو أنه لا يرتبط بهذا "
-"المستند."
+"يوجد مُعرّف في المستند، ولكن إما أنه لا يوجد مرفق أو أنه لا يرتبط بهذا المستند."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -516,8 +515,7 @@ msgstr "يوجد مُعرّف يرتبط بمرفق مستند، ولكن لا �
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media "
-"store."
+"document file store is one of your choosing and not the standard Media store."
 msgstr ""
 "كأحد أشكال هذه الحالة الأخيرة، ربما تكون قد قمت بإعداد المكون الإضافي بحيث "
 "يكون مخزن ملفات المستندات هو أحد اختياراتك وليس مخزن الوسائط القياسي."
@@ -544,8 +542,8 @@ msgstr "تحذيرات"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you"
-" know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you "
+"know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "طبيعة تقنية الويب المستخدمة في تقديم ووردبريس تعني أنه إذا كنت تعرف اسم "
@@ -553,8 +551,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access"
-" a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access "
+"a document if you go via WordPress itself."
 msgstr ""
 "من خصائص تصميم هذه الإضافة أنه لا يمكنك الوصول إلى المستند إلا من خلال "
 "ووردبريس نفسه."
@@ -871,7 +869,8 @@ msgstr "تم حفظ المستند."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "تم إرسال المستند. <a target=\"_blank\" href=\"%s\">تنزيل المستند</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -894,8 +893,11 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr "تم تحديث مسودة المستند. <a target=\"_blank\" href=\"%s\">تنزيل المستند</a>"
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
+"a>"
+msgstr ""
+"تم تحديث مسودة المستند. <a target=\"_blank\" href=\"%s\">تنزيل المستند</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
 #: includes/trait-wp-document-revisions-admin-editor.php:979
@@ -954,14 +956,12 @@ msgstr "أحدث نسخة من المستند"
 msgid "Download"
 msgstr "تحميل"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post
-#. modified date in time format, %3$s is how long ago the post was modified,
-#. %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
-" ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"ago by %4$s"
 msgstr ""
 "تم تسجيل الوصول قبل <abbr class=\"timestamp\" title=\"%1$s\" "
 "id=\"A%2$s\">%3$s</abbr> بواسطة %4$s"
@@ -977,15 +977,15 @@ msgstr "الاستخدام الأساسي"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter"
-" a description, and click <code>Upload New Version</code> and select the "
-"file from your computer."
+"revision history. To begin, enter a title for the document, optionally enter "
+"a description, and click <code>Upload New Version</code> and select the file "
+"from your computer."
 msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the"
-" document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the "
+"document an author, and describe its current workflow state."
 msgstr ""
 "بمجرد تحميل الملف بنجاح، يمكنك إدخال رسالة سجل المراجعة، وتعيين مؤلف "
 "للمستند، ووصف حالة سير العمل الحالية."
@@ -1016,12 +1016,12 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a"
-" comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a "
+"comprehensive history of the document at a glance."
 msgstr ""
-"يُقدّم سجلّ المراجعات ملخصًا موجزًا للتغييرات التي طرأت على مراجعة مُحدّدة. "
-"ويُستخدم على نطاق واسع في مجتمع المصادر المفتوحة، حيث يُوفّر تاريخًا شاملاً "
-"للوثيقة بنظرة سريعة."
+"يُقدّم سجلّ المراجعات ملخصًا موجزًا للتغييرات التي طرأت على مراجعة مُحدّدة. ويُستخدم "
+"على نطاق واسع في مجتمع المصادر المفتوحة، حيث يُوفّر تاريخًا شاملاً للوثيقة بنظرة "
+"سريعة."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
 msgid ""
@@ -1032,9 +1032,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what"
-" stage a document sits within a particular organization&quot;s workflow. The"
-" field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what "
+"stage a document sits within a particular organization&quot;s workflow. The "
+"field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 
@@ -1050,10 +1050,10 @@ msgid ""
 "Any document marked as published will be accessible to anyone with the "
 "proper URL."
 msgstr ""
-"بشكل افتراضي، لا يمكن الوصول إلى المستندات المرفوعة إلا للمستخدمين المسجلين."
-" يمكن نشر المستندات، ما يجعلها متاحة للجميع، عن طريق تفعيل/إلغاء تفعيل خيار "
-"\"نشر\" في الزاوية العلوية اليمنى. أي مستند مُعلّم بأنه منشور سيكون متاحًا "
-"لأي شخص لديه الرابط الصحيح."
+"بشكل افتراضي، لا يمكن الوصول إلى المستندات المرفوعة إلا للمستخدمين المسجلين. "
+"يمكن نشر المستندات، ما يجعلها متاحة للجميع، عن طريق تفعيل/إلغاء تفعيل خيار "
+"\"نشر\" في الزاوية العلوية اليمنى. أي مستند مُعلّم بأنه منشور سيكون متاحًا لأي "
+"شخص لديه الرابط الصحيح."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
@@ -1072,11 +1072,11 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow"
-" States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow "
+"States</strong> in the menu on the left."
 msgstr ""
-"لعرض جميع المستندات في حالة سير عمل معينة، انقر فوق <strong>حالات سير "
-"العمل</strong> في القائمة الموجودة على اليسار."
+"لعرض جميع المستندات في حالة سير عمل معينة، انقر فوق <strong>حالات سير العمل</"
+"strong> في القائمة الموجودة على اليسار."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963
@@ -1095,8 +1095,8 @@ msgstr "لن تتمكن من تحميل أي مستندات."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that"
-" allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that "
+"allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "ملخصات المراجعة هي ملاحظات اختيارية يتم تخزينها مع هذه المراجعة، مما يسمح "
@@ -1135,16 +1135,16 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"سيؤدي استعادة الإصدارات السابقة إلى استعادة هذا الوصف أيضًا.<br/>إذا كنت "
-"ترغب في استخدام الإصدار الحالي، فانسخه أولاً."
+"سيؤدي استعادة الإصدارات السابقة إلى استعادة هذا الوصف أيضًا.<br/>إذا كنت ترغب "
+"في استخدام الإصدار الحالي، فانسخه أولاً."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
 "You currently have this file checked out. No other user can edit this "
 "document so long as you remain on this page."
 msgstr ""
-"هذا الملف مُستعار حاليًا. لا يمكن لأي مستخدم آخر تعديل هذا المستند طالما "
-"بقيت على هذه الصفحة."
+"هذا الملف مُستعار حاليًا. لا يمكن لأي مستخدم آخر تعديل هذا المستند طالما بقيت "
+"على هذه الصفحة."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1187
 msgid "Document Owner"
@@ -1204,8 +1204,7 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "إنشاء مفتاح جديد"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
-#. post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1225,8 +1224,8 @@ msgstr "مجلد المستندات غير قابل للكتابة. يرجى ا�
 
 #: includes/trait-wp-document-revisions-admin-settings.php:400
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved"
-" to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved "
+"to the new folder to ensure they remain accessible."
 msgstr ""
 "تم تغيير دليل تحميل المستندات، ولكن قد يلزم نقل التحميلات الموجودة إلى "
 "المجلد الجديد لضمان بقاء إمكانية الوصول إليها."
@@ -1261,11 +1260,11 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-settings.php:570
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path"
-" to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path "
+"to separate files by site."
 msgstr ""
-"يمكنك اختيارياً تضمين السلسلة <code>%site_id%</code> ضمن المسار لفصل الملفات"
-" حسب الموقع."
+"يمكنك اختيارياً تضمين السلسلة <code>%site_id%</code> ضمن المسار لفصل الملفات "
+"حسب الموقع."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:585
 msgid "example-document-title"
@@ -1280,13 +1279,11 @@ msgstr ""
 "(وأرشيف المستندات). القيمة الافتراضية هي <code>documents</code>."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid ""
-"Remove the year and month element /yyyy/mm from the document permalink."
+msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "قم بإزالة عنصر السنة والشهر /yyyy/mm من الرابط الدائم للمستند."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid ""
-"By default the document permalink will contain the post year and month."
+msgid "By default the document permalink will contain the post year and month."
 msgstr "بشكل افتراضي، سيحتوي الرابط الدائم للمستند على سنة وشهر النشر."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:606
@@ -1395,8 +1392,7 @@ msgstr "نفاية"
 msgid "Somebody"
 msgstr "شخص ما"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
-#. the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1408,8 +1404,7 @@ msgstr "%1$s: %2$s قد تجاوز قفلك على %3$s"
 msgid "Dear %s:"
 msgstr ""
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
-#. the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1572,13 +1567,13 @@ msgstr "إظهار رابط التعديل"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice"
-" made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice "
+"made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "يُتيح خيار \"إظهار رابط التحرير\" إضافة رابط إلى وظيفة التحرير في القائمة. "
-"سيؤدي اختيار هذا الخيار إلى تجاوز الإعدادات المُسبقة للنظام. ولن تظهر "
-"الروابط إلا إذا كان بإمكان المستخدم تحرير المستند."
+"سيؤدي اختيار هذا الخيار إلى تجاوز الإعدادات المُسبقة للنظام. ولن تظهر الروابط "
+"إلا إذا كان بإمكان المستخدم تحرير المستند."
 
 #: src/blocks/documents-shortcode/edit.js:175
 msgid "Default"
@@ -1637,8 +1632,7 @@ msgstr "المعلمات الحرة"
 msgid ""
 "The query parameters can be very extensive. enter any other parameters "
 "required here."
-msgstr ""
-"قد تكون معلمات الاستعلام واسعة النطاق. أدخل أي معلمات أخرى مطلوبة هنا."
+msgstr "قد تكون معلمات الاستعلام واسعة النطاق. أدخل أي معلمات أخرى مطلوبة هنا."
 
 #: src/blocks/documents-widget/edit.js:23
 msgid "Latest Documents Settings"
@@ -1665,8 +1659,8 @@ msgid ""
 "Under certain conditons WordPress can generate an image for Page 1 of PDF "
 "documents. If created this will be used as the Featured Image."
 msgstr ""
-"في ظل ظروف معينة، يمكن لـ WordPress إنشاء صورة للصفحة الأولى من مستندات PDF."
-" إذا تم إنشاؤها، فسيتم استخدامها كصورة مميزة."
+"في ظل ظروف معينة، يمكن لـ WordPress إنشاء صورة للصفحة الأولى من مستندات PDF. "
+"إذا تم إنشاؤها، فسيتم استخدامها كصورة مميزة."
 
 #: src/blocks/documents-widget/edit.js:98
 msgid "Show author name?"
