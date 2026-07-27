@@ -2,6 +2,12 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.2.0
+
+* The classic-editor admin and block-editor sidebar (document upload and revision log) interface strings are now fully translatable via WordPress's JavaScript internationalization. Previously a number of the plugin's script-side strings could not be translated and always appeared in English regardless of the site language. (#628)
+* Add or refresh translations for 31 languages covering the newly-translatable admin and block-editor strings. (#628)
+* Under the hood: the plugin's admin JavaScript is now built as ES modules through `@wordpress/scripts`, with static type-checking and expanded unit and component test coverage in CI. No change to functionality.
+
 ### 5.1.3
 
 * Fix stale document data after consecutive revisions are merged on save: the document's object cache is now cleared correctly (previously the cache was keyed on the revision excerpt text rather than the document ID, so it was never invalidated). (#613)
