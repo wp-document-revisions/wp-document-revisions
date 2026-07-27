@@ -4,10 +4,10 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 5.3.0
 
-* The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list.
-* Add a first-run prompt on the Documents screen that points new users (and Live Preview visitors) to add their first document, replacing the blank empty-state table.
-* Occasionally invite established users to leave a WordPress.org review — shown only after real, successful use, dismissible, and never repeated once dismissed.
-* Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities.
+* The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
+* Add a first-run prompt on the Documents screen that points new users (and Live Preview visitors) to add their first document, replacing the blank empty-state table. (#632)
+* Occasionally invite established users to leave a WordPress.org review — shown only after real, successful use, dismissible, and never repeated once dismissed. (#632)
+* Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
 
 ### 5.2.0
 
