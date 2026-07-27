@@ -94,6 +94,9 @@ jobs:
                   fi
                   echo "OK: migrated strings are extracted from the admin scripts."
 
+            - name: Install gettext (msgmerge)
+              run: sudo apt-get update && sudo apt-get install -y gettext
+
             - name: Diagnostic — script-translation JSON hash vs enqueued path
               run: |
                   set -euo pipefail
