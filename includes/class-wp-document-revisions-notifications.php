@@ -167,7 +167,7 @@ class WP_Document_Revisions_Notifications {
 	 * @param int $doc_id    the document ID.
 	 * @param int $attach_id the attachment ID of the new revision.
 	 */
-	public function notify_document_saved( int $doc_id, int $attach_id ): void {
+	public function notify_document_saved( int $doc_id, int $attach_id ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( ! $this->enabled() ) {
 			return;
 		}
