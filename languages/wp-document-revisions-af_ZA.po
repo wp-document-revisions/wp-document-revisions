@@ -3,908 +3,1859 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-27T02:32:14+00:00\n"
+"PO-Revision-Date: 2022-01-24 22:19\n"
+"Language-Team: Afrikaans\n"
+"Language: af_ZA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
+"X-Crowdin-File-ID: 33\n"
+"X-Crowdin-Language: af\n"
+"X-Crowdin-Project: wordpress-document-revisions\n"
+"X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: wordpress-document-revisions\n"
-"X-Crowdin-Project-ID: 290225\n"
-"X-Crowdin-Language: af\n"
-"X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
-"X-Crowdin-File-ID: 33\n"
-"Language-Team: Afrikaans\n"
-"Language: af_ZA\n"
-"PO-Revision-Date: 2022-01-24 22:19\n"
 
-#. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:170
-msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:171
-msgid "Custom field updated."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:172
-msgid "Custom field deleted."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:173
-msgid "Document updated."
-msgstr ""
-
-#. translators: %s is the revision ID.
-#: includes/class-wp-document-revisions-admin.php:176
-msgid "Document restored to revision from %s"
-msgstr ""
-
-#. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:179
-msgid "Document published. <a href=\"%s\">Download document</a>"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:180
-msgid "Document saved."
-msgstr ""
-
-#. translators: %s is the download link.
-#: includes/class-wp-document-revisions-admin.php:182
-msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
-
-#. translators: %1$s is the date, %2$s is the preview link.
-#: includes/class-wp-document-revisions-admin.php:184
-msgid "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
-msgstr ""
-
-#. translators: %s is the link to download the document.
-#: includes/class-wp-document-revisions-admin.php:186
-msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:237
-msgid "Basic Usage"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:238
-msgid "This screen allows users to collaboratively edit documents and track their revision history. To begin, enter a title for the document, optionally enter a description, and click <code>Upload New Version</code> and select the file from your computer."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:239
-msgid "Once successfully uploaded, you can enter a revision log message, assign the document an author, and describe its current workflow state."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:240
-msgid "When done, simply click <code>Update</code> to save your changes"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:241, includes/class-wp-document-revisions-admin.php:346
-msgid "Document Description"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:242
-msgid "The document description provides a short user-oriented summary of the document."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:243
-msgid "This can be used with the Document List or Latest Documents blocks or their shortcode or widget equivalents."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:244, includes/class-wp-document-revisions-admin.php:292
-msgid "Revision Log"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:245
-msgid "The revision log provides a short summary of the changes reflected in a particular revision. Used widely in the open-source community, it provides a comprehensive history of the document at a glance."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:246
-msgid "You can download and view previous versions of the document by clicking the timestamp in the revision log. You can also restore revisions by clicking the <code>restore</code> button beside the revision."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:247, includes/class-wp-document-revisions-admin.php:296
-msgid "Workflow State"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:248
-msgid "The workflow state field can be used to help team members understand at what stage a document sits within a particular organization&quot;s workflow. The field is optional, and can be customized or queried by clicking <code>Workflow States</code> on the left-hand side."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:249
-msgid "Publishing Documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:250
-msgid "By default, uploaded documents are only accessible to logged in users. Documents can be published, thus making them accessible to the world, by toggling their visibility in the \"Publish\" box in the top right corner. Any document marked as published will be accessible to anyone with the proper URL."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:253, includes/class-wp-document-revisions.php:318
-msgid "Documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:254
-msgid "Below is a list of all documents to which you have access. Click the document title to edit the document or download the latest version."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:255
-msgid "To add a new document, click <strong>Add Document</strong> on the left-hand side."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:256
-msgid "To view all documents at a particular workflow state, click <strong>Workflow States</strong> in the menu on the left."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:288, includes/class-wp-document-revisions-admin.php:559
-msgid "Revision Summary"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:289
-msgid "Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:304, includes/class-wp-document-revisions-admin.php:1193, includes/class-wp-document-revisions-admin.php:1428
-msgid "Owner"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:485, includes/class-wp-document-revisions-admin.php:477
-msgid "You do not have the upload_files capability!"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:487
-msgid "You will not be able to upload any documents."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:479
-msgid "You will not be able to upload documents though you may be able change some attributes."
-msgstr ""
-
-#. translators: %s is the user that holds the document lock.
-#: includes/class-wp-document-revisions-admin.php:516
-msgid "%s has prevented other users from making changes."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:519
-msgid "<br />If you believe this is in error you can <a href=\"#\" id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:525
-msgid "Upload Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:526
-msgid "Upload New Version"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:534
-msgid "Latest Version of the Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:535
-msgid "Download"
-msgstr ""
-
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-#: includes/class-wp-document-revisions-admin.php:541
-msgid "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> ago by %4$s"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:561
-msgid "Revision summaries are optional notes to store along with this revision that allow other users to quickly and easily see what changes you made without needing to open the actual file."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:579
-msgid "Modified"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:580
-msgid "User"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:581
-msgid "Summary"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:585
-msgid "Actions"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:632
-msgid "Restore"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:639
-msgid "RSS Feed"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:689, includes/class-wp-document-revisions-admin.php:766
-msgid "Document Upload Directory"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:690, includes/class-wp-document-revisions-admin.php:773
-msgid "Document Slug"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:721
-msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:750
-msgid "Document slug changed, but some previously published URLs may now be broken."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:763
-msgid "Document Settings"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:797, includes/class-wp-document-revisions-admin.php:827, includes/class-wp-document-revisions.php:2112
-msgid "Not authorized"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:885
-msgid "Directory in which to store uploaded documents. The default is in your <code>wp_content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
-msgstr ""
-
-#. translators: %site_id% is not interpolated and should not be translated.
-#: includes/class-wp-document-revisions-admin.php:893
-msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:907
-msgid "example-document-title"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:911
-msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:963
-msgid "You currently have this file checked out. No other user can edit this document so long as you remain on this page."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:978
-msgid "Feed Privacy"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:981
-msgid "Secret Feed Key"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:984
-msgid "To protect your privacy, you need to append a key to feeds for use in feed readers."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:986
-msgid "Generate New Key"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1117
-msgid "Maximum number of revisions reached for this document. Making changes will delete data."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1108
-msgid "More revisions exist for this document than is permitted. Making changes will delete data."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1095
-msgid "Maximum number of document revisions set to zero using a filter. Check your configuration."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1139
-msgid "All workflow states"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1141
-msgid "All statuses"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1157
-msgid "All owners"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1212
-msgid "Currently Editing"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1259
-msgid "Current State"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1429
-msgid "Document Owner"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1471
-msgid "Are you sure you want to restore this revision? If you do, no history will be lost. This revision will be copied and become the most recent revision."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1473
-msgid "File uploaded successfully. Add a revision summary below (optional) and press <strong>Update</strong> to save your changes."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1474
-msgid "After you have saved your document in your office software, <a href=\"#\" onClick=\"location.reload();\">reload this page</a> to see your changes."
-msgstr ""
-
-#. translators: %s is the title of the document.
-#: includes/class-wp-document-revisions-admin.php:1476
-msgid "Your lock on the document %s has been overridden. Any changes will be lost."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1477
-msgid "An error has occurred, please try reloading the page."
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1478
-msgid "Lost Document Lock"
-msgstr ""
-
-#. translators: %d is the numeric minutes, when singular.
-#. translators: %d is the numeric minutes, when plural.
-#: includes/class-wp-document-revisions-admin.php:1481, includes/class-wp-document-revisions-admin.php:1483
-msgid "%d mins"
-msgstr ""
-
-#. translators: %d is the numeric hour, when singular.
-#: includes/class-wp-document-revisions-admin.php:1485
-msgid "%d hour"
-msgstr ""
-
-#. translators: %d is the numeric hour, when plural.
-#: includes/class-wp-document-revisions-admin.php:1487
-msgid "%d hours"
-msgstr ""
-
-#. translators: %d is the numeric day, when singular.
-#: includes/class-wp-document-revisions-admin.php:1489
-msgid "%d day"
-msgstr ""
-
-#. translators: %d is the numeric days, when plural.
-#: includes/class-wp-document-revisions-admin.php:1491
-msgid "%d days"
-msgstr ""
-
-#: includes/class-wp-document-revisions-admin.php:1774, includes/class-wp-document-revisions-recently-revised-widget.php:36, includes/class-wp-document-revisions-recently-revised-widget.php:39
-msgid "Recently Revised Documents"
-msgstr ""
-
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
-#: includes/class-wp-document-revisions-admin.php:1818
-msgid "%1$s ago by %2$s [%3$s]"
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:118, includes/class-wp-document-revisions-front-end.php:844, includes/class-wp-document-revisions-front-end.php:997
-msgid "You are not authorized to read this data"
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:124, includes/class-wp-document-revisions-front-end.php:1002
-msgid "This is not a valid document."
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:162
-msgid "ago by"
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:401
-msgid "Edit"
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:420, includes/class-wp-document-revisions-recently-revised-widget.php:120
-msgid "No attachment available."
-msgstr ""
-
-#: includes/class-wp-document-revisions-front-end.php:495
+#. Plugin Name of the plugin
+#: wp-document-revisions.php
+#: includes/class-wp-document-revisions-front-end.php:564
 msgid "WP Document Revisions"
-msgstr ""
+msgstr "WP Dokument Hersienings"
 
-#: includes/class-wp-document-revisions-front-end.php:773
+#. Plugin URI of the plugin
+#: wp-document-revisions.php
+msgid ""
+"http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-"
+"version-control-wordpress/"
+msgstr ""
+"http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-"
+"version-control-wordpress/"
+
+#. Description of the plugin
+#: wp-document-revisions.php
+msgid ""
+"A document management and version control plugin for WordPress that allows "
+"teams of any size to collaboratively edit files and manage their workflow."
+msgstr ""
+"'n Dokumentbestuur- en weergawebeheer-inprop vir WordPress wat spanne van "
+"enige grootte in staat stel om saam lêers te wysig en hul werkvloei te "
+"bestuur."
+
+#. Author of the plugin
+#: wp-document-revisions.php
+msgid "Ben Balter"
+msgstr "Ben Balter"
+
+#. Author URI of the plugin
+#: wp-document-revisions.php
+msgid "https://ben.balter.com"
+msgstr "https://ben.balter.com"
+
+#: includes/class-wp-document-revisions-ai-summary-rest.php:126
+msgid "Insufficient permission to read this document."
+msgstr "Onvoldoende toestemming om hierdie dokument te lees."
+
+#: includes/class-wp-document-revisions-ai-summary-rest.php:149
+msgid "Insufficient permission to mark this summary reviewed."
+msgstr "Onvoldoende toestemming om hierdie opsomming as hersien te merk."
+
+#: includes/class-wp-document-revisions-ai-summary-rest.php:172
+msgid "Insufficient permission to read this document revision diff."
+msgstr ""
+"Onvoldoende toestemming om hierdie dokument se hersieningsverskil te lees."
+
+#: includes/class-wp-document-revisions-ai-summary-rest.php:289
+msgid "No summary has been generated for this revision yet."
+msgstr "Geen opsomming is nog vir hierdie hersiening gegenereer nie."
+
+#: includes/class-wp-document-revisions-front-end.php:135
+#: includes/class-wp-document-revisions-front-end.php:795
+#: includes/class-wp-document-revisions-front-end.php:950
+msgid "You are not authorized to read this data"
+msgstr "Jy is nie gemagtig om hierdie data te lees nie"
+
+#: includes/class-wp-document-revisions-front-end.php:141
+#: includes/class-wp-document-revisions-front-end.php:955
+msgid "This is not a valid document."
+msgstr "Dit is nie 'n geldige dokument nie."
+
+#: includes/class-wp-document-revisions-front-end.php:164
+#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-recently-revised-widget.php:121
+msgid "(PDF)"
+msgstr "(PDF)"
+
+#: includes/class-wp-document-revisions-front-end.php:189
+msgid "ago by"
+msgstr "gelede deur"
+
+#: includes/class-wp-document-revisions-front-end.php:448
+msgid "Edit"
+msgstr "Wysig"
+
+#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-recently-revised-widget.php:129
+msgid "No thumbnail available."
+msgstr "Geen miniatuurbeeld beskikbaar nie."
+
+#: includes/class-wp-document-revisions-front-end.php:720
 msgid "No selection"
-msgstr ""
+msgstr "Geen seleksie nie"
 
-#: includes/class-wp-document-revisions-front-end.php:882
+#: includes/class-wp-document-revisions-front-end.php:834
 msgid " Taxonomy details in this block have changed."
-msgstr ""
+msgstr "Taksonomiebesonderhede in hierdie blok het verander."
 
-#: includes/class-wp-document-revisions-front-end.php:913, includes/class-wp-document-revisions-front-end.php:929, includes/class-wp-document-revisions-front-end.php:945
+#: includes/class-wp-document-revisions-front-end.php:869
+#: includes/class-wp-document-revisions-front-end.php:883
+#: includes/class-wp-document-revisions-front-end.php:897
 msgid " Taxonomy term does not belong to this taxonomy."
-msgstr ""
+msgstr "Taksonomieterm behoort nie tot hierdie taksonomie nie."
 
-#: includes/class-wp-document-revisions-manage-rest.php:96
+#: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
-msgstr ""
+msgstr "Jammer, jy mag nie dokumente wysig nie."
 
-#: includes/class-wp-document-revisions-manage-rest.php:107, includes/class-wp-document-revisions-manage-rest.php:202
+#: includes/class-wp-document-revisions-manage-rest.php:123
 msgid "Sorry, you are not allowed to view revisions."
-msgstr ""
+msgstr "Jammer, jy mag nie hersienings sien nie."
 
-#: includes/class-wp-document-revisions-manage-rest.php:118
+#: includes/class-wp-document-revisions-manage-rest.php:134
 msgid "Sorry, you are not allowed to read documents."
-msgstr ""
+msgstr "Jammer, jy mag nie dokumente lees nie."
 
-#: includes/class-wp-document-revisions-manage-rest.php:145
+#: includes/class-wp-document-revisions-manage-rest.php:149
+msgid "Sorry, invalid REST call"
+msgstr "Jammer, ongeldige REST-oproep"
+
+#: includes/class-wp-document-revisions-manage-rest.php:156
 msgid "Sorry, you are only allowed to use GET method"
-msgstr ""
+msgstr "Jammer, jy mag slegs die GET-metode gebruik"
 
-#: includes/class-wp-document-revisions-manage-rest.php:138
-msgid "Sorry, invalid PUT call"
-msgstr ""
+#: includes/class-wp-document-revisions-manage-rest.php:260
+msgid "Sorry, you are not allowed to view this revision."
+msgstr "Jammer, jy mag nie hierdie hersiening sien nie."
 
-#: includes/class-wp-document-revisions-manage-rest.php:239, includes/class-wp-document-revisions-manage-rest.php:240, includes/class-wp-document-revisions-manage-rest.php:243, includes/class-wp-document-revisions-manage-rest.php:244
+#: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
-#: includes/class-wp-document-revisions-recently-revised-widget.php:98
+#: includes/class-wp-document-revisions-recently-revised-widget.php:113
+#, php-format
 msgid "%1$s ago by %2$s"
-msgstr ""
+msgstr "%1$s gelede deur %2$s"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:98
+#. translators: %1$s is the time ago in words, %2$s is the author.
+#: includes/class-wp-document-revisions-recently-revised-widget.php:113
+#, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s gelede"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:169
+#: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:173
+#: includes/class-wp-document-revisions-recently-revised-widget.php:205
 msgid "Number of Posts:"
-msgstr ""
+msgstr "Aantal plasings:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:177
+#: includes/class-wp-document-revisions-recently-revised-widget.php:209
 msgid "Posts to Show:"
-msgstr ""
+msgstr "Plasings om te wys:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:184
+#: includes/class-wp-document-revisions-recently-revised-widget.php:216
 msgid "Display Featured Image:"
-msgstr ""
+msgstr "Wys Uitgeligte Prent:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:185, includes/class-wp-document-revisions-recently-revised-widget.php:189, includes/class-wp-document-revisions-recently-revised-widget.php:193, includes/class-wp-document-revisions-recently-revised-widget.php:197
+#: includes/class-wp-document-revisions-recently-revised-widget.php:217
+#: includes/class-wp-document-revisions-recently-revised-widget.php:221
+#: includes/class-wp-document-revisions-recently-revised-widget.php:225
+#: includes/class-wp-document-revisions-recently-revised-widget.php:229
+#: includes/class-wp-document-revisions-recently-revised-widget.php:233
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:188
+#: includes/class-wp-document-revisions-recently-revised-widget.php:220
 msgid "Display Document Description:"
-msgstr ""
+msgstr "Vertoon dokumentbeskrywing:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:192
+#: includes/class-wp-document-revisions-recently-revised-widget.php:224
 msgid "Display Document Author:"
-msgstr ""
+msgstr "Wys dokument outeur:"
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:196
+#: includes/class-wp-document-revisions-recently-revised-widget.php:228
+msgid "Display PDF File Indication:"
+msgstr "Wys PDF-lêer aanduiding:"
+
+#: includes/class-wp-document-revisions-recently-revised-widget.php:232
 msgid "Open documents in new tab:"
-msgstr ""
+msgstr "Maak dokumente oop in 'n nuwe oortjie:"
 
-#: includes/class-wp-document-revisions-validate-structure.php:214, includes/class-wp-document-revisions-validate-structure.php:240, includes/class-wp-document-revisions-validate-structure.php:280, includes/class-wp-document-revisions-validate-structure.php:307
+#: includes/class-wp-document-revisions-recently-revised-widget.php:374
+#: includes/class-wp-document-revisions-recently-revised-widget.php:377
+#: includes/trait-wp-document-revisions-admin-settings.php:273
+msgid "Recently Revised Documents"
+msgstr "Onlangs Hersiene Dokumente"
+
+#: includes/class-wp-document-revisions-text-extraction-opt-out.php:197
+msgid "Text Extraction & AI"
+msgstr "Teksonttrekking en KI"
+
+#: includes/class-wp-document-revisions-text-extraction-opt-out.php:225
+msgid "Skip text extraction for this document"
+msgstr "Slaan teksonttrekking vir hierdie dokument oor"
+
+#: includes/class-wp-document-revisions-text-extraction-opt-out.php:230
+msgid ""
+"When checked, plain text will not be extracted from uploaded files for this "
+"document, and any previously extracted text will be cleared. Useful for "
+"sensitive documents whose contents should not be cached for search, AI "
+"summaries, or other text-based features."
+msgstr ""
+"Wanneer dit gemerk is, sal gewone teks nie uit opgelaaide lêers vir hierdie "
+"dokument onttrek word nie, en enige voorheen onttrekte teks sal uitgevee "
+"word. Nuttig vir sensitiewe dokumente waarvan die inhoud nie vir soektog, "
+"KI-opsommings of ander teksgebaseerde funksies gekas moet word nie."
+
+#: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
+msgid "Do not pre-fill the revision log with AI suggestions"
+msgstr "Moenie die hersieningslogboek vooraf met KI-voorstelle invul nie"
+
+#: includes/class-wp-document-revisions-text-extraction-opt-out.php:250
+msgid ""
+"When checked, AI-generated revision summaries will not be inserted into the "
+"revision log field when a new file is uploaded. Extraction (and summary "
+"generation, if enabled) still run — only the editor pre-fill is suppressed."
+msgstr ""
+"Wanneer dit gemerk is, sal KI-gegenereerde hersieningsopsommings nie in die "
+"hersieningslogveld ingevoeg word wanneer 'n nuwe lêer opgelaai word nie. "
+"Onttrekking (en opsommingsgenerering, indien geaktiveer) loop steeds — slegs"
+" die redigeerder se voorafinvul word onderdruk."
+
+#: includes/class-wp-document-revisions-validate-structure.php:216
+msgid "Validate Structure"
+msgstr "Valideer Struktuur"
+
+#: includes/class-wp-document-revisions-validate-structure.php:280
+#: includes/class-wp-document-revisions-validate-structure.php:317
+#: includes/class-wp-document-revisions-validate-structure.php:365
+#: includes/class-wp-document-revisions-validate-structure.php:420
+#: includes/class-wp-document-revisions-validate-structure.php:459
 msgid "Inconsistent data sent to Interface"
-msgstr ""
+msgstr "Inkonsekwente data gestuur na Interface"
 
-#: includes/class-wp-document-revisions-validate-structure.php:392, includes/class-wp-document-revisions-validate-structure.php:398
-msgid "Invalid Document Internal Structures"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:393
-msgid "No invalid documents found."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:404
-msgid "ID"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:405
-msgid "Type"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:406
-msgid "Title"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:407
-msgid "Message"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:408, includes/class-wp-document-revisions-validate-structure.php:431
-msgid "Fix"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:439
-msgid "Error"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:439
-msgid "Warning"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:450
-msgid "See the Help pulldown for detailed Help information"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:506
-msgid "There is no attachment record held for document"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:525
-msgid "Attachment found for document, but not currently linked"
-msgstr ""
-
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
-#: includes/class-wp-document-revisions-validate-structure.php:527, includes/class-wp-document-revisions-validate-structure.php:544
-msgid "[Modified Date: Document - %1$s, Attachment - %2$s]"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:542
-msgid "Document links to invalid attachment. An attachment exists and can replace link"
-msgstr ""
-
+#: includes/class-wp-document-revisions-validate-structure.php:593
 #: includes/class-wp-document-revisions-validate-structure.php:599
-msgid "Document links to an invalid attachment record"
-msgstr ""
+msgid "Invalid Document Internal Structures"
+msgstr "Ongeldige Dokument Interne Strukture"
+
+#: includes/class-wp-document-revisions-validate-structure.php:594
+msgid "No invalid documents found."
+msgstr "Geen ongeldige dokumente gevind nie."
+
+#: includes/class-wp-document-revisions-validate-structure.php:601
+msgid "Internal structure"
+msgstr "Interne struktuur"
+
+#: includes/class-wp-document-revisions-validate-structure.php:604
+msgid "No invalid internal linkages found."
+msgstr "Geen ongeldige interne skakels gevind nie."
+
+#: includes/class-wp-document-revisions-validate-structure.php:611
+msgid "Permalink / guid"
+msgstr "Permanente skakel / gids"
+
+#: includes/class-wp-document-revisions-validate-structure.php:614
+msgid "No invalid permalinks found."
+msgstr "Geen ongeldige permanente skakels gevind nie."
 
 #: includes/class-wp-document-revisions-validate-structure.php:617
-msgid "Document attachment exists but related file not in document location"
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:846
+msgid "The guid is not the expected \"ugly\" permalink"
+msgstr "Die gids is nie die verwagte \"lelike\" permanente skakel nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:625
-msgid "Document attachment exists but related file not found"
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:619
+#: includes/class-wp-document-revisions-validate-structure.php:848
+#: includes/class-wp-document-revisions-validate-structure.php:912
+msgid "The guid does not contain the site URL."
+msgstr "Die gids bevat nie die webwerf-URL nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:637
-msgid "Document attachment does not appear to be md5 encoded"
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:621
+#: includes/class-wp-document-revisions-validate-structure.php:850
+#: includes/class-wp-document-revisions-validate-structure.php:910
+msgid "The guid does not contain the correct date."
+msgstr "Die gids bevat nie die korrekte datum nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:682
-msgid "Overview"
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:623
+#: includes/class-wp-document-revisions-validate-structure.php:852
+msgid "The guid does not contain the document name."
+msgstr "Die gids bevat nie die dokumentnaam nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:683
-msgid "This tool allows you to find errors in the internal structure of documents."
+#: includes/class-wp-document-revisions-validate-structure.php:624
+#: includes/class-wp-document-revisions-validate-structure.php:853
+msgid "The guid does not reflect the complete document permalink."
 msgstr ""
+"Die gids weerspieël nie die volledige dokument se permanente skakel nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:684
-msgid "It will review all documents that you are able to edit."
+#: includes/class-wp-document-revisions-validate-structure.php:627
+msgid "The guid field is meant to be the unique access path."
+msgstr "Die guid-veld is bedoel om die unieke toegangspad te wees."
+
+#: includes/class-wp-document-revisions-validate-structure.php:628
+msgid ""
+"It is recommended not to change it, but can be changed to a valid value."
 msgstr ""
+"Dit word aanbeveel om dit nie te verander nie, maar dit kan na 'n geldige "
+"waarde verander word."
 
-#: includes/class-wp-document-revisions-validate-structure.php:685
-msgid "This version does not address revision data."
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:629
+msgid "They can be displayed or hidden as wished by checking the options:"
+msgstr "Hulle kan na wense vertoon of versteek word deur die opsies te merk:"
 
-#: includes/class-wp-document-revisions-validate-structure.php:686
-msgid "Two types of issues can be identified - Errors and Warnings."
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:640
+msgid "See the Help pulldown for detailed Help information"
+msgstr "Sien die Hulp-aftreklys vir meer inligting oor hulp"
 
+#: includes/class-wp-document-revisions-validate-structure.php:659
+msgid "ID"
+msgstr "ID"
+
+#: includes/class-wp-document-revisions-validate-structure.php:660
+msgid "Type"
+msgstr "Tipe"
+
+#: includes/class-wp-document-revisions-validate-structure.php:661
+msgid "Title"
+msgstr "Titel"
+
+#: includes/class-wp-document-revisions-validate-structure.php:662
+msgid "Message"
+msgstr "Boodskap"
+
+#: includes/class-wp-document-revisions-validate-structure.php:663
 #: includes/class-wp-document-revisions-validate-structure.php:687
-msgid "If you have an error reported here, then you will get an \"Error 404 - Document Not Found\" (or equivalent) message on trying to view the document."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:688
-msgid "Some of these can be fixed using data from within the system - and a button is available to fix the issue, but others cannot."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:689
-msgid "When they cannot be fixed, the resolution is either normally to delete the document or to load a new version of the document."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:690
-msgid "This process will, of course, also address unfixed, but fixable, issues as well."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:691
-msgid "Errors"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:692
-msgid "These are issues that stop you displaying your document on the front end. Problems include:"
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:693
-msgid "The identifier of the latest attachment (i.e. the current document) is held in the post content field."
-msgstr ""
-
-#: includes/class-wp-document-revisions-validate-structure.php:694
-msgid "If this is missing or points to a non-existant one then the document cannot be viewed."
-msgstr ""
+msgid "Fix"
+msgstr "Herstel"
 
 #: includes/class-wp-document-revisions-validate-structure.php:695
-msgid "However if there are any attachments attached to the document then we can display the latest one."
-msgstr ""
+msgid "Error"
+msgstr "Fout"
 
-#: includes/class-wp-document-revisions-validate-structure.php:696
-msgid "This is done by updating the document record so that the content contains the attachment identifier."
-msgstr ""
+#: includes/class-wp-document-revisions-validate-structure.php:695
+msgid "Warning"
+msgstr "Waarskuwing"
 
-#: includes/class-wp-document-revisions-validate-structure.php:697
+#: includes/class-wp-document-revisions-validate-structure.php:764
+msgid "There is no attachment record held for document"
+msgstr "Daar is geen aanhangselrekord vir die dokument nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:786
+#: includes/class-wp-document-revisions-validate-structure.php:985
+msgid ""
+"Attachment recently uploaded for document, but not currently linked to it"
+msgstr ""
+"Aanhegsel onlangs opgelaai vir dokument, maar tans nie daaraan gekoppel nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:787
+msgid "Attachment found for document, but not currently linked"
+msgstr "Aanhegsel vir dokument gevind, maar tans nie gekoppel nie"
+
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
+#: includes/class-wp-document-revisions-validate-structure.php:789
+#: includes/class-wp-document-revisions-validate-structure.php:806
+#: includes/class-wp-document-revisions-validate-structure.php:987
+#, php-format
+msgid "[Modified Date: Document - %1$s, Attachment - %2$s]"
+msgstr "[Gewysigde Datum: Dokument - %1$s, Aanhegsel - %2$s]"
+
+#: includes/class-wp-document-revisions-validate-structure.php:804
+msgid ""
+"Document links to invalid attachment. An attachment exists and can replace "
+"link"
+msgstr ""
+"Dokument skakel na ongeldige aanhangsel. 'n Aanhangsel bestaan en kan skakel"
+" vervang."
+
+#: includes/class-wp-document-revisions-validate-structure.php:973
+msgid "Document links to an invalid attachment record"
+msgstr "Dokument skakel na 'n ongeldige aanhangselrekord"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1011
+msgid "Document attachment exists but related file not in document location"
+msgstr ""
+"Dokumentaanhangsel bestaan, maar verwante lêer is nie in dokumentligging nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1019
+msgid "Document attachment exists but related file not found"
+msgstr "Dokumentaanhangsel bestaan, maar verwante lêer nie gevind nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1029
+msgid "Document attachment file exists but is not readable"
+msgstr "Dokument-aanhangsellêer bestaan, maar is nie leesbaar nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1048
+msgid "Document attachment does not appear to be md5 encoded"
+msgstr "Dokumentaanhangsel blyk nie md5-geënkodeer te wees nie"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1074
+msgid ""
+"The document contains additional document files that are inaccessible. They "
+"should be deleted to reduce storage."
+msgstr ""
+"Die dokument bevat bykomende dokumentlêers wat ontoeganklik is. Hulle moet "
+"uitgevee word om stoorplek te verminder."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1182
+msgid "Overview"
+msgstr "Oorsig"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1183
+msgid ""
+"This tool allows you to find errors in the internal structure of documents."
+msgstr ""
+"Hierdie hulpmiddel laat jou toe om foute in die interne struktuur van "
+"dokumente te vind."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1184
+msgid "It will review all documents that you are able to edit."
+msgstr "Dit sal alle dokumente wat jy kan wysig, hersien."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1185
+msgid "This version does not address revision data."
+msgstr "Hierdie weergawe spreek nie hersieningsdata aan nie."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1186
+msgid "Two types of issues can be identified - Errors and Warnings."
+msgstr "Twee tipes probleme kan geïdentifiseer word - Foute en Waarskuwings."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1187
+msgid ""
+"If you have an error reported here, then you will get an \"Error 404 - "
+"Document Not Found\" (or equivalent) message on trying to view the document."
+msgstr ""
+"As jy 'n fout hier aangemeld het, sal jy 'n \"Fout 404 - Dokument nie gevind"
+" nie\" (of ekwivalent) boodskap kry wanneer jy probeer om die dokument te "
+"bekyk."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1188
+msgid ""
+"Some of these can be fixed using data from within the system - and a button "
+"is available to fix the issue, but others cannot."
+msgstr ""
+"Sommige hiervan kan reggestel word deur data van binne die stelsel te "
+"gebruik - en 'n knoppie is beskikbaar om die probleem op te los, maar ander "
+"nie."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1189
+msgid ""
+"When they cannot be fixed, the resolution is normally either to delete the "
+"document or to load a new version of the document."
+msgstr ""
+"Wanneer hulle nie reggestel kan word nie, is die oplossing gewoonlik om die "
+"dokument te verwyder of om 'n nuwe weergawe van die dokument te laai."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1190
+msgid ""
+"This resolution process will, of course, also address unfixed, but fixable, "
+"issues as well."
+msgstr ""
+"Hierdie oplossingsproses sal natuurlik ook onopgeloste, maar regstelbare, "
+"probleme aanspreek."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1191
+msgid "Errors"
+msgstr "Foute"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1192
+msgid ""
+"These are issues that stop you displaying your document on the front end. "
+"Problems include:"
+msgstr ""
+"Dit is probleme wat verhoed dat jy jou dokument op die voorkant vertoon. "
+"Probleme sluit in:"
+
+#: includes/class-wp-document-revisions-validate-structure.php:1193
+msgid ""
+"The identifier of the latest attachment (i.e. the current document) is held "
+"in the post content field."
+msgstr ""
+"Die identifiseerder van die nuutste aanhangsel (d.w.s. die huidige dokument)"
+" word in die plasinginhoudveld gehou."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1194
+msgid ""
+"If this is missing or points to a non-existant one then the document cannot "
+"be viewed."
+msgstr ""
+"Indien dit ontbreek of na 'n nie-bestaande een wys, kan die dokument nie "
+"besigtig word nie."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1195
+msgid ""
+"However if there are any attachments attached to the document then we can "
+"display the latest one."
+msgstr ""
+"As daar egter enige aanhangsels aan die dokument is, kan ons die nuutste een"
+" vertoon."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1196
+msgid ""
+"This is done by updating the document record so that the content contains "
+"the attachment identifier."
+msgstr ""
+"Dit word gedoen deur die dokumentrekord op te dateer sodat die inhoud die "
+"aanhangselidentifiseerder bevat."
+
+#: includes/class-wp-document-revisions-validate-structure.php:1197
 msgid "There is no attachment associated with the document."
-msgstr ""
+msgstr "Daar is geen aanhangsel wat met die dokument geassosieer word nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:698
-msgid "There is an identifier in the document but either there is no attachment or it does not relate to this document."
+#: includes/class-wp-document-revisions-validate-structure.php:1198
+msgid ""
+"There is an identifier in the document but either there is no attachment or "
+"it does not relate to this document."
 msgstr ""
+"Daar is 'n identifiseerder in die dokument, maar daar is óf geen aanhangsel "
+"nie, óf dit hou nie verband met hierdie dokument nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:699
-msgid "There is an identifier that links to a document attachment but there is no underlying file."
+#: includes/class-wp-document-revisions-validate-structure.php:1199
+msgid ""
+"There is an identifier that links to a document attachment but there is no "
+"underlying file."
 msgstr ""
+"Daar is 'n identifiseerder wat na 'n dokumentaanhangsel skakel, maar daar is"
+" geen onderliggende lêer nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:700
-msgid "As a variant of this last case, you may have set up the plugin so that the document file store is one of your choosing and not the standard Media store."
+#: includes/class-wp-document-revisions-validate-structure.php:1200
+msgid ""
+"As a variant of this last case, you may have set up the plugin so that the "
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
+"As 'n variant van hierdie laaste geval, het jy dalk die inprop so opgestel "
+"dat die dokumentlêerstoor een van jou keuse is en nie die standaard "
+"mediastoor nie."
 
-#: includes/class-wp-document-revisions-validate-structure.php:701
-msgid "In this very specific case, when it has been unable to find the file in the document store, it will look for it in the Media store."
+#: includes/class-wp-document-revisions-validate-structure.php:1201
+msgid ""
+"In this very specific case, when it has been unable to find the file in the "
+"document store, it will look for it in the Media store."
 msgstr ""
+"In hierdie baie spesifieke geval, wanneer dit nie die lêer in die "
+"dokumentstoor kon vind nie, sal dit daarna in die Mediastoor soek."
 
-#: includes/class-wp-document-revisions-validate-structure.php:702
-msgid "If found there it will offer you a fix which is to move the file from the Media store to the document store."
+#: includes/class-wp-document-revisions-validate-structure.php:1202
+msgid ""
+"If found there it will offer you a fix which is to move the file from the "
+"Media store to the document store."
 msgstr ""
+"Indien dit daar gevind word, sal dit jou 'n oplossing bied, naamlik om die "
+"lêer van die mediawinkel na die dokumentwinkel te skuif."
 
-#: includes/class-wp-document-revisions-validate-structure.php:703
+#: includes/class-wp-document-revisions-validate-structure.php:1203
 msgid "Warnings"
-msgstr ""
+msgstr "Waarskuwings"
 
-#: includes/class-wp-document-revisions-validate-structure.php:704
-msgid "The nature of the web technology used to deliver WordPress means that if you know the name of the file held on the server then you can access the file directly"
+#: includes/class-wp-document-revisions-validate-structure.php:1204
+msgid ""
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
+"directly"
 msgstr ""
+"Die aard van die webtegnologie wat gebruik word om WordPress te lewer, "
+"beteken dat as jy die naam van die lêer wat op die bediener gehou word, ken,"
+" jy direk toegang tot die lêer kan kry."
 
-#: includes/class-wp-document-revisions-validate-structure.php:705
-msgid "It is a design feature of this plugin that you should only be able to access a document if you go via WordPress itself."
+#: includes/class-wp-document-revisions-validate-structure.php:1205
+msgid ""
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
+"Dit is 'n ontwerpkenmerk van hierdie inprop dat jy slegs toegang tot 'n "
+"dokument moet hê as jy via WordPress self gaan."
 
-#: includes/class-wp-document-revisions-validate-structure.php:706
-msgid "So to deliver this the plugin changes the file name to an md5-encoded file name and then hides it from you when using the application."
+#: includes/class-wp-document-revisions-validate-structure.php:1206
+msgid ""
+"So to deliver this the plugin changes the file name to an md5-encoded file "
+"name and then hides it from you when using the application."
 msgstr ""
+"Om dit te lewer, verander die inprop die lêernaam na 'n md5-geënkodeerde "
+"lêernaam en versteek dit dan vir jou wanneer jy die toepassing gebruik."
 
-#: includes/class-wp-document-revisions-validate-structure.php:707
+#: includes/class-wp-document-revisions-validate-structure.php:1207
 msgid "The fix is therefore to md5-encode the file name."
-msgstr ""
+msgstr "Die oplossing is dus om die lêernaam met md5 te enkodeer."
 
-#: includes/class-wp-document-revisions.php:234
-msgid "You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:236
-msgid "Documents menu may not be displayed completely with \"All Documents\" and \"Add Document\" options missing"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:306
-msgctxt "post type general name"
+#: includes/class-wp-document-revisions.php:288
+#: includes/class-wp-document-revisions.php:702
+#: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:307
-msgctxt "post type singular name"
-msgid "Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:308
-msgctxt "document"
-msgid "Add Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:309
-msgid "Add New Document"
-msgstr ""
+msgstr "Dokumente"
 
 #: includes/class-wp-document-revisions.php:310
-msgid "Edit Document"
-msgstr ""
+msgid "Check Document Access"
+msgstr "Kontroleer dokumenttoegang"
 
 #: includes/class-wp-document-revisions.php:311
-msgid "New Document"
+msgid ""
+"Check whether the current user can perform a specific action on a document."
 msgstr ""
-
-#: includes/class-wp-document-revisions.php:312
-msgid "View Document"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:313
-msgid "View Documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:314
-msgid "Search Documents"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:315
-msgid "No documents found"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:316
-msgid "No documents found in Trash"
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:319
-msgid "All Documents"
-msgstr ""
+"Kontroleer of die huidige gebruiker 'n spesifieke aksie op 'n dokument kan "
+"uitvoer."
 
 #: includes/class-wp-document-revisions.php:320
+msgid "The document post ID to check access for."
+msgstr "Die dokumentplasing-ID om toegang voor na te gaan."
+
+#: includes/class-wp-document-revisions.php:324
+msgid "The action to check: read, edit, delete, or publish."
+msgstr "Die aksie om te kontroleer: lees, wysig, verwyder of publiseer."
+
+#: includes/class-wp-document-revisions.php:335
+msgid "Whether the user can perform the action."
+msgstr "Of die gebruiker die aksie kan uitvoer."
+
+#: includes/class-wp-document-revisions.php:346
+msgid "Get Document Info"
+msgstr "Kry dokumentinligting"
+
+#: includes/class-wp-document-revisions.php:347
+msgid ""
+"Retrieve metadata for a document including file type, revision count, and "
+"lock status."
+msgstr ""
+"Kry metadata vir 'n dokument, insluitend lêertipe, hersieningtelling en "
+"sluitstatus."
+
+#: includes/class-wp-document-revisions.php:358
+#: includes/class-wp-document-revisions.php:392
+msgid "The document post ID."
+msgstr "Die dokumentplasing-ID."
+
+#: includes/class-wp-document-revisions.php:380
+msgid "Get Document Revisions"
+msgstr "Kry dokumenthersienings"
+
+#: includes/class-wp-document-revisions.php:381
+msgid "Retrieve the revision history of a document."
+msgstr "Kry die hersieningsgeskiedenis van 'n dokument op."
+
+#: includes/class-wp-document-revisions.php:421
+msgid "Override Document Lock"
+msgstr "Oorskryf Dokumentslot"
+
+#: includes/class-wp-document-revisions.php:422
+msgid "Override another user's lock on a document to allow editing."
+msgstr ""
+"Ignoreer 'n ander gebruiker se slot op 'n dokument om redigering toe te "
+"laat."
+
+#: includes/class-wp-document-revisions.php:433
+msgid "The document post ID to unlock."
+msgstr "Die dokumentplasing-ID om te ontsluit."
+
+#: includes/class-wp-document-revisions.php:499
+#: includes/class-wp-document-revisions.php:539
+#: includes/class-wp-document-revisions.php:592
+msgid "Document not found."
+msgstr "Dokument nie gevind nie."
+
+#: includes/class-wp-document-revisions.php:507
+msgid "You do not have permission to view this document."
+msgstr "Jy het nie toestemming om hierdie dokument te bekyk nie."
+
+#: includes/class-wp-document-revisions.php:547
+msgid "You do not have permission to view revisions for this document."
+msgstr ""
+"Jy het nie toestemming om hersienings vir hierdie dokument te sien nie."
+
+#: includes/class-wp-document-revisions.php:555
+msgid "You do not have permission to view document revisions."
+msgstr "Jy het nie toestemming om dokumenthersienings te bekyk nie."
+
+#: includes/class-wp-document-revisions.php:569
+msgid "Unknown"
+msgstr "Onbekend"
+
+#: includes/class-wp-document-revisions.php:610
+msgid "You do not have permission to override the lock on this document."
+msgstr ""
+"Jy het nie toestemming om die slot op hierdie dokument te ignoreer nie."
+
+#: includes/class-wp-document-revisions.php:638
+msgid "You have activated the plugin WP Document Revisions"
+msgstr "Jy het die inprop WP Document Revisions geaktiveer"
+
+#: includes/class-wp-document-revisions.php:640
+msgid ""
+"You do not have the edit_documents capability possibly due to multiple "
+"conficting roles or use of a custom role!"
+msgstr ""
+"Jy het nie die edit_documents-vermoë nie, moontlik as gevolg van veelvuldige"
+" botsende rolle of die gebruik van 'n persoonlike rol!"
+
+#: includes/class-wp-document-revisions.php:642
+msgid ""
+"The Documents menu may not be displayed completely with the \"All "
+"Documents\" and \"Add Document\" options missing"
+msgstr ""
+"Die Dokumente-kieslys word moontlik nie volledig vertoon met die opsies "
+"\"Alle Dokumente\" en \"Voeg Dokument By\" wat ontbreek nie."
+
+#: includes/class-wp-document-revisions.php:644
+msgid ""
+"You should first check whether you have multiple roles and that each has "
+"edit_documents capability."
+msgstr ""
+"Jy moet eers kyk of jy verskeie rolle het en dat elkeen die edit_documents-"
+"vermoë het."
+
+#: includes/class-wp-document-revisions.php:690
+msgctxt "post type general name"
+msgid "Documents"
+msgstr "Dokumente"
+
+#: includes/class-wp-document-revisions.php:691
+msgctxt "post type singular name"
+msgid "Document"
+msgstr "Dokument"
+
+#: includes/class-wp-document-revisions.php:692
+msgctxt "document"
+msgid "Add Document"
+msgstr "Voeg dokument by"
+
+#: includes/class-wp-document-revisions.php:693
+msgid "Add New Document"
+msgstr "Voeg Nuwe Dokument By"
+
+#: includes/class-wp-document-revisions.php:694
+msgid "Edit Document"
+msgstr "Wysig Dokument"
+
+#: includes/class-wp-document-revisions.php:695
+msgid "New Document"
+msgstr "Nuwe Dokument"
+
+#: includes/class-wp-document-revisions.php:696
+msgid "View Document"
+msgstr "Bekyk Dokument"
+
+#: includes/class-wp-document-revisions.php:697
+msgid "View Documents"
+msgstr "Bekyk Dokumente"
+
+#: includes/class-wp-document-revisions.php:698
+msgid "Search Documents"
+msgstr "Soek Dokumente"
+
+#: includes/class-wp-document-revisions.php:699
+msgid "No documents found"
+msgstr "Geen dokumente gevind nie"
+
+#: includes/class-wp-document-revisions.php:700
+msgid "No documents found in Trash"
+msgstr "Geen dokumente in die asblik gevind nie"
+
+#: includes/class-wp-document-revisions.php:703
+msgid "All Documents"
+msgstr "Alle Dokumente"
+
+#: includes/class-wp-document-revisions.php:704
 msgid "Document Image"
-msgstr ""
+msgstr "Dokumentbeeld"
 
-#: includes/class-wp-document-revisions.php:321
+#: includes/class-wp-document-revisions.php:705
 msgid "Set Document Image"
-msgstr ""
+msgstr "Stel dokumentbeeld"
 
-#: includes/class-wp-document-revisions.php:322
+#: includes/class-wp-document-revisions.php:706
 msgid "Remove Document Image"
-msgstr ""
+msgstr "Verwyder dokumentbeeld"
 
-#: includes/class-wp-document-revisions.php:323
+#: includes/class-wp-document-revisions.php:707
 msgid "Use as Document Image"
-msgstr ""
+msgstr "Gebruik as dokumentbeeld"
 
-#: includes/class-wp-document-revisions.php:407
+#: includes/class-wp-document-revisions.php:812
 msgctxt "taxonomy general name"
 msgid "Workflow States"
-msgstr ""
+msgstr "Werkvloeitoestande"
 
-#: includes/class-wp-document-revisions.php:408
+#: includes/class-wp-document-revisions.php:813
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
-msgstr ""
+msgstr "Werkvloeistatus"
 
-#: includes/class-wp-document-revisions.php:409
+#: includes/class-wp-document-revisions.php:814
 msgid "Search Workflow States"
-msgstr ""
+msgstr "Soek Werkvloei State"
 
-#: includes/class-wp-document-revisions.php:410
+#: includes/class-wp-document-revisions.php:815
 msgid "All Workflow States"
-msgstr ""
+msgstr "Alle werkvloeitoestande"
 
-#: includes/class-wp-document-revisions.php:411
+#: includes/class-wp-document-revisions.php:816
 msgid "Parent Workflow State"
-msgstr ""
+msgstr "Ouerwerkvloei-status"
 
-#: includes/class-wp-document-revisions.php:412
+#: includes/class-wp-document-revisions.php:817
 msgid "Parent Workflow State:"
-msgstr ""
+msgstr "Ouerwerkvloeistatus:"
 
-#: includes/class-wp-document-revisions.php:413
+#: includes/class-wp-document-revisions.php:818
 msgid "Edit Workflow State"
-msgstr ""
+msgstr "Wysig Werkvloeistatus"
 
-#: includes/class-wp-document-revisions.php:414
+#: includes/class-wp-document-revisions.php:819
 msgid "Update Workflow State"
-msgstr ""
+msgstr "Werkvloeistatus opdateer"
 
-#: includes/class-wp-document-revisions.php:415
+#: includes/class-wp-document-revisions.php:820
 msgid "Add New Workflow State"
-msgstr ""
+msgstr "Voeg nuwe werkvloeistatus by"
 
-#: includes/class-wp-document-revisions.php:416
+#: includes/class-wp-document-revisions.php:821
 msgid "New Workflow State Name"
-msgstr ""
+msgstr "Nuwe Werkvloei Staat Naam"
 
-#: includes/class-wp-document-revisions.php:417
+#: includes/class-wp-document-revisions.php:822
 msgid "Workflow States"
-msgstr ""
+msgstr "Werkvloeitoestande"
 
-#: includes/class-wp-document-revisions.php:476
+#: includes/class-wp-document-revisions.php:880
 msgid "In Progress"
-msgstr ""
+msgstr "Aan die gang"
 
-#: includes/class-wp-document-revisions.php:476
+#: includes/class-wp-document-revisions.php:880
 msgid "Document is in the process of being written"
-msgstr ""
+msgstr "Dokument word tans geskryf"
 
-#: includes/class-wp-document-revisions.php:477
+#: includes/class-wp-document-revisions.php:881
 msgid "Initial Draft"
-msgstr ""
+msgstr "Aanvanklike Konsep"
 
-#: includes/class-wp-document-revisions.php:477
+#: includes/class-wp-document-revisions.php:881
 msgid "Document is being edited and refined"
-msgstr ""
+msgstr "Dokument word geredigeer en verfyn"
 
-#: includes/class-wp-document-revisions.php:478
+#: includes/class-wp-document-revisions.php:882
 msgid "Under Review"
-msgstr ""
+msgstr "Onder hersiening"
 
-#: includes/class-wp-document-revisions.php:478
+#: includes/class-wp-document-revisions.php:882
 msgid "Document is pending final review"
-msgstr ""
+msgstr "Dokument is hangende finale hersiening"
 
-#: includes/class-wp-document-revisions.php:479
+#: includes/class-wp-document-revisions.php:883
 msgid "Final"
-msgstr ""
+msgstr "Finale"
 
-#: includes/class-wp-document-revisions.php:479
+#: includes/class-wp-document-revisions.php:883
 msgid "Document is in its final form"
-msgstr ""
+msgstr "Dokument is in sy finale vorm"
 
-#: includes/class-wp-document-revisions.php:592
-msgid "Somebody"
-msgstr ""
+#. translators: %s is the download link.
+#: includes/trait-wp-document-revisions-admin-editor.php:48
+#, php-format
+msgid "Document updated. <a href=\"%s\">Download document</a>"
+msgstr "Dokument opgedateer. <a href=\"%s\">Laai dokument af</a>"
 
-#: includes/class-wp-document-revisions.php:779, includes/class-wp-document-revisions.php:1173
-msgid "-revision-"
-msgstr ""
+#: includes/trait-wp-document-revisions-admin-editor.php:49
+msgid "Custom field updated."
+msgstr "Aangepaste veld opgedateer."
 
-#: includes/class-wp-document-revisions.php:1041, includes/class-wp-document-revisions.php:1070
+#: includes/trait-wp-document-revisions-admin-editor.php:50
+msgid "Custom field deleted."
+msgstr "Aangepaste veld is uitgevee."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:51
+msgid "Document updated."
+msgstr "Dokument opgedateer."
+
+#. translators: %s is the revision ID.
+#: includes/trait-wp-document-revisions-admin-editor.php:54
+#, php-format
+msgid "Document restored to revision from %s"
+msgstr "Dokument herstel na hersiening vanaf %s"
+
+#. translators: %s is the download link.
+#: includes/trait-wp-document-revisions-admin-editor.php:57
+#, php-format
+msgid "Document published. <a href=\"%s\">Download document</a>"
+msgstr "Dokument gepubliseer. <a href=\"%s\">Laai dokument af</a>"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:58
+msgid "Document saved."
+msgstr "Dokument gestoor."
+
+#. translators: %s is the download link.
+#: includes/trait-wp-document-revisions-admin-editor.php:60
+#, php-format
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Dokument ingedien. <a target=\"_blank\" href=\"%s\">Laai dokument af</a>"
+
+#. translators: %1$s is the date, %2$s is the preview link.
+#: includes/trait-wp-document-revisions-admin-editor.php:62
+#, php-format
+msgid ""
+"Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">Preview document</a>"
+msgstr ""
+"Dokument geskeduleer vir: <strong>%1$s</strong>. <a target=\"_blank\" "
+"href=\"%2$s\">Voorskou van dokument</a>"
+
+#. translators: %1$s is the date, %2$s is the preview link.
+#: includes/trait-wp-document-revisions-admin-editor.php:62
+#, php-format
+msgctxt "%1$s: date; %2$s: time"
+msgid "%1$s @ %2$s"
+msgstr "%1$s @ %2$s"
+
+#. translators: %s is the link to download the document.
+#: includes/trait-wp-document-revisions-admin-editor.php:64
+#, php-format
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr ""
+"Dokumentkonsep opgedateer. <a target=\"_blank\" href=\"%s\">Laai dokument "
+"af</a>"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:112
+#: includes/trait-wp-document-revisions-admin-editor.php:979
+#: src/editor-document-upload/index.js:405
+msgid "Revision Summary"
+msgstr "Hersieningsopsomming"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:113
+#: src/editor-document-upload/index.js:320
+msgid "Document"
+msgstr "Dokument"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:117
+#: includes/trait-wp-document-revisions-admin-editor.php:755
+#: src/editor-document-upload/index.js:509
+msgid "Revision Log"
+msgstr "Hersieningslogboek"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:121
+#: includes/trait-wp-document-revisions-admin-editor.php:758
+msgid "Workflow State"
+msgstr "Werkvloeistatus"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:129
+#: includes/trait-wp-document-revisions-admin-editor.php:1186
+#: includes/trait-wp-document-revisions-admin-list.php:122
+msgid "Owner"
+msgstr "Eienaar"
+
+#. translators: %s is the user that holds the document lock.
+#: includes/trait-wp-document-revisions-admin-editor.php:187
+#, php-format
+msgid "%s has prevented other users from making changes."
+msgstr "%s het ander gebruikers verhoed om veranderinge aan te bring."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:190
+msgid ""
+"<br />If you believe this is in error you can <a href=\"#\" "
+"id=\"override_link\">override the lock</a>, but their changes will be lost."
+msgstr ""
+"<br />As jy glo dat dit 'n fout is, kan jy <a href=\"#\" "
+"id=\"override_link\">die slot oorskryf</a>, maar hul veranderinge sal "
+"verlore gaan."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:196
+#: src/editor-document-upload/index.js:257
+#: src/editor-document-upload/index.js:396
+msgid "Upload New Version"
+msgstr "Laai Nuwe Weergawe Op"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:203
+msgid "Latest Version of the Document"
+msgstr "Nuutste weergawe van die dokument"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:204
+#: src/editor-document-upload/index.js:385
+msgid "Download"
+msgstr "Laai af"
+
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
+#: includes/trait-wp-document-revisions-admin-editor.php:209
+#, php-format
+msgid ""
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
+msgstr ""
+"Ingeboek <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
+"gelede deur %4$s"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:249
+msgid "Current State"
+msgstr "Huidige toestand"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:748
+msgid "Basic Usage"
+msgstr "Basiese Gebruik"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:749
+msgid ""
+"This screen allows users to collaboratively edit documents and track their "
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
+msgstr ""
+"Hierdie skerm laat gebruikers toe om dokumente saam te wysig en hul "
+"hersieningsgeskiedenis na te spoor. Om te begin, voer 'n titel vir die "
+"dokument in, voer opsioneel 'n beskrywing in, en klik <code>Laai Nuwe "
+"Weergawe Op</code> en kies die lêer vanaf jou rekenaar."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:750
+msgid ""
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
+msgstr ""
+"Sodra dit suksesvol opgelaai is, kan jy 'n hersieningslogboodskap invoer, "
+"die dokument 'n outeur toewys en die huidige werkvloeistatus beskryf."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:751
+msgid "When done, simply click <code>Update</code> to save your changes"
+msgstr ""
+"Wanneer jy klaar is, klik eenvoudig op <code>Opdateer</code> om jou "
+"veranderinge te stoor"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:752
+#: includes/trait-wp-document-revisions-admin-editor.php:822
+msgid "Document Description"
+msgstr "Dokumentbeskrywing"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:753
+msgid ""
+"The document description provides a short user-oriented summary of the "
+"document."
+msgstr ""
+"Die dokumentbeskrywing bied 'n kort gebruikersgerigte opsomming van die "
+"dokument."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:754
+msgid ""
+"This can be used with the Document List or Latest Documents blocks or their "
+"shortcode or widget equivalents."
+msgstr ""
+"Dit kan gebruik word met die Dokumentlys- of Nuutste Dokumente-blokke of hul"
+" kortkode- of widget-ekwivalente."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:756
+msgid ""
+"The revision log provides a short summary of the changes reflected in a "
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
+msgstr ""
+"Die hersieningslogboek verskaf 'n kort opsomming van die veranderinge wat in"
+" 'n spesifieke hersiening weerspieël word. Dit word wyd gebruik in die "
+"oopbrongemeenskap en bied 'n omvattende geskiedenis van die dokument in 'n "
+"oogopslag."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:757
+msgid ""
+"You can download and view previous versions of the document by clicking the "
+"timestamp in the revision log. You can also restore revisions by clicking "
+"the <code>restore</code> button beside the revision."
+msgstr ""
+"Jy kan vorige weergawes van die dokument aflaai en bekyk deur op die "
+"tydstempel in die hersieningslogboek te klik. Jy kan ook hersienings herstel"
+" deur op die <code>herstel</code>-knoppie langs die hersiening te klik."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:759
+msgid ""
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
+"<code>Workflow States</code> on the left-hand side."
+msgstr ""
+"Die veld vir werkvloeistatus kan gebruik word om spanlede te help verstaan "
+"in watter stadium 'n dokument binne 'n spesifieke organisasie se werkvloei "
+"is. Die veld is opsioneel en kan aangepas of nagevra word deur op "
+"<code>Werkvloeistatusse</code> aan die linkerkant te klik."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:760
+msgid "Publishing Documents"
+msgstr "Publikasie van dokumente"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:761
+msgid ""
+"By default, uploaded documents are only accessible to logged in users. "
+"Documents can be published, thus making them accessible to the world, by "
+"toggling their visibility in the \"Publish\" box in the top right corner. "
+"Any document marked as published will be accessible to anyone with the "
+"proper URL."
+msgstr ""
+"Standaard is opgelaaide dokumente slegs toeganklik vir aangemelde "
+"gebruikers. Dokumente kan gepubliseer word, wat hulle toeganklik maak vir "
+"die wêreld, deur hul sigbaarheid in die \"Publiseer\"-blokkie in die regter "
+"boonste hoek te wissel. Enige dokument wat as gepubliseer gemerk is, sal "
+"toeganklik wees vir enigiemand met die korrekte URL."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:765
+msgid ""
+"Below is a list of all documents to which you have access. Click the "
+"document title to edit the document or download the latest version."
+msgstr ""
+"Hieronder is 'n lys van alle dokumente waartoe u toegang het. Klik op die "
+"dokumenttitel om die dokument te wysig of die nuutste weergawe af te laai."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:766
+msgid ""
+"To add a new document, click <strong>Add Document</strong> on the left-hand "
+"side."
+msgstr ""
+"Om 'n nuwe dokument by te voeg, klik <strong>Voeg dokument by</strong> aan "
+"die linkerkant."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:767
+msgid ""
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
+msgstr ""
+"Om alle dokumente in 'n spesifieke werkvloeistatus te sien, klik "
+"<strong>Werkvloeistatusse</strong> in die kieslys aan die linkerkant."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:955
+#: includes/trait-wp-document-revisions-admin-editor.php:963
+msgid "You do not have the upload_files capability!"
+msgstr "Jy het nie die upload_files-vermoë nie!"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:957
+msgid ""
+"You will not be able to upload documents though you may be able change some "
+"attributes."
+msgstr ""
+"Jy sal nie dokumente kan oplaai nie, alhoewel jy dalk sommige eienskappe kan"
+" verander."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:965
+msgid "You will not be able to upload any documents."
+msgstr "Jy sal geen dokumente kan oplaai nie."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:981
+msgid ""
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
+"needing to open the actual file."
+msgstr ""
+"Hersieningsopsommings is opsionele notas om saam met hierdie hersiening te "
+"stoor wat ander gebruikers toelaat om vinnig en maklik te sien watter "
+"veranderinge jy aangebring het sonder om die werklike lêer oop te maak."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1002
+#: src/editor-document-upload/index.js:536
+msgid "Modified"
+msgstr "Gewysig"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1003
+#: src/editor-document-upload/index.js:545
+msgid "User"
+msgstr "Gebruiker"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1004
+#: src/editor-document-upload/index.js:554
+msgid "Summary"
+msgstr "Opsomming"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1008
+msgid "Actions"
+msgstr "Aksies"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1058
+msgid "Restore"
+msgstr "Herstel"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1068
+msgid "RSS Feed"
+msgstr "RSS-voer"
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1071
+msgid ""
+"Restoring earlier revisions will also restore that description.<br/>If the "
+"current one is wanted, copy it first."
+msgstr ""
+"Die herstel van vorige hersienings sal ook daardie beskrywing "
+"herstel.<br/>Indien die huidige een verlang word, kopieer dit eers."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1105
+msgid ""
+"You currently have this file checked out. No other user can edit this "
+"document so long as you remain on this page."
+msgstr ""
+"Jy het tans hierdie lêer uitgeboek. Geen ander gebruiker kan hierdie "
+"dokument wysig solank jy op hierdie bladsy bly nie."
+
+#: includes/trait-wp-document-revisions-admin-editor.php:1187
+msgid "Document Owner"
+msgstr "Dokumenteienaar"
+
+#: includes/trait-wp-document-revisions-admin-list.php:30
+msgid "All workflow states"
+msgstr "Alle werkvloei-toestande"
+
+#: includes/trait-wp-document-revisions-admin-list.php:32
+msgid "All statuses"
+msgstr "Alle statusse"
+
+#: includes/trait-wp-document-revisions-admin-list.php:53
+msgid "All owners"
+msgstr "Alle eienaars"
+
+#: includes/trait-wp-document-revisions-admin-list.php:140
+msgid "Currently Editing"
+msgstr "Tans besig met redigering"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:52
+msgid "Document Settings"
+msgstr "Dokumentinstellings"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:55
+#: includes/trait-wp-document-revisions-admin-settings.php:346
+msgid "Document Upload Directory"
+msgstr "Dokumentoplaaigids"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:62
+#: includes/trait-wp-document-revisions-admin-settings.php:347
+msgid "Document Slug"
+msgstr "Dokument Slug"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:69
+msgid "Document Link Date"
+msgstr "Dokument skakel datum"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:89
+msgid "Feed Privacy"
+msgstr "Voerprivaatheid"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:92
+msgid "Secret Feed Key"
+msgstr "Geheime Voersleutel"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:95
+msgid ""
+"To protect your privacy, you need to append a key to feeds for use in feed "
+"readers."
+msgstr ""
+"Om jou privaatheid te beskerm, moet jy 'n sleutel by feeds voeg vir gebruik "
+"in feedlesers."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:97
+msgid "Generate New Key"
+msgstr "Genereer Nuwe Sleutel"
+
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
+#: includes/trait-wp-document-revisions-admin-settings.php:318
+#, php-format
+msgid "%1$s ago by %2$s [%3$s]"
+msgstr "%1$s gelede deur %2$s [%3$s]"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:358
+msgid "Document Date in Permalink"
+msgstr "Dokumentdatum in Permanente Skakel"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:394
+msgid "Document directory does not appear to exist. Please review value."
+msgstr "Dokumentgids blyk nie te bestaan nie. Hersien asseblief die waarde."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:396
+msgid "Document directory is not writable. Please check permissions."
+msgstr "Dokumentgids is nie skryfbaar nie. Kontroleer asseblief toestemmings."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:400
+msgid ""
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
+msgstr ""
+"Dokumentoplaaigids is verander, maar bestaande oplaaie moet dalk na die nuwe"
+" vouer geskuif word om te verseker dat hulle toeganklik bly."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:429
+msgid ""
+"Document slug changed, but some previously published URLs may now be broken."
+msgstr ""
+"Dokument-slug verander, maar sommige voorheen gepubliseerde URL'e is dalk "
+"nou gebreek."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+#: includes/trait-wp-document-revisions-admin-settings.php:478
+#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-revisions.php:196
+#: includes/trait-wp-document-revisions-rewrites.php:341
+msgid "Not authorized"
+msgstr "Nie gemagtig nie"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:562
+msgid ""
+"Directory in which to store uploaded documents. The default is in your "
+"<code>wp-content/uploads</code> folder (or another default uploads folder "
+"defined elsewhere), but it may be moved to a folder outside of the "
+"<code>htdocs</code> or <code>public_html</code> folder for added security."
+msgstr ""
+"Gids waarin opgelaaide dokumente gestoor moet word. Die verstekwaarde is in "
+"jou <code>wp-content/uploads</code>-vouer (of 'n ander verstek-oplaai-vouer "
+"wat elders gedefinieer is), maar dit kan na 'n vouer buite die "
+"<code>htdocs</code>- of <code>public_html</code>-vouer geskuif word vir "
+"ekstra sekuriteit."
+
+#. translators: %site_id% is not interpolated and should not be translated.
+#: includes/trait-wp-document-revisions-admin-settings.php:570
+#, php-format
+msgid ""
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
+msgstr ""
+"Jy kan opsioneel die string <code>%site_id%</code> in die pad insluit om "
+"lêers volgens webwerf te skei."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:585
+msgid "example-document-title"
+msgstr "voorbeeld-dokument-titel"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:589
+msgid ""
+"\"Slug\" with which to prefix all URLs for documents (and the document "
+"archive). Default is <code>documents</code>."
+msgstr ""
+"\"'n Nag\" waarmee alle URL'e vir dokumente (en die dokumentargief) "
+"voorgevoeg moet word. Die verstekwaarde is <code>dokumente</code>."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:603
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
+msgstr ""
+"Verwyder die jaar- en maand-element /yyyy/mm van die dokument se permanente "
+"skakel."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:605
+msgid ""
+"By default the document permalink will contain the post year and month."
+msgstr ""
+"Standaard sal die dokument se permanente skakel die plasing se jaar en maand"
+" bevat."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:606
+msgid "The delivered rewrite rules support both formats."
+msgstr "Die gelewerde herskryfreëls ondersteun beide formate."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:659
+msgid ""
+"Maximum number of document revisions set to zero using a filter. Check your "
+"configuration."
+msgstr ""
+"Maksimum aantal dokumenthersienings is met behulp van 'n filter op nul "
+"gestel. Kontroleer jou konfigurasie."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:672
+msgid ""
+"More revisions exist for this document than is permitted. Making changes "
+"will delete data."
+msgstr ""
+"Daar is meer hersienings vir hierdie dokument as wat toegelaat word. "
+"Veranderinge sal data uitvee."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:681
+msgid ""
+"Maximum number of revisions reached for this document. Making changes will "
+"delete data."
+msgstr ""
+"Maksimum aantal hersienings is vir hierdie dokument bereik. Veranderinge sal"
+" data uitvee."
+
+#: includes/trait-wp-document-revisions-file-handler.php:74
+#: includes/trait-wp-document-revisions-file-handler.php:107
 msgid "No document file is attached."
-msgstr ""
+msgstr "Geen dokumentlêer is aangeheg nie."
 
-#: includes/class-wp-document-revisions.php:1070
+#: includes/trait-wp-document-revisions-file-handler.php:107
 msgid "Document is not available."
-msgstr ""
+msgstr "Dokument is nie beskikbaar nie."
 
-#: includes/class-wp-document-revisions.php:1132
+#: includes/trait-wp-document-revisions-file-handler.php:158
 msgid "You are not authorized to access that file."
-msgstr ""
+msgstr "Jy is nie gemagtig om toegang tot daardie lêer te verkry nie."
 
-#: includes/class-wp-document-revisions.php:1329
+#: includes/trait-wp-document-revisions-file-handler.php:202
+#: includes/trait-wp-document-revisions-rewrites.php:108
+msgid "-revision-"
+msgstr "-hersiening-"
+
+#: includes/trait-wp-document-revisions-file-handler.php:345
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
-msgstr ""
+msgstr "Jammer, uitvoerbuffer bestaan met data. Lêerskryf onderdruk."
 
-#: includes/class-wp-document-revisions.php:1335
-msgid "Sorry, Output has already been written, so your file cannot be downloaded."
+#: includes/trait-wp-document-revisions-file-handler.php:351
+msgid ""
+"Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
+"Jammer, die uitvoer is reeds geskryf, so jou lêer kan nie afgelaai word nie."
 
-#: includes/class-wp-document-revisions.php:2045
+#: includes/trait-wp-document-revisions-file-handler.php:1165
 msgid "Sorry, this is a private feed."
-msgstr ""
-
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
-#: includes/class-wp-document-revisions.php:2163
-msgid "%1$s: %2$s has overridden your lock on %3$s"
-msgstr ""
-
-#. translators: %s is the user's name.
-#: includes/class-wp-document-revisions.php:2173
-msgid "Dear %s:"
-msgstr ""
-
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
-#: includes/class-wp-document-revisions.php:2175
-msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
-msgstr ""
-
-#: includes/class-wp-document-revisions.php:2176
-msgid "Any changes you have made will be lost."
-msgstr ""
-
-#. translators: %s is the blog name.
-#: includes/class-wp-document-revisions.php:2178
-msgid "- The %s Team"
-msgstr ""
+msgstr "Jammer, hierdie is 'n privaat stroom."
 
 #. translators: %s is the document title.
-#: includes/class-wp-document-revisions.php:2368
+#: includes/trait-wp-document-revisions-query.php:260
+#, php-format
 msgid "%s - Latest Revision"
-msgstr ""
+msgstr "%s - Nuutste Hersiening"
 
 #. translators: %1$s is the document title, %2$d is the revision ID.
-#: includes/class-wp-document-revisions.php:2389
+#: includes/trait-wp-document-revisions-query.php:281
+#, php-format
 msgid "%1$s - Revision %2$d"
-msgstr ""
+msgstr "%1$s - Hersiening %2$d"
 
-#: includes/class-wp-document-revisions.php:2473
+#: includes/trait-wp-document-revisions-query.php:566
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
-#: includes/class-wp-document-revisions.php:2497
+#: includes/trait-wp-document-revisions-query.php:589
 msgid "Published"
-msgstr ""
+msgstr "Gepubliseer"
 
-#: includes/class-wp-document-revisions.php:2498
+#: includes/trait-wp-document-revisions-query.php:590
+#: src/blocks/documents-widget/edit.js:67
 msgid "Draft"
-msgstr ""
+msgstr "Konsep"
 
-#: includes/class-wp-document-revisions.php:2499
+#: includes/trait-wp-document-revisions-query.php:591
 msgid "Scheduled"
-msgstr ""
+msgstr "Geskeduleer"
 
-#: includes/class-wp-document-revisions.php:2500
+#: includes/trait-wp-document-revisions-query.php:592
+#: src/blocks/documents-widget/edit.js:58
 msgid "Private"
-msgstr ""
+msgstr "Privaat"
 
-#: includes/class-wp-document-revisions.php:2501
+#: includes/trait-wp-document-revisions-query.php:593
 msgid "Pending Review"
-msgstr ""
+msgstr "Hangende hersiening"
 
-#: includes/class-wp-document-revisions.php:2502
+#: includes/trait-wp-document-revisions-query.php:594
 msgid "Trash"
-msgstr ""
+msgstr "Asblik"
 
+#: includes/trait-wp-document-revisions-revisions.php:328
+msgid "Somebody"
+msgstr "Iemand"
+
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
+#: includes/trait-wp-document-revisions-revisions.php:405
+#, php-format
+msgid "%1$s: %2$s has overridden your lock on %3$s"
+msgstr "%1$s: %2$s het jou slot op %3$s oorgeskryf"
+
+#. translators: %s is the user's name.
+#: includes/trait-wp-document-revisions-revisions.php:415
+#, php-format
+msgid "Dear %s:"
+msgstr "Geagte %s:"
+
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
+#: includes/trait-wp-document-revisions-revisions.php:417
+#, php-format
+msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
+msgstr "%1$s (%2$s) het jou slot op die dokument %3$s (%4$s) oorgeskryf."
+
+#: includes/trait-wp-document-revisions-revisions.php:418
+msgid "Any changes you have made will be lost."
+msgstr "Enige veranderinge wat jy aangebring het, sal verlore gaan."
+
+#. translators: %s is the blog name.
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- Die %s-span"
+
+#: includes/trait-wp-document-revisions-rewrites.php:47
+#: includes/trait-wp-document-revisions-rewrites.php:62
+msgid "revision"
+msgstr "hersiening"
+
+#: src/admin/wp-document-revisions-ai-prefill.js:61
+msgid "✨ AI suggestion — edit before saving."
+msgstr "✨ KI-voorstel — wysig voor stoor."
+
+#: src/admin/wp-document-revisions-ai-prefill.js:70
+msgid "✨ AI summary will be available shortly — refresh this page to see it."
+msgstr ""
+"✨ KI-opsomming sal binnekort beskikbaar wees — verfris hierdie bladsy om dit"
+" te sien."
+
+#: src/admin/wp-document-revisions-ai-prefill.js:100
+msgid "Dismiss"
+msgstr "Maak toe"
+
+#: src/admin/wp-document-revisions-ai-prefill.js:123
+msgid "Reviewed ✓"
+msgstr "Hersien ✓"
+
+#: src/admin/wp-document-revisions-ai-prefill.js:142
+msgid "Mark reviewed"
+msgstr "Merk hersien"
+
+#: src/admin/wp-document-revisions-validate.js:24
+msgid "Processed successfully."
+msgstr "Suksesvol verwerk."
+
+#: src/admin/wp-document-revisions.js:127
+msgid "Upload failed."
+msgstr "Oplaai het misluk."
+
+#: src/admin/wp-document-revisions.js:156
+msgid ""
+"File uploaded successfully. Add a revision summary below (optional) and "
+"press <strong>Update</strong> to save your changes."
+msgstr ""
+"Lêer suksesvol opgelaai. Voeg 'n hersieningsopsomming hieronder by "
+"(opsioneel) en druk <strong>Opdateer</strong> om jou veranderinge te stoor."
+
+#: src/admin/wp-document-revisions.js:173
+msgid "New version uploaded. Press Update to save."
+msgstr "Nuwe weergawe opgelaai. Druk Opdateer om te stoor."
+
+#: src/admin/wp-document-revisions.js:190
+msgid ""
+"Are you sure you want to restore this revision? If you do, no history will "
+"be lost. This revision will be copied and become the most recent revision."
+msgstr ""
+"Is jy seker jy wil hierdie hersiening herstel? Indien wel, sal geen "
+"geskiedenis verlore gaan nie. Hierdie hersiening sal gekopieer word en die "
+"mees onlangse hersiening word."
+
+#: src/admin/wp-document-revisions.js:240
+#: src/admin/wp-document-revisions.js:249
+msgid "An error has occurred, please try reloading the page."
+msgstr "'n Fout het voorgekom, probeer asseblief om die bladsy te herlaai."
+
+#: src/admin/wp-document-revisions.js:270
+msgid "Lost Document Lock"
+msgstr "Verlore Dokumentslot"
+
+#. translators: %s is the title of the document.
+#: src/admin/wp-document-revisions.js:285
+msgid ""
+"Your lock on the document %s has been overridden. Any changes will be lost."
+msgstr ""
+"Jou slot op die dokument %s is oorgeskryf. Enige veranderinge sal verlore "
+"gaan."
+
+#. translators: %d is the number of minutes.
+#: src/admin/wp-document-revisions.js:311
+msgid "%d mins"
+msgstr "%d min"
+
+#. translators: %d is the number of hours (singular).
+#: src/admin/wp-document-revisions.js:316
+msgid "%d hour"
+msgstr "%d uur"
+
+#. translators: %d is the number of hours (plural).
+#: src/admin/wp-document-revisions.js:319
+msgid "%d hours"
+msgstr "%d uur"
+
+#. translators: %d is the number of days (singular).
+#: src/admin/wp-document-revisions.js:324
+msgid "%d day"
+msgstr "%d dag"
+
+#. translators: %d is the number of days (plural).
+#: src/admin/wp-document-revisions.js:327
+msgid "%d days"
+msgstr "%d dae"
+
+#: src/admin/wp-document-revisions.js:410
+#: src/admin/wp-document-revisions.js:417
+#: src/editor-document-upload/index.js:258
+#: src/editor-document-upload/index.js:397
+msgid "Upload Document"
+msgstr "Laai dokument op"
+
+#: src/admin/wp-document-revisions.js:413
+msgid "Select Document"
+msgstr "Kies Dokument"
+
+#: src/blocks/documents-shortcode/edit.js:76
+msgid "There are no taxonomies defined."
+msgstr "Daar is geen taksonomieë gedefinieer nie."
+
+#: src/blocks/documents-shortcode/edit.js:88
+msgid "Taxonomy:"
+msgstr "Taksonomie:"
+
+#: src/blocks/documents-shortcode/edit.js:116
+msgid "Block Heading"
+msgstr "Blokopskrif"
+
+#: src/blocks/documents-shortcode/edit.js:123
+msgid "Display Settings"
+msgstr "Skerminstellings"
+
+#: src/blocks/documents-shortcode/edit.js:128
+msgid "Number of documents to display"
+msgstr "Aantal dokumente om te vertoon"
+
+#: src/blocks/documents-shortcode/edit.js:140
+msgid "List ordering Field"
+msgstr "Lysvolgordeveld"
+
+#: src/blocks/documents-shortcode/edit.js:141
+msgid "Example fields are post_title, post_date and post_modified."
+msgstr "Voorbeeldvelde is post_title, post_date en post_modified."
+
+#: src/blocks/documents-shortcode/edit.js:154
+msgid "Ascending"
+msgstr "Stygend"
+
+#: src/blocks/documents-shortcode/edit.js:158
+msgid "Descending"
+msgstr "Dalend"
+
+#: src/blocks/documents-shortcode/edit.js:167
+msgid "Show Edit link"
+msgstr "Wys Wysig skakel"
+
+#: src/blocks/documents-shortcode/edit.js:168
+msgid ""
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
+"appear if the user can edit the document."
+msgstr ""
+"Wys Wysig skakel laat die lys toe om 'n skakel na die Wysig funksie te hê. "
+"'n Keuse wat hier gemaak word, sal die stelsel-gekonfigureerde instellings "
+"oorskryf. Skakels sal slegs verskyn as die gebruiker die dokument kan wysig."
+
+#: src/blocks/documents-shortcode/edit.js:175
+msgid "Default"
+msgstr "Standaard"
+
+#: src/blocks/documents-shortcode/edit.js:179
+msgid "No Edit link"
+msgstr "Geen wysigingskakel nie"
+
+#: src/blocks/documents-shortcode/edit.js:183
+msgid "Edit link"
+msgstr "Wysig skakel"
+
+#: src/blocks/documents-shortcode/edit.js:194
+#: src/blocks/documents-widget/edit.js:78
+msgid "Show featured image?"
+msgstr "Wys uitgeligte prent?"
+
+#: src/blocks/documents-shortcode/edit.js:202
+#: src/blocks/documents-widget/edit.js:90
+msgid "Show document description?"
+msgstr "Wys dokumentbeskrywing?"
+
+#: src/blocks/documents-shortcode/edit.js:210
+#: src/blocks/documents-widget/edit.js:106
+#: src/blocks/revisions-shortcode/edit.js:50
+msgid "Show PDF File indication?"
+msgstr "Wys PDF-lêer aanduiding?"
+
+#: src/blocks/documents-shortcode/edit.js:218
+#: src/blocks/documents-widget/edit.js:114
+msgid "Open documents in new tab?"
+msgstr "Maak dokumente in nuwe oortjie oop?"
+
+#: src/blocks/documents-shortcode/edit.js:219
+#: src/blocks/documents-widget/edit.js:115
+#: src/blocks/revisions-shortcode/edit.js:59
+msgid ""
+"Setting this on will open the document in a new tab. This should be set on "
+"whilst editing the page using this block as clicking on a link whilst "
+"editing will force the current page to be left."
+msgstr ""
+"As jy dit aanskakel, sal die dokument in 'n nuwe oortjie oopmaak. Dit moet "
+"aangeskakel wees terwyl jy die bladsy met hierdie blok wysig, aangesien dit "
+"sal dwing om die huidige bladsy te verlaat as jy op 'n skakel klik terwyl jy"
+" wysig."
+
+#: src/blocks/documents-shortcode/edit.js:229
+msgid "Free Form Settings"
+msgstr "Vrye Vorm Instellings"
+
+#: src/blocks/documents-shortcode/edit.js:236
+msgid "Free-form parameters"
+msgstr "Vrye vorm parameters"
+
+#: src/blocks/documents-shortcode/edit.js:237
+msgid ""
+"The query parameters can be very extensive. enter any other parameters "
+"required here."
+msgstr ""
+"Die navraagparameters kan baie uitgebreid wees. Voer enige ander parameters "
+"hier in."
+
+#: src/blocks/documents-widget/edit.js:23
+msgid "Latest Documents Settings"
+msgstr "Instellings vir die nuutste dokumente"
+
+#: src/blocks/documents-widget/edit.js:29
+msgid "Latest Documents List Heading"
+msgstr "Opskrif van die nuutste dokumentelys"
+
+#: src/blocks/documents-widget/edit.js:36
+msgid "Documents to Display"
+msgstr "Dokumente om te vertoon"
+
+#: src/blocks/documents-widget/edit.js:46
+msgid "Document Statuses to Display"
+msgstr "Dokumentstatusse om te vertoon"
+
+#: src/blocks/documents-widget/edit.js:49
+msgid "Publish"
+msgstr "Publiseer"
+
+#: src/blocks/documents-widget/edit.js:79
+msgid ""
+"Under certain conditons WordPress can generate an image for Page 1 of PDF "
+"documents. If created this will be used as the Featured Image."
+msgstr ""
+"Onder sekere omstandighede kan WordPress 'n beeld genereer vir Bladsy 1 van "
+"PDF-dokumente. Indien dit geskep word, sal dit as die Uitgeligte Beeld "
+"gebruik word."
+
+#: src/blocks/documents-widget/edit.js:98
+msgid "Show author name?"
+msgstr "Wys outeur se naam?"
+
+#: src/blocks/revisions-shortcode/edit.js:17
+msgid "Selection Criteria"
+msgstr "Seleksiekriteria"
+
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "Dokument-ID"
+
+#: src/blocks/revisions-shortcode/edit.js:30
+msgid "Revisions to Display"
+msgstr "Hersienings om te vertoon"
+
+#: src/blocks/revisions-shortcode/edit.js:42
+msgid "Show Revision Summaries?"
+msgstr "Wys hersieningsopsommings?"
+
+#: src/blocks/revisions-shortcode/edit.js:58
+msgid "Open in New Tab?"
+msgstr "Maak oop in Nuwe Oortjie?"
+
+#: src/editor-document-upload/index.js:50
+msgid "just now"
+msgstr "nou net"
+
+#: src/editor-document-upload/index.js:53
+msgid "min ago"
+msgstr "min gelede"
+
+#: src/editor-document-upload/index.js:61
+msgid "hour ago"
+msgstr "uur gelede"
+
+#: src/editor-document-upload/index.js:62
+msgid "hours ago"
+msgstr "ure gelede"
+
+#: src/editor-document-upload/index.js:71
+msgid "day ago"
+msgstr "dag gelede"
+
+#: src/editor-document-upload/index.js:72
+msgid "days ago"
+msgstr "dae gelede"
+
+#: src/editor-document-upload/index.js:200
+msgid ""
+"The attached document file could not be found. It may have been deleted."
+msgstr ""
+"Die aangehegte dokumentlêer kon nie gevind word nie. Dit is moontlik "
+"verwyder."
+
+#: src/editor-document-upload/index.js:212
+msgid "Document selection failed."
+msgstr "Dokumentkeuse het misluk."
+
+#: src/editor-document-upload/index.js:224
+msgid "New version selected. Press Update to save."
+msgstr "Nuwe weergawe gekies. Druk Opdateer om te stoor."
+
+#: src/editor-document-upload/index.js:225
+msgid "Document selected. Press Update to save."
+msgstr "Dokument gekies. Druk Opdateer om te stoor."
+
+#: src/editor-document-upload/index.js:261
+msgid "Select"
+msgstr "Kies"
+
+#: src/editor-document-upload/index.js:312
+msgid "Attached document"
+msgstr "Aangehegte dokument"
+
+#. translators: %s is the name of the user who has the document locked
+#: src/editor-document-upload/index.js:344
+msgid "%s is currently editing this document."
+msgstr "%s is tans besig om hierdie dokument te redigeer."
+
+#: src/editor-document-upload/index.js:348
+msgid "This document is currently locked."
+msgstr "Hierdie dokument is tans gesluit."
+
+#: src/editor-document-upload/index.js:406
+msgid "A brief description of the changes in this version."
+msgstr "'n Kort beskrywing van die veranderinge in hierdie weergawe."
+
+#: src/editor-document-upload/index.js:515
+msgid "No revisions yet."
+msgstr "Geen hersienings nog nie."
+
+#: src/editor-document-upload/index.js:578
+msgid "—"
+msgstr "—"
+
+#: src/blocks/documents-shortcode/block.json
+msgctxt "block title"
+msgid "Documents List"
+msgstr "Dokumentelys"
+
+#: src/blocks/documents-shortcode/block.json
+msgctxt "block description"
+msgid "Display a list of documents."
+msgstr "Wys 'n lys van dokumente."
+
+#: src/blocks/documents-widget/block.json
+msgctxt "block title"
+msgid "Latest Documents"
+msgstr "Nuutste Dokumente"
+
+#: src/blocks/documents-widget/block.json
+msgctxt "block description"
+msgid "Display a list of your most recent documents."
+msgstr "Wys 'n lys van jou mees onlangse dokumente."
+
+#: src/blocks/revisions-shortcode/block.json
+msgctxt "block title"
+msgid "Document Revisions"
+msgstr "Dokumenthersienings"
+
+#: src/blocks/revisions-shortcode/block.json
+msgctxt "block description"
+msgid "Display a list of revisions for your document."
+msgstr "Wys 'n lys van hersienings vir jou dokument."
