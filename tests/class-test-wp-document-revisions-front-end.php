@@ -731,6 +731,7 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 		// need to unregister blocks before reregister (if Block Editor onstalled).
 		unregister_block_type( 'wp-document-revisions/documents-shortcode' );
 		unregister_block_type( 'wp-document-revisions/revisions-shortcode' );
+		unregister_block_type( 'wp-document-revisions/document-preview' );
 
 		$wpdr_fe->documents_shortcode_blocks();
 

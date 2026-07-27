@@ -228,6 +228,10 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.4.0 =
+
+* Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)
+
 = 5.3.0 =
 
 * The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
@@ -236,11 +240,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
 
 = 5.2.0 =
-
-* The classic-editor admin and block-editor sidebar (document upload and revision log) interface strings are now fully translatable via WordPress's JavaScript internationalization. Previously a number of the plugin's script-side strings could not be translated and always appeared in English regardless of the site language. (#628)
-* Add or refresh translations for 31 languages covering the newly-translatable admin and block-editor strings. (#628)
-* Under the hood: the plugin's admin JavaScript is now built as ES modules through `@wordpress/scripts`, with static type-checking and expanded unit and component test coverage in CI. No change to functionality.
-
-= 5.1.3 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

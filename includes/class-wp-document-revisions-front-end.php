@@ -68,6 +68,7 @@ class WP_Document_Revisions_Front_End {
 
 		add_shortcode( 'document_revisions', array( $this, 'revisions_shortcode' ) );
 		add_shortcode( 'documents', array( $this, 'documents_shortcode' ) );
+		add_shortcode( 'document_preview', array( $this, 'wpdr_document_preview_display' ) );
 		add_filter( 'document_shortcode_atts', array( $this, 'shortcode_atts_hyphen_filter' ) );
 
 		// Add blocks. Done after wp_loaded so that the taxonomies have been defined.
@@ -621,6 +622,25 @@ class WP_Document_Revisions_Front_End {
 			);
 		}
 
+		$prev_build_dir = $dir . '/build/blocks/document-preview';
+
+		if ( file_exists( $prev_build_dir . '/block.json' ) ) {
+			register_block_type(
+				$prev_build_dir,
+				array(
+					'render_callback' => array( $this, 'wpdr_document_preview_display' ),
+				)
+			);
+		} else {
+			// Fallback when build directory is not available (e.g. development/CI).
+			register_block_type(
+				'wp-document-revisions/document-preview',
+				array(
+					'render_callback' => array( $this, 'wpdr_document_preview_display' ),
+				)
+			);
+		}
+
 		// Add supplementary script for additional information.
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
 		// Ensure taxonomies are set.
@@ -642,6 +662,10 @@ class WP_Document_Revisions_Front_End {
 			$rev_block = $registry->get_registered( 'wp-document-revisions/revisions-shortcode' );
 			if ( $rev_block && ! empty( $rev_block->editor_script_handles ) ) {
 				wp_set_script_translations( $rev_block->editor_script_handles[0], 'wp-document-revisions' );
+			}
+			$prev_block = $registry->get_registered( 'wp-document-revisions/document-preview' );
+			if ( $prev_block && ! empty( $prev_block->editor_script_handles ) ) {
+				wp_set_script_translations( $prev_block->editor_script_handles[0], 'wp-document-revisions' );
 			}
 		}
 	}
@@ -962,6 +986,93 @@ class WP_Document_Revisions_Front_End {
 
 		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
 		$output .= $wpdr_fe->revisions_shortcode( $atts );
+		return $output;
+	}
+
+	/**
+	 * Server side block/shortcode to render an inline preview of a document's latest revision.
+	 *
+	 * The document permalink serves the latest revision inline through the authenticated
+	 * file handler (serve_file), so the browser previews it in place and access control is
+	 * enforced on the actual file request regardless of this callback.
+	 *
+	 * @param array<string, mixed> $atts shortcode/block attributes.
+	 * @return string the preview markup.
+	 * @since 5.4.0
+	 */
+	public function wpdr_document_preview_display( array $atts ): string {
+		global $wpdr;
+
+		$atts = shortcode_atts(
+			array(
+				'id'            => 0,
+				'height'        => 600,
+				'show_title'    => false,
+				'show_download' => true,
+			),
+			$atts,
+			'document'
+		);
+
+		$id = absint( $atts['id'] );
+
+		// Check it is a document (and not its revision or attached document).
+		if ( 'document' !== get_post_type( $id ) ) {
+			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// Mirror serve_file()'s access decision exactly, using the same filter, so the preview
+		// renders if and only if the file would actually be served. This keeps the preview in
+		// step with WPDR's model (published documents are public by default, others are gated)
+		// and honours any third-party auth filters. serve_file re-enforces this on the real
+		// file request regardless, so access control never depends on this callback alone.
+		if ( ! apply_filters( 'serve_document_auth', true, get_post( $id ), false ) ) {
+			return '<p>' . esc_html__( 'You are not authorized to read this document.', 'wp-document-revisions' ) . '</p>';
+		}
+
+		$url = get_permalink( $id );
+		if ( ! $url ) {
+			return '<p>' . esc_html__( 'This document has no file to preview.', 'wp-document-revisions' ) . '</p>';
+		}
+
+		// get_file_type() returns the extension with a leading dot (e.g. ".pdf"); normalize it.
+		$extension     = ltrim( strtolower( $wpdr->get_file_type( $id ) ), '.' );
+		$height        = absint( $atts['height'] );
+		$height        = ( 0 === $height ) ? 600 : $height;
+		$show_title    = filter_var( $atts['show_title'], FILTER_VALIDATE_BOOLEAN );
+		$show_download = filter_var( $atts['show_download'], FILTER_VALIDATE_BOOLEAN );
+		$image_types   = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp' );
+
+		$download_link = '<a href="' . esc_url( $url ) . '" class="document-download" download>' . esc_html__( 'Download document', 'wp-document-revisions' ) . '</a>';
+
+		$output = '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
+
+		if ( $show_title ) {
+			$output .= '<h2 class="document-title">' . esc_html( get_the_title( $id ) ) . '</h2>';
+		}
+
+		if ( 'pdf' === $extension ) {
+			// <object> renders the PDF inline; the nested link is the graceful fallback
+			// when the browser cannot display it.
+			$output .= '<object class="document-preview-object" data="' . esc_url( $url ) . '" type="application/pdf" width="100%" height="' . esc_attr( (string) $height ) . '">';
+			$output .= $download_link;
+			$output .= '</object>';
+		} elseif ( in_array( $extension, $image_types, true ) ) {
+			$output .= '<img class="document-preview-image" src="' . esc_url( $url ) . '" alt="' . esc_attr( get_the_title( $id ) ) . '" />';
+		} else {
+			// Non-previewable type: the served file is behind an auth gate, so external
+			// viewers cannot reach it. Offer a download instead.
+			$output .= '<p class="document-preview-nopreview">' . esc_html__( 'This file type cannot be previewed inline.', 'wp-document-revisions' ) . ' ' . $download_link . '</p>';
+			// Avoid rendering the link twice below.
+			$show_download = false;
+		}
+
+		if ( $show_download ) {
+			$output .= '<p class="document-preview-download">' . $download_link . '</p>';
+		}
+
+		$output .= '</div>';
+
 		return $output;
 	}
 }
