@@ -6,6 +6,12 @@ name: Machine-translate missing strings
 # the POT is refreshed on main (i.e. once the "Update POT file" PR from pot.yml
 # merges), so newly-extracted JS strings get translated.
 #
+# Engine: set the repo secret GOOGLE_TRANSLATE_API_KEY to use Google Cloud
+# Translation (reliable, covers every locale, free at this volume). Without it,
+# the script falls back to keyless translate-shell, which is best-effort and
+# often rate-limited from CI. (To swap to DeepL later, add a DEEPL_API_KEY
+# branch to script/fill-machine-translations.py.)
+#
 # Machine translations are written as final (not fuzzy) per project decision,
 # but only when they preserve every printf placeholder / HTML tag from the
 # source (see script/fill-machine-translations.py); unsafe ones are left
@@ -61,6 +67,10 @@ jobs:
                   done
 
             - name: Fill untranslated entries with machine translations
+              env:
+                  # Optional: when set, uses Google Cloud Translation instead of
+                  # the keyless translate-shell fallback.
+                  GOOGLE_TRANSLATE_API_KEY: ${{ secrets.GOOGLE_TRANSLATE_API_KEY }}
               run: python3 script/fill-machine-translations.py
 
             - name: Compile MO files

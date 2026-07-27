@@ -2,33 +2,45 @@
 """Fill untranslated gettext entries with machine translations.
 
 For every ``languages/*.po`` file, each untranslated entry's ``msgid`` (and
-plural form) is translated into the file's locale via the ``trans`` CLI
-(translate-shell, a keyless public MT front-end) and written to ``msgstr``.
+plural form) is translated into the file's locale and written to ``msgstr``.
 Machine translations are shipped as final (the fuzzy flag is cleared) per
 project decision.
+
+Engine:
+ - If ``GOOGLE_TRANSLATE_API_KEY`` is set, the Google Cloud Translation v2
+   REST API is used (reliable from CI, covers all of this plugin's locales).
+ - Otherwise it falls back to the keyless ``trans`` CLI (translate-shell),
+   which is best-effort and often rate-limited from datacenter IPs.
 
 Safety:
  - Entries whose translation does not preserve the exact set of printf-style
    placeholders (``%s``, ``%d``, ``%1$s``) and HTML tags are skipped and left
    untranslated, so a mangled string never reaches the UI.
- - ``trans`` failures / rate-limits leave the entry untranslated; a later run
-   retries it. Nothing is overwritten that already has a translation.
+ - Failures / rate-limits leave the entry untranslated; a later run retries
+   it. Nothing is overwritten that already has a translation.
 
-Requires: polib, and the ``trans`` binary (translate-shell) on PATH.
-Compiling the .mo files is done separately (msgfmt) by the workflow.
+Requires: polib. The ``trans`` binary (translate-shell) is only needed for the
+keyless fallback. Compiling the .mo files is done separately (msgfmt) by the
+workflow.
 """
 
 import glob
+import json
 import os
 import re
 import subprocess
 import sys
 import time
+import urllib.parse
+import urllib.request
 
 try:
     import polib
 except ImportError:  # pragma: no cover
     sys.exit("polib is required: pip install polib")
+
+_GOOGLE_KEY = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+_GOOGLE_ENDPOINT = "https://translation.googleapis.com/language/translate/v2"
 
 # printf placeholders (%s, %d, %1$s, %02d, …) and HTML tags.
 _TOKEN_RE = re.compile(r"%[0-9]*\$?[0-9]*[sd]|<[^>]+>")
@@ -40,17 +52,39 @@ def tokens(text):
 
 
 def locale_of(path):
-    """`wp-document-revisions-pt_BR.po` -> `pt-BR` (trans accepts either form)."""
+    """`wp-document-revisions-pt_BR.po` -> `pt-BR`."""
     m = re.search(r"-([a-z]{2,3}(?:_[A-Za-z]+)?)\.po$", os.path.basename(path))
     if not m:
         return None
     return m.group(1).replace("_", "-")
 
 
-def translate(text, target):
-    """Translate `text` into `target` via translate-shell; '' on failure."""
-    if not text.strip():
-        return ""
+def target_code(locale):
+    """Map a PO locale to an MT target code (base language, keeping zh region)."""
+    base, _, region = locale.partition("-")
+    if base == "zh":
+        return "zh-TW" if region == "TW" else "zh-CN"
+    return base
+
+
+def _translate_google(text, target):
+    """Google Cloud Translation v2 REST; '' on failure."""
+    data = urllib.parse.urlencode(
+        {"q": text, "target": target, "source": "en", "format": "text", "key": _GOOGLE_KEY}
+    ).encode()
+    for _ in range(3):
+        try:
+            req = urllib.request.Request(_GOOGLE_ENDPOINT, data=data)
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                payload = json.load(resp)
+            return payload["data"]["translations"][0]["translatedText"].strip()
+        except Exception:  # noqa: BLE001 - best-effort
+            time.sleep(2)
+    return ""
+
+
+def _translate_trans(text, target):
+    """Keyless translate-shell fallback; '' on failure."""
     for _ in range(3):
         try:
             proc = subprocess.run(
@@ -63,10 +97,19 @@ def translate(text, target):
             out = proc.stdout.strip()
             if out:
                 return out
-        except Exception:  # noqa: BLE001 - best-effort, keep going
+        except Exception:  # noqa: BLE001 - best-effort
             pass
         time.sleep(2)
     return ""
+
+
+def translate(text, target):
+    """Translate `text` into `target` with the configured engine; '' on failure."""
+    if not text.strip():
+        return ""
+    if _GOOGLE_KEY:
+        return _translate_google(text, target)
+    return _translate_trans(text, target)
 
 
 def safe(original, translated):
@@ -99,11 +142,14 @@ def fill_entry(entry, target):
 
 
 def main():
+    engine = "Google Cloud Translation" if _GOOGLE_KEY else "translate-shell (keyless)"
+    print(f"Machine-translation engine: {engine}")
     total = 0
     for path in sorted(glob.glob("languages/*.po")):
-        target = locale_of(path)
-        if not target:
+        locale = locale_of(path)
+        if not locale:
             continue
+        target = target_code(locale)
         po = polib.pofile(path)
         filled = 0
         for entry in po:
