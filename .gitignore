@@ -13,3 +13,7 @@ build
 clover.xml
 tests/e2e/results
 tests/e2e/config/.auth
+
+# Python bytecode from local script runs
+__pycache__/
+*.pyc

@@ -144,6 +144,23 @@ def fill_entry(entry, target):
 def main():
     engine = "Google Cloud Translation" if _GOOGLE_KEY else "translate-shell (keyless)"
     print(f"Machine-translation engine: {engine}")
+
+    # Preflight: fail fast (seconds) if the engine can't translate at all —
+    # e.g. a bad/rotated key, the Cloud Translation API not enabled, or billing
+    # not linked — rather than grinding through retries for hours.
+    probe = translate("Document", "es")
+    if not probe:
+        sys.exit(
+            "Machine-translation engine is not responding to a test request.\n"
+            + (
+                "Check GOOGLE_TRANSLATE_API_KEY, that the Cloud Translation API is "
+                "enabled, and that billing is linked to the project."
+                if _GOOGLE_KEY
+                else "The keyless translate-shell endpoint appears blocked/rate-limited."
+            )
+        )
+    print(f"Preflight OK (Document -> es: {probe!r}).")
+
     total = 0
     for path in sorted(glob.glob("languages/*.po")):
         locale = locale_of(path)
@@ -157,7 +174,8 @@ def main():
                 continue
             if fill_entry(entry, target):
                 filled += 1
-            time.sleep(0.3)  # be gentle on the public endpoint
+            if not _GOOGLE_KEY:
+                time.sleep(0.3)  # be gentle on the keyless public endpoint
         if filled:
             po.save(path)
             total += filled

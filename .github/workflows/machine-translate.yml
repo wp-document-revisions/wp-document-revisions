@@ -26,6 +26,11 @@ on:
         paths:
             - 'languages/wp-document-revisions.pot'
 
+# Only one translation pass at a time; a newer trigger supersedes an older run.
+concurrency:
+    group: machine-translate
+    cancel-in-progress: true
+
 jobs:
     machine-translate:
         name: Machine-translate PO files
