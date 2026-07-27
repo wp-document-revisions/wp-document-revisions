@@ -18,6 +18,15 @@ A powerful document management and version control plugin for WordPress that all
 2. **👥 Collaboration Tool** - Empower teams to collaboratively draft, edit, and refine documents
 3. **🔒 File Hosting Solution** - Publish and securely deliver files to teams, clients, or the public
 
+### ✨ Modern and AI-ready
+
+WP Document Revisions keeps pace with modern WordPress:
+
+- **🔍 Full-text search inside your files** — native text extraction from PDF, DOCX, and ODT documents (pluggable for more formats) makes document *contents* searchable, not just their titles.
+- **🤖 AI-generated revision summaries** — powered by the [WordPress 7.0 AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), each new revision can be summarized automatically from a diff against the prior version and pre-filled into the revision log for your review (opt-in, with per-document and sitewide opt-outs).
+- **🧱 Block editor support** — an opt-in Gutenberg editing experience with a document sidebar panel for uploads, revision summaries, and lock status.
+- **🔌 REST API & WP-CLI** — manage documents headlessly and backfill the search/AI cache across your whole library from the command line.
+
 See [**the full list of features**](./features.md) for more information.
 
 ## 📚 Documentation
@@ -33,7 +42,7 @@ See [**the full list of features**](./features.md) for more information.
 ### 📖 User Documentation
 
 - **[Frequently Asked Questions](./frequently-asked-questions.md)** - Common questions answered
-- **[Block Editor Support](./block-editor.md)** - ⚠️ Experimental Gutenberg support (opt-in)
+- **[Block Editor Support](./block-editor.md)** - Opt-in Gutenberg editing for documents
 - **[Plugin Actions](./actions.md)** - Available WordPress actions
 - **[Plugin Filters](./filters.md)** - Available WordPress filters
 - **[Plugin Shortcodes and Widget](./shortcodes.md)** - Display documents on your site

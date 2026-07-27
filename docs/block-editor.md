@@ -1,8 +1,8 @@
-# Block Editor (Gutenberg) Support — Experimental
+# Block Editor (Gutenberg) Support
 
-> **⚠️ Experimental Feature:** Block editor support and the REST API for documents are both experimental and opt-in. The classic editor remains the default, recommended, and most thoroughly tested interface. Enable the block editor only if you want to evaluate the new experience and are comfortable with potential rough edges. Please [report any issues](https://github.com/wp-document-revisions/wp-document-revisions/issues) you encounter.
+> **ℹ️ Opt-in feature:** Block editor support and the REST API for documents are supported but opt-in. The classic editor remains the default because it provides a streamlined, purpose-built upload interface. Enable the block editor when you prefer the modern WordPress editing experience for documents. Found a rough edge? Please [report it](https://github.com/wp-document-revisions/wp-document-revisions/issues).
 
-WP Document Revisions includes experimental support for the WordPress block editor (Gutenberg). By default, documents use the classic editor, which provides a streamlined, purpose-built upload interface. The block editor can be enabled for evaluation when you want to try the newer WordPress editing experience for documents.
+WP Document Revisions supports the WordPress block editor (Gutenberg) for documents. By default, documents use the classic editor, which provides a streamlined, purpose-built upload interface. Enable the block editor when you want the newer WordPress editing experience for documents — the upload flow is exercised by the plugin's end-to-end test suite.
 
 ## How to Opt In
 
@@ -12,7 +12,7 @@ Add the following two filters to your theme's `functions.php` or a custom plugin
 // Enable REST API for documents (required for block editor).
 add_filter( 'document_show_in_rest', '__return_true' );
 
-// Enable the experimental block editor for documents.
+// Enable the block editor for documents.
 add_filter( 'document_use_block_editor', '__return_true' );
 ```
 
@@ -20,14 +20,14 @@ Alternatively, create a [must-use plugin](https://developer.wordpress.org/advanc
 
 ```php
 <?php
-// Experimental: Enable block editor for documents.
+// Enable the block editor for documents.
 add_filter( 'document_show_in_rest', '__return_true' );
 add_filter( 'document_use_block_editor', '__return_true' );
 ```
 
 To disable the block editor, simply remove these filters.
 
-Both filters are required. `document_show_in_rest` exposes documents to the WordPress REST API (also experimental), and `document_use_block_editor` configures the plugin for block editor compatibility (enables Gutenberg for documents, allows REST write methods, adds excerpt support, and registers post meta). Enabling `document_show_in_rest` alone provides read-only REST API access without the block editor.
+Both filters are required. `document_show_in_rest` exposes documents to the WordPress REST API, and `document_use_block_editor` configures the plugin for block editor compatibility (enables Gutenberg for documents, allows REST write methods, adds excerpt support, and registers post meta). Enabling `document_show_in_rest` alone provides read-only REST API access without the block editor.
 
 ## Document Sidebar Panel
 
@@ -92,7 +92,6 @@ WP Document Revisions also provides three Gutenberg blocks for displaying docume
 
 ## Known Limitations
 
-- **Experimental** — This feature is under active development and may have rough edges
 - **Document locking** — Uses WordPress core's lock mechanism, which differs from the plugin's custom `document_lock_check` filter used in the classic editor
 - **REST API exposure** — Requires the REST API to be enabled for documents, which exposes document endpoints to authenticated users with appropriate capabilities
 - **Content area hidden** — The main editor canvas is hidden since documents don't use post body content; all management happens via the sidebar panels

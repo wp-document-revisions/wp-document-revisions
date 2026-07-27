@@ -9,4 +9,4 @@ Stable tag: 5.2.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
+Document management and version control for WordPress. Collaborate on files, track every revision, and auto-generate change summaries with AI.

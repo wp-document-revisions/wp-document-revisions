@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-A powerful document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
+A powerful document management and version control plugin for WordPress. Collaborate on files, track every revision, search inside document contents, and auto-generate change summaries with AI.
 
 ## 🚀 Quick Start
 
@@ -24,6 +24,9 @@ WP Document Revisions transforms WordPress into a complete document management s
 - **Team Collaboration** - File check-out/check-in system prevents conflicts
 - **Flexible Workflow** - Integrates with your existing processes
 - **Permanent URLs** - Files get persistent links that always point to the latest version
+- **🔍 Full-Text Search** - Native text extraction from PDF, DOCX, and ODT makes document *contents* searchable
+- **🤖 AI Revision Summaries** - Auto-summarize each revision via the WordPress 7.0 AI Client (opt-in)
+- **🧱 Block Editor & REST API** - Opt-in Gutenberg editing plus headless REST and WP-CLI management
 
 ## 📋 Requirements
 

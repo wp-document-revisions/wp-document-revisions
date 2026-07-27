@@ -132,7 +132,7 @@ Yes. It will need to be slightly customized to meet your needs, but take a look 
 
 ### Can I use the block editor (Gutenberg) with documents?
 
-Yes, but it is experimental and opt-in. By default, documents use the classic editor, which provides a streamlined, purpose-built upload interface. To enable the block editor, add both the `document_show_in_rest` and `document_use_block_editor` filters to your theme's `functions.php` or a custom plugin. See the [Block Editor Support](./block-editor.md) page for full details, including known limitations.
+Yes. Block editor support is opt-in — by default, documents use the classic editor, which provides a streamlined, purpose-built upload interface. To enable the block editor, add both the `document_show_in_rest` and `document_use_block_editor` filters to your theme's `functions.php` or a custom plugin. See the [Block Editor Support](./block-editor.md) page for full details, including known limitations.
 
 ### What happens when I delete (uninstall) the plugin?
 
