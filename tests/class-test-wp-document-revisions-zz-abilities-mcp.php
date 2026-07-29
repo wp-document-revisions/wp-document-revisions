@@ -20,6 +20,12 @@
  * flag values so a future change to `meta.public` — or an accidental
  * flip of a flag — can't silently widen or narrow the agent surface.
  *
+ * NOTE ON FILE NAME: the `zz-` prefix forces this class to run last. The
+ * WPDR suite has ordering-dependent tests (hence the sibling `z-last`
+ * class); a new test class inserted earlier shifts that order and breaks
+ * unrelated attachment/revision-count assertions. Running last keeps this
+ * self-contained, read-only test from disturbing them.
+ *
  * @package WP_Document_Revisions
  */
 
