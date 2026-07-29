@@ -32,7 +32,7 @@
 /**
  * Tests for the abilities' MCP exposure meta.
  */
-class Test_WP_Document_Revisions_Abilities_MCP extends Test_Common_WPDR {
+class Test_WP_Document_Revisions_Zz_Abilities_MCP extends Test_Common_WPDR {
 
 	/**
 	 * Abilities that must be exposed over MCP (read-only surface).
