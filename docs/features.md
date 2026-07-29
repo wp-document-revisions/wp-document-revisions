@@ -35,7 +35,7 @@
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 - Opt-in [Block Editor (Gutenberg) support](block-editor.md) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
-- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
+- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette, with read-only abilities exposed over the Model Context Protocol via the [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter)
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use
 - AI-generated revision summaries via the [WordPress 7.0 AI Client](https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), computed from a unified diff of the new revision against the prior one and pre-filled into the revision log for editor review. See the [Text Extraction & AI cookbook entry](cookbook/text-extraction-and-ai-summaries.md) for customization recipes
 - WP-CLI `document-revisions extract-text` command to backfill the extraction cache across an existing library, with `--all`/`--missing`/`--id`/`--extractor`/`--force`/`--dry-run` selectors

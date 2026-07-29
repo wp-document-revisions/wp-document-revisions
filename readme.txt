@@ -100,7 +100,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 - Opt-in [Block Editor (Gutenberg) support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
-- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
+- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette, with read-only abilities exposed over the Model Context Protocol via the [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter)
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use
 - AI-generated revision summaries via the [WordPress 7.0 AI Client](https://wp-document-revisions.github.io/wp-document-revisions/https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), computed from a unified diff of the new revision against the prior one and pre-filled into the revision log for editor review. See the [Text Extraction & AI cookbook entry](cookbook/text-extraction-and-ai-summaries/) for customization recipes
 - WP-CLI `document-revisions extract-text` command to backfill the extraction cache across an existing library, with `--all`/`--missing`/`--id`/`--extractor`/`--force`/`--dry-run` selectors
@@ -297,6 +297,8 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 * Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)
 * Add opt-in email notifications (Settings → Media) that alert a configurable recipient list, plus the document's author, when a document changes workflow state or gains a new revision. Disabled by default; the person making the change is never notified of their own change; fully customizable via filters. Supersedes the former code-cookbook recipe by making state-change notifications a built-in feature.
+* Fix Abilities API registration on WordPress 6.9+: the plugin's ability category was registered without the now-required `description`, which caused the category — and therefore all four document abilities — to silently fail to register. The category now includes a description and the abilities register as intended.
+* Expose the three read-only Abilities API abilities (`check-document-access`, `get-document-info`, `get-document-revisions`) to AI agents over the Model Context Protocol via the WordPress MCP Adapter — no bundled MCP server required. The mutating `override-document-lock` ability is intentionally excluded, keeping the agent-facing surface read-only, and every call continues to enforce per-document read permissions.
 
 = 5.3.0 =
 
