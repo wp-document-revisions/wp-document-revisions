@@ -141,3 +141,5 @@ WP Document Revisions includes an `uninstall.php` that runs when the plugin is d
 ### What is the Abilities API?
 
 Starting with WordPress 6.9, the plugin registers 4 document abilities (`check-document-access`, `get-document-info`, `get-document-revisions`, `override-document-lock`) via the WordPress Abilities API. These make document operations discoverable by REST clients, AI agents, and the WordPress command palette. The abilities are feature-gated and only registered when WordPress 6.9+ is detected.
+
+The three read-only abilities (`check-document-access`, `get-document-info`, `get-document-revisions`) are also exposed to AI agents over the [Model Context Protocol](https://modelcontextprotocol.io/) when the [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter) is installed — no separate MCP server is required. Every request still runs through the same per-document permission checks (`read_document`, `read_document_revisions`), so agents only ever see documents the authenticated user is allowed to read. The `override-document-lock` ability changes state and is deliberately **not** exposed over MCP, keeping the agent-facing surface read-only.

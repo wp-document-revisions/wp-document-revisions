@@ -289,7 +289,10 @@ class WP_Document_Revisions {
 		wp_register_ability_category(
 			'wp-document-revisions',
 			array(
-				'label' => __( 'Documents', 'wp-document-revisions' ),
+				'label'       => __( 'Documents', 'wp-document-revisions' ),
+				// Core requires a description; without it the category (and therefore every
+				// ability assigned to it) fails to register on WordPress 6.9+.
+				'description' => __( 'Read and manage documents stored by WP Document Revisions.', 'wp-document-revisions' ),
 			)
 		);
 	}
@@ -340,7 +343,11 @@ class WP_Document_Revisions {
 						),
 					),
 				),
-				'meta'                => array( 'show_in_rest' => true ),
+				// Read-only ability; expose to REST and to the MCP Adapter (WordPress/mcp-adapter) for AI agents.
+				'meta'                => array(
+					'show_in_rest' => true,
+					'mcp'          => array( 'public' => true ),
+				),
 			)
 		);
 
@@ -374,7 +381,11 @@ class WP_Document_Revisions {
 						'status'         => array( 'type' => 'string' ),
 					),
 				),
-				'meta'                => array( 'show_in_rest' => true ),
+				// Read-only ability; expose to REST and to the MCP Adapter (WordPress/mcp-adapter) for AI agents.
+				'meta'                => array(
+					'show_in_rest' => true,
+					'mcp'          => array( 'public' => true ),
+				),
 			)
 		);
 
@@ -415,7 +426,11 @@ class WP_Document_Revisions {
 						),
 					),
 				),
-				'meta'                => array( 'show_in_rest' => true ),
+				// Read-only ability; expose to REST and to the MCP Adapter (WordPress/mcp-adapter) for AI agents.
+				'meta'                => array(
+					'show_in_rest' => true,
+					'mcp'          => array( 'public' => true ),
+				),
 			)
 		);
 
@@ -446,7 +461,12 @@ class WP_Document_Revisions {
 						'previous_lock' => array( 'type' => array( 'string', 'null' ) ),
 					),
 				),
-				'meta'                => array( 'show_in_rest' => true ),
+				// Mutating ability: intentionally NOT exposed to MCP (read-only agent surface).
+				// mcp.public => false guards against a future broad meta.public opt-in.
+				'meta'                => array(
+					'show_in_rest' => true,
+					'mcp'          => array( 'public' => false ),
+				),
 			)
 		);
 	}
