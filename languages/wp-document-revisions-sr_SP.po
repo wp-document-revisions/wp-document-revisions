@@ -3,33 +3,29 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
-"revisions\n"
-"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-30T00:14:48+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr_SP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: sr\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:564
+#: includes/class-wp-document-revisions-front-end.php:565
 msgid "WP Document Revisions"
 msgstr "Ревизије WP документа"
 
@@ -78,49 +74,66 @@ msgstr "Недовољна дозвола за читање ове разлик�
 msgid "No summary has been generated for this revision yet."
 msgstr "За ову ревизију још увек није генерисан резиме."
 
-#: includes/class-wp-document-revisions-front-end.php:135
-#: includes/class-wp-document-revisions-front-end.php:795
-#: includes/class-wp-document-revisions-front-end.php:950
+#: includes/class-wp-document-revisions-front-end.php:136
+#: includes/class-wp-document-revisions-front-end.php:819
+#: includes/class-wp-document-revisions-front-end.php:974
 msgid "You are not authorized to read this data"
 msgstr "Нисте овлашћени да читате ове податке"
 
-#: includes/class-wp-document-revisions-front-end.php:141
-#: includes/class-wp-document-revisions-front-end.php:955
+#: includes/class-wp-document-revisions-front-end.php:142
+#: includes/class-wp-document-revisions-front-end.php:979
+#: includes/class-wp-document-revisions-front-end.php:1021
 msgid "This is not a valid document."
 msgstr "Ово није важећи документ."
 
-#: includes/class-wp-document-revisions-front-end.php:164
-#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-front-end.php:165
+#: includes/class-wp-document-revisions-front-end.php:348
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr "(PDF)"
 
-#: includes/class-wp-document-revisions-front-end.php:189
+#: includes/class-wp-document-revisions-front-end.php:190
 msgid "ago by"
 msgstr "пре од стране"
 
-#: includes/class-wp-document-revisions-front-end.php:448
+#: includes/class-wp-document-revisions-front-end.php:449
 msgid "Edit"
 msgstr "Измени"
 
-#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-front-end.php:467
 #: includes/class-wp-document-revisions-recently-revised-widget.php:129
 msgid "No thumbnail available."
 msgstr "Нема доступне сличице."
 
-#: includes/class-wp-document-revisions-front-end.php:720
+#: includes/class-wp-document-revisions-front-end.php:744
 msgid "No selection"
 msgstr "Без избора"
 
-#: includes/class-wp-document-revisions-front-end.php:834
+#: includes/class-wp-document-revisions-front-end.php:858
 msgid " Taxonomy details in this block have changed."
 msgstr "Детаљи таксономије у овом блоку су се променили."
 
-#: includes/class-wp-document-revisions-front-end.php:869
-#: includes/class-wp-document-revisions-front-end.php:883
-#: includes/class-wp-document-revisions-front-end.php:897
+#: includes/class-wp-document-revisions-front-end.php:893
+#: includes/class-wp-document-revisions-front-end.php:907
+#: includes/class-wp-document-revisions-front-end.php:921
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr "Термин таксономије не припада овој таксономији."
+
+#: includes/class-wp-document-revisions-front-end.php:1030
+msgid "You are not authorized to read this document."
+msgstr "Нисте овлашћени да читате овај документ."
+
+#: includes/class-wp-document-revisions-front-end.php:1035
+msgid "This document has no file to preview."
+msgstr "Овај документ нема датотеку за преглед."
+
+#: includes/class-wp-document-revisions-front-end.php:1046
+msgid "Download document"
+msgstr "Преузми документ"
+
+#: includes/class-wp-document-revisions-front-end.php:1065
+msgid "This file type cannot be previewed inline."
+msgstr "Овај тип датотеке не може бити прегледан у тексту."
 
 #: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
@@ -149,6 +162,72 @@ msgstr "Жао нам је, није вам дозвољено да видите
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
+
+#: includes/class-wp-document-revisions-notifications.php:142
+#: includes/class-wp-document-revisions-notifications.php:196
+msgid "Someone"
+msgstr "Неко"
+
+#. translators: %1$s is the blog name, %2$s is the document title, %3$s is the
+#. new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:145
+#, php-format
+msgid "%1$s: %2$s moved to %3$s"
+msgstr "%1$s: %2$s је премештено у %3$s"
+
+#. translators: %1$s is the user who made the change, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:148
+#, php-format
+msgid "%1$s changed the workflow state of the document %2$s."
+msgstr "%1$s је променио/ла стање тока посла документа %2$s."
+
+#. translators: %1$s is the previous workflow state, %2$s is the new workflow
+#. state.
+#: includes/class-wp-document-revisions-notifications.php:151
+#, php-format
+msgid "State: %1$s to %2$s"
+msgstr "Држава: %1$s до %2$s"
+
+#. translators: %s is the new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:154
+#, php-format
+msgid "State: %s"
+msgstr "Држава: %s"
+
+#. translators: %s is the document URL.
+#: includes/class-wp-document-revisions-notifications.php:157
+#: includes/class-wp-document-revisions-notifications.php:209
+#, php-format
+msgid "View the document: %s"
+msgstr "Погледајте документ: %s"
+
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions-notifications.php:159
+#: includes/class-wp-document-revisions-notifications.php:211
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- Тим %s"
+
+#. translators: %1$s is the blog name, %2$s is the document title.
+#: includes/class-wp-document-revisions-notifications.php:199
+#, php-format
+msgid "%1$s: New revision of %2$s"
+msgstr "%1$s: Нова верзија %2$s"
+
+#. translators: %1$s is the user who saved the revision, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:202
+#, php-format
+msgid "%1$s saved a new revision of the document %2$s."
+msgstr "%1$s је сачувао/ла нову ревизију документа %2$s."
+
+#. translators: %s is the revision summary.
+#: includes/class-wp-document-revisions-notifications.php:206
+#, php-format
+msgid "Summary: %s"
+msgstr "Резиме: %s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -223,8 +302,8 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"Када је означено, обичан текст неће бити издвојен из отпремљених датотека за "
-"овај документ, а сав претходно издвојен текст ће бити обрисан. Корисно за "
+"Када је означено, обичан текст неће бити издвојен из отпремљених датотека за"
+" овај документ, а сав претходно издвојен текст ће бити обрисан. Корисно за "
 "осетљиве документе чији садржај не треба кеширати за претрагу, резимее "
 "вештачке интелигенције или друге функције засноване на тексту."
 
@@ -370,7 +449,8 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Прилог је пронађен за документ, али тренутно није повезан"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -450,8 +530,8 @@ msgid ""
 "Some of these can be fixed using data from within the system - and a button "
 "is available to fix the issue, but others cannot."
 msgstr ""
-"Неки од њих се могу поправити коришћењем података из система - и доступно је "
-"дугме за решавање проблема, али други не могу."
+"Неки од њих се могу поправити коришћењем података из система - и доступно је"
+" дугме за решавање проблема, али други не могу."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1189
 msgid ""
@@ -478,8 +558,8 @@ msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
 msgstr ""
-"Ово су проблеми који вас спречавају да прикажете свој документ на фронтенд-"
-"у. Проблеми укључују:"
+"Ово су проблеми који вас спречавају да прикажете свој документ на "
+"фронтенд-у. Проблеми укључују:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
@@ -502,7 +582,8 @@ msgid ""
 "However if there are any attachments attached to the document then we can "
 "display the latest one."
 msgstr ""
-"Међутим, ако постоје прилози приложени документу, можемо приказати најновији."
+"Међутим, ако постоје прилози приложени документу, можемо приказати "
+"најновији."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1196
 msgid ""
@@ -529,13 +610,14 @@ msgid ""
 "There is an identifier that links to a document attachment but there is no "
 "underlying file."
 msgstr ""
-"Постоји идентификатор који води до прилога документа, али не постоји основна "
-"датотека."
+"Постоји идентификатор који води до прилога документа, али не постоји основна"
+" датотека."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media store."
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
 "Као варијанта овог последњег случаја, можда сте подесили додатак тако да "
 "складиште докумената буде једно по вашем избору, а не стандардно складиште "
@@ -563,18 +645,18 @@ msgstr "Упозорења"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you "
-"know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
-"Природа веб технологије која се користи за испоруку WordPress-а значи да ако "
-"знате име датотеке која се налази на серверу, онда можете директно "
+"Природа веб технологије која се користи за испоруку WordPress-а значи да ако"
+" знате име датотеке која се налази на серверу, онда можете директно "
 "приступити датотеци."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access "
-"a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
 "Дизајнерска карактеристика овог додатка је да би требало да можете да "
 "приступите документу само ако идете преко самог WordPress-а."
@@ -591,40 +673,45 @@ msgstr ""
 msgid "The fix is therefore to md5-encode the file name."
 msgstr "Решење је, дакле, md5-кодирање имена датотеке."
 
-#: includes/class-wp-document-revisions.php:288
-#: includes/class-wp-document-revisions.php:702
+#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:726
 #: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
 msgstr "Документи"
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:295
+msgid "Read and manage documents stored by WP Document Revisions."
+msgstr "Читајте и управљајте документима које чува WP Document Revisions."
+
+#: includes/class-wp-document-revisions.php:317
 msgid "Check Document Access"
 msgstr "Проверите приступ документима"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:318
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr ""
-"Проверите да ли тренутни корисник може да изврши одређену радњу на документу."
+"Проверите да ли тренутни корисник може да изврши одређену радњу на "
+"документу."
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:327
 msgid "The document post ID to check access for."
 msgstr "ИД објаве документа за који треба проверити приступ."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:331
 msgid "The action to check: read, edit, delete, or publish."
 msgstr ""
 "Радња коју треба проверити: читање, уређивање, брисање или објављивање."
 
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:342
 msgid "Whether the user can perform the action."
 msgstr "Да ли корисник може да изврши радњу."
 
-#: includes/class-wp-document-revisions.php:346
+#: includes/class-wp-document-revisions.php:357
 msgid "Get Document Info"
 msgstr "Преузми информације о документу"
 
-#: includes/class-wp-document-revisions.php:347
+#: includes/class-wp-document-revisions.php:358
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
@@ -632,64 +719,64 @@ msgstr ""
 "Преузмите метаподатке за документ, укључујући тип датотеке, број ревизија и "
 "статус закључавања."
 
-#: includes/class-wp-document-revisions.php:358
-#: includes/class-wp-document-revisions.php:392
+#: includes/class-wp-document-revisions.php:369
+#: includes/class-wp-document-revisions.php:407
 msgid "The document post ID."
 msgstr "ИД објаве документа."
 
-#: includes/class-wp-document-revisions.php:380
+#: includes/class-wp-document-revisions.php:395
 msgid "Get Document Revisions"
 msgstr "Преузмите ревизије докумената"
 
-#: includes/class-wp-document-revisions.php:381
+#: includes/class-wp-document-revisions.php:396
 msgid "Retrieve the revision history of a document."
 msgstr "Преузмите историју ревизија документа."
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:440
 msgid "Override Document Lock"
 msgstr "Замени закључавање документа"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:441
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
 "Поништите закључавање документа од стране другог корисника да бисте "
 "омогућили уређивање."
 
-#: includes/class-wp-document-revisions.php:433
+#: includes/class-wp-document-revisions.php:452
 msgid "The document post ID to unlock."
 msgstr "ИД објаве документа коју треба откључати."
 
-#: includes/class-wp-document-revisions.php:499
-#: includes/class-wp-document-revisions.php:539
-#: includes/class-wp-document-revisions.php:592
+#: includes/class-wp-document-revisions.php:523
+#: includes/class-wp-document-revisions.php:563
+#: includes/class-wp-document-revisions.php:616
 msgid "Document not found."
 msgstr "Документ није пронађен."
 
-#: includes/class-wp-document-revisions.php:507
+#: includes/class-wp-document-revisions.php:531
 msgid "You do not have permission to view this document."
 msgstr "Немате дозволу да видите овај документ."
 
-#: includes/class-wp-document-revisions.php:547
+#: includes/class-wp-document-revisions.php:571
 msgid "You do not have permission to view revisions for this document."
 msgstr "Немате дозволу да видите ревизије овог документа."
 
-#: includes/class-wp-document-revisions.php:555
+#: includes/class-wp-document-revisions.php:579
 msgid "You do not have permission to view document revisions."
 msgstr "Немате дозволу за преглед ревизија документа."
 
-#: includes/class-wp-document-revisions.php:569
+#: includes/class-wp-document-revisions.php:593
 msgid "Unknown"
 msgstr "Непознато"
 
-#: includes/class-wp-document-revisions.php:610
+#: includes/class-wp-document-revisions.php:634
 msgid "You do not have permission to override the lock on this document."
 msgstr "Немате дозволу да поништите закључавање овог документа."
 
-#: includes/class-wp-document-revisions.php:638
+#: includes/class-wp-document-revisions.php:662
 msgid "You have activated the plugin WP Document Revisions"
 msgstr "Активирали сте додатак WP Document Revisions"
 
-#: includes/class-wp-document-revisions.php:640
+#: includes/class-wp-document-revisions.php:664
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
@@ -697,7 +784,7 @@ msgstr ""
 "Немате могућност edit_documents, вероватно због вишеструких конфликтних "
 "улога или коришћења прилагођене улоге!"
 
-#: includes/class-wp-document-revisions.php:642
+#: includes/class-wp-document-revisions.php:666
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
@@ -705,156 +792,156 @@ msgstr ""
 "Мени Документи се можда неће приказивати у потпуности ако недостају опције "
 "„Сви документи“ и „Додај документ“"
 
-#: includes/class-wp-document-revisions.php:644
+#: includes/class-wp-document-revisions.php:668
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
 msgstr ""
-"Прво би требало да проверите да ли имате више улога и да ли свака од њих има "
-"могућност уређивања докумената (edit_documents)."
+"Прво би требало да проверите да ли имате више улога и да ли свака од њих има"
+" могућност уређивања докумената (edit_documents)."
 
-#: includes/class-wp-document-revisions.php:690
+#: includes/class-wp-document-revisions.php:714
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Документи"
 
-#: includes/class-wp-document-revisions.php:691
+#: includes/class-wp-document-revisions.php:715
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Документ"
 
-#: includes/class-wp-document-revisions.php:692
+#: includes/class-wp-document-revisions.php:716
 msgctxt "document"
 msgid "Add Document"
 msgstr "Додај документ"
 
-#: includes/class-wp-document-revisions.php:693
+#: includes/class-wp-document-revisions.php:717
 msgid "Add New Document"
 msgstr "Додај нови документ"
 
-#: includes/class-wp-document-revisions.php:694
+#: includes/class-wp-document-revisions.php:718
 msgid "Edit Document"
 msgstr "Уреди документ"
 
-#: includes/class-wp-document-revisions.php:695
+#: includes/class-wp-document-revisions.php:719
 msgid "New Document"
 msgstr "Нови документ"
 
-#: includes/class-wp-document-revisions.php:696
+#: includes/class-wp-document-revisions.php:720
 msgid "View Document"
 msgstr "Прикажи документ"
 
-#: includes/class-wp-document-revisions.php:697
+#: includes/class-wp-document-revisions.php:721
 msgid "View Documents"
 msgstr "Прикажи документе"
 
-#: includes/class-wp-document-revisions.php:698
+#: includes/class-wp-document-revisions.php:722
 msgid "Search Documents"
 msgstr "Претражи документе"
 
-#: includes/class-wp-document-revisions.php:699
+#: includes/class-wp-document-revisions.php:723
 msgid "No documents found"
 msgstr "Није пронађен ниједан документ"
 
-#: includes/class-wp-document-revisions.php:700
+#: includes/class-wp-document-revisions.php:724
 msgid "No documents found in Trash"
 msgstr "Није пронађен ниједан документ у Отпаду"
 
-#: includes/class-wp-document-revisions.php:703
+#: includes/class-wp-document-revisions.php:727
 msgid "All Documents"
 msgstr "Сви документи"
 
-#: includes/class-wp-document-revisions.php:704
+#: includes/class-wp-document-revisions.php:728
 msgid "Document Image"
 msgstr "Слика документа"
 
-#: includes/class-wp-document-revisions.php:705
+#: includes/class-wp-document-revisions.php:729
 msgid "Set Document Image"
 msgstr "Постави слику документа"
 
-#: includes/class-wp-document-revisions.php:706
+#: includes/class-wp-document-revisions.php:730
 msgid "Remove Document Image"
 msgstr "Уклони слику документа"
 
-#: includes/class-wp-document-revisions.php:707
+#: includes/class-wp-document-revisions.php:731
 msgid "Use as Document Image"
 msgstr "Користи као слику документа"
 
-#: includes/class-wp-document-revisions.php:812
+#: includes/class-wp-document-revisions.php:836
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Стања тока посла"
 
-#: includes/class-wp-document-revisions.php:813
+#: includes/class-wp-document-revisions.php:837
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Стање тока посла"
 
-#: includes/class-wp-document-revisions.php:814
+#: includes/class-wp-document-revisions.php:838
 msgid "Search Workflow States"
 msgstr "Претрага стања тока посла"
 
-#: includes/class-wp-document-revisions.php:815
+#: includes/class-wp-document-revisions.php:839
 msgid "All Workflow States"
 msgstr "Сва стања тока посла"
 
-#: includes/class-wp-document-revisions.php:816
+#: includes/class-wp-document-revisions.php:840
 msgid "Parent Workflow State"
 msgstr "Надређено стање тока посла"
 
-#: includes/class-wp-document-revisions.php:817
+#: includes/class-wp-document-revisions.php:841
 msgid "Parent Workflow State:"
 msgstr "Стање надређеног тока посла:"
 
-#: includes/class-wp-document-revisions.php:818
+#: includes/class-wp-document-revisions.php:842
 msgid "Edit Workflow State"
 msgstr "Измени стање тока посла"
 
-#: includes/class-wp-document-revisions.php:819
+#: includes/class-wp-document-revisions.php:843
 msgid "Update Workflow State"
 msgstr "Ажурирај стање тока посла"
 
-#: includes/class-wp-document-revisions.php:820
+#: includes/class-wp-document-revisions.php:844
 msgid "Add New Workflow State"
 msgstr "Додај ново стање тока посла"
 
-#: includes/class-wp-document-revisions.php:821
+#: includes/class-wp-document-revisions.php:845
 msgid "New Workflow State Name"
 msgstr "Назив новог стања тока посла"
 
-#: includes/class-wp-document-revisions.php:822
+#: includes/class-wp-document-revisions.php:846
 msgid "Workflow States"
 msgstr "Стања тока посла"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "In Progress"
 msgstr "У току"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "Document is in the process of being written"
 msgstr "Документ је у процесу писања"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Initial Draft"
 msgstr "Почетни нацрт"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Document is being edited and refined"
 msgstr "Документ се уређује и дорађује"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Under Review"
 msgstr "У току је преглед"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Document is pending final review"
 msgstr "Документ чека коначни преглед"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Final"
 msgstr "Коначно"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Document is in its final form"
 msgstr "Документ је у својој коначној форми"
 
@@ -895,8 +982,7 @@ msgstr "Документ је сачуван."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid ""
-"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Документ послат. <a target=\"_blank\" href=\"%s\">Преузми документ</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -919,9 +1005,7 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid ""
-"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
-"a>"
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 "Нацрт документа је ажуриран. <a target=\"_blank\" href=\"%s\">Преузми "
 "документ</a>"
@@ -950,7 +1034,7 @@ msgstr "Стање тока посла"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:129
 #: includes/trait-wp-document-revisions-admin-editor.php:1186
-#: includes/trait-wp-document-revisions-admin-list.php:122
+#: includes/trait-wp-document-revisions-admin-list.php:266
 msgid "Owner"
 msgstr "Власник"
 
@@ -984,15 +1068,17 @@ msgstr "Најновија верзија документа"
 msgid "Download"
 msgstr "Преузми"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
-"ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
 msgstr ""
-"Пријавио се пре <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
-"abbr> корисник %4$s"
+"Пријавио се пре <abbr class=\"timestamp\" title=\"%1$s\" "
+"id=\"A%2$s\">%3$s</abbr> корисник %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1005,9 +1091,9 @@ msgstr "Основна употреба"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter "
-"a description, and click <code>Upload New Version</code> and select the file "
-"from your computer."
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
 msgstr ""
 "Овај екран омогућава корисницима да заједнички уређују документе и прате "
 "историју њихових ревизија. Да бисте започели, унесите наслов документа, "
@@ -1016,8 +1102,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the "
-"document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
 msgstr ""
 "Након успешног отпремања, можете унети поруку дневника ревизија, доделити "
 "документу аутора и описати његово тренутно стање тока рада."
@@ -1037,7 +1123,8 @@ msgstr "Опис документа"
 msgid ""
 "The document description provides a short user-oriented summary of the "
 "document."
-msgstr "Опис документа пружа кратак резиме документа оријентисан на корисника."
+msgstr ""
+"Опис документа пружа кратак резиме документа оријентисан на корисника."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:754
 msgid ""
@@ -1050,8 +1137,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a "
-"comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
 msgstr ""
 "Дневник ревизија пружа кратак резиме промена које се одражавају у одређеној "
 "ревизији. Широко коришћен у заједници отвореног кода, он пружа свеобухватан "
@@ -1063,21 +1150,21 @@ msgid ""
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
 msgstr ""
-"Претходне верзије документа можете преузети и прегледати кликом на временску "
-"ознаку у дневнику ревизија. Такође можете вратити ревизије кликом на дугме "
+"Претходне верзије документа можете преузети и прегледати кликом на временску"
+" ознаку у дневнику ревизија. Такође можете вратити ревизије кликом на дугме "
 "<code>врати</code> поред ревизије."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what "
-"stage a document sits within a particular organization&quot;s workflow. The "
-"field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Поље за стање тока посла може се користити да помогне члановима тима да "
 "разумеју у којој фази се документ налази у оквиру тока посла одређене "
-"организације. Поље је опционо и може се прилагодити или испитивати кликом на "
-"<code>Стање тока посла</code> са леве стране."
+"организације. Поље је опционо и може се прилагодити или испитивати кликом на"
+" <code>Стање тока посла</code> са леве стране."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1115,8 +1202,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow "
-"States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
 msgstr ""
 "Да бисте видели све документе у одређеном стању тока посла, кликните на "
 "<strong>Стања тока посла</strong> у менију са леве стране."
@@ -1140,13 +1227,13 @@ msgstr "Нећете моћи да отпремите ниједан докум�
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that "
-"allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Резимеи ревизија су опционе белешке које се чувају уз ову ревизију и које "
-"омогућавају другим корисницима да брзо и лако виде које сте измене направили "
-"без потребе да отварају саму датотеку."
+"омогућавају другим корисницима да брзо и лако виде које сте измене направили"
+" без потребе да отварају саму датотеку."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1002
 #: src/editor-document-upload/index.js:536
@@ -1207,7 +1294,47 @@ msgstr "Сви статуси"
 msgid "All owners"
 msgstr "Сви власници"
 
-#: includes/trait-wp-document-revisions-admin-list.php:140
+#: includes/trait-wp-document-revisions-admin-list.php:102
+msgid "Add your first document"
+msgstr "Додајте свој први документ"
+
+#: includes/trait-wp-document-revisions-admin-list.php:107
+msgid "read the documentation"
+msgstr "прочитајте документацију"
+
+#: includes/trait-wp-document-revisions-admin-list.php:112
+msgid "Welcome to WP Document Revisions!"
+msgstr "Добродошли у WP ревизије докумената!"
+
+#. translators: 1: link to add a new document, 2: link to the documentation
+#: includes/trait-wp-document-revisions-admin-list.php:116
+#, php-format
+msgid ""
+"You have not added any documents yet. %1$s to start tracking revisions and "
+"workflow, or %2$s."
+msgstr ""
+"Још увек нисте додали ниједан документ. %1$s да бисте почели да пратите "
+"ревизије и ток рада, или %2$s."
+
+#: includes/trait-wp-document-revisions-admin-list.php:171
+msgid ""
+"You have been managing your documents with WP Document Revisions — thank "
+"you! If it has been useful, would you consider leaving a quick review? It "
+"genuinely helps other teams discover the plugin."
+msgstr ""
+"Управљали сте својим документима помоћу WP Document Revisions — хвала вам! "
+"Ако вам је било корисно, да ли бисте размотрили да оставите кратку "
+"рецензију? То заиста помаже другим тимовима да открију додатак."
+
+#: includes/trait-wp-document-revisions-admin-list.php:173
+msgid "Leave a review"
+msgstr "Оставите рецензију"
+
+#: includes/trait-wp-document-revisions-admin-list.php:174
+msgid "No thanks"
+msgstr "Не хвала"
+
+#: includes/trait-wp-document-revisions-admin-list.php:284
 msgid "Currently Editing"
 msgstr "Тренутно уређујем"
 
@@ -1249,7 +1376,8 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Генериши нови кључ"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1259,40 +1387,70 @@ msgstr "Пре %1$s од стране %2$s [%3$s]"
 msgid "Document Date in Permalink"
 msgstr "Датум документа у трајној вези"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:394
+#: includes/trait-wp-document-revisions-admin-settings.php:390
+msgid "Document Notifications"
+msgstr "Обавештења о документима"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:435
+msgid "Email notifications when documents change."
+msgstr "Обавештења путем е-поште када се документи промене."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:437
+msgid "Notify these email addresses (one per line or comma-separated):"
+msgstr ""
+"Обавестите ове имејл адресе (по једну у сваки ред или одвојено зарезима):"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:439
+msgid ""
+"The document's author is always notified in addition to this list. Whoever "
+"made the change is never notified of their own change."
+msgstr ""
+"Аутор документа је увек обавештен поред ове листе. Ко год да је направио "
+"промену никада није обавештен о својој промени."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:444
+msgid "Notify when a document changes workflow state."
+msgstr "Обавести када документ промени стање тока посла."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+msgid "Notify when a new revision of a document is saved."
+msgstr "Обавести када се сачува нова ревизија документа."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:481
 msgid "Document directory does not appear to exist. Please review value."
 msgstr ""
 "Изгледа да директоријум докумената не постоји. Молимо вас да проверите "
 "вредност."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:396
+#: includes/trait-wp-document-revisions-admin-settings.php:483
 msgid "Document directory is not writable. Please check permissions."
 msgstr "Директоријум докумената није доступан за писање. Проверите дозволе."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:400
+#: includes/trait-wp-document-revisions-admin-settings.php:487
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved "
-"to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
 msgstr ""
 "Директоријум за отпремање докумената је промењен, али постојеће отпремљене "
-"датотеке ће можда требати преместити у нову фасциклу како би остале доступне."
+"датотеке ће можда требати преместити у нову фасциклу како би остале "
+"доступне."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:429
+#: includes/trait-wp-document-revisions-admin-settings.php:516
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 "Слика документа је промењена, али неки претходно објављени URL-ови сада "
 "можда не раде."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
-#: includes/trait-wp-document-revisions-admin-settings.php:478
-#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-admin-settings.php:534
+#: includes/trait-wp-document-revisions-admin-settings.php:565
+#: includes/trait-wp-document-revisions-admin-settings.php:593
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr "Није овлашћено"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:562
+#: includes/trait-wp-document-revisions-admin-settings.php:649
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp-content/uploads</code> folder (or another default uploads folder "
@@ -1306,20 +1464,20 @@ msgstr ""
 "<code>public_html</code> ради додатне безбедности."
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:570
+#: includes/trait-wp-document-revisions-admin-settings.php:657
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path "
-"to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
 msgstr ""
-"Опционо можете укључити стринг <code>%site_id%</code> унутар путање да бисте "
-"раздвојили датотеке по сајту."
+"Опционо можете укључити стринг <code>%site_id%</code> унутар путање да бисте"
+" раздвојили датотеке по сајту."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:585
+#: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid "example-document-title"
 msgstr "пример-наслов-документа"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:589
+#: includes/trait-wp-document-revisions-admin-settings.php:676
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
@@ -1327,20 +1485,22 @@ msgstr ""
 "„Slug“ којим се додаје префикс свим URL-овима за документе (и архиву "
 "докумената). Подразумевано је <code>documents</code>."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid "Remove the year and month element /yyyy/mm from the document permalink."
+#: includes/trait-wp-document-revisions-admin-settings.php:690
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "Уклоните елемент године и месеца /yyyy/mm из сталне везе документа."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid "By default the document permalink will contain the post year and month."
+#: includes/trait-wp-document-revisions-admin-settings.php:692
+msgid ""
+"By default the document permalink will contain the post year and month."
 msgstr ""
 "Подразумевано, стална веза документа ће садржати годину и месец објаве."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:606
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "The delivered rewrite rules support both formats."
 msgstr "Достављена правила преписивања подржавају оба формата."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:659
+#: includes/trait-wp-document-revisions-admin-settings.php:746
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
@@ -1348,7 +1508,7 @@ msgstr ""
 "Максималан број ревизија документа је подешен на нулу помоћу филтера. "
 "Проверите конфигурацију."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:759
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
@@ -1356,7 +1516,7 @@ msgstr ""
 "За овај документ постоји више ревизија него што је дозвољено. Прављење "
 "промена ће обрисати податке."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:681
+#: includes/trait-wp-document-revisions-admin-settings.php:768
 msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
@@ -1394,7 +1554,7 @@ msgid ""
 msgstr ""
 "Жао нам је, излаз је већ написан, тако да се ваша датотека не може преузети."
 
-#: includes/trait-wp-document-revisions-file-handler.php:1165
+#: includes/trait-wp-document-revisions-file-handler.php:1167
 msgid "Sorry, this is a private feed."
 msgstr "Извините, ово је приватни фид."
 
@@ -1444,7 +1604,8 @@ msgstr "Смеће"
 msgid "Somebody"
 msgstr "Неко"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1456,7 +1617,8 @@ msgstr "%1$s: %2$s је поништио/ла ваше закључавање н
 msgid "Dear %s:"
 msgstr "Драги %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1465,12 +1627,6 @@ msgstr "%1$s (%2$s), је поништио ваше закључавање до�
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
 msgstr "Све измене које сте направили биће изгубљене."
-
-#. translators: %s is the blog name.
-#: includes/trait-wp-document-revisions-revisions.php:420
-#, php-format
-msgid "- The %s Team"
-msgstr "- Тим %s"
 
 #: includes/trait-wp-document-revisions-rewrites.php:47
 #: includes/trait-wp-document-revisions-rewrites.php:62
@@ -1484,8 +1640,8 @@ msgstr "✨ Предлог вештачке интелигенције — из�
 #: src/admin/wp-document-revisions-ai-prefill.js:70
 msgid "✨ AI summary will be available shortly — refresh this page to see it."
 msgstr ""
-"✨ Резиме вештачке интелигенције биће ускоро доступан — освежите ову "
-"страницу да бисте га видели."
+"✨ Резиме вештачке интелигенције биће ускоро доступан — освежите ову страницу"
+" да бисте га видели."
 
 #: src/admin/wp-document-revisions-ai-prefill.js:100
 msgid "Dismiss"
@@ -1579,6 +1735,35 @@ msgstr "Отпреми документ"
 msgid "Select Document"
 msgstr "Изаберите документ"
 
+#: src/blocks/document-preview/edit.js:17
+msgid "Preview Settings"
+msgstr "Подешавања прегледа"
+
+#: src/blocks/document-preview/edit.js:23
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "ИД документа"
+
+#: src/blocks/document-preview/edit.js:30
+msgid "Preview Height (px)"
+msgstr "Висина прегледа (px)"
+
+#: src/blocks/document-preview/edit.js:41
+msgid "Show Document Title?"
+msgstr "Прикажи наслов документа?"
+
+#: src/blocks/document-preview/edit.js:49
+msgid "Show Download Link?"
+msgstr "Прикажи линк за преузимање?"
+
+#: src/blocks/document-preview/edit.js:50
+msgid ""
+"Displays a download link below the preview, and is shown as a fallback when "
+"the file type cannot be previewed inline."
+msgstr ""
+"Приказује везу за преузимање испод прегледа и приказује се као резервна "
+"опција када тип датотеке не може бити прегледан у тексту."
+
 #: src/blocks/documents-shortcode/edit.js:76
 msgid "There are no taxonomies defined."
 msgstr "Не постоје дефинисане таксономије."
@@ -1621,8 +1806,8 @@ msgstr "Прикажи линк за измене"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice "
-"made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Прикажи везу за уређивање омогућава да листа има везу до функције за "
@@ -1727,10 +1912,6 @@ msgstr "Прикажи име аутора?"
 msgid "Selection Criteria"
 msgstr "Критеријуми за избор"
 
-#: src/blocks/revisions-shortcode/edit.js:23
-msgid "Document Id"
-msgstr "ИД документа"
-
 #: src/blocks/revisions-shortcode/edit.js:30
 msgid "Revisions to Display"
 msgstr "Ревизије за приказ"
@@ -1812,6 +1993,16 @@ msgstr "Још нема ревизија."
 #: src/editor-document-upload/index.js:578
 msgid "—"
 msgstr "—"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block title"
+msgid "Document Preview"
+msgstr "Преглед документа"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block description"
+msgid "Embed an inline preview of a document's latest revision."
+msgstr "Уградите преглед најновије ревизије документа."
 
 #: src/blocks/documents-shortcode/block.json
 msgctxt "block title"

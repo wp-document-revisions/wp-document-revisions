@@ -3,9 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
-"revisions\n"
-"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-30T00:14:48+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -19,16 +18,14 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:564
+#: includes/class-wp-document-revisions-front-end.php:565
 msgid "WP Document Revisions"
 msgstr "Revisi Dokumen WP"
 
@@ -47,8 +44,8 @@ msgid ""
 "A document management and version control plugin for WordPress that allows "
 "teams of any size to collaboratively edit files and manage their workflow."
 msgstr ""
-"Plugin manajemen dokumen dan kontrol versi untuk WordPress yang memungkinkan "
-"tim dengan ukuran apa pun untuk mengedit file secara kolaboratif dan "
+"Plugin manajemen dokumen dan kontrol versi untuk WordPress yang memungkinkan"
+" tim dengan ukuran apa pun untuk mengedit file secara kolaboratif dan "
 "mengelola alur kerja mereka."
 
 #. Author of the plugin
@@ -78,49 +75,66 @@ msgstr "Izin tidak mencukupi untuk membaca dokumen revisi ini."
 msgid "No summary has been generated for this revision yet."
 msgstr "Belum ada ringkasan yang dibuat untuk revisi ini."
 
-#: includes/class-wp-document-revisions-front-end.php:135
-#: includes/class-wp-document-revisions-front-end.php:795
-#: includes/class-wp-document-revisions-front-end.php:950
+#: includes/class-wp-document-revisions-front-end.php:136
+#: includes/class-wp-document-revisions-front-end.php:819
+#: includes/class-wp-document-revisions-front-end.php:974
 msgid "You are not authorized to read this data"
 msgstr "Anda tidak berwenang untuk membaca data ini."
 
-#: includes/class-wp-document-revisions-front-end.php:141
-#: includes/class-wp-document-revisions-front-end.php:955
+#: includes/class-wp-document-revisions-front-end.php:142
+#: includes/class-wp-document-revisions-front-end.php:979
+#: includes/class-wp-document-revisions-front-end.php:1021
 msgid "This is not a valid document."
 msgstr "Ini bukan dokumen yang sah."
 
-#: includes/class-wp-document-revisions-front-end.php:164
-#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-front-end.php:165
+#: includes/class-wp-document-revisions-front-end.php:348
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr "(PDF)"
 
-#: includes/class-wp-document-revisions-front-end.php:189
+#: includes/class-wp-document-revisions-front-end.php:190
 msgid "ago by"
 msgstr "lalu oleh"
 
-#: includes/class-wp-document-revisions-front-end.php:448
+#: includes/class-wp-document-revisions-front-end.php:449
 msgid "Edit"
 msgstr "Edit"
 
-#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-front-end.php:467
 #: includes/class-wp-document-revisions-recently-revised-widget.php:129
 msgid "No thumbnail available."
 msgstr "Tidak ada gambar mini yang tersedia."
 
-#: includes/class-wp-document-revisions-front-end.php:720
+#: includes/class-wp-document-revisions-front-end.php:744
 msgid "No selection"
 msgstr "Tidak ada pilihan"
 
-#: includes/class-wp-document-revisions-front-end.php:834
+#: includes/class-wp-document-revisions-front-end.php:858
 msgid " Taxonomy details in this block have changed."
 msgstr "Detail taksonomi di blok ini telah berubah."
 
-#: includes/class-wp-document-revisions-front-end.php:869
-#: includes/class-wp-document-revisions-front-end.php:883
-#: includes/class-wp-document-revisions-front-end.php:897
+#: includes/class-wp-document-revisions-front-end.php:893
+#: includes/class-wp-document-revisions-front-end.php:907
+#: includes/class-wp-document-revisions-front-end.php:921
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr "Istilah taksonomi ini tidak termasuk dalam taksonomi ini."
+
+#: includes/class-wp-document-revisions-front-end.php:1030
+msgid "You are not authorized to read this document."
+msgstr "Anda tidak berwenang untuk membaca dokumen ini."
+
+#: includes/class-wp-document-revisions-front-end.php:1035
+msgid "This document has no file to preview."
+msgstr "Dokumen ini tidak memiliki file untuk dipratinjau."
+
+#: includes/class-wp-document-revisions-front-end.php:1046
+msgid "Download document"
+msgstr "Unduh dokumen"
+
+#: includes/class-wp-document-revisions-front-end.php:1065
+msgid "This file type cannot be previewed inline."
+msgstr "Jenis file ini tidak dapat dipratinjau langsung."
 
 #: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
@@ -149,6 +163,72 @@ msgstr "Maaf, Anda tidak diizinkan untuk melihat revisi ini."
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
+
+#: includes/class-wp-document-revisions-notifications.php:142
+#: includes/class-wp-document-revisions-notifications.php:196
+msgid "Someone"
+msgstr "Seseorang"
+
+#. translators: %1$s is the blog name, %2$s is the document title, %3$s is the
+#. new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:145
+#, php-format
+msgid "%1$s: %2$s moved to %3$s"
+msgstr "%1$s: %2$s dipindahkan ke %3$s"
+
+#. translators: %1$s is the user who made the change, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:148
+#, php-format
+msgid "%1$s changed the workflow state of the document %2$s."
+msgstr "%1$s mengubah status alur kerja dokumen %2$s."
+
+#. translators: %1$s is the previous workflow state, %2$s is the new workflow
+#. state.
+#: includes/class-wp-document-revisions-notifications.php:151
+#, php-format
+msgid "State: %1$s to %2$s"
+msgstr "Negara Bagian: %1$s hingga %2$s"
+
+#. translators: %s is the new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:154
+#, php-format
+msgid "State: %s"
+msgstr "Negara Bagian: %s"
+
+#. translators: %s is the document URL.
+#: includes/class-wp-document-revisions-notifications.php:157
+#: includes/class-wp-document-revisions-notifications.php:209
+#, php-format
+msgid "View the document: %s"
+msgstr "Lihat dokumen: %s"
+
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions-notifications.php:159
+#: includes/class-wp-document-revisions-notifications.php:211
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- Itu %s Tim"
+
+#. translators: %1$s is the blog name, %2$s is the document title.
+#: includes/class-wp-document-revisions-notifications.php:199
+#, php-format
+msgid "%1$s: New revision of %2$s"
+msgstr "%1$s: Revisi baru dari %2$s"
+
+#. translators: %1$s is the user who saved the revision, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:202
+#, php-format
+msgid "%1$s saved a new revision of the document %2$s."
+msgstr "%1$s menyimpan revisi baru dokumen %2$s."
+
+#. translators: %s is the revision summary.
+#: includes/class-wp-document-revisions-notifications.php:206
+#, php-format
+msgid "Summary: %s"
+msgstr "Ringkasan: %s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -238,10 +318,10 @@ msgid ""
 "revision log field when a new file is uploaded. Extraction (and summary "
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
-"Saat dicentang, ringkasan revisi yang dihasilkan AI tidak akan dimasukkan ke "
-"dalam kolom log revisi saat file baru diunggah. Ekstraksi (dan pembuatan "
-"ringkasan, jika diaktifkan) tetap berjalan — hanya pengisian otomatis editor "
-"yang ditekan."
+"Saat dicentang, ringkasan revisi yang dihasilkan AI tidak akan dimasukkan ke"
+" dalam kolom log revisi saat file baru diunggah. Ekstraksi (dan pembuatan "
+"ringkasan, jika diaktifkan) tetap berjalan — hanya pengisian otomatis editor"
+" yang ditekan."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
 msgid "Validate Structure"
@@ -283,8 +363,7 @@ msgstr "Tidak ditemukan tautan permanen yang tidak valid."
 #: includes/class-wp-document-revisions-validate-structure.php:617
 #: includes/class-wp-document-revisions-validate-structure.php:846
 msgid "The guid is not the expected \"ugly\" permalink"
-msgstr ""
-"GUID tersebut bukanlah tautan permanen \"jelek\" seperti yang diharapkan."
+msgstr "GUID tersebut bukanlah tautan permanen \"jelek\" seperti yang diharapkan."
 
 #: includes/class-wp-document-revisions-validate-structure.php:619
 #: includes/class-wp-document-revisions-validate-structure.php:848
@@ -374,7 +453,8 @@ msgid "Attachment found for document, but not currently linked"
 msgstr ""
 "Lampiran ditemukan untuk dokumen tersebut, tetapi saat ini belum terhubung."
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -447,8 +527,8 @@ msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
-"Jika Anda menemukan kesalahan yang dilaporkan di sini, Anda akan mendapatkan "
-"pesan \"Kesalahan 404 - Dokumen Tidak Ditemukan\" (atau yang setara) saat "
+"Jika Anda menemukan kesalahan yang dilaporkan di sini, Anda akan mendapatkan"
+" pesan \"Kesalahan 404 - Dokumen Tidak Ditemukan\" (atau yang setara) saat "
 "mencoba melihat dokumen tersebut."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
@@ -485,8 +565,8 @@ msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
 msgstr ""
-"Berikut adalah beberapa masalah yang menghalangi Anda menampilkan dokumen di "
-"bagian depan situs. Masalah-masalah tersebut meliputi:"
+"Berikut adalah beberapa masalah yang menghalangi Anda menampilkan dokumen di"
+" bagian depan situs. Masalah-masalah tersebut meliputi:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
@@ -501,8 +581,8 @@ msgid ""
 "If this is missing or points to a non-existant one then the document cannot "
 "be viewed."
 msgstr ""
-"Jika ini hilang atau mengarah ke yang tidak ada, maka dokumen tersebut tidak "
-"dapat dilihat."
+"Jika ini hilang atau mengarah ke yang tidak ada, maka dokumen tersebut tidak"
+" dapat dilihat."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1195
 msgid ""
@@ -543,7 +623,8 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media store."
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
 "Sebagai variasi dari kasus terakhir ini, Anda mungkin telah mengatur plugin "
 "sehingga penyimpanan file dokumen adalah salah satu pilihan Anda dan bukan "
@@ -562,8 +643,8 @@ msgid ""
 "If found there it will offer you a fix which is to move the file from the "
 "Media store to the document store."
 msgstr ""
-"Jika ditemukan di sana, sistem akan menawarkan solusi yaitu memindahkan file "
-"dari Media Store ke Document Store."
+"Jika ditemukan di sana, sistem akan menawarkan solusi yaitu memindahkan file"
+" dari Media Store ke Document Store."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1203
 msgid "Warnings"
@@ -571,8 +652,8 @@ msgstr "Peringatan"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you "
-"know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Sifat teknologi web yang digunakan untuk menghadirkan WordPress berarti "
@@ -581,8 +662,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access "
-"a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
 "Ini adalah fitur desain dari plugin ini yang mengharuskan Anda hanya dapat "
 "mengakses dokumen melalui WordPress itu sendiri."
@@ -602,40 +683,45 @@ msgstr ""
 "Oleh karena itu, solusinya adalah dengan mengenkode nama file menggunakan "
 "md5."
 
-#: includes/class-wp-document-revisions.php:288
-#: includes/class-wp-document-revisions.php:702
+#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:726
 #: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:295
+msgid "Read and manage documents stored by WP Document Revisions."
+msgstr ""
+"Membaca dan mengelola dokumen yang disimpan oleh WP Document Revisions."
+
+#: includes/class-wp-document-revisions.php:317
 msgid "Check Document Access"
 msgstr "Periksa Akses Dokumen"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:318
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr ""
 "Periksa apakah pengguna saat ini dapat melakukan tindakan tertentu pada "
 "dokumen."
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:327
 msgid "The document post ID to check access for."
 msgstr "ID posting dokumen untuk memeriksa akses."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:331
 msgid "The action to check: read, edit, delete, or publish."
 msgstr "Tindakan yang perlu diperiksa: baca, edit, hapus, atau publikasikan."
 
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:342
 msgid "Whether the user can perform the action."
 msgstr "Apakah pengguna dapat melakukan tindakan tersebut."
 
-#: includes/class-wp-document-revisions.php:346
+#: includes/class-wp-document-revisions.php:357
 msgid "Get Document Info"
 msgstr "Dapatkan Informasi Dokumen"
 
-#: includes/class-wp-document-revisions.php:347
+#: includes/class-wp-document-revisions.php:358
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
@@ -643,63 +729,64 @@ msgstr ""
 "Mengambil metadata untuk sebuah dokumen termasuk tipe file, jumlah revisi, "
 "dan status penguncian."
 
-#: includes/class-wp-document-revisions.php:358
-#: includes/class-wp-document-revisions.php:392
+#: includes/class-wp-document-revisions.php:369
+#: includes/class-wp-document-revisions.php:407
 msgid "The document post ID."
 msgstr "ID unggahan dokumen."
 
-#: includes/class-wp-document-revisions.php:380
+#: includes/class-wp-document-revisions.php:395
 msgid "Get Document Revisions"
 msgstr "Dapatkan Revisi Dokumen"
 
-#: includes/class-wp-document-revisions.php:381
+#: includes/class-wp-document-revisions.php:396
 msgid "Retrieve the revision history of a document."
 msgstr "Mengambil riwayat revisi dokumen."
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:440
 msgid "Override Document Lock"
 msgstr "Mengesampingkan Kunci Dokumen"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:441
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
-"Batalkan penguncian pengguna lain pada dokumen untuk memungkinkan pengeditan."
+"Batalkan penguncian pengguna lain pada dokumen untuk memungkinkan "
+"pengeditan."
 
-#: includes/class-wp-document-revisions.php:433
+#: includes/class-wp-document-revisions.php:452
 msgid "The document post ID to unlock."
 msgstr "ID unggahan dokumen untuk membuka kunci."
 
-#: includes/class-wp-document-revisions.php:499
-#: includes/class-wp-document-revisions.php:539
-#: includes/class-wp-document-revisions.php:592
+#: includes/class-wp-document-revisions.php:523
+#: includes/class-wp-document-revisions.php:563
+#: includes/class-wp-document-revisions.php:616
 msgid "Document not found."
 msgstr "Dokumen tidak ditemukan."
 
-#: includes/class-wp-document-revisions.php:507
+#: includes/class-wp-document-revisions.php:531
 msgid "You do not have permission to view this document."
 msgstr "Anda tidak memiliki izin untuk melihat dokumen ini."
 
-#: includes/class-wp-document-revisions.php:547
+#: includes/class-wp-document-revisions.php:571
 msgid "You do not have permission to view revisions for this document."
 msgstr "Anda tidak memiliki izin untuk melihat revisi dokumen ini."
 
-#: includes/class-wp-document-revisions.php:555
+#: includes/class-wp-document-revisions.php:579
 msgid "You do not have permission to view document revisions."
 msgstr "Anda tidak memiliki izin untuk melihat revisi dokumen."
 
-#: includes/class-wp-document-revisions.php:569
+#: includes/class-wp-document-revisions.php:593
 msgid "Unknown"
 msgstr "Tidak dikenal"
 
-#: includes/class-wp-document-revisions.php:610
+#: includes/class-wp-document-revisions.php:634
 msgid "You do not have permission to override the lock on this document."
 msgstr "Anda tidak memiliki izin untuk membuka kunci dokumen ini."
 
-#: includes/class-wp-document-revisions.php:638
+#: includes/class-wp-document-revisions.php:662
 msgid "You have activated the plugin WP Document Revisions"
 msgstr "Anda telah mengaktifkan plugin WP Document Revisions."
 
-#: includes/class-wp-document-revisions.php:640
+#: includes/class-wp-document-revisions.php:664
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
@@ -707,7 +794,7 @@ msgstr ""
 "Anda mungkin tidak memiliki kemampuan edit_dokumen karena adanya beberapa "
 "peran yang saling bertentangan atau penggunaan peran khusus!"
 
-#: includes/class-wp-document-revisions.php:642
+#: includes/class-wp-document-revisions.php:666
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
@@ -715,156 +802,156 @@ msgstr ""
 "Menu Dokumen mungkin tidak ditampilkan sepenuhnya karena opsi \"Semua "
 "Dokumen\" dan \"Tambah Dokumen\" hilang."
 
-#: includes/class-wp-document-revisions.php:644
+#: includes/class-wp-document-revisions.php:668
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
 msgstr ""
-"Anda harus terlebih dahulu memeriksa apakah Anda memiliki beberapa peran dan "
-"bahwa masing-masing peran memiliki kemampuan edit_dokumen."
+"Anda harus terlebih dahulu memeriksa apakah Anda memiliki beberapa peran dan"
+" bahwa masing-masing peran memiliki kemampuan edit_dokumen."
 
-#: includes/class-wp-document-revisions.php:690
+#: includes/class-wp-document-revisions.php:714
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions.php:691
+#: includes/class-wp-document-revisions.php:715
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Dokumen"
 
-#: includes/class-wp-document-revisions.php:692
+#: includes/class-wp-document-revisions.php:716
 msgctxt "document"
 msgid "Add Document"
 msgstr "Tambahkan Dokumen"
 
-#: includes/class-wp-document-revisions.php:693
+#: includes/class-wp-document-revisions.php:717
 msgid "Add New Document"
 msgstr "Tambahkan Dokumen Baru"
 
-#: includes/class-wp-document-revisions.php:694
+#: includes/class-wp-document-revisions.php:718
 msgid "Edit Document"
 msgstr "Edit Dokumen"
 
-#: includes/class-wp-document-revisions.php:695
+#: includes/class-wp-document-revisions.php:719
 msgid "New Document"
 msgstr "Dokumen baru"
 
-#: includes/class-wp-document-revisions.php:696
+#: includes/class-wp-document-revisions.php:720
 msgid "View Document"
 msgstr "Lihat Dokumen"
 
-#: includes/class-wp-document-revisions.php:697
+#: includes/class-wp-document-revisions.php:721
 msgid "View Documents"
 msgstr "Lihat Dokumen"
 
-#: includes/class-wp-document-revisions.php:698
+#: includes/class-wp-document-revisions.php:722
 msgid "Search Documents"
 msgstr "Cari Dokumen"
 
-#: includes/class-wp-document-revisions.php:699
+#: includes/class-wp-document-revisions.php:723
 msgid "No documents found"
 msgstr "Tidak ditemukan dokumen"
 
-#: includes/class-wp-document-revisions.php:700
+#: includes/class-wp-document-revisions.php:724
 msgid "No documents found in Trash"
 msgstr "Tidak ada dokumen yang ditemukan di Sampah"
 
-#: includes/class-wp-document-revisions.php:703
+#: includes/class-wp-document-revisions.php:727
 msgid "All Documents"
 msgstr "Semua dokumen"
 
-#: includes/class-wp-document-revisions.php:704
+#: includes/class-wp-document-revisions.php:728
 msgid "Document Image"
 msgstr "Gambar Dokumen"
 
-#: includes/class-wp-document-revisions.php:705
+#: includes/class-wp-document-revisions.php:729
 msgid "Set Document Image"
 msgstr "Atur Gambar Dokumen"
 
-#: includes/class-wp-document-revisions.php:706
+#: includes/class-wp-document-revisions.php:730
 msgid "Remove Document Image"
 msgstr "Hapus Gambar Dokumen"
 
-#: includes/class-wp-document-revisions.php:707
+#: includes/class-wp-document-revisions.php:731
 msgid "Use as Document Image"
 msgstr "Gunakan sebagai Gambar Dokumen"
 
-#: includes/class-wp-document-revisions.php:812
+#: includes/class-wp-document-revisions.php:836
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:813
+#: includes/class-wp-document-revisions.php:837
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Negara alur kerja"
 
-#: includes/class-wp-document-revisions.php:814
+#: includes/class-wp-document-revisions.php:838
 msgid "Search Workflow States"
 msgstr "Cari Workflow States"
 
-#: includes/class-wp-document-revisions.php:815
+#: includes/class-wp-document-revisions.php:839
 msgid "All Workflow States"
 msgstr "Semua Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:816
+#: includes/class-wp-document-revisions.php:840
 msgid "Parent Workflow State"
 msgstr "Induk Alur kerja Negara"
 
-#: includes/class-wp-document-revisions.php:817
+#: includes/class-wp-document-revisions.php:841
 msgid "Parent Workflow State:"
 msgstr "Induk Alur kerja negara:"
 
-#: includes/class-wp-document-revisions.php:818
+#: includes/class-wp-document-revisions.php:842
 msgid "Edit Workflow State"
 msgstr "Edit Alur kerja Negara"
 
-#: includes/class-wp-document-revisions.php:819
+#: includes/class-wp-document-revisions.php:843
 msgid "Update Workflow State"
 msgstr "Memperbarui alur kerja negara"
 
-#: includes/class-wp-document-revisions.php:820
+#: includes/class-wp-document-revisions.php:844
 msgid "Add New Workflow State"
 msgstr "Menambahkan Alur kerja baru Negara"
 
-#: includes/class-wp-document-revisions.php:821
+#: includes/class-wp-document-revisions.php:845
 msgid "New Workflow State Name"
 msgstr "Nama Alur Kerja Baru Negara"
 
-#: includes/class-wp-document-revisions.php:822
+#: includes/class-wp-document-revisions.php:846
 msgid "Workflow States"
 msgstr "Serikat Pekerja"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "In Progress"
 msgstr "Sedang Berlangsung"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "Document is in the process of being written"
 msgstr "Dokumen sedang dalam proses penulisan"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Initial Draft"
 msgstr "Draf Awal"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Document is being edited and refined"
 msgstr "Dokumen sedang diedit dan disempurnakan"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Under Review"
 msgstr "Sedang dalam Tinjauan"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Document is pending final review"
 msgstr "Dokumen sedang menunggu tinjauan akhir"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Final"
 msgstr "Terakhir"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Document is in its final form"
 msgstr "Dokumen dalam bentuk akhirnya"
 
@@ -905,8 +992,7 @@ msgstr "Dokumen disimpan."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid ""
-"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "Dokumen diserahkan <a target=\"_blank\" href=\"%s\">Unduh dokumen</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -929,11 +1015,8 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid ""
-"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
-"a>"
-msgstr ""
-"Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a>"
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
 #: includes/trait-wp-document-revisions-admin-editor.php:979
@@ -959,7 +1042,7 @@ msgstr "Negara alur kerja"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:129
 #: includes/trait-wp-document-revisions-admin-editor.php:1186
-#: includes/trait-wp-document-revisions-admin-list.php:122
+#: includes/trait-wp-document-revisions-admin-list.php:266
 msgid "Owner"
 msgstr "Pemilik"
 
@@ -992,15 +1075,17 @@ msgstr "Versi terbaru dari Dokumen"
 msgid "Download"
 msgstr "Download"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
-"ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
 msgstr ""
-"Diperiksa pada <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
-"abbr> yang lalu oleh %4$s"
+"Diperiksa pada <abbr class=\"timestamp\" title=\"%1$s\" "
+"id=\"A%2$s\">%3$s</abbr> yang lalu oleh %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1013,9 +1098,9 @@ msgstr "Penggunaan Dasar"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter "
-"a description, and click <code>Upload New Version</code> and select the file "
-"from your computer."
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
 msgstr ""
 "Layar ini memungkinkan pengguna untuk mengedit dokumen secara kolaboratif "
 "dan melacak riwayat revisinya. Untuk memulai, masukkan judul untuk dokumen, "
@@ -1024,8 +1109,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the "
-"document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
 msgstr ""
 "Setelah berhasil diunggah, Anda dapat memasukkan pesan log revisi, "
 "menetapkan dokumen sebagai pengarang, dan menjelaskan keadaan alur kerja "
@@ -1061,13 +1146,11 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a "
-"comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
 msgstr ""
-"Log revisi tersebut memberikan ringkasan singkat tentang perubahan yang "
-"tercermin dalam revisi tertentu.\n"
-"Digunakan secara luas di komunitas open-source, ini memberikan sejarah "
-"komprehensif tentang sekilas dokumen."
+"Log revisi tersebut memberikan ringkasan singkat tentang perubahan yang tercermin dalam revisi tertentu.\n"
+"Digunakan secara luas di komunitas open-source, ini memberikan sejarah komprehensif tentang sekilas dokumen."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:757
 msgid ""
@@ -1081,9 +1164,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what "
-"stage a document sits within a particular organization&quot;s workflow. The "
-"field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Bidang alur kerja dapat digunakan untuk membantu anggota tim memahami pada "
@@ -1103,9 +1186,9 @@ msgid ""
 "Any document marked as published will be accessible to anyone with the "
 "proper URL."
 msgstr ""
-"Secara default, dokumen yang diunggah hanya dapat diakses oleh pengguna yang "
-"masuk. Dokumen dapat dipublikasikan, sehingga membuatnya dapat diakses oleh "
-"dunia, dengan mengalihkan visibilitas mereka di kotak \"Publikasikan\" di "
+"Secara default, dokumen yang diunggah hanya dapat diakses oleh pengguna yang"
+" masuk. Dokumen dapat dipublikasikan, sehingga membuatnya dapat diakses oleh"
+" dunia, dengan mengalihkan visibilitas mereka di kotak \"Publikasikan\" di "
 "pojok kanan atas. Dokumen apa pun yang ditandai sebagai dipublikasikan akan "
 "dapat diakses oleh siapa saja yang memiliki URL yang tepat."
 
@@ -1122,13 +1205,13 @@ msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
 msgstr ""
-"Untuk menambahkan dokumen baru, klik <strong>Tambah Dokumen</strong> di sisi "
-"kiri."
+"Untuk menambahkan dokumen baru, klik <strong>Tambah Dokumen</strong> di sisi"
+" kiri."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow "
-"States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
 msgstr ""
 "Untuk melihat semua dokumen pada keadaan alur kerja tertentu, klik "
 "<strong>Serikat alur kerja</strong> di menu di sebelah kiri."
@@ -1152,8 +1235,8 @@ msgstr "Anda tidak dapat mengunggah dokumen apa pun."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that "
-"allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Ringkasan revisi adalah catatan opsional untuk disimpan bersamaan dengan "
@@ -1192,8 +1275,8 @@ msgid ""
 "Restoring earlier revisions will also restore that description.<br/>If the "
 "current one is wanted, copy it first."
 msgstr ""
-"Mengembalikan revisi sebelumnya juga akan mengembalikan deskripsi tersebut."
-"<br/>Jika revisi terbaru yang diinginkan, salin terlebih dahulu."
+"Mengembalikan revisi sebelumnya juga akan mengembalikan deskripsi "
+"tersebut.<br/>Jika revisi terbaru yang diinginkan, salin terlebih dahulu."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:1105
 msgid ""
@@ -1219,7 +1302,47 @@ msgstr "Semua status"
 msgid "All owners"
 msgstr "Semua pemilik"
 
-#: includes/trait-wp-document-revisions-admin-list.php:140
+#: includes/trait-wp-document-revisions-admin-list.php:102
+msgid "Add your first document"
+msgstr "Tambahkan dokumen pertama Anda"
+
+#: includes/trait-wp-document-revisions-admin-list.php:107
+msgid "read the documentation"
+msgstr "baca dokumentasi"
+
+#: includes/trait-wp-document-revisions-admin-list.php:112
+msgid "Welcome to WP Document Revisions!"
+msgstr "Selamat datang di WP Document Revisions!"
+
+#. translators: 1: link to add a new document, 2: link to the documentation
+#: includes/trait-wp-document-revisions-admin-list.php:116
+#, php-format
+msgid ""
+"You have not added any documents yet. %1$s to start tracking revisions and "
+"workflow, or %2$s."
+msgstr ""
+"Anda belum menambahkan dokumen apa pun. %1$s untuk mulai melacak revisi dan "
+"alur kerja, atau %2$s."
+
+#: includes/trait-wp-document-revisions-admin-list.php:171
+msgid ""
+"You have been managing your documents with WP Document Revisions — thank "
+"you! If it has been useful, would you consider leaving a quick review? It "
+"genuinely helps other teams discover the plugin."
+msgstr ""
+"Anda telah mengelola dokumen Anda dengan WP Document Revisions — terima "
+"kasih! Jika bermanfaat, maukah Anda mempertimbangkan untuk memberikan ulasan"
+" singkat? Ini sangat membantu tim lain untuk menemukan plugin ini."
+
+#: includes/trait-wp-document-revisions-admin-list.php:173
+msgid "Leave a review"
+msgstr "Berikan ulasan"
+
+#: includes/trait-wp-document-revisions-admin-list.php:174
+msgid "No thanks"
+msgstr "Tidak, terima kasih"
+
+#: includes/trait-wp-document-revisions-admin-list.php:284
 msgid "Currently Editing"
 msgstr "Saat ini sedang mengedit"
 
@@ -1261,7 +1384,8 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Buat Kunci Baru"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1271,38 +1395,67 @@ msgstr "%1$s lalu oleh %2$s [%3$s]"
 msgid "Document Date in Permalink"
 msgstr "Tanggal Dokumen dalam Tautan Permanen"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:394
+#: includes/trait-wp-document-revisions-admin-settings.php:390
+msgid "Document Notifications"
+msgstr "Pemberitahuan Dokumen"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:435
+msgid "Email notifications when documents change."
+msgstr "Notifikasi email saat dokumen berubah."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:437
+msgid "Notify these email addresses (one per line or comma-separated):"
+msgstr "Beri tahu alamat email berikut (satu per baris atau dipisahkan koma):"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:439
+msgid ""
+"The document's author is always notified in addition to this list. Whoever "
+"made the change is never notified of their own change."
+msgstr ""
+"Penulis dokumen selalu diberi tahu selain daftar ini. Siapa pun yang "
+"melakukan perubahan tidak pernah diberi tahu tentang perubahan yang mereka "
+"lakukan sendiri."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:444
+msgid "Notify when a document changes workflow state."
+msgstr "Beri tahu saat status alur kerja dokumen berubah."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+msgid "Notify when a new revision of a document is saved."
+msgstr "Beri tahu saat revisi baru dokumen disimpan."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:481
 msgid "Document directory does not appear to exist. Please review value."
 msgstr "Direktori dokumen tampaknya tidak ada. Harap periksa nilainya."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:396
+#: includes/trait-wp-document-revisions-admin-settings.php:483
 msgid "Document directory is not writable. Please check permissions."
 msgstr "Direktori dokumen tidak dapat ditulis. Harap periksa izinnya."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:400
+#: includes/trait-wp-document-revisions-admin-settings.php:487
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved "
-"to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
 msgstr ""
 "Dokumen upload direktori berubah, tapi upload yang ada mungkin perlu "
 "dipindahkan ke folder baru untuk memastikan mereka tetap dapat diakses."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:429
+#: includes/trait-wp-document-revisions-admin-settings.php:516
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
-"Slug dokumen berubah, namun beberapa URL yang diterbitkan sebelumnya mungkin "
-"sudah rusak."
+"Slug dokumen berubah, namun beberapa URL yang diterbitkan sebelumnya mungkin"
+" sudah rusak."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
-#: includes/trait-wp-document-revisions-admin-settings.php:478
-#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-admin-settings.php:534
+#: includes/trait-wp-document-revisions-admin-settings.php:565
+#: includes/trait-wp-document-revisions-admin-settings.php:593
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr "Tidak diizinkan"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:562
+#: includes/trait-wp-document-revisions-admin-settings.php:649
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp-content/uploads</code> folder (or another default uploads folder "
@@ -1316,20 +1469,20 @@ msgstr ""
 "untuk keamanan tambahan."
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:570
+#: includes/trait-wp-document-revisions-admin-settings.php:657
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path "
-"to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
 msgstr ""
 "Anda dapat secara opsional menyertakan string <code>%site_id%</code> di "
 "dalam path untuk memisahkan file menurut situs."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:585
+#: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid "example-document-title"
 msgstr "contoh-dokumen-judul"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:589
+#: includes/trait-wp-document-revisions-admin-settings.php:676
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
@@ -1337,20 +1490,23 @@ msgstr ""
 "\"Slug\" yang digunakan untuk awalan semua URL untuk dokumen (dan arsip "
 "dokumen). Defaultnya adalah <code>dokumen</code>."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid "Remove the year and month element /yyyy/mm from the document permalink."
+#: includes/trait-wp-document-revisions-admin-settings.php:690
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "Hapus elemen tahun dan bulan /yyyy/mm dari permalink dokumen."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid "By default the document permalink will contain the post year and month."
+#: includes/trait-wp-document-revisions-admin-settings.php:692
+msgid ""
+"By default the document permalink will contain the post year and month."
 msgstr ""
 "Secara default, permalink dokumen akan berisi tahun dan bulan postingan."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:606
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "The delivered rewrite rules support both formats."
-msgstr "Aturan penulisan ulang yang diberikan mendukung kedua format tersebut."
+msgstr ""
+"Aturan penulisan ulang yang diberikan mendukung kedua format tersebut."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:659
+#: includes/trait-wp-document-revisions-admin-settings.php:746
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
@@ -1358,7 +1514,7 @@ msgstr ""
 "Jumlah maksimum revisi dokumen diatur ke nol menggunakan filter. Periksa "
 "konfigurasi Anda."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:759
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
@@ -1366,13 +1522,13 @@ msgstr ""
 "Terdapat lebih banyak revisi untuk dokumen ini daripada yang diizinkan. "
 "Melakukan perubahan akan menghapus data."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:681
+#: includes/trait-wp-document-revisions-admin-settings.php:768
 msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
 msgstr ""
-"Jumlah revisi maksimum untuk dokumen ini telah tercapai. Melakukan perubahan "
-"akan menghapus data."
+"Jumlah revisi maksimum untuk dokumen ini telah tercapai. Melakukan perubahan"
+" akan menghapus data."
 
 #: includes/trait-wp-document-revisions-file-handler.php:74
 #: includes/trait-wp-document-revisions-file-handler.php:107
@@ -1401,7 +1557,7 @@ msgid ""
 "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr "Maaf, output sudah ditulis, jadi file Anda tidak dapat diunduh."
 
-#: includes/trait-wp-document-revisions-file-handler.php:1165
+#: includes/trait-wp-document-revisions-file-handler.php:1167
 msgid "Sorry, this is a private feed."
 msgstr "Maaf, ini adalah umpan pribadi."
 
@@ -1451,7 +1607,8 @@ msgstr "Sampah"
 msgid "Somebody"
 msgstr "Seseorang"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1463,7 +1620,8 @@ msgstr "%1$s: %2$s telah mengganti kunci Anda pada %3$s"
 msgid "Dear %s:"
 msgstr "Yang terhormat %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1472,12 +1630,6 @@ msgstr "%1$s (%2$s), telah menggantikan kunci Anda pada dokumen %3$s (%4$s)."
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
 msgstr "Setiap perubahan yang Anda buat akan hilang."
-
-#. translators: %s is the blog name.
-#: includes/trait-wp-document-revisions-revisions.php:420
-#, php-format
-msgid "- The %s Team"
-msgstr "- Itu %s Tim"
 
 #: includes/trait-wp-document-revisions-rewrites.php:47
 #: includes/trait-wp-document-revisions-rewrites.php:62
@@ -1518,8 +1670,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"Berkas berhasil diunggah. Tambahkan ringkasan revisi di bawah ini (opsional) "
-"dan tekan <strong>Perbarui</strong> untuk menyimpan perubahan Anda."
+"Berkas berhasil diunggah. Tambahkan ringkasan revisi di bawah ini (opsional)"
+" dan tekan <strong>Perbarui</strong> untuk menyimpan perubahan Anda."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1585,6 +1737,35 @@ msgstr "Mengunggah Dokumen"
 msgid "Select Document"
 msgstr "Pilih Dokumen"
 
+#: src/blocks/document-preview/edit.js:17
+msgid "Preview Settings"
+msgstr "Pengaturan Pratinjau"
+
+#: src/blocks/document-preview/edit.js:23
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "ID Dokumen"
+
+#: src/blocks/document-preview/edit.js:30
+msgid "Preview Height (px)"
+msgstr "Pratinjau Tinggi (px)"
+
+#: src/blocks/document-preview/edit.js:41
+msgid "Show Document Title?"
+msgstr "Tampilkan Judul Dokumen?"
+
+#: src/blocks/document-preview/edit.js:49
+msgid "Show Download Link?"
+msgstr "Tampilkan tautan unduhan?"
+
+#: src/blocks/document-preview/edit.js:50
+msgid ""
+"Displays a download link below the preview, and is shown as a fallback when "
+"the file type cannot be previewed inline."
+msgstr ""
+"Menampilkan tautan unduhan di bawah pratinjau, dan ditampilkan sebagai "
+"alternatif jika jenis file tidak dapat dipratinjau secara langsung."
+
 #: src/blocks/documents-shortcode/edit.js:76
 msgid "There are no taxonomies defined."
 msgstr "Tidak ada taksonomi yang didefinisikan."
@@ -1628,13 +1809,14 @@ msgstr "Tampilkan tautan Edit"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice "
-"made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
-"Opsi \"Tampilkan tautan Edit\" memungkinkan daftar memiliki tautan ke fungsi "
-"Edit. Pilihan yang dibuat di sini akan menimpa pengaturan yang dikonfigurasi "
-"sistem. Tautan hanya akan muncul jika pengguna dapat mengedit dokumen."
+"Opsi \"Tampilkan tautan Edit\" memungkinkan daftar memiliki tautan ke fungsi"
+" Edit. Pilihan yang dibuat di sini akan menimpa pengaturan yang "
+"dikonfigurasi sistem. Tautan hanya akan muncul jika pengguna dapat mengedit "
+"dokumen."
 
 #: src/blocks/documents-shortcode/edit.js:175
 msgid "Default"
@@ -1694,8 +1876,8 @@ msgid ""
 "The query parameters can be very extensive. enter any other parameters "
 "required here."
 msgstr ""
-"Parameter kueri bisa sangat luas. Masukkan parameter lain yang dibutuhkan di "
-"sini."
+"Parameter kueri bisa sangat luas. Masukkan parameter lain yang dibutuhkan di"
+" sini."
 
 #: src/blocks/documents-widget/edit.js:23
 msgid "Latest Documents Settings"
@@ -1732,10 +1914,6 @@ msgstr "Tampilkan nama penulis?"
 #: src/blocks/revisions-shortcode/edit.js:17
 msgid "Selection Criteria"
 msgstr "Kriteria Seleksi"
-
-#: src/blocks/revisions-shortcode/edit.js:23
-msgid "Document Id"
-msgstr "ID Dokumen"
 
 #: src/blocks/revisions-shortcode/edit.js:30
 msgid "Revisions to Display"
@@ -1776,7 +1954,8 @@ msgstr "beberapa hari yang lalu"
 #: src/editor-document-upload/index.js:200
 msgid ""
 "The attached document file could not be found. It may have been deleted."
-msgstr "Berkas dokumen terlampir tidak dapat ditemukan. Mungkin telah dihapus."
+msgstr ""
+"Berkas dokumen terlampir tidak dapat ditemukan. Mungkin telah dihapus."
 
 #: src/editor-document-upload/index.js:212
 msgid "Document selection failed."
@@ -1819,6 +1998,16 @@ msgstr "Belum ada revisi."
 msgid "—"
 msgstr "—"
 
+#: src/blocks/document-preview/block.json
+msgctxt "block title"
+msgid "Document Preview"
+msgstr "Pratinjau Dokumen"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block description"
+msgid "Embed an inline preview of a document's latest revision."
+msgstr "Sematkan pratinjau langsung dari revisi terbaru dokumen."
+
 #: src/blocks/documents-shortcode/block.json
 msgctxt "block title"
 msgid "Documents List"
@@ -1850,8 +2039,8 @@ msgid "Display a list of revisions for your document."
 msgstr "Tampilkan daftar revisi untuk dokumen Anda."
 
 #~ msgid ""
-#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</"
-#~ "abbr> ago by %4$s"
+#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
+#~ "ago by %4$s"
 #~ msgstr ""
 #~ "Diperiksa dalam <abbr class =\"timestamp\" title "
 #~ "=\"%1$s\"id=\"%2$s\">%3$s</abbr> yang lalu oleh %4$s"
@@ -1864,14 +2053,13 @@ msgstr "Tampilkan daftar revisi untuk dokumen Anda."
 #~ msgstr ""
 #~ "Direktori tempat menyimpan dokumen upload. Defaultnya ada di map "
 #~ "<code>wp_content/uploads</code>anda (atau folder unggahan default lainnya "
-#~ "yang didefinisikan di tempat lain), namun bisa dipindahkan ke folder di "
-#~ "luar <code>htdocs</code> atau <code>public_html</code> untuk keamanan "
-#~ "tambahan."
+#~ "yang didefinisikan di tempat lain), namun bisa dipindahkan ke folder di luar"
+#~ " <code>htdocs</code> atau <code>public_html</code> untuk keamanan tambahan."
 
 #~ msgid ""
 #~ "After you have saved your document in your office software, <a href=\"#\" "
 #~ "onClick=\"location.reload();\">reload this page</a> to see your changes."
 #~ msgstr ""
 #~ "Setelah menyimpan dokumen Anda di perangkat lunak perkantoran Anda, <a "
-#~ "href=\"#\" onClick=\"location.reload();\">muat ulang halaman ini</a> "
-#~ "untuk melihat perubahan Anda."
+#~ "href=\"#\" onClick=\"location.reload();\">muat ulang halaman ini</a> untuk "
+#~ "melihat perubahan Anda."

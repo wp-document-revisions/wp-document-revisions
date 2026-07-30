@@ -3,33 +3,29 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
-"revisions\n"
-"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-30T00:14:48+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
-"n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
 "X-Crowdin-File: /master/languages/wp-document-revisions.pot\n"
 "X-Crowdin-File-ID: 33\n"
 "X-Crowdin-Language: he\n"
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:564
+#: includes/class-wp-document-revisions-front-end.php:565
 msgid "WP Document Revisions"
 msgstr "תיקוני מסמך WP"
 
@@ -77,49 +73,66 @@ msgstr "אין הרשאה מספקת לקריאת הבדל גרסה של מסמ�
 msgid "No summary has been generated for this revision yet."
 msgstr "טרם נוצר סיכום עבור גרסה זו."
 
-#: includes/class-wp-document-revisions-front-end.php:135
-#: includes/class-wp-document-revisions-front-end.php:795
-#: includes/class-wp-document-revisions-front-end.php:950
+#: includes/class-wp-document-revisions-front-end.php:136
+#: includes/class-wp-document-revisions-front-end.php:819
+#: includes/class-wp-document-revisions-front-end.php:974
 msgid "You are not authorized to read this data"
 msgstr "אינך מורשה לקרוא נתונים אלה"
 
-#: includes/class-wp-document-revisions-front-end.php:141
-#: includes/class-wp-document-revisions-front-end.php:955
+#: includes/class-wp-document-revisions-front-end.php:142
+#: includes/class-wp-document-revisions-front-end.php:979
+#: includes/class-wp-document-revisions-front-end.php:1021
 msgid "This is not a valid document."
 msgstr "זה אינו מסמך תקף."
 
-#: includes/class-wp-document-revisions-front-end.php:164
-#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-front-end.php:165
+#: includes/class-wp-document-revisions-front-end.php:348
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr "(קובץ PDF)"
 
-#: includes/class-wp-document-revisions-front-end.php:189
+#: includes/class-wp-document-revisions-front-end.php:190
 msgid "ago by"
 msgstr "לפני על ידי"
 
-#: includes/class-wp-document-revisions-front-end.php:448
+#: includes/class-wp-document-revisions-front-end.php:449
 msgid "Edit"
 msgstr "לַעֲרוֹך"
 
-#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-front-end.php:467
 #: includes/class-wp-document-revisions-recently-revised-widget.php:129
 msgid "No thumbnail available."
 msgstr "אין תמונה ממוזערת זמינה"
 
-#: includes/class-wp-document-revisions-front-end.php:720
+#: includes/class-wp-document-revisions-front-end.php:744
 msgid "No selection"
 msgstr "אין בחירה"
 
-#: includes/class-wp-document-revisions-front-end.php:834
+#: includes/class-wp-document-revisions-front-end.php:858
 msgid " Taxonomy details in this block have changed."
 msgstr "פרטי הטקסונומיה בבלוק זה השתנו."
 
-#: includes/class-wp-document-revisions-front-end.php:869
-#: includes/class-wp-document-revisions-front-end.php:883
-#: includes/class-wp-document-revisions-front-end.php:897
+#: includes/class-wp-document-revisions-front-end.php:893
+#: includes/class-wp-document-revisions-front-end.php:907
+#: includes/class-wp-document-revisions-front-end.php:921
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr "מונח הטקסונומיה אינו שייך לטקסונומיה זו."
+
+#: includes/class-wp-document-revisions-front-end.php:1030
+msgid "You are not authorized to read this document."
+msgstr "אינך מורשה לקרוא מסמך זה."
+
+#: includes/class-wp-document-revisions-front-end.php:1035
+msgid "This document has no file to preview."
+msgstr "אין קובץ לתצוגה מקדימה במסמך זה."
+
+#: includes/class-wp-document-revisions-front-end.php:1046
+msgid "Download document"
+msgstr "הורד מסמך"
+
+#: includes/class-wp-document-revisions-front-end.php:1065
+msgid "This file type cannot be previewed inline."
+msgstr "לא ניתן להציג תצוגה מקדימה של סוג קובץ זה בתוך השורה."
 
 #: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
@@ -148,6 +161,72 @@ msgstr "סליחה, אינך מורשה לצפות בגרסה זו."
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
+
+#: includes/class-wp-document-revisions-notifications.php:142
+#: includes/class-wp-document-revisions-notifications.php:196
+msgid "Someone"
+msgstr "מִישֶׁהוּ"
+
+#. translators: %1$s is the blog name, %2$s is the document title, %3$s is the
+#. new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:145
+#, php-format
+msgid "%1$s: %2$s moved to %3$s"
+msgstr "%1$s: %2$s הועבר ל- %3$s"
+
+#. translators: %1$s is the user who made the change, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:148
+#, php-format
+msgid "%1$s changed the workflow state of the document %2$s."
+msgstr "%1$s שינה את מצב זרימת העבודה של המסמך %2$s."
+
+#. translators: %1$s is the previous workflow state, %2$s is the new workflow
+#. state.
+#: includes/class-wp-document-revisions-notifications.php:151
+#, php-format
+msgid "State: %1$s to %2$s"
+msgstr "מצב: %1$s עד %2$s"
+
+#. translators: %s is the new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:154
+#, php-format
+msgid "State: %s"
+msgstr "מצב: %s"
+
+#. translators: %s is the document URL.
+#: includes/class-wp-document-revisions-notifications.php:157
+#: includes/class-wp-document-revisions-notifications.php:209
+#, php-format
+msgid "View the document: %s"
+msgstr "הצג את המסמך: %s"
+
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions-notifications.php:159
+#: includes/class-wp-document-revisions-notifications.php:211
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- צוות %s"
+
+#. translators: %1$s is the blog name, %2$s is the document title.
+#: includes/class-wp-document-revisions-notifications.php:199
+#, php-format
+msgid "%1$s: New revision of %2$s"
+msgstr "%1$s: גרסה חדשה של %2$s"
+
+#. translators: %1$s is the user who saved the revision, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:202
+#, php-format
+msgid "%1$s saved a new revision of the document %2$s."
+msgstr "%1$s שמר גרסה חדשה של המסמך %2$s."
+
+#. translators: %s is the revision summary.
+#: includes/class-wp-document-revisions-notifications.php:206
+#, php-format
+msgid "Summary: %s"
+msgstr "סיכום: %s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -222,9 +301,9 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"כאשר האפשרות מסומנת, טקסט רגיל לא יחולץ מקבצים שהועלו עבור מסמך זה, וכל טקסט "
-"שחולץ בעבר ינוקה. שימושי עבור מסמכים רגישים שאת תוכנם לא צריך להישמר במטמון "
-"עבור חיפוש, תקצירי בינה מלאכותית או תכונות מבוססות טקסט אחרות."
+"כאשר האפשרות מסומנת, טקסט רגיל לא יחולץ מקבצים שהועלו עבור מסמך זה, וכל טקסט"
+" שחולץ בעבר ינוקה. שימושי עבור מסמכים רגישים שאת תוכנם לא צריך להישמר במטמון"
+" עבור חיפוש, תקצירי בינה מלאכותית או תכונות מבוססות טקסט אחרות."
 
 #: includes/class-wp-document-revisions-text-extraction-opt-out.php:245
 msgid "Do not pre-fill the revision log with AI suggestions"
@@ -364,7 +443,8 @@ msgstr "קובץ מצורף שהועלה לאחרונה למסמך, אך אינ�
 msgid "Attachment found for document, but not currently linked"
 msgstr "נמצא קובץ מצורף למסמך, אך הוא אינו מקושר כרגע"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -465,7 +545,8 @@ msgstr "שגיאות"
 msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
-msgstr "אלו הן בעיות שמונעות ממך להציג את המסמך שלך בקצה הקדמי. הבעיות כוללות:"
+msgstr ""
+"אלו הן בעיות שמונעות ממך להציג את המסמך שלך בקצה הקדמי. הבעיות כוללות:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
@@ -512,18 +593,19 @@ msgstr "ישנו מזהה המקשר למסמך מצורף, אך אין קובץ
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media store."
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
-"כגרסה אחרת של המקרה האחרון, ייתכן שהגדרת את התוסף כך שמאגר קבצי המסמכים יהיה "
-"לבחירתך ולא מאגר המדיה הסטנדרטי."
+"כגרסה אחרת של המקרה האחרון, ייתכן שהגדרת את התוסף כך שמאגר קבצי המסמכים יהיה"
+" לבחירתך ולא מאגר המדיה הסטנדרטי."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1201
 msgid ""
 "In this very specific case, when it has been unable to find the file in the "
 "document store, it will look for it in the Media store."
 msgstr ""
-"במקרה הספציפי הזה, כאשר לא הצליח למצוא את הקובץ במאגר המסמכים, הוא יחפש אותו "
-"במאגר המדיה."
+"במקרה הספציפי הזה, כאשר לא הצליח למצוא את הקובץ במאגר המסמכים, הוא יחפש אותו"
+" במאגר המדיה."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1202
 msgid ""
@@ -539,8 +621,8 @@ msgstr "אזהרות"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you "
-"know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "אופי טכנולוגיית האינטרנט המשמשת לאספקת וורדפרס פירושו שאם אתם יודעים את שם "
@@ -548,8 +630,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access "
-"a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
 "תכונה עיצובית של תוסף זה היא שתוכלו לגשת למסמך רק אם תעברו דרך וורדפרס עצמה."
 
@@ -565,99 +647,103 @@ msgstr ""
 msgid "The fix is therefore to md5-encode the file name."
 msgstr "לכן, התיקון הוא לקודד את שם הקובץ באמצעות md5."
 
-#: includes/class-wp-document-revisions.php:288
-#: includes/class-wp-document-revisions.php:702
+#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:726
 #: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
 msgstr "מסמכים"
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:295
+msgid "Read and manage documents stored by WP Document Revisions."
+msgstr "קריאה ונהל מסמכים המאוחסנים על ידי WP Document Revisions."
+
+#: includes/class-wp-document-revisions.php:317
 msgid "Check Document Access"
 msgstr "בדיקת גישה למסמכים"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:318
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr "בדוק אם המשתמש הנוכחי יכול לבצע פעולה ספציפית על מסמך."
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:327
 msgid "The document post ID to check access for."
 msgstr "מזהה פרסום המסמך שיש לבדוק עבורו גישה."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:331
 msgid "The action to check: read, edit, delete, or publish."
 msgstr "הפעולה לבדיקה: קריאה, עריכה, מחיקה או פרסום."
 
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:342
 msgid "Whether the user can perform the action."
 msgstr "האם המשתמש יכול לבצע את הפעולה."
 
-#: includes/class-wp-document-revisions.php:346
+#: includes/class-wp-document-revisions.php:357
 msgid "Get Document Info"
 msgstr "קבל מידע על המסמך"
 
-#: includes/class-wp-document-revisions.php:347
+#: includes/class-wp-document-revisions.php:358
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
 msgstr "אחזור מטא-נתונים עבור מסמך, כולל סוג קובץ, ספירת גרסאות ומצב נעילה."
 
-#: includes/class-wp-document-revisions.php:358
-#: includes/class-wp-document-revisions.php:392
+#: includes/class-wp-document-revisions.php:369
+#: includes/class-wp-document-revisions.php:407
 msgid "The document post ID."
 msgstr "מזהה פרסום המסמך."
 
-#: includes/class-wp-document-revisions.php:380
+#: includes/class-wp-document-revisions.php:395
 msgid "Get Document Revisions"
 msgstr "קבל גרסאות מסמכים"
 
-#: includes/class-wp-document-revisions.php:381
+#: includes/class-wp-document-revisions.php:396
 msgid "Retrieve the revision history of a document."
 msgstr "אחזור היסטוריית הגרסאות של מסמך."
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:440
 msgid "Override Document Lock"
 msgstr "עקיפת נעילת מסמך"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:441
 msgid "Override another user's lock on a document to allow editing."
 msgstr "ביטול נעילה של משתמש אחר במסמך כדי לאפשר עריכה."
 
-#: includes/class-wp-document-revisions.php:433
+#: includes/class-wp-document-revisions.php:452
 msgid "The document post ID to unlock."
 msgstr "מזהה פרסום המסמך שיש לפתוח."
 
-#: includes/class-wp-document-revisions.php:499
-#: includes/class-wp-document-revisions.php:539
-#: includes/class-wp-document-revisions.php:592
+#: includes/class-wp-document-revisions.php:523
+#: includes/class-wp-document-revisions.php:563
+#: includes/class-wp-document-revisions.php:616
 msgid "Document not found."
 msgstr "המסמך לא נמצא."
 
-#: includes/class-wp-document-revisions.php:507
+#: includes/class-wp-document-revisions.php:531
 msgid "You do not have permission to view this document."
 msgstr "אין לך הרשאה לצפות במסמך זה."
 
-#: includes/class-wp-document-revisions.php:547
+#: includes/class-wp-document-revisions.php:571
 msgid "You do not have permission to view revisions for this document."
 msgstr "אין לך הרשאה לצפות בתיקונים של מסמך זה."
 
-#: includes/class-wp-document-revisions.php:555
+#: includes/class-wp-document-revisions.php:579
 msgid "You do not have permission to view document revisions."
 msgstr "אין לך הרשאה לצפות בתיקוני מסמכים."
 
-#: includes/class-wp-document-revisions.php:569
+#: includes/class-wp-document-revisions.php:593
 msgid "Unknown"
 msgstr "לֹא יְדוּעַ"
 
-#: includes/class-wp-document-revisions.php:610
+#: includes/class-wp-document-revisions.php:634
 msgid "You do not have permission to override the lock on this document."
 msgstr "אין לך הרשאה לעקוף את הנעילה במסמך זה."
 
-#: includes/class-wp-document-revisions.php:638
+#: includes/class-wp-document-revisions.php:662
 msgid "You have activated the plugin WP Document Revisions"
 msgstr "הפעלת את התוסף WP Document Revisions"
 
-#: includes/class-wp-document-revisions.php:640
+#: includes/class-wp-document-revisions.php:664
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
@@ -665,7 +751,7 @@ msgstr ""
 "אין לך את היכולת edit_documents, כנראה בגלל מספר תפקידים מתנגשים או שימוש "
 "בתפקיד מותאם אישית!"
 
-#: includes/class-wp-document-revisions.php:642
+#: includes/class-wp-document-revisions.php:666
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
@@ -673,7 +759,7 @@ msgstr ""
 "ייתכן שתפריט המסמכים לא יוצג במלואו כאשר האפשרויות \"כל המסמכים\" ו\"הוסף "
 "מסמך\" חסרות."
 
-#: includes/class-wp-document-revisions.php:644
+#: includes/class-wp-document-revisions.php:668
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
@@ -681,148 +767,148 @@ msgstr ""
 "ראשית עליך לבדוק האם יש לך מספר תפקידים ושכל אחד מהם כולל יכולת "
 "edit_documents."
 
-#: includes/class-wp-document-revisions.php:690
+#: includes/class-wp-document-revisions.php:714
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "מסמכים"
 
-#: includes/class-wp-document-revisions.php:691
+#: includes/class-wp-document-revisions.php:715
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "מִסְמָך"
 
-#: includes/class-wp-document-revisions.php:692
+#: includes/class-wp-document-revisions.php:716
 msgctxt "document"
 msgid "Add Document"
 msgstr "הוסף מסמך"
 
-#: includes/class-wp-document-revisions.php:693
+#: includes/class-wp-document-revisions.php:717
 msgid "Add New Document"
 msgstr "הוסף מסמך חדש"
 
-#: includes/class-wp-document-revisions.php:694
+#: includes/class-wp-document-revisions.php:718
 msgid "Edit Document"
 msgstr "עריכת מסמך"
 
-#: includes/class-wp-document-revisions.php:695
+#: includes/class-wp-document-revisions.php:719
 msgid "New Document"
 msgstr "מסמך חדש"
 
-#: includes/class-wp-document-revisions.php:696
+#: includes/class-wp-document-revisions.php:720
 msgid "View Document"
 msgstr "הצג מסמך"
 
-#: includes/class-wp-document-revisions.php:697
+#: includes/class-wp-document-revisions.php:721
 msgid "View Documents"
 msgstr "הצג מסמכים"
 
-#: includes/class-wp-document-revisions.php:698
+#: includes/class-wp-document-revisions.php:722
 msgid "Search Documents"
 msgstr "חיפוש מסמכים"
 
-#: includes/class-wp-document-revisions.php:699
+#: includes/class-wp-document-revisions.php:723
 msgid "No documents found"
 msgstr "לא נמצאו מסמכים"
 
-#: includes/class-wp-document-revisions.php:700
+#: includes/class-wp-document-revisions.php:724
 msgid "No documents found in Trash"
 msgstr "לא נמצאו מסמכים באשפה"
 
-#: includes/class-wp-document-revisions.php:703
+#: includes/class-wp-document-revisions.php:727
 msgid "All Documents"
 msgstr "כל המסמכים"
 
-#: includes/class-wp-document-revisions.php:704
+#: includes/class-wp-document-revisions.php:728
 msgid "Document Image"
 msgstr "תמונת מסמך"
 
-#: includes/class-wp-document-revisions.php:705
+#: includes/class-wp-document-revisions.php:729
 msgid "Set Document Image"
 msgstr "הגדר תמונת מסמך"
 
-#: includes/class-wp-document-revisions.php:706
+#: includes/class-wp-document-revisions.php:730
 msgid "Remove Document Image"
 msgstr "הסר תמונת מסמך"
 
-#: includes/class-wp-document-revisions.php:707
+#: includes/class-wp-document-revisions.php:731
 msgid "Use as Document Image"
 msgstr "השתמש כתמונת מסמך"
 
-#: includes/class-wp-document-revisions.php:812
+#: includes/class-wp-document-revisions.php:836
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "מצבי זרימת עבודה"
 
-#: includes/class-wp-document-revisions.php:813
+#: includes/class-wp-document-revisions.php:837
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "מצב זרימת עבודה"
 
-#: includes/class-wp-document-revisions.php:814
+#: includes/class-wp-document-revisions.php:838
 msgid "Search Workflow States"
 msgstr "מצבי זרימת עבודה של חיפוש"
 
-#: includes/class-wp-document-revisions.php:815
+#: includes/class-wp-document-revisions.php:839
 msgid "All Workflow States"
 msgstr "כל מצבי זרימת העבודה"
 
-#: includes/class-wp-document-revisions.php:816
+#: includes/class-wp-document-revisions.php:840
 msgid "Parent Workflow State"
 msgstr "מצב זרימת עבודה של האב"
 
-#: includes/class-wp-document-revisions.php:817
+#: includes/class-wp-document-revisions.php:841
 msgid "Parent Workflow State:"
 msgstr "מצב זרימת עבודה של האב:"
 
-#: includes/class-wp-document-revisions.php:818
+#: includes/class-wp-document-revisions.php:842
 msgid "Edit Workflow State"
 msgstr "עריכת מצב זרימת עבודה"
 
-#: includes/class-wp-document-revisions.php:819
+#: includes/class-wp-document-revisions.php:843
 msgid "Update Workflow State"
 msgstr "עדכון מצב זרימת עבודה"
 
-#: includes/class-wp-document-revisions.php:820
+#: includes/class-wp-document-revisions.php:844
 msgid "Add New Workflow State"
 msgstr "הוסף מצב זרימת עבודה חדש"
 
-#: includes/class-wp-document-revisions.php:821
+#: includes/class-wp-document-revisions.php:845
 msgid "New Workflow State Name"
 msgstr "שם מצב זרימת עבודה חדש"
 
-#: includes/class-wp-document-revisions.php:822
+#: includes/class-wp-document-revisions.php:846
 msgid "Workflow States"
 msgstr "מצבי זרימת עבודה"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "In Progress"
 msgstr "בתהליך"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "Document is in the process of being written"
 msgstr "המסמך נמצא בתהליך כתיבה"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Initial Draft"
 msgstr "טיוטה ראשונית"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Document is being edited and refined"
 msgstr "המסמך נמצא בעריכה ובשיפור"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Under Review"
 msgstr "בבדיקה"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Document is pending final review"
 msgstr "המסמך ממתין לבדיקה סופית"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Final"
 msgstr "סוֹפִי"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Document is in its final form"
 msgstr "המסמך נמצא בצורתו הסופית"
 
@@ -863,8 +949,7 @@ msgstr "המסמך נשמר."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid ""
-"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "המסמך הוגש. <a target=\"_blank\" href=\"%s\">הורד את המסמך</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
@@ -887,9 +972,7 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid ""
-"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
-"a>"
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr "טיוטת המסמך עודכנה. <a target=\"_blank\" href=\"%s\">הורד את המסמך</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
@@ -916,7 +999,7 @@ msgstr "מצב זרימת עבודה"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:129
 #: includes/trait-wp-document-revisions-admin-editor.php:1186
-#: includes/trait-wp-document-revisions-admin-list.php:122
+#: includes/trait-wp-document-revisions-admin-list.php:266
 msgid "Owner"
 msgstr "בַּעַל"
 
@@ -947,12 +1030,14 @@ msgstr "הגרסה האחרונה של המסמך"
 msgid "Download"
 msgstr "הורדה"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
-"ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
 msgstr ""
 "בוצע צ'ק-אין לפני <abbr class=\"timestamp\" title=\"%1$s\" "
 "id=\"A%2$s\">%3$s</abbr> על ידי %4$s"
@@ -968,21 +1053,21 @@ msgstr "שימוש בסיסי"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter "
-"a description, and click <code>Upload New Version</code> and select the file "
-"from your computer."
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
 msgstr ""
-"מסך זה מאפשר למשתמשים לערוך מסמכים בשיתוף פעולה ולעקוב אחר היסטוריית הגרסאות "
-"שלהם. כדי להתחיל, הזינו כותרת למסמך, אופציונלית הזינו תיאור, ולחצו על "
+"מסך זה מאפשר למשתמשים לערוך מסמכים בשיתוף פעולה ולעקוב אחר היסטוריית הגרסאות"
+" שלהם. כדי להתחיל, הזינו כותרת למסמך, אופציונלית הזינו תיאור, ולחצו על "
 "<code>העלה גרסה חדשה</code> ובחרו את הקובץ מהמחשב שלכם."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the "
-"document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
 msgstr ""
-"לאחר העלאה מוצלחת, תוכלו להזין הודעת יומן גרסאות, להקצות למסמך מחבר ולתאר את "
-"מצב זרימת העבודה הנוכחי שלו."
+"לאחר העלאה מוצלחת, תוכלו להזין הודעת יומן גרסאות, להקצות למסמך מחבר ולתאר את"
+" מצב זרימת העבודה הנוכחי שלו."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
@@ -1010,8 +1095,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a "
-"comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
 msgstr ""
 "יומן הגרסאות מספק סיכום קצר של השינויים המשתקפים בגרסה מסוימת. הוא נמצא "
 "בשימוש נרחב בקהילת הקוד הפתוח, ומספק סקירה מקיפה של המסמך במבט חטוף."
@@ -1028,13 +1113,13 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what "
-"stage a document sits within a particular organization&quot;s workflow. The "
-"field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
-"ניתן להשתמש בשדה מצב זרימת העבודה כדי לעזור לחברי הצוות להבין באיזה שלב נמצא "
-"מסמך בתהליך העבודה של ארגון מסוים. השדה הוא אופציונלי, וניתן להתאים אותו "
+"ניתן להשתמש בשדה מצב זרימת העבודה כדי לעזור לחברי הצוות להבין באיזה שלב נמצא"
+" מסמך בתהליך העבודה של ארגון מסוים. השדה הוא אופציונלי, וניתן להתאים אותו "
 "אישית או לבצע שאילתה עליו על ידי לחיצה על <code>מצבי זרימת עבודה</code> בצד "
 "שמאל."
 
@@ -1052,8 +1137,8 @@ msgid ""
 msgstr ""
 "כברירת מחדל, מסמכים שהועלו נגישים רק למשתמשים מחוברים. ניתן לפרסם מסמכים, "
 "ובכך להפוך אותם לנגישים לעולם, על ידי הפעלה/כיבוי של הנראות שלהם בתיבה "
-"\"פרסם\" בפינה הימנית העליונה. כל מסמך המסומן כפורסם יהיה נגיש לכל מי שיש לו "
-"את כתובת ה-URL המתאימה."
+"\"פרסם\" בפינה הימנית העליונה. כל מסמך המסומן כפורסם יהיה נגיש לכל מי שיש לו"
+" את כתובת ה-URL המתאימה."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
@@ -1071,8 +1156,8 @@ msgstr "כדי להוסיף מסמך חדש, לחץ על <strong>הוסף מסמ
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow "
-"States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
 msgstr ""
 "כדי להציג את כל המסמכים במצב זרימת עבודה מסוים, לחץ על <strong>מצבי זרימת "
 "עבודה</strong> בתפריט משמאל."
@@ -1094,8 +1179,8 @@ msgstr "לא תוכל להעלות מסמכים כלשהם."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that "
-"allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "סיכומי גרסאות הם הערות אופציונליות לאחסון יחד עם גרסה זו, המאפשרות למשתמשים "
@@ -1160,7 +1245,46 @@ msgstr "כל הסטטוסים"
 msgid "All owners"
 msgstr "כל הבעלים"
 
-#: includes/trait-wp-document-revisions-admin-list.php:140
+#: includes/trait-wp-document-revisions-admin-list.php:102
+msgid "Add your first document"
+msgstr "הוסף את המסמך הראשון שלך"
+
+#: includes/trait-wp-document-revisions-admin-list.php:107
+msgid "read the documentation"
+msgstr "קרא את התיעוד"
+
+#: includes/trait-wp-document-revisions-admin-list.php:112
+msgid "Welcome to WP Document Revisions!"
+msgstr "ברוכים הבאים ל-WP Document Revisions!"
+
+#. translators: 1: link to add a new document, 2: link to the documentation
+#: includes/trait-wp-document-revisions-admin-list.php:116
+#, php-format
+msgid ""
+"You have not added any documents yet. %1$s to start tracking revisions and "
+"workflow, or %2$s."
+msgstr ""
+"עדיין לא הוספת מסמכים. %1$s כדי להתחיל לעקוב אחר תיקונים וזרימת עבודה, או "
+"%2$s."
+
+#: includes/trait-wp-document-revisions-admin-list.php:171
+msgid ""
+"You have been managing your documents with WP Document Revisions — thank "
+"you! If it has been useful, would you consider leaving a quick review? It "
+"genuinely helps other teams discover the plugin."
+msgstr ""
+"ניהלת את המסמכים שלך עם WP Document Revisions - תודה! אם זה היה שימושי, האם "
+"תשקול להשאיר ביקורת קצרה? זה באמת עוזר לצוותים אחרים לגלות את התוסף."
+
+#: includes/trait-wp-document-revisions-admin-list.php:173
+msgid "Leave a review"
+msgstr "השאר ביקורת"
+
+#: includes/trait-wp-document-revisions-admin-list.php:174
+msgid "No thanks"
+msgstr "לא תודה"
+
+#: includes/trait-wp-document-revisions-admin-list.php:284
 msgid "Currently Editing"
 msgstr "עורך כעת"
 
@@ -1200,7 +1324,8 @@ msgstr "כדי להגן על פרטיותך, עליך לצרף מפתח לעדכ
 msgid "Generate New Key"
 msgstr "צור מפתח חדש"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1210,96 +1335,126 @@ msgstr "לפני %1$s על ידי %2$s [%3$s]"
 msgid "Document Date in Permalink"
 msgstr "תאריך המסמך בקישור קבוע"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:394
+#: includes/trait-wp-document-revisions-admin-settings.php:390
+msgid "Document Notifications"
+msgstr "הודעות מסמכים"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:435
+msgid "Email notifications when documents change."
+msgstr "התראות דוא\"ל כאשר מסמכים משתנים."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:437
+msgid "Notify these email addresses (one per line or comma-separated):"
+msgstr "הודע לכתובות הדוא\"ל הבאות (אחת בכל שורה או מופרדת בפסיקים):"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:439
+msgid ""
+"The document's author is always notified in addition to this list. Whoever "
+"made the change is never notified of their own change."
+msgstr ""
+"מחבר המסמך תמיד מקבל הודעה בנוסף לרשימה זו. מי שביצע את השינוי לעולם לא מקבל"
+" הודעה על השינוי שלו."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:444
+msgid "Notify when a document changes workflow state."
+msgstr "הודעה כאשר מסמך משנה את מצב זרימת העבודה."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+msgid "Notify when a new revision of a document is saved."
+msgstr "הודעה כאשר נשמרת גרסה חדשה של מסמך."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:481
 msgid "Document directory does not appear to exist. Please review value."
 msgstr "נראה שספריית המסמכים אינה קיימת. אנא בדוק את הערך."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:396
+#: includes/trait-wp-document-revisions-admin-settings.php:483
 msgid "Document directory is not writable. Please check permissions."
 msgstr "ספריית המסמכים אינה ניתנת לכתיבה. אנא בדוק את ההרשאות."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:400
+#: includes/trait-wp-document-revisions-admin-settings.php:487
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved "
-"to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
 msgstr ""
-"תיקיית העלאת המסמכים שונתה, אך ייתכן שיהיה צורך להעביר העלאות קיימות לתיקייה "
-"החדשה כדי להבטיח שהן יישארו נגישות."
+"תיקיית העלאת המסמכים שונתה, אך ייתכן שיהיה צורך להעביר העלאות קיימות לתיקייה"
+" החדשה כדי להבטיח שהן יישארו נגישות."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:429
+#: includes/trait-wp-document-revisions-admin-settings.php:516
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 "קוד ה-URL של המסמך השתנה, אך ייתכן שכמה כתובות URL שפורסמו בעבר פגומות כעת."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
-#: includes/trait-wp-document-revisions-admin-settings.php:478
-#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-admin-settings.php:534
+#: includes/trait-wp-document-revisions-admin-settings.php:565
+#: includes/trait-wp-document-revisions-admin-settings.php:593
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr "לא מורשה"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:562
+#: includes/trait-wp-document-revisions-admin-settings.php:649
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp-content/uploads</code> folder (or another default uploads folder "
 "defined elsewhere), but it may be moved to a folder outside of the "
 "<code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
-"ספרייה לאחסון מסמכים שהועלו. ברירת המחדל היא בתיקייה <code>wp-content/"
-"uploads</code> שלך (או בתיקיית העלאות אחרת המוגדרת כברירת מחדל במקום אחר), "
-"אך ניתן להעביר אותה לתיקייה מחוץ לתיקיות <code>htdocs</code> או "
+"ספרייה לאחסון מסמכים שהועלו. ברירת המחדל היא בתיקייה <code>wp-"
+"content/uploads</code> שלך (או בתיקיית העלאות אחרת המוגדרת כברירת מחדל במקום"
+" אחר), אך ניתן להעביר אותה לתיקייה מחוץ לתיקיות <code>htdocs</code> או "
 "<code>public_html</code> לצורך אבטחה נוספת."
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:570
+#: includes/trait-wp-document-revisions-admin-settings.php:657
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path "
-"to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
 msgstr ""
 "באפשרותך לכלול באופן אופציונלי את המחרוזת <code>%site_id%</code> בתוך הנתיב "
 "כדי להפריד קבצים לפי אתר."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:585
+#: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid "example-document-title"
 msgstr "כותרת-דוגמה-מסמך"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:589
+#: includes/trait-wp-document-revisions-admin-settings.php:676
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
 msgstr ""
-"\"Slug\" (קידומת) שאליה יש להוסיף קידומת לכל כתובות ה-URL של מסמכים (וארכיון "
-"המסמכים). ברירת המחדל היא <code>documents</code>."
+"\"Slug\" (קידומת) שאליה יש להוסיף קידומת לכל כתובות ה-URL של מסמכים (וארכיון"
+" המסמכים). ברירת המחדל היא <code>documents</code>."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid "Remove the year and month element /yyyy/mm from the document permalink."
+#: includes/trait-wp-document-revisions-admin-settings.php:690
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "הסר את רכיב השנה והחודש /yyyy/mm מהקישור הקבוע של המסמך."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid "By default the document permalink will contain the post year and month."
+#: includes/trait-wp-document-revisions-admin-settings.php:692
+msgid ""
+"By default the document permalink will contain the post year and month."
 msgstr "כברירת מחדל, קישור קבוע למסמך יכיל את שנת הפוסט והחודש."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:606
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "The delivered rewrite rules support both formats."
 msgstr "כללי הכתיבה מחדש המסופקים תומכים בשני הפורמטים."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:659
+#: includes/trait-wp-document-revisions-admin-settings.php:746
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
 msgstr ""
 "מספר המקסימלי של גרסאות מסמכים הוגדר לאפס באמצעות מסנן. בדוק את התצורה שלך."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:759
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
 msgstr "קיימות יותר גרסאות למסמך זה מהמותר. ביצוע שינויים ימחק נתונים."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:681
+#: includes/trait-wp-document-revisions-admin-settings.php:768
 msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
@@ -1332,7 +1487,7 @@ msgid ""
 "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr "מצטערים, הפלט כבר נכתב, לכן לא ניתן להוריד את הקובץ שלך."
 
-#: includes/trait-wp-document-revisions-file-handler.php:1165
+#: includes/trait-wp-document-revisions-file-handler.php:1167
 msgid "Sorry, this is a private feed."
 msgstr "סליחה, זהו פיד פרטי."
 
@@ -1382,7 +1537,8 @@ msgstr "אַשׁפָּה"
 msgid "Somebody"
 msgstr "מִישֶׁהוּ"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1394,7 +1550,8 @@ msgstr "%1$s: %2$s ביטל את הנעילה שלך ב- %3$s"
 msgid "Dear %s:"
 msgstr "%s היקר/ה:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1403,12 +1560,6 @@ msgstr "%1$s (%2$s), ביטל את הנעילה שלך במסמך %3$s (%4$s)."
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
 msgstr "כל שינוי שביצעת יאבד."
-
-#. translators: %s is the blog name.
-#: includes/trait-wp-document-revisions-revisions.php:420
-#, php-format
-msgid "- The %s Team"
-msgstr "- צוות %s"
 
 #: includes/trait-wp-document-revisions-rewrites.php:47
 #: includes/trait-wp-document-revisions-rewrites.php:62
@@ -1448,8 +1599,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"הקובץ הועלה בהצלחה. הוסף סיכום גרסאות למטה (אופציונלי) ולחץ על <strong>עדכן</"
-"strong> כדי לשמור את השינויים שלך."
+"הקובץ הועלה בהצלחה. הוסף סיכום גרסאות למטה (אופציונלי) ולחץ על "
+"<strong>עדכן</strong> כדי לשמור את השינויים שלך."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1514,6 +1665,35 @@ msgstr "העלאת מסמך"
 msgid "Select Document"
 msgstr "בחר מסמך"
 
+#: src/blocks/document-preview/edit.js:17
+msgid "Preview Settings"
+msgstr "הגדרות תצוגה מקדימה"
+
+#: src/blocks/document-preview/edit.js:23
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "מזהה מסמך"
+
+#: src/blocks/document-preview/edit.js:30
+msgid "Preview Height (px)"
+msgstr "גובה תצוגה מקדימה (פיקסלים)"
+
+#: src/blocks/document-preview/edit.js:41
+msgid "Show Document Title?"
+msgstr "להציג את כותרת המסמך?"
+
+#: src/blocks/document-preview/edit.js:49
+msgid "Show Download Link?"
+msgstr "להציג קישור להורדה?"
+
+#: src/blocks/document-preview/edit.js:50
+msgid ""
+"Displays a download link below the preview, and is shown as a fallback when "
+"the file type cannot be previewed inline."
+msgstr ""
+"מציג קישור הורדה מתחת לתצוגה המקדימה, ומוצג כגיבוי כאשר לא ניתן להציג את סוג"
+" הקובץ בתצוגה מקדימה בתוך השורה."
+
 #: src/blocks/documents-shortcode/edit.js:76
 msgid "There are no taxonomies defined."
 msgstr "אין טקסונומיות מוגדרות."
@@ -1556,8 +1736,8 @@ msgstr "הצג קישור עריכה"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice "
-"made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "\"הצג קישור עריכה\" מאפשר לרשימה לכלול קישור לפונקציית העריכה. בחירה שתבוצע "
@@ -1659,10 +1839,6 @@ msgstr "להציג את שם המחבר?"
 msgid "Selection Criteria"
 msgstr "קריטריוני בחירה"
 
-#: src/blocks/revisions-shortcode/edit.js:23
-msgid "Document Id"
-msgstr "מזהה מסמך"
-
 #: src/blocks/revisions-shortcode/edit.js:30
 msgid "Revisions to Display"
 msgstr "תיקונים לתצוגה"
@@ -1744,6 +1920,16 @@ msgstr "עדיין אין תיקונים."
 #: src/editor-document-upload/index.js:578
 msgid "—"
 msgstr "—"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block title"
+msgid "Document Preview"
+msgstr "תצוגה מקדימה של המסמך"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block description"
+msgid "Embed an inline preview of a document's latest revision."
+msgstr "הטמע תצוגה מקדימה מוטבעת של הגרסה האחרונה של מסמך."
 
 #: src/blocks/documents-shortcode/block.json
 msgctxt "block title"

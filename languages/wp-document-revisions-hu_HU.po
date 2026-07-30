@@ -3,9 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wordpress-document-revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
-"revisions\n"
-"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-30T00:14:48+00:00\n"
 "PO-Revision-Date: 2022-01-24 22:19\n"
 "Language-Team: Hungarian\n"
 "Language: hu_HU\n"
@@ -19,16 +18,14 @@ msgstr ""
 "X-Crowdin-Project: wordpress-document-revisions\n"
 "X-Crowdin-Project-ID: 290225\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
-"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
-"esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:564
+#: includes/class-wp-document-revisions-front-end.php:565
 msgid "WP Document Revisions"
 msgstr "WP dokumentumváltozatok"
 
@@ -79,49 +76,66 @@ msgstr "Nincs elegendő jogosultság a dokumentum olvasásához. verziókülönb
 msgid "No summary has been generated for this revision yet."
 msgstr "Ehhez a verzióhoz még nem készült összefoglaló."
 
-#: includes/class-wp-document-revisions-front-end.php:135
-#: includes/class-wp-document-revisions-front-end.php:795
-#: includes/class-wp-document-revisions-front-end.php:950
+#: includes/class-wp-document-revisions-front-end.php:136
+#: includes/class-wp-document-revisions-front-end.php:819
+#: includes/class-wp-document-revisions-front-end.php:974
 msgid "You are not authorized to read this data"
 msgstr "Nincs jogosultsága ezen adatok olvasására"
 
-#: includes/class-wp-document-revisions-front-end.php:141
-#: includes/class-wp-document-revisions-front-end.php:955
+#: includes/class-wp-document-revisions-front-end.php:142
+#: includes/class-wp-document-revisions-front-end.php:979
+#: includes/class-wp-document-revisions-front-end.php:1021
 msgid "This is not a valid document."
 msgstr "Ez nem érvényes dokumentum."
 
-#: includes/class-wp-document-revisions-front-end.php:164
-#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-front-end.php:165
+#: includes/class-wp-document-revisions-front-end.php:348
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr "(PDF)"
 
-#: includes/class-wp-document-revisions-front-end.php:189
+#: includes/class-wp-document-revisions-front-end.php:190
 msgid "ago by"
 msgstr "ezelőtt által"
 
-#: includes/class-wp-document-revisions-front-end.php:448
+#: includes/class-wp-document-revisions-front-end.php:449
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-front-end.php:467
 #: includes/class-wp-document-revisions-recently-revised-widget.php:129
 msgid "No thumbnail available."
 msgstr "Nincs elérhető indexkép."
 
-#: includes/class-wp-document-revisions-front-end.php:720
+#: includes/class-wp-document-revisions-front-end.php:744
 msgid "No selection"
 msgstr "Nincs kijelölés"
 
-#: includes/class-wp-document-revisions-front-end.php:834
+#: includes/class-wp-document-revisions-front-end.php:858
 msgid " Taxonomy details in this block have changed."
 msgstr "A blokk taxonómiai részletei megváltoztak."
 
-#: includes/class-wp-document-revisions-front-end.php:869
-#: includes/class-wp-document-revisions-front-end.php:883
-#: includes/class-wp-document-revisions-front-end.php:897
+#: includes/class-wp-document-revisions-front-end.php:893
+#: includes/class-wp-document-revisions-front-end.php:907
+#: includes/class-wp-document-revisions-front-end.php:921
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr "A taxonómiai kifejezés nem tartozik ehhez a taxonómiához."
+
+#: includes/class-wp-document-revisions-front-end.php:1030
+msgid "You are not authorized to read this document."
+msgstr "Nincs jogosultsága a dokumentum elolvasására."
+
+#: includes/class-wp-document-revisions-front-end.php:1035
+msgid "This document has no file to preview."
+msgstr "Ebben a dokumentumban nincs előnézeti fájl."
+
+#: includes/class-wp-document-revisions-front-end.php:1046
+msgid "Download document"
+msgstr "Dokumentum letöltése"
+
+#: includes/class-wp-document-revisions-front-end.php:1065
+msgid "This file type cannot be previewed inline."
+msgstr "Ez a fájltípus nem tekinthető meg előnézetben a fájlban."
 
 #: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
@@ -150,6 +164,72 @@ msgstr "Sajnáljuk, de nincs jogosultsága megtekinteni ezt a verziót."
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
+
+#: includes/class-wp-document-revisions-notifications.php:142
+#: includes/class-wp-document-revisions-notifications.php:196
+msgid "Someone"
+msgstr "Valaki"
+
+#. translators: %1$s is the blog name, %2$s is the document title, %3$s is the
+#. new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:145
+#, php-format
+msgid "%1$s: %2$s moved to %3$s"
+msgstr "%1$s: %2$s áthelyezve ide: %3$s"
+
+#. translators: %1$s is the user who made the change, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:148
+#, php-format
+msgid "%1$s changed the workflow state of the document %2$s."
+msgstr "%1$s módosította a(z) %2$s dokumentum munkafolyamat-állapotát."
+
+#. translators: %1$s is the previous workflow state, %2$s is the new workflow
+#. state.
+#: includes/class-wp-document-revisions-notifications.php:151
+#, php-format
+msgid "State: %1$s to %2$s"
+msgstr "Állam: %1$s - %2$s"
+
+#. translators: %s is the new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:154
+#, php-format
+msgid "State: %s"
+msgstr "Állam: %s"
+
+#. translators: %s is the document URL.
+#: includes/class-wp-document-revisions-notifications.php:157
+#: includes/class-wp-document-revisions-notifications.php:209
+#, php-format
+msgid "View the document: %s"
+msgstr "A dokumentum megtekintése: %s"
+
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions-notifications.php:159
+#: includes/class-wp-document-revisions-notifications.php:211
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- A %s csapata"
+
+#. translators: %1$s is the blog name, %2$s is the document title.
+#: includes/class-wp-document-revisions-notifications.php:199
+#, php-format
+msgid "%1$s: New revision of %2$s"
+msgstr "%1$s: %2$s új verziója"
+
+#. translators: %1$s is the user who saved the revision, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:202
+#, php-format
+msgid "%1$s saved a new revision of the document %2$s."
+msgstr "%1$s mentette a(z) %2$s dokumentum új verzióját."
+
+#. translators: %s is the revision summary.
+#: includes/class-wp-document-revisions-notifications.php:206
+#, php-format
+msgid "Summary: %s"
+msgstr "Összefoglaló: %s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -224,8 +304,8 @@ msgid ""
 "sensitive documents whose contents should not be cached for search, AI "
 "summaries, or other text-based features."
 msgstr ""
-"Ha be van jelölve, a dokumentum feltöltött fájljaiból nem lesz kinyerve sima "
-"szöveg, és a korábban kinyert szöveg törlődik. Hasznos olyan bizalmas "
+"Ha be van jelölve, a dokumentum feltöltött fájljaiból nem lesz kinyerve sima"
+" szöveg, és a korábban kinyert szöveg törlődik. Hasznos olyan bizalmas "
 "dokumentumoknál, amelyek tartalmát nem szabad gyorsítótárazni kereséshez, "
 "mesterséges intelligencia általi összefoglalókhoz vagy más szövegalapú "
 "funkciókhoz."
@@ -242,9 +322,9 @@ msgid ""
 "generation, if enabled) still run — only the editor pre-fill is suppressed."
 msgstr ""
 "Ha be van jelölve, a mesterséges intelligencia által generált revíziós "
-"összefoglalók nem kerülnek be a revíziós napló mezőbe új fájl feltöltésekor. "
-"A kinyerés (és az összefoglaló generálása, ha engedélyezve van) továbbra is "
-"fut — csak a szerkesztő előzetes kitöltése van letiltva."
+"összefoglalók nem kerülnek be a revíziós napló mezőbe új fájl feltöltésekor."
+" A kinyerés (és az összefoglaló generálása, ha engedélyezve van) továbbra is"
+" fut — csak a szerkesztő előzetes kitöltése van letiltva."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
 msgid "Validate Structure"
@@ -374,7 +454,8 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "A dokumentumhoz csatolva található, de jelenleg nincs csatolva"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -484,8 +565,8 @@ msgid ""
 "These are issues that stop you displaying your document on the front end. "
 "Problems include:"
 msgstr ""
-"Ezek azok a problémák, amelyek megakadályozzák a dokumentum megjelenítését a "
-"felhasználói felületen. A problémák közé tartoznak:"
+"Ezek azok a problémák, amelyek megakadályozzák a dokumentum megjelenítését a"
+" felhasználói felületen. A problémák közé tartoznak:"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1193
 msgid ""
@@ -542,7 +623,8 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media store."
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
 "Ennek az utóbbi esetnek egy változataként beállíthatod a bővítményt úgy, "
 "hogy a dokumentumfájl-tároló az egyik általad választott legyen, és ne a "
@@ -570,8 +652,8 @@ msgstr "Figyelmeztetések"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you "
-"know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "A WordPress szállításához használt webtechnológia jellegéből adódóan, ha "
@@ -580,8 +662,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access "
-"a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
 "Ennek a bővítménynek a tervezési jellemzője, hogy csak akkor férhetsz hozzá "
 "egy dokumentumhoz, ha magán a WordPressen keresztül mész hozzá."
@@ -598,107 +680,112 @@ msgstr ""
 msgid "The fix is therefore to md5-encode the file name."
 msgstr "A javítás tehát a fájlnév md5 kódolása."
 
-#: includes/class-wp-document-revisions.php:288
-#: includes/class-wp-document-revisions.php:702
+#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:726
 #: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
 msgstr "Dokumentumok"
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:295
+msgid "Read and manage documents stored by WP Document Revisions."
+msgstr ""
+"A WP Document Revisions által tárolt dokumentumok olvasása és kezelése."
+
+#: includes/class-wp-document-revisions.php:317
 msgid "Check Document Access"
 msgstr "Dokumentumhozzáférés ellenőrzése"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:318
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr ""
-"Ellenőrizze, hogy az aktuális felhasználó végrehajthat-e egy adott műveletet "
-"egy dokumentumon."
+"Ellenőrizze, hogy az aktuális felhasználó végrehajthat-e egy adott műveletet"
+" egy dokumentumon."
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:327
 msgid "The document post ID to check access for."
 msgstr ""
 "A dokumentum bejegyzésazonosítója, amelyhez a hozzáférés ellenőrizendő."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:331
 msgid "The action to check: read, edit, delete, or publish."
 msgstr ""
 "Az ellenőrizendő művelet: olvasás, szerkesztés, törlés vagy közzététel."
 
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:342
 msgid "Whether the user can perform the action."
 msgstr "Hogy a felhasználó végrehajthatja-e a műveletet."
 
-#: includes/class-wp-document-revisions.php:346
+#: includes/class-wp-document-revisions.php:357
 msgid "Get Document Info"
 msgstr "Dokumentuminformációk lekérése"
 
-#: includes/class-wp-document-revisions.php:347
+#: includes/class-wp-document-revisions.php:358
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
 msgstr ""
-"Dokumentum metaadatainak lekérése, beleértve a fájltípust, a verziószámot és "
-"a zárolási állapotot."
+"Dokumentum metaadatainak lekérése, beleértve a fájltípust, a verziószámot és"
+" a zárolási állapotot."
 
-#: includes/class-wp-document-revisions.php:358
-#: includes/class-wp-document-revisions.php:392
+#: includes/class-wp-document-revisions.php:369
+#: includes/class-wp-document-revisions.php:407
 msgid "The document post ID."
 msgstr "A dokumentum bejegyzésazonosítója."
 
-#: includes/class-wp-document-revisions.php:380
+#: includes/class-wp-document-revisions.php:395
 msgid "Get Document Revisions"
 msgstr "Dokumentumváltozatok beszerzése"
 
-#: includes/class-wp-document-revisions.php:381
+#: includes/class-wp-document-revisions.php:396
 msgid "Retrieve the revision history of a document."
 msgstr "Dokumentum módosítási előzményeinek lekérése."
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:440
 msgid "Override Document Lock"
 msgstr "Dokumentumzár felülbírálása"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:441
 msgid "Override another user's lock on a document to allow editing."
 msgstr ""
 "Felülírhatja egy másik felhasználó dokumentumzárolását a szerkesztés "
 "engedélyezéséhez."
 
-#: includes/class-wp-document-revisions.php:433
+#: includes/class-wp-document-revisions.php:452
 msgid "The document post ID to unlock."
 msgstr "A feloldandó dokumentumbejegyzés-azonosító."
 
-#: includes/class-wp-document-revisions.php:499
-#: includes/class-wp-document-revisions.php:539
-#: includes/class-wp-document-revisions.php:592
+#: includes/class-wp-document-revisions.php:523
+#: includes/class-wp-document-revisions.php:563
+#: includes/class-wp-document-revisions.php:616
 msgid "Document not found."
 msgstr "A dokumentum nem található."
 
-#: includes/class-wp-document-revisions.php:507
+#: includes/class-wp-document-revisions.php:531
 msgid "You do not have permission to view this document."
 msgstr "Nincs jogosultsága a dokumentum megtekintésére."
 
-#: includes/class-wp-document-revisions.php:547
+#: includes/class-wp-document-revisions.php:571
 msgid "You do not have permission to view revisions for this document."
 msgstr "Nincs jogosultsága a dokumentum módosításainak megtekintésére."
 
-#: includes/class-wp-document-revisions.php:555
+#: includes/class-wp-document-revisions.php:579
 msgid "You do not have permission to view document revisions."
 msgstr "Nincs jogosultsága a dokumentum módosításainak megtekintésére."
 
-#: includes/class-wp-document-revisions.php:569
+#: includes/class-wp-document-revisions.php:593
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: includes/class-wp-document-revisions.php:610
+#: includes/class-wp-document-revisions.php:634
 msgid "You do not have permission to override the lock on this document."
 msgstr "Nincs jogosultsága felülbírálni a dokumentum zárolását."
 
-#: includes/class-wp-document-revisions.php:638
+#: includes/class-wp-document-revisions.php:662
 msgid "You have activated the plugin WP Document Revisions"
 msgstr "Aktiválta a WP Document Revisions bővítményt."
 
-#: includes/class-wp-document-revisions.php:640
+#: includes/class-wp-document-revisions.php:664
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
@@ -706,7 +793,7 @@ msgstr ""
 "Nem rendelkezik az edit_documents képességgel, valószínűleg több ütköző "
 "szerepkör vagy egyéni szerepkör használata miatt!"
 
-#: includes/class-wp-document-revisions.php:642
+#: includes/class-wp-document-revisions.php:666
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
@@ -714,7 +801,7 @@ msgstr ""
 "Előfordulhat, hogy a Dokumentumok menü nem jelenik meg teljesen, ha "
 "hiányoznak az „Összes dokumentum” és a „Dokumentum hozzáadása” opciók."
 
-#: includes/class-wp-document-revisions.php:644
+#: includes/class-wp-document-revisions.php:668
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
@@ -722,148 +809,148 @@ msgstr ""
 "Először ellenőrizd, hogy van-e több szerepköröd, és hogy mindegyik "
 "rendelkezik-e edit_documents jogosultsággal."
 
-#: includes/class-wp-document-revisions.php:690
+#: includes/class-wp-document-revisions.php:714
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Dokumentumok"
 
-#: includes/class-wp-document-revisions.php:691
+#: includes/class-wp-document-revisions.php:715
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Dokumentum"
 
-#: includes/class-wp-document-revisions.php:692
+#: includes/class-wp-document-revisions.php:716
 msgctxt "document"
 msgid "Add Document"
 msgstr "Dokumentum hozzáadása"
 
-#: includes/class-wp-document-revisions.php:693
+#: includes/class-wp-document-revisions.php:717
 msgid "Add New Document"
 msgstr "Új dokumentum hozzáadása"
 
-#: includes/class-wp-document-revisions.php:694
+#: includes/class-wp-document-revisions.php:718
 msgid "Edit Document"
 msgstr "Dokumentum szerkesztése"
 
-#: includes/class-wp-document-revisions.php:695
+#: includes/class-wp-document-revisions.php:719
 msgid "New Document"
 msgstr "Új dokumentum"
 
-#: includes/class-wp-document-revisions.php:696
+#: includes/class-wp-document-revisions.php:720
 msgid "View Document"
 msgstr "Dokumentum megtekintése"
 
-#: includes/class-wp-document-revisions.php:697
+#: includes/class-wp-document-revisions.php:721
 msgid "View Documents"
 msgstr "Dokumentumok megtekintése"
 
-#: includes/class-wp-document-revisions.php:698
+#: includes/class-wp-document-revisions.php:722
 msgid "Search Documents"
 msgstr "Dokumentumok keresése"
 
-#: includes/class-wp-document-revisions.php:699
+#: includes/class-wp-document-revisions.php:723
 msgid "No documents found"
 msgstr "Nem találhatók dokumentumok"
 
-#: includes/class-wp-document-revisions.php:700
+#: includes/class-wp-document-revisions.php:724
 msgid "No documents found in Trash"
 msgstr "Nem találhatók dokumentumok a Kukában"
 
-#: includes/class-wp-document-revisions.php:703
+#: includes/class-wp-document-revisions.php:727
 msgid "All Documents"
 msgstr "Minden dokumentum"
 
-#: includes/class-wp-document-revisions.php:704
+#: includes/class-wp-document-revisions.php:728
 msgid "Document Image"
 msgstr "Dokumentumkép"
 
-#: includes/class-wp-document-revisions.php:705
+#: includes/class-wp-document-revisions.php:729
 msgid "Set Document Image"
 msgstr "Dokumentumkép beállítása"
 
-#: includes/class-wp-document-revisions.php:706
+#: includes/class-wp-document-revisions.php:730
 msgid "Remove Document Image"
 msgstr "Dokumentumkép eltávolítása"
 
-#: includes/class-wp-document-revisions.php:707
+#: includes/class-wp-document-revisions.php:731
 msgid "Use as Document Image"
 msgstr "Használja dokumentumképként"
 
-#: includes/class-wp-document-revisions.php:812
+#: includes/class-wp-document-revisions.php:836
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Munkafolyamat-állapotok"
 
-#: includes/class-wp-document-revisions.php:813
+#: includes/class-wp-document-revisions.php:837
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Munkafolyamat állapota"
 
-#: includes/class-wp-document-revisions.php:814
+#: includes/class-wp-document-revisions.php:838
 msgid "Search Workflow States"
 msgstr "Keresési munkafolyamat-állapotok"
 
-#: includes/class-wp-document-revisions.php:815
+#: includes/class-wp-document-revisions.php:839
 msgid "All Workflow States"
 msgstr "Minden munkafolyamat-állapot"
 
-#: includes/class-wp-document-revisions.php:816
+#: includes/class-wp-document-revisions.php:840
 msgid "Parent Workflow State"
 msgstr "Szülő munkafolyamat állapota"
 
-#: includes/class-wp-document-revisions.php:817
+#: includes/class-wp-document-revisions.php:841
 msgid "Parent Workflow State:"
 msgstr "Szülő munkafolyamat állapota:"
 
-#: includes/class-wp-document-revisions.php:818
+#: includes/class-wp-document-revisions.php:842
 msgid "Edit Workflow State"
 msgstr "Munkafolyamat állapotának szerkesztése"
 
-#: includes/class-wp-document-revisions.php:819
+#: includes/class-wp-document-revisions.php:843
 msgid "Update Workflow State"
 msgstr "Munkafolyamat állapotának frissítése"
 
-#: includes/class-wp-document-revisions.php:820
+#: includes/class-wp-document-revisions.php:844
 msgid "Add New Workflow State"
 msgstr "Új munkafolyamat-állapot hozzáadása"
 
-#: includes/class-wp-document-revisions.php:821
+#: includes/class-wp-document-revisions.php:845
 msgid "New Workflow State Name"
 msgstr "Új munkafolyamat állapot neve"
 
-#: includes/class-wp-document-revisions.php:822
+#: includes/class-wp-document-revisions.php:846
 msgid "Workflow States"
 msgstr "Munkafolyamat-állapotok"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "In Progress"
 msgstr "Folyamatban van"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "Document is in the process of being written"
 msgstr "A dokumentum írás alatt áll"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Initial Draft"
 msgstr "Kezdeti tervezet"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Document is being edited and refined"
 msgstr "A dokumentum szerkesztése és finomítása folyamatban van."
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Under Review"
 msgstr "Felülvizsgálat alatt"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Document is pending final review"
 msgstr "A dokumentum végső felülvizsgálatra vár"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Final"
 msgstr "Végső"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Document is in its final form"
 msgstr "A dokumentum végleges formában van"
 
@@ -904,11 +991,10 @@ msgstr "Dokumentum mentve."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid ""
-"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
-"Dokumentum elküldve. <a target=\"_blank\" href=\"%s\">Dokumentum letöltése</"
-"a>"
+"Dokumentum elküldve. <a target=\"_blank\" href=\"%s\">Dokumentum "
+"letöltése</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -930,9 +1016,7 @@ msgstr "%1$s @ %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid ""
-"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
-"a>"
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 "Dokumentumtervezet frissítve. <a target=\"_blank\" href=\"%s\">Dokumentum "
 "letöltése</a>"
@@ -961,7 +1045,7 @@ msgstr "Munkafolyamat állapota"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:129
 #: includes/trait-wp-document-revisions-admin-editor.php:1186
-#: includes/trait-wp-document-revisions-admin-list.php:122
+#: includes/trait-wp-document-revisions-admin-list.php:266
 msgid "Owner"
 msgstr "Tulajdonos"
 
@@ -978,7 +1062,8 @@ msgid ""
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
 msgstr ""
 "<br />Ha úgy gondolod, hogy ez tévedés, <a href=\"#\" "
-"id=\"override_link\">felülírhatod a zárolást</a>, de a módosítások elvesznek."
+"id=\"override_link\">felülírhatod a zárolást</a>, de a módosítások "
+"elvesznek."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -995,15 +1080,17 @@ msgstr "A dokumentum legújabb verziója"
 msgid "Download"
 msgstr "Letöltés"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
-"ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
 msgstr ""
-"Bejelentkezve <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
-"abbr> ezelőtt, %4$s által"
+"Bejelentkezve <abbr class=\"timestamp\" title=\"%1$s\" "
+"id=\"A%2$s\">%3$s</abbr> ezelőtt, %4$s által"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -1016,20 +1103,20 @@ msgstr "Alapvető használat"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter "
-"a description, and click <code>Upload New Version</code> and select the file "
-"from your computer."
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
 msgstr ""
 "Ez a képernyő lehetővé teszi a felhasználók számára, hogy közösen "
-"szerkesszék a dokumentumokat és nyomon kövessék azok módosítási előzményeit. "
-"Kezdéshez adjon meg egy címet a dokumentumnak, opcionálisan adjon meg egy "
+"szerkesszék a dokumentumokat és nyomon kövessék azok módosítási előzményeit."
+" Kezdéshez adjon meg egy címet a dokumentumnak, opcionálisan adjon meg egy "
 "leírást, majd kattintson az <code>Új verzió feltöltése</code> gombra, és "
 "válassza ki a fájlt a számítógépéről."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the "
-"document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
 msgstr ""
 "A sikeres feltöltés után megadhat egy módosítási naplóüzenetet, "
 "hozzárendelhet egy szerzőt a dokumentumhoz, és leírhatja az aktuális "
@@ -1038,8 +1125,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:751
 msgid "When done, simply click <code>Update</code> to save your changes"
 msgstr ""
-"Ha kész, egyszerűen kattintson a <code>Frissítés</code> gombra a módosítások "
-"mentéséhez."
+"Ha kész, egyszerűen kattintson a <code>Frissítés</code> gombra a módosítások"
+" mentéséhez."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:752
 #: includes/trait-wp-document-revisions-admin-editor.php:822
@@ -1065,8 +1152,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a "
-"comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
 msgstr ""
 "A verziónapló rövid összefoglalást nyújt az adott verzióban megjelenő "
 "változtatásokról. A nyílt forráskódú közösségben széles körben használt "
@@ -1084,9 +1171,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what "
-"stage a document sits within a particular organization&quot;s workflow. The "
-"field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "A munkafolyamat állapota mező segítségével a csapattagok megérthetik, hogy "
@@ -1132,8 +1219,8 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow "
-"States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
 msgstr ""
 "Egy adott munkafolyamat-állapotban lévő összes dokumentum megtekintéséhez "
 "kattintson a bal oldali menü <strong>Munkafolyamat-állapotok</strong> "
@@ -1158,8 +1245,8 @@ msgstr "Nem fogsz tudni dokumentumokat feltölteni."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that "
-"allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "A módosítási összefoglalók opcionális jegyzetek, amelyeket a módosítással "
@@ -1226,7 +1313,47 @@ msgstr "Minden állapot"
 msgid "All owners"
 msgstr "Minden tulajdonos"
 
-#: includes/trait-wp-document-revisions-admin-list.php:140
+#: includes/trait-wp-document-revisions-admin-list.php:102
+msgid "Add your first document"
+msgstr "Első dokumentum hozzáadása"
+
+#: includes/trait-wp-document-revisions-admin-list.php:107
+msgid "read the documentation"
+msgstr "olvassa el a dokumentációt"
+
+#: includes/trait-wp-document-revisions-admin-list.php:112
+msgid "Welcome to WP Document Revisions!"
+msgstr "Üdvözlünk a WP Dokumentumjavítások oldalán!"
+
+#. translators: 1: link to add a new document, 2: link to the documentation
+#: includes/trait-wp-document-revisions-admin-list.php:116
+#, php-format
+msgid ""
+"You have not added any documents yet. %1$s to start tracking revisions and "
+"workflow, or %2$s."
+msgstr ""
+"Még nem adott hozzá dokumentumokat. %1$s a javítások és a munkafolyamatok "
+"nyomon követésének megkezdéséhez, vagy %2$s."
+
+#: includes/trait-wp-document-revisions-admin-list.php:171
+msgid ""
+"You have been managing your documents with WP Document Revisions — thank "
+"you! If it has been useful, would you consider leaving a quick review? It "
+"genuinely helps other teams discover the plugin."
+msgstr ""
+"A WP Document Revisions segítségével kezelted a dokumentumaidat – köszönöm! "
+"Ha hasznosnak találtad, megfontolnád, hogy írsz egy rövid értékelést? Ez "
+"valóban segít más csapatoknak felfedezni a bővítményt."
+
+#: includes/trait-wp-document-revisions-admin-list.php:173
+msgid "Leave a review"
+msgstr "Írj véleményt"
+
+#: includes/trait-wp-document-revisions-admin-list.php:174
+msgid "No thanks"
+msgstr "Nem, köszönöm"
+
+#: includes/trait-wp-document-revisions-admin-list.php:284
 msgid "Currently Editing"
 msgstr "Jelenleg szerkesztés alatt"
 
@@ -1261,14 +1388,15 @@ msgid ""
 "To protect your privacy, you need to append a key to feeds for use in feed "
 "readers."
 msgstr ""
-"Az adataid védelme érdekében hozzá kell fűznöd egy kulcsot a hírfolyamokhoz, "
-"hogy azokat hírfolyam-olvasókban használhasd."
+"Az adataid védelme érdekében hozzá kell fűznöd egy kulcsot a hírfolyamokhoz,"
+" hogy azokat hírfolyam-olvasókban használhasd."
 
 #: includes/trait-wp-document-revisions-admin-settings.php:97
 msgid "Generate New Key"
 msgstr "Új kulcs generálása"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1278,40 +1406,71 @@ msgstr "%1$s ezelőtt, %2$s felhasználó [%3$s] által"
 msgid "Document Date in Permalink"
 msgstr "Dokumentum dátuma állandó hivatkozásban"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:394
+#: includes/trait-wp-document-revisions-admin-settings.php:390
+msgid "Document Notifications"
+msgstr "Dokumentumértesítések"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:435
+msgid "Email notifications when documents change."
+msgstr "E-mail értesítések a dokumentumok változásairól."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:437
+msgid "Notify these email addresses (one per line or comma-separated):"
+msgstr ""
+"Értesítse ezeket az e-mail címeket (soronként egyet, vagy vesszővel "
+"elválasztva):"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:439
+msgid ""
+"The document's author is always notified in addition to this list. Whoever "
+"made the change is never notified of their own change."
+msgstr ""
+"A dokumentum szerzője mindig értesítést kap ezen a listán felül. Aki a "
+"módosítást végezte, soha nem kap értesítést a saját módosításáról."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:444
+msgid "Notify when a document changes workflow state."
+msgstr ""
+"Értesítés küldése, ha egy dokumentum munkafolyamat-állapota megváltozik."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+msgid "Notify when a new revision of a document is saved."
+msgstr "Értesítés küldése, ha egy dokumentum új verzióját mentik."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:481
 msgid "Document directory does not appear to exist. Please review value."
 msgstr ""
 "Úgy tűnik, a dokumentumkönyvtár nem létezik. Kérjük, ellenőrizze az értéket."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:396
+#: includes/trait-wp-document-revisions-admin-settings.php:483
 msgid "Document directory is not writable. Please check permissions."
 msgstr "A dokumentumkönyvtár nem írható. Kérjük, ellenőrizze az engedélyeket."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:400
+#: includes/trait-wp-document-revisions-admin-settings.php:487
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved "
-"to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
 msgstr ""
-"A dokumentumok feltöltési könyvtára megváltozott, de a meglévő feltöltéseket "
-"esetleg át kell helyezni az új mappába, hogy továbbra is elérhetőek "
+"A dokumentumok feltöltési könyvtára megváltozott, de a meglévő feltöltéseket"
+" esetleg át kell helyezni az új mappába, hogy továbbra is elérhetőek "
 "maradjanak."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:429
+#: includes/trait-wp-document-revisions-admin-settings.php:516
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 "A dokumentum slugja megváltozott, de előfordulhat, hogy néhány korábban "
 "közzétett URL mostantól hibás."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
-#: includes/trait-wp-document-revisions-admin-settings.php:478
-#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-admin-settings.php:534
+#: includes/trait-wp-document-revisions-admin-settings.php:565
+#: includes/trait-wp-document-revisions-admin-settings.php:593
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr "Nem engedélyezett"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:562
+#: includes/trait-wp-document-revisions-admin-settings.php:649
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp-content/uploads</code> folder (or another default uploads folder "
@@ -1321,48 +1480,50 @@ msgstr ""
 "A feltöltött dokumentumok tárolására szolgáló könyvtár. Az alapértelmezett "
 "érték a <code>wp-content/uploads</code> mappa (vagy egy másik, máshol "
 "definiált alapértelmezett feltöltési mappa), de a fokozott biztonság "
-"érdekében áthelyezhető a <code>htdocs</code> vagy a <code>public_html</code> "
-"mappán kívüli mappába."
+"érdekében áthelyezhető a <code>htdocs</code> vagy a <code>public_html</code>"
+" mappán kívüli mappába."
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:570
+#: includes/trait-wp-document-revisions-admin-settings.php:657
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path "
-"to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
 msgstr ""
 "Opcionálisan megadhatod a <code>%site_id%</code> karakterláncot az elérési "
 "úton, hogy webhelyek szerint elkülönítsd a fájlokat."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:585
+#: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid "example-document-title"
 msgstr "példa-dokumentum-címe"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:589
+#: includes/trait-wp-document-revisions-admin-settings.php:676
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
 msgstr ""
 "„Slug”, amellyel a dokumentumok (és a dokumentumarchívum) összes URL-címét "
-"előtagként kell megadni. Az alapértelmezett érték a <code>dokumentumok</"
-"code>."
+"előtagként kell megadni. Az alapértelmezett érték a "
+"<code>dokumentumok</code>."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid "Remove the year and month element /yyyy/mm from the document permalink."
+#: includes/trait-wp-document-revisions-admin-settings.php:690
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 "Távolítsa el az /éééé/hh év és hónap elemet a dokumentum permalinkjéből."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid "By default the document permalink will contain the post year and month."
+#: includes/trait-wp-document-revisions-admin-settings.php:692
+msgid ""
+"By default the document permalink will contain the post year and month."
 msgstr ""
-"Alapértelmezés szerint a dokumentum permalinkje tartalmazza a bejegyzés évét "
-"és hónapját."
+"Alapértelmezés szerint a dokumentum permalinkje tartalmazza a bejegyzés évét"
+" és hónapját."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:606
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "The delivered rewrite rules support both formats."
 msgstr "A kézbesített átírási szabályok mindkét formátumot támogatják."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:659
+#: includes/trait-wp-document-revisions-admin-settings.php:746
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
@@ -1370,7 +1531,7 @@ msgstr ""
 "A dokumentumjavítások maximális száma nullára van állítva egy szűrő "
 "használatával. Ellenőrizze a konfigurációt."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:759
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
@@ -1378,7 +1539,7 @@ msgstr ""
 "Több módosítás létezik ehhez a dokumentumhoz, mint amennyi megengedett. A "
 "módosítások törlik az adatokat."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:681
+#: includes/trait-wp-document-revisions-admin-settings.php:768
 msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
@@ -1414,7 +1575,7 @@ msgid ""
 "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr "Sajnáljuk, a kimenet már ki lett írva, ezért a fájl nem tölthető le."
 
-#: includes/trait-wp-document-revisions-file-handler.php:1165
+#: includes/trait-wp-document-revisions-file-handler.php:1167
 msgid "Sorry, this is a private feed."
 msgstr "Sajnálom, ez egy privát hírfolyam."
 
@@ -1464,7 +1625,8 @@ msgstr "Szemét"
 msgid "Somebody"
 msgstr "Valaki"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1476,7 +1638,8 @@ msgstr "%1$s: %2$s felülírta a zárolásodat a következőn: %3$s"
 msgid "Dear %s:"
 msgstr "Kedves %s!"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1485,12 +1648,6 @@ msgstr "%1$s (%2$s) felülírta a(z) %3$s (%4$s) dokumentum zárolását."
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
 msgstr "Minden módosítás elveszik."
-
-#. translators: %s is the blog name.
-#: includes/trait-wp-document-revisions-revisions.php:420
-#, php-format
-msgid "- The %s Team"
-msgstr "- A %s csapata"
 
 #: includes/trait-wp-document-revisions-rewrites.php:47
 #: includes/trait-wp-document-revisions-rewrites.php:62
@@ -1533,8 +1690,8 @@ msgid ""
 "press <strong>Update</strong> to save your changes."
 msgstr ""
 "A fájl feltöltése sikeresen megtörtént. Adjon hozzá egy módosítási "
-"összefoglalót alább (opcionális), és kattintson a <strong>Frissítés</strong> "
-"gombra a módosítások mentéséhez."
+"összefoglalót alább (opcionális), és kattintson a <strong>Frissítés</strong>"
+" gombra a módosítások mentéséhez."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1545,8 +1702,8 @@ msgid ""
 "Are you sure you want to restore this revision? If you do, no history will "
 "be lost. This revision will be copied and become the most recent revision."
 msgstr ""
-"Biztosan vissza szeretné állítani ezt a verziót? Ha így tesz, nem vesznek el "
-"az előzmények. Ez a verzió átmásolódik, és a legújabb verzió lesz."
+"Biztosan vissza szeretné állítani ezt a verziót? Ha így tesz, nem vesznek el"
+" az előzmények. Ez a verzió átmásolódik, és a legújabb verzió lesz."
 
 #: src/admin/wp-document-revisions.js:240
 #: src/admin/wp-document-revisions.js:249
@@ -1599,6 +1756,35 @@ msgstr "Dokumentum feltöltése"
 msgid "Select Document"
 msgstr "Dokumentum kiválasztása"
 
+#: src/blocks/document-preview/edit.js:17
+msgid "Preview Settings"
+msgstr "Előnézeti beállítások"
+
+#: src/blocks/document-preview/edit.js:23
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "Dokumentumazonosító"
+
+#: src/blocks/document-preview/edit.js:30
+msgid "Preview Height (px)"
+msgstr "Előnézeti magasság (px)"
+
+#: src/blocks/document-preview/edit.js:41
+msgid "Show Document Title?"
+msgstr "Mutassa a dokumentum címét?"
+
+#: src/blocks/document-preview/edit.js:49
+msgid "Show Download Link?"
+msgstr "Letöltési link megjelenítése?"
+
+#: src/blocks/document-preview/edit.js:50
+msgid ""
+"Displays a download link below the preview, and is shown as a fallback when "
+"the file type cannot be previewed inline."
+msgstr ""
+"Megjelenít egy letöltési linket az előnézet alatt, és tartalék megoldásként "
+"jelenik meg, ha a fájltípus nem tekinthető meg előnézetben."
+
 #: src/blocks/documents-shortcode/edit.js:76
 msgid "There are no taxonomies defined."
 msgstr "Nincsenek meghatározott taxonómiák."
@@ -1641,14 +1827,14 @@ msgstr "Szerkesztés link megjelenítése"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice "
-"made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "A Szerkesztés hivatkozás megjelenítése beállítás lehetővé teszi, hogy a "
 "lista hivatkozással rendelkezzen a Szerkesztés funkcióra. Az itt "
-"kiválasztott beállítás felülírja a rendszer által konfigurált beállításokat. "
-"A hivatkozások csak akkor jelennek meg, ha a felhasználó szerkesztheti a "
+"kiválasztott beállítás felülírja a rendszer által konfigurált beállításokat."
+" A hivatkozások csak akkor jelennek meg, ha a felhasználó szerkesztheti a "
 "dokumentumot."
 
 #: src/blocks/documents-shortcode/edit.js:175
@@ -1748,10 +1934,6 @@ msgstr "Mutassa a szerző nevét?"
 msgid "Selection Criteria"
 msgstr "Kiválasztási kritériumok"
 
-#: src/blocks/revisions-shortcode/edit.js:23
-msgid "Document Id"
-msgstr "Dokumentumazonosító"
-
 #: src/blocks/revisions-shortcode/edit.js:30
 msgid "Revisions to Display"
 msgstr "A kijelző módosításai"
@@ -1833,6 +2015,16 @@ msgstr "Még nincsenek módosítások."
 #: src/editor-document-upload/index.js:578
 msgid "—"
 msgstr "—"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block title"
+msgid "Document Preview"
+msgstr "Dokumentum előnézete"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block description"
+msgid "Embed an inline preview of a document's latest revision."
+msgstr "Beágyaz egy előnézetet a dokumentum legújabb verziójából."
 
 #: src/blocks/documents-shortcode/block.json
 msgctxt "block title"

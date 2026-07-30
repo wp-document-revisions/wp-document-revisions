@@ -3,9 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Document Revisions\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-"
-"revisions\n"
-"POT-Creation-Date: 2026-07-27T17:37:46+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
+"POT-Creation-Date: 2026-07-30T00:14:48+00:00\n"
 "PO-Revision-Date: 2013-07-03 13:30:42+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,7 +14,7 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:564
+#: includes/class-wp-document-revisions-front-end.php:565
 msgid "WP Document Revisions"
 msgstr "WP Dokument Versjoner"
 
@@ -66,49 +65,66 @@ msgstr ""
 msgid "No summary has been generated for this revision yet."
 msgstr "Det er ikke generert noe sammendrag for denne revisjonen ennå."
 
-#: includes/class-wp-document-revisions-front-end.php:135
-#: includes/class-wp-document-revisions-front-end.php:795
-#: includes/class-wp-document-revisions-front-end.php:950
+#: includes/class-wp-document-revisions-front-end.php:136
+#: includes/class-wp-document-revisions-front-end.php:819
+#: includes/class-wp-document-revisions-front-end.php:974
 msgid "You are not authorized to read this data"
 msgstr "Du har ikke tillatelse til å lese disse dataene"
 
-#: includes/class-wp-document-revisions-front-end.php:141
-#: includes/class-wp-document-revisions-front-end.php:955
+#: includes/class-wp-document-revisions-front-end.php:142
+#: includes/class-wp-document-revisions-front-end.php:979
+#: includes/class-wp-document-revisions-front-end.php:1021
 msgid "This is not a valid document."
 msgstr "Dette er ikke et gyldig dokument."
 
-#: includes/class-wp-document-revisions-front-end.php:164
-#: includes/class-wp-document-revisions-front-end.php:347
+#: includes/class-wp-document-revisions-front-end.php:165
+#: includes/class-wp-document-revisions-front-end.php:348
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr "(PDF)"
 
-#: includes/class-wp-document-revisions-front-end.php:189
+#: includes/class-wp-document-revisions-front-end.php:190
 msgid "ago by"
 msgstr "siden av"
 
-#: includes/class-wp-document-revisions-front-end.php:448
+#: includes/class-wp-document-revisions-front-end.php:449
 msgid "Edit"
 msgstr "Redigere"
 
-#: includes/class-wp-document-revisions-front-end.php:466
+#: includes/class-wp-document-revisions-front-end.php:467
 #: includes/class-wp-document-revisions-recently-revised-widget.php:129
 msgid "No thumbnail available."
 msgstr "Ingen miniatyrbilder tilgjengelig"
 
-#: includes/class-wp-document-revisions-front-end.php:720
+#: includes/class-wp-document-revisions-front-end.php:744
 msgid "No selection"
 msgstr "Ingen valg"
 
-#: includes/class-wp-document-revisions-front-end.php:834
+#: includes/class-wp-document-revisions-front-end.php:858
 msgid " Taxonomy details in this block have changed."
 msgstr "Taksonomidetaljene i denne blokken har endret seg."
 
-#: includes/class-wp-document-revisions-front-end.php:869
-#: includes/class-wp-document-revisions-front-end.php:883
-#: includes/class-wp-document-revisions-front-end.php:897
+#: includes/class-wp-document-revisions-front-end.php:893
+#: includes/class-wp-document-revisions-front-end.php:907
+#: includes/class-wp-document-revisions-front-end.php:921
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr "Taksonomibegrepet tilhører ikke denne taksonomien."
+
+#: includes/class-wp-document-revisions-front-end.php:1030
+msgid "You are not authorized to read this document."
+msgstr "Du har ikke tillatelse til å lese dette dokumentet."
+
+#: includes/class-wp-document-revisions-front-end.php:1035
+msgid "This document has no file to preview."
+msgstr "Dette dokumentet har ingen fil å forhåndsvise."
+
+#: includes/class-wp-document-revisions-front-end.php:1046
+msgid "Download document"
+msgstr "Last ned dokumentet"
+
+#: includes/class-wp-document-revisions-front-end.php:1065
+msgid "This file type cannot be previewed inline."
+msgstr "Denne filtypen kan ikke forhåndsvises innebygd."
 
 #: includes/class-wp-document-revisions-manage-rest.php:112
 msgid "Sorry, you are not allowed to edit documents."
@@ -137,6 +153,72 @@ msgstr "Beklager, du har ikke tillatelse til å se denne revisjonen."
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
 msgstr ""
+
+#: includes/class-wp-document-revisions-notifications.php:142
+#: includes/class-wp-document-revisions-notifications.php:196
+msgid "Someone"
+msgstr "Noen"
+
+#. translators: %1$s is the blog name, %2$s is the document title, %3$s is the
+#. new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:145
+#, php-format
+msgid "%1$s: %2$s moved to %3$s"
+msgstr "%1$s: %2$s flyttet til %3$s"
+
+#. translators: %1$s is the user who made the change, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:148
+#, php-format
+msgid "%1$s changed the workflow state of the document %2$s."
+msgstr "%1$s endret arbeidsflytstatusen til dokumentet %2$s."
+
+#. translators: %1$s is the previous workflow state, %2$s is the new workflow
+#. state.
+#: includes/class-wp-document-revisions-notifications.php:151
+#, php-format
+msgid "State: %1$s to %2$s"
+msgstr "Stat: %1$s til %2$s"
+
+#. translators: %s is the new workflow state.
+#: includes/class-wp-document-revisions-notifications.php:154
+#, php-format
+msgid "State: %s"
+msgstr "Stat: %s"
+
+#. translators: %s is the document URL.
+#: includes/class-wp-document-revisions-notifications.php:157
+#: includes/class-wp-document-revisions-notifications.php:209
+#, php-format
+msgid "View the document: %s"
+msgstr "Vis dokumentet: %s"
+
+#. translators: %s is the blog name.
+#: includes/class-wp-document-revisions-notifications.php:159
+#: includes/class-wp-document-revisions-notifications.php:211
+#: includes/trait-wp-document-revisions-revisions.php:420
+#, php-format
+msgid "- The %s Team"
+msgstr "- %s laget"
+
+#. translators: %1$s is the blog name, %2$s is the document title.
+#: includes/class-wp-document-revisions-notifications.php:199
+#, php-format
+msgid "%1$s: New revision of %2$s"
+msgstr "%1$s: Ny revisjon av %2$s"
+
+#. translators: %1$s is the user who saved the revision, %2$s is the document
+#. title.
+#: includes/class-wp-document-revisions-notifications.php:202
+#, php-format
+msgid "%1$s saved a new revision of the document %2$s."
+msgstr "%1$s lagret en ny revisjon av dokumentet %2$s."
+
+#. translators: %s is the revision summary.
+#: includes/class-wp-document-revisions-notifications.php:206
+#, php-format
+msgid "Summary: %s"
+msgstr "Sammendrag: %s"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -228,8 +310,8 @@ msgid ""
 msgstr ""
 "Når dette alternativet er avmerket, vil ikke AI-genererte "
 "revisjonssammendrag bli satt inn i revisjonsloggfeltet når en ny fil lastes "
-"opp. Uttrekking (og generering av sammendrag, hvis aktivert) kjører fortsatt "
-"– bare forhåndsutfyllingen av redigeringsprogrammet undertrykkes."
+"opp. Uttrekking (og generering av sammendrag, hvis aktivert) kjører fortsatt"
+" – bare forhåndsutfyllingen av redigeringsprogrammet undertrykkes."
 
 #: includes/class-wp-document-revisions-validate-structure.php:216
 msgid "Validate Structure"
@@ -359,7 +441,8 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Vedlegg funnet for dokumentet, men ikke lenket til for øyeblikket"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its
+#. attachment last modifified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -431,8 +514,8 @@ msgid ""
 "If you have an error reported here, then you will get an \"Error 404 - "
 "Document Not Found\" (or equivalent) message on trying to view the document."
 msgstr ""
-"Hvis du har rapportert en feil her, vil du få meldingen «Feil 404 - Dokument "
-"ikke funnet» (eller tilsvarende) når du prøver å vise dokumentet."
+"Hvis du har rapportert en feil her, vil du få meldingen «Feil 404 - Dokument"
+" ikke funnet» (eller tilsvarende) når du prøver å vise dokumentet."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1188
 msgid ""
@@ -510,8 +593,8 @@ msgid ""
 "There is an identifier in the document but either there is no attachment or "
 "it does not relate to this document."
 msgstr ""
-"Det finnes en identifikator i dokumentet, men enten er det ikke noe vedlegg, "
-"eller så er det ikke relatert til dette dokumentet."
+"Det finnes en identifikator i dokumentet, men enten er det ikke noe vedlegg,"
+" eller så er det ikke relatert til dette dokumentet."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1199
 msgid ""
@@ -524,7 +607,8 @@ msgstr ""
 #: includes/class-wp-document-revisions-validate-structure.php:1200
 msgid ""
 "As a variant of this last case, you may have set up the plugin so that the "
-"document file store is one of your choosing and not the standard Media store."
+"document file store is one of your choosing and not the standard Media "
+"store."
 msgstr ""
 "Som en variant av dette siste tilfellet, kan du ha konfigurert plugin-"
 "modulen slik at dokumentfillageret er et du velger og ikke standard "
@@ -543,8 +627,8 @@ msgid ""
 "If found there it will offer you a fix which is to move the file from the "
 "Media store to the document store."
 msgstr ""
-"Hvis den finnes der, vil den tilby deg en løsning, som er å flytte filen fra "
-"medielageret til dokumentlageret."
+"Hvis den finnes der, vil den tilby deg en løsning, som er å flytte filen fra"
+" medielageret til dokumentlageret."
 
 #: includes/class-wp-document-revisions-validate-structure.php:1203
 msgid "Warnings"
@@ -552,8 +636,8 @@ msgstr "Advarsler"
 
 #: includes/class-wp-document-revisions-validate-structure.php:1204
 msgid ""
-"The nature of the web technology used to deliver WordPress means that if you "
-"know the name of the file held on the server then you can access the file "
+"The nature of the web technology used to deliver WordPress means that if you"
+" know the name of the file held on the server then you can access the file "
 "directly"
 msgstr ""
 "Nettteknologien som brukes til å levere WordPress betyr at hvis du vet "
@@ -562,8 +646,8 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1205
 msgid ""
-"It is a design feature of this plugin that you should only be able to access "
-"a document if you go via WordPress itself."
+"It is a design feature of this plugin that you should only be able to access"
+" a document if you go via WordPress itself."
 msgstr ""
 "Det er en designfunksjon ved denne plugin-modulen at du bare skal kunne få "
 "tilgang til et dokument hvis du går via selve WordPress."
@@ -580,41 +664,45 @@ msgstr ""
 msgid "The fix is therefore to md5-encode the file name."
 msgstr "Løsningen er derfor å md5-kode filnavnet."
 
-#: includes/class-wp-document-revisions.php:288
-#: includes/class-wp-document-revisions.php:702
+#: includes/class-wp-document-revisions.php:292
+#: includes/class-wp-document-revisions.php:726
 #: includes/trait-wp-document-revisions-admin-editor.php:764
 msgid "Documents"
 msgstr "Dokumenter"
 
-#: includes/class-wp-document-revisions.php:310
+#: includes/class-wp-document-revisions.php:295
+msgid "Read and manage documents stored by WP Document Revisions."
+msgstr "Les og administrer dokumenter lagret av WP Document Revisions."
+
+#: includes/class-wp-document-revisions.php:317
 msgid "Check Document Access"
 msgstr "Sjekk dokumenttilgang"
 
-#: includes/class-wp-document-revisions.php:311
+#: includes/class-wp-document-revisions.php:318
 msgid ""
 "Check whether the current user can perform a specific action on a document."
 msgstr ""
 "Sjekk om den gjeldende brukeren kan utføre en bestemt handling på et "
 "dokument."
 
-#: includes/class-wp-document-revisions.php:320
+#: includes/class-wp-document-revisions.php:327
 msgid "The document post ID to check access for."
 msgstr "Dokumentinnleggs-ID-en som skal kontrolleres for tilgang."
 
-#: includes/class-wp-document-revisions.php:324
+#: includes/class-wp-document-revisions.php:331
 msgid "The action to check: read, edit, delete, or publish."
 msgstr ""
 "Handlingen som skal kontrolleres: lese, redigere, slette eller publisere."
 
-#: includes/class-wp-document-revisions.php:335
+#: includes/class-wp-document-revisions.php:342
 msgid "Whether the user can perform the action."
 msgstr "Om brukeren kan utføre handlingen."
 
-#: includes/class-wp-document-revisions.php:346
+#: includes/class-wp-document-revisions.php:357
 msgid "Get Document Info"
 msgstr "Hent dokumentinformasjon"
 
-#: includes/class-wp-document-revisions.php:347
+#: includes/class-wp-document-revisions.php:358
 msgid ""
 "Retrieve metadata for a document including file type, revision count, and "
 "lock status."
@@ -622,62 +710,63 @@ msgstr ""
 "Hent metadata for et dokument, inkludert filtype, antall revisjoner og "
 "låsestatus."
 
-#: includes/class-wp-document-revisions.php:358
-#: includes/class-wp-document-revisions.php:392
+#: includes/class-wp-document-revisions.php:369
+#: includes/class-wp-document-revisions.php:407
 msgid "The document post ID."
 msgstr "Dokumentets innleggs-ID."
 
-#: includes/class-wp-document-revisions.php:380
+#: includes/class-wp-document-revisions.php:395
 msgid "Get Document Revisions"
 msgstr "Hent dokumentrevisjoner"
 
-#: includes/class-wp-document-revisions.php:381
+#: includes/class-wp-document-revisions.php:396
 msgid "Retrieve the revision history of a document."
 msgstr "Hent revisjonshistorikken til et dokument."
 
-#: includes/class-wp-document-revisions.php:421
+#: includes/class-wp-document-revisions.php:440
 msgid "Override Document Lock"
 msgstr "Overstyr dokumentlås"
 
-#: includes/class-wp-document-revisions.php:422
+#: includes/class-wp-document-revisions.php:441
 msgid "Override another user's lock on a document to allow editing."
-msgstr "Overstyr en annen brukers lås på et dokument for å tillate redigering."
+msgstr ""
+"Overstyr en annen brukers lås på et dokument for å tillate redigering."
 
-#: includes/class-wp-document-revisions.php:433
+#: includes/class-wp-document-revisions.php:452
 msgid "The document post ID to unlock."
 msgstr "Dokumentinnleggs-ID-en som skal låses opp."
 
-#: includes/class-wp-document-revisions.php:499
-#: includes/class-wp-document-revisions.php:539
-#: includes/class-wp-document-revisions.php:592
+#: includes/class-wp-document-revisions.php:523
+#: includes/class-wp-document-revisions.php:563
+#: includes/class-wp-document-revisions.php:616
 msgid "Document not found."
 msgstr "Dokumentet ble ikke funnet."
 
-#: includes/class-wp-document-revisions.php:507
+#: includes/class-wp-document-revisions.php:531
 msgid "You do not have permission to view this document."
 msgstr "Du har ikke tillatelse til å se dette dokumentet."
 
-#: includes/class-wp-document-revisions.php:547
+#: includes/class-wp-document-revisions.php:571
 msgid "You do not have permission to view revisions for this document."
 msgstr "Du har ikke tillatelse til å se revisjoner for dette dokumentet."
 
-#: includes/class-wp-document-revisions.php:555
+#: includes/class-wp-document-revisions.php:579
 msgid "You do not have permission to view document revisions."
 msgstr "Du har ikke tillatelse til å se dokumentrevisjoner."
 
-#: includes/class-wp-document-revisions.php:569
+#: includes/class-wp-document-revisions.php:593
 msgid "Unknown"
 msgstr "Ukjent"
 
-#: includes/class-wp-document-revisions.php:610
+#: includes/class-wp-document-revisions.php:634
 msgid "You do not have permission to override the lock on this document."
 msgstr "Du har ikke tillatelse til å overstyre låsen på dette dokumentet."
 
-#: includes/class-wp-document-revisions.php:638
+#: includes/class-wp-document-revisions.php:662
 msgid "You have activated the plugin WP Document Revisions"
 msgstr "Du har aktivert plugin-modulen WP Document Revisions"
 
-#: includes/class-wp-document-revisions.php:640
+#: includes/class-wp-document-revisions.php:664
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
 "conficting roles or use of a custom role!"
@@ -685,7 +774,7 @@ msgstr ""
 "Du har ikke edit_documents-funksjonen, muligens på grunn av flere "
 "motstridende roller eller bruk av en tilpasset rolle!"
 
-#: includes/class-wp-document-revisions.php:642
+#: includes/class-wp-document-revisions.php:666
 msgid ""
 "The Documents menu may not be displayed completely with the \"All "
 "Documents\" and \"Add Document\" options missing"
@@ -693,7 +782,7 @@ msgstr ""
 "Dokumenter-menyen vises kanskje ikke fullstendig hvis alternativene «Alle "
 "dokumenter» og «Legg til dokument» mangler"
 
-#: includes/class-wp-document-revisions.php:644
+#: includes/class-wp-document-revisions.php:668
 msgid ""
 "You should first check whether you have multiple roles and that each has "
 "edit_documents capability."
@@ -701,148 +790,148 @@ msgstr ""
 "Du bør først sjekke om du har flere roller, og at hver av dem har "
 "edit_documents-funksjonalitet."
 
-#: includes/class-wp-document-revisions.php:690
+#: includes/class-wp-document-revisions.php:714
 msgctxt "post type general name"
 msgid "Documents"
 msgstr "Dokumenter"
 
-#: includes/class-wp-document-revisions.php:691
+#: includes/class-wp-document-revisions.php:715
 msgctxt "post type singular name"
 msgid "Document"
 msgstr "Dokument"
 
-#: includes/class-wp-document-revisions.php:692
+#: includes/class-wp-document-revisions.php:716
 msgctxt "document"
 msgid "Add Document"
 msgstr "Legg til dokument"
 
-#: includes/class-wp-document-revisions.php:693
+#: includes/class-wp-document-revisions.php:717
 msgid "Add New Document"
 msgstr "Legg til nytt dokument"
 
-#: includes/class-wp-document-revisions.php:694
+#: includes/class-wp-document-revisions.php:718
 msgid "Edit Document"
 msgstr "Rediger dokument"
 
-#: includes/class-wp-document-revisions.php:695
+#: includes/class-wp-document-revisions.php:719
 msgid "New Document"
 msgstr "Nytt dokument"
 
-#: includes/class-wp-document-revisions.php:696
+#: includes/class-wp-document-revisions.php:720
 msgid "View Document"
 msgstr "Vis dokument"
 
-#: includes/class-wp-document-revisions.php:697
+#: includes/class-wp-document-revisions.php:721
 msgid "View Documents"
 msgstr "Vis dokumenter"
 
-#: includes/class-wp-document-revisions.php:698
+#: includes/class-wp-document-revisions.php:722
 msgid "Search Documents"
 msgstr "Søk gjennom dokumenter"
 
-#: includes/class-wp-document-revisions.php:699
+#: includes/class-wp-document-revisions.php:723
 msgid "No documents found"
 msgstr "Ingen dokumenter funnet"
 
-#: includes/class-wp-document-revisions.php:700
+#: includes/class-wp-document-revisions.php:724
 msgid "No documents found in Trash"
 msgstr "Ingen dokumenter funnet i papirkurven"
 
-#: includes/class-wp-document-revisions.php:703
+#: includes/class-wp-document-revisions.php:727
 msgid "All Documents"
 msgstr "Alle dokumenter"
 
-#: includes/class-wp-document-revisions.php:704
+#: includes/class-wp-document-revisions.php:728
 msgid "Document Image"
 msgstr "Dokumentbilde"
 
-#: includes/class-wp-document-revisions.php:705
+#: includes/class-wp-document-revisions.php:729
 msgid "Set Document Image"
 msgstr "Angi dokumentbilde"
 
-#: includes/class-wp-document-revisions.php:706
+#: includes/class-wp-document-revisions.php:730
 msgid "Remove Document Image"
 msgstr "Fjern dokumentbilde"
 
-#: includes/class-wp-document-revisions.php:707
+#: includes/class-wp-document-revisions.php:731
 msgid "Use as Document Image"
 msgstr "Bruk som dokumentbilde"
 
-#: includes/class-wp-document-revisions.php:812
+#: includes/class-wp-document-revisions.php:836
 msgctxt "taxonomy general name"
 msgid "Workflow States"
 msgstr "Arbeidsstatuser"
 
-#: includes/class-wp-document-revisions.php:813
+#: includes/class-wp-document-revisions.php:837
 msgctxt "taxonomy singular name"
 msgid "Workflow State"
 msgstr "Arbeidsstatus"
 
-#: includes/class-wp-document-revisions.php:814
+#: includes/class-wp-document-revisions.php:838
 msgid "Search Workflow States"
 msgstr "Søk gjennom arbeidsstatuser"
 
-#: includes/class-wp-document-revisions.php:815
+#: includes/class-wp-document-revisions.php:839
 msgid "All Workflow States"
 msgstr "Alle arbeidsstatuser"
 
-#: includes/class-wp-document-revisions.php:816
+#: includes/class-wp-document-revisions.php:840
 msgid "Parent Workflow State"
 msgstr "Arbeidsstatus's foreldre"
 
-#: includes/class-wp-document-revisions.php:817
+#: includes/class-wp-document-revisions.php:841
 msgid "Parent Workflow State:"
 msgstr "Arbeidsstatus's foreldre:"
 
-#: includes/class-wp-document-revisions.php:818
+#: includes/class-wp-document-revisions.php:842
 msgid "Edit Workflow State"
 msgstr "Rediger arbeidsstatus"
 
-#: includes/class-wp-document-revisions.php:819
+#: includes/class-wp-document-revisions.php:843
 msgid "Update Workflow State"
 msgstr "Oppdater arbeidsstatus"
 
-#: includes/class-wp-document-revisions.php:820
+#: includes/class-wp-document-revisions.php:844
 msgid "Add New Workflow State"
 msgstr "Legg til arbeidsstatus"
 
-#: includes/class-wp-document-revisions.php:821
+#: includes/class-wp-document-revisions.php:845
 msgid "New Workflow State Name"
 msgstr "Nytt arbeidsstatusnavn"
 
-#: includes/class-wp-document-revisions.php:822
+#: includes/class-wp-document-revisions.php:846
 msgid "Workflow States"
 msgstr "Arbeidsstatuser"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "In Progress"
 msgstr "Pågår"
 
-#: includes/class-wp-document-revisions.php:880
+#: includes/class-wp-document-revisions.php:904
 msgid "Document is in the process of being written"
 msgstr "Dokumentet er under omskrivning"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Initial Draft"
 msgstr "Første kladd"
 
-#: includes/class-wp-document-revisions.php:881
+#: includes/class-wp-document-revisions.php:905
 msgid "Document is being edited and refined"
 msgstr "Dokumentet er under redigering og klargjøring"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Under Review"
 msgstr "Under vurdering"
 
-#: includes/class-wp-document-revisions.php:882
+#: includes/class-wp-document-revisions.php:906
 msgid "Document is pending final review"
 msgstr "Dokumentet under sin påventende slutt-vurdering"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Final"
 msgstr "Avsluttende"
 
-#: includes/class-wp-document-revisions.php:883
+#: includes/class-wp-document-revisions.php:907
 msgid "Document is in its final form"
 msgstr "Dokumentet under sin avsluttende form"
 
@@ -883,10 +972,8 @@ msgstr "Dokument lagret."
 #. translators: %s is the download link.
 #: includes/trait-wp-document-revisions-admin-editor.php:60
 #, php-format
-msgid ""
-"Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
-msgstr ""
-"Dokument levert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
+msgid "Document submitted. <a target=\"_blank\" href=\"%s\">Download document</a>"
+msgstr "Dokument levert. <a target=\"_blank\" href=\"%s\">Last ned dokument</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -908,9 +995,7 @@ msgstr "%1$s kl. %2$s"
 #. translators: %s is the link to download the document.
 #: includes/trait-wp-document-revisions-admin-editor.php:64
 #, php-format
-msgid ""
-"Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
-"a>"
+msgid "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</a>"
 msgstr ""
 "Dokument kladd oppdatert. <a target=\"_blank\" href=\"%s\">Last ned "
 "dokument</a>"
@@ -939,7 +1024,7 @@ msgstr "Arbeidsstatus"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:129
 #: includes/trait-wp-document-revisions-admin-editor.php:1186
-#: includes/trait-wp-document-revisions-admin-list.php:122
+#: includes/trait-wp-document-revisions-admin-list.php:266
 msgid "Owner"
 msgstr "Eier"
 
@@ -972,15 +1057,17 @@ msgstr "Siste versjon av dokumentet"
 msgid "Download"
 msgstr "Last ned"
 
-#. translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
+#. translators: %1$s is the post modified date in words, %2$s is the post
+#. modified date in time format, %3$s is how long ago the post was modified,
+#. %4$s is the author's name.
 #: includes/trait-wp-document-revisions-admin-editor.php:209
 #, php-format
 msgid ""
-"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr> "
-"ago by %4$s"
+"Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</abbr>"
+" ago by %4$s"
 msgstr ""
-"Sjekket inn for <abbr class=\"timestamp\" title=\"%1$s\" id=\"A%2$s\">%3$s</"
-"abbr> siden av %4$s"
+"Sjekket inn for <abbr class=\"timestamp\" title=\"%1$s\" "
+"id=\"A%2$s\">%3$s</abbr> siden av %4$s"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:249
 msgid "Current State"
@@ -993,19 +1080,19 @@ msgstr "Grunnleggende bruk"
 #: includes/trait-wp-document-revisions-admin-editor.php:749
 msgid ""
 "This screen allows users to collaboratively edit documents and track their "
-"revision history. To begin, enter a title for the document, optionally enter "
-"a description, and click <code>Upload New Version</code> and select the file "
-"from your computer."
+"revision history. To begin, enter a title for the document, optionally enter"
+" a description, and click <code>Upload New Version</code> and select the "
+"file from your computer."
 msgstr ""
 "Denne skjermen lar brukere samarbeide om å redigere dokumenter og spore "
-"revisjonshistorikken sin. For å begynne, skriv inn en tittel for dokumentet, "
-"skriv eventuelt inn en beskrivelse, og klikk på <code>Last opp ny versjon</"
-"code> og velg filen fra datamaskinen din."
+"revisjonshistorikken sin. For å begynne, skriv inn en tittel for dokumentet,"
+" skriv eventuelt inn en beskrivelse, og klikk på <code>Last opp ny "
+"versjon</code> og velg filen fra datamaskinen din."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
-"Once successfully uploaded, you can enter a revision log message, assign the "
-"document an author, and describe its current workflow state."
+"Once successfully uploaded, you can enter a revision log message, assign the"
+" document an author, and describe its current workflow state."
 msgstr ""
 "Når opplastingen er fullført, kan du legge inn en revisjonsloggmelding, "
 "tilordne dokumentet en forfatter og beskrive gjeldende arbeidsflytstatus."
@@ -1039,8 +1126,8 @@ msgstr ""
 #: includes/trait-wp-document-revisions-admin-editor.php:756
 msgid ""
 "The revision log provides a short summary of the changes reflected in a "
-"particular revision. Used widely in the open-source community, it provides a "
-"comprehensive history of the document at a glance."
+"particular revision. Used widely in the open-source community, it provides a"
+" comprehensive history of the document at a glance."
 msgstr ""
 "Revisjonsloggen gir et kort sammendrag av endringene som gjenspeiles i en "
 "bestemt revisjon. Den brukes mye i åpen kildekode-miljøet, og gir en "
@@ -1058,9 +1145,9 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
-"The workflow state field can be used to help team members understand at what "
-"stage a document sits within a particular organization&quot;s workflow. The "
-"field is optional, and can be customized or queried by clicking "
+"The workflow state field can be used to help team members understand at what"
+" stage a document sits within a particular organization&quot;s workflow. The"
+" field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
 msgstr ""
 "Feltet for arbeidsflytstatus kan brukes til å hjelpe teammedlemmer med å "
@@ -1100,13 +1187,13 @@ msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
 msgstr ""
-"For å legge til et nytt dokument, klikk på <strong>Legg til dokument</"
-"strong> på venstre side."
+"For å legge til et nytt dokument, klikk på <strong>Legg til "
+"dokument</strong> på venstre side."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
-"To view all documents at a particular workflow state, click <strong>Workflow "
-"States</strong> in the menu on the left."
+"To view all documents at a particular workflow state, click <strong>Workflow"
+" States</strong> in the menu on the left."
 msgstr ""
 "Hvis du vil se alle dokumenter med en bestemt arbeidsflyttilstand, klikker "
 "du på <strong>Arbeidsflyttilstander</strong> i menyen til venstre."
@@ -1130,8 +1217,8 @@ msgstr "Du vil ikke kunne laste opp noen dokumenter."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:981
 msgid ""
-"Revision summaries are optional notes to store along with this revision that "
-"allow other users to quickly and easily see what changes you made without "
+"Revision summaries are optional notes to store along with this revision that"
+" allow other users to quickly and easily see what changes you made without "
 "needing to open the actual file."
 msgstr ""
 "Revisjon sammendrag er valgfri notater til å lagre sammen med den versjonen "
@@ -1197,7 +1284,47 @@ msgstr "Alle statuser"
 msgid "All owners"
 msgstr "Alle eiere"
 
-#: includes/trait-wp-document-revisions-admin-list.php:140
+#: includes/trait-wp-document-revisions-admin-list.php:102
+msgid "Add your first document"
+msgstr "Legg til ditt første dokument"
+
+#: includes/trait-wp-document-revisions-admin-list.php:107
+msgid "read the documentation"
+msgstr "les dokumentasjonen"
+
+#: includes/trait-wp-document-revisions-admin-list.php:112
+msgid "Welcome to WP Document Revisions!"
+msgstr "Velkommen til WP Dokumentrevisjoner!"
+
+#. translators: 1: link to add a new document, 2: link to the documentation
+#: includes/trait-wp-document-revisions-admin-list.php:116
+#, php-format
+msgid ""
+"You have not added any documents yet. %1$s to start tracking revisions and "
+"workflow, or %2$s."
+msgstr ""
+"Du har ikke lagt til noen dokumenter ennå. %1$s for å begynne å spore "
+"revisjoner og arbeidsflyt, eller %2$s."
+
+#: includes/trait-wp-document-revisions-admin-list.php:171
+msgid ""
+"You have been managing your documents with WP Document Revisions — thank "
+"you! If it has been useful, would you consider leaving a quick review? It "
+"genuinely helps other teams discover the plugin."
+msgstr ""
+"Du har administrert dokumentene dine med WP Document Revisions – takk! Hvis "
+"det har vært nyttig, kunne du tenke deg å legge igjen en rask anmeldelse? "
+"Det hjelper virkelig andre team å oppdage plugin-modulen."
+
+#: includes/trait-wp-document-revisions-admin-list.php:173
+msgid "Leave a review"
+msgstr "Legg igjen en anmeldelse"
+
+#: includes/trait-wp-document-revisions-admin-list.php:174
+msgid "No thanks"
+msgstr "Nei takk"
+
+#: includes/trait-wp-document-revisions-admin-list.php:284
 msgid "Currently Editing"
 msgstr "Redigeres for øyeblikket"
 
@@ -1239,7 +1366,8 @@ msgstr ""
 msgid "Generate New Key"
 msgstr "Lag ny nøkkel"
 
-#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
+#. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the
+#. post status.
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
@@ -1249,39 +1377,67 @@ msgstr "For %1$s siden av %2$s [%3$s]"
 msgid "Document Date in Permalink"
 msgstr "Dokumentdato i permalenke"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:394
+#: includes/trait-wp-document-revisions-admin-settings.php:390
+msgid "Document Notifications"
+msgstr "Dokumentvarsler"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:435
+msgid "Email notifications when documents change."
+msgstr "E-postvarsler når dokumenter endres."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:437
+msgid "Notify these email addresses (one per line or comma-separated):"
+msgstr "Varsle disse e-postadressene (én per linje eller kommaseparert):"
+
+#: includes/trait-wp-document-revisions-admin-settings.php:439
+msgid ""
+"The document's author is always notified in addition to this list. Whoever "
+"made the change is never notified of their own change."
+msgstr ""
+"Dokumentets forfatter blir alltid varslet i tillegg til denne listen. Den "
+"som gjorde endringen blir aldri varslet om sin egen endring."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:444
+msgid "Notify when a document changes workflow state."
+msgstr "Varsle når et dokument endrer arbeidsflytstatus."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:447
+msgid "Notify when a new revision of a document is saved."
+msgstr "Varsle når en ny revisjon av et dokument lagres."
+
+#: includes/trait-wp-document-revisions-admin-settings.php:481
 msgid "Document directory does not appear to exist. Please review value."
 msgstr ""
 "Dokumentkatalogen ser ikke ut til å eksistere. Vennligst sjekk verdien."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:396
+#: includes/trait-wp-document-revisions-admin-settings.php:483
 msgid "Document directory is not writable. Please check permissions."
 msgstr "Dokumentkatalogen er ikke skrivbar. Sjekk tillatelsene."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:400
+#: includes/trait-wp-document-revisions-admin-settings.php:487
 msgid ""
-"Document upload directory changed, but existing uploads may need to be moved "
-"to the new folder to ensure they remain accessible."
+"Document upload directory changed, but existing uploads may need to be moved"
+" to the new folder to ensure they remain accessible."
 msgstr ""
 "Dokument opplasting-mappen er endret, men eksisterende opplastinger må "
 "kanskje flyttes til den nye mappen for å sikre at de forblir tilgjengelig."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:429
+#: includes/trait-wp-document-revisions-admin-settings.php:516
 msgid ""
 "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 "Dokumentsluggen er endret, men noen tidligere publiserte URL-er kan nå være "
 "ødelagte."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
-#: includes/trait-wp-document-revisions-admin-settings.php:478
-#: includes/trait-wp-document-revisions-admin-settings.php:506
+#: includes/trait-wp-document-revisions-admin-settings.php:534
+#: includes/trait-wp-document-revisions-admin-settings.php:565
+#: includes/trait-wp-document-revisions-admin-settings.php:593
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr "Du er ikke autorisert"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:562
+#: includes/trait-wp-document-revisions-admin-settings.php:649
 msgid ""
 "Directory in which to store uploaded documents. The default is in your "
 "<code>wp-content/uploads</code> folder (or another default uploads folder "
@@ -1295,20 +1451,20 @@ msgstr ""
 "sikkerhet."
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:570
+#: includes/trait-wp-document-revisions-admin-settings.php:657
 #, php-format
 msgid ""
-"You may optionally include the string <code>%site_id%</code> within the path "
-"to separate files by site."
+"You may optionally include the string <code>%site_id%</code> within the path"
+" to separate files by site."
 msgstr ""
 "Du kan eventuelt inkludere strengen <code>%site_id%</code> i banen for å "
 "skille filer etter nettsted."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:585
+#: includes/trait-wp-document-revisions-admin-settings.php:672
 msgid "example-document-title"
 msgstr "eksempel-dokument-tittel"
 
-#: includes/trait-wp-document-revisions-admin-settings.php:589
+#: includes/trait-wp-document-revisions-admin-settings.php:676
 msgid ""
 "\"Slug\" with which to prefix all URLs for documents (and the document "
 "archive). Default is <code>documents</code>."
@@ -1316,36 +1472,38 @@ msgstr ""
 "«Slug» som prefiks skal brukes for alle URL-er for dokumenter (og "
 "dokumentarkivet). Standard er <code>dokumenter</code>."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:603
-msgid "Remove the year and month element /yyyy/mm from the document permalink."
+#: includes/trait-wp-document-revisions-admin-settings.php:690
+msgid ""
+"Remove the year and month element /yyyy/mm from the document permalink."
 msgstr "Fjern år- og månedselementet /yyyy/mm fra dokumentets permalenke."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:605
-msgid "By default the document permalink will contain the post year and month."
+#: includes/trait-wp-document-revisions-admin-settings.php:692
+msgid ""
+"By default the document permalink will contain the post year and month."
 msgstr ""
 "Som standard vil dokumentets permalenke inneholde innleggets år og måned."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:606
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "The delivered rewrite rules support both formats."
 msgstr "De leverte omskrivingsreglene støtter begge formatene."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:659
+#: includes/trait-wp-document-revisions-admin-settings.php:746
 msgid ""
 "Maximum number of document revisions set to zero using a filter. Check your "
 "configuration."
 msgstr ""
-"Maksimalt antall dokumentrevisjoner er satt til null ved hjelp av et filter. "
-"Sjekk konfigurasjonen din."
+"Maksimalt antall dokumentrevisjoner er satt til null ved hjelp av et filter."
+" Sjekk konfigurasjonen din."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:759
 msgid ""
 "More revisions exist for this document than is permitted. Making changes "
 "will delete data."
 msgstr ""
-"Det finnes flere revisjoner av dette dokumentet enn det som er tillatt. Hvis "
-"du gjør endringer, slettes data."
+"Det finnes flere revisjoner av dette dokumentet enn det som er tillatt. Hvis"
+" du gjør endringer, slettes data."
 
-#: includes/trait-wp-document-revisions-admin-settings.php:681
+#: includes/trait-wp-document-revisions-admin-settings.php:768
 msgid ""
 "Maximum number of revisions reached for this document. Making changes will "
 "delete data."
@@ -1381,7 +1539,7 @@ msgid ""
 msgstr ""
 "Beklager, resultatet er allerede skrevet, så filen din kan ikke lastes ned."
 
-#: includes/trait-wp-document-revisions-file-handler.php:1165
+#: includes/trait-wp-document-revisions-file-handler.php:1167
 msgid "Sorry, this is a private feed."
 msgstr "Obs, dette er privat."
 
@@ -1431,7 +1589,8 @@ msgstr "Søppel"
 msgid "Somebody"
 msgstr "Noen"
 
-#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is the document title.
+#. translators: %1$s is the blog name, %2$s is the overriding user, %3$s is
+#. the document title.
 #: includes/trait-wp-document-revisions-revisions.php:405
 #, php-format
 msgid "%1$s: %2$s has overridden your lock on %3$s"
@@ -1443,7 +1602,8 @@ msgstr "%1$s: %2$s har overstyrt din lås på %3$s"
 msgid "Dear %s:"
 msgstr "Kjære %s:"
 
-#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
+#. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is
+#. the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417
 #, php-format
 msgid "%1$s (%2$s), has overridden your lock on the document %3$s (%4$s)."
@@ -1452,12 +1612,6 @@ msgstr "%1$s (%2$s), har overstyrt din lås på dokumentet %3$s (%4$s)."
 #: includes/trait-wp-document-revisions-revisions.php:418
 msgid "Any changes you have made will be lost."
 msgstr "Alle endringer du har gjort vil være tapt."
-
-#. translators: %s is the blog name.
-#: includes/trait-wp-document-revisions-revisions.php:420
-#, php-format
-msgid "- The %s Team"
-msgstr "- %s laget"
 
 #: includes/trait-wp-document-revisions-rewrites.php:47
 #: includes/trait-wp-document-revisions-rewrites.php:62
@@ -1499,8 +1653,8 @@ msgid ""
 "File uploaded successfully. Add a revision summary below (optional) and "
 "press <strong>Update</strong> to save your changes."
 msgstr ""
-"Filen er lastet opp. Legg til et revisjonssammendrag nedenfor (valgfritt) og "
-"trykk på <strong>Oppdater</strong> for å lagre endringene."
+"Filen er lastet opp. Legg til et revisjonssammendrag nedenfor (valgfritt) og"
+" trykk på <strong>Oppdater</strong> for å lagre endringene."
 
 #: src/admin/wp-document-revisions.js:173
 msgid "New version uploaded. Press Update to save."
@@ -1567,6 +1721,35 @@ msgstr "Last opp dokument"
 msgid "Select Document"
 msgstr "Velg dokument"
 
+#: src/blocks/document-preview/edit.js:17
+msgid "Preview Settings"
+msgstr "Forhåndsvisningsinnstillinger"
+
+#: src/blocks/document-preview/edit.js:23
+#: src/blocks/revisions-shortcode/edit.js:23
+msgid "Document Id"
+msgstr "Dokument-ID"
+
+#: src/blocks/document-preview/edit.js:30
+msgid "Preview Height (px)"
+msgstr "Forhåndsvisningshøyde (piksler)"
+
+#: src/blocks/document-preview/edit.js:41
+msgid "Show Document Title?"
+msgstr "Vis dokumenttittel?"
+
+#: src/blocks/document-preview/edit.js:49
+msgid "Show Download Link?"
+msgstr "Vis nedlastingslenke?"
+
+#: src/blocks/document-preview/edit.js:50
+msgid ""
+"Displays a download link below the preview, and is shown as a fallback when "
+"the file type cannot be previewed inline."
+msgstr ""
+"Viser en nedlastingslenke under forhåndsvisningen, og vises som en reserve "
+"når filtypen ikke kan forhåndsvises innebygd."
+
 #: src/blocks/documents-shortcode/edit.js:76
 msgid "There are no taxonomies defined."
 msgstr "Det er ingen definerte taksonomier."
@@ -1609,8 +1792,8 @@ msgstr "Vis redigeringslenke"
 
 #: src/blocks/documents-shortcode/edit.js:168
 msgid ""
-"Show Edit link allows the list to have a link to the Edit function. A choice "
-"made here will over-ride the system-configured settings. Links will only "
+"Show Edit link allows the list to have a link to the Edit function. A choice"
+" made here will over-ride the system-configured settings. Links will only "
 "appear if the user can edit the document."
 msgstr ""
 "Vis redigeringslenke lar listen ha en lenke til redigeringsfunksjonen. Et "
@@ -1715,10 +1898,6 @@ msgstr "Vis forfatternavn?"
 msgid "Selection Criteria"
 msgstr "Utvalgskriterier"
 
-#: src/blocks/revisions-shortcode/edit.js:23
-msgid "Document Id"
-msgstr "Dokument-ID"
-
 #: src/blocks/revisions-shortcode/edit.js:30
 msgid "Revisions to Display"
 msgstr "Revisjoner for visning"
@@ -1801,6 +1980,17 @@ msgstr "Ingen revisjoner ennå."
 msgid "—"
 msgstr "—"
 
+#: src/blocks/document-preview/block.json
+msgctxt "block title"
+msgid "Document Preview"
+msgstr "Forhåndsvisning av dokument"
+
+#: src/blocks/document-preview/block.json
+msgctxt "block description"
+msgid "Embed an inline preview of a document's latest revision."
+msgstr ""
+"Legg inn en innebygd forhåndsvisning av den siste revisjonen av et dokument."
+
 #: src/blocks/documents-shortcode/block.json
 msgctxt "block title"
 msgid "Documents List"
@@ -1842,22 +2032,20 @@ msgstr "Vis en liste over revisjoner for dokumentet ditt."
 #~ "<span class=\"agoby\">siden av</a> <span class=\"author\">%5$s</a>"
 
 #~ msgid ""
-#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</"
-#~ "abbr> ago by %4$s"
+#~ "Checked in <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\">%3$s</abbr> "
+#~ "ago by %4$s"
 #~ msgstr ""
-#~ "Sjekket inn <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ s</"
-#~ "abbr> siden av %4$ s"
+#~ "Sjekket inn <abbr class=\"timestamp\" title=\"%1$s\" id=\"%2$s\"> %3$ "
+#~ "s</abbr> siden av %4$ s"
 
 #~ msgid ""
 #~ "Are you sure you want to restore this revision?\n"
 #~ "\n"
-#~ "If you do, no history will be lost. This revision will be copied and "
-#~ "become the most recent revision."
+#~ "If you do, no history will be lost. This revision will be copied and become the most recent revision."
 #~ msgstr ""
 #~ "Er du sikker på at du vil gjenopprette denne versjonen? \n"
 #~ "\n"
-#~ "Ingen historie vil være tapt om du gjør det. Denne versjonen vil bli "
-#~ "kopiert og bli den mest nylige versjonen."
+#~ "Ingen historie vil være tapt om du gjør det. Denne versjonen vil bli kopiert og bli den mest nylige versjonen."
 
 #~ msgid "is currently editing this"
 #~ msgstr "redigerer dette for øyeblikket"
@@ -1868,8 +2056,8 @@ msgstr "Vis en liste over revisjoner for dokumentet ditt."
 #~ "<em>Update</em> to save your changes.</p></div>"
 #~ msgstr ""
 #~ "<div id=\"message\" class=\"updated\" style=\"display:none\"><p>Fil laset "
-#~ "opp vellykket. Legg til et versjon-sammendrag under (valgfritt) eller "
-#~ "press <em>Oppdater</em> til dine endringer.</p></div>"
+#~ "opp vellykket. Legg til et versjon-sammendrag under (valgfritt) eller press "
+#~ "<em>Oppdater</em> til dine endringer.</p></div>"
 
 #~ msgid "Benjamin J. Balter"
 #~ msgstr "Benjamin J. Balter"
