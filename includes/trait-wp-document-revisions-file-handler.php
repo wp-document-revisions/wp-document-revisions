@@ -947,10 +947,12 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.5.0
 	 * @param string|false $file          The file path to where the attached file should be.
-	 * @param int          $attachment_id Attachment Id.
+	 * @param int|string   $attachment_id Attachment Id. WordPress core may pass a numeric string.
 	 * @return string path to document
 	 */
-	public function get_attached_file_filter( $file, int $attachment_id ) {
+	public function get_attached_file_filter( $file, $attachment_id ) {
+		$attachment_id = (int) $attachment_id;
+
 		// returned false.
 		if ( ! $file ) {
 			return $file;

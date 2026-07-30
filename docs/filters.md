@@ -384,3 +384,45 @@ Seconds between text extraction completing and the summary cron event firing. De
 In: includes/class-wp-document-revisions-ai-summary.php
 
 Hard timeout, in seconds, for a single summary generation call. Default 60. Applied via `set_time_limit()` inside the cron handler (advisory).
+
+## Filter document_notify_enabled
+
+In: includes/class-wp-document-revisions-notifications.php
+
+Master switch for document email notifications. Receives the boolean value of the `document_notify_enabled` site option. Return true to force-enable or false to force-disable notifications regardless of the setting.
+
+## Filter document_notify_on_state_change
+
+In: includes/class-wp-document-revisions-notifications.php
+
+Whether to notify on workflow-state changes. Receives the boolean value of the `document_notify_on_state_change` site option (default true). Return false to suppress state-change notifications.
+
+## Filter document_notify_on_new_revision
+
+In: includes/class-wp-document-revisions-notifications.php
+
+Whether to notify when a new revision is saved. Receives the boolean value of the `document_notify_on_new_revision` site option (default false). Return true to enable new-revision notifications.
+
+## Filter document_notification_recipients
+
+In: includes/class-wp-document-revisions-notifications.php
+
+The list of email addresses to notify. Receives `( string[] $emails, int $doc_id, string $event, int $actor_id )` where `$event` is `'state_change'` or `'new_revision'`. The default list is the site-wide recipient list plus the document author, with the acting user removed and duplicates/invalid addresses dropped. Return a modified array to reroute — this is the seam for per-document subscribers or state-based routing (e.g. sending *Under Review* transitions to a review team). Addresses are re-validated after filtering.
+
+## Filter document_notification_subject
+
+In: includes/class-wp-document-revisions-notifications.php
+
+The notification email subject. Receives `( string $subject, int $doc_id, string $event )`.
+
+## Filter document_notification_message
+
+In: includes/class-wp-document-revisions-notifications.php
+
+The notification email body. Receives `( string $message, int $doc_id, string $event )`.
+
+## Filter document_notification_headers
+
+In: includes/class-wp-document-revisions-notifications.php
+
+Email headers for notifications. Receives `( string[] $headers, int $doc_id, string $event )`; defaults to an empty array. Use to add a `From:`, `Reply-To:`, or other headers.

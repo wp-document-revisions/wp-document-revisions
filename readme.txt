@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 5.3.0
+Stable tag: 5.4.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -100,7 +100,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 - Opt-in [Block Editor (Gutenberg) support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
-- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette
+- WordPress Abilities API integration (WP 6.9+) for AI agents and the command palette, with read-only abilities exposed over the Model Context Protocol via the [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter)
 - Native text extraction from PDF, DOCX, and ODT files (pluggable for additional formats), cached per-attachment for search and AI use
 - AI-generated revision summaries via the [WordPress 7.0 AI Client](https://wp-document-revisions.github.io/wp-document-revisions/https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/), computed from a unified diff of the new revision against the prior one and pre-filled into the revision log for editor review. See the [Text Extraction & AI cookbook entry](cookbook/text-extraction-and-ai-summaries/) for customization recipes
 - WP-CLI `document-revisions extract-text` command to backfill the extraction cache across an existing library, with `--all`/`--missing`/`--id`/`--extractor`/`--force`/`--dry-run` selectors
@@ -108,6 +108,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Clean uninstall: options, user meta, and capabilities removed on plugin deletion
 - Deactivation hook flushes rewrite rules for clean deactivation
 - Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
+- Opt-in email notifications when a document changes workflow state or gains a new revision, with a configurable recipient list (see [Document Notifications](https://wp-document-revisions.github.io/wp-document-revisions/notifications/))
 
 = Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) =
 
@@ -115,7 +116,6 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
 - **Third Party Encryption** - example of how to integrate at rest encryption using third-party tools
 - **Rename Documents** - changes all references to "Documents" in the interface to any label of your choosing
-- **State Change Notification** - how to use document api to allow users to receive notification whenever documents change workflow state
 - **Bulk Import** - how to batch import a directory (or other list) of files as documents
 - **Filetype Taxonomy** - Adds support to filter by filetype
 - **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
@@ -178,6 +178,71 @@ Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-r
 - **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
 
 
+=== Document Notifications ===
+
+WP Document Revisions can email interested people when a document moves through your workflow — when it **changes workflow state** (for example, moved to *Under Review* or *Approved*) or when a **new revision** is saved. This turns workflow states from passive labels into an active review loop: the reviewer actually hears about it.
+
+Notifications are **opt-in and disabled by default**, so enabling the plugin (or upgrading) never starts sending mail on its own.
+
+== Enabling notifications ==
+
+Notifications are configured under **Settings → Media**, in the **Document Notifications** section:
+
+- **Email notifications when documents change** — the master switch. Off by default; nothing is sent until you turn it on.
+- **Notify these email addresses** — a site-wide recipient list (one address per line, or comma-separated).
+- **Notify when a document changes workflow state** — on by default (only takes effect once the master switch is on).
+- **Notify when a new revision of a document is saved** — off by default.
+
+== Who gets notified ==
+
+For each event, the recipients are:
+
+- everyone on the site-wide recipient list, **plus**
+- the document's author,
+
+with two rules always applied:
+
+- **the person who made the change is never notified of their own change**, and
+- duplicate and invalid addresses are removed.
+
+Each recipient receives their own copy — the recipient list is never exposed to the others, and no stray copy is sent to the site administrator.
+
+> **Note on bulk edits:** because a notification is sent per document, changing the workflow state of many documents at once (for example, a bulk edit) sends one notification per document. Use the `document_notification_recipients` filter to suppress or reroute mail in that situation if needed.
+
+== Customizing with filters ==
+
+Every part of the behavior is filterable. See [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) for full signatures. In brief:
+
+- `document_notify_enabled`, `document_notify_on_state_change`, `document_notify_on_new_revision` — force-enable or force-disable the master switch and each event.
+- `document_notification_recipients` — receives `( array $emails, int $doc_id, string $event, int $actor_id )`. This is the seam for advanced routing: notify prior editors, or route by workflow state (e.g. send *Under Review* transitions to a review team).
+- `document_notification_subject`, `document_notification_message` — customize the email subject and body.
+- `document_notification_headers` — add email headers (e.g. a `From:` or `Reply-To:`).
+
+= Example: route "Under Review" to a review team =
+
+```php
+add_filter(
+	'document_notification_recipients',
+	function ( $emails, $doc_id, $event, $actor_id ) {
+		if ( 'state_change' !== $event ) {
+			return $emails;
+		}
+		$states = wp_get_object_terms( $doc_id, 'workflow_state', array( 'fields' => 'names' ) );
+		if ( in_array( 'Under Review', $states, true ) ) {
+			$emails[] = 'review-team@example.com';
+		}
+		return $emails;
+	},
+	10,
+	4
+);
+```
+
+== Delivery ==
+
+Notifications are sent through WordPress's standard `wp_mail()`. On sites with high mail volume or a slow mail server, install a transactional-email/SMTP plugin so delivery does not add latency to saving a document.
+
+
 == Screenshots ==
 
 1. Every document keeps a complete, audited revision history — who changed what and when, each with a summary and one-click restore.
@@ -228,6 +293,14 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.4.0 =
+
+* Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)
+* Add opt-in email notifications (Settings → Media) that alert a configurable recipient list, plus the document's author, when a document changes workflow state or gains a new revision. Disabled by default; the person making the change is never notified of their own change; fully customizable via filters. Supersedes the former code-cookbook recipe by making state-change notifications a built-in feature.
+* Fix a fatal `TypeError` when serving or resolving a document's attached file on newer WordPress: the `get_attached_file` filter now accepts the attachment ID as either an integer or a numeric string (WordPress core passes a string in some paths), casting it internally. Previously the strict `int` type hint could abort the request.
+* Fix Abilities API registration on WordPress 6.9+: the plugin's ability category was registered without the now-required `description`, which caused the category — and therefore all four document abilities — to silently fail to register. The category now includes a description and the abilities register as intended.
+* Expose the three read-only Abilities API abilities (`check-document-access`, `get-document-info`, `get-document-revisions`) to AI agents over the Model Context Protocol via the WordPress MCP Adapter — no bundled MCP server required. The mutating `override-document-lock` ability is intentionally excluded, keeping the agent-facing surface read-only, and every call continues to enforce per-document read permissions.
+
 = 5.3.0 =
 
 * The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
@@ -236,11 +309,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
 
 = 5.2.0 =
-
-* The classic-editor admin and block-editor sidebar (document upload and revision log) interface strings are now fully translatable via WordPress's JavaScript internationalization. Previously a number of the plugin's script-side strings could not be translated and always appeared in English regardless of the site language. (#628)
-* Add or refresh translations for 31 languages covering the newly-translatable admin and block-editor strings. (#628)
-* Under the hood: the plugin's admin JavaScript is now built as ES modules through `@wordpress/scripts`, with static type-checking and expanded unit and component test coverage in CI. No change to functionality.
-
-= 5.1.3 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

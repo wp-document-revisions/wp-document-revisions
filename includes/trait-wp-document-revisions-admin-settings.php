@@ -360,6 +360,93 @@ trait WP_Document_Revisions_Admin_Settings {
 			'media',
 			'uploads'
 		);
+		register_setting(
+			'media',
+			'document_notify_enabled',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+			)
+		);
+		register_setting( 'media', 'document_notify_recipients', array( $this, 'sanitize_notify_recipients' ) );
+		register_setting(
+			'media',
+			'document_notify_on_state_change',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+			)
+		);
+		register_setting(
+			'media',
+			'document_notify_on_new_revision',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+			)
+		);
+		add_settings_field(
+			'document_notifications',
+			__( 'Document Notifications', 'wp-document-revisions' ),
+			array( $this, 'document_notifications_cb' ),
+			'media',
+			'uploads'
+		);
+	}
+
+	/**
+	 * Sanitizes a checkbox setting to a boolean.
+	 *
+	 * @since 5.4.0
+	 * @param string|null $value the submitted value (null/absent when unchecked).
+	 * @return bool true if checked.
+	 */
+	public function sanitize_checkbox( ?string $value ): bool {
+		return (bool) $value;
+	}
+
+	/**
+	 * Sanitizes the notification recipients list to newline-separated valid emails.
+	 *
+	 * @since 5.4.0
+	 * @param string|null $value the submitted, comma/whitespace-separated address list.
+	 * @return string newline-separated list of valid email addresses.
+	 */
+	public function sanitize_notify_recipients( ?string $value ): string {
+		$emails = array();
+		foreach ( preg_split( '/[\s,]+/', (string) $value ) as $addr ) {
+			$addr = sanitize_email( trim( (string) $addr ) );
+			if ( is_email( $addr ) ) {
+				$emails[] = $addr;
+			}
+		}
+		return implode( "\n", array_values( array_unique( $emails ) ) );
+	}
+
+	/**
+	 * Renders the Document Notifications settings controls.
+	 *
+	 * @since 5.4.0
+	 */
+	public function document_notifications_cb(): void {
+		?>
+		<label for="document_notify_enabled">
+		<input name="document_notify_enabled" type="checkbox" id="document_notify_enabled" value="1" <?php checked( true, (bool) get_site_option( 'document_notify_enabled', false ) ); ?> />
+		<?php esc_html_e( 'Email notifications when documents change.', 'wp-document-revisions' ); ?></label><br />
+		<p>
+		<label for="document_notify_recipients"><?php esc_html_e( 'Notify these email addresses (one per line or comma-separated):', 'wp-document-revisions' ); ?></label><br />
+		<textarea name="document_notify_recipients" id="document_notify_recipients" rows="3" cols="40" class="large-text code"><?php echo esc_textarea( (string) get_site_option( 'document_notify_recipients', '' ) ); ?></textarea><br />
+		<span class="description"><?php esc_html_e( "The document's author is always notified in addition to this list. Whoever made the change is never notified of their own change.", 'wp-document-revisions' ); ?></span>
+		</p>
+		<p>
+		<label for="document_notify_on_state_change">
+		<input name="document_notify_on_state_change" type="checkbox" id="document_notify_on_state_change" value="1" <?php checked( true, (bool) get_site_option( 'document_notify_on_state_change', true ) ); ?> />
+		<?php esc_html_e( 'Notify when a document changes workflow state.', 'wp-document-revisions' ); ?></label><br />
+		<label for="document_notify_on_new_revision">
+		<input name="document_notify_on_new_revision" type="checkbox" id="document_notify_on_new_revision" value="1" <?php checked( true, (bool) get_site_option( 'document_notify_on_new_revision', false ) ); ?> />
+		<?php esc_html_e( 'Notify when a new revision of a document is saved.', 'wp-document-revisions' ); ?></label>
+		</p>
+		<?php
 	}
 
 	/**
