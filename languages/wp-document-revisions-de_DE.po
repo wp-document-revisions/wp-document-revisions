@@ -1032,7 +1032,7 @@ msgid ""
 "revision history. To begin, enter a title for the document, optionally enter "
 "a description, and click <code>Upload New Version</code> and select the file "
 "from your computer."
-msgstr ""
+msgstr "Dieser Bildschirm ermöglicht es Benutzern, Dokumente gemeinsam zu bearbeiten und ihre Revisionshistorie zu verfolgen. Um zu beginnen, geben Sie einen Titel für das Dokument ein, optional eine Beschreibung, und klicken Sie auf <code>Upload New Version</code> und wählen Sie die Datei von Ihrem Computer aus."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""

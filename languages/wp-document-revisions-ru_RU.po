@@ -974,9 +974,7 @@ msgstr "%s помешал другим пользователям вносить
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-"<br /> Если вы считаете, что произошла ошибка, можно <a href=\"#\" "
-"id=\"override_link\">отменить блокировку</ a>, но изменения будут потеряны."
+msgstr "<br /> Если вы считаете, что произошла ошибка, можно <a href=\"#\" id=\"override_link\">отменить блокировку</a>, но изменения будут потеряны."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257

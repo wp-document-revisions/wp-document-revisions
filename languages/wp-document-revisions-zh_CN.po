@@ -146,7 +146,7 @@ msgstr "抱歉，您无权查看此版本。"
 
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
-msgstr ""
+msgstr "<!-- protected -->"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -959,7 +959,7 @@ msgid ""
 "revision history. To begin, enter a title for the document, optionally enter "
 "a description, and click <code>Upload New Version</code> and select the file "
 "from your computer."
-msgstr ""
+msgstr "此界面允许用户协作编辑文档并跟踪其修订历史。要开始，请输入文档标题，可选输入描述，然后点击<code>上传新版本</code>并从您的电脑选择文件。"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""

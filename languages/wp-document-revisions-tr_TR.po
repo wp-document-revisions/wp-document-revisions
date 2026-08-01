@@ -159,7 +159,7 @@ msgstr "%1$s önce %2$s tarafından"
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s önce"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
@@ -961,7 +961,7 @@ msgstr "%s diğer kullanıcıların değişiklik yapmasını engelledi."
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
+msgstr "<br />Eğer bunun bir hata olduğunu düşünüyorsanız <a href=\"#\" id=\"override_link\">kilidi geçersiz kılabilirsiniz</a>, ancak yaptıkları değişiklikler kaybolacaktır."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257

@@ -152,13 +152,13 @@ msgstr "<!-- protected -->"
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago by %2$s"
-msgstr ""
+msgstr "%2$s により %1$s 前"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s前"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
@@ -1005,7 +1005,7 @@ msgid ""
 "revision history. To begin, enter a title for the document, optionally enter "
 "a description, and click <code>Upload New Version</code> and select the file "
 "from your computer."
-msgstr ""
+msgstr "この画面では、ユーザーがドキュメントを共同編集し、リビジョン履歴を追跡できます。開始するには、ドキュメントのタイトルを入力し、必要に応じて説明を入力し、<code>Upload New Version</code> をクリックしてコンピューターからファイルを選択してください。"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
@@ -1102,13 +1102,13 @@ msgstr ""
 msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
-msgstr ""
+msgstr "新しいドキュメントを追加するには、左側の<strong>Add Document</strong>をクリックしてください"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
 "To view all documents at a particular workflow state, click <strong>Workflow "
 "States</strong> in the menu on the left."
-msgstr ""
+msgstr "特定のワークフロー状態のすべてのドキュメントを表示するには、左側のメニューで <strong>ワークフロー状態</strong> をクリックしてください"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963

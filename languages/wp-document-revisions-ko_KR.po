@@ -152,13 +152,13 @@ msgstr ""
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago by %2$s"
-msgstr ""
+msgstr "%2$s님이 %1$s 전에"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s 전"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
@@ -1227,7 +1227,7 @@ msgstr "새 키 생성"
 #: includes/trait-wp-document-revisions-admin-settings.php:318
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
-msgstr ""
+msgstr "%2$s [%3$s]이(가) %1$s 전에"
 
 #: includes/trait-wp-document-revisions-admin-settings.php:358
 msgid "Document Date in Permalink"

@@ -17,3 +17,6 @@ tests/e2e/config/.auth
 # Python bytecode from local script runs
 __pycache__/
 *.pyc
+
+# Translation QA reports (local output of script/qa-translations.py)
+/i18n-qa/

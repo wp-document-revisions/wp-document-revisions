@@ -147,7 +147,7 @@ msgstr "Rất tiếc, bạn không được phép xem bản sửa đổi này."
 
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
-msgstr ""
+msgstr "<!-- protected -->"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
