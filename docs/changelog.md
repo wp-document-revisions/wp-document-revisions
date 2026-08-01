@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.1
+
+* Fix a number of broken strings in the bundled translations where a malformed HTML tag or placeholder could cause markup to render as visible text — for example a stray space splitting a `<code>`/`<strong>` tag or sitting inside a link's URL, and a mismatched format placeholder. Also fill the remaining untranslated strings across several locales. (#647)
+
 ### 5.4.0
 
 * Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)
