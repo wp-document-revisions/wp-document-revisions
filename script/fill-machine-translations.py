@@ -42,6 +42,46 @@ except ImportError:  # pragma: no cover
 _GOOGLE_KEY = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
 _GOOGLE_ENDPOINT = "https://translation.googleapis.com/language/translate/v2"
 
+# Azure OpenAI (Azure AI Foundry) chat-completions engine. When configured, an
+# LLM translates with domain context + a glossary, yielding more natural,
+# terminology-consistent strings than phrase-based MT. Preferred over Google.
+_AZURE_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT", "").strip().rstrip("/")
+_AZURE_KEY = os.environ.get("AZURE_OPENAI_API_KEY", "").strip()
+_AZURE_DEPLOYMENT = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4.1").strip()
+_AZURE_API_VERSION = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21").strip()
+_AZURE_ENABLED = bool(_AZURE_ENDPOINT and _AZURE_KEY)
+
+# Target-code -> language name for the LLM prompt (keys match target_code()).
+_LANG_NAMES = {
+    "af": "Afrikaans", "ar": "Arabic", "ca": "Catalan", "cs": "Czech",
+    "da": "Danish", "de": "German", "el": "Greek", "es": "Spanish",
+    "fi": "Finnish", "fr": "French", "he": "Hebrew", "hu": "Hungarian",
+    "id": "Indonesian", "it": "Italian", "ja": "Japanese", "ko": "Korean",
+    "nb": "Norwegian Bokmål", "nl": "Dutch", "no": "Norwegian", "pl": "Polish",
+    "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sr": "Serbian",
+    "sv": "Swedish", "tr": "Turkish", "uk": "Ukrainian", "vi": "Vietnamese",
+    "zh-CN": "Simplified Chinese", "zh-TW": "Traditional Chinese",
+}
+
+# Domain context + glossary so the model uses WP Document Revisions' vocabulary
+# consistently and follows standard WordPress localization conventions.
+_AZURE_SYSTEM = (
+    "You are a professional software-localization translator for WordPress plugins, "
+    'translating UI strings for "WP Document Revisions" — a plugin for document '
+    "management, version control, and editorial workflow.\n"
+    "Translate the user's English string into {language}.\n"
+    "Rules:\n"
+    "- Output ONLY the translation — no quotes, no explanation, no trailing "
+    "punctuation absent from the source.\n"
+    "- Preserve every printf placeholder (%s, %d, %1$s, %02d) and HTML tag "
+    "(<a ...>, <strong>) EXACTLY, positioned naturally for the target language.\n"
+    "- Never translate placeholders, HTML attributes/URLs, or the plugin name.\n"
+    "- Use standard WordPress localization conventions/glossary for the locale.\n"
+    "- Translate these key terms consistently: document, revision, workflow state, "
+    "check out / check in (version-control sense), attachment, permalink, feed, "
+    "taxonomy, post type."
+)
+
 # printf placeholders (%s, %d, %1$s, %02d, …) and HTML tags.
 _TOKEN_RE = re.compile(r"%[0-9]*\$?[0-9]*[sd]|<[^>]+>")
 
@@ -103,10 +143,41 @@ def _translate_trans(text, target):
     return ""
 
 
+def _translate_azure(text, target):
+    """Azure OpenAI (Foundry) chat-completions translation; '' on failure."""
+    system = _AZURE_SYSTEM.format(language=_LANG_NAMES.get(target, target))
+    body = json.dumps(
+        {
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": text},
+            ],
+            "temperature": 0,
+            "max_tokens": 512,
+        }
+    ).encode()
+    url = (
+        f"{_AZURE_ENDPOINT}/openai/deployments/{_AZURE_DEPLOYMENT}"
+        f"/chat/completions?api-version={_AZURE_API_VERSION}"
+    )
+    headers = {"Content-Type": "application/json", "api-key": _AZURE_KEY}
+    for _ in range(3):
+        try:
+            req = urllib.request.Request(url, data=body, headers=headers)
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                payload = json.load(resp)
+            return payload["choices"][0]["message"]["content"].strip()
+        except Exception:  # noqa: BLE001 - best-effort
+            time.sleep(2)
+    return ""
+
+
 def translate(text, target):
     """Translate `text` into `target` with the configured engine; '' on failure."""
     if not text.strip():
         return ""
+    if _AZURE_ENABLED:
+        return _translate_azure(text, target)
     if _GOOGLE_KEY:
         return _translate_google(text, target)
     return _translate_trans(text, target)
@@ -142,7 +213,12 @@ def fill_entry(entry, target):
 
 
 def main():
-    engine = "Google Cloud Translation" if _GOOGLE_KEY else "translate-shell (keyless)"
+    if _AZURE_ENABLED:
+        engine = f"Azure OpenAI ({_AZURE_DEPLOYMENT})"
+    elif _GOOGLE_KEY:
+        engine = "Google Cloud Translation"
+    else:
+        engine = "translate-shell (keyless)"
     print(f"Machine-translation engine: {engine}")
 
     # Preflight: fail fast (seconds) if the engine can't translate at all —
@@ -150,14 +226,20 @@ def main():
     # not linked — rather than grinding through retries for hours.
     probe = translate("Document", "es")
     if not probe:
-        sys.exit(
-            "Machine-translation engine is not responding to a test request.\n"
-            + (
+        if _AZURE_ENABLED:
+            hint = (
+                "Check AZURE_OPENAI_ENDPOINT / AZURE_OPENAI_API_KEY / "
+                "AZURE_OPENAI_DEPLOYMENT and that the deployment is provisioned."
+            )
+        elif _GOOGLE_KEY:
+            hint = (
                 "Check GOOGLE_TRANSLATE_API_KEY, that the Cloud Translation API is "
                 "enabled, and that billing is linked to the project."
-                if _GOOGLE_KEY
-                else "The keyless translate-shell endpoint appears blocked/rate-limited."
             )
+        else:
+            hint = "The keyless translate-shell endpoint appears blocked/rate-limited."
+        sys.exit(
+            "Machine-translation engine is not responding to a test request.\n" + hint
         )
     print(f"Preflight OK (Document -> es: {probe!r}).")
 
@@ -167,6 +249,8 @@ def main():
         if not locale:
             continue
         target = target_code(locale)
+        if target == "en":
+            continue  # source locale: en->en would overwrite msgids with paraphrases
         po = polib.pofile(path)
         filled = 0
         for entry in po:
@@ -174,7 +258,7 @@ def main():
                 continue
             if fill_entry(entry, target):
                 filled += 1
-            if not _GOOGLE_KEY:
+            if not (_GOOGLE_KEY or _AZURE_ENABLED):
                 time.sleep(0.3)  # be gentle on the keyless public endpoint
         if filled:
             po.save(path)

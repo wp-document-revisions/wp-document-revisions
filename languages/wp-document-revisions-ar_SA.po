@@ -159,7 +159,7 @@ msgstr "قبل %1$s بواسطة %2$s"
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "منذ %1$s"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
@@ -980,7 +980,7 @@ msgid ""
 "revision history. To begin, enter a title for the document, optionally enter "
 "a description, and click <code>Upload New Version</code> and select the file "
 "from your computer."
-msgstr ""
+msgstr "تتيح هذه الشاشة للمستخدمين تحرير المستندات بشكل تعاوني وتتبع سجل المراجعات الخاص بها. للبدء، أدخل عنوان المستند، ويمكنك إدخال وصف اختياري، ثم انقر على <code>Upload New Version</code> واختر الملف من جهازك."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""
@@ -1028,7 +1028,7 @@ msgid ""
 "You can download and view previous versions of the document by clicking the "
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
-msgstr ""
+msgstr "يمكنك تنزيل وعرض الإصدارات السابقة من المستند بالنقر على الطابع الزمني في سجل المراجعات. يمكنك أيضًا استعادة المراجعات بالنقر على زر <code>استعادة</code> بجانب المراجعة."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
@@ -1036,7 +1036,7 @@ msgid ""
 "stage a document sits within a particular organization&quot;s workflow. The "
 "field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
-msgstr ""
+msgstr "يمكن استخدام حقل حالة سير العمل لمساعدة أعضاء الفريق على فهم المرحلة التي يوجد فيها المستند ضمن سير عمل المنظمة المحددة. هذا الحقل اختياري، ويمكن تخصيصه أو الاستعلام عنه بالنقر على <code>حالات سير العمل</code> في الجانب الأيسر."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1402,7 +1402,7 @@ msgstr "%1$s: %2$s قد تجاوز قفلك على %3$s"
 #: includes/trait-wp-document-revisions-revisions.php:415
 #, php-format
 msgid "Dear %s:"
-msgstr ""
+msgstr "عزيزي %s:"
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417

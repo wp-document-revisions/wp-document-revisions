@@ -907,9 +907,7 @@ msgstr ""
 msgid ""
 "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview document</a>"
-msgstr ""
-"Dokumentti %s ajoitettu <strong>%1$s</strong> varten. <a target=\"_blank\" "
-"href=\"%2$s\">Esikatselu</a>"
+msgstr "Dokumentti ajoitettu <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Esikatselu</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -966,9 +964,7 @@ msgstr "%s on estänyt muita käyttäjiä tekemästä muutoksia."
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-"<br>Mikäli uskot, että tämä on virheellinen dokumentti voit <a href=\"#\" "
-"id=\"override_link\">ohittaa lukon</a>mutta dokumentin muutokset menetetään."
+msgstr "<br />Mikäli uskot, että tämä on virheellinen dokumentti voit <a href=\"#\" id=\"override_link\">ohittaa lukon</a>, mutta dokumentin muutokset menetetään."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257

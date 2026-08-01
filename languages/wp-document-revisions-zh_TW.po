@@ -146,7 +146,7 @@ msgstr "抱歉，您無權查看此版本。"
 
 #: includes/class-wp-document-revisions-manage-rest.php:307
 msgid "<!-- protected -->"
-msgstr ""
+msgstr "<!-- protected -->"
 
 #. translators: %1$s is the time ago in words, %2$s is the author.
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
@@ -158,7 +158,7 @@ msgstr "%1$s 前由 %2$s 主持"
 #: includes/class-wp-document-revisions-recently-revised-widget.php:113
 #, php-format
 msgid "%1$s ago"
-msgstr ""
+msgstr "%1$s 前"
 
 #: includes/class-wp-document-revisions-recently-revised-widget.php:201
 msgid "Title:"
@@ -959,7 +959,7 @@ msgid ""
 "revision history. To begin, enter a title for the document, optionally enter "
 "a description, and click <code>Upload New Version</code> and select the file "
 "from your computer."
-msgstr ""
+msgstr "此畫面允許使用者協作編輯文件並追蹤其修訂歷史。開始時，請輸入文件標題，選擇性輸入描述，然後點擊 <code>Upload New Version</code> 並從您的電腦選擇檔案。"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:750
 msgid ""

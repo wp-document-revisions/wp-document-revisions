@@ -1079,7 +1079,7 @@ msgid ""
 "stage a document sits within a particular organization&quot;s workflow. The "
 "field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
-msgstr ""
+msgstr "O campo de estado do fluxo de trabalho pode ser usado para ajudar os membros da equipe a entender em que etapa um documento está dentro do fluxo de trabalho de uma determinada organização. O campo é opcional e pode ser personalizado ou consultado clicando em <code>Estados do Fluxo de Trabalho</code> no lado esquerdo."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1464,7 +1464,7 @@ msgstr "%1$s: %2$s anulou seu bloqueio em %3$s"
 #: includes/trait-wp-document-revisions-revisions.php:415
 #, php-format
 msgid "Dear %s:"
-msgstr ""
+msgstr "Prezado(a) %s:"
 
 #. translators: %1$s is the overriding user, %2$s is the user's email, %3$s is the document title, %4$s is the document URL.
 #: includes/trait-wp-document-revisions-revisions.php:417

@@ -1056,10 +1056,7 @@ msgid ""
 "You can download and view previous versions of the document by clicking the "
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
-msgstr ""
-"Zde si můžete stáhnout a zobrazit předchozí verze dokumentu kliknutím na "
-"časové razítko v záznamu verzí. Můžete také obnovit verze kliknutím na "
-"tlačítko <code>obnovit</ code> vedle verze."
+msgstr "Zde si můžete stáhnout a zobrazit předchozí verze dokumentu kliknutím na časové razítko v záznamu verzí. Můžete také obnovit verze kliknutím na tlačítko <code>obnovit</code> vedle verze."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
@@ -1067,10 +1064,7 @@ msgid ""
 "stage a document sits within a particular organization&quot;s workflow. The "
 "field is optional, and can be customized or queried by clicking "
 "<code>Workflow States</code> on the left-hand side."
-msgstr ""
-"Pole Stav ve workflow pomáhá členům týmu zorientovat se, v jakém stádiu se "
-"dokument nachází v rámci daného workflow. Pole je nepovinné a může být "
-"upraveno nebo rozkliknuto přes <code>Stavy workflow</ code> na levé straně."
+msgstr "Pole Stav ve workflow pomáhá členům týmu zorientovat se, v jakém stádiu se dokument nachází v rámci daného workflow. Pole je nepovinné a může být upraveno nebo rozkliknuto přes <code>Stavy workflow</code> na levé straně."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:760
 msgid "Publishing Documents"
@@ -1101,17 +1095,13 @@ msgstr ""
 msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
-msgstr ""
-"Chcete-li přidat nový dokument, klepněte na tlačítko <strong>Přidat "
-"dokument</ strong> na levé straně."
+msgstr "Chcete-li přidat nový dokument, klepněte na tlačítko <strong>Přidat dokument</strong> na levé straně."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""
 "To view all documents at a particular workflow state, click <strong>Workflow "
 "States</strong> in the menu on the left."
-msgstr ""
-"Chcete-li zobrazit všechny dokumenty v určitém stavu workflow, klepněte na "
-"tlačítko <strong>Stavy workflow</ strong> v menu na levé straně."
+msgstr "Chcete-li zobrazit všechny dokumenty v určitém stavu workflow, klepněte na tlačítko <strong>Stavy workflow</strong> v menu na levé straně."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963
