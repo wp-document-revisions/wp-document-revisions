@@ -872,7 +872,7 @@ msgstr "Dokumen dalam bentuk akhirnya"
 #: includes/trait-wp-document-revisions-admin-editor.php:48
 #, php-format
 msgid "Document updated. <a href=\"%s\">Download document</a>"
-msgstr "Dokumen diperbarui <a href=\" %s \">Mengunduh dokumen</a>"
+msgstr "Dokumen diperbarui. <a href=\"%s\">Mengunduh dokumen</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:49
 msgid "Custom field updated."
@@ -915,9 +915,7 @@ msgstr "Dokumen diserahkan <a target=\"_blank\" href=\"%s\">Unduh dokumen</a>"
 msgid ""
 "Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview document</a>"
-msgstr ""
-"Dokumen dijadwalkan untuk: <strong>%1$s</strong>. <a target=\"_blank\" "
-"href=\" %2$s\">Preview document</a>"
+msgstr "Dokumen dijadwalkan untuk: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview document</a>"
 
 #. translators: %1$s is the date, %2$s is the preview link.
 #: includes/trait-wp-document-revisions-admin-editor.php:62
@@ -932,8 +930,7 @@ msgstr "%1$s @ %2$s"
 msgid ""
 "Document draft updated. <a target=\"_blank\" href=\"%s\">Download document</"
 "a>"
-msgstr ""
-"Draf dokumen diperbarui <a target=\"_blank\"href=\"%s\">Unduh dokumen</a>"
+msgstr "Draf dokumen diperbarui. <a target=\"_blank\" href=\"%s\">Unduh dokumen</a>"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:112
 #: includes/trait-wp-document-revisions-admin-editor.php:979
@@ -973,9 +970,7 @@ msgstr "%s mencegah pengguna lain melakukan perubahan."
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-"<br/>Jika Anda yakin ini salah, Anda dapat <a href=\"#\" "
-"id=\"override_link\">mengganti kunci </a>, namun perubahannya akan hilang."
+msgstr "<br />Jika Anda yakin ini salah, Anda dapat <a href=\"#\" id=\"override_link\">mengganti kunci</a>, namun perubahannya akan hilang."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257

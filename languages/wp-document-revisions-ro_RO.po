@@ -1074,7 +1074,7 @@ msgid ""
 "You can download and view previous versions of the document by clicking the "
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
-msgstr ""
+msgstr "Poți descărca și vizualiza versiunile anterioare ale documentului făcând clic pe marcajul temporal din jurnalul de revizii. De asemenea, poți restaura reviziile făcând clic pe butonul <code>restore</code> de lângă revizie."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
@@ -1120,7 +1120,7 @@ msgstr ""
 msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
-msgstr ""
+msgstr "Pentru a adăuga un document nou, faceți clic pe <strong>Adaugă document</strong> în partea stângă."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""

@@ -930,7 +930,7 @@ msgstr "%s מנע ממשתמשים אחרים לבצע שינויים."
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
+msgstr "<br />אם אתה סבור שזו טעות, תוכל <a href=\"#\" id=\"override_link\">לעקוף את הנעילה</a>, אך השינויים שלהם יאבדו"
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -1481,7 +1481,7 @@ msgstr "הנעילה שלך על המסמך %s בוטלה. כל שינוי יא�
 #. translators: %d is the number of minutes.
 #: src/admin/wp-document-revisions.js:311
 msgid "%d mins"
-msgstr ""
+msgstr "%d דקות"
 
 #. translators: %d is the number of hours (singular).
 #: src/admin/wp-document-revisions.js:316
@@ -1491,12 +1491,12 @@ msgstr "שעה %d"
 #. translators: %d is the number of hours (plural).
 #: src/admin/wp-document-revisions.js:319
 msgid "%d hours"
-msgstr ""
+msgstr "%d שעות"
 
 #. translators: %d is the number of days (singular).
 #: src/admin/wp-document-revisions.js:324
 msgid "%d day"
-msgstr ""
+msgstr "%d יום"
 
 #. translators: %d is the number of days (plural).
 #: src/admin/wp-document-revisions.js:327

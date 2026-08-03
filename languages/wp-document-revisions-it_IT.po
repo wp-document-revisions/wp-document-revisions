@@ -1139,9 +1139,7 @@ msgstr ""
 msgid ""
 "To add a new document, click <strong>Add Document</strong> on the left-hand "
 "side."
-msgstr ""
-"Per aggiungere un nuovo documento, cliccare <strong>Aggiungi  Documento</ "
-"strong> sul lato sinistro."
+msgstr "Per aggiungere un nuovo documento, cliccare <strong>Aggiungi Documento</strong> sul lato sinistro."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:767
 msgid ""

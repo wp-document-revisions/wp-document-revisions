@@ -960,9 +960,7 @@ msgstr "%s har förhindrat andra användare från att kunna ändra i dokumentet.
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-"< br / > Ifall du tror att det har blivit fel kan du <a href=\"#\" "
-"id=\"override_link\"> låsa upp </a>, observera att ändringarna går förlorade."
+msgstr "<br />Ifall du tror att det har blivit fel kan du <a href=\"#\" id=\"override_link\">låsa upp</a>, observera att ändringarna går förlorade."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
@@ -1058,10 +1056,7 @@ msgid ""
 "You can download and view previous versions of the document by clicking the "
 "timestamp in the revision log. You can also restore revisions by clicking "
 "the <code>restore</code> button beside the revision."
-msgstr ""
-"Du kan ladda ner och se tidigare versioner av dokumentet genom att klicka på "
-"tidpunkten på samma rad som versionen. Du kan också återställa en tidigare "
-"version genom att klicka på knappen \"Återställ\" på samma rad som versionen."
+msgstr "Du kan ladda ner och se tidigare versioner av dokumentet genom att klicka på tidpunkten i versionsloggen. Du kan också återställa versioner genom att klicka på <code>restore</code>-knappen bredvid versionen."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:759
 msgid ""
@@ -1086,11 +1081,7 @@ msgid ""
 "toggling their visibility in the \"Publish\" box in the top right corner. "
 "Any document marked as published will be accessible to anyone with the "
 "proper URL."
-msgstr ""
-"Standardval för uppladdade dokument är bara nödvändigt för inloggade "
-"användare. Dokument kan publiceras, då visas de publikt genom att ändra "
-"synbarhet. <code>Obs! Alla dokument som publiseras kan vem som helst som har "
-"länken ladda ner!</code>"
+msgstr "Standardval för uppladdade dokument är bara nödvändigt för inloggade användare. Dokument kan publiceras, då visas de publikt genom att ändra synbarhet i \"Publicera\"-rutan i det övre högra hörnet. Alla dokument som är markerade som publicerade kommer att vara tillgängliga för alla med rätt URL."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:765
 msgid ""
@@ -1111,9 +1102,7 @@ msgstr ""
 msgid ""
 "To view all documents at a particular workflow state, click <strong>Workflow "
 "States</strong> in the menu on the left."
-msgstr ""
-"För att visa alla dokument i ett speciellt skede så kan du klicka på "
-"<strong>Status</status> i menyn till vänster."
+msgstr "För att visa alla dokument i ett speciellt skede så kan du klicka på <strong>Workflow States</strong> i menyn till vänster."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:955
 #: includes/trait-wp-document-revisions-admin-editor.php:963

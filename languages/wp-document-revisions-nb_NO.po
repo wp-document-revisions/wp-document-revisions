@@ -953,9 +953,7 @@ msgstr "%s har forhindret andre brukere til å redigere."
 msgid ""
 "<br />If you believe this is in error you can <a href=\"#\" "
 "id=\"override_link\">override the lock</a>, but their changes will be lost."
-msgstr ""
-"< br / > Hvis du tror dette er i feil kan du <a href=\"#\" "
-"id=\"override_link\"> overstyre låsen</a>, men endringer vil gå tapt."
+msgstr "<br /> Hvis du tror dette er i feil kan du <a href=\"#\" id=\"override_link\">overstyre låsen</a>, men endringer vil gå tapt."
 
 #: includes/trait-wp-document-revisions-admin-editor.php:196
 #: src/editor-document-upload/index.js:257
