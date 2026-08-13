@@ -3,9 +3,9 @@
 Contributors: benbalter, nwjames
 Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.4.0
+Stable tag: 5.4.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -293,6 +293,10 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.4.1 =
+
+* Confirm compatibility with WordPress 7.1 and bump the tested-up-to version. No functional changes — the classic-editor document workflow and the custom document upload and routing flow were verified against WordPress 7.1's iframed editor and client-side media processing.
+
 = 5.4.0 =
 
 * Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)
@@ -302,12 +306,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Expose the three read-only Abilities API abilities (`check-document-access`, `get-document-info`, `get-document-revisions`) to AI agents over the Model Context Protocol via the WordPress MCP Adapter — no bundled MCP server required. The mutating `override-document-lock` ability is intentionally excluded, keeping the agent-facing surface read-only, and every call continues to enforce per-document read permissions.
 
 = 5.3.0 =
-
-* The WordPress.org "Live Preview" now opens with sample documents that already carry revision history and workflow states, so the preview demonstrates version control and workflow at a glance instead of showing an empty list. (#632)
-* Add a first-run prompt on the Documents screen that points new users (and Live Preview visitors) to add their first document, replacing the blank empty-state table. (#632)
-* Occasionally invite established users to leave a WordPress.org review — shown only after real, successful use, dismissible, and never repeated once dismissed. (#632)
-* Documentation: block editor (Gutenberg) support is now described as supported and opt-in rather than experimental, and the readme leads with the plugin's full-text search and AI-generated revision summary capabilities. (#632)
-
-= 5.2.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
