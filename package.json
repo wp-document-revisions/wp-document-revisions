@@ -45,7 +45,7 @@
     "@wordpress/scripts": "^34.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "~29.7.0",
-    "terser": "^5.49.0",
+    "terser": "^5.49.2",
     "typescript": "^5.9.3"
   },
   "overrides": {
