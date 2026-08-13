@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.1
+
+* Confirm compatibility with WordPress 7.1 and bump the tested-up-to version. No functional changes — verified that the classic-editor document workflow and the custom document upload and routing flow continue to work on WordPress 7.1, whose editor-iframing and client-side media processing changes do not affect the plugin (documents use the classic editor, and document uploads are routed and hashed server-side).
+
 ### 5.4.0
 
 * Add an inline document preview: the new `[document_preview]` shortcode and matching **Document Preview** block embed a document's latest revision directly in a post or page (PDFs and images render inline; other file types offer a download link). The preview is served through the document's permalink, so it always shows the current revision and respects the document's existing access control. (#634)

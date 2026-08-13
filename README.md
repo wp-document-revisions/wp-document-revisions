@@ -32,7 +32,7 @@ WP Document Revisions transforms WordPress into a complete document management s
 
 - **WordPress:** 5.9 or higher
 - **PHP:** 8.0 or higher
-- **Tested up to:** WordPress 7.0
+- **Tested up to:** WordPress 7.1
 
 ## 🔧 Installation
 
