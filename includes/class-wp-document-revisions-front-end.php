@@ -1026,6 +1026,7 @@ class WP_Document_Revisions_Front_End {
 		// step with WPDR's model (published documents are public by default, others are gated)
 		// and honours any third-party auth filters. serve_file re-enforces this on the real
 		// file request regardless, so access control never depends on this callback alone.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		if ( ! apply_filters( 'serve_document_auth', true, get_post( $id ), false ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this document.', 'wp-document-revisions' ) . '</p>';
 		}
