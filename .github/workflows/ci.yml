@@ -179,7 +179,7 @@ jobs:
                       --exclude-from=.distignore ./ plugin-dist/
 
             - name: Run Plugin Check
-              uses: wordpress/plugin-check-action@v1.1.7
+              uses: wordpress/plugin-check-action@v1.1.9
               with:
                   build-dir: ./plugin-dist
                   # The plugin is assembled into ./plugin-dist, so pin the slug
