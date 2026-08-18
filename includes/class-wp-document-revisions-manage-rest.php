@@ -107,6 +107,15 @@ class WP_Document_Revisions_Manage_Rest {
 			if ( isset( $params['parent'] ) && current_user_can( 'edit_document', $params['parent'] ) ) {
 				return $response;
 			}
+			// route for query loop.
+			if ( '/wp/v2/documents' === $route && ! isset( $params['id'] ) && ! isset( $params['parent'] ) ) {
+				// check the user can read documents.
+				global $wp_post_types;
+				$read_cap = $wp_post_types['document']->cap->read;
+				if ( current_user_can( $read_cap ) ) {
+					return $response;
+				}
+			}
 			return new WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit documents.', 'wp-document-revisions' ),
