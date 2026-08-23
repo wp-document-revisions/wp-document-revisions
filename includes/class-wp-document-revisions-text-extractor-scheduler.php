@@ -177,7 +177,7 @@ class WP_Document_Revisions_Text_Extractor_Scheduler {
 		$timeout = (int) apply_filters( 'wpdr_text_extraction_timeout', self::DEFAULT_TIMEOUT, $attachment_id );
 		if ( $timeout > 0 ) {
 			// Advisory only; safe_mode / disable_functions can no-op this.
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky,Squiz.PHP.DiscouragedFunctions.Discouraged
 			@set_time_limit( $timeout );
 		}
 

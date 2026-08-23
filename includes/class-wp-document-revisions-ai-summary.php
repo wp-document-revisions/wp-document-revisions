@@ -273,7 +273,7 @@ class WP_Document_Revisions_AI_Summary {
 
 		$timeout = (int) apply_filters( 'wpdr_ai_summary_timeout', self::DEFAULT_TIMEOUT, $attachment_id );
 		if ( $timeout > 0 ) {
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky,Squiz.PHP.DiscouragedFunctions.Discouraged
 			@set_time_limit( $timeout );
 		}
 
