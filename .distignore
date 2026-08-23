@@ -29,12 +29,12 @@ composer.lock
 # `vendor-prefixed/` instead.
 crowdin.yml
 docker-compose.yml
+eslint.config.cjs
 Gruntfile.js
 jsconfig.json
 JS_TESTS_SUMMARY.md
 package.json
 package-lock.json
-phpunit.xml
 phpunit.xml.dist
 phpunit9.xml
 multisite.xml
