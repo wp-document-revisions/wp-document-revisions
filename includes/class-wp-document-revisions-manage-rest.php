@@ -92,7 +92,7 @@ class WP_Document_Revisions_Manage_Rest {
 		$post_type = get_post_type_object( 'document' );
 		$route     = $request->get_route();
 		$params    = $request->get_params();
-		$target    = 'wp/v2/' . $post_type->rest_base . '/';
+		$target    = '/' . $post_type->rest_namespace . '/' . $post_type->rest_base . '/';
 		if ( false === strpos( $route . '/', $target ) ) {
 			return $response;
 		}
@@ -107,8 +107,8 @@ class WP_Document_Revisions_Manage_Rest {
 			if ( isset( $params['parent'] ) && current_user_can( 'edit_document', $params['parent'] ) ) {
 				return $response;
 			}
-			// route for query loop.
-			if ( '/wp/v2/documents' === $route && ! isset( $params['id'] ) && ! isset( $params['parent'] ) ) {
+			// route for query loop. Make sure NOT an edit document/revision route.
+			if ( trailingslashit( $route ) === $target && ! isset( $params['id'] ) && ! isset( $params['parent'] ) ) {
 				// check the user can read documents.
 				global $wp_post_types;
 				$read_cap = $wp_post_types['document']->cap->read;
