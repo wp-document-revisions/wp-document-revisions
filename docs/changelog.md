@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.2
+
+* Fix the core Query Loop block failing to list documents. The block queries the REST API in `edit` context, which the plugin previously rejected as an unauthorized document edit, so no documents were returned. Users who can read documents can now query the document collection over REST, letting the Query Loop block display documents as expected. Document read permissions continue to be enforced. (#664)
+
 ### 5.4.1
 
 * Confirm compatibility with WordPress 7.1 and bump the tested-up-to version. No functional changes — verified that the classic-editor document workflow and the custom document upload and routing flow continue to work on WordPress 7.1, whose editor-iframing and client-side media processing changes do not affect the plugin (documents use the classic editor, and document uploads are routed and hashed server-side).
