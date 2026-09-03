@@ -24,16 +24,16 @@ jobs:
         env:
             TRAVIS_BUILD_DIR: ${{ github.workspace }}
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
               with:
                   php-version: '8.2'
                   extensions: mysqli
 
             - name: Cache Composer packages
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-8.2-${{ hashFiles('**/composer.lock') }}
@@ -64,10 +64,10 @@ jobs:
             contents: read
         name: Scoper pipeline smoke test
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
               with:
                   php-version: '8.2'
 
@@ -96,15 +96,15 @@ jobs:
             contents: read
         name: JavaScript Tests
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v7
+              uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
               with:
                   node-version: 22
 
             - name: Cache Node modules
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
@@ -132,7 +132,7 @@ jobs:
               run: npm test -- --ci --coverage --maxWorkers=2
 
             - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v7
+              uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
               with:
                   files: ./coverage/lcov.info
                   flags: javascript
@@ -157,10 +157,10 @@ jobs:
             pull-requests: write
         name: Plugin Check
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v7
+              uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
               with:
                   node-version: 22
 
@@ -179,7 +179,7 @@ jobs:
                       --exclude-from=.distignore ./ plugin-dist/
 
             - name: Run Plugin Check
-              uses: wordpress/plugin-check-action@v1.1.9
+              uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
               with:
                   build-dir: ./plugin-dist
                   # The plugin is assembled into ./plugin-dist, so pin the slug
@@ -216,10 +216,10 @@ jobs:
               run: sudo systemctl start mysql
 
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
               with:
                   php-version: ${{ matrix.php-versions }}
                   extensions: fileinfo, imagick, mysqli, xml, zip, zlib
@@ -229,7 +229,7 @@ jobs:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Cache Composer packages
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
@@ -240,7 +240,7 @@ jobs:
               run: composer install --optimize-autoloader --prefer-dist --no-progress
 
             - name: Cache WordPress test framework
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: |
                       /tmp/wordpress
@@ -261,7 +261,7 @@ jobs:
 
             - name: Upload coverage to Codecov
               if: matrix.coverage
-              uses: codecov/codecov-action@v7
+              uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
               with:
                   flags: php
                   name: php-coverage
@@ -300,10 +300,10 @@ jobs:
               run: sudo systemctl start mysql
 
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
               with:
                   php-version: ${{ matrix.php-versions }}
                   extensions: fileinfo, imagick, mysqli, xml, zip, zlib
@@ -313,7 +313,7 @@ jobs:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Cache Composer packages
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
@@ -324,7 +324,7 @@ jobs:
               run: composer install --optimize-autoloader --prefer-dist --no-progress
 
             - name: Cache WordPress test framework
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: |
                       /tmp/wordpress
@@ -351,15 +351,15 @@ jobs:
         name: E2E Tests
         steps:
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: Setup Node.js
-              uses: actions/setup-node@v7
+              uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
               with:
                   node-version: 22
 
             - name: Cache Node modules
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: node_modules
                   key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
@@ -381,7 +381,7 @@ jobs:
 
             - name: Cache Playwright browsers
               id: playwright-cache
-              uses: actions/cache@v6
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
               with:
                   path: ~/.cache/ms-playwright
                   key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
@@ -435,7 +435,7 @@ jobs:
 
             - name: Upload test artifacts
               if: failure()
-              uses: actions/upload-artifact@v7
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
               with:
                   name: e2e-results
                   path: |
