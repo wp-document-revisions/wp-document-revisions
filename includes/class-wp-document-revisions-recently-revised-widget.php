@@ -233,6 +233,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'new_tab' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'new_tab' ) ); ?>" <?php checked( $instance['new_tab'] ); ?> /> <?php esc_html_e( 'Yes', 'wp-document-revisions' ); ?>
 		</p>
 		<?php
+		return null;
 	}
 
 
