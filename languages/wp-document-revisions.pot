@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 5.4.1 5.4.1\n"
+"Project-Id-Version: WP Document Revisions 5.4.2 5.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-13T17:43:03+00:00\n"
+"POT-Creation-Date: 2026-09-03T19:51:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-document-revisions\n"
@@ -101,47 +101,47 @@ msgstr ""
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1030
+#: includes/class-wp-document-revisions-front-end.php:1031
 msgid "You are not authorized to read this document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1035
+#: includes/class-wp-document-revisions-front-end.php:1036
 msgid "This document has no file to preview."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1046
+#: includes/class-wp-document-revisions-front-end.php:1047
 msgid "Download document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1065
+#: includes/class-wp-document-revisions-front-end.php:1066
 msgid "This file type cannot be previewed inline."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:112
+#: includes/class-wp-document-revisions-manage-rest.php:121
 msgid "Sorry, you are not allowed to edit documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:123
+#: includes/class-wp-document-revisions-manage-rest.php:132
 msgid "Sorry, you are not allowed to view revisions."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:134
+#: includes/class-wp-document-revisions-manage-rest.php:143
 msgid "Sorry, you are not allowed to read documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:149
+#: includes/class-wp-document-revisions-manage-rest.php:158
 msgid "Sorry, invalid REST call"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:156
+#: includes/class-wp-document-revisions-manage-rest.php:165
 msgid "Sorry, you are only allowed to use GET method"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:260
+#: includes/class-wp-document-revisions-manage-rest.php:269
 msgid "Sorry, you are not allowed to view this revision."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:307
+#: includes/class-wp-document-revisions-manage-rest.php:316
 msgid "<!-- protected -->"
 msgstr ""
 
@@ -259,8 +259,8 @@ msgstr ""
 msgid "Open documents in new tab:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:374
-#: includes/class-wp-document-revisions-recently-revised-widget.php:377
+#: includes/class-wp-document-revisions-recently-revised-widget.php:375
+#: includes/class-wp-document-revisions-recently-revised-widget.php:378
 #: includes/trait-wp-document-revisions-admin-settings.php:273
 msgid "Recently Revised Documents"
 msgstr ""
