@@ -22,10 +22,10 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
             - name: WordPress.org plugin asset update
-              uses: 10up/action-wordpress-plugin-asset-update@stable
+              uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # stable
               env:
                   SLUG: wp-document-revisions
                   # We don't commit build artifacts (vendor/, build/) to git, so the
