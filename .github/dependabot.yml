@@ -17,6 +17,16 @@ updates:
       directory: '/'
       schedule:
           interval: 'weekly'
+      # React refuses to run when `react` and `react-dom` resolve to
+      # different versions, so a solo bump of either one red-lines the
+      # Jest suite until its twin lands. Keep them in one PR.
+      groups:
+          react:
+              patterns:
+                  - 'react'
+                  - 'react-dom'
+                  - '@types/react'
+                  - '@types/react-dom'
       # jest-environment-jsdom 30.x bundles a newer jsdom in which
       # `window.location` is non-configurable, breaking the test-suite
       # setup.js mock. Pin to the 29.x line until that compatibility work
