@@ -195,7 +195,10 @@ trait WP_Document_Revisions_Admin_Settings {
 		// Since all revisions are deleted with the document, all attachments will get deleted.
 		$attach = $this->get_document( $post_id );
 		if ( ! $attach ) {
-			// no attachment.
+			// no attachment. Still clear the deletion state so later deletions in this request are not treated as part of it.
+			if ( 'document' === $record->post_type ) {
+				self::$attachmts = null;
+			}
 			return;
 		}
 
