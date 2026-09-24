@@ -507,7 +507,12 @@ trait WP_Document_Revisions_Revisions {
 		if ( ! array_key_exists( $doc, self::$revns ) ) {
 			global $wpdr;
 			$all_revns           = $wpdr->get_revisions( $doc );
-			self::$revns[ $doc ] = array_slice( $all_revns, 0, $keep );
+			self::$revns[ $doc ] = array_map(
+				static function ( WP_Post $revision ): int {
+					return (int) $revision->ID;
+				},
+				array_slice( $all_revns, 0, $keep )
+			);
 		}
 
 		if ( in_array( $post->ID, self::$revns[ $doc ], true ) ) {
