@@ -120,7 +120,7 @@ class WPDocumentRevisions {
 								'&': '&amp;',
 								'"': '&quot;',
 							} )[ c ]
-				  )
+					)
 				: '';
 			const notice =
 				'<div id="wpdr-upload-error" class="error"><p>' +
