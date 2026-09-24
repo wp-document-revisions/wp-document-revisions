@@ -341,10 +341,10 @@ function DocumentUploadPanelContent() {
 					<span>
 						{ lockUser.name
 							? /* translators: %s is the name of the user who has the document locked */
-							  __(
+								__(
 									'%s is currently editing this document.',
 									'wp-document-revisions'
-							  ).replace( '%s', lockUser.name )
+								).replace( '%s', lockUser.name )
 							: __( 'This document is currently locked.', 'wp-document-revisions' ) }
 					</span>
 				</div>
