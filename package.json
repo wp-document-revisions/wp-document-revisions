@@ -51,7 +51,13 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "jest-mock": "^30"
+    "jest-mock": "^30",
+    "copy-webpack-plugin": {
+      "serialize-javascript": "^7.0.5"
+    },
+    "sockjs": {
+      "uuid": "^11.1.1"
+    }
   },
   "jest": {
     "testEnvironment": "jsdom",
