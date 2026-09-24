@@ -370,7 +370,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Прилог је пронађен за документ, али тренутно није повезан"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -491,7 +491,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "Ако ово недостаје или указује на непостојећи, онда документ не може бити "
@@ -692,7 +692,7 @@ msgstr "Активирали сте додатак WP Document Revisions"
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "Немате могућност edit_documents, вероватно због вишеструких конфликтних "
 "улога или коришћења прилагођене улоге!"

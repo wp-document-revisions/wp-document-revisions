@@ -368,7 +368,7 @@ msgid "Attachment found for document, but not currently linked"
 msgstr ""
 "ドキュメントに添付ファイルが見つかりましたが、現在リンクされていません。"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -490,7 +490,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "これが欠落しているか、存在しないものを指している場合、文書を表示することはで"
@@ -688,7 +688,7 @@ msgstr "WP Document Revisionsプラグインを有効化しました"
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "複数のロールが競合しているか、カスタムロールを使用しているため、"
 "edit_documents 権限がありません。"

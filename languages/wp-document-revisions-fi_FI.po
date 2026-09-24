@@ -372,7 +372,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "Dokumentille löytyi liite, mutta sitä ei ole tällä hetkellä linkitetty"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -495,7 +495,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "Jos tämä puuttuu tai viittaa olemattomaan, dokumenttia ei voi tarkastella."
@@ -693,7 +693,7 @@ msgstr "Olet aktivoinut WP Document Revisions -laajennuksen"
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "Sinulla ei ole edit_documents-ominaisuutta mahdollisesti useiden "
 "ristiriitaisten roolien tai mukautetun roolin käytön vuoksi!"
