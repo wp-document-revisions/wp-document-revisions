@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 5.4.1 5.4.1\n"
+"Project-Id-Version: WP Document Revisions 5.4.3 5.4.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-13T17:43:03+00:00\n"
+"POT-Creation-Date: 2026-09-24T21:15:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-document-revisions\n"
@@ -101,47 +101,47 @@ msgstr ""
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1030
+#: includes/class-wp-document-revisions-front-end.php:1031
 msgid "You are not authorized to read this document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1035
+#: includes/class-wp-document-revisions-front-end.php:1036
 msgid "This document has no file to preview."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1046
+#: includes/class-wp-document-revisions-front-end.php:1047
 msgid "Download document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1065
+#: includes/class-wp-document-revisions-front-end.php:1066
 msgid "This file type cannot be previewed inline."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:112
+#: includes/class-wp-document-revisions-manage-rest.php:121
 msgid "Sorry, you are not allowed to edit documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:123
+#: includes/class-wp-document-revisions-manage-rest.php:132
 msgid "Sorry, you are not allowed to view revisions."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:134
+#: includes/class-wp-document-revisions-manage-rest.php:143
 msgid "Sorry, you are not allowed to read documents."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:149
+#: includes/class-wp-document-revisions-manage-rest.php:158
 msgid "Sorry, invalid REST call"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:156
+#: includes/class-wp-document-revisions-manage-rest.php:165
 msgid "Sorry, you are only allowed to use GET method"
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:260
+#: includes/class-wp-document-revisions-manage-rest.php:269
 msgid "Sorry, you are not allowed to view this revision."
 msgstr ""
 
-#: includes/class-wp-document-revisions-manage-rest.php:307
+#: includes/class-wp-document-revisions-manage-rest.php:316
 msgid "<!-- protected -->"
 msgstr ""
 
@@ -259,9 +259,9 @@ msgstr ""
 msgid "Open documents in new tab:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:374
-#: includes/class-wp-document-revisions-recently-revised-widget.php:377
-#: includes/trait-wp-document-revisions-admin-settings.php:273
+#: includes/class-wp-document-revisions-recently-revised-widget.php:375
+#: includes/class-wp-document-revisions-recently-revised-widget.php:378
+#: includes/trait-wp-document-revisions-admin-settings.php:276
 msgid "Recently Revised Documents"
 msgstr ""
 
@@ -1087,12 +1087,12 @@ msgid "Document Settings"
 msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-settings.php:55
-#: includes/trait-wp-document-revisions-admin-settings.php:346
+#: includes/trait-wp-document-revisions-admin-settings.php:349
 msgid "Document Upload Directory"
 msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-settings.php:62
-#: includes/trait-wp-document-revisions-admin-settings.php:347
+#: includes/trait-wp-document-revisions-admin-settings.php:350
 msgid "Document Slug"
 msgstr ""
 
@@ -1117,102 +1117,102 @@ msgid "Generate New Key"
 msgstr ""
 
 #. translators: %1$s is the time ago in words, %2$s is the author, %3$s is the post status.
-#: includes/trait-wp-document-revisions-admin-settings.php:318
+#: includes/trait-wp-document-revisions-admin-settings.php:321
 #, php-format
 msgid "%1$s ago by %2$s [%3$s]"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:358
+#: includes/trait-wp-document-revisions-admin-settings.php:361
 msgid "Document Date in Permalink"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:390
+#: includes/trait-wp-document-revisions-admin-settings.php:393
 msgid "Document Notifications"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:435
+#: includes/trait-wp-document-revisions-admin-settings.php:438
 msgid "Email notifications when documents change."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:437
+#: includes/trait-wp-document-revisions-admin-settings.php:440
 msgid "Notify these email addresses (one per line or comma-separated):"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:439
+#: includes/trait-wp-document-revisions-admin-settings.php:442
 msgid "The document's author is always notified in addition to this list. Whoever made the change is never notified of their own change."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:444
+#: includes/trait-wp-document-revisions-admin-settings.php:447
 msgid "Notify when a document changes workflow state."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:447
+#: includes/trait-wp-document-revisions-admin-settings.php:450
 msgid "Notify when a new revision of a document is saved."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:481
+#: includes/trait-wp-document-revisions-admin-settings.php:484
 msgid "Document directory does not appear to exist. Please review value."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:483
+#: includes/trait-wp-document-revisions-admin-settings.php:486
 msgid "Document directory is not writable. Please check permissions."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:487
+#: includes/trait-wp-document-revisions-admin-settings.php:490
 msgid "Document upload directory changed, but existing uploads may need to be moved to the new folder to ensure they remain accessible."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:516
+#: includes/trait-wp-document-revisions-admin-settings.php:519
 msgid "Document slug changed, but some previously published URLs may now be broken."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:534
-#: includes/trait-wp-document-revisions-admin-settings.php:565
-#: includes/trait-wp-document-revisions-admin-settings.php:593
+#: includes/trait-wp-document-revisions-admin-settings.php:537
+#: includes/trait-wp-document-revisions-admin-settings.php:568
+#: includes/trait-wp-document-revisions-admin-settings.php:596
 #: includes/trait-wp-document-revisions-revisions.php:196
 #: includes/trait-wp-document-revisions-rewrites.php:341
 msgid "Not authorized"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:649
+#: includes/trait-wp-document-revisions-admin-settings.php:652
 msgid "Directory in which to store uploaded documents. The default is in your <code>wp-content/uploads</code> folder (or another default uploads folder defined elsewhere), but it may be moved to a folder outside of the <code>htdocs</code> or <code>public_html</code> folder for added security."
 msgstr ""
 
 #. translators: %site_id% is not interpolated and should not be translated.
-#: includes/trait-wp-document-revisions-admin-settings.php:657
+#: includes/trait-wp-document-revisions-admin-settings.php:660
 #, php-format
 msgid "You may optionally include the string <code>%site_id%</code> within the path to separate files by site."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:672
+#: includes/trait-wp-document-revisions-admin-settings.php:675
 msgid "example-document-title"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:676
+#: includes/trait-wp-document-revisions-admin-settings.php:679
 msgid "\"Slug\" with which to prefix all URLs for documents (and the document archive). Default is <code>documents</code>."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:690
+#: includes/trait-wp-document-revisions-admin-settings.php:693
 msgid "Remove the year and month element /yyyy/mm from the document permalink."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:692
+#: includes/trait-wp-document-revisions-admin-settings.php:695
 msgid "By default the document permalink will contain the post year and month."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:693
+#: includes/trait-wp-document-revisions-admin-settings.php:696
 msgid "The delivered rewrite rules support both formats."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:746
+#: includes/trait-wp-document-revisions-admin-settings.php:749
 msgid "Maximum number of document revisions set to zero using a filter. Check your configuration."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:759
+#: includes/trait-wp-document-revisions-admin-settings.php:762
 msgid "More revisions exist for this document than is permitted. Making changes will delete data."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-settings.php:768
+#: includes/trait-wp-document-revisions-admin-settings.php:771
 msgid "Maximum number of revisions reached for this document. Making changes will delete data."
 msgstr ""
 
