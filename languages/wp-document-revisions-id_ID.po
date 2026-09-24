@@ -374,7 +374,7 @@ msgid "Attachment found for document, but not currently linked"
 msgstr ""
 "Lampiran ditemukan untuk dokumen tersebut, tetapi saat ini belum terhubung."
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -498,7 +498,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "Jika ini hilang atau mengarah ke yang tidak ada, maka dokumen tersebut tidak "
@@ -702,7 +702,7 @@ msgstr "Anda telah mengaktifkan plugin WP Document Revisions."
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "Anda mungkin tidak memiliki kemampuan edit_dokumen karena adanya beberapa "
 "peran yang saling bertentangan atau penggunaan peran khusus!"

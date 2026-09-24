@@ -365,7 +365,7 @@ msgstr "تم تحميل المرفق مؤخراً للمستند، ولكنه غ
 msgid "Attachment found for document, but not currently linked"
 msgstr "تم العثور على مرفق للمستند، ولكنه غير مرتبط حاليًا"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -478,7 +478,7 @@ msgstr "يتم الاحتفاظ بمعرف أحدث مرفق (أي المستن�
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "إذا كان هذا العنصر مفقودًا أو يشير إلى عنصر غير موجود، فلا يمكن عرض المستند."
@@ -666,7 +666,7 @@ msgstr "لقد قمت بتفعيل إضافة WP Document Revisions"
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "قد لا تملك صلاحية تعديل المستندات بسبب وجود أدوار متعددة متضاربة أو استخدام "
 "دور مخصص!"

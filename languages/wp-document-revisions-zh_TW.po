@@ -362,7 +362,7 @@ msgstr "最近上傳了一個文件附件，但目前尚未連結到該文件。
 msgid "Attachment found for document, but not currently linked"
 msgstr "找到文件附件，但目前未連結。"
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -470,7 +470,7 @@ msgstr "最新附件（即目前文件）的識別碼保存在文章內容欄位
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr "如果此字段缺失或指向不存在的字段，則無法查看文件。"
 
@@ -651,7 +651,7 @@ msgstr "您已啟動 WP Document Revisions 外掛程式。"
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr "您沒有編輯文件的權限，可能是由於存在多個衝突的角色或使用了自訂角色！"
 
 #: includes/class-wp-document-revisions.php:642

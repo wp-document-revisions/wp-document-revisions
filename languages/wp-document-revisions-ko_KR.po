@@ -364,7 +364,7 @@ msgstr ""
 msgid "Attachment found for document, but not currently linked"
 msgstr "문서에 첨부 파일이 발견되었지만 현재 연결되어 있지 않습니다."
 
-#. translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+#. translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 #: includes/class-wp-document-revisions-validate-structure.php:789
 #: includes/class-wp-document-revisions-validate-structure.php:806
 #: includes/class-wp-document-revisions-validate-structure.php:987
@@ -482,7 +482,7 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-validate-structure.php:1194
 msgid ""
-"If this is missing or points to a non-existant one then the document cannot "
+"If this is missing or points to a non-existent one then the document cannot "
 "be viewed."
 msgstr ""
 "이 항목이 없거나 존재하지 않는 항목을 가리키는 경우 문서를 볼 수 없습니다."
@@ -673,7 +673,7 @@ msgstr "WP Document Revisions 플러그인을 활성화했습니다."
 #: includes/class-wp-document-revisions.php:640
 msgid ""
 "You do not have the edit_documents capability possibly due to multiple "
-"conficting roles or use of a custom role!"
+"conflicting roles or use of a custom role!"
 msgstr ""
 "여러 역할이 충돌하거나 사용자 지정 역할을 사용하고 있기 때문에 문서 편집 권한"
 "이 없을 수 있습니다!"

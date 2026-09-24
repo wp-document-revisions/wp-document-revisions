@@ -661,7 +661,7 @@ class WP_Document_Revisions {
 			<div class="notice notice-warning is-dismissible"><p>
 			<?php esc_html_e( 'You have activated the plugin WP Document Revisions', 'wp-document-revisions' ); ?>
 			</p><p>
-			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conficting roles or use of a custom role!', 'wp-document-revisions' ); ?>
+			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conflicting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
 			</p></div>

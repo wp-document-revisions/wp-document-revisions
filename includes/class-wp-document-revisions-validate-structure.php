@@ -785,7 +785,7 @@ class WP_Document_Revisions_Validate_Structure {
 				'msg'   => ( $meta_id === $attach_id ) ?
 					__( 'Attachment recently uploaded for document, but not currently linked to it', 'wp-document-revisions' ) :
 					__( 'Attachment found for document, but not currently linked', 'wp-document-revisions' ),
-				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+				// translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
@@ -802,7 +802,7 @@ class WP_Document_Revisions_Validate_Structure {
 					'code'  => 5,
 					'error' => 1,
 					'msg'   => __( 'Document links to invalid attachment. An attachment exists and can replace link', 'wp-document-revisions' ),
-					// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+					// translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 					'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 					'fix'   => 1,
 					'parm'  => $last,
@@ -983,7 +983,7 @@ class WP_Document_Revisions_Validate_Structure {
 				'code'  => 4,
 				'error' => 1,
 				'msg'   => __( 'Attachment recently uploaded for document, but not currently linked to it', 'wp-document-revisions' ),
-				// translators: %1$s is the document last modified date, %2$s is its attachment last modifified date.
+				// translators: %1$s is the document last modified date, %2$s is its attachment last modified date.
 				'msg2'  => sprintf( __( '[Modified Date: Document - %1$s, Attachment - %2$s]', 'wp-document-revisions' ), $post_date, $attach_date ),
 				'fix'   => 1,
 				'parm'  => $attach_id,
@@ -1191,7 +1191,7 @@ class WP_Document_Revisions_Validate_Structure {
 			__( 'Errors', 'wp-document-revisions' )   =>
 				'<p>' . __( 'These are issues that stop you displaying your document on the front end. Problems include:', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'The identifier of the latest attachment (i.e. the current document) is held in the post content field.', 'wp-document-revisions' ) . '<br/>' .
-				__( 'If this is missing or points to a non-existant one then the document cannot be viewed.', 'wp-document-revisions' ) . '<br/>' .
+				__( 'If this is missing or points to a non-existent one then the document cannot be viewed.', 'wp-document-revisions' ) . '<br/>' .
 				__( 'However if there are any attachments attached to the document then we can display the latest one.', 'wp-document-revisions' ) . '<br/>' .
 				__( 'This is done by updating the document record so that the content contains the attachment identifier.', 'wp-document-revisions' ) . '</p><p>' .
 				__( 'There is no attachment associated with the document.', 'wp-document-revisions' ) . '</p><p>' .
