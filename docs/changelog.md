@@ -2,6 +2,11 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.3
+
+* Fix revision-limit protection never taking effect. When a document revision limit is set, the plugin is meant to stop other plugins or code from deleting a document's newest revisions, but a type mismatch meant no revision was ever recognized as protected, so any revision could be deleted. The newest revisions within the limit are now kept as intended. (#712)
+* Fix spelling in two admin messages ("non-existent", "conflicting"). Bundled translations are updated to match. (#714)
+
 ### 5.4.2
 
 * Fix the core Query Loop block failing to list documents. The block queries the REST API in `edit` context, which the plugin previously rejected as an unauthorized document edit, so no documents were returned. Users who can read documents can now query the document collection over REST, letting the Query Loop block display documents as expected. Document read permissions continue to be enforced. (#664)
