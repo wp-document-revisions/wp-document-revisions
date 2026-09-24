@@ -96,4 +96,27 @@ class Test_WP_Document_Revisions_Zz_Revision_Keep_List extends WP_UnitTestCase {
 		$this->assertNull( $wpdr->possibly_delete_revision( null, $third, true ), 'Revision beyond the limit may be deleted' );
 		$this->assertNull( $wpdr->possibly_delete_revision( null, $oldest, true ), 'Oldest revision may be deleted' );
 	}
+
+	/**
+	 * Deleting a document with no attachment must not leave the deletion state set,
+	 * or every later revision deletion in the request would bypass the keep list.
+	 */
+	public function test_deleting_document_without_attachment_clears_deletion_state() {
+		global $wpdr;
+		$wpdr->admin_init( true );
+
+		$doc_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Document Without Attachment',
+				'post_type'   => 'document',
+				'post_status' => 'private',
+			)
+		);
+
+		$wpdr->admin->list_attachments_with_document( $doc_id );
+		$this->assertTrue( $wpdr->admin->is_deleting(), 'Deletion state should be set while deleting a document' );
+
+		$wpdr->admin->delete_attachments_with_document( $doc_id );
+		$this->assertFalse( $wpdr->admin->is_deleting(), 'Deletion state should be cleared after deleting a document' );
+	}
 }
