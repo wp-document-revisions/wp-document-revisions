@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Export the bundled languages/*.po files for import into translate.wordpress.org.
+#
+# Translations used to be managed on Crowdin and bundled in languages/. They
+# now live on translate.wordpress.org (GlotPress), which builds the language
+# packs WordPress installs automatically. This one-time helper seeds GlotPress
+# with the existing bundled translations:
+#
+#   1. Maps each Crowdin locale code to its WordPress locale (several Crowdin
+#      codes, e.g. ja_JP or uk_UA, are ones WordPress never loads) and to the
+#      GlotPress locale slug used in translate.wordpress.org URLs.
+#   2. Syncs each PO with the current POT and keeps only translated,
+#      non-fuzzy, non-obsolete entries.
+#   3. Writes i18n-glotpress/wp-document-revisions-<wp_locale>.po and prints
+#      the GlotPress import URL for each.
+#
+# Import each file as "waiting" (suggestions) so locale editors can review
+# them — most bundled strings are machine translations.
+#
+# Requires: gettext (`msgmerge`, `msgattrib`, `msgfmt`).
+
+set -euo pipefail
+
+POT=languages/wp-document-revisions.pot
+OUT=i18n-glotpress
+PROJECT_URL=https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/stable
+
+# Crowdin locale -> "<WordPress locale> <GlotPress slug>". Locales not listed
+# (en_US, and no_NO, which duplicates nb_NO) are skipped.
+locale_map() {
+	case "$1" in
+	af_ZA) echo "af af" ;;
+	ar_SA) echo "ar ar" ;;
+	ca_ES) echo "ca ca" ;;
+	cs_CZ) echo "cs_CZ cs" ;;
+	da_DK) echo "da_DK da" ;;
+	de_DE) echo "de_DE de" ;;
+	el_GR) echo "el el" ;;
+	es_ES) echo "es_ES es" ;;
+	fi_FI) echo "fi fi" ;;
+	fr_FR) echo "fr_FR fr" ;;
+	he_IL) echo "he_IL he" ;;
+	hu_HU) echo "hu_HU hu" ;;
+	id_ID) echo "id_ID id" ;;
+	it_IT) echo "it_IT it" ;;
+	ja_JP) echo "ja ja" ;;
+	ko_KR) echo "ko_KR ko" ;;
+	nb_NO) echo "nb_NO nb" ;;
+	nl_NL) echo "nl_NL nl" ;;
+	pl_PL) echo "pl_PL pl" ;;
+	pt_BR) echo "pt_BR pt-br" ;;
+	pt_PT) echo "pt_PT pt" ;;
+	ro_RO) echo "ro_RO ro" ;;
+	ru_RU) echo "ru_RU ru" ;;
+	sr_SP) echo "sr_RS sr" ;;
+	sv_SE) echo "sv_SE sv" ;;
+	tr_TR) echo "tr_TR tr" ;;
+	uk_UA) echo "uk uk" ;;
+	vi_VN) echo "vi vi" ;;
+	zh_CN) echo "zh_CN zh-cn" ;;
+	zh_TW) echo "zh_TW zh-tw" ;;
+	esac
+}
+
+rm -rf "$OUT"
+mkdir -p "$OUT"
+MERGED="$(mktemp)"
+trap 'rm -f "$MERGED"' EXIT
+
+printf '%-8s %-6s %s\n' LOCALE COUNT IMPORT_URL
+shopt -s nullglob
+for po in languages/wp-document-revisions-*.po; do
+	crowdin="${po#languages/wp-document-revisions-}"
+	crowdin="${crowdin%.po}"
+	mapping="$(locale_map "$crowdin")"
+	if [[ -z "$mapping" ]]; then
+		echo "skip     $crowdin" >&2
+		continue
+	fi
+	read -r wp_locale gp_slug <<<"$mapping"
+	dest="$OUT/wp-document-revisions-$wp_locale.po"
+
+	msgmerge --quiet --no-fuzzy-matching --no-wrap "$po" "$POT" -o "$MERGED"
+	msgattrib --translated --no-fuzzy --no-obsolete --no-wrap "$MERGED" -o "$dest"
+	sed -i.bak -E "s/^\"Language: .*\\\\n\"$/\"Language: $wp_locale\\\\n\"/" "$dest" && rm -f "$dest.bak"
+	msgfmt --check-format -o /dev/null "$dest"
+
+	count="$(msgattrib --translated --no-fuzzy "$dest" 2>/dev/null | grep -c '^msgid ' || true)"
+	printf '%-8s %-6s %s\n' "$wp_locale" "$((count - 1))" "$PROJECT_URL/$gp_slug/default/import-translations/"
+done

@@ -1,6 +1,6 @@
 # WP Document Revisions
 
-[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 A powerful document management and version control plugin for WordPress. Collaborate on files, track every revision, search inside document contents, and auto-generate change summaries with AI.
 
@@ -102,7 +102,7 @@ We welcome contributions! Here's how you can help:
 
 - **🐛 Report Issues** - [GitHub Issues](https://github.com/wp-document-revisions/wp-document-revisions/issues)
 - **💬 Get Support** - [WordPress.org Forums](https://wordpress.org/support/plugin/wp-document-revisions/)
-- **🌍 Translate** - [Crowdin Project](https://crowdin.com/project/wordpress-document-revisions)
+- **🌍 Translate** - [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/)
 - **💻 Code** - Fork and submit pull requests
 
 See our [Contributing Guide](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/) for detailed information.

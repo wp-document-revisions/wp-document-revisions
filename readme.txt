@@ -173,7 +173,7 @@ Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-r
 - **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
 - **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
 - **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
-- **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
+- **[Translations](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/)** (translate.wordpress.org)
 - **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
 - **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
 
@@ -252,7 +252,9 @@ Notifications are sent through WordPress's standard `wp_mail()`. On sites with h
 
 == Translations ==
 
-Interested in translating WP Document Revisions? You can do so [via Crowdin](https://crowdin.com/project/wordpress-document-revisions), or by submitting a pull request.
+Interested in translating WP Document Revisions? Translations are managed on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/), and WordPress automatically installs them as language packs. Anyone with a WordPress.org account can suggest translations; see the [Polyglots handbook](https://make.wordpress.org/polyglots/handbook/) to get started.
+
+Thanks to everyone who has contributed translations, including:
 
 - French - [Hubert CAMPAN](http://omnimaki.com/)
 - Spanish - [IBIDEM GROUP](https://www.ibidemgroup.com), [TradiArt](http://www.tradiart.com/), and [elarequi](http://www.labitacoradeltigre.com)

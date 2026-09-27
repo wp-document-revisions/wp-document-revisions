@@ -20,3 +20,6 @@ __pycache__/
 
 # Translation QA reports (local output of script/qa-translations.py)
 /i18n-qa/
+
+# GlotPress import files (local output of script/export-glotpress-po)
+/i18n-glotpress/

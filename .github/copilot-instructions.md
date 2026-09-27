@@ -63,7 +63,7 @@ For automated environment setup, the repository includes a GitHub Actions workfl
 - Build Gutenberg blocks: `npm run build:blocks` (compiles `src/blocks/` → `build/blocks/`)
 - Build admin JS: `npm run build:admin` (compiles `src/admin/` → `build/admin/`)
 - Build all: `npm run build`
-- Generate translation files: `script/generate-pot` (requires wp-pot-cli globally)
+- Generate the POT file: `script/generate-pot` (requires WP-CLI). Translations themselves are managed on translate.wordpress.org, not in this repo
 - The `build/` directory is gitignored; blocks must be built before E2E tests or distribution
 
 ## Validation
