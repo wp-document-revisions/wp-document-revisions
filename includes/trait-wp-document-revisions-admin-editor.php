@@ -487,7 +487,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( $thumb > 0 ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_parent` = 0 WHERE `id` = %d AND `post_parent` = %d ",
 				$thumb,
@@ -495,7 +495,6 @@ trait WP_Document_Revisions_Admin_Editor {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			wp_cache_delete( $thumb, 'posts' );
 			clean_post_cache( $thumb );
 		}
 
@@ -516,7 +515,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				update_post_meta( $doc_id, '_document_attachment_id', $latest_attach->ID );
 				global $wpdb;
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				$post_table = "{$wpdb->prefix}posts";
+				$post_table = "{$wpdb->posts}";
 				$wpdb->query(
 					$wpdb->prepare(
 						"UPDATE `$post_table` SET `post_content` = %s WHERE `ID` = %d",
@@ -525,7 +524,6 @@ trait WP_Document_Revisions_Admin_Editor {
 					)
 				);
 				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				wp_cache_delete( $doc_id, 'posts' );
 				clean_post_cache( $doc_id );
 				$attach_id = $latest_attach->ID;
 			}
@@ -546,7 +544,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( $new_guid !== $doc_post->guid ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `guid` = %s WHERE `id` = %d AND `post_parent` = 0 ",
 				$new_guid,
@@ -568,7 +566,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
 				self::$last_revn_excerpt,
@@ -578,8 +576,6 @@ trait WP_Document_Revisions_Admin_Editor {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
-			wp_cache_delete( self::$last_revn, 'posts' );
-			wp_cache_delete( $doc_id, 'posts' );
 			clean_post_cache( $doc_id );
 			clean_post_cache( self::$last_revn );
 		}

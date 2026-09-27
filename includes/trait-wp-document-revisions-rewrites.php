@@ -349,7 +349,7 @@ trait WP_Document_Revisions_Rewrites {
 
 		global $wpdb;
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		$post_table = "{$wpdb->prefix}posts";
+		$post_table = "{$wpdb->posts}";
 		$sql        = $wpdb->prepare(
 			"UPDATE `$post_table` SET `post_name` = %s, guid = %s WHERE `id` = %d ",
 			$slug,
