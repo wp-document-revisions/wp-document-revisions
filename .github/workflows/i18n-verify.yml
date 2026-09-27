@@ -1,24 +1,14 @@
 name: Verify JS i18n pipeline
 
-# Throwaway / on-demand verification for the classic-admin i18n migration
-# (strings moved from PHP-localized objects to @wordpress/i18n __()). It runs
+# On-demand check that `wp i18n make-pot` extracts the UI strings from the
+# JavaScript (strings moved from PHP-localized objects to @wordpress/i18n
+# __()), so they reach the POT that translate.wordpress.org imports. It runs
 # where PHP + WP-CLI exist, since that tooling isn't available on every dev
-# host. Two things are checked:
+# host.
 #
-#   1. HARD ASSERT — `wp i18n make-pot` actually extracts the migrated UI
-#      strings from the built/source JavaScript. This is the foundational part
-#      of the migration and the piece that was previously broken (the old
-#      wp-pot scanned only includes/**.php). If this fails, translations are
-#      definitely broken.
-#
-#   2. DIAGNOSTIC — generate the fr_FR script-translation JSON and print its
-#      filename hash alongside md5() of the src/ and build/ script paths. The
-#      runtime (wp_set_script_translations) looks up the JSON by a hash of the
-#      *enqueued* (build/) path, while make-json hashes the .pot reference
-#      (src/). Whether these line up in production depends on how
-#      translate.wordpress.org builds the language pack from the deployed
-#      (build/-only) plugin, which can't be reproduced here — so this step is
-#      informational, not a gate.
+# Script-translation JSON is no longer built here: translate.wordpress.org
+# language packs ship it, hashed on the deployed build/ paths that
+# wp_set_script_translations() looks up.
 
 # Run on demand from the Actions tab (Run workflow). Kept dispatch-only until
 # it's confirmed green once; then a `pull_request:` trigger on src/**/*.js +
@@ -93,30 +83,3 @@ jobs:
                     exit 1
                   fi
                   echo "OK: migrated strings are extracted from the admin scripts."
-
-            - name: Install gettext (msgmerge)
-              run: sudo apt-get update && sudo apt-get install -y gettext
-
-            # Run the exact deploy-time step and confirm it emits JSON hashed on
-            # the ENQUEUED build/ path (what wp_set_script_translations loads),
-            # not the src/ path make-pot references.
-            - name: Build script-translation JSON (deploy-time step)
-              run: script/build-script-translations
-
-            - name: Assert build/-path-hashed JSON is produced for fr_FR
-              run: |
-                  set -euo pipefail
-                  build_hash=$( printf '%s' 'build/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1 )
-                  src_hash=$( printf '%s' 'src/admin/wp-document-revisions.js' | md5sum | cut -d' ' -f1 )
-                  want="languages/wp-document-revisions-fr_FR-${build_hash}.json"
-                  echo "build/ hash = $build_hash (this is what the runtime loads)"
-                  echo "src/   hash = $src_hash (what make-pot references, pre-rewrite)"
-                  echo "--- generated fr_FR JSON ---"
-                  ls -1 languages/*fr_FR*.json 2>/dev/null || echo "(none)"
-                  if [ ! -f "$want" ]; then
-                    echo "::error::Expected build/-hashed JSON not found: $want"
-                    echo "::error::Script translations would not load at runtime."
-                    exit 1
-                  fi
-                  echo "OK: build/-path-hashed script-translation JSON produced ($want)."
-                  echo "Sample:"; head -c 300 "$want"; echo
