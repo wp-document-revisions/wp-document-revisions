@@ -222,7 +222,7 @@ trait WP_Document_Revisions_File_Handler {
 		$headers['Content-Disposition'] = $disposition . '; filename="' . $filename . '"';
 
 		// get the mime type.
-		$mimetype = $this->get_doc_mimetype( $file );
+		$mimetype = $this->get_doc_mimetype( $file, $attach->ID );
 
 		// Set the Content-Type header if a mimetype has been detected or provided.
 		if ( is_string( $mimetype ) ) {
@@ -865,10 +865,15 @@ trait WP_Document_Revisions_File_Handler {
 	/**
 	 * Find the mimetype.
 	 *
-	 * @param string $file  file name..
-	 * @return string
+	 * Resolution order: the `document_revisions_mimetype` filter, the attachment's
+	 * stored MIME type (when an attachment ID is given), the file extension, content
+	 * sniffing, and finally `application/octet-stream`.
+	 *
+	 * @param string $file      file name.
+	 * @param int    $attach_id optional attachment ID whose stored MIME type is preferred.
+	 * @return string|false
 	 */
-	public function get_doc_mimetype( string $file ) {
+	public function get_doc_mimetype( string $file, int $attach_id = 0 ) {
 		/**
 		 * Filters the MIME type for a file before it is processed by WP Document Revisions.
 		 *
@@ -876,22 +881,26 @@ trait WP_Document_Revisions_File_Handler {
 		 *
 		 * If filtered to a string, that value will be set for the `Content-Type` header.
 		 *
-		 * @param null|bool|string $mimetype The MIME type for a given file.
-		 * @param string           $file     The file being served.
+		 * @param null|bool|string $mimetype  The MIME type for a given file.
+		 * @param string           $file      The file being served.
+		 * @param int              $attach_id The attachment ID, or 0 if not known.
 		 */
-		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file );
+		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file, $attach_id );
 
 		if ( is_null( $mimetype ) ) {
-			// inspired by wp-includes/ms-files.php.
-			$mime = wp_check_filetype( $file );
-			if ( false === $mime['type'] && function_exists( 'mime_content_type' ) ) {
-				$mime['type'] = mime_content_type( $file );
+			$mimetype = $attach_id ? get_post_mime_type( $attach_id ) : false;
+
+			if ( ! $mimetype ) {
+				$mime     = wp_check_filetype( $file );
+				$mimetype = $mime['type'];
 			}
 
-			if ( $mime['type'] ) {
-				$mimetype = $mime['type'];
-			} else {
-				$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
+			if ( ! $mimetype && function_exists( 'mime_content_type' ) && is_readable( $file ) ) {
+				$mimetype = mime_content_type( $file );
+			}
+
+			if ( ! $mimetype ) {
+				$mimetype = 'application/octet-stream';
 			}
 		}
 		return $mimetype;

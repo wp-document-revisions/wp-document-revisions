@@ -116,7 +116,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			if ( $instance['show_pdf'] ) {
 				// find mimetype.
 				$doc_attach = $wpdr->get_document( $document->ID );
-				$mimetype   = $wpdr->get_doc_mimetype( get_attached_file( $doc_attach->ID ) );
+				$mimetype   = $wpdr->get_doc_mimetype( get_attached_file( $doc_attach->ID ), $doc_attach->ID );
 				if ( 'application/pdf' === strtolower( $mimetype ) ) {
 					$pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
 				}

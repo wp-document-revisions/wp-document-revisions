@@ -161,7 +161,7 @@ class WP_Document_Revisions_Front_End {
 			$attach = $wpdr->get_document( $id );
 			$file   = get_attached_file( $attach->ID );
 			if ( $file ) {
-				$mimetype      = $wpdr->get_doc_mimetype( $file );
+				$mimetype      = $wpdr->get_doc_mimetype( $file, $attach->ID );
 				$atts_show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
 			}
 		}
@@ -424,7 +424,7 @@ class WP_Document_Revisions_Front_End {
 				$attach = $wpdr->get_document( $document->ID );
 				$file   = get_attached_file( $attach->ID );
 				if ( $file ) {
-					$mimetype = $wpdr->get_doc_mimetype( $file );
+					$mimetype = $wpdr->get_doc_mimetype( $file, $attach->ID );
 					$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
 				} else {
 					// cant find attached file.

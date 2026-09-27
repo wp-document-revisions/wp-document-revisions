@@ -311,4 +311,34 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 		$result = $wpdr->verify_post_type( $page );
 		self::assertFalse( $result, 'verify_post_type should return false for page post type' );
 	}
+
+	/**
+	 * Test get_doc_mimetype resolution order.
+	 */
+	public function test_get_doc_mimetype_resolution() {
+		global $wpdr;
+
+		// Known extension resolves from the file name.
+		self::assertSame( 'application/pdf', $wpdr->get_doc_mimetype( '/no/such/file.pdf' ) );
+
+		// Unknown extension and unreadable file falls back to a generic binary type, not image/<ext>.
+		self::assertSame( 'application/octet-stream', $wpdr->get_doc_mimetype( '/no/such/file.wpdrunknown' ) );
+
+		// The attachment's stored MIME type is preferred when an ID is given.
+		$attach_id = self::factory()->post->create(
+			array(
+				'post_type'      => 'attachment',
+				'post_mime_type' => 'application/vnd.oasis.opendocument.text',
+			)
+		);
+		self::assertSame( 'application/vnd.oasis.opendocument.text', $wpdr->get_doc_mimetype( '/no/such/file.pdf', $attach_id ) );
+
+		// The filter still short-circuits everything.
+		$filter = static function () {
+			return 'text/x-filtered';
+		};
+		add_filter( 'document_revisions_mimetype', $filter );
+		self::assertSame( 'text/x-filtered', $wpdr->get_doc_mimetype( '/no/such/file.pdf', $attach_id ) );
+		remove_filter( 'document_revisions_mimetype', $filter );
+	}
 }
