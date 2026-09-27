@@ -62,7 +62,7 @@ A chronological list of all documents a user has access to can be seen at yourdo
 
 ### Can WP Document Revisions work in my language?
 
-Yes! So far WP Document Revisions has been translated to French and Spanish, and is designed to by fully internationalized. If you enjoy the plugin and are interested in contributing a translation (it's super easy), please take a look at the [Translating WordPress](http://codex.wordpress.org/Translating_WordPress) page and the plugin's [translations repository](http://translations.benbalter.com/projects/wp-document-revisions/). If you do translate the plugin, please be sure to [contact the plugin author](http://ben.balter.com/contact/) so that it can be included in future releases for other to use.
+Yes! WP Document Revisions is fully internationalized, and WordPress installs its translations automatically as language packs. Translations are contributed by volunteers on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/). If your language isn't complete yet, you can help: see [Translations](./translations.md) for how to review and suggest translations. It only takes a WordPress.org account.
 
 ### Will in work with WordPress MultiSite
 

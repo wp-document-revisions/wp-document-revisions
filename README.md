@@ -102,7 +102,7 @@ We welcome contributions! Here's how you can help:
 
 - **🐛 Report Issues** - [GitHub Issues](https://github.com/wp-document-revisions/wp-document-revisions/issues)
 - **💬 Get Support** - [WordPress.org Forums](https://wordpress.org/support/plugin/wp-document-revisions/)
-- **🌍 Translate** - [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/)
+- **🌍 Translate** - Review or suggest translations in your language on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/). No coding required ([how to help](https://wp-document-revisions.github.io/wp-document-revisions/translations/))
 - **💻 Code** - Fork and submit pull requests
 
 See our [Contributing Guide](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/) for detailed information.

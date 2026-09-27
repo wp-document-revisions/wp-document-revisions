@@ -38,7 +38,7 @@ Feature requests are welcome. But take a moment to find out whether your idea fi
 
 - **Everyone** - Jump in and answer questions in [the support forums](http://wordpress.org/support/plugin/wp-document-revisions), or help expand the projects [documentation](https://github.com/wp-document-revisions/wp-document-revisions/tree/master/docs) to make it easier for other users to get started
 - **Users** - download the latest [development version](https://github.com/wp-document-revisions/wp-document-revisions/) of the plugin, and [submit bug/feature requests](https://github.com/wp-document-revisions/wp-document-revisions/issues).
-- **Non-English Speaking Users** - [Contribute a translation](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) on translate.wordpress.org - no technical knowledge required.
+- **Non-English Speaking Users** - [Review or contribute translations](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) on translate.wordpress.org. No technical knowledge is required, and thirty languages have suggestions waiting for a fluent reviewer. See [Translations](./translations.md) for how to get started.
 - **Developers** - [Fork the development version](https://github.com/wp-document-revisions/wp-document-revisions/) and submit a pull request, especially for any [known issues](https://github.com/wp-document-revisions/wp-document-revisions/issues?direction=desc&sort=created&state=open)
 
 ## Your first contribution
