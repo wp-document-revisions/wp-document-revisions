@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Export the bundled languages/*.po files for import into translate.wordpress.org.
+#
+# Translations used to be managed on Crowdin and bundled in languages/. They
+# now live on translate.wordpress.org (GlotPress), which builds the language
+# packs WordPress installs automatically. This one-time helper seeds GlotPress
+# with the existing bundled translations:
+#
+#   1. Maps each Crowdin locale code to its WordPress locale (several Crowdin
+#      codes, e.g. ja_JP or uk_UA, are ones WordPress never loads) and to the
+#      GlotPress locale slug used in translate.wordpress.org URLs.
+#   2. Syncs each PO with the current POT and keeps only translated,
+#      non-fuzzy, non-obsolete entries.
+#   3. Splits each locale by provenance, comparing against the PO as it stood
+#      before the first machine-translation pass ($PRE_MT_REV):
+#        i18n-glotpress/crowdin/  strings unchanged since the Crowdin era
+#                                 (contributed via Crowdin, likely human)
+#        i18n-glotpress/machine/  strings added or changed by the Google/Azure
+#                                 machine-translation passes
+#      and prints the GlotPress import URL for each locale.
+#
+# Import the crowdin/ files first, then the machine/ files as "waiting"
+# (suggestions) so locale editors can review them.
+#
+# Requires: git and gettext (`msgmerge`, `msgattrib`, `msgcat`, `msgfmt`).
+
+set -euo pipefail
+
+POT=languages/wp-document-revisions.pot
+OUT=i18n-glotpress
+# Parent of the first "Machine-translate missing strings" commit: the last
+# state of languages/ synced from Crowdin.
+PRE_MT_REV=6bc4b1f^
+PROJECT_URL=https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/stable
+
+# Crowdin locale -> "<WordPress locale> <GlotPress slug>". Locales not listed
+# (en_US, and no_NO, which duplicates nb_NO) are skipped.
+locale_map() {
+	case "$1" in
+	af_ZA) echo "af af" ;;
+	ar_SA) echo "ar ar" ;;
+	ca_ES) echo "ca ca" ;;
+	cs_CZ) echo "cs_CZ cs" ;;
+	da_DK) echo "da_DK da" ;;
+	de_DE) echo "de_DE de" ;;
+	el_GR) echo "el el" ;;
+	es_ES) echo "es_ES es" ;;
+	fi_FI) echo "fi fi" ;;
+	fr_FR) echo "fr_FR fr" ;;
+	he_IL) echo "he_IL he" ;;
+	hu_HU) echo "hu_HU hu" ;;
+	id_ID) echo "id_ID id" ;;
+	it_IT) echo "it_IT it" ;;
+	ja_JP) echo "ja ja" ;;
+	ko_KR) echo "ko_KR ko" ;;
+	nb_NO) echo "nb_NO nb" ;;
+	nl_NL) echo "nl_NL nl" ;;
+	pl_PL) echo "pl_PL pl" ;;
+	pt_BR) echo "pt_BR pt-br" ;;
+	pt_PT) echo "pt_PT pt" ;;
+	ro_RO) echo "ro_RO ro" ;;
+	ru_RU) echo "ru_RU ru" ;;
+	sr_SP) echo "sr_RS sr" ;;
+	sv_SE) echo "sv_SE sv" ;;
+	tr_TR) echo "tr_TR tr" ;;
+	uk_UA) echo "uk uk" ;;
+	vi_VN) echo "vi vi" ;;
+	zh_CN) echo "zh_CN zh-cn" ;;
+	zh_TW) echo "zh_TW zh-tw" ;;
+	esac
+}
+
+count() {
+	local n
+	n="$(grep -c '^msgid ' "$1" || true)"
+	echo $((n - 1)) # minus the header entry
+}
+
+rm -rf "$OUT"
+mkdir -p "$OUT/crowdin" "$OUT/machine"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+printf '%-8s %-8s %-8s %s\n' LOCALE CROWDIN MACHINE IMPORT_URL
+shopt -s nullglob
+for po in languages/wp-document-revisions-*.po; do
+	crowdin="${po#languages/wp-document-revisions-}"
+	crowdin="${crowdin%.po}"
+	mapping="$(locale_map "$crowdin")"
+	if [[ -z "$mapping" ]]; then
+		echo "skip     $crowdin" >&2
+		continue
+	fi
+	read -r wp_locale gp_slug <<<"$mapping"
+	all="$TMP/all.po"
+	crowdin_po="$OUT/crowdin/wp-document-revisions-$wp_locale.po"
+	machine_po="$OUT/machine/wp-document-revisions-$wp_locale.po"
+
+	# Current translations, synced with the POT.
+	msgmerge --quiet --no-fuzzy-matching --no-wrap "$po" "$POT" -o "$TMP/merged.po"
+	msgattrib --translated --no-fuzzy --no-obsolete --no-wrap "$TMP/merged.po" -o "$all"
+	sed -i.bak -E "s/^\"Language: .*\\\\n\"$/\"Language: $wp_locale\\\\n\"/" "$all" && rm -f "$all.bak"
+
+	# Crowdin-era translations, synced the same way. msgcat marks entries
+	# whose msgstr differs between the two files as fuzzy, so what survives
+	# --no-fuzzy is the set of strings unchanged since the Crowdin era.
+	# (Locales with none — or not in Crowdin at all — get an empty set.)
+	msgattrib --set-obsolete --no-wrap "$all" | msgattrib --no-obsolete --force-po --no-wrap -o "$TMP/unchanged.po"
+	if git show "$PRE_MT_REV:$po" >"$TMP/pre.po" 2>/dev/null; then
+		msgmerge --quiet --no-fuzzy-matching --no-wrap "$TMP/pre.po" "$POT" -o "$TMP/pre-merged.po"
+		msgattrib --translated --no-fuzzy --no-obsolete --force-po --no-wrap "$TMP/pre-merged.po" -o "$TMP/pre-translated.po"
+		msgcat --more-than=1 --force-po --no-wrap "$all" "$TMP/pre-translated.po" -o "$TMP/common.po" 2>/dev/null
+		if [[ -s "$TMP/common.po" ]]; then
+			msgattrib --no-fuzzy --force-po --no-wrap "$TMP/common.po" -o "$TMP/unchanged.po"
+		fi
+		rm -f "$TMP/common.po"
+	fi
+
+	# Split the current file by that set, keeping its clean header.
+	msgattrib --set-obsolete --ignore-file="$TMP/unchanged.po" --no-wrap "$all" |
+		msgattrib --no-obsolete --force-po --no-wrap -o "$crowdin_po"
+	msgattrib --set-obsolete --only-file="$TMP/unchanged.po" --no-wrap "$all" |
+		msgattrib --no-obsolete --force-po --no-wrap -o "$machine_po"
+
+	crowdin_count="$(count "$crowdin_po")"
+	machine_count="$(count "$machine_po")"
+	[[ "$crowdin_count" -gt 0 ]] || rm -f "$crowdin_po"
+	[[ "$machine_count" -gt 0 ]] || rm -f "$machine_po"
+	for f in "$crowdin_po" "$machine_po"; do
+		[[ ! -f "$f" ]] || msgfmt --check-format -o /dev/null "$f"
+	done
+
+	printf '%-8s %-8s %-8s %s\n' "$wp_locale" "$crowdin_count" "$machine_count" "$PROJECT_URL/$gp_slug/default/import-translations/"
+done

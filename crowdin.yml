@@ -1,3 +1,0 @@
-files:
-    - source: /languages/wp-document-revisions.pot
-      translation: /languages/wp-document-revisions-%locale_with_underscore%.po
