@@ -31,7 +31,7 @@
 - Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 - Documents and Revisions shortcodes, Recently Revised Documents widget
 - Multisite and Windows (XAMPP) support
-- Multiple language support including French, Spanish and German (easily translated to your language)
+- Fully translatable, with community translations delivered as WordPress.org language packs ([help translate](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/))
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 - Opt-in [Block Editor (Gutenberg) support](block-editor.md) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
