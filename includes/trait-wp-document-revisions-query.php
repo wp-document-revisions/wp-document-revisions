@@ -18,6 +18,9 @@ trait WP_Document_Revisions_Query {
 	/**
 	 * Returns the.document attachment associated with a post.
 	 *
+	 * The attachment id comes from (forgeable) post_content, so the attachment is only
+	 * returned if it is parented to the document that owns the post.
+	 *
 	 * @param int $post_id ID of a post object (document or revision).
 	 * @return WP_Post|false
 	 */
@@ -27,7 +30,12 @@ trait WP_Document_Revisions_Query {
 		if ( $attach_id ) {
 			$attach = get_post( $attach_id );
 			if ( (bool) $attach && 'attachment' === $attach->post_type ) {
-				return $attach;
+				// For a revision (or autosave) the owning document is its parent.
+				$post   = get_post( $post_id );
+				$doc_id = ( $post && 'revision' === $post->post_type ) ? $post->post_parent : ( $post ? $post->ID : 0 );
+				if ( $doc_id && (int) $attach->post_parent === (int) $doc_id ) {
+					return $attach;
+				}
 			}
 		}
 		// not a valid attachment.

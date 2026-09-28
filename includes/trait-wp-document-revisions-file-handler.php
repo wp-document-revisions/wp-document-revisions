@@ -885,13 +885,14 @@ trait WP_Document_Revisions_File_Handler {
 
 		$latest = $this->get_latest_revision( $id );
 
-		if ( ! $latest ) {
+		$attach = $latest ? $this->get_document( $latest->ID ) : false;
+		if ( ! $attach ) {
 			return false;
 		}
 
 		// temporarily remove our filter to get the true URL, not the permalink.
 		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$url = wp_get_attachment_url( $this->get_document( $latest->ID )->ID );
+		$url = wp_get_attachment_url( $attach->ID );
 		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
 
 		return $url;
