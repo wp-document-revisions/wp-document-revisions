@@ -113,7 +113,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Message  The guid is not the expected "ugly" permalink
  * Fixable  Yes
  * Cause    The guid of a pending or draft document or when there is no permalink rewrite is expected to be able to access the document.
- *          Changing it to be in the form "site_url/?post_type=document&p=nnnn" will make it useable.
+ *          Changing it to be in the form "home_url/?post_type=document&p=nnnn" will make it useable.
  *
  * Code     10
  * Type     Warning
@@ -121,7 +121,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          The guid cannot be used to successfully access the document,
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     11
  * Type     Warning
@@ -129,7 +129,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          The guid cannot be used to successfully access the document,
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     12
  * Type     Warning
@@ -137,7 +137,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          This is only a completeness check. Normally access is possible, and normally indicates that the attachment extension has been changed.
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     14
  * Type     Warning
@@ -854,10 +854,15 @@ class WP_Document_Revisions_Validate_Structure {
 		$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
 		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
 		global $wp_rewrite;
-		$permalink1 = site_url( '?post_type=document&p=' . (string) $doc_id );
-		$permalink2 = str_replace( '&p=', '&#038;p=', $permalink1 );
-		$permalink3 = str_replace( '/?', '?', $permalink1 );
-		$in_ugly    = in_array( $guid, array( $permalink1, $permalink2, $permalink3 ), true );
+		// Ugly permalinks are built on home_url() now, but older ones used site_url(); accept both.
+		$ugly = array();
+		foreach ( array_unique( array( home_url( '/' ), site_url( '/' ) ) ) as $base ) {
+			$permalink1 = $base . '?post_type=document&p=' . (string) $doc_id;
+			$ugly[]     = $permalink1;
+			$ugly[]     = str_replace( '&p=', '&#038;p=', $permalink1 );
+			$ugly[]     = str_replace( '/?', '?', $permalink1 );
+		}
+		$in_ugly = in_array( $guid, $ugly, true );
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
 			if ( ! $in_ugly ) {
 				return array(
