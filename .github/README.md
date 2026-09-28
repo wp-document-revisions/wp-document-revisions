@@ -2,7 +2,7 @@
 
 # WP Document Revisions
 
-[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/wordpress-document-revisions/localized.svg)](https://crowdin.com/project/wordpress-document-revisions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![CI](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml/badge.svg)](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 A powerful document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
 

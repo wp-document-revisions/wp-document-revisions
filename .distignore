@@ -27,7 +27,6 @@ composer.lock
 # workflow and ship to wordpress.org from there. When the scoper pipeline
 # moves onto the release path, swap to excluding `vendor` and shipping
 # `vendor-prefixed/` instead.
-crowdin.yml
 docker-compose.yml
 eslint.config.cjs
 Gruntfile.js

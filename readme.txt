@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.4.3
+Stable tag: 5.5.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -96,7 +96,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Can move document upload folder to location outside of web root to further ensure government- and enterprise-grade security
 - Documents and Revisions shortcodes, Recently Revised Documents widget
 - Multisite and Windows (XAMPP) support
-- Multiple language support including French, Spanish and German (easily translated to your language)
+- Fully translatable, with community translations delivered as WordPress.org language packs ([help translate](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/))
 - Integration with [Edit Flow](https://editflow.org), PublishPress or PublishPress Statuses.
 - Opt-in [Block Editor (Gutenberg) support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) with document sidebar panel
 - REST API security hardening: attachment data sanitized for non-editors, attachment ownership validation
@@ -173,7 +173,7 @@ Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-r
 - **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
 - **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
 - **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
-- **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
+- **[Translations](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/)** (translate.wordpress.org)
 - **[Where to get Support or Report an Issue](https://wp-document-revisions.github.io/wp-document-revisions/SUPPORT/)** - Get help when you need it
 - **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
 
@@ -252,7 +252,24 @@ Notifications are sent through WordPress's standard `wp_mail()`. On sites with h
 
 == Translations ==
 
-Interested in translating WP Document Revisions? You can do so [via Crowdin](https://crowdin.com/project/wordpress-document-revisions), or by submitting a pull request.
+**Help bring WP Document Revisions to your language.** Translations are managed on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/), and WordPress installs them automatically as language packs, so every translated string reaches every site using that language. No coding or GitHub account is needed. A free WordPress.org account is enough.
+
+= The most helpful thing you can do: review suggestions =
+
+Thirty languages already have a nearly complete set of suggested translations waiting for review. Some carry over from the plugin's earlier translators, and most are machine translations that need a fluent speaker to check them. A language pack is published once a language reaches 90% approved translations, so reviewing is the fastest way to get the plugin working in your language.
+
+1. Sign in with your [WordPress.org account](https://login.wordpress.org/register).
+2. Open the [plugin's translation project](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) and choose your language.
+3. Filter by **Waiting** to see the suggestions, then fix anything that reads wrong. You can also translate any untranslated strings.
+4. To approve suggestions yourself, [request Project Translation Editor access](https://make.wordpress.org/polyglots/handbook/plugin-theme-authors-guide/pte-request/) for your language, or ask your language's [local Polyglots team](https://make.wordpress.org/polyglots/teams/) to review them.
+
+New to translating WordPress? The [Polyglots handbook](https://make.wordpress.org/polyglots/handbook/translating/) covers the basics, including each language's style guide and glossary.
+
+= Found a bad translation? =
+
+Suggest a better one on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) rather than opening a pull request. Translation files bundled with the plugin are overridden by WordPress.org language packs, so fixes belong there.
+
+Thanks to everyone who has contributed translations, including:
 
 - French - [Hubert CAMPAN](http://omnimaki.com/)
 - Spanish - [IBIDEM GROUP](https://www.ibidemgroup.com), [TradiArt](http://www.tradiart.com/), and [elarequi](http://www.labitacoradeltigre.com)
@@ -293,15 +310,16 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.5.0 =
+
+* Translations now come from [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) language packs, which WordPress installs and updates automatically, instead of being bundled with the plugin. The project previously used Crowdin; its translations, along with machine translations for 30 languages, have been imported to translate.wordpress.org as suggestions for volunteers to review. A language's pack is published once 90% of its strings are approved, so until then some sites may see English where they previously saw a bundled translation. Anyone with a WordPress.org account can help by reviewing or suggesting translations; see [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/). (#718, #719, #720)
+* Fix revision-limit protection being skipped after an attachment-less document was deleted. Deleting a document with no attached file left internal "deleting a document" state set for the rest of the request, so later revision deletions in that request bypassed the revision limit. (#717)
+
 = 5.4.3 =
 
 * Fix revision-limit protection never taking effect. When a document revision limit is set, the plugin is meant to stop other plugins or code from deleting a document's newest revisions, but a type mismatch meant no revision was ever recognized as protected, so any revision could be deleted. The newest revisions within the limit are now kept as intended. (#712)
 * Fix spelling in two admin messages ("non-existent", "conflicting"). Bundled translations are updated to match. (#714)
 
 = 5.4.2 =
-
-* Fix the core Query Loop block failing to list documents. The block queries the REST API in `edit` context, which the plugin previously rejected as an unauthorized document edit, so no documents were returned. Users who can read documents can now query the document collection over REST, letting the Query Loop block display documents as expected. Document read permissions continue to be enforced. (#664)
-
-= 5.4.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

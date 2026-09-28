@@ -5,6 +5,6 @@
 - **[WordPress.org Plugin Page](https://wordpress.org/plugins/wp-document-revisions/)** - Official plugin listing
 - **[Development Version](https://github.com/wp-document-revisions/wp-document-revisions/tree/develop)** ([CI Status](https://github.com/wp-document-revisions/wp-document-revisions/actions/workflows/ci.yml))
 - **[Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)** - Code examples and customizations
-- **[Translations](https://crowdin.com/project/wordpress-document-revisions)** (Crowdin)
+- **[Translations](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/)** (translate.wordpress.org)
 - **[Where to get Support or Report an Issue](./SUPPORT.md)** - Get help when you need it
 - **[How to Contribute](./CONTRIBUTING.md)** - Join our community
