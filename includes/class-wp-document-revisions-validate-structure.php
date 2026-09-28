@@ -166,6 +166,20 @@ class WP_Document_Revisions_Validate_Structure {
 	public static $instance;
 
 	/**
+	 * Admin page slug.
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'wpdr_validate';
+
+	/**
+	 * Hook suffix of the Validate Structure screen, set when the menu is added.
+	 *
+	 * @var string
+	 */
+	public static $page_hook = '';
+
+	/**
 	 * Constructor
 	 *
 	 * @since 3.4
@@ -212,11 +226,37 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 **/
 	public static function add_menu(): void {
-		$slug = 'wpdr_validate';
-		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
+		$hook = add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), self::capability(), self::PAGE_SLUG, array( __CLASS__, 'page_validate' ) );
+		if ( ! $hook ) {
+			return;
+		}
+		self::$page_hook = $hook;
 
 		// help text.
-		add_action( 'load-document_page_' . $slug, array( __CLASS__, 'add_help_tab' ) );
+		add_action( 'load-' . $hook, array( __CLASS__, 'add_help_tab' ) );
+	}
+
+	/**
+	 * Capability needed to see the Validate Structure screen and use its fixes.
+	 *
+	 * Fixing a document also requires permission to edit that document.
+	 *
+	 * @since 5.6.0
+	 * @return string
+	 */
+	public static function capability(): string {
+		/**
+		 * Filters the capability needed to use Validate Structure.
+		 *
+		 * The screen lists every document the user can edit and can rename files and
+		 * rewrite guids, so larger sites may want to limit it to administrators,
+		 * e.g. by returning 'manage_options'.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string $capability Capability. Default 'edit_documents'.
+		 */
+		return (string) apply_filters( 'document_validate_structure_capability', 'edit_documents' );
 	}
 
 	/**
@@ -516,7 +556,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( ! isset( $params['id'] ) ) {
 			return false;
 		}
-		return current_user_can( 'edit_document', $params['id'] );
+		return current_user_can( self::capability() ) && current_user_can( 'edit_document', $params['id'] );
 	}
 
 	/**
@@ -699,13 +739,18 @@ class WP_Document_Revisions_Validate_Structure {
 	}
 
 	/**
-	 * Enqueue javascript.
+	 * Enqueue javascript on the Validate Structure screen only.
 	 *
 	 * @since 3.4.0
 	 *
+	 * @param string $hook_suffix the current admin page.
 	 * @return void
 	 */
-	public static function enqueue_scripts(): void {
+	public static function enqueue_scripts( $hook_suffix = '' ): void {
+		if ( '' === self::$page_hook || self::$page_hook !== $hook_suffix ) {
+			return;
+		}
+
 		$asset_file = plugin_dir_path( __DIR__ ) . 'build/admin/wp-document-revisions-validate.asset.php';
 		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
 			'dependencies' => array( 'wp-api-fetch' ),
