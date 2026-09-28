@@ -279,6 +279,26 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Whether the classic document edit screen shows the Document Description editor.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function show_description_editor(): bool {
+		/**
+		 * Filters whether to show the Document Description editor on the classic edit screen.
+		 *
+		 * Return false for sites that don't use document descriptions. Existing
+		 * descriptions are kept. Has no effect in block editor mode, which needs the editor.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show Whether to show the editor. Default true.
+		 */
+		return (bool) apply_filters( 'document_show_description_editor', true );
+	}
+
+	/**
 	 * Registers the document ability category for the Abilities API.
 	 *
 	 * @since 3.9.1
@@ -800,6 +820,9 @@ class WP_Document_Revisions {
 		// Add excerpt support when block editor is enabled (used for Revision Summary).
 		if ( apply_filters( 'document_use_block_editor', false ) ) {
 			$args['supports'][] = 'excerpt';
+		} elseif ( ! $this->show_description_editor() ) {
+			// The block editor needs editor support, so this only applies to the classic editor.
+			$args['supports'] = array_values( array_diff( $args['supports'], array( 'editor' ) ) );
 		}
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.

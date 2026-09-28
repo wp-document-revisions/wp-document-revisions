@@ -809,7 +809,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post Post object.
 	 */
 	public function prepare_editor( WP_Post $post ): void {
-		if ( 'document' !== $post->post_type ) {
+		if ( 'document' !== $post->post_type || ! self::$parent->show_description_editor() ) {
 			return;
 		}
 
