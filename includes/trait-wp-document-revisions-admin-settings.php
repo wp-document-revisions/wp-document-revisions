@@ -625,10 +625,14 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Appends the settings-updated query arg to the network admin settings redirect so that the settings API can work.
 	 *
 	 * @since 1.0
-	 * @param string $location the URL being redirected to.
-	 * @return string the modified location
+	 * @param mixed $location the URL being redirected to.
+	 * @return mixed the modified location
 	 */
-	public function network_settings_redirect( string $location ): string {
+	public function network_settings_redirect( $location ) {
+		if ( ! is_string( $location ) ) {
+			return $location;
+		}
+
 		// Verify redirect string from /wp-admin/network/edit.php line 164.
 		if ( add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) ) === $location ) {
 			// append the settings-updated query arg and return.
