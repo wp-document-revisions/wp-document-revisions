@@ -59,7 +59,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// translators: %s is the download link.
 			8  => sprintf( __( 'Document submitted. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
 			// translators: %1$s is the date, %2$s is the preview link.
-			9  => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), date_i18n( sprintf( _x( '%1$s @ %2$s', '%1$s: date; %2$s: time', 'wp-document-revisions' ), $date_format, $time_format ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_id ) ) ),
+			9  => sprintf( __( 'Document scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview document</a>', 'wp-document-revisions' ), wp_date( sprintf( _x( '%1$s @ %2$s', '%1$s: date; %2$s: time', 'wp-document-revisions' ), $date_format, $time_format ), (int) get_post_timestamp( $post ) ), esc_url( get_permalink( $post_id ) ) ),
 			// translators: %s is the link to download the document.
 			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Download document</a>', 'wp-document-revisions' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_id ) ) ) ),
 		);
@@ -206,7 +206,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			<?php
 			$mod_date = $latest_version->post_modified;
 			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) strtotime( $mod_date ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
+			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
 			echo wp_kses(
 				$checked_in,
 				array(
@@ -487,7 +487,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( $thumb > 0 ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_parent` = 0 WHERE `id` = %d AND `post_parent` = %d ",
 				$thumb,
@@ -495,7 +495,6 @@ trait WP_Document_Revisions_Admin_Editor {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			wp_cache_delete( $thumb, 'posts' );
 			clean_post_cache( $thumb );
 		}
 
@@ -516,7 +515,7 @@ trait WP_Document_Revisions_Admin_Editor {
 				update_post_meta( $doc_id, '_document_attachment_id', $latest_attach->ID );
 				global $wpdb;
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				$post_table = "{$wpdb->prefix}posts";
+				$post_table = "{$wpdb->posts}";
 				$wpdb->query(
 					$wpdb->prepare(
 						"UPDATE `$post_table` SET `post_content` = %s WHERE `ID` = %d",
@@ -525,7 +524,6 @@ trait WP_Document_Revisions_Admin_Editor {
 					)
 				);
 				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				wp_cache_delete( $doc_id, 'posts' );
 				clean_post_cache( $doc_id );
 				$attach_id = $latest_attach->ID;
 			}
@@ -546,7 +544,7 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( $new_guid !== $doc_post->guid ) {
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `guid` = %s WHERE `id` = %d AND `post_parent` = 0 ",
 				$new_guid,
@@ -568,7 +566,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_excerpt` = %s WHERE `id` IN ( %d, %d ) AND `post_excerpt` <> %s ",
 				self::$last_revn_excerpt,
@@ -578,8 +576,6 @@ trait WP_Document_Revisions_Admin_Editor {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery	
-			wp_cache_delete( self::$last_revn, 'posts' );
-			wp_cache_delete( $doc_id, 'posts' );
 			clean_post_cache( $doc_id );
 			clean_post_cache( self::$last_revn );
 		}
@@ -663,9 +659,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// wp_set_script_translations() below; only non-translatable runtime
 			// config is passed through the localized object.
 			$data = array(
-				'lostLockNoticeLogo' => admin_url( 'images/logo.gif' ),
-				'offset'             => get_option( 'gmt_offset' ) * 3600,
-				'nonce'              => wp_create_nonce( 'wp-document-revisions' ),
+				'nonce' => wp_create_nonce( 'wp-document-revisions' ),
 			);
 
 			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
@@ -1032,8 +1026,8 @@ trait WP_Document_Revisions_Admin_Editor {
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
-			// cast the modified date into js format to simplify updating.
-			$mod_date = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $revision->post_modified ) );
+			// ISO 8601 UTC modified date, read by the admin JS to refresh the relative time.
+			$mod_date = mysql_to_rfc3339( $revision->post_modified_gmt ) . 'Z';
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>

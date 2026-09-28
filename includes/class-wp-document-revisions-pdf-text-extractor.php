@@ -54,8 +54,9 @@ class WP_Document_Revisions_PDF_Text_Extractor implements WP_Document_Revisions_
 		unset( $mime_type );
 
 		try {
-			$parser = new \Smalot\PdfParser\Parser();
-			$pdf    = $parser->parseFile( $file_path );
+			$parser_class = wpdr_vendor_class( 'Smalot\PdfParser\Parser' );
+			$parser       = new $parser_class();
+			$pdf          = $parser->parseFile( $file_path );
 
 			return (string) $pdf->getText();
 		} catch ( \Throwable $e ) {

@@ -1060,6 +1060,15 @@ describe( 'wpdr-documents-shortcode block', () => {
 				expect( result.numberposts ).toBe( 10 );
 				expect( result.freeform ).toBe( 'custom=value' );
 			} );
+
+			test( 'should keep quoted values containing spaces intact', () => {
+				const result =
+					blockConfig.transforms.from[ 0 ].transform( {
+						text: '[documents numberposts="3" meta_value="two words" suppress]',
+					} );
+				expect( result.numberposts ).toBe( 3 );
+				expect( result.freeform ).toBe( 'meta_value="two words" suppress' );
+			} );
 		} );
 
 		describe( 'transform without brackets', () => {
@@ -1300,7 +1309,7 @@ describe( 'wpdr-documents-shortcode block', () => {
 						term_0: 999,
 					} );
 				expect( result.text ).toContain(
-					'workflow_state=??'
+					'workflow_state="??"'
 				);
 			} );
 		} );
@@ -1424,11 +1433,22 @@ describe( 'wpdr-documents-shortcode block', () => {
 					} );
 
 				expect( result.text ).toContain(
-					'custom_param=value'
+					'custom_param="value"'
 				);
 				expect( result.text ).toMatch(
-					/custom_param=value\s*\]$/
+					/custom_param="value"\s*\]$/
 				);
+			} );
+
+			test( 'should round-trip a freeform value containing spaces', () => {
+				const result =
+					blockConfig.transforms.to[ 0 ].transform( {
+						...baseToAttrs,
+						show_descr: false,
+						new_tab: false,
+						freeform: 'meta_value="two words"',
+					} );
+				expect( result.text ).toContain( 'meta_value="two words"' );
 			} );
 
 			test( 'should not include freeform when empty', () => {
@@ -1441,7 +1461,7 @@ describe( 'wpdr-documents-shortcode block', () => {
 					} );
 
 				expect( result.text ).toMatch(
-					/^\[documents\s+numberposts="5"\s+\]$/
+					/^\[documents\s+numberposts="5"\s*\]$/
 				);
 			} );
 

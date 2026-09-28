@@ -2,7 +2,7 @@
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
-import { parseShortcodeParams } from '../shared/parse-shortcode';
+import { buildShortcode, parseShortcodeParams } from '../shared/parse-shortcode';
 
 registerBlockType( metadata, {
 	edit: Edit,
@@ -57,21 +57,15 @@ registerBlockType( metadata, {
 				type: 'block',
 				blocks: [ 'core/shortcode' ],
 				transform: ( attributes ) => {
-					let content = '[document_preview ';
+					/** @type {Record<string, string>} */
+					const named = {};
 					if ( '' !== attributes.id ) {
-						content += `id=${ attributes.id }`;
+						named.id = String( attributes.id );
 					}
-					content += ` height=${ attributes.height }`;
-					if ( attributes.show_title ) {
-						content += ' show_title=true';
-					} else {
-						content += ' show_title=false';
-					}
-					if ( attributes.show_download ) {
-						content += ' show_download=true ]';
-					} else {
-						content += ' show_download=false ]';
-					}
+					named.height = String( attributes.height );
+					named.show_title = attributes.show_title ? 'true' : 'false';
+					named.show_download = attributes.show_download ? 'true' : 'false';
+					const content = buildShortcode( 'document_preview', named );
 					return createBlock( 'core/shortcode', {
 						text: content,
 					} );

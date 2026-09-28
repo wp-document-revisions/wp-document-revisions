@@ -84,8 +84,8 @@ describe('WPDocumentRevisions', () => {
 			expect(WPDocumentRevisions.hasUpload).toBe(false);
 		});
 
-		test('should set up intervals for updates', () => {
-			expect(global.setInterval).toHaveBeenCalledTimes(2);
+		test('should only poll for timestamp updates', () => {
+			expect(global.setInterval).toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -336,6 +336,47 @@ describe('WPDocumentRevisions', () => {
 */
 	});
 
+	describe('bindEditorEvents', () => {
+		afterEach(() => {
+			delete window.tinymce;
+		});
+
+		test('binds an editor that is already initialised and syncs once', () => {
+			const editor = { id: 'content', initialized: true, on: jest.fn() };
+			window.tinymce = { get: jest.fn(() => editor), on: jest.fn() };
+			WPDocumentRevisions.checkUpdate = jest.fn();
+
+			WPDocumentRevisions.bindEditorEvents();
+
+			expect(editor.on).toHaveBeenCalledWith(expect.stringContaining('input'), WPDocumentRevisions.checkUpdate);
+			expect(WPDocumentRevisions.checkUpdate).toHaveBeenCalledTimes(1);
+		});
+
+		test('binds the content editor when it is added later, ignoring others', () => {
+			let addEditor;
+			window.tinymce = {
+				get: jest.fn(() => null),
+				on: jest.fn((evt, cb) => {
+					if (evt === 'AddEditor') addEditor = cb;
+				}),
+			};
+			WPDocumentRevisions.bindEditorEvents();
+
+			const other = { id: 'excerpt', on: jest.fn() };
+			addEditor({ editor: other });
+			expect(other.on).not.toHaveBeenCalled();
+
+			const content = { id: 'content', initialized: false, on: jest.fn() };
+			addEditor({ editor: content });
+			expect(content.on).toHaveBeenCalledWith(expect.stringContaining('init'), WPDocumentRevisions.checkUpdate);
+		});
+
+		test('does nothing without TinyMCE', () => {
+			delete window.tinymce;
+			expect(() => WPDocumentRevisions.bindEditorEvents()).not.toThrow();
+		});
+	});
+
 	describe('checkUpdate', () => {
 /*
 		test('should call enableSubmit when content differs', () => {
@@ -379,28 +420,22 @@ describe('WPDocumentRevisions', () => {
 
 			expect(mockEl.textContent).toBe('5 minutes');
 		});
-	});
 
-	describe('requestPermission', () => {
-		test('should request notification permission if webkitNotifications exists', () => {
-			const mockRequestPermission = jest.fn();
-			window.webkitNotifications = {
-				requestPermission: mockRequestPermission,
-			};
-
-			WPDocumentRevisions.requestPermission();
-
-			expect(mockRequestPermission).toHaveBeenCalled();
-
-			delete window.webkitNotifications;
+		test('reads the UTC timestamp from an A<unix> id', () => {
+			expect(
+				WPDocumentRevisions.getTimestamp({ id: 'A1609459200', title: '2021-01-01 05:00:00' })
+			).toBe(1609459200);
 		});
 
-		test('should handle missing webkitNotifications gracefully', () => {
-			window.webkitNotifications = null;
+		test('reads an ISO 8601 UTC title when there is no timestamp id', () => {
+			expect(
+				WPDocumentRevisions.getTimestamp({ id: '', title: '2021-01-01T00:00:00Z' })
+			).toBe(1609459200);
+		});
 
-			expect(() => {
-				WPDocumentRevisions.requestPermission();
-			}).not.toThrow();
+		test('human_time_diff defaults "to" to the current UTC time', () => {
+			const now = Date.now() / 1000;
+			expect(WPDocumentRevisions.human_time_diff(now - 7200)).toBe('2 hours');
 		});
 	});
 
@@ -548,8 +583,6 @@ describe('WPDocumentRevisions', () => {
 				if (id === 'title') return { value: 'Test Document' };
 				return null;
 			});
-
-			delete window.webkitNotifications;
 
 			WPDocumentRevisions.postAutosaveCallback();
 

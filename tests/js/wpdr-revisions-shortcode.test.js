@@ -391,7 +391,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=1 numberposts=5 summary=false new_tab=true ]',
+					text: '[document_revisions id="1" numberposts="5" summary="false" new_tab="true"]',
 				}
 			);
 		} );
@@ -408,7 +408,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=1 numberposts=5 summary=true new_tab=true ]',
+					text: '[document_revisions id="1" numberposts="5" summary="true" new_tab="true"]',
 				}
 			);
 		} );
@@ -425,7 +425,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=1 numberposts=5 summary=false show_pdf new_tab=true ]',
+					text: '[document_revisions show_pdf id="1" numberposts="5" summary="false" new_tab="true"]',
 				}
 			);
 		} );
@@ -456,7 +456,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=2 numberposts=10 summary=true show_pdf new_tab=false ]',
+					text: '[document_revisions show_pdf id="2" numberposts="10" summary="true" new_tab="false"]',
 				}
 			);
 		} );
@@ -473,7 +473,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=42 numberposts=15 summary=true new_tab=false ]',
+					text: '[document_revisions id="42" numberposts="15" summary="true" new_tab="false"]',
 				}
 			);
 		} );
@@ -952,7 +952,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 
 			const callText =
 				createBlock.mock.calls[ 0 ][ 1 ].text;
-			expect( callText ).toContain( 'id=0' );
+			expect( callText ).toContain( 'id="0"' );
 		} );
 
 		test( 'to transform handles all booleans toggled', () => {
@@ -967,7 +967,7 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( createBlock ).toHaveBeenCalledWith(
 				'core/shortcode',
 				{
-					text: '[document_revisions id=1 numberposts=5 summary=true show_pdf new_tab=false ]',
+					text: '[document_revisions show_pdf id="1" numberposts="5" summary="true" new_tab="false"]',
 				}
 			);
 		} );

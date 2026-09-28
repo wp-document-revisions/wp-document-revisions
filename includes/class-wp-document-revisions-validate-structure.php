@@ -294,7 +294,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content = $wpdr->format_doc_id( $parm ) . $content;
 			}
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_content` = %s WHERE `id` = %d",
 				$content,
@@ -305,7 +305,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// update the post_meta.
 			update_post_meta( $id, '_document_attachment_id', $parm );
 
-			wp_cache_delete( $id, 'posts' );
+			clean_post_cache( $id );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
@@ -325,7 +325,7 @@ class WP_Document_Revisions_Validate_Structure {
 				$content = $wpdr->format_doc_id( $parm ) . substr( $content, $end_id + 1 );
 			}
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `post_content` = %s WHERE `id` = %d",
 				$content,
@@ -336,7 +336,7 @@ class WP_Document_Revisions_Validate_Structure {
 			// update the post_meta.
 			update_post_meta( $id, '_document_attachment_id', $parm );
 
-			wp_cache_delete( $id, 'posts' );
+			clean_post_cache( $id );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
@@ -376,12 +376,13 @@ class WP_Document_Revisions_Validate_Structure {
 
 			// rename attachment post (if no clash).
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"SELECT COUNT(1) FROM `$post_table` WHERE `post_name` = %s",
 				$new_name
 			);
-			$res        = $wpdb->get_var( $sql );
+			// $wpdb->get_var() returns a numeric string, so cast before comparing.
+			$res = (int) $wpdb->get_var( $sql );
 			if ( 0 === $res ) {
 				$sql = $wpdb->prepare(
 					"UPDATE `$post_table` SET `post_name` = %s, `post_title` = %s WHERE `id` = %d",
@@ -391,7 +392,8 @@ class WP_Document_Revisions_Validate_Structure {
 				);
 				$wpdb->query( $sql );
 				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				wp_cache_delete( $id, 'posts' );
+				clean_post_cache( $attach_id );
+				clean_post_cache( $id );
 				wp_cache_delete( $id, 'document_revisions' );
 			}
 		}
@@ -461,7 +463,7 @@ class WP_Document_Revisions_Validate_Structure {
 			$guid = get_the_permalink( $id );
 			global $wpdb;
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->prefix}posts";
+			$post_table = "{$wpdb->posts}";
 			$sql        = $wpdb->prepare(
 				"UPDATE `$post_table` SET `guid` = %s WHERE `id` = %d",
 				$guid,
@@ -469,7 +471,7 @@ class WP_Document_Revisions_Validate_Structure {
 			);
 			$wpdb->query( $sql );
 			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			wp_cache_delete( $id, 'posts' );
+			clean_post_cache( $id );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
@@ -485,8 +487,8 @@ class WP_Document_Revisions_Validate_Structure {
 				$dups = $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT COUNT(1)
-						 FROM {$wpdb->prefix}posts
-						 INNER JOIN {$wpdb->prefix}postmeta
+						 FROM {$wpdb->posts}
+						 INNER JOIN {$wpdb->postmeta}
 						 ON post_id = ID
 						 WHERE post_type = 'attachment'
 						 AND post_parent = %d
@@ -506,7 +508,7 @@ class WP_Document_Revisions_Validate_Structure {
 				wp_delete_attachment( $orphan, true );
 			}
 
-			wp_cache_delete( $id, 'posts' );
+			clean_post_cache( $id );
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
@@ -542,7 +544,7 @@ class WP_Document_Revisions_Validate_Structure {
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$documents = $wpdb->get_results(
 			"SELECT ID, post_title, post_content, post_date, post_name, guid, post_status, post_modified_gmt
-			 FROM {$wpdb->prefix}posts 
+			 FROM {$wpdb->posts} 
 			 WHERE post_type = 'document'
 			 AND post_status not in ( 'auto-draft', 'trash' )
 			 ORDER BY ID DESC
@@ -938,7 +940,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$attach = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT MAX(ID) AS ID
-				 FROM {$wpdb->prefix}posts 
+				 FROM {$wpdb->posts} 
 				 WHERE post_type = 'attachment'
 				 AND post_parent = %d
 				",
@@ -1096,7 +1098,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$attachs = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID
-				 FROM {$wpdb->prefix}posts 
+				 FROM {$wpdb->posts} 
 				 WHERE post_type = 'attachment'
 				 AND post_parent = %d
 				 AND ID <> %d
@@ -1115,7 +1117,7 @@ class WP_Document_Revisions_Validate_Structure {
 		$revns = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT post_content
-				 FROM {$wpdb->prefix}posts 
+				 FROM {$wpdb->posts} 
 				 WHERE post_type = 'revision'
 				 AND post_parent = %d
 				",

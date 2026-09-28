@@ -161,7 +161,7 @@ class WP_Document_Revisions_Front_End {
 			$attach = $wpdr->get_document( $id );
 			$file   = get_attached_file( $attach->ID );
 			if ( $file ) {
-				$mimetype      = $wpdr->get_doc_mimetype( $file );
+				$mimetype      = $wpdr->get_doc_mimetype( $file, $attach->ID );
 				$atts_show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
 			}
 		}
@@ -424,7 +424,7 @@ class WP_Document_Revisions_Front_End {
 				$attach = $wpdr->get_document( $document->ID );
 				$file   = get_attached_file( $attach->ID );
 				if ( $file ) {
-					$mimetype = $wpdr->get_doc_mimetype( $file );
+					$mimetype = $wpdr->get_doc_mimetype( $file, $attach->ID );
 					$show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? $atts_show_pdf : '' );
 				} else {
 					// cant find attached file.
@@ -681,28 +681,51 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Get taxonomy structure.
 	 *
+	 * Appends the terms to self::$tax_terms depth-first (children by name under
+	 * their parent), with each term's depth stored in term_group. Loads all the
+	 * taxonomy's terms with a single query.
+	 *
 	 * @param string $taxonomy Taxonomy name.
 	 * @param int    $par_term parent term.
 	 * @param int    $level    level in hierarchy.
 	 * @since 3.3.0
 	 */
 	private function get_taxonomy_hierarchy( string $taxonomy, int $par_term = 0, int $level = 0 ): void {
-		// get all direct descendants of the $parent.
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
 				'hide_empty' => false,
-				'parent'     => $par_term,
 			)
 		);
-		// go through all the direct descendants of $parent, and recurse their children.
-		// this creates a treewalk in simple array format.
+		if ( ! is_array( $terms ) ) {
+			return;
+		}
+
+		// group by parent, keeping get_terms()' name order within each parent.
+		$children = array();
 		foreach ( $terms as $term ) {
+			$children[ (int) $term->parent ][] = $term;
+		}
+
+		$this->append_term_children( $children, $par_term, $level );
+	}
+
+	/**
+	 * Depth-first walk of grouped terms into self::$tax_terms.
+	 *
+	 * @param array<int, WP_Term[]> $children terms grouped by parent ID.
+	 * @param int                   $par_term parent term.
+	 * @param int                   $level    level in hierarchy.
+	 */
+	private function append_term_children( array $children, int $par_term, int $level ): void {
+		if ( empty( $children[ $par_term ] ) ) {
+			return;
+		}
+		foreach ( $children[ $par_term ] as $term ) {
 			// Mis-use term_group to hold level.
 			$term->term_group  = $level;
 			self::$tax_terms[] = $term;
-			// recurse to get the direct descendants of "this" term.
-			$this->get_taxonomy_hierarchy( $taxonomy, $term->term_id, $level + 1 );
+			$this->append_term_children( $children, $term->term_id, $level + 1 );
 		}
 	}
 
@@ -713,7 +736,10 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function get_taxonomy_details(): array {
-		$taxonomy_details = wp_cache_get( 'wpdr_document_taxonomies' );
+		// Salt the key with the terms last_changed value so edits to terms show up at once, and
+		// with the locale because the "No selection" label is translated.
+		$cache_key        = 'wpdr_document_taxonomies:' . get_user_locale() . ':' . wp_cache_get_last_changed( 'terms' );
+		$taxonomy_details = wp_cache_get( $cache_key );
 
 		if ( false === $taxonomy_details ) {
 			// build and create cache entry. Get name only to allow easier filtering.
@@ -796,7 +822,8 @@ class WP_Document_Revisions_Front_End {
 				'taxos'   => $taxonomy_elements,
 			);
 
-			wp_cache_set( 'wpdr_document_taxonomies', $taxonomy_details, '', ( WP_DEBUG ? 10 : 120 ) );
+			// Keep a TTL: the document_block_taxonomies filter output is not covered by the salt.
+			wp_cache_set( $cache_key, $taxonomy_details, '', ( WP_DEBUG ? 10 : 120 ) );
 		}
 
 		return $taxonomy_details;

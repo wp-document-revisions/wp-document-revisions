@@ -748,15 +748,73 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 			$wpdr_fe = new WP_Document_Revisions_Front_End();
 		}
 
-		wp_cache_delete( 'wpdr_document_taxonomies' );
 		register_taxonomy_for_object_type( 'category', 'document' );
 
-		$wpdr_fe->get_taxonomy_details();
+		// nested terms, created out of name order.
+		$zed   = self::factory()->category->create( array( 'name' => 'Zed' ) );
+		$alpha = self::factory()->category->create( array( 'name' => 'Alpha' ) );
+		self::factory()->category->create(
+			array(
+				'name'   => 'Mid B',
+				'parent' => $alpha,
+			)
+		);
+		$mid_a = self::factory()->category->create(
+			array(
+				'name'   => 'Mid A',
+				'parent' => $alpha,
+			)
+		);
+		self::factory()->category->create(
+			array(
+				'name'   => 'Leaf',
+				'parent' => $mid_a,
+			)
+		);
+		self::factory()->category->create(
+			array(
+				'name'   => 'Zed child',
+				'parent' => $zed,
+			)
+		);
+
+		// expected: the previous one-query-per-parent depth-first walk.
+		$expected = array();
+		$walk     = static function ( $parent_id, $level ) use ( &$walk, &$expected ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => 'category',
+					'hide_empty' => false,
+					'parent'     => $parent_id,
+				)
+			);
+			foreach ( $terms as $term ) {
+				$expected[] = str_repeat( ' ', $level ) . $term->name;
+				$walk( $term->term_id, $level + 1 );
+			}
+		};
+		$walk( 0, 0 );
+
+		$details = $wpdr_fe->get_taxonomy_details();
+		$labels  = null;
+		foreach ( $details['taxos'] as $taxo ) {
+			if ( 'category' === $taxo['slug'] ) {
+				$labels = wp_list_pluck( array_slice( $taxo['terms'], 1 ), 1 );
+			}
+		}
+		self::assertSame( $expected, $labels, 'hierarchy differs from per-parent walk' );
+		self::assertContains( '  Leaf', $labels, 'depth not indented' );
+
+		// a new term shows up at once (cache key is salted with terms last_changed).
+		self::factory()->category->create( array( 'name' => 'Brand new' ) );
+		$details = $wpdr_fe->get_taxonomy_details();
+		foreach ( $details['taxos'] as $taxo ) {
+			if ( 'category' === $taxo['slug'] ) {
+				self::assertContains( 'Brand new', wp_list_pluck( $taxo['terms'], 1 ), 'stale cached taxonomy details' );
+			}
+		}
 
 		unregister_taxonomy_for_object_type( 'category', 'document' );
-		wp_cache_delete( 'wpdr_document_taxonomies' );
-
-		self::assertTrue( true, 'taxonomy hierarchy' );
 	}
 
 	/**

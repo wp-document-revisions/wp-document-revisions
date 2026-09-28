@@ -1,8 +1,8 @@
 /**
  * Tests for src/blocks/shared/parse-shortcode.js
  *
- * The tokenizer feeds both the [documents] and [document_revisions] block
- * "from shortcode" transforms, so its contract (bracket/tag stripping, quote
+ * The tokenizer feeds the [documents], [document_revisions] and
+ * [document_preview] block "from shortcode" transforms, so its contract (bracket/tag stripping, quote
  * removal, bare-flag pairs) is covered here directly.
  */
 
@@ -53,9 +53,18 @@ describe( 'parseShortcodeParams', () => {
 		expect( parseShortcodeParams( '[documents]' ) ).toEqual( [] );
 	} );
 
-	test( 'preserves multiple params in order, mixing flags and values', () => {
+	test( 'returns named params in order, then bare flags', () => {
 		expect(
 			parseShortcodeParams( '[document_revisions id=7 summary show_pdf=true]' )
-		).toEqual( [ [ 'id', '7' ], [ 'summary' ], [ 'show_pdf', 'true' ] ] );
+		).toEqual( [ [ 'id', '7' ], [ 'show_pdf', 'true' ], [ 'summary' ] ] );
+	} );
+
+	test( 'keeps quoted values containing spaces together', () => {
+		expect(
+			parseShortcodeParams( '[documents meta_value="two words" b=\'x y\']' )
+		).toEqual( [
+			[ 'meta_value', 'two words' ],
+			[ 'b', 'x y' ],
+		] );
 	} );
 } );

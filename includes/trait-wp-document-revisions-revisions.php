@@ -67,10 +67,9 @@ trait WP_Document_Revisions_Revisions {
 		);
 		// phpcs:enable WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters
 
-		$revs     = array();
-		$post_rev = $post_id . '-autosave-v1';
+		$revs = array();
 		foreach ( $get_revs as $id => &$get_rev ) {
-			if ( $get_rev->post_name !== $post_rev ) {
+			if ( ! wp_is_post_autosave( $get_rev ) ) {
 				// not an autosave.
 				$revs[ $id ] = $get_rev;
 			}
@@ -351,10 +350,9 @@ trait WP_Document_Revisions_Revisions {
 		$i = 1;
 
 		// ignore autosaves keeping only real revisions.
-		$output   = array();
-		$post_rev = $post_id . '-autosave-v1';
+		$output = array();
 		foreach ( $revs as $rev ) {
-			if ( $rev->post_name !== $post_rev ) {
+			if ( ! wp_is_post_autosave( $rev ) ) {
 				// not an autosave.
 				$output[ $i++ ] = $rev->ID;
 			}
@@ -450,7 +448,7 @@ trait WP_Document_Revisions_Revisions {
 	 */
 	public function possibly_delete_revision( $delete, WP_Post $post, bool $force_delete ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// bail if not a revision, an autosave or already decided not to delete.
-		if ( 'revision' !== $post->post_type || str_contains( $post->post_name, '-autosave-v1' ) || ! is_null( $delete ) ) {
+		if ( 'revision' !== $post->post_type || wp_is_post_autosave( $post ) || ! is_null( $delete ) ) {
 			// only process revisions.
 			return $delete;
 		}

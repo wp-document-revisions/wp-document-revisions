@@ -133,19 +133,11 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		$wpdr->manage_rest();
 		self::assertTrue( true, 'manage_rest' );
 
-		// test ie_fix. Parameter should be passed by reference.
+		// ie_cache_fix is deprecated and a no-op.
 		global $wp;
-		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		$_SERVER['HTTPS'] = 'on';
+		$this->setExpectedDeprecated( 'WP_Document_Revisions::ie_cache_fix' );
 		$wpdr->ie_cache_fix( $wp );
-		self::assertTrue( true, 'ie_cache_fix 1' );
-		$_SERVER['HTTP_USER_AGENT'] = 'msie';
-		$wpdr->ie_cache_fix( $wp );
-		self::assertTrue( true, 'ie_cache_fix 2' );
-		$_SERVER['HTTP_USER_AGENT'] = 'other';
-		$wpdr->ie_cache_fix( $wp );
-		self::assertTrue( true, 'ie_cache_fix 2' );
-		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+		self::assertFalse( has_action( 'parse_request', array( $wpdr, 'ie_cache_fix' ) ), 'ie_cache_fix still hooked' );
 
 		// put back globals.
 		$wpdr        = $val1;

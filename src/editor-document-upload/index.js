@@ -17,6 +17,7 @@
  * @package
  */
 
+import apiFetch from '@wordpress/api-fetch';
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { MediaUploadCheck } from '@wordpress/block-editor';
@@ -24,55 +25,32 @@ import { Button, Spinner, TextareaControl } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useState, useCallback, useRef } from '@wordpress/element';
+import { dateI18n, getDate, getSettings, humanTimeDiff } from '@wordpress/date';
 import { __ } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 const LOCK_NAME = 'wp-document-revisions-upload';
 
 /**
- * Format a revision timestamp as a short relative-time string
- * ("just now", "5 min ago", "1 hour ago", …), falling back to a
- * locale date string for anything 30+ days old.
+ * Format a revision date as a localized relative time ("5 minutes ago"),
+ * falling back to the site's date format for anything 30+ days old.
+ *
+ * Uses `@wordpress/date`, so dates without an explicit offset (the REST
+ * `date` field) are read in the site's timezone rather than the browser's.
  *
  * `now` is injectable so the branching can be unit-tested deterministically;
  * production callers rely on the default (current time).
  *
- * @param {string} dateStr Revision date, parseable by the Date constructor.
+ * @param {string} dateStr Revision date.
  * @param {Date}   [now]   Reference "now" (defaults to the current time).
  * @return {string} Human-readable relative time.
  */
 export function formatDate( dateStr, now = new Date() ) {
-	const date = new Date( dateStr );
-	const diffMs = now - date;
-	const diffMins = Math.floor( diffMs / 60000 );
-
-	if ( diffMins < 1 ) {
-		return __( 'just now', 'wp-document-revisions' );
-	}
-	if ( diffMins < 60 ) {
-		return diffMins + ' ' + __( 'min ago', 'wp-document-revisions' );
-	}
-	const diffHours = Math.floor( diffMins / 60 );
-	if ( diffHours < 24 ) {
-		return (
-			diffHours +
-			' ' +
-			( diffHours === 1
-				? __( 'hour ago', 'wp-document-revisions' )
-				: __( 'hours ago', 'wp-document-revisions' ) )
-		);
-	}
-	const diffDays = Math.floor( diffHours / 24 );
+	const diffDays = ( now.getTime() - getDate( dateStr ).getTime() ) / 86400000;
 	if ( diffDays < 30 ) {
-		return (
-			diffDays +
-			' ' +
-			( diffDays === 1
-				? __( 'day ago', 'wp-document-revisions' )
-				: __( 'days ago', 'wp-document-revisions' ) )
-		);
+		return humanTimeDiff( dateStr, now );
 	}
-	return date.toLocaleDateString();
+	return dateI18n( getSettings().formats.date, dateStr );
 }
 
 /**
@@ -466,10 +444,9 @@ function RevisionLogPanelContent( { postId } ) {
 	const fetchRevisions = useCallback( () => {
 		setLoading( true );
 		const restBase = window.wpDocumentRevisions?.restBase || 'documents';
-		window.wp
-			.apiFetch( {
-				path: `/wp/v2/${ restBase }/${ postId }/revisions?per_page=20&context=edit`,
-			} )
+		apiFetch( {
+			path: `/wp/v2/${ restBase }/${ postId }/revisions?per_page=20&context=edit`,
+		} )
 			.then( ( data ) => {
 				setRevisions( data );
 				setLoading( false );
