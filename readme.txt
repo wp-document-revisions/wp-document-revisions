@@ -312,14 +312,15 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 = 5.5.0 =
 
+* Includes the security fix from 5.4.5.
 * Includes the security fix from 5.4.4 ([GHSA-697p-7g2w-6q3q](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-697p-7g2w-6q3q)).
 * Translations now come from [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) language packs, which WordPress installs and updates automatically, instead of being bundled with the plugin. The project previously used Crowdin; its translations, along with machine translations for 30 languages, have been imported to translate.wordpress.org as suggestions for volunteers to review. A language's pack is published once 90% of its strings are approved, so until then some sites may see English where they previously saw a bundled translation. Anyone with a WordPress.org account can help by reviewing or suggesting translations; see [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/). (#718, #719, #720)
 * Fix revision-limit protection being skipped after an attachment-less document was deleted. Deleting a document with no attached file left internal "deleting a document" state set for the rest of the request, so later revision deletions in that request bypassed the revision limit. (#717)
 
+= 5.4.5 =
+
+* Security: on sites that enable block editor mode for documents (off by default), files uploaded through the block editor's Document panel were stored under their original filenames in the normal uploads location, so a private or draft document's file could be downloaded directly by anyone who knew or guessed its URL. Panel uploads are now stored and protected like classic editor uploads (hashed name, document directory). Files already uploaded through the panel should be re-uploaded. The panel also now shows the attached file and saves the selection. (#735)
+
 = 5.4.4 =
-
-* Security: on sites that enable the REST API for documents (off by default), a user who could edit their own documents could point one of them at another document's file, including a private document they could not read, and so serve that file. A document now only ever resolves to, and can only be linked to, a file that belongs to it, and REST writes can no longer bypass the plugin's REST checks by requesting the `edit` context. See [GHSA-697p-7g2w-6q3q](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-697p-7g2w-6q3q). (#734)
-
-= 5.4.3 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
