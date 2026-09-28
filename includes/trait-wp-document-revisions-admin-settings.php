@@ -126,7 +126,6 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Filters documents from media galleries.
 	 *
 	 * @uses filter_media_where()
-	 * @uses filter_media_join()
 	 */
 	public function filter_from_media(): void {
 		global $pagenow;
@@ -137,7 +136,6 @@ trait WP_Document_Revisions_Admin_Settings {
 		}
 
 		// note: hook late so that unattached filter can hook in, if necessary.
-		add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
 		add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
 	}
 
@@ -778,21 +776,24 @@ trait WP_Document_Revisions_Admin_Settings {
 	}
 
 	/**
-	 * Joins wp_posts on itself so posts can be filter by post_parent's type.
+	 * No longer used: filter_media_where() needs no join. Kept so existing
+	 * add_filter()/remove_filter() calls referencing it keep working.
 	 *
+	 * @deprecated 5.5.0
 	 * @param string $join the original join statement.
-	 * @return string the modified join statement
+	 * @return string the unchanged join statement
 	 */
 	public function filter_media_join( string $join ): string {
-		global $wpdb;
-
-		$join .= " LEFT OUTER JOIN {$wpdb->posts} wpdr_post_parent ON wpdr_post_parent.ID = {$wpdb->posts}.post_parent";
-
 		return $join;
 	}
 
 	/**
 	 * Exclude children of documents from query.
+	 *
+	 * Uses an uncorrelated subquery rather than joining wp_posts on itself, so the
+	 * set of document children is built once from the post_parent and
+	 * type_status_date indexes instead of being looked up for every attachment,
+	 * which is slow on large media libraries. (#725)
 	 *
 	 * @param string $where the original where statement.
 	 * @return string the modified where statement
@@ -800,7 +801,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	public function filter_media_where( string $where ): string {
 		global $wpdb;
 
-		$where .= " AND ( wpdr_post_parent.post_type IS NULL OR wpdr_post_parent.post_type != 'document' )";
+		$where .= " AND {$wpdb->posts}.ID NOT IN ( SELECT wpdr_child.ID FROM {$wpdb->posts} wpdr_child WHERE wpdr_child.post_parent IN ( SELECT wpdr_document.ID FROM {$wpdb->posts} wpdr_document WHERE wpdr_document.post_type = 'document' ) )";
 
 		return $where;
 	}
@@ -815,7 +816,6 @@ trait WP_Document_Revisions_Admin_Settings {
 	public function filter_from_media_grid( array $query ) {
 		// note: hook late so that unattached filter can hook in, if necessary.
 		if ( ! apply_filters( 'document_use_block_editor', false ) ) {
-			add_filter( 'posts_join_paged', array( $this, 'filter_media_join' ) );
 			add_filter( 'posts_where_paged', array( $this, 'filter_media_where' ), 20 );
 		}
 
