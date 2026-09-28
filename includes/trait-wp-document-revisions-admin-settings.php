@@ -834,16 +834,16 @@ trait WP_Document_Revisions_Admin_Settings {
 			return;
 		}
 
-		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-		$attachmts       = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID FROM {$wpdb->prefix}posts WHERE post_parent = %d AND post_type = 'attachment'",
-				$post_id
-			),
-			ARRAY_A
+		// every status (including trash and auto-draft), matching the previous raw query.
+		$attachmts       = get_children(
+			array(
+				'post_parent' => $post_id,
+				'post_type'   => 'attachment',
+				'post_status' => array_keys( get_post_stati() ),
+				'fields'      => 'ids',
+			)
 		);
-		self::$attachmts = wp_list_pluck( $attachmts, 'ID', 'ID' );
+		self::$attachmts = array_combine( $attachmts, $attachmts );
 	}
 
 	/**

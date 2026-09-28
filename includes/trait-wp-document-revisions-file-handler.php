@@ -771,8 +771,6 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return bool
 	 */
 	public function validate_feed_key(): bool {
-		global $wpdb;
-
 		// verify key exists.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['key'] ) ) {
@@ -793,19 +791,28 @@ trait WP_Document_Revisions_File_Handler {
 		if ( $user->exists() ) {
 			// yes, validate against their key, i.e. act somewhat like nonce.
 			$key_user = get_user_option( self::$meta_key );
-			if ( $key === $key_user ) {
-				return true;
-			} else {
-				return false;
-			}
+			return hash_equals( (string) $key_user, $key );
 		}
 
 		// lookup key and, if found, set user_id (so current_user_can will work).
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		$feed_user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) );
-		// $wpdb->get_var() returns NULL when no row matches; only authenticate when an actual user_id is found.
-		if ( ! empty( $feed_user ) && is_numeric( $feed_user ) ) {
-			wp_set_current_user( (int) $feed_user );
+		global $wpdb;
+		$feed_users = get_users(
+			array(
+				'blog_id'    => 0,
+				'meta_key'   => $wpdb->get_blog_prefix() . self::$meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'fields'     => 'ID',
+				'number'     => 1,
+			)
+		);
+		if ( empty( $feed_users ) ) {
+			return false;
+		}
+
+		// Re-check with a constant-time, case-sensitive comparison (the SQL match uses the column collation).
+		$feed_user = (int) $feed_users[0];
+		if ( hash_equals( (string) get_user_option( self::$meta_key, $feed_user ), $key ) ) {
+			wp_set_current_user( $feed_user );
 			return true;
 		}
 
