@@ -326,7 +326,7 @@ trait WP_Document_Revisions_Admin_Settings {
 				printf(
 					esc_html( $format_string ),
 					esc_html( human_time_diff( strtotime( $document->post_modified_gmt ), time() ) ),
-					esc_html( get_the_author_meta( 'display_name', (int) $document->post_author ) ),
+					esc_html( get_the_author_meta( 'display_name', self::$parent->get_revision_author( $document ) ) ),
 					esc_html( ucwords( $document->post_status ) )
 				);
 				?>

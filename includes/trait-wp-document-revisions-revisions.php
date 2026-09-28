@@ -135,6 +135,45 @@ trait WP_Document_Revisions_Revisions {
 
 
 	/**
+	 * Returns the user who saved a document version.
+	 *
+	 * The document itself comes first in get_revisions(), and a document's post_author
+	 * is its owner, not whoever uploaded the current file. For the document, this
+	 * returns the author of its latest revision (WordPress records the saving user
+	 * there), falling back to the owner when there are no revisions yet or the latest
+	 * one has no author (e.g. saved by cron or WP-CLI). For a revision, it returns the
+	 * revision's author.
+	 *
+	 * @since 5.6.0
+	 * @param int|WP_Post $revision the document or revision.
+	 * @return int user ID, or 0 if unknown.
+	 */
+	public function get_revision_author( $revision ): int {
+		$revision = get_post( $revision );
+		if ( ! $revision ) {
+			return 0;
+		}
+
+		$author = (int) $revision->post_author;
+		if ( 'document' === $revision->post_type ) {
+			$revisions = $this->get_revisions( $revision->ID );
+			if ( isset( $revisions[1] ) && (int) $revisions[1]->post_author > 0 ) {
+				$author = (int) $revisions[1]->post_author;
+			}
+		}
+
+		/**
+		 * Filters the user shown as having saved a document version.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int     $author   user ID.
+		 * @param WP_Post $revision the document or revision.
+		 */
+		return (int) apply_filters( 'document_revision_author', $author, $revision );
+	}
+
+	/**
 	 * Returns a modified WP Query object of a document and its revisions
 	 * Corrects the authors bug.
 	 *

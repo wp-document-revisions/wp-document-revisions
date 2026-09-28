@@ -156,7 +156,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				}
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo ( (bool) $instance['show_descr'] && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
-				printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) );
+				printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $document ) ) ) );
 				?>
 			</li>
 			<?php
