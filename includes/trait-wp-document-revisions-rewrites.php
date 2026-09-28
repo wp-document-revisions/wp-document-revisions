@@ -343,6 +343,7 @@ trait WP_Document_Revisions_Rewrites {
 
 		// update the post name with the slug and then the guid - direct in the database.
 		$doc            = get_post( $post_id );
+		$old_slug       = $doc->post_name;
 		$slug           = wp_unique_post_slug( $slug, $post_id, $doc->post_status, 'document', 0 );
 		$doc->post_name = $slug;
 		$guid           = $this->permalink( $doc->guid, $doc, false );
@@ -360,8 +361,54 @@ trait WP_Document_Revisions_Rewrites {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$this->clear_cache( $post_id, $doc, true );
 
+		if ( $old_slug !== $slug ) {
+			$this->record_old_slug( $post_id, $old_slug, $slug, $doc->post_status );
+
+			/**
+			 * Fires after a document's slug is changed from the edit screen.
+			 *
+			 * @since 5.6.0
+			 *
+			 * @param int    $post_id  the document ID.
+			 * @param string $slug     the new slug.
+			 * @param string $old_slug the previous slug.
+			 */
+			do_action( 'document_permalink_updated', $post_id, $slug, $old_slug );
+		}
+
 		// phpcs:ignore WordPress.Security.EscapeOutput
 		wp_die( wp_kses_post( get_sample_permalink_html( $post_id, $title, $slug ) ) );
+	}
+
+	/**
+	 * Remembers a document's previous slug so its old URL redirects to the new one.
+	 *
+	 * The slug is written directly to the database above, so core's
+	 * wp_check_for_changed_slugs() never sees the change. This mirrors it, but for any
+	 * status that has a pretty permalink (private documents too), not just published.
+	 * wp_old_slug_redirect() then redirects the old URL.
+	 *
+	 * @since 5.6.0
+	 * @param int    $post_id     the document ID.
+	 * @param string $old_slug    the previous slug.
+	 * @param string $slug        the new slug.
+	 * @param string $post_status the document status.
+	 */
+	private function record_old_slug( int $post_id, string $old_slug, string $slug, string $post_status ): void {
+		// Drafts and pending documents use ?p= links, so there's no old URL to redirect.
+		if ( '' === $old_slug || in_array( $post_status, array( 'draft', 'pending', 'auto-draft' ), true ) ) {
+			return;
+		}
+
+		$old_slugs = (array) get_post_meta( $post_id, '_wp_old_slug', false );
+		if ( ! in_array( $old_slug, $old_slugs, true ) ) {
+			add_post_meta( $post_id, '_wp_old_slug', $old_slug );
+		}
+
+		// The new slug is no longer an old one.
+		if ( in_array( $slug, $old_slugs, true ) ) {
+			delete_post_meta( $post_id, '_wp_old_slug', $slug );
+		}
 	}
 
 	/**
