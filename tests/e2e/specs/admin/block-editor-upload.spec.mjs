@@ -140,124 +140,81 @@ test.describe( 'Block Editor Document Upload', () => {
 		await requestUtils.deleteMedia( media.id );
 	} );
 
-	test( 'selecting media updates attachment meta in block editor', async ( {
-		admin,
-		editor,
-		page,
-		requestUtils,
-	} ) => {
-		// Upload a test file first so media library has something.
-		const filePath = path.resolve(
-			__dirname,
-			'../../fixtures/test-document.txt'
-		);
-		const media = await requestUtils.uploadMedia( filePath );
-
+	test( 'media frame is upload-only (no Media Library tab)', async ( { admin, editor, page } ) => {
 		await admin.createNewPost( {
 			postType: 'document',
-			title: 'Block Editor Media Select Test',
+			title: 'Block Editor Upload-only Frame Test',
 		} );
-
-		// Wait for block editor to fully load (canvas is hidden for documents via CSS).
 		await page.waitForSelector( '.edit-post-header', { timeout: 15000 } );
 
-		// Open and expand the Document upload panel.
 		const panel = await openDocumentUploadPanel( page, editor );
+		await panel.getByRole( 'button', { name: /[Uu]pload [Dd]ocument/ } ).click();
 
-		const uploadButton = panel.getByRole( 'button', {
-			name: /[Uu]pload [Dd]ocument/,
-		} );
-		await uploadButton.click();
-
-		// The media library modal should open.
 		const mediaModal = page.locator( '.media-modal' );
 		await expect( mediaModal ).toBeVisible( { timeout: 10000 } );
-
-		// Switch to Media Library tab and wait for items to load.
-		const mediaLibTab = mediaModal.getByRole( 'tab', {
-			name: /[Mm]edia [Ll]ibrary/,
-		} );
-		if ( await mediaLibTab.isVisible() ) {
-			await mediaLibTab.click();
-		}
-
-		// Wait for the media library to load items.
-		const mediaItem = mediaModal.locator( '.attachment' ).first();
-		await expect( mediaItem ).toBeVisible( { timeout: 15000 } );
-		await mediaItem.click();
-
-		// Click the select button (exact match to avoid matching "Deselect").
-		const selectButton = mediaModal.getByRole( 'button', {
-			name: 'Select',
-			exact: true,
-		} );
-		await selectButton.click();
-
-		// Modal should close.
-		await expect( mediaModal ).not.toBeVisible( { timeout: 5000 } );
-
-		// The panel should now show "Upload New Version" instead of "Upload Document".
-		const newVersionButton = panel.getByRole( 'button', {
-			name: /[Uu]pload [Nn]ew [Vv]ersion/,
-		} );
-		await expect( newVersionButton ).toBeVisible( { timeout: 10000 } );
-
-		// Clean up the uploaded media.
-		await requestUtils.deleteMedia( media.id );
+		// Picking an existing library file can't work: a document may only use its own attachments.
+		await expect( mediaModal.getByRole( 'tab', { name: /[Mm]edia [Ll]ibrary/ } ) ).toHaveCount( 0 );
+		await expect( mediaModal.locator( 'input[type="file"]' ) ).toHaveCount( 1 );
 	} );
 
-	test( 'saving document with meta persists WPDR comment in content', async ( {
+	test( 'uploading through the panel stores a protected document file and survives reload', async ( {
 		admin,
 		editor,
 		page,
 		requestUtils,
 	} ) => {
-		// Upload a test file.
-		const filePath = path.resolve(
-			__dirname,
-			'../../fixtures/test-document.txt'
-		);
-		const media = await requestUtils.uploadMedia( filePath );
-
 		await admin.createNewPost( {
 			postType: 'document',
-			title: 'Block Editor Save Test',
+			title: 'Block Editor Upload Flow Test',
 		} );
-
-		// Wait for block editor to fully load (canvas is hidden for documents via CSS).
 		await page.waitForSelector( '.edit-post-header', { timeout: 15000 } );
 
-		// Set the attachment meta directly via the editor data store.
-		// This mimics what happens when a file is selected via the sidebar panel.
-		await page.evaluate( ( attachId ) => {
-			wp.data
-				.dispatch( 'core/editor' )
-				.editPost( { meta: { _document_attachment_id: attachId } } );
-		}, media.id );
+		const panel = await openDocumentUploadPanel( page, editor );
+		await panel.getByRole( 'button', { name: /[Uu]pload [Dd]ocument/ } ).click();
 
-		// Save the document via keyboard shortcut.
-		await page.keyboard.press( 'Meta+s' );
+		const mediaModal = page.locator( '.media-modal' );
+		await expect( mediaModal ).toBeVisible( { timeout: 10000 } );
+		await mediaModal
+			.locator( 'input[type="file"]' )
+			.setInputFiles( path.resolve( __dirname, '../../fixtures/test-document.txt' ) );
 
-		// Wait for save to complete — look for the "saved" notice or URL change.
-		await page.waitForTimeout( 3000 );
+		// The frame auto-closes once the upload finishes, and the panel shows the file.
+		await expect( mediaModal ).not.toBeVisible( { timeout: 15000 } );
+		await expect(
+			panel.getByRole( 'button', { name: /[Uu]pload [Nn]ew [Vv]ersion/ } )
+		).toBeVisible( { timeout: 10000 } );
 
-		// Get the post ID from the URL.
-		const url = page.url();
-		const postIdMatch = url.match( /post=(\d+)/ );
+		await editor.saveDraft();
+		const postId = await page.evaluate( () =>
+			wp.data.select( 'core/editor' ).getCurrentPostId()
+		);
 
-		if ( postIdMatch ) {
-			const postId = parseInt( postIdMatch[ 1 ], 10 );
+		const doc = await requestUtils.rest( {
+			path: `/wp/v2/documents/${ postId }?context=edit`,
+		} );
+		const attachId = doc.meta._document_attachment_id;
+		expect( attachId ).toBeGreaterThan( 0 );
 
-			// Fetch the saved document via REST to verify content.
-			const saved = await requestUtils.rest( {
-				path: `/wp/v2/documents/${ postId }`,
-			} );
+		const media = await requestUtils.rest( {
+			path: `/wp/v2/media/${ attachId }?context=edit`,
+		} );
+		// Parented to the document, and stored under a hashed name (not the public original).
+		expect( media.post ).toBe( postId );
+		expect( media.source_url ).not.toContain( 'test-document' );
 
-			// The document should have the attachment meta set.
-			expect( saved.meta._document_attachment_id ).toBe( media.id );
-		}
+		// After a reload the panel still shows the attached file.
+		await page.reload();
+		await page.waitForSelector( '.edit-post-header', { timeout: 15000 } );
+		const reloaded = await openDocumentUploadPanel( page, editor );
+		await expect(
+			reloaded.getByRole( 'button', { name: /[Uu]pload [Nn]ew [Vv]ersion/ } )
+		).toBeVisible( { timeout: 10000 } );
+		await expect( reloaded.getByRole( 'link', { name: 'Download' } ) ).toBeVisible();
 
-		// Clean up uploaded media.
-		await requestUtils.deleteMedia( media.id );
+		await requestUtils.rest( {
+			method: 'DELETE',
+			path: `/wp/v2/documents/${ postId }`,
+			params: { force: true },
+		} );
 	} );
 } );
