@@ -105,7 +105,7 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 		$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions-ai-prefill.asset.php';
 		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
 			'dependencies' => array( 'wp-api-fetch' ),
-			'version'      => '5.0.0',
+			'version'      => WPDR_VERSION,
 		);
 
 		wp_enqueue_script(

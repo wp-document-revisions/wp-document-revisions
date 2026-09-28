@@ -17,6 +17,7 @@
  * @package
  */
 
+import apiFetch from '@wordpress/api-fetch';
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { MediaUploadCheck } from '@wordpress/block-editor';
@@ -466,10 +467,9 @@ function RevisionLogPanelContent( { postId } ) {
 	const fetchRevisions = useCallback( () => {
 		setLoading( true );
 		const restBase = window.wpDocumentRevisions?.restBase || 'documents';
-		window.wp
-			.apiFetch( {
-				path: `/wp/v2/${ restBase }/${ postId }/revisions?per_page=20&context=edit`,
-			} )
+		apiFetch( {
+			path: `/wp/v2/${ restBase }/${ postId }/revisions?per_page=20&context=edit`,
+		} )
 			.then( ( data ) => {
 				setRevisions( data );
 				setLoading( false );
