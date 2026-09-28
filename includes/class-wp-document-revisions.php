@@ -1249,12 +1249,12 @@ class WP_Document_Revisions {
 	/**
 	 * Formerly removed nocache headers from document downloads on IE < 8. No longer hooked.
 	 *
-	 * @deprecated 5.6.0 Internet Explorer is no longer supported.
+	 * @deprecated 5.5.0 Internet Explorer is no longer supported.
 	 *
 	 * @param WP $wp The global WP object.
 	 * @return void
 	 */
 	public function ie_cache_fix( WP $wp ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __METHOD__, '5.6.0' );
+		_deprecated_function( __METHOD__, '5.5.0' );
 	}
 }
