@@ -1,0 +1,134 @@
+#!/usr/bin/env node
+/* eslint-disable no-console */
+
+// Reports translate.wordpress.org progress for the plugin as Markdown on
+// stdout: which locales have a language pack, how close the rest are, and
+// which bundled fallback files in languages/ are now shadowed by a pack and
+// can be deleted (see #739). Used by .github/workflows/language-packs.yml.
+//
+// The last line is an HTML comment listing the locales with packs, so the
+// workflow can tell when a new pack has appeared since the previous run.
+
+const fs = require( 'fs' );
+const path = require( 'path' );
+
+const SLUG = 'wp-document-revisions';
+const PACKS_API = `https://api.wordpress.org/translations/plugins/1.0/?slug=${ SLUG }`;
+const GLOTPRESS_API = `https://translate.wordpress.org/api/projects/wp-plugins/${ SLUG }/stable/`;
+const GLOTPRESS_URL = `https://translate.wordpress.org/projects/wp-plugins/${ SLUG }/stable`;
+
+// translate.wordpress.org builds a pack once this share of strings is approved.
+const PACK_THRESHOLD = 90;
+
+async function getJSON( url ) {
+	const response = await fetch( url );
+	if ( ! response.ok ) {
+		throw new Error( `${ url } returned HTTP ${ response.status }` );
+	}
+	return response.json();
+}
+
+function bundledLocales() {
+	const dir = path.join( __dirname, '..', 'languages' );
+	const pattern = new RegExp( `^${ SLUG }-(.+)\\.po$` );
+	return fs
+		.readdirSync( dir )
+		.map( ( file ) => file.match( pattern ) )
+		.filter( Boolean )
+		.map( ( match ) => match[ 1 ] )
+		.sort();
+}
+
+async function main() {
+	const [ packsResponse, glotpress ] = await Promise.all( [
+		getJSON( PACKS_API ),
+		getJSON( GLOTPRESS_API ),
+	] );
+
+	const packs = new Map(
+		packsResponse.translations.map( ( pack ) => [ pack.language, pack ] )
+	);
+	const bundled = bundledLocales();
+
+	// Only list sets someone has worked on, plus any locale we bundle.
+	const sets = glotpress.translation_sets
+		.filter(
+			( set ) =>
+				set.current_count > 0 ||
+				set.waiting_count > 0 ||
+				packs.has( set.wp_locale ) ||
+				bundled.includes( set.wp_locale )
+		)
+		.sort(
+			( a, b ) =>
+				b.percent_translated - a.percent_translated ||
+				b.waiting_count - a.waiting_count ||
+				a.wp_locale.localeCompare( b.wp_locale )
+		);
+
+	const removable = bundled.filter( ( locale ) => packs.has( locale ) );
+	const pending = sets.filter(
+		( set ) =>
+			set.percent_translated >= PACK_THRESHOLD &&
+			! packs.has( set.wp_locale )
+	);
+	const fallbacks = bundled.filter( ( locale ) => ! packs.has( locale ) );
+
+	const lines = [
+		`Tracks [translate.wordpress.org](${ GLOTPRESS_URL }) progress for WP Document Revisions. A language pack is built once a locale reaches ${ PACK_THRESHOLD }% approved strings. This issue is updated automatically by the Language pack status workflow; don't edit it by hand.`,
+		'',
+		`- **Language packs (${ packs.size }):** ${
+			[ ...packs.keys() ].sort().join( ', ' ) || 'none'
+		}`,
+		`- **At ${ PACK_THRESHOLD }%+ but no pack yet (${ pending.length }):** ${
+			pending.map( ( set ) => set.wp_locale ).join( ', ' ) || 'none'
+		}`,
+		`- **Bundled fallbacks still needed (${ fallbacks.length }):** ${
+			fallbacks.join( ', ' ) || 'none'
+		}`,
+	];
+
+	if ( removable.length ) {
+		lines.push(
+			'',
+			'### Bundled files to remove',
+			'',
+			'These locales now have a language pack, which WordPress loads instead of the bundled file, so the bundled `.po`/`.mo` can be deleted in the next release:',
+			'',
+			...removable.map(
+				( locale ) =>
+					`- [ ] \`languages/${ SLUG }-${ locale }.po\` / \`.mo\``
+			)
+		);
+	}
+
+	lines.push(
+		'',
+		'### Progress',
+		'',
+		'| Locale | Approved | Waiting review | Pack | Bundled |',
+		'| --- | ---: | ---: | :---: | :---: |',
+		...sets.map( ( set ) => {
+			const name = `[${ set.name }${
+				set.slug === 'default' ? '' : ` (${ set.slug })`
+			} \`${ set.wp_locale }\`](${ GLOTPRESS_URL }/${ set.locale }/${
+				set.slug
+			}/)`;
+			const pack = packs.get( set.wp_locale );
+			return `| ${ name } | ${ set.percent_translated }% (${
+				set.current_count
+			}/${ set.all_count }) | ${ set.waiting_count } | ${
+				pack ? pack.version : ''
+			} | ${ bundled.includes( set.wp_locale ) ? '✓' : '' } |`;
+		} ),
+		'',
+		`<!-- packs: ${ [ ...packs.keys() ].sort().join( ',' ) } -->`
+	);
+
+	console.log( lines.join( '\n' ) );
+}
+
+main().catch( ( error ) => {
+	console.error( error );
+	process.exit( 1 );
+} );
