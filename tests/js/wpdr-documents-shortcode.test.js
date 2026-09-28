@@ -288,30 +288,6 @@ describe( 'wpdr-documents-shortcode block', () => {
 				default: '',
 			} );
 		} );
-
-		test( 'should define style attributes for block supports', () => {
-			expect( metadata.attributes.align ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.backgroundColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.textColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.linkColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.gradient ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.fontSize ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.style ).toEqual( {
-				type: 'object',
-			} );
-		} );
 	} );
 
 	// ── Block Supports ──

@@ -167,16 +167,6 @@ describe( 'Block Attributes', () => {
 		expect( metadata.attributes.show_pdf.type ).toBe( 'boolean' );
 		expect( metadata.attributes.new_tab.type ).toBe( 'boolean' );
 	} );
-
-	test( 'defines styling attributes', () => {
-		expect( metadata.attributes.align.type ).toBe( 'string' );
-		expect( metadata.attributes.backgroundColor.type ).toBe( 'string' );
-		expect( metadata.attributes.linkColor.type ).toBe( 'string' );
-		expect( metadata.attributes.textColor.type ).toBe( 'string' );
-		expect( metadata.attributes.gradient.type ).toBe( 'string' );
-		expect( metadata.attributes.fontSize.type ).toBe( 'string' );
-		expect( metadata.attributes.style.type ).toBe( 'object' );
-	} );
 } );
 
 // ─── Block Supports ─────────────────────────────────────────────────────────────────

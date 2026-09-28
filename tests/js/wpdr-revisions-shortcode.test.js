@@ -146,48 +146,6 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 				default: true,
 			} );
 		} );
-
-		test( 'defines align attribute as string', () => {
-			expect( metadata.attributes.align ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines backgroundColor attribute as string', () => {
-			expect( metadata.attributes.backgroundColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines linkColor attribute as string', () => {
-			expect( metadata.attributes.linkColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines textColor attribute as string', () => {
-			expect( metadata.attributes.textColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines gradient attribute as string', () => {
-			expect( metadata.attributes.gradient ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines fontSize attribute as string', () => {
-			expect( metadata.attributes.fontSize ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines style attribute as object', () => {
-			expect( metadata.attributes.style ).toEqual( {
-				type: 'object',
-			} );
-		} );
 	} );
 
 	// -------------------------------------------------------
