@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.4
+
+* Security: on sites that enable the REST API for documents (off by default), a user who could edit their own documents could point one of them at another document's file, including a private document they could not read, and so serve that file. A document now only ever resolves to, and can only be linked to, a file that belongs to it, and REST writes can no longer bypass the plugin's REST checks by requesting the `edit` context.
+
 ### 5.4.3
 
 * Fix revision-limit protection never taking effect. When a document revision limit is set, the plugin is meant to stop other plugins or code from deleting a document's newest revisions, but a type mismatch meant no revision was ever recognized as protected, so any revision could be deleted. The newest revisions within the limit are now kept as intended. (#712)
