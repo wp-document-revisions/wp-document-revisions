@@ -59,6 +59,80 @@ class WP_Document_Revisions_Manage_Rest {
 		if ( apply_filters( 'document_use_block_editor', false ) ) {
 			add_filter( 'rest_pre_insert_document', array( $this, 'sync_meta_to_content' ), 10, 2 );
 		}
+
+		// Read-only file details on document responses. This class is created during
+		// rest_api_init (priority 10), so hook a later priority to run in the same pass.
+		add_action( 'rest_api_init', array( $this, 'register_document_file_field' ), 20 );
+	}
+
+	/**
+	 * Registers the read-only document_file field on document REST responses.
+	 *
+	 * @since 5.6.0
+	 * @return void
+	 */
+	public function register_document_file_field(): void {
+		$post_type = get_post_type_object( 'document' );
+		if ( ! $post_type || ! $post_type->show_in_rest ) {
+			return;
+		}
+
+		register_rest_field(
+			'document',
+			'document_file',
+			array(
+				'get_callback' => array( $this, 'get_document_file_field' ),
+				'schema'       => array(
+					'description' => __( 'The current file of the document. Only shown to users who can edit the document; null otherwise or when there is no file.', 'wp-document-revisions' ),
+					'type'        => array( 'object', 'null' ),
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'properties'  => array(
+						'attachment_id' => array( 'type' => 'integer' ),
+						'mime_type'     => array( 'type' => 'string' ),
+						'extension'     => array( 'type' => 'string' ),
+						'filesize'      => array( 'type' => array( 'integer', 'null' ) ),
+						'url'           => array(
+							'type'   => 'string',
+							'format' => 'uri',
+						),
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Returns the document_file REST field for a document.
+	 *
+	 * Gated on edit_document, like the attachment details doc_clean_attachment() hides
+	 * from other users. The URL is the document permalink, which checks permissions,
+	 * not the file's storage location.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, mixed> $data the prepared response data.
+	 * @return array<string, mixed>|null
+	 */
+	public function get_document_file_field( array $data ): ?array {
+		$document_id = isset( $data['id'] ) ? (int) $data['id'] : 0;
+		if ( $document_id <= 0 || ! current_user_can( 'edit_document', $document_id ) ) {
+			return null;
+		}
+
+		$attach = self::$parent->get_document( $document_id );
+		if ( ! $attach instanceof WP_Post ) {
+			return null;
+		}
+
+		$file = get_attached_file( $attach->ID );
+
+		return array(
+			'attachment_id' => (int) $attach->ID,
+			'mime_type'     => (string) get_post_mime_type( $attach->ID ),
+			'extension'     => ltrim( self::$parent->get_extension( (string) get_post_meta( $attach->ID, '_wp_attached_file', true ) ), '.' ),
+			'filesize'      => ( is_string( $file ) && is_file( $file ) ) ? (int) filesize( $file ) : null,
+			'url'           => (string) get_permalink( $document_id ),
+		);
 	}
 
 	/**
