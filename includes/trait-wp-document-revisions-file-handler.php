@@ -642,16 +642,21 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.4.0.
 	 *
-	 * @param array<string, mixed> $metadata      An array of attachment meta data.
-	 * @param int                  $attachment_id Current attachment ID.
-	 * @param string               $context       Additional context. Can be 'create' when metadata was initially created for new attachment
-	 *                                             or 'update' when the metadata was updated.
-	 * @return array<string, mixed> the (possibly modified) attachment metadata.
+	 * @param mixed $metadata      An array of attachment meta data.
+	 * @param mixed $attachment_id Current attachment ID.
+	 * @param mixed $context       Additional context. Can be 'create' when metadata was initially created for new attachment
+	 *                             or 'update' when the metadata was updated.
+	 * @return mixed the (possibly modified) attachment metadata.
 	 */
-	public function hide_doc_attach_slug( array $metadata, int $attachment_id, string $context ): array {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function hide_doc_attach_slug( $metadata, $attachment_id = 0, $context = 'create' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		if ( ! is_array( $metadata ) || ! is_numeric( $attachment_id ) ) {
+			return $metadata;
+		}
+		$attachment_id = (int) $attachment_id;
+
 		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( ! self::check_doc_attach( $attach ) ) {
+		if ( ! $attach || ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
@@ -1088,15 +1093,16 @@ trait WP_Document_Revisions_File_Handler {
 	 * Prevents direct access to files and ensures authentication.
 	 *
 	 * @since 1.2
-	 * @param string $url the original URL.
-	 * @param int    $post_id the attachment ID.
-	 * @return string the modified URL
+	 * @param mixed $url the original URL.
+	 * @param mixed $post_id the attachment ID.
+	 * @return mixed the modified URL
 	 */
-	public function attachment_url_filter( string $url, int $post_id ): string {
+	public function attachment_url_filter( $url, $post_id = 0 ) {
 		// not an attached attachment.
-		if ( ! $this->verify_post_type( $post_id ) ) {
+		if ( ! is_string( $url ) || ! is_numeric( $post_id ) || (int) $post_id <= 0 || ! $this->verify_post_type( (int) $post_id ) ) {
 			return $url;
 		}
+		$post_id = (int) $post_id;
 
 		$document = get_post( $post_id );
 

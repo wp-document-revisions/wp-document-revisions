@@ -30,10 +30,14 @@ trait WP_Document_Revisions_Rewrites {
 	 * Adds document rewrite rules to the rewrite array.
 	 *
 	 * @since 0.5
-	 * @param string[] $rules rewrite rules.
-	 * @return string[] rewrite rules
+	 * @param mixed $rules rewrite rules. `transient_rewrite_rules` passes false when the rules aren't cached.
+	 * @return mixed rewrite rules
 	 */
-	public function revision_rewrite( array $rules ): array {
+	public function revision_rewrite( $rules ) {
+		if ( ! is_array( $rules ) ) {
+			return $rules;
+		}
+
 		$slug = $this->document_slug();
 
 		// remove any previous versions of file matches (will be added back if same).
@@ -87,17 +91,20 @@ trait WP_Document_Revisions_Rewrites {
 	 * Builds document post type permalink.
 	 *
 	 * @since 0.5
-	 * @param string  $link      original permalink.
-	 * @param WP_Post $document  post object.
-	 * @param bool    $leavename whether to leave the %document% placeholder.
-	 * @return string the real permalink
+	 * @param mixed $link      original permalink.
+	 * @param mixed $document  post object.
+	 * @param mixed $leavename whether to leave the %document% placeholder.
+	 * @return mixed the real permalink
 	 */
-	public function permalink( string $link, WP_Post $document, bool $leavename ): string {
+	public function permalink( $link, $document = null, $leavename = false ) {
 		global $wp_rewrite;
 		$revision_num = false;
+		if ( ! $document instanceof WP_Post ) {
+			$document = is_numeric( $document ) && $document > 0 ? get_post( (int) $document ) : null;
+		}
 
 		// if this isn't our post type, kick.
-		if ( ! $this->verify_post_type( $document ) ) {
+		if ( ! is_string( $link ) || ! $document || ! $this->verify_post_type( $document ) ) {
 			return $link;
 		}
 
@@ -236,13 +243,13 @@ trait WP_Document_Revisions_Rewrites {
 	 * Hides file's true location from users in the Gallery.
 	 *
 	 * @since 0.5
-	 * @param string $link URL to file's tru location.
-	 * @param int    $id attachment ID.
-	 * @return string empty string
+	 * @param mixed $link URL to file's tru location.
+	 * @param mixed $id attachment ID.
+	 * @return mixed empty string
 	 */
-	public function attachment_link_filter( string $link, int $id ): string {
+	public function attachment_link_filter( $link, $id = 0 ) {
 
-		if ( ! $this->verify_post_type( $id ) ) {
+		if ( ! is_numeric( $id ) || (int) $id <= 0 || ! $this->verify_post_type( (int) $id ) ) {
 			return $link;
 		}
 
@@ -299,12 +306,12 @@ trait WP_Document_Revisions_Rewrites {
 	 * Because documents end with a phaux file extension, we don't want that unless there is a named extension
 	 * Removes trailing slash from documents, while allowing all other SEO goodies to continue working.
 	 *
-	 * @param String $redirect    the redirect URL.
-	 * @param bool   $do_redirect whether to redirect.
-	 * @return String the redirect URL without the trailing slash
+	 * @param mixed $redirect    the redirect URL. Another filter may already have set it to false to cancel the redirect.
+	 * @param mixed $do_redirect whether to redirect.
+	 * @return mixed the redirect URL without the trailing slash
 	 */
-	public function redirect_canonical_filter( string $redirect, $do_redirect ): string {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		if ( ! $this->verify_post_type() ) {
+	public function redirect_canonical_filter( $redirect, $do_redirect = true ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		if ( ! is_string( $redirect ) || '' === $redirect || ! $this->verify_post_type() ) {
 			return $redirect;
 		}
 
