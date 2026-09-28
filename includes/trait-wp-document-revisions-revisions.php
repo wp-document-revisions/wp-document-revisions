@@ -42,8 +42,8 @@ trait WP_Document_Revisions_Revisions {
 		}
 
 		$cache = wp_cache_get( $post_id, 'document_revisions' );
-		if ( $cache ) {
-			return $cache;
+		if ( is_array( $cache ) && $cache ) {
+			return $this->clone_revisions( $cache );
 		}
 
 		// Before post is saved GMT fields are zero.
@@ -78,7 +78,59 @@ trait WP_Document_Revisions_Revisions {
 
 		wp_cache_set( $post_id, $revs, 'document_revisions' );
 
-		return $revs;
+		return $this->clone_revisions( $revs );
+	}
+
+	/**
+	 * Copies a list of revisions so callers can't change the cached objects.
+	 *
+	 * The non-persistent object cache returns arrays by value, but the WP_Post objects
+	 * inside are shared, so a caller changing one (as get_latest_revision() does)
+	 * changed every later get_revisions() result in the request.
+	 *
+	 * @since 5.6.0
+	 * @param WP_Post[] $revisions the cached revisions.
+	 * @return WP_Post[]
+	 */
+	private function clone_revisions( array $revisions ): array {
+		return array_map(
+			static function ( $revision ) {
+				return clone $revision;
+			},
+			$revisions
+		);
+	}
+
+	/**
+	 * Clears a document's cached revisions when it, one of its revisions or one of its
+	 * attachments changes.
+	 *
+	 * Hooked to clean_post_cache, which core runs whenever a post is inserted, updated
+	 * or deleted, so revisions deleted with wp_delete_post_revision() and attachments
+	 * added or deleted are covered, not just saves of the document.
+	 *
+	 * @since 5.6.0
+	 * @param int          $post_id the post ID.
+	 * @param WP_Post|null $post    the post object.
+	 */
+	public function flush_revision_cache( $post_id, $post = null ): void {
+		$post = $post instanceof WP_Post ? $post : get_post( (int) $post_id );
+		if ( ! $post ) {
+			return;
+		}
+
+		$documents = array();
+		if ( 'document' === $post->post_type ) {
+			$documents[] = (int) $post->ID;
+		}
+		if ( $post->post_parent && 'document' === get_post_type( $post->post_parent ) ) {
+			$documents[] = (int) $post->post_parent;
+		}
+
+		foreach ( $documents as $document_id ) {
+			wp_cache_delete( $document_id, 'document_revision_indices' );
+			wp_cache_delete( $document_id, 'document_revisions' );
+		}
 	}
 
 

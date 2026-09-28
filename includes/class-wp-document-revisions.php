@@ -196,6 +196,7 @@ class WP_Document_Revisions {
 
 		// cache clean.
 		add_action( 'save_post_document', array( $this, 'clear_cache' ), 20, 3 );
+		add_action( 'clean_post_cache', array( $this, 'flush_revision_cache' ), 10, 2 );
 
 		// Edit Flow or PublishPress Statuses.
 		add_action( 'ef_module_options_loaded', array( $this, 'edit_flow_support' ) );
