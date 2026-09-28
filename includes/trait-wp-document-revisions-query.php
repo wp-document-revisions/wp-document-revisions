@@ -18,6 +18,9 @@ trait WP_Document_Revisions_Query {
 	/**
 	 * Returns the.document attachment associated with a post.
 	 *
+	 * The attachment id comes from (forgeable) post_content, so the attachment is only
+	 * returned if it is parented to the document that owns the post.
+	 *
 	 * @param int $post_id ID of a post object (document or revision).
 	 * @return WP_Post|false
 	 */
@@ -27,7 +30,12 @@ trait WP_Document_Revisions_Query {
 		if ( $attach_id ) {
 			$attach = get_post( $attach_id );
 			if ( (bool) $attach && 'attachment' === $attach->post_type ) {
-				return $attach;
+				// For a revision (or autosave) the owning document is its parent.
+				$post   = get_post( $post_id );
+				$doc_id = ( $post && 'revision' === $post->post_type ) ? $post->post_parent : ( $post ? $post->ID : 0 );
+				if ( $doc_id && (int) $attach->post_parent === (int) $doc_id ) {
+					return $attach;
+				}
 			}
 		}
 		// not a valid attachment.
@@ -214,10 +222,10 @@ trait WP_Document_Revisions_Query {
 	 * Prevents Attachment ID from being displayed on front end.
 	 *
 	 * @since 1.0.3
-	 * @param string $content the post content.
-	 * @return string either the original content or none
+	 * @param mixed $content the post content (a string, unless another filter misbehaves).
+	 * @return mixed either the original content or none
 	 */
-	public function content_filter( string $content ): string {
+	public function content_filter( $content ) {
 		if ( ! $this->verify_post_type( get_post() ) ) {
 			return $content;
 		}
@@ -235,13 +243,13 @@ trait WP_Document_Revisions_Query {
 	 * Adds revision number to document titles.
 	 *
 	 * @since 1.0
-	 * @param string $title   the title.
-	 * @param int    $post_id The ID of the post for which the title is being generated.
-	 * @return string the title possibly with the revision number
+	 * @param mixed $title   the title (a string, unless another filter misbehaves).
+	 * @param mixed $post_id The ID of the post for which the title is being generated.
+	 * @return mixed the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( string $title, $post_id = null ): string {
+	public function add_revision_num_to_title( $title, $post_id = null ) {
 		// If a post ID is not provided, do not attempt to filter the title.
-		if ( ! is_numeric( $post_id ) ) {
+		if ( ! is_string( $title ) || ! is_numeric( $post_id ) ) {
 			return $title;
 		}
 
@@ -446,13 +454,14 @@ trait WP_Document_Revisions_Query {
 	 * revision notes (except if the user could see them by editting the post).
 	 *
 	 * @since 3.3.0
-	 * @param string  $excerpt The original excerpt text associated with a post.
-	 * @param WP_Post $post    The post object.
+	 * @param mixed $excerpt The original excerpt text associated with a post.
+	 * @param mixed $post    The post object. Defaults to the current post.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function empty_excerpt_return( string $excerpt, WP_Post $post ): string {
-		if ( '' === $excerpt || ! $this->verify_post_type( $post ) ) {
+	public function empty_excerpt_return( $excerpt, $post = null ) {
+		$post = get_post( $post );
+		if ( ! is_string( $excerpt ) || '' === $excerpt || ! $post || ! $this->verify_post_type( $post ) ) {
 			return $excerpt;
 		}
 
@@ -472,16 +481,21 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 3.3.0
 	 *
-	 * @param string       $where          The `WHERE` clause in the SQL.
-	 * @param bool         $in_same_term   Whether post should be in a same taxonomy term.
-	 * @param int[]|string $excluded_terms Array of excluded term IDs, or comma-separated string.
-	 * @param string       $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
-	 * @param WP_Post      $post           WP_Post object.
+	 * Core always passes all five arguments, but themes and plugins sometimes apply
+	 * this filter themselves with fewer or non-canonical ones (#732), so accept
+	 * anything and fall back to the current post.
 	 *
-	 * @return string
+	 * @param mixed $where          The `WHERE` clause in the SQL.
+	 * @param mixed $in_same_term   Whether post should be in a same taxonomy term.
+	 * @param mixed $excluded_terms Array of excluded term IDs, or comma-separated string.
+	 * @param mixed $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
+	 * @param mixed $post           WP_Post object. Defaults to the current post.
+	 *
+	 * @return mixed
 	 */
-	public function suppress_adjacent_doc( string $where, bool $in_same_term, $excluded_terms, string $taxonomy, WP_Post $post ): string {
-		if ( ! $this->verify_post_type( $post ) ) {
+	public function suppress_adjacent_doc( $where, $in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $post = null ) {
+		$post = $post instanceof WP_Post ? $post : get_post();
+		if ( ! is_string( $where ) || ! $post || ! $this->verify_post_type( $post ) ) {
 			return $where;
 		}
 

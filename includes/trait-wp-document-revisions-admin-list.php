@@ -78,6 +78,17 @@ trait WP_Document_Revisions_Admin_List {
 			return;
 		}
 
+		/**
+		 * Filters whether to show the first-run "add your first document" notice.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show Whether to show the notice. Default true.
+		 */
+		if ( ! apply_filters( 'document_show_empty_state', true ) ) {
+			return;
+		}
+
 		// Only a genuine first-run state: skip when searching or filtering, where an empty list means "no matches" rather than "no documents".
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['s'] ) || isset( $_GET['post_status'] ) || isset( $_GET['workflow_state'] ) || isset( $_GET['author'] ) ) {
@@ -137,6 +148,21 @@ trait WP_Document_Revisions_Admin_List {
 	public function review_prompt(): void {
 		$screen = get_current_screen();
 		if ( is_null( $screen ) || 'edit-document' !== $screen->id ) {
+			return;
+		}
+
+		/**
+		 * Filters whether to show the WordPress.org review prompt.
+		 *
+		 * Return false to turn it off for everyone, e.g. on managed sites, rather than
+		 * faking each user's dismissal.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show    Whether to show the prompt. Default true.
+		 * @param int  $user_id Current user ID.
+		 */
+		if ( ! apply_filters( 'document_show_review_prompt', true, get_current_user_id() ) ) {
 			return;
 		}
 

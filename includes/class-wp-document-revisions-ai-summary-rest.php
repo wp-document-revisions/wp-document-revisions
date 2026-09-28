@@ -66,6 +66,12 @@ class WP_Document_Revisions_AI_Summary_REST {
 	 * @return void
 	 */
 	public static function register_routes(): void {
+		// Summaries and diffs are built from extracted text. With extraction off sitewide,
+		// don't serve whatever was cached before it was turned off.
+		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_globally_disabled() ) {
+			return;
+		}
+
 		register_rest_route(
 			self::ROUTE_NAMESPACE,
 			'/documents/(?P<doc_id>\d+)/revisions/(?P<rev_id>\d+)/summary',

@@ -99,13 +99,14 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// Check for valid document editing.
 		if ( 'edit' === $request['context'] ) {
+			$edit_ok = false;
 			// standard route for document.
 			if ( isset( $params['id'] ) && current_user_can( 'edit_document', $params['id'] ) ) {
-				return $response;
+				$edit_ok = true;
 			}
 			// route for revisions and autosaves.
 			if ( isset( $params['parent'] ) && current_user_can( 'edit_document', $params['parent'] ) ) {
-				return $response;
+				$edit_ok = true;
 			}
 			// route for query loop. Make sure NOT an edit document/revision route.
 			if ( trailingslashit( $route ) === $target && ! isset( $params['id'] ) && ! isset( $params['parent'] ) ) {
@@ -113,14 +114,21 @@ class WP_Document_Revisions_Manage_Rest {
 				global $wp_post_types;
 				$read_cap = $wp_post_types['document']->cap->read;
 				if ( current_user_can( $read_cap ) ) {
-					return $response;
+					$edit_ok = true;
 				}
 			}
-			return new WP_Error(
-				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to edit documents.', 'wp-document-revisions' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			if ( ! $edit_ok ) {
+				return new WP_Error(
+					'rest_forbidden_context',
+					__( 'Sorry, you are not allowed to edit documents.', 'wp-document-revisions' ),
+					array( 'status' => rest_authorization_required_code() )
+				);
+			}
+			// An edit context read is allowed. Writes must still pass the method check below,
+			// the edit context must not be a way around it.
+			if ( 'GET' === $request->get_method() ) {
+				return $response;
+			}
 		}
 
 		// Additional validation for documents.
@@ -350,7 +358,7 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @since 3.9.1
 	 * @param stdClass        $prepared_post An object representing a single post prepared for inserting or updating the database.
 	 * @param WP_REST_Request $request       Request object.
-	 * @return stdClass Modified post object.
+	 * @return stdClass|WP_Error Modified post object, or an error if the attachment does not belong to the document.
 	 */
 	public function sync_meta_to_content( $prepared_post, WP_REST_Request $request ) {
 		$wpdr = self::$parent;
@@ -368,25 +376,33 @@ class WP_Document_Revisions_Manage_Rest {
 			}
 		}
 
+		// Only rewrite content that the request actually supplies.
+		if ( ! isset( $prepared_post->post_content ) ) {
+			return $prepared_post;
+		}
+
+		// The request content is forgeable. Never keep a WPDR marker from it; the marker is
+		// rebuilt below from an attachment verified to belong to this document.
+		$content = $prepared_post->post_content;
+		$content = ( is_numeric( $content ) ? '' : preg_replace( '/<!-- WPDR \s*\d+ -->/i', '', $content ) );
+
 		// check the attachment data.
 		if ( $attach_id ) {
-			// Validate the attachment exists and is actually an attachment.
+			// Validate the attachment exists, is an attachment and belongs to this document.
 			$attachment = get_post( $attach_id );
-			if ( ! $attachment || 'attachment' !== $attachment->post_type ) {
-				return $prepared_post;
+			if ( ! $attachment || 'attachment' !== $attachment->post_type || empty( $prepared_post->ID ) || (int) $attachment->post_parent !== (int) $prepared_post->ID ) {
+				return new WP_Error(
+					'rest_invalid_param',
+					__( 'Invalid document attachment.', 'wp-document-revisions' ),
+					array( 'status' => 400 )
+				);
 			}
 
-			// Verify the attachment belongs to this document.
-			if ( ! empty( $prepared_post->ID ) && (int) $attachment->post_parent !== (int) $prepared_post->ID ) {
-				return $prepared_post;
-			}
-
-			$content = isset( $prepared_post->post_content ) ? $prepared_post->post_content : '';
-			// Strip any existing WPDR comment to avoid multiple. (Legacy format is numeric only).
-			$content = ( is_numeric( $content ) ? '' : preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $content ) );
 			// Prepend the WPDR comment.
-			$prepared_post->post_content = $wpdr->format_doc_id( $attach_id ) . $content;
+			$content = $wpdr->format_doc_id( $attach_id ) . $content;
 		}
+
+		$prepared_post->post_content = $content;
 
 		return $prepared_post;
 	}

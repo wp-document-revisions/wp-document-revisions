@@ -207,7 +207,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			<?php
 			$mod_date = $latest_version->post_modified;
 			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
+			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $latest_version ) ) ) );
 			echo wp_kses(
 				$checked_in,
 				array(
@@ -832,7 +832,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post Post object.
 	 */
 	public function prepare_editor( WP_Post $post ): void {
-		if ( 'document' !== $post->post_type ) {
+		if ( 'document' !== $post->post_type || ! self::$parent->show_description_editor() ) {
 			return;
 		}
 
@@ -1054,7 +1054,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
-				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
+				<td><?php echo esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $revision ) ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach && $attach_id !== $attach->ID ) { ?>
 					<td><a href="
@@ -1153,8 +1153,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// misuse of filter, but can use to determine whether the revisions can be merged.
-		// keep revision if title or content (document linked only) changed. Also if author changed.
-		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
+		// keep revision if title or content (document linked only) changed. Also if someone else saved the
+		// last revision (a revision's author is the user who saved it, whereas $post->post_author is the owner).
+		if ( $post->post_title !== $last_revision->post_title || get_current_user_id() !== (int) $last_revision->post_author ) {
 			return true;
 		}
 

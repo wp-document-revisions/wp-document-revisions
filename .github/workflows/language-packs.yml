@@ -1,0 +1,75 @@
+name: Language pack status
+
+# Keeps a single "Language pack status" issue up to date with
+# translate.wordpress.org progress (script/language-pack-status), and comments
+# on it when the set of published language packs changes, so it's clear when a
+# bundled fallback in languages/ can be deleted.
+
+on:
+    schedule:
+        # Mondays, 14:00 UTC.
+        - cron: '0 14 * * 1'
+    workflow_dispatch: {}
+
+permissions:
+    contents: read
+    issues: write
+
+concurrency:
+    group: language-packs
+    cancel-in-progress: false
+
+jobs:
+    status:
+        name: Update language pack status issue
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 24
+
+            - name: Build status report
+              run: script/language-pack-status > "$RUNNER_TEMP/status.md"
+
+            - name: Update tracking issue
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  set -euo pipefail
+                  report="$RUNNER_TEMP/status.md"
+                  label=language-packs
+
+                  gh label create "$label" --force \
+                    --color 0e8a16 \
+                    --description 'translate.wordpress.org language pack progress'
+
+                  issue=$(gh issue list --label "$label" --state open --limit 1 --json number --jq '.[0].number // empty')
+                  if [ -z "$issue" ]; then
+                    gh issue create --title 'Language pack status' --label "$label" --body-file "$report"
+                    exit 0
+                  fi
+
+                  packs() { grep -o '<!-- packs: [^>]*-->' | sed 's/<!-- packs: //; s/ -->//' | tr ',' '\n' | sed '/^$/d' | sort; }
+                  gh issue view "$issue" --json body --jq .body | packs > "$RUNNER_TEMP/old-packs" || true
+                  packs < "$report" > "$RUNNER_TEMP/new-packs"
+
+                  gh issue edit "$issue" --body-file "$report"
+
+                  added=$(comm -13 "$RUNNER_TEMP/old-packs" "$RUNNER_TEMP/new-packs" | paste -sd, - | sed 's/,/, /g')
+                  removed=$(comm -23 "$RUNNER_TEMP/old-packs" "$RUNNER_TEMP/new-packs" | paste -sd, - | sed 's/,/, /g')
+                  if [ -n "$added$removed" ]; then
+                    {
+                      echo 'Language packs changed.'
+                      echo
+                      [ -n "$added" ] && echo "- **New:** $added"
+                      [ -n "$removed" ] && echo "- **No longer available:** $removed"
+                      echo
+                      # shellcheck disable=SC2016 # literal Markdown backticks
+                      echo 'If a new pack covers a locale bundled in `languages/`, that file can be removed in the next release. See the checklist in the issue description.'
+                    } > "$RUNNER_TEMP/comment.md"
+                    gh issue comment "$issue" --body-file "$RUNNER_TEMP/comment.md"
+                  fi

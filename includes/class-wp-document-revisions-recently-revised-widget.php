@@ -156,7 +156,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				}
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo ( (bool) $instance['show_descr'] && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
-				printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) );
+				printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $document ) ) ) );
 				?>
 			</li>
 			<?php
@@ -270,8 +270,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @since 3.3.0
 	 */
 	public function documents_widget_block(): void {
-		if ( ! function_exists( 'register_block_type' ) ) {
-			// Gutenberg is not active, e.g. Old WP version installed.
+		if ( ! function_exists( 'register_block_type' ) || ! WP_Document_Revisions_Front_End::blocks_enabled() ) {
+			// Gutenberg is not active (e.g. old WP version installed), or the site turned the blocks off.
 			return;
 		}
 
