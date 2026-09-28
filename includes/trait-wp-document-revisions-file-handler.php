@@ -58,13 +58,6 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
-		/*
-		 * Filters the http response code when a document or revision (attachment) is not found.
-		 *
-		 * @param int 403 The default respnse code when the file cannot be served.
-		 */
-		$response = apply_filters( 'document_no_document_response_code', 403 );
-
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
 			$revn = $this->get_latest_revision( $post->ID );
@@ -73,7 +66,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					'',
-					array( 'response' => absint( $response ) )
+					array( 'response' => absint( $this->no_document_response_code( $post, 0 ) ) )
 				);
 			}
 			$rev_id = $revn->ID;
@@ -104,7 +97,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				'',
-				array( 'response' => absint( $response ) )
+				array( 'response' => absint( $this->no_document_response_code( $post, (int) $rev_id ) ) )
 			);
 		}
 
@@ -558,6 +551,28 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		return false;
+	}
+
+	/**
+	 * HTTP status for a document request that has no file to serve.
+	 *
+	 * @since 5.6.0
+	 * @param WP_Post $post   the requested document.
+	 * @param int     $rev_id the document or revision selected, or 0 if none was found.
+	 * @return int
+	 */
+	private function no_document_response_code( WP_Post $post, int $rev_id ): int {
+		/**
+		 * Filters the HTTP response code when a document or revision has no file to serve.
+		 *
+		 * @since 5.6.0 Defaults to 404 (previously 403, which suggests an authorization failure)
+		 *              and receives the document and revision.
+		 *
+		 * @param int     $code   Response code. Default 404.
+		 * @param WP_Post $post   The requested document.
+		 * @param int     $rev_id The document or revision selected, or 0 if none was found.
+		 */
+		return absint( apply_filters( 'document_no_document_response_code', 404, $post, $rev_id ) );
 	}
 
 	/**

@@ -153,11 +153,13 @@ class WP_Document_Revisions_Text_Extractor_Cache {
 		 * the cache class.
 		 *
 		 * @since 5.0.0
+		 * @since 5.6.0 Receives the document ID.
 		 *
 		 * @param int $attachment_id ID of the revision attachment whose
 		 *                           extracted text was just cached.
+		 * @param int $document_id   ID of the document the attachment belongs to.
 		 */
-		do_action( 'wpdr_text_extracted', $attachment_id );
+		do_action( 'wpdr_text_extracted', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
 	}
 
 	/**
@@ -208,10 +210,24 @@ class WP_Document_Revisions_Text_Extractor_Cache {
 			return;
 		}
 
-		delete_post_meta( $attachment_id, self::META_KEY_TEXT );
+		$had_text = delete_post_meta( $attachment_id, self::META_KEY_TEXT );
 		delete_post_meta( $attachment_id, self::META_KEY_HASH );
 		delete_post_meta( $attachment_id, self::META_KEY_EXTRACTOR );
 		delete_post_meta( $attachment_id, self::META_KEY_FAILED_HASH );
+
+		if ( $had_text ) {
+			/**
+			 * Fires after cached extracted text is removed from a revision attachment,
+			 * e.g. when a document opts out of extraction, so search indexes and other
+			 * consumers of wpdr_text_extracted can drop it too.
+			 *
+			 * @since 5.6.0
+			 *
+			 * @param int $attachment_id ID of the revision attachment.
+			 * @param int $document_id   ID of the document the attachment belongs to.
+			 */
+			do_action( 'wpdr_text_cleared', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
+		}
 	}
 
 	/**
