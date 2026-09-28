@@ -56,6 +56,16 @@ class WP_Document_Revisions {
 	public static $wpdr_document_dir = null;
 
 	/**
+	 * Set while resolving the default upload directory, so the document upload_dir
+	 * filter doesn't apply to its own lookup.
+	 *
+	 * @var bool
+	 *
+	 * @since 5.6.0
+	 */
+	private static $resolving_upload_dir = false;
+
+	/**
 	 * The document admin class.
 	 *
 	 * @var object | null
@@ -112,7 +122,9 @@ class WP_Document_Revisions {
 	public function __construct() {
 		self::$instance = $this;
 
-		// set the standard default directory - creating the cache (before applying filter).
+		// Kept for code that reads the static directly. The plugin itself resolves the
+		// uploads directory when it's needed (default_upload_dir()), after other plugins,
+		// such as S3-Uploads, have registered their upload_dir filters.
 		self::$wp_default_dir = wp_upload_dir( null, true, true );
 
 		// admin. translations need to be called on init, not plugins_loaded.
@@ -188,8 +200,8 @@ class WP_Document_Revisions {
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
-		// initialise document directory (will itself populate cache).
-		$this->document_upload_dir();
+		// The document directory is resolved on first use and again after switch_blog().
+		add_action( 'switch_blog', array( $this, 'reset_document_upload_dir' ) );
 
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( $this, 'override_lock' ) );

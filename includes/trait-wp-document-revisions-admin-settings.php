@@ -865,8 +865,8 @@ trait WP_Document_Revisions_Admin_Settings {
 	 */
 	public function wp_delete_file( string $file ) {
 		global $wpdr;
-		$std_dir = $wpdr::$wp_default_dir['basedir'];
-		$doc_dir = $wpdr::$wpdr_document_dir;
+		$std_dir = $wpdr->default_upload_dir()['basedir'];
+		$doc_dir = $wpdr->document_upload_dir();
 		if ( $doc_dir !== $std_dir ) {
 			$file = str_ireplace( $std_dir, $doc_dir, $file );
 		}
