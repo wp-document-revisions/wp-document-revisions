@@ -113,7 +113,7 @@ function configureUpload( {
 		},
 	};
 	mockEntityProps = {
-		meta: [ { document_attachment_id: attachmentId }, jest.fn() ],
+		meta: [ { _document_attachment_id: attachmentId }, jest.fn() ],
 		excerpt: [ excerpt, jest.fn() ],
 	};
 	const dispatch = {
