@@ -213,6 +213,10 @@ class WP_Document_Revisions {
 		// block external processes from deleting revisions.
 		add_filter( 'pre_delete_post', array( $this, 'possibly_delete_revision' ), 9999, 3 );
 
+		// only allow the attachment id meta to point at an attachment of the same document.
+		add_filter( 'add_post_metadata', array( $this, 'guard_attachment_meta' ), 10, 4 );
+		add_filter( 'update_post_metadata', array( $this, 'guard_attachment_meta' ), 10, 4 );
+
 		// revisions management.
 		add_filter( 'wp_revisions_to_keep', array( $this, 'manage_document_revisions_limit' ), 999, 2 );
 
@@ -701,6 +705,38 @@ class WP_Document_Revisions {
 			}
 			$this->admin = new WP_Document_Revisions_Admin( self::$instance );
 		}
+	}
+
+	/**
+	 * Blocks writes of the attachment id meta that name another document's attachment.
+	 *
+	 * The meta is writable over REST (and by other code paths from forgeable input), so it
+	 * must not name an attachment that is parented to a different post.
+	 *
+	 * @since 5.5.0
+	 * @param null|bool $check      Whether to allow the write. Null to carry on.
+	 * @param int       $object_id  Post id.
+	 * @param string    $meta_key   Meta key.
+	 * @param mixed     $meta_value Meta value.
+	 * @return null|bool Null to allow the write, false to block it.
+	 */
+	public function guard_attachment_meta( $check, $object_id, $meta_key, $meta_value ) {
+		if ( '_document_attachment_id' !== $meta_key || null !== $check ) {
+			return $check;
+		}
+
+		$attach_id = absint( $meta_value );
+		if ( 0 === $attach_id ) {
+			return $check;
+		}
+
+		// Only an existing attachment of another post is a threat; anything else never resolves.
+		$attachment = get_post( $attach_id );
+		if ( $attachment instanceof WP_Post && 'attachment' === $attachment->post_type && (int) $attachment->post_parent !== (int) $object_id ) {
+			return false;
+		}
+
+		return $check;
 	}
 
 	/**
