@@ -223,7 +223,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * Register route
 	 */
 	public function wpdr_register_route(): void {
-		$valid_codes = array( 4, 5, 6, 7, 9, 10, 11, 12, 14 );
+		$valid_codes = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15 );
 		$args        = array(
 			'methods'             => \WP_REST_Server::EDITABLE,
 			'callback'            => array( $this, 'correct_document' ),
@@ -365,36 +365,25 @@ class WP_Document_Revisions_Validate_Structure {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
 			}
 
-			$new_name = md5( $title . microtime() );
-			$new_file = str_replace( $filename, $new_name, $file );
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			if ( @copy( $file, $new_file ) ) {
-				$name = get_post_meta( $attach_id, '_wp_attached_file', true );
-				update_post_meta( $attach_id, '_wp_attached_file', str_replace( $filename, $new_name, $name ), $name );
-				wp_delete_file( $file );
+			self::rename_to_hash( $attach_id, $id, $file, $title );
+		}
+
+		if ( 15 === $params['code'] ) {
+			// Document files (current or earlier revisions) stored under unhashed names.
+			// revalidate input values.
+			if ( $id !== $parm ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
 			}
 
-			// rename attachment post (if no clash).
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->posts}";
-			$sql        = $wpdb->prepare(
-				"SELECT COUNT(1) FROM `$post_table` WHERE `post_name` = %s",
-				$new_name
-			);
-			// $wpdb->get_var() returns a numeric string, so cast before comparing.
-			$res = (int) $wpdb->get_var( $sql );
-			if ( 0 === $res ) {
-				$sql = $wpdb->prepare(
-					"UPDATE `$post_table` SET `post_name` = %s, `post_title` = %s WHERE `id` = %d",
-					$new_name,
-					$new_name,
-					$attach_id
-				);
-				$wpdb->query( $sql );
-				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-				clean_post_cache( $attach_id );
-				clean_post_cache( $id );
-				wp_cache_delete( $id, 'document_revisions' );
+			// ensure not in document image mode.
+			$wpdr::$doc_image = false;
+
+			// make sure we're looking at the document directory.
+			add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
+
+			$title = get_post_field( 'post_title', $id );
+			foreach ( self::identify_unhashed_files( $id ) as $attach_id => $paths ) {
+				self::rename_to_hash( $attach_id, $id, $paths['file'], $title, $paths['target'] );
 			}
 		}
 
@@ -812,6 +801,17 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 		}
 
+		// if otherwise no error, look for document files stored under unhashed names.
+		if ( ! $att_error && apply_filters( 'document_validate_md5', true ) && self::identify_unhashed_files( $doc_id ) ) {
+			$att_error = array(
+				'code'  => 15,
+				'error' => 0,
+				'msg'   => __( 'Some of this document\'s files (current or earlier versions) are stored under their original file names, so they may be downloadable directly by anyone who can guess their address', 'wp-document-revisions' ),
+				'fix'   => 1,
+				'parm'  => $doc_id,
+			);
+		}
+
 		// if otherwise no error, look for orphan documents.
 		/**
 		 * Filter to Switch off checking for orphan documents.
@@ -1149,6 +1149,113 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Identifies a document's files that are not stored under an MD5-format (hashed) name.
+	 *
+	 * Covers every document file attached to the document, not only the current one, as
+	 * files of earlier versions remain downloadable. Only existing files are returned.
+	 *
+	 * @since 5.5.0
+	 *
+	 * @param int $doc_id id of the document post object.
+	 * @return array<int, array{file: string, target: string}> map of attachment id => current file path and the document directory it belongs in.
+	 */
+	private static function identify_unhashed_files( int $doc_id ): array {
+		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$attachs = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID
+				 FROM {$wpdb->posts}
+				 WHERE post_type = 'attachment'
+				 AND post_parent = %d
+				",
+				$doc_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+
+		$unhashed = array();
+		foreach ( $attachs as $attach_id ) {
+			$attach_id = (int) $attach_id;
+			// where the file belongs (document directory).
+			$target = self::check_document_folder( (string) get_attached_file( $attach_id ) );
+			$file   = $target;
+			if ( '' === $file || ! file_exists( $file ) ) {
+				// not in the document directory, so look in the standard media location.
+				remove_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10 );
+				$file = (string) get_attached_file( $attach_id );
+				add_filter( 'get_attached_file', array( self::$parent, 'get_attached_file_filter' ), 10, 2 );
+				if ( '' === $file || ! file_exists( $file ) ) {
+					continue;
+				}
+			}
+			if ( ! preg_match( '/^[a-f0-9]{32}$/', pathinfo( $file, PATHINFO_FILENAME ) ) ) {
+				$unhashed[ $attach_id ] = array(
+					'file'   => $file,
+					'target' => dirname( $target ),
+				);
+			}
+		}
+
+		return $unhashed;
+	}
+
+	/**
+	 * Renames a document file to an MD5-format (hashed) name.
+	 *
+	 * @since 5.5.0
+	 *
+	 * @param int    $attach_id id of the attachment post object.
+	 * @param int    $doc_id    id of the document post object.
+	 * @param string $file      current file path.
+	 * @param string $title     document title (seed for the new name).
+	 * @param string $dir       directory to store the renamed file in (default: the file's current directory).
+	 * @return void
+	 */
+	private static function rename_to_hash( int $attach_id, int $doc_id, string $file, string $title, string $dir = '' ): void {
+		global $wpdb;
+
+		$dir      = ( '' === $dir ) ? dirname( $file ) : $dir;
+		$new_name = md5( $title . $attach_id . microtime() );
+		if ( ! is_dir( $dir ) ) {
+			wp_mkdir_p( $dir );
+		}
+		$new_file = trailingslashit( $dir ) . $new_name . ( pathinfo( $file, PATHINFO_EXTENSION ) ? '.' . pathinfo( $file, PATHINFO_EXTENSION ) : '' );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( @copy( $file, $new_file ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod,WordPress.PHP.NoSilencedErrors.Discouraged
+			@chmod( $new_file, 0664 );
+			$name    = get_post_meta( $attach_id, '_wp_attached_file', true );
+			$rel_dir = dirname( $name );
+			update_post_meta( $attach_id, '_wp_attached_file', ( '.' === $rel_dir ? '' : trailingslashit( $rel_dir ) ) . basename( $new_file ), $name );
+			wp_delete_file( $file );
+		}
+
+		// rename attachment post (if no clash).
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$post_table = "{$wpdb->posts}";
+		$sql        = $wpdb->prepare(
+			"SELECT COUNT(1) FROM `$post_table` WHERE `post_name` = %s",
+			$new_name
+		);
+		// $wpdb->get_var() returns a numeric string, so cast before comparing.
+		$res = (int) $wpdb->get_var( $sql );
+		if ( 0 === $res ) {
+			$sql = $wpdb->prepare(
+				"UPDATE `$post_table` SET `post_name` = %s, `post_title` = %s WHERE `id` = %d",
+				$new_name,
+				$new_name,
+				$attach_id
+			);
+			$wpdb->query( $sql );
+		}
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		clean_post_cache( $attach_id );
+		clean_post_cache( $doc_id );
+		wp_cache_delete( $doc_id, 'document_revisions' );
 	}
 
 	/**
