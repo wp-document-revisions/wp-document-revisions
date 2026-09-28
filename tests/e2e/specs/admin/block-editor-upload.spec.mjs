@@ -76,17 +76,35 @@ test.describe( 'Block Editor Document Upload', () => {
 		);
 		const media = await requestUtils.uploadMedia( filePath );
 
-		// Create a document with the attachment ID in meta.
+		// Create the document first; its attachment must be parented to it.
 		const doc = await requestUtils.rest( {
 			method: 'POST',
 			path: '/wp/v2/documents',
 			data: {
 				title: 'Meta Sync Test',
 				status: 'draft',
-				meta: {
-					_document_attachment_id: media.id,
-				},
 			},
+		} );
+
+		// An attachment that doesn't belong to the document is refused.
+		await expect(
+			requestUtils.rest( {
+				method: 'POST',
+				path: `/wp/v2/documents/${ doc.id }`,
+				data: { meta: { _document_attachment_id: media.id } },
+			} )
+		).rejects.toMatchObject( { code: 'rest_meta_database_error' } );
+
+		// Attach the upload to the document (as a real document upload is), then link it.
+		await requestUtils.rest( {
+			method: 'POST',
+			path: `/wp/v2/media/${ media.id }`,
+			data: { post: doc.id },
+		} );
+		await requestUtils.rest( {
+			method: 'POST',
+			path: `/wp/v2/documents/${ doc.id }`,
+			data: { meta: { _document_attachment_id: media.id } },
 		} );
 
 		// Fetch the document to verify content was synced.
