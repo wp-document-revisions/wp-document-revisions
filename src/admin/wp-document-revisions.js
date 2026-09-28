@@ -274,8 +274,8 @@ class WPDocumentRevisions {
 	};
 
 	human_time_diff = ( from, to ) => {
-		const d = new Date();
-		to = to || d.getTime() / 1000 + parseInt( String( wp_document_revisions.offset ), 10 );
+		// Both values are Unix timestamps (UTC), so no site offset is involved.
+		to = to || Date.now() / 1000;
 		const diff = Math.abs( to - from );
 		if ( diff < 3600 ) {
 			// Singular and plural share the "%d mins" msgid (matches the prior
@@ -309,10 +309,26 @@ class WPDocumentRevisions {
 		return Math.round( n );
 	};
 
+	/**
+	 * Unix timestamp (UTC) of a `.timestamp` element.
+	 *
+	 * The "checked in" abbr carries it in its id (`A<timestamp>`); the revision
+	 * log links carry an ISO 8601 UTC date in their title.
+	 *
+	 * @param {HTMLElement} el Timestamp element.
+	 * @return {number} Seconds since the epoch.
+	 */
+	getTimestamp = ( el ) => {
+		const match = /^A(\d+)$/.exec( String( el.id || '' ) );
+		if ( match ) {
+			return parseInt( match[ 1 ], 10 );
+		}
+		return new Date( String( el.title ) ).getTime() / 1000;
+	};
+
 	updateTimestamps = () => {
 		document.querySelectorAll( '.timestamp' ).forEach( ( /** @type {HTMLElement} */ el ) => {
-			const from = new Date( String( el.title ) );
-			el.textContent = this.human_time_diff( from.getTime() / 1000 );
+			el.textContent = this.human_time_diff( this.getTimestamp( el ) );
 		} );
 	};
 

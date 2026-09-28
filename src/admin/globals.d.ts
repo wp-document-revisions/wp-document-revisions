@@ -32,7 +32,6 @@ declare module '@wordpress/dom-ready' {
  * config remains here.
  */
 interface WpdrClassicConfig {
-	offset: number;
 	nonce: string;
 }
 

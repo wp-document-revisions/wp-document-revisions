@@ -379,6 +379,23 @@ describe('WPDocumentRevisions', () => {
 
 			expect(mockEl.textContent).toBe('5 minutes');
 		});
+
+		test('reads the UTC timestamp from an A<unix> id', () => {
+			expect(
+				WPDocumentRevisions.getTimestamp({ id: 'A1609459200', title: '2021-01-01 05:00:00' })
+			).toBe(1609459200);
+		});
+
+		test('reads an ISO 8601 UTC title when there is no timestamp id', () => {
+			expect(
+				WPDocumentRevisions.getTimestamp({ id: '', title: '2021-01-01T00:00:00Z' })
+			).toBe(1609459200);
+		});
+
+		test('human_time_diff defaults "to" to the current UTC time', () => {
+			const now = Date.now() / 1000;
+			expect(WPDocumentRevisions.human_time_diff(now - 7200)).toBe('2 hours');
+		});
 	});
 
 	describe('overrideLock', () => {

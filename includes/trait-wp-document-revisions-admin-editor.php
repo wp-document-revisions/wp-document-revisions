@@ -206,7 +206,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			<?php
 			$mod_date = $latest_version->post_modified;
 			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) strtotime( $mod_date ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
+			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
 			echo wp_kses(
 				$checked_in,
 				array(
@@ -659,8 +659,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			// wp_set_script_translations() below; only non-translatable runtime
 			// config is passed through the localized object.
 			$data = array(
-				'offset' => get_option( 'gmt_offset' ) * 3600,
-				'nonce'  => wp_create_nonce( 'wp-document-revisions' ),
+				'nonce' => wp_create_nonce( 'wp-document-revisions' ),
 			);
 
 			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
@@ -1027,8 +1026,8 @@ trait WP_Document_Revisions_Admin_Editor {
 			} else {
 				$fn = get_permalink( $revision->ID );
 			}
-			// cast the modified date into js format to simplify updating.
-			$mod_date = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $revision->post_modified ) );
+			// ISO 8601 UTC modified date, read by the admin JS to refresh the relative time.
+			$mod_date = mysql_to_rfc3339( $revision->post_modified_gmt ) . 'Z';
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>

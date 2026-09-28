@@ -141,7 +141,6 @@ global.wp_document_revisions = {
 	lostLockNotice: 'The lock for %s has been overridden',
 	postUploadNotice: '<div>File uploaded successfully</div>',
 	extension: '.docx',
-	offset: 0,
 	minute: '%d minute',
 	minutes: '%d minutes',
 	hour: '%d hour',
