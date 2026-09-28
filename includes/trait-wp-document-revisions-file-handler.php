@@ -1191,7 +1191,7 @@ trait WP_Document_Revisions_File_Handler {
 	/**
 	 * Returns the WP_Filesystem instance when it can be used directly (no credentials) for a directory.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param string $dir directory the caller will work in.
 	 * @return WP_Filesystem_Base|null the filesystem, or null when direct access is not available.
 	 */
@@ -1221,7 +1221,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * A size entry is only updated when its file was actually moved, so the metadata
 	 * never points at a file that is not there.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param array<string, mixed> $sizes    the 'sizes' element of the attachment metadata.
 	 * @param string               $file_dir directory holding the files (with trailing slash).
 	 * @param string               $title    attachment title the file names start with.

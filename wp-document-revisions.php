@@ -99,7 +99,7 @@ if ( ! function_exists( 'wpdr_vendor_class' ) ) {
 	 * this rather than hard-coding `\Smalot\...` / `\PhpOffice\...`, because the
 	 * plugin files themselves are not rewritten by php-scoper.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param string $class_name unprefixed, fully-qualified class name.
 	 * @return class-string the class name to instantiate or compare against.
 	 */
