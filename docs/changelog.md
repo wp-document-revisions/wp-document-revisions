@@ -4,8 +4,13 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 5.5.0
 
+* Includes the security fix from 5.4.4.
 * Translations now come from [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) language packs, which WordPress installs and updates automatically, instead of being bundled with the plugin. The project previously used Crowdin; its translations, along with machine translations for 30 languages, have been imported to translate.wordpress.org as suggestions for volunteers to review. A language's pack is published once 90% of its strings are approved, so until then some sites may see English where they previously saw a bundled translation. Anyone with a WordPress.org account can help by reviewing or suggesting translations; see [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/). (#718, #719, #720)
 * Fix revision-limit protection being skipped after an attachment-less document was deleted. Deleting a document with no attached file left internal "deleting a document" state set for the rest of the request, so later revision deletions in that request bypassed the revision limit. (#717)
+
+### 5.4.4
+
+* Security: on sites that enable the REST API for documents (off by default), a user who could edit their own documents could point one of them at another document's file, including a private document they could not read, and so serve that file. A document now only ever resolves to, and can only be linked to, a file that belongs to it, and REST writes can no longer bypass the plugin's REST checks by requesting the `edit` context.
 
 ### 5.4.3
 
