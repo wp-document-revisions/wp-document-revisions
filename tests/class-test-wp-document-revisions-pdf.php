@@ -309,6 +309,36 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * The document_serve_use_gzip default only compresses text/* documents.
+	 */
+	public function test_gzip_default_off_for_pdf() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( 0 );
+		wp_cache_flush();
+		add_filter( 'document_read_uses_read', '__return_true' );
+
+		$seen = array();
+		$spy  = static function ( $gzip, $mimetype ) use ( &$seen ) {
+			$seen[] = array( $gzip, $mimetype );
+			// record the default, but still serve uncompressed so the content check works.
+			return false;
+		};
+		add_filter( 'document_serve_use_gzip', $spy, 5, 2 );
+		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip, deflate';
+		try {
+			self::verify_download( '?p=' . self::$author_public_post . '&post_type=document', self::$pdf_file, 'PDF gzip default' );
+		} finally {
+			unset( $_SERVER['HTTP_ACCEPT_ENCODING'] );
+			remove_filter( 'document_serve_use_gzip', $spy, 5 );
+			remove_filter( 'document_read_uses_read', '__return_true' );
+		}
+
+		self::assertCount( 1, $seen, 'gzip filter not applied once' );
+		self::assertFalse( $seen[0][0], 'unexpected gzip default for ' . $seen[0][1] );
+	}
+
+	/**
 	 * Can the public access a public file - doc_id using read_document? (no).
 	 */
 	public function test_public_document_docid_docread() {

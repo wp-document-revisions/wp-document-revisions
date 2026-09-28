@@ -239,13 +239,22 @@ trait WP_Document_Revisions_File_Handler {
 			}
 		}
 
+		// Only compress text by default. PDFs, office files, images and archives are already
+		// compressed, so deflating them in PHP costs CPU and memory for little or no gain and
+		// forces the whole response to be buffered.
+		if ( $gzip_dflt && ! ( is_string( $mimetype ) && 0 === strpos( $mimetype, 'text/' ) ) ) {
+			$gzip_dflt = false;
+		}
+
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
+		 *
+		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is text/*.
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $gzip_dflt Whether gzip is supported by the client.
+		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a text/* MIME type).
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */

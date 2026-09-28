@@ -205,6 +205,8 @@ In: trait-wp-document-revisions-file-handler.php
 
 Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 
+Defaults to true only when the browser accepts gzip/deflate and the document's MIME type is `text/*`. Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to compress other types too.
+
 ## Filter document_shortcode_atts
 
 In: class-wp-document-revisions-front-end.php
