@@ -125,7 +125,14 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 	 * @return bool true when the constant is defined and equal to false.
 	 */
 	public static function is_globally_disabled(): bool {
-		return defined( 'WPDR_TEXT_EXTRACTION' ) && false === WPDR_TEXT_EXTRACTION;
+		/**
+		 * Filters whether text extraction is turned off sitewide.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $disabled Default: whether WPDR_TEXT_EXTRACTION is defined as false.
+		 */
+		return (bool) apply_filters( 'document_text_extraction_disabled', defined( 'WPDR_TEXT_EXTRACTION' ) && false === WPDR_TEXT_EXTRACTION );
 	}
 
 	/**
@@ -160,7 +167,14 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 	 * @return bool true when the constant is defined and equal to false.
 	 */
 	public static function is_prefill_globally_disabled(): bool {
-		return defined( 'WPDR_AI_SUMMARY_PREFILL' ) && false === WPDR_AI_SUMMARY_PREFILL;
+		/**
+		 * Filters whether the AI revision-log pre-fill is turned off sitewide.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $disabled Default: whether WPDR_AI_SUMMARY_PREFILL is defined as false.
+		 */
+		return (bool) apply_filters( 'document_ai_prefill_disabled', defined( 'WPDR_AI_SUMMARY_PREFILL' ) && false === WPDR_AI_SUMMARY_PREFILL );
 	}
 
 	/**
@@ -192,6 +206,12 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 	 * @return void
 	 */
 	public static function register_meta_box(): void {
+		// With extraction off sitewide there's nothing to opt out of: no text is extracted,
+		// so no AI summaries are generated to pre-fill either.
+		if ( self::is_globally_disabled() ) {
+			return;
+		}
+
 		add_meta_box(
 			self::META_BOX_ID,
 			__( 'Text Extraction & AI', 'wp-document-revisions' ),
@@ -233,6 +253,12 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 			);
 			?>
 		</p>
+		<?php
+		// The pre-fill checkbox does nothing when the pre-fill is off sitewide.
+		if ( self::is_prefill_globally_disabled() ) {
+			return;
+		}
+		?>
 		<p>
 			<label for="<?php echo esc_attr( self::FORM_FIELD_PREFILL ); ?>">
 				<input
@@ -303,6 +329,11 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 		// (for search) while suppressing the editor pre-fill, or vice
 		// versa. No cache-clearing pass here — the pre-fill is a UI-only
 		// concern, not a data-residency one.
+		// The checkbox isn't rendered when the pre-fill is off sitewide; keep the stored value.
+		if ( self::is_prefill_globally_disabled() ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
 		$prefill_disabled = isset( $_POST[ self::FORM_FIELD_PREFILL ] )
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.

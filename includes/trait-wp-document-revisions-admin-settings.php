@@ -625,10 +625,14 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Appends the settings-updated query arg to the network admin settings redirect so that the settings API can work.
 	 *
 	 * @since 1.0
-	 * @param string $location the URL being redirected to.
-	 * @return string the modified location
+	 * @param mixed $location the URL being redirected to.
+	 * @return mixed the modified location
 	 */
-	public function network_settings_redirect( string $location ): string {
+	public function network_settings_redirect( $location ) {
+		if ( ! is_string( $location ) ) {
+			return $location;
+		}
+
 		// Verify redirect string from /wp-admin/network/edit.php line 164.
 		if ( add_query_arg( 'updated', 'true', network_admin_url( 'settings.php' ) ) === $location ) {
 			// append the settings-updated query arg and return.
@@ -670,7 +674,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	 */
 	public function document_slug_cb(): void {
 		// Same site-local year/month that wp_upload_dir() uses for the upload subdirectory.
-		$year_month = ( get_site_option( 'document_link_date' ) ? '' : '/' . wp_date( 'Y/m' ) );
+		$year_month = ( $this->document_link_date() ? '' : '/' . wp_date( 'Y/m' ) );
 		?>
 		<code><?php echo esc_html( trailingslashit( home_url() ) ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" /><?php echo esc_html( $year_month ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 		<span class="description">
@@ -689,7 +693,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	public function document_link_date_cb(): void {
 		?>
 		<label for="document_link_date">
-		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( '1', get_site_option( 'document_link_date' ) ); ?> />
+		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( $this->document_link_date() ); ?> />
 		<?php esc_html_e( 'Remove the year and month element /yyyy/mm from the document permalink.', 'wp-document-revisions' ); ?></label><br />
 		<span class="description">
 		<?php esc_html_e( 'By default the document permalink will contain the post year and month.', 'wp-document-revisions' ); ?><br />
@@ -865,8 +869,8 @@ trait WP_Document_Revisions_Admin_Settings {
 	 */
 	public function wp_delete_file( string $file ) {
 		global $wpdr;
-		$std_dir = $wpdr::$wp_default_dir['basedir'];
-		$doc_dir = $wpdr::$wpdr_document_dir;
+		$std_dir = $wpdr->default_upload_dir()['basedir'];
+		$doc_dir = $wpdr->document_upload_dir();
 		if ( $doc_dir !== $std_dir ) {
 			$file = str_ireplace( $std_dir, $doc_dir, $file );
 		}

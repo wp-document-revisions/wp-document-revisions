@@ -56,6 +56,16 @@ class WP_Document_Revisions {
 	public static $wpdr_document_dir = null;
 
 	/**
+	 * Set while resolving the default upload directory, so the document upload_dir
+	 * filter doesn't apply to its own lookup.
+	 *
+	 * @var bool
+	 *
+	 * @since 5.6.0
+	 */
+	private static $resolving_upload_dir = false;
+
+	/**
 	 * The document admin class.
 	 *
 	 * @var object | null
@@ -112,7 +122,9 @@ class WP_Document_Revisions {
 	public function __construct() {
 		self::$instance = $this;
 
-		// set the standard default directory - creating the cache (before applying filter).
+		// Kept for code that reads the static directly. The plugin itself resolves the
+		// uploads directory when it's needed (default_upload_dir()), after other plugins,
+		// such as S3-Uploads, have registered their upload_dir filters.
 		self::$wp_default_dir = wp_upload_dir( null, true, true );
 
 		// admin. translations need to be called on init, not plugins_loaded.
@@ -188,14 +200,15 @@ class WP_Document_Revisions {
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
-		// initialise document directory (will itself populate cache).
-		$this->document_upload_dir();
+		// The document directory is resolved on first use and again after switch_blog().
+		add_action( 'switch_blog', array( $this, 'reset_document_upload_dir' ) );
 
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( $this, 'override_lock' ) );
 
 		// cache clean.
 		add_action( 'save_post_document', array( $this, 'clear_cache' ), 20, 3 );
+		add_action( 'clean_post_cache', array( $this, 'flush_revision_cache' ), 10, 2 );
 
 		// Edit Flow or PublishPress Statuses.
 		add_action( 'ef_module_options_loaded', array( $this, 'edit_flow_support' ) );
@@ -276,6 +289,26 @@ class WP_Document_Revisions {
 	 */
 	public function deactivation_hook(): void {
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * Whether the classic document edit screen shows the Document Description editor.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function show_description_editor(): bool {
+		/**
+		 * Filters whether to show the Document Description editor on the classic edit screen.
+		 *
+		 * Return false for sites that don't use document descriptions. Existing
+		 * descriptions are kept. Has no effect in block editor mode, which needs the editor.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show Whether to show the editor. Default true.
+		 */
+		return (bool) apply_filters( 'document_show_description_editor', true );
 	}
 
 	/**
@@ -621,6 +654,16 @@ class WP_Document_Revisions {
 			);
 		}
 
+		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive
+		// override cap, before saying anything about the document's lock.
+		if ( ! current_user_can( 'edit_document', $document_id ) ) {
+			return new WP_Error(
+				'document_forbidden',
+				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
+				array( 'status' => 403 )
+			);
+		}
+
 		$previous_lock = $this->get_document_lock( $document_id );
 
 		if ( ! $previous_lock ) {
@@ -630,16 +673,9 @@ class WP_Document_Revisions {
 			);
 		}
 
-		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive override cap.
-		if ( ! current_user_can( 'edit_document', $document_id ) ) {
-			return new WP_Error(
-				'document_forbidden',
-				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
-				array( 'status' => 403 )
-			);
-		}
-
-		delete_post_meta( $document_id, '_edit_lock' );
+		// Take the lock the same way the editor's override button does, so the previous owner is
+		// notified and document_lock_override fires.
+		$this->take_document_lock( $document_id, (int) wp_check_post_lock( $document_id ) );
 
 		return array(
 			'success'       => true,
@@ -800,6 +836,9 @@ class WP_Document_Revisions {
 		// Add excerpt support when block editor is enabled (used for Revision Summary).
 		if ( apply_filters( 'document_use_block_editor', false ) ) {
 			$args['supports'][] = 'excerpt';
+		} elseif ( ! $this->show_description_editor() ) {
+			// The block editor needs editor support, so this only applies to the classic editor.
+			$args['supports'] = array_values( array_diff( $args['supports'], array( 'editor' ) ) );
 		}
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.

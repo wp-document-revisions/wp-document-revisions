@@ -113,7 +113,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Message  The guid is not the expected "ugly" permalink
  * Fixable  Yes
  * Cause    The guid of a pending or draft document or when there is no permalink rewrite is expected to be able to access the document.
- *          Changing it to be in the form "site_url/?post_type=document&p=nnnn" will make it useable.
+ *          Changing it to be in the form "home_url/?post_type=document&p=nnnn" will make it useable.
  *
  * Code     10
  * Type     Warning
@@ -121,7 +121,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          The guid cannot be used to successfully access the document,
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     11
  * Type     Warning
@@ -129,7 +129,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          The guid cannot be used to successfully access the document,
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     12
  * Type     Warning
@@ -137,7 +137,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    The document permalink should contain the post_date year and month.
  *          This is only a completeness check. Normally access is possible, and normally indicates that the attachment extension has been changed.
- *          The "ugly" form "site_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
+ *          The "ugly" form "home_url/?post_type=document&p=nnnn" is a unique identifier and if set to this value, this test is not applied.
  *
  * Code     14
  * Type     Warning
@@ -164,6 +164,20 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @var object
 	 */
 	public static $instance;
+
+	/**
+	 * Admin page slug.
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'wpdr_validate';
+
+	/**
+	 * Hook suffix of the Validate Structure screen, set when the menu is added.
+	 *
+	 * @var string
+	 */
+	public static $page_hook = '';
 
 	/**
 	 * Constructor
@@ -212,11 +226,37 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @since 3.4.0
 	 **/
 	public static function add_menu(): void {
-		$slug = 'wpdr_validate';
-		add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), 'edit_documents', $slug, array( __CLASS__, 'page_validate' ) );
+		$hook = add_submenu_page( 'edit.php?post_type=document', __( 'Validate Structure', 'wp-document-revisions' ), __( 'Validate Structure', 'wp-document-revisions' ), self::capability(), self::PAGE_SLUG, array( __CLASS__, 'page_validate' ) );
+		if ( ! $hook ) {
+			return;
+		}
+		self::$page_hook = $hook;
 
 		// help text.
-		add_action( 'load-document_page_' . $slug, array( __CLASS__, 'add_help_tab' ) );
+		add_action( 'load-' . $hook, array( __CLASS__, 'add_help_tab' ) );
+	}
+
+	/**
+	 * Capability needed to see the Validate Structure screen and use its fixes.
+	 *
+	 * Fixing a document also requires permission to edit that document.
+	 *
+	 * @since 5.6.0
+	 * @return string
+	 */
+	public static function capability(): string {
+		/**
+		 * Filters the capability needed to use Validate Structure.
+		 *
+		 * The screen lists every document the user can edit and can rename files and
+		 * rewrite guids, so larger sites may want to limit it to administrators,
+		 * e.g. by returning 'manage_options'.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string $capability Capability. Default 'edit_documents'.
+		 */
+		return (string) apply_filters( 'document_validate_structure_capability', 'edit_documents' );
 	}
 
 	/**
@@ -516,7 +556,7 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( ! isset( $params['id'] ) ) {
 			return false;
 		}
-		return current_user_can( 'edit_document', $params['id'] );
+		return current_user_can( self::capability() ) && current_user_can( 'edit_document', $params['id'] );
 	}
 
 	/**
@@ -606,7 +646,7 @@ class WP_Document_Revisions_Validate_Structure {
 		} else {
 			// these messages are repeated below.
 			$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
-			if ( get_option( 'document_link_date' ) ) {
+			if ( self::$parent->document_link_date() ) {
 				$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 			} else {
 				$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
@@ -699,13 +739,18 @@ class WP_Document_Revisions_Validate_Structure {
 	}
 
 	/**
-	 * Enqueue javascript.
+	 * Enqueue javascript on the Validate Structure screen only.
 	 *
 	 * @since 3.4.0
 	 *
+	 * @param string $hook_suffix the current admin page.
 	 * @return void
 	 */
-	public static function enqueue_scripts(): void {
+	public static function enqueue_scripts( $hook_suffix = '' ): void {
+		if ( '' === self::$page_hook || self::$page_hook !== $hook_suffix ) {
+			return;
+		}
+
 		$asset_file = plugin_dir_path( __DIR__ ) . 'build/admin/wp-document-revisions-validate.asset.php';
 		$asset      = file_exists( $asset_file ) ? require $asset_file : array(
 			'dependencies' => array( 'wp-api-fetch' ),
@@ -846,7 +891,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
-		if ( get_option( 'document_link_date' ) ) {
+		if ( self::$parent->document_link_date() ) {
 			$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 		} else {
 			$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
@@ -854,10 +899,15 @@ class WP_Document_Revisions_Validate_Structure {
 		$msg_11 = esc_html__( 'The guid does not contain the document name.', 'wp-document-revisions' );
 		$msg_12 = esc_html__( 'The guid does not reflect the complete document permalink.', 'wp-document-revisions' );
 		global $wp_rewrite;
-		$permalink1 = site_url( '?post_type=document&p=' . (string) $doc_id );
-		$permalink2 = str_replace( '&p=', '&#038;p=', $permalink1 );
-		$permalink3 = str_replace( '/?', '?', $permalink1 );
-		$in_ugly    = in_array( $guid, array( $permalink1, $permalink2, $permalink3 ), true );
+		// Ugly permalinks are built on home_url() now, but older ones used site_url(); accept both.
+		$ugly = array();
+		foreach ( array_unique( array( home_url( '/' ), site_url( '/' ) ) ) as $base ) {
+			$permalink1 = $base . '?post_type=document&p=' . (string) $doc_id;
+			$ugly[]     = $permalink1;
+			$ugly[]     = str_replace( '&p=', '&#038;p=', $permalink1 );
+			$ugly[]     = str_replace( '/?', '?', $permalink1 );
+		}
+		$in_ugly = in_array( $guid, $ugly, true );
 		if ( '' === $wp_rewrite->permalink_structure || in_array( $post_status, array( 'pending', 'draft' ), true ) ) {
 			if ( ! $in_ugly ) {
 				return array(
@@ -871,7 +921,7 @@ class WP_Document_Revisions_Validate_Structure {
 			return true;
 		}
 		// find the permalink (except extension).
-		$year_mth  = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $post_date, 0, 7 ) ) );
+		$year_mth  = ( self::$parent->document_link_date() ? '' : '/' . str_replace( '-', '/', substr( $post_date, 0, 7 ) ) );
 		$permalink = home_url( self::$parent->document_slug() . $year_mth . '/' );
 		if ( str_contains( $guid, $permalink ) ) {
 			// now add the post name.
