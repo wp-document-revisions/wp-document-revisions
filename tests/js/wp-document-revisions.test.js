@@ -84,8 +84,8 @@ describe('WPDocumentRevisions', () => {
 			expect(WPDocumentRevisions.hasUpload).toBe(false);
 		});
 
-		test('should set up intervals for updates', () => {
-			expect(global.setInterval).toHaveBeenCalledTimes(2);
+		test('should only poll for timestamp updates', () => {
+			expect(global.setInterval).toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -334,6 +334,47 @@ describe('WPDocumentRevisions', () => {
 			expect(result).toBe('Fallback content');
 		});
 */
+	});
+
+	describe('bindEditorEvents', () => {
+		afterEach(() => {
+			delete window.tinymce;
+		});
+
+		test('binds an editor that is already initialised and syncs once', () => {
+			const editor = { id: 'content', initialized: true, on: jest.fn() };
+			window.tinymce = { get: jest.fn(() => editor), on: jest.fn() };
+			WPDocumentRevisions.checkUpdate = jest.fn();
+
+			WPDocumentRevisions.bindEditorEvents();
+
+			expect(editor.on).toHaveBeenCalledWith(expect.stringContaining('input'), WPDocumentRevisions.checkUpdate);
+			expect(WPDocumentRevisions.checkUpdate).toHaveBeenCalledTimes(1);
+		});
+
+		test('binds the content editor when it is added later, ignoring others', () => {
+			let addEditor;
+			window.tinymce = {
+				get: jest.fn(() => null),
+				on: jest.fn((evt, cb) => {
+					if (evt === 'AddEditor') addEditor = cb;
+				}),
+			};
+			WPDocumentRevisions.bindEditorEvents();
+
+			const other = { id: 'excerpt', on: jest.fn() };
+			addEditor({ editor: other });
+			expect(other.on).not.toHaveBeenCalled();
+
+			const content = { id: 'content', initialized: false, on: jest.fn() };
+			addEditor({ editor: content });
+			expect(content.on).toHaveBeenCalledWith(expect.stringContaining('init'), WPDocumentRevisions.checkUpdate);
+		});
+
+		test('does nothing without TinyMCE', () => {
+			delete window.tinymce;
+			expect(() => WPDocumentRevisions.bindEditorEvents()).not.toThrow();
+		});
 	});
 
 	describe('checkUpdate', () => {

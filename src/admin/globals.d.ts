@@ -53,6 +53,7 @@ interface Window {
 	WPDocumentRevisions?: unknown;
 	WPDocumentRevisionsClass?: unknown;
 	autosave_enable_buttons?: () => void;
+	tinymce?: any;
 	// Validate-structure functions exposed on window for inline onclick=.
 	wpdr_valid_fix?: ( id: number, code: string, parm: number ) => Promise< void >;
 	clear_line?: ( id: number, code: string ) => void;

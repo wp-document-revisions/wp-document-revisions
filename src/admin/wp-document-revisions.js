@@ -62,8 +62,31 @@ class WPDocumentRevisions {
 
 		this.hijackAutosave();
 		setInterval( this.updateTimestamps, 60000 );
-		setInterval( this.checkUpdate, 1000 );
+		this.bindEditorEvents();
 	}
+
+	/**
+	 * Run checkUpdate() when the description editor changes, instead of
+	 * polling its iframe every second. Handles an editor that initialised
+	 * before this script as well as one added later.
+	 */
+	bindEditorEvents = () => {
+		const tmce = window.tinymce;
+		if ( ! tmce ) {
+			return;
+		}
+		const bind = ( editor ) => {
+			if ( ! editor || 'content' !== editor.id ) {
+				return;
+			}
+			editor.on( 'init SetContent input change keyup Undo Redo', this.checkUpdate );
+			if ( editor.initialized ) {
+				this.checkUpdate();
+			}
+		};
+		bind( tmce.get( 'content' ) );
+		tmce.on( 'AddEditor', ( e ) => bind( e.editor ) );
+	};
 
 	hijackAutosave = () => {
 		this.autosaveEnableButtonsOriginal = window.autosave_enable_buttons;
