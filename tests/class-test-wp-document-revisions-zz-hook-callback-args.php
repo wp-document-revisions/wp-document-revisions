@@ -86,6 +86,7 @@ class Test_WP_Document_Revisions_Zz_Hook_Callback_Args extends WP_UnitTestCase {
 
 		self::assertIsString( $wpdr->empty_excerpt_return( 'Revision note' ) );
 		self::assertSame( array(), $wpdr->hide_doc_attach_slug( array() ) );
+		self::assertSame( array( 'sizes' => array() ), $wpdr->hide_doc_attach_slug( array( 'sizes' => array() ), 0 ), 'No ID means no change, not the global post.' );
 		self::assertSame( 'http://example.org/file.txt', $wpdr->attachment_url_filter( 'http://example.org/file.txt' ) );
 		self::assertSame( 'http://example.org/?attachment_id=1', $wpdr->attachment_link_filter( 'http://example.org/?attachment_id=1' ) );
 		self::assertIsString( $wpdr->redirect_canonical_filter( 'http://example.org/x/' ) );

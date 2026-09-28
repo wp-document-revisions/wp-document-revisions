@@ -649,7 +649,8 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return mixed the (possibly modified) attachment metadata.
 	 */
 	public function hide_doc_attach_slug( $metadata, $attachment_id = 0, $context = 'create' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		if ( ! is_array( $metadata ) || ! is_numeric( $attachment_id ) ) {
+		// No attachment ID: don't fall back to the global post (get_post( 0 )).
+		if ( ! is_array( $metadata ) || ! is_numeric( $attachment_id ) || (int) $attachment_id <= 0 ) {
 			return $metadata;
 		}
 		$attachment_id = (int) $attachment_id;
