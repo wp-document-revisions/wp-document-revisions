@@ -1001,10 +1001,14 @@ trait WP_Document_Revisions_File_Handler {
 
 		self::$doc_image = false;
 		$doc_dir         = untrailingslashit( $this->document_upload_dir() );
-		$new_dir         = array(
-			'path'    => $doc_dir . '/' . $dir['subdir'],
-			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
-			'subdir'  => $dir['subdir'],
+
+		// Core's subdir is either empty or starts with a slash ("/2026/09"). Joining it with
+		// another slash produced "uploads//2026/09", which breaks stream wrappers such as s3://.
+		$subdir  = isset( $dir['subdir'] ) && '' !== $dir['subdir'] ? '/' . ltrim( (string) $dir['subdir'], '/' ) : '';
+		$new_dir = array(
+			'path'    => $doc_dir . $subdir,
+			'url'     => home_url( '/' . $this->document_slug() ) . $subdir,
+			'subdir'  => $subdir,
 			'basedir' => $doc_dir,
 			'baseurl' => home_url( '/' . $this->document_slug() ),
 			'error'   => false,
