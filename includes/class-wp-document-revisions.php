@@ -589,7 +589,7 @@ class WP_Document_Revisions {
 
 		if ( is_array( $revisions ) ) {
 			foreach ( $revisions as $revision ) {
-				$author   = get_userdata( (int) $revision->post_author );
+				$author   = get_userdata( $this->get_revision_author( $revision ) );
 				$result[] = array(
 					'id'     => $revision->ID,
 					'date'   => $revision->post_date,

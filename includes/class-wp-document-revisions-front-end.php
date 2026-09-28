@@ -188,7 +188,7 @@ class WP_Document_Revisions_Front_End {
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
 				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
-				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', (int) $revision->post_author ) ) );
+				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $revision ) ) ) );
 				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
 				?>
 			</li>
