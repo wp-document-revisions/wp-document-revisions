@@ -654,6 +654,16 @@ class WP_Document_Revisions {
 			);
 		}
 
+		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive
+		// override cap, before saying anything about the document's lock.
+		if ( ! current_user_can( 'edit_document', $document_id ) ) {
+			return new WP_Error(
+				'document_forbidden',
+				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
+				array( 'status' => 403 )
+			);
+		}
+
 		$previous_lock = $this->get_document_lock( $document_id );
 
 		if ( ! $previous_lock ) {
@@ -663,16 +673,9 @@ class WP_Document_Revisions {
 			);
 		}
 
-		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive override cap.
-		if ( ! current_user_can( 'edit_document', $document_id ) ) {
-			return new WP_Error(
-				'document_forbidden',
-				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
-				array( 'status' => 403 )
-			);
-		}
-
-		delete_post_meta( $document_id, '_edit_lock' );
+		// Take the lock the same way the editor's override button does, so the previous owner is
+		// notified and document_lock_override fires.
+		$this->take_document_lock( $document_id, (int) wp_check_post_lock( $document_id ) );
 
 		return array(
 			'success'       => true,

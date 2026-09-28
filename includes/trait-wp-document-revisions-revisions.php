@@ -253,24 +253,45 @@ trait WP_Document_Revisions_Revisions {
 			wp_die( '-1' );
 		}
 
+		$this->take_document_lock( $post_id, $current_owner, $send_notice );
+
+		wp_die( '1' );
+	}
+
+	/**
+	 * Gives the current user the lock on a document, notifying the previous owner.
+	 *
+	 * Callers are responsible for checking that the current user may override the lock.
+	 *
+	 * @since 5.6.0
+	 * @param int  $post_id     the document ID.
+	 * @param int  $owner_id    the user who held the lock, or 0 if unknown.
+	 * @param bool $send_notice (optional) whether or not to send an e-mail to the former lock owner.
+	 */
+	public function take_document_lock( int $post_id, int $owner_id, bool $send_notice = true ): void {
 		// update the lock.
 		wp_set_post_lock( $post_id );
 
 		// get the current user ID.
-		$current_user = wp_get_current_user();
+		$current_user_id = get_current_user_id();
 
 		/**
 		 * Filters the option to send a locked document override email.
 		 *
 		 * @param boolean $send_notice selector whether to send the locked document.
 		 */
-		if ( apply_filters( 'send_document_override_notice', $send_notice ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			$this->send_override_notice( $post_id, $current_owner, $current_user->ID );
+		if ( apply_filters( 'send_document_override_notice', $send_notice ) && $owner_id ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			$this->send_override_notice( $post_id, $owner_id, $current_user_id );
 		}
 
-		do_action( 'document_lock_override', $post_id, $current_user->ID, $current_owner );
-
-		wp_die( '1' );
+		/**
+		 * Fires after a user overrides another user's lock on a document.
+		 *
+		 * @param int $post_id         the document ID.
+		 * @param int $current_user_id the user who now holds the lock.
+		 * @param int $owner_id        the user who held the lock.
+		 */
+		do_action( 'document_lock_override', $post_id, $current_user_id, $owner_id );
 	}
 
 
