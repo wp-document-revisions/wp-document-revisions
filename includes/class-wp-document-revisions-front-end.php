@@ -159,7 +159,7 @@ class WP_Document_Revisions_Front_End {
 		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
 			$attach = $wpdr->get_document( $id );
-			$file   = get_attached_file( $attach->ID );
+			$file   = $attach ? get_attached_file( $attach->ID ) : false;
 			if ( $file ) {
 				$mimetype      = $wpdr->get_doc_mimetype( $file, $attach->ID );
 				$atts_show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
@@ -188,7 +188,7 @@ class WP_Document_Revisions_Front_End {
 				echo ( $atts_new_tab ? ' target="_blank"' : '' );
 				printf( '>%s</a> <span class="agoby">', esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ) . wp_kses_post( $atts_show_pdf ) );
 				esc_html_e( 'ago by', 'wp-document-revisions' );
-				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', (int) $revision->post_author ) ) );
+				printf( '</span> <span class="author">%s</span>', esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $revision ) ) ) );
 				echo ( $atts_summary ? '<br/>' . esc_html( $revision->post_excerpt ) : '' );
 				?>
 			</li>
@@ -439,6 +439,8 @@ class WP_Document_Revisions_Front_End {
 			</a>
 			<?php
 			if ( $show_edit && current_user_can( 'edit_document', $document->ID ) ) {
+				// The Edit link is the only front-end output styled by style-front.css.
+				$this->enqueue_front_style();
 				$link = add_query_arg(
 					array(
 						'post'   => $document->ID,
@@ -506,16 +508,57 @@ class WP_Document_Revisions_Front_End {
 	}
 
 	/**
-	 * Shortcode can have CSS on any page.
+	 * Registers the front-end CSS. It's enqueued only when output that uses it renders.
 	 *
 	 * @since 3.2.0
 	 */
 	public function enqueue_front(): void {
+		$this->register_front_style();
+	}
 
-		$wpdr = self::$parent;
+	/**
+	 * Registers the front-end stylesheet if it isn't already.
+	 *
+	 * @since 5.6.0
+	 */
+	private function register_front_style(): void {
+		if ( wp_style_is( 'wp-document-revisions-front', 'registered' ) ) {
+			return;
+		}
+		wp_register_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), array(), self::$parent->version );
+	}
 
-		// enqueue CSS for shortcode.
-		wp_enqueue_style( 'wp-document-revisions-front', plugins_url( '/css/style-front.css', __DIR__ ), array(), $wpdr->version );
+	/**
+	 * Enqueues the front-end stylesheet from inside shortcode or block output.
+	 *
+	 * WordPress prints styles enqueued after wp_head in the footer.
+	 *
+	 * @since 5.6.0
+	 */
+	private function enqueue_front_style(): void {
+		$this->register_front_style();
+		wp_enqueue_style( 'wp-document-revisions-front' );
+	}
+
+	/**
+	 * Whether to register the plugin's blocks.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public static function blocks_enabled(): bool {
+		/**
+		 * Filters whether to register WP Document Revisions' blocks (documents list,
+		 * revisions list, document preview and recently revised documents).
+		 *
+		 * The [documents], [document_revisions] and [document_preview] shortcodes and
+		 * the classic widget are unaffected.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $register Whether to register the blocks. Default true.
+		 */
+		return (bool) apply_filters( 'document_register_blocks', true );
 	}
 
 
@@ -575,8 +618,8 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function documents_shortcode_blocks(): void {
-		if ( ! function_exists( 'register_block_type' ) ) {
-			// Gutenberg is not active, e.g. Old WP version installed.
+		if ( ! function_exists( 'register_block_type' ) || ! self::blocks_enabled() ) {
+			// Gutenberg is not active (e.g. old WP version installed), or the site turned the blocks off.
 			return;
 		}
 

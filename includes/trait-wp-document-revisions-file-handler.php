@@ -535,26 +535,58 @@ trait WP_Document_Revisions_File_Handler {
 		// If no options set, default to normal upload dir.
 		$dir = get_site_option( 'document_upload_directory' );
 		if ( ! ( $dir ) ) {
-			self::$wpdr_document_dir = self::$wp_default_dir['basedir'];
-			return self::$wpdr_document_dir;
-		}
-
-		self::$wpdr_document_dir = $dir;
-		if ( ! is_multisite() ) {
-			return $dir;
-		}
-
-		// make site specific on multisite.
-		// @phpstan-ignore booleanAnd.leftAlwaysTrue (phpstan-wordpress remembers an earlier is_multisite() result and treats this defensive re-check as constant; it is a genuine runtime guard)
-		if ( is_multisite() && ! is_network_admin() ) {
+			$dir = $this->default_upload_dir()['basedir'];
+		} elseif ( is_multisite() && ! is_network_admin() ) {
+			// make site specific on multisite.
 			if ( is_main_site() && get_current_network_id() === get_main_network_id() ) {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
 			global $wpdb;
-			$dir                     = str_replace( '%site_id%', $wpdb->blogid, $dir );
-			self::$wpdr_document_dir = $dir;
+			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
 		}
+
+		/**
+		 * Filters the directory documents are stored in.
+		 *
+		 * Runs when the directory is first needed on each site, after other plugins
+		 * have loaded, rather than when WP Document Revisions loads.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string $dir absolute path, or stream wrapper URL such as s3://bucket/path.
+		 */
+		self::$wpdr_document_dir = (string) apply_filters( 'document_upload_directory', (string) $dir );
+
+		return self::$wpdr_document_dir;
+	}
+
+	/**
+	 * Forgets the resolved document directory, e.g. after switch_blog().
+	 *
+	 * @since 5.6.0
+	 */
+	public function reset_document_upload_dir(): void {
+		self::$wpdr_document_dir = null;
+	}
+
+	/**
+	 * Returns WordPress's uploads directory for the current site, without the document override.
+	 *
+	 * Resolved on each call so it reflects upload_dir filters registered after this plugin
+	 * loaded and the current site on multisite.
+	 *
+	 * @since 5.6.0
+	 * @return array<string, mixed> the wp_upload_dir() result.
+	 */
+	public function default_upload_dir(): array {
+		self::$resolving_upload_dir = true;
+		try {
+			$dir = wp_upload_dir( null, false );
+		} finally {
+			self::$resolving_upload_dir = false;
+		}
+		self::$wp_default_dir = $dir;
 
 		return $dir;
 	}
@@ -642,16 +674,22 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.4.0.
 	 *
-	 * @param array<string, mixed> $metadata      An array of attachment meta data.
-	 * @param int                  $attachment_id Current attachment ID.
-	 * @param string               $context       Additional context. Can be 'create' when metadata was initially created for new attachment
-	 *                                             or 'update' when the metadata was updated.
-	 * @return array<string, mixed> the (possibly modified) attachment metadata.
+	 * @param mixed $metadata      An array of attachment meta data.
+	 * @param mixed $attachment_id Current attachment ID.
+	 * @param mixed $context       Additional context. Can be 'create' when metadata was initially created for new attachment
+	 *                             or 'update' when the metadata was updated.
+	 * @return mixed the (possibly modified) attachment metadata.
 	 */
-	public function hide_doc_attach_slug( array $metadata, int $attachment_id, string $context ): array {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function hide_doc_attach_slug( $metadata, $attachment_id = 0, $context = 'create' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// No attachment ID: don't fall back to the global post (get_post( 0 )).
+		if ( ! is_array( $metadata ) || ! is_numeric( $attachment_id ) || (int) $attachment_id <= 0 ) {
+			return $metadata;
+		}
+		$attachment_id = (int) $attachment_id;
+
 		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( ! self::check_doc_attach( $attach ) ) {
+		if ( ! $attach || ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
@@ -885,13 +923,14 @@ trait WP_Document_Revisions_File_Handler {
 
 		$latest = $this->get_latest_revision( $id );
 
-		if ( ! $latest ) {
+		$attach = $latest ? $this->get_document( $latest->ID ) : false;
+		if ( ! $attach ) {
 			return false;
 		}
 
 		// temporarily remove our filter to get the true URL, not the permalink.
 		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$url = wp_get_attachment_url( $this->get_document( $latest->ID )->ID );
+		$url = wp_get_attachment_url( $attach->ID );
 		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
 
 		return $url;
@@ -920,7 +959,7 @@ trait WP_Document_Revisions_File_Handler {
 
 		// need to rebuild file name.
 		$file = get_post_meta( $attachment_id, '_wp_attached_file', true );
-		return trailingslashit( self::$wpdr_document_dir ) . $file;
+		return trailingslashit( $this->document_upload_dir() ) . $file;
 	}
 
 	/**
@@ -931,6 +970,10 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return array<string, mixed> modified directory
 	 */
 	public function document_upload_dir_filter( array $dir ): array {
+		if ( self::$resolving_upload_dir ) {
+			return $dir;
+		}
+
 		if ( ! $this->verify_post_type() ) {
 			// Ensure cookie variable is set correctly - if needed elsewhere.
 			self::$doc_image = true;
@@ -957,11 +1000,15 @@ trait WP_Document_Revisions_File_Handler {
 	public function document_upload_dir_set( array $dir ): array {
 
 		self::$doc_image = false;
-		$doc_dir         = untrailingslashit( self::$wpdr_document_dir );
-		$new_dir         = array(
-			'path'    => $doc_dir . '/' . $dir['subdir'],
-			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
-			'subdir'  => $dir['subdir'],
+		$doc_dir         = untrailingslashit( $this->document_upload_dir() );
+
+		// Core's subdir is either empty or starts with a slash ("/2026/09"). Joining it with
+		// another slash produced "uploads//2026/09", which breaks stream wrappers such as s3://.
+		$subdir  = isset( $dir['subdir'] ) && '' !== $dir['subdir'] ? '/' . ltrim( (string) $dir['subdir'], '/' ) : '';
+		$new_dir = array(
+			'path'    => $doc_dir . $subdir,
+			'url'     => home_url( '/' . $this->document_slug() ) . $subdir,
+			'subdir'  => $subdir,
 			'basedir' => $doc_dir,
 			'baseurl' => home_url( '/' . $this->document_slug() ),
 			'error'   => false,
@@ -1087,15 +1134,16 @@ trait WP_Document_Revisions_File_Handler {
 	 * Prevents direct access to files and ensures authentication.
 	 *
 	 * @since 1.2
-	 * @param string $url the original URL.
-	 * @param int    $post_id the attachment ID.
-	 * @return string the modified URL
+	 * @param mixed $url the original URL.
+	 * @param mixed $post_id the attachment ID.
+	 * @return mixed the modified URL
 	 */
-	public function attachment_url_filter( string $url, int $post_id ): string {
+	public function attachment_url_filter( $url, $post_id = 0 ) {
 		// not an attached attachment.
-		if ( ! $this->verify_post_type( $post_id ) ) {
+		if ( ! is_string( $url ) || ! is_numeric( $post_id ) || (int) $post_id <= 0 || ! $this->verify_post_type( (int) $post_id ) ) {
 			return $url;
 		}
+		$post_id = (int) $post_id;
 
 		$document = get_post( $post_id );
 
@@ -1190,7 +1238,7 @@ trait WP_Document_Revisions_File_Handler {
 	/**
 	 * Returns the WP_Filesystem instance when it can be used directly (no credentials) for a directory.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param string $dir directory the caller will work in.
 	 * @return WP_Filesystem_Base|null the filesystem, or null when direct access is not available.
 	 */
@@ -1220,7 +1268,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * A size entry is only updated when its file was actually moved, so the metadata
 	 * never points at a file that is not there.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param array<string, mixed> $sizes    the 'sizes' element of the attachment metadata.
 	 * @param string               $file_dir directory holding the files (with trailing slash).
 	 * @param string               $title    attachment title the file names start with.
