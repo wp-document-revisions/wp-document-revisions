@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @method string format_doc_id( int $post_id )
  * @method string document_upload_dir()
  * @method string document_slug()
+ * @method bool document_link_date()
  * @method string|false get_document_lock( $document )
  */
 class WP_Document_Revisions_Admin {

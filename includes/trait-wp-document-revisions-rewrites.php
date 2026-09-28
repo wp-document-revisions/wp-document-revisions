@@ -84,6 +84,25 @@ trait WP_Document_Revisions_Rewrites {
 
 
 	/**
+	 * Whether document permalinks omit the /yyyy/mm date element.
+	 *
+	 * The network settings page saves this with update_site_option(), like the
+	 * document slug and upload directory, so read it the same way. A per-site value
+	 * saved from the Media settings screen is used only when no network value exists.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function document_link_date(): bool {
+		$link_date = get_network_option( null, 'document_link_date', null );
+		if ( null === $link_date ) {
+			$link_date = get_option( 'document_link_date' );
+		}
+
+		return (bool) $link_date;
+	}
+
+	/**
 	 * Builds document post type permalink.
 	 *
 	 * @since 0.5
@@ -126,7 +145,7 @@ trait WP_Document_Revisions_Rewrites {
 
 			// build documents(/yyyy/mm)/slug.
 			$extension  = $this->get_file_type( $document );
-			$year_month = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
+			$year_month = ( $this->document_link_date() ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
 
 			$link  = trailingslashit( $home_url ) . $this->document_slug() . $year_month . '/';
 			$link .= ( $leavename ) ? '%document%' : $document->post_name;

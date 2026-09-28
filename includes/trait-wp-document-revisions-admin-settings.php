@@ -670,7 +670,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	 */
 	public function document_slug_cb(): void {
 		// Same site-local year/month that wp_upload_dir() uses for the upload subdirectory.
-		$year_month = ( get_site_option( 'document_link_date' ) ? '' : '/' . wp_date( 'Y/m' ) );
+		$year_month = ( $this->document_link_date() ? '' : '/' . wp_date( 'Y/m' ) );
 		?>
 		<code><?php echo esc_html( trailingslashit( home_url() ) ); ?><input name="document_slug" type="text" id="document_slug" value="<?php echo esc_attr( $this->document_slug() ); ?>" class="medium-text" /><?php echo esc_html( $year_month ); ?>/<?php esc_html_e( 'example-document-title', 'wp-document-revisions' ); ?>.txt</code><br />
 		<span class="description">
@@ -689,7 +689,7 @@ trait WP_Document_Revisions_Admin_Settings {
 	public function document_link_date_cb(): void {
 		?>
 		<label for="document_link_date">
-		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( '1', get_site_option( 'document_link_date' ) ); ?> />
+		<input name="document_link_date" type="checkbox" id="document_link_date" value="1" <?php checked( $this->document_link_date() ); ?> />
 		<?php esc_html_e( 'Remove the year and month element /yyyy/mm from the document permalink.', 'wp-document-revisions' ); ?></label><br />
 		<span class="description">
 		<?php esc_html_e( 'By default the document permalink will contain the post year and month.', 'wp-document-revisions' ); ?><br />

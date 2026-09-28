@@ -646,7 +646,7 @@ class WP_Document_Revisions_Validate_Structure {
 		} else {
 			// these messages are repeated below.
 			$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
-			if ( get_option( 'document_link_date' ) ) {
+			if ( self::$parent->document_link_date() ) {
 				$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 			} else {
 				$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
@@ -891,7 +891,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 */
 	private static function validate_guid( $doc_id, $attach_id, string $post_status, string $post_date, string $post_name, string $guid ) {
 		$msg_09 = esc_html__( 'The guid is not the expected "ugly" permalink', 'wp-document-revisions' );
-		if ( get_option( 'document_link_date' ) ) {
+		if ( self::$parent->document_link_date() ) {
 			$msg_10 = esc_html__( 'The guid does not contain the site URL.', 'wp-document-revisions' );
 		} else {
 			$msg_10 = esc_html__( 'The guid does not contain the correct date.', 'wp-document-revisions' );
@@ -916,7 +916,7 @@ class WP_Document_Revisions_Validate_Structure {
 			return true;
 		}
 		// find the permalink (except extension).
-		$year_mth  = ( get_option( 'document_link_date' ) ? '' : '/' . str_replace( '-', '/', substr( $post_date, 0, 7 ) ) );
+		$year_mth  = ( self::$parent->document_link_date() ? '' : '/' . str_replace( '-', '/', substr( $post_date, 0, 7 ) ) );
 		$permalink = home_url( self::$parent->document_slug() . $year_mth . '/' );
 		if ( str_contains( $guid, $permalink ) ) {
 			// now add the post name.
