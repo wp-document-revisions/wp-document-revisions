@@ -30,9 +30,15 @@ In: trait-wp-document-revisions-admin-editor.php
 
 ## Action document_lock_override
 
-Called after trying to over-ride the lock and possibly a notice has been sent.
+Called after a user overrides another user's lock on a document, from the editor's override link or the `override-document-lock` ability. Receives the document ID, the user now holding the lock and the previous lock owner.
 
 In: trait-wp-document-revisions-revisions.php
+
+## Action document_permalink_updated
+
+Called after a document's slug is changed from the edit screen. Receives the document ID, the new slug and the previous slug. The previous slug is also stored in `_wp_old_slug`, so WordPress redirects the old URL. (Since 5.6.0.)
+
+In: trait-wp-document-revisions-rewrites.php
 
 ## Action document_saved
 
