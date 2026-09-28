@@ -159,7 +159,7 @@ class WP_Document_Revisions_Front_End {
 		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
 			$attach = $wpdr->get_document( $id );
-			$file   = get_attached_file( $attach->ID );
+			$file   = $attach ? get_attached_file( $attach->ID ) : false;
 			if ( $file ) {
 				$mimetype      = $wpdr->get_doc_mimetype( $file );
 				$atts_show_pdf = ( 'application/pdf' === strtolower( $mimetype ) ? ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>' : '' );
