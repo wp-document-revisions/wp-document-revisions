@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.4.5
+
+* Security: on sites that enable block editor mode for documents (off by default), files uploaded through the block editor's Document panel were stored under their original filenames in the normal uploads location, so a private or draft document's file could be downloaded directly by anyone who knew or guessed its URL. Panel uploads are now stored and protected like classic editor uploads (hashed name, document directory). Files already uploaded through the panel should be re-uploaded. The panel also now shows the attached file and saves the selection. (#735)
+
 ### 5.4.4
 
 * Security: on sites that enable the REST API for documents (off by default), a user who could edit their own documents could point one of them at another document's file, including a private document they could not read, and so serve that file. A document now only ever resolves to, and can only be linked to, a file that belongs to it, and REST writes can no longer bypass the plugin's REST checks by requesting the `edit` context.
