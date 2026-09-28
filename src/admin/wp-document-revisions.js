@@ -23,9 +23,6 @@ class WPDocumentRevisions {
 			el.addEventListener( 'click', this.restoreRevision );
 		} );
 		document.getElementById( 'override_link' )?.addEventListener( 'click', this.overrideLock );
-		document.querySelectorAll( '#document a' ).forEach( ( el ) => {
-			el.addEventListener( 'click', this.requestPermission );
-		} );
 		document.addEventListener( 'autosaveComplete', this.postAutosaveCallback );
 		document
 			.querySelectorAll( SUBMIT_BUTTONS )
@@ -254,25 +251,6 @@ class WPDocumentRevisions {
 			} );
 	};
 
-	requestPermission = () => {
-		if ( window.webkitNotifications != null ) {
-			return window.webkitNotifications.requestPermission();
-		}
-	};
-
-	lockOverrideNotice = ( notice ) => {
-		if ( window.webkitNotifications.checkPermission() > 0 ) {
-			return window.webkitNotifications.RequestPermission( lock_override_notice );
-		}
-		return window.webkitNotifications
-			.createNotification(
-				wp_document_revisions.lostLockNoticeLogo,
-				__( 'Lost Document Lock', 'wp-document-revisions' ),
-				notice
-			)
-			.show();
-	};
-
 	postAutosaveCallback = () => {
 		const autosaveAlert = document.getElementById( 'autosave-alert' );
 		const lockNotice = document.getElementById( 'lock-notice' );
@@ -288,11 +266,7 @@ class WPDocumentRevisions {
 				),
 				title ? title.value : ''
 			);
-			if ( window.webkitNotifications ) {
-				lock_override_notice( lostLockNotice );
-			} else {
-				alert( lostLockNotice );
-			}
+			alert( lostLockNotice );
 			// The legacy forceReload arg is a no-op in modern browsers; the DOM
 			// typings declare reload() as zero-arg, so cast to preserve the call.
 			return /** @type {( forceReload?: boolean ) => void } */ ( location.reload )( true );

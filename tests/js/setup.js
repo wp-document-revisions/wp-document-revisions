@@ -137,7 +137,6 @@ global.wp_document_revisions = {
 	restoreConfirmation: 'Are you sure you want to restore this revision?',
 	nonce: 'test-nonce',
 	lockError: 'Unable to override lock',
-	lostLockNoticeLogo: 'logo.png',
 	lostLockNoticeTitle: 'Lock Override',
 	lostLockNotice: 'The lock for %s has been overridden',
 	postUploadNotice: '<div>File uploaded successfully</div>',

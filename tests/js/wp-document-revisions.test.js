@@ -381,29 +381,6 @@ describe('WPDocumentRevisions', () => {
 		});
 	});
 
-	describe('requestPermission', () => {
-		test('should request notification permission if webkitNotifications exists', () => {
-			const mockRequestPermission = jest.fn();
-			window.webkitNotifications = {
-				requestPermission: mockRequestPermission,
-			};
-
-			WPDocumentRevisions.requestPermission();
-
-			expect(mockRequestPermission).toHaveBeenCalled();
-
-			delete window.webkitNotifications;
-		});
-
-		test('should handle missing webkitNotifications gracefully', () => {
-			window.webkitNotifications = null;
-
-			expect(() => {
-				WPDocumentRevisions.requestPermission();
-			}).not.toThrow();
-		});
-	});
-
 	describe('overrideLock', () => {
 		test('should call wp.apiFetch with correct URL and data', () => {
 			document.getElementById = jest.fn(() => null);
@@ -548,8 +525,6 @@ describe('WPDocumentRevisions', () => {
 				if (id === 'title') return { value: 'Test Document' };
 				return null;
 			});
-
-			delete window.webkitNotifications;
 
 			WPDocumentRevisions.postAutosaveCallback();
 

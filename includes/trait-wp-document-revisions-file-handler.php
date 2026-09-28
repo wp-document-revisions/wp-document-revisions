@@ -75,10 +75,6 @@ trait WP_Document_Revisions_File_Handler {
 					'',
 					array( 'response' => absint( $response ) )
 				);
-				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-				$wp_query->is_404 = true;
-				return false;
 			}
 			$rev_id = $revn->ID;
 		} else {
@@ -110,10 +106,6 @@ trait WP_Document_Revisions_File_Handler {
 				'',
 				array( 'response' => absint( $response ) )
 			);
-			// for unit testing.
-			// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-			$wp_query->is_404 = true;
-			return false;
 		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line.
@@ -159,10 +151,6 @@ trait WP_Document_Revisions_File_Handler {
 					'',
 					array( 'response' => 403 )
 				);
-				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-				$wp_query->is_404 = true;
-				return false;
 			} else {
 				// not logged on, deny file existence (as above).
 				$wp_query->posts          = array();

@@ -32,7 +32,6 @@ declare module '@wordpress/dom-ready' {
  * config remains here.
  */
 interface WpdrClassicConfig {
-	lostLockNoticeLogo: string;
 	offset: number;
 	nonce: string;
 }
@@ -55,7 +54,6 @@ interface Window {
 	WPDocumentRevisions?: unknown;
 	WPDocumentRevisionsClass?: unknown;
 	autosave_enable_buttons?: () => void;
-	webkitNotifications?: any;
 	// Validate-structure functions exposed on window for inline onclick=.
 	wpdr_valid_fix?: ( id: number, code: string, parm: number ) => Promise< void >;
 	clear_line?: ( id: number, code: string ) => void;
@@ -65,7 +63,6 @@ interface Window {
 // Standard WordPress admin globals injected by core / inline scripts.
 declare var ajaxurl: string;
 declare function autosave(): void;
-declare function lock_override_notice( notice?: string ): void;
 
 // Validate-structure inline-script global (the current user id).
 declare var user: number;

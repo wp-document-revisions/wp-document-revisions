@@ -659,9 +659,8 @@ trait WP_Document_Revisions_Admin_Editor {
 			// wp_set_script_translations() below; only non-translatable runtime
 			// config is passed through the localized object.
 			$data = array(
-				'lostLockNoticeLogo' => admin_url( 'images/logo.gif' ),
-				'offset'             => get_option( 'gmt_offset' ) * 3600,
-				'nonce'              => wp_create_nonce( 'wp-document-revisions' ),
+				'offset' => get_option( 'gmt_offset' ) * 3600,
+				'nonce'  => wp_create_nonce( 'wp-document-revisions' ),
 			);
 
 			$asset_file = dirname( __DIR__ ) . '/build/admin/wp-document-revisions.asset.php';
