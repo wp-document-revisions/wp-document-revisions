@@ -54,6 +54,12 @@ In: trait-wp-document-revisions-file-handler.php
 
 ## Action wpdr_text_extracted
 
-Fires after extracted text is successfully cached for a revision attachment. Receives the attachment ID. Used internally by the AI summary scheduler to queue a follow-on cron event; third-party consumers (search indexing, embedding generation, etc.) can hook this to react to new extracted content without monkey-patching the cache class.
+Fires after extracted text is successfully cached for a revision attachment. Receives the attachment ID and, since 5.6.0, the document ID. Used internally by the AI summary scheduler to queue a follow-on cron event; third-party consumers (search indexing, embedding generation, etc.) can hook this to react to new extracted content without monkey-patching the cache class.
+
+In: includes/class-wp-document-revisions-text-extractor-cache.php
+
+## Action wpdr_text_cleared
+
+Fires after cached extracted text is removed from a revision attachment, for example when a document opts out of extraction. Receives the attachment ID and the document ID, so search indexes and other consumers of `wpdr_text_extracted` can drop the text too. (Since 5.6.0.)
 
 In: includes/class-wp-document-revisions-text-extractor-cache.php

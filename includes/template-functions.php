@@ -136,3 +136,36 @@ if ( ! function_exists( 'wpdr_extract_text' ) ) {
 		return $text;
 	}
 }
+
+if ( ! function_exists( 'wpdr_get_document_text' ) ) {
+	/**
+	 * Returns the extracted plain text of a document's current file.
+	 *
+	 * A convenience wrapper around wpdr_extract_text() for search and other
+	 * integrations that work with documents rather than revision attachments. It
+	 * uses the cached text when there is some, extracts it otherwise, and returns ''
+	 * when the document has no file or extraction is turned off for it.
+	 *
+	 * It doesn't check permissions: only show the text to users who can read the
+	 * document.
+	 *
+	 * @since 5.6.0
+	 *
+	 * @param int $document_id the document post ID.
+	 * @return string extracted text, or empty string.
+	 */
+	function wpdr_get_document_text( int $document_id ): string {
+		global $wpdr;
+
+		if ( $document_id <= 0 || 'document' !== get_post_type( $document_id ) || ! $wpdr ) {
+			return '';
+		}
+
+		$attachment = $wpdr->get_document( $document_id );
+		if ( ! $attachment instanceof WP_Post ) {
+			return '';
+		}
+
+		return wpdr_extract_text( $attachment->ID );
+	}
+}
