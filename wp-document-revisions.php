@@ -89,6 +89,30 @@ if ( file_exists( __DIR__ . '/vendor-prefixed/scoper-autoload.php' ) ) {
 	);
 }
 
+if ( ! function_exists( 'wpdr_vendor_class' ) ) {
+	/**
+	 * Resolve a bundled Composer class name to the one that is actually loaded.
+	 *
+	 * Prefers the php-scoper name (`WP_Document_Revisions\Vendor\...`) when it can be
+	 * autoloaded, which covers both the scoped build and the unscoped build (via the
+	 * alias shim above), and falls back to the plain name. Plugin code must go through
+	 * this rather than hard-coding `\Smalot\...` / `\PhpOffice\...`, because the
+	 * plugin files themselves are not rewritten by php-scoper.
+	 *
+	 * @since 5.6.0
+	 * @param string $class_name unprefixed, fully-qualified class name.
+	 * @return class-string the class name to instantiate or compare against.
+	 */
+	function wpdr_vendor_class( string $class_name ): string {
+		$class_name = ltrim( $class_name, '\\' );
+		$prefixed   = 'WP_Document_Revisions\\Vendor\\' . $class_name;
+		if ( class_exists( $prefixed ) || interface_exists( $prefixed ) ) {
+			return $prefixed;
+		}
+		return $class_name;
+	}
+}
+
 require_once __DIR__ . '/includes/trait-wp-document-revisions-rewrites.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-file-handler.php';
 require_once __DIR__ . '/includes/trait-wp-document-revisions-revisions.php';

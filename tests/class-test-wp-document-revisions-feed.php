@@ -297,5 +297,18 @@ class Test_WP_Document_Revisions_Feed extends Test_Common_WPDR {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$_GET['key'] = strrev( $key );
 		self::assertFalse( $wpdr->validate_feed_key(), 'not properly validating wrong feed key' );
+
+		// anonymous lookup: exact key authenticates, a case-swapped key does not.
+		wp_set_current_user( 0 );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = $key;
+		self::assertTrue( $wpdr->validate_feed_key(), 'anonymous lookup of valid feed key failed' );
+		self::assertSame( self::$users['author']->ID, get_current_user_id(), 'feed key did not set the user' );
+
+		wp_set_current_user( 0 );
+		$swapped = strtolower( $key ) === $key ? strtoupper( $key ) : strtolower( $key );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$_GET['key'] = $swapped;
+		self::assertFalse( $wpdr->validate_feed_key(), 'case-swapped feed key accepted' );
 	}
 }

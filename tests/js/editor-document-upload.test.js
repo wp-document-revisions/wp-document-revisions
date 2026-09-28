@@ -114,26 +114,30 @@ describe( 'formatDate', () => {
 	const HOUR = 60 * MIN;
 	const DAY = 24 * HOUR;
 
-	test( 'returns "just now" under a minute', () => {
-		expect( formatDate( ago( 30 * 1000 ), now ) ).toBe( 'just now' );
+	test( 'describes very recent revisions', () => {
+		expect( formatDate( ago( 30 * 1000 ), now ) ).toBe( 'a few seconds ago' );
 	} );
 
 	test( 'returns minutes for under an hour', () => {
-		expect( formatDate( ago( 5 * MIN ), now ) ).toBe( '5 min ago' );
+		expect( formatDate( ago( 5 * MIN ), now ) ).toBe( '5 minutes ago' );
 	} );
 
 	test( 'uses singular hour and plural hours', () => {
-		expect( formatDate( ago( 1 * HOUR ), now ) ).toBe( '1 hour ago' );
+		expect( formatDate( ago( 1 * HOUR ), now ) ).toBe( 'an hour ago' );
 		expect( formatDate( ago( 5 * HOUR ), now ) ).toBe( '5 hours ago' );
 	} );
 
 	test( 'uses singular day and plural days', () => {
-		expect( formatDate( ago( 1 * DAY ), now ) ).toBe( '1 day ago' );
+		expect( formatDate( ago( 1 * DAY ), now ) ).toBe( 'a day ago' );
 		expect( formatDate( ago( 10 * DAY ), now ) ).toBe( '10 days ago' );
 	} );
 
-	test( 'falls back to a locale date string at 30+ days', () => {
-		const old = new Date( '2020-01-01T12:00:00Z' );
-		expect( formatDate( old.toISOString(), now ) ).toBe( old.toLocaleDateString() );
+	test( 'reads dates without an offset in the site timezone', () => {
+		// Default @wordpress/date settings use UTC, so a bare REST `date` equals its Z form.
+		expect( formatDate( '2021-01-01T11:55:00', now ) ).toBe( '5 minutes ago' );
+	} );
+
+	test( 'falls back to the site date format at 30+ days', () => {
+		expect( formatDate( '2020-01-01T12:00:00Z', now ) ).toBe( 'January 1, 2020' );
 	} );
 } );

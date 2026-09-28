@@ -75,10 +75,6 @@ trait WP_Document_Revisions_File_Handler {
 					'',
 					array( 'response' => absint( $response ) )
 				);
-				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-				$wp_query->is_404 = true;
-				return false;
 			}
 			$rev_id = $revn->ID;
 		} else {
@@ -110,10 +106,6 @@ trait WP_Document_Revisions_File_Handler {
 				'',
 				array( 'response' => absint( $response ) )
 			);
-			// for unit testing.
-			// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-			$wp_query->is_404 = true;
-			return false;
 		}
 
 		// flip slashes for WAMP settups to prevent 404ing on the next line.
@@ -159,10 +151,6 @@ trait WP_Document_Revisions_File_Handler {
 					'',
 					array( 'response' => 403 )
 				);
-				// for unit testing.
-				// @phpstan-ignore deadCode.unreachable (wp_die() above is mocked to return, not exit, in the PHPUnit suite; these lines run only there)
-				$wp_query->is_404 = true;
-				return false;
 			} else {
 				// not logged on, deny file existence (as above).
 				$wp_query->posts          = array();
@@ -222,7 +210,7 @@ trait WP_Document_Revisions_File_Handler {
 		$headers['Content-Disposition'] = $disposition . '; filename="' . $filename . '"';
 
 		// get the mime type.
-		$mimetype = $this->get_doc_mimetype( $file );
+		$mimetype = $this->get_doc_mimetype( $file, $attach->ID );
 
 		// Set the Content-Type header if a mimetype has been detected or provided.
 		if ( is_string( $mimetype ) ) {
@@ -251,13 +239,22 @@ trait WP_Document_Revisions_File_Handler {
 			}
 		}
 
+		// Only compress text by default. PDFs, office files, images and archives are already
+		// compressed, so deflating them in PHP costs CPU and memory for little or no gain and
+		// forces the whole response to be buffered.
+		if ( $gzip_dflt && ! ( is_string( $mimetype ) && 0 === strpos( $mimetype, 'text/' ) ) ) {
+			$gzip_dflt = false;
+		}
+
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
+		 *
+		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is text/*.
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $gzip_dflt Whether gzip is supported by the client.
+		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a text/* MIME type).
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
@@ -443,30 +440,16 @@ trait WP_Document_Revisions_File_Handler {
 			$file_served = false;
 			if ( apply_filters( 'document_use_wp_filesystem', false, $file, $post->ID, $attach->ID ) ) {
 				// try WP_filesystem for $doc_dir.
-				// file code may not be already loaded.
-				if ( ! function_exists( 'get_filesystem_method' ) ) {
-					include ABSPATH . 'wp-admin/includes/file.php';
-				}
-				$method = get_filesystem_method( array(), dirname( $file ), false );
-
-				if ( 'direct' === $method ) {
-					// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-					$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, dirname( $file ), array(), false );
-
-					// initialize the API.
-					if ( WP_Filesystem( $creds ) ) {
-						// all good so far.
-						global $wp_filesystem;
-
-						// downloading a file, not normally WP text so don't sanitize.
-						$contents = $wp_filesystem->get_contents( $file );
-						if ( false !== $contents ) {
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							echo $contents;
-							$file_served = true;
-						}
-						// Fall through to readfile if get_contents fails.
+				$wp_filesystem = $this->direct_filesystem( dirname( $file ) );
+				if ( $wp_filesystem ) {
+					// downloading a file, not normally WP text so don't sanitize.
+					$contents = $wp_filesystem->get_contents( $file );
+					if ( false !== $contents ) {
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $contents;
+						$file_served = true;
 					}
+					// Fall through to readfile if get_contents fails.
 				}
 			}
 
@@ -680,51 +663,7 @@ trait WP_Document_Revisions_File_Handler {
 			$file     = get_attached_file( $attach->ID );
 			$file_dir = trailingslashit( dirname( $file ) );
 
-			// prepare to use WP_Filesystem if we can.
-			$use_wp_filesystem = false;
-			// file code may not be already loaded.
-			if ( ! function_exists( 'get_filesystem_method' ) ) {
-				include ABSPATH . 'wp-admin/includes/file.php';
-			}
-			$method = get_filesystem_method( array(), $file_dir, false );
-
-			if ( 'direct' === $method ) {
-				// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-				$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
-
-				// initialize the API.
-				if ( WP_Filesystem( $creds ) ) {
-					// all good so far.
-					global $wp_filesystem;
-					$use_wp_filesystem = true;
-				}
-			}
-
-			$title    = $attach->post_title;
-			$new_name = md5( $title . microtime() );
-			// move file and update.
-			foreach ( $metadata['sizes'] as $size => $sizeinfo ) {
-				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
-					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-						if ( $use_wp_filesystem ) {
-							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
-							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
-							$metadata['sizes'][ $size ]['file'] = $new_file;
-						} else {
-							$dummy = null;
-							// Use copy and unlink because rename breaks streams.
-							// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
-							if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-								@chmod( $file_dir . $new_file, 0664 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
-								wp_delete_file( $file_dir . $sizeinfo['file'] );
-								$metadata['sizes'][ $size ]['file'] = $new_file;
-							}
-							// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
-						}
-					}
-				}
-			}
+			$metadata['sizes'] = $this->hide_size_file_names( $metadata['sizes'], $file_dir, $attach->post_title );
 		}
 		// add indicator to note it has been changed (so no need to reprocess).
 		$metadata['wpdr_hidden'] = 1;
@@ -771,8 +710,6 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return bool
 	 */
 	public function validate_feed_key(): bool {
-		global $wpdb;
-
 		// verify key exists.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_GET['key'] ) ) {
@@ -793,19 +730,28 @@ trait WP_Document_Revisions_File_Handler {
 		if ( $user->exists() ) {
 			// yes, validate against their key, i.e. act somewhat like nonce.
 			$key_user = get_user_option( self::$meta_key );
-			if ( $key === $key_user ) {
-				return true;
-			} else {
-				return false;
-			}
+			return hash_equals( (string) $key_user, $key );
 		}
 
 		// lookup key and, if found, set user_id (so current_user_can will work).
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		$feed_user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s AND meta_value = %s", $wpdb->prefix . self::$meta_key, $key ) );
-		// $wpdb->get_var() returns NULL when no row matches; only authenticate when an actual user_id is found.
-		if ( ! empty( $feed_user ) && is_numeric( $feed_user ) ) {
-			wp_set_current_user( (int) $feed_user );
+		global $wpdb;
+		$feed_users = get_users(
+			array(
+				'blog_id'    => 0,
+				'meta_key'   => $wpdb->get_blog_prefix() . self::$meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'fields'     => 'ID',
+				'number'     => 1,
+			)
+		);
+		if ( empty( $feed_users ) ) {
+			return false;
+		}
+
+		// Re-check with a constant-time, case-sensitive comparison (the SQL match uses the column collation).
+		$feed_user = (int) $feed_users[0];
+		if ( hash_equals( (string) get_user_option( self::$meta_key, $feed_user ), $key ) ) {
+			wp_set_current_user( $feed_user );
 			return true;
 		}
 
@@ -865,10 +811,15 @@ trait WP_Document_Revisions_File_Handler {
 	/**
 	 * Find the mimetype.
 	 *
-	 * @param string $file  file name..
-	 * @return string
+	 * Resolution order: the `document_revisions_mimetype` filter, the attachment's
+	 * stored MIME type (when an attachment ID is given), the file extension, content
+	 * sniffing, and finally `application/octet-stream`.
+	 *
+	 * @param string $file      file name.
+	 * @param int    $attach_id optional attachment ID whose stored MIME type is preferred.
+	 * @return string|false
 	 */
-	public function get_doc_mimetype( string $file ) {
+	public function get_doc_mimetype( string $file, int $attach_id = 0 ) {
 		/**
 		 * Filters the MIME type for a file before it is processed by WP Document Revisions.
 		 *
@@ -876,22 +827,26 @@ trait WP_Document_Revisions_File_Handler {
 		 *
 		 * If filtered to a string, that value will be set for the `Content-Type` header.
 		 *
-		 * @param null|bool|string $mimetype The MIME type for a given file.
-		 * @param string           $file     The file being served.
+		 * @param null|bool|string $mimetype  The MIME type for a given file.
+		 * @param string           $file      The file being served.
+		 * @param int              $attach_id The attachment ID, or 0 if not known.
 		 */
-		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file );
+		$mimetype = apply_filters( 'document_revisions_mimetype', null, $file, $attach_id );
 
 		if ( is_null( $mimetype ) ) {
-			// inspired by wp-includes/ms-files.php.
-			$mime = wp_check_filetype( $file );
-			if ( false === $mime['type'] && function_exists( 'mime_content_type' ) ) {
-				$mime['type'] = mime_content_type( $file );
+			$mimetype = $attach_id ? get_post_mime_type( $attach_id ) : false;
+
+			if ( ! $mimetype ) {
+				$mime     = wp_check_filetype( $file );
+				$mimetype = $mime['type'];
 			}
 
-			if ( $mime['type'] ) {
-				$mimetype = $mime['type'];
-			} else {
-				$mimetype = 'image/' . substr( $file, strrpos( $file, '.' ) + 1 );
+			if ( ! $mimetype && function_exists( 'mime_content_type' ) && is_readable( $file ) ) {
+				$mimetype = mime_content_type( $file );
+			}
+
+			if ( ! $mimetype ) {
+				$mimetype = 'application/octet-stream';
 			}
 		}
 		return $mimetype;
@@ -1056,50 +1011,8 @@ trait WP_Document_Revisions_File_Handler {
 		$file     = get_attached_file( $attachment_id );
 		$file_dir = trailingslashit( dirname( $file ) );
 
-		// prepare to use WP_Filesystem if we can.
-		$use_wp_filesystem = false;
-		// file code may not be already loaded.
-		if ( ! function_exists( 'get_filesystem_method' ) ) {
-			include ABSPATH . 'wp-admin/includes/file.php';
-		}
+		$meta_sizes = $this->hide_size_file_names( $meta_sizes, $file_dir, $attach->post_title );
 
-		$method = get_filesystem_method( array(), $file_dir, false );
-		if ( 'direct' === $method ) {
-			// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
-
-			// initialize the API.
-			if ( WP_Filesystem( $creds ) ) {
-				// all good so far.
-				global $wp_filesystem;
-				$use_wp_filesystem = true;
-			}
-		}
-
-		$title    = $attach->post_title;
-		$new_name = md5( $title . microtime() );
-		// move file and update.
-		foreach ( $meta_sizes as $size => $sizeinfo ) {
-			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
-				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-					if ( $use_wp_filesystem ) {
-						if ( $wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
-							$meta_sizes[ $size ]['file'] = $new_file;
-						}
-					} else {
-						$dummy = null;
-						// Use copy and unlink because rename breaks streams.
-						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							wp_delete_file( $file_dir . $sizeinfo['file'] );
-							$meta_sizes[ $size ]['file'] = $new_file;
-						}
-					}
-				}
-			}
-		}
 		// update the metadata.
 		$meta['sizes']       = $meta_sizes;
 		$meta['wpdr_hidden'] = 1;
@@ -1272,5 +1185,74 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		return $image;
+	}
+
+	/**
+	 * Returns the WP_Filesystem instance when it can be used directly (no credentials) for a directory.
+	 *
+	 * @since 5.6.0
+	 * @param string $dir directory the caller will work in.
+	 * @return WP_Filesystem_Base|null the filesystem, or null when direct access is not available.
+	 */
+	private function direct_filesystem( string $dir ) {
+		// file code may not be already loaded.
+		if ( ! function_exists( 'get_filesystem_method' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( 'direct' !== get_filesystem_method( array(), $dir, false ) ) {
+			return null;
+		}
+
+		// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', 'direct', false, $dir, array(), false );
+		if ( ! WP_Filesystem( $creds ) ) {
+			return null;
+		}
+
+		global $wp_filesystem;
+		return $wp_filesystem;
+	}
+
+	/**
+	 * Renames generated image-size files that start with the attachment title to an md5 name.
+	 *
+	 * A size entry is only updated when its file was actually moved, so the metadata
+	 * never points at a file that is not there.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, mixed> $sizes    the 'sizes' element of the attachment metadata.
+	 * @param string               $file_dir directory holding the files (with trailing slash).
+	 * @param string               $title    attachment title the file names start with.
+	 * @return array<string, mixed> the updated sizes.
+	 */
+	private function hide_size_file_names( array $sizes, string $file_dir, string $title ): array {
+		$wp_filesystem = $this->direct_filesystem( $file_dir );
+		$new_name      = md5( $title . microtime() );
+		foreach ( $sizes as $size => $sizeinfo ) {
+			if ( 0 !== strpos( $sizeinfo['file'], $title ) || ! file_exists( $file_dir . $sizeinfo['file'] ) ) {
+				continue;
+			}
+			$old_path = $file_dir . $sizeinfo['file'];
+			$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
+			$new_path = $file_dir . $new_file;
+			if ( $wp_filesystem ) {
+				if ( ! $wp_filesystem->move( $old_path, $new_path ) ) {
+					continue;
+				}
+				$wp_filesystem->chmod( $new_path, FS_CHMOD_FILE );
+			} else {
+				// Use copy and unlink because rename breaks streams.
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				if ( ! @copy( $old_path, $new_path ) ) {
+					continue;
+				}
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+				@chmod( $new_path, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644 );
+				wp_delete_file( $old_path );
+			}
+			$sizes[ $size ]['file'] = $new_file;
+		}
+		return $sizes;
 	}
 }

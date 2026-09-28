@@ -684,6 +684,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		self::assertEquals( 200, $response->get_status(), 'success not returned' );
 		self::assertEquals( 'Success.', $response->get_data(), 'not expected response' );
 
+		// the attachment post itself must be renamed to the new md5 name (read without flushing the cache).
+		$new_fname = pathinfo( get_post_meta( $attach_id, '_wp_attached_file', true ), PATHINFO_FILENAME );
+		self::assertMatchesRegularExpression( '/^[a-f0-9]{32}$/', $new_fname, 'file not renamed to md5' );
+		self::assertSame( $new_fname, get_post_field( 'post_name', $attach_id ), 'attachment post_name not renamed' );
+		self::assertSame( $new_fname, get_post_field( 'post_title', $attach_id ), 'attachment post_title not renamed' );
+
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();

@@ -23,9 +23,6 @@ class WPDocumentRevisions {
 			el.addEventListener( 'click', this.restoreRevision );
 		} );
 		document.getElementById( 'override_link' )?.addEventListener( 'click', this.overrideLock );
-		document.querySelectorAll( '#document a' ).forEach( ( el ) => {
-			el.addEventListener( 'click', this.requestPermission );
-		} );
 		document.addEventListener( 'autosaveComplete', this.postAutosaveCallback );
 		document
 			.querySelectorAll( SUBMIT_BUTTONS )
@@ -65,8 +62,31 @@ class WPDocumentRevisions {
 
 		this.hijackAutosave();
 		setInterval( this.updateTimestamps, 60000 );
-		setInterval( this.checkUpdate, 1000 );
+		this.bindEditorEvents();
 	}
+
+	/**
+	 * Run checkUpdate() when the description editor changes, instead of
+	 * polling its iframe every second. Handles an editor that initialised
+	 * before this script as well as one added later.
+	 */
+	bindEditorEvents = () => {
+		const tmce = window.tinymce;
+		if ( ! tmce ) {
+			return;
+		}
+		const bind = ( editor ) => {
+			if ( ! editor || 'content' !== editor.id ) {
+				return;
+			}
+			editor.on( 'init SetContent input change keyup Undo Redo', this.checkUpdate );
+			if ( editor.initialized ) {
+				this.checkUpdate();
+			}
+		};
+		bind( tmce.get( 'content' ) );
+		tmce.on( 'AddEditor', ( e ) => bind( e.editor ) );
+	};
 
 	hijackAutosave = () => {
 		this.autosaveEnableButtonsOriginal = window.autosave_enable_buttons;
@@ -254,25 +274,6 @@ class WPDocumentRevisions {
 			} );
 	};
 
-	requestPermission = () => {
-		if ( window.webkitNotifications != null ) {
-			return window.webkitNotifications.requestPermission();
-		}
-	};
-
-	lockOverrideNotice = ( notice ) => {
-		if ( window.webkitNotifications.checkPermission() > 0 ) {
-			return window.webkitNotifications.RequestPermission( lock_override_notice );
-		}
-		return window.webkitNotifications
-			.createNotification(
-				wp_document_revisions.lostLockNoticeLogo,
-				__( 'Lost Document Lock', 'wp-document-revisions' ),
-				notice
-			)
-			.show();
-	};
-
 	postAutosaveCallback = () => {
 		const autosaveAlert = document.getElementById( 'autosave-alert' );
 		const lockNotice = document.getElementById( 'lock-notice' );
@@ -288,11 +289,7 @@ class WPDocumentRevisions {
 				),
 				title ? title.value : ''
 			);
-			if ( window.webkitNotifications ) {
-				lock_override_notice( lostLockNotice );
-			} else {
-				alert( lostLockNotice );
-			}
+			alert( lostLockNotice );
 			// The legacy forceReload arg is a no-op in modern browsers; the DOM
 			// typings declare reload() as zero-arg, so cast to preserve the call.
 			return /** @type {( forceReload?: boolean ) => void } */ ( location.reload )( true );
@@ -300,8 +297,8 @@ class WPDocumentRevisions {
 	};
 
 	human_time_diff = ( from, to ) => {
-		const d = new Date();
-		to = to || d.getTime() / 1000 + parseInt( String( wp_document_revisions.offset ), 10 );
+		// Both values are Unix timestamps (UTC), so no site offset is involved.
+		to = to || Date.now() / 1000;
 		const diff = Math.abs( to - from );
 		if ( diff < 3600 ) {
 			// Singular and plural share the "%d mins" msgid (matches the prior
@@ -335,10 +332,26 @@ class WPDocumentRevisions {
 		return Math.round( n );
 	};
 
+	/**
+	 * Unix timestamp (UTC) of a `.timestamp` element.
+	 *
+	 * The "checked in" abbr carries it in its id (`A<timestamp>`); the revision
+	 * log links carry an ISO 8601 UTC date in their title.
+	 *
+	 * @param {HTMLElement} el Timestamp element.
+	 * @return {number} Seconds since the epoch.
+	 */
+	getTimestamp = ( el ) => {
+		const match = /^A(\d+)$/.exec( String( el.id || '' ) );
+		if ( match ) {
+			return parseInt( match[ 1 ], 10 );
+		}
+		return new Date( String( el.title ) ).getTime() / 1000;
+	};
+
 	updateTimestamps = () => {
 		document.querySelectorAll( '.timestamp' ).forEach( ( /** @type {HTMLElement} */ el ) => {
-			const from = new Date( String( el.title ) );
-			el.textContent = this.human_time_diff( from.getTime() / 1000 );
+			el.textContent = this.human_time_diff( this.getTimestamp( el ) );
 		} );
 	};
 

@@ -2,7 +2,7 @@
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
-import { parseShortcodeParams } from '../shared/parse-shortcode';
+import { buildShortcode, parseShortcodeParams } from '../shared/parse-shortcode';
 
 registerBlockType( metadata, {
 	edit: Edit,
@@ -67,26 +67,21 @@ registerBlockType( metadata, {
 				type: 'block',
 				blocks: [ 'core/shortcode' ],
 				transform: ( attributes ) => {
-					let content = '[document_revisions ';
+					/** @type {Record<string, string>} */
+					const named = {};
+					const flags = [];
 					if ( '' !== attributes.id ) {
-						content += `id=${ attributes.id }`;
+						named.id = String( attributes.id );
 					}
 					if ( '' !== attributes.numberposts ) {
-						content += ` numberposts=${ attributes.numberposts }`;
+						named.numberposts = String( attributes.numberposts );
 					}
-					if ( ! attributes.summary ) {
-						content += ' summary=false';
-					} else {
-						content += ' summary=true';
-					}
+					named.summary = attributes.summary ? 'true' : 'false';
 					if ( attributes.show_pdf ) {
-						content += ' show_pdf';
+						flags.push( 'show_pdf' );
 					}
-					if ( ! attributes.new_tab ) {
-						content += ' new_tab=false ]';
-					} else {
-						content += ' new_tab=true ]';
-					}
+					named.new_tab = attributes.new_tab ? 'true' : 'false';
+					const content = buildShortcode( 'document_revisions', named, flags );
 					return createBlock( 'core/shortcode', {
 						text: content,
 					} );

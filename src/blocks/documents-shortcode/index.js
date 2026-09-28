@@ -2,7 +2,7 @@
 import { createBlock, registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
 import Edit from './edit';
-import { parseShortcodeParams } from '../shared/parse-shortcode';
+import { buildShortcode, parseAttrs, parseShortcodeParams } from '../shared/parse-shortcode';
 
 registerBlockType( metadata, {
 	edit: Edit,
@@ -117,8 +117,14 @@ registerBlockType( metadata, {
 							used = true;
 						}
 						if ( ! used ) {
-							// other parameter, add to freeform one.
-							sfreeform += ` ${ parm.join( '=' ) }`;
+							// other parameter, add to freeform one (quoting values that contain spaces).
+							if ( parm.length === 1 ) {
+								sfreeform += ` ${ parm[ 0 ] }`;
+							} else if ( /[\s'\]]/.test( parm[ 1 ] ) ) {
+								sfreeform += ` ${ parm[ 0 ] }="${ parm[ 1 ] }"`;
+							} else {
+								sfreeform += ` ${ parm[ 0 ] }=${ parm[ 1 ] }`;
+							}
 						}
 					}
 
@@ -149,12 +155,15 @@ registerBlockType( metadata, {
 				blocks: [ 'core/shortcode' ],
 				transform: ( attributes ) => {
 					const taxo = wpdr_data.taxos;
+					/** @type {Record<string, string>} */
+					const named = {};
+					const flags = [];
 
 					function id_to_slug( n, val ) {
 						const terms = taxo[ n ].terms;
 						for ( let j = 0; j < terms.length; j++ ) {
 							if ( val === terms[ j ][ 0 ] ) {
-								return `"${ terms[ j ][ 2 ] }"`;
+								return terms[ j ][ 2 ];
 							}
 						}
 						return '??';
@@ -164,50 +173,50 @@ registerBlockType( metadata, {
 						if ( '' !== tax && 0 !== val ) {
 							for ( const i of [ 0, 1, 2 ] ) {
 								if ( tax === taxo[ i ].query ) {
-									content += ` ${ tax }=${ id_to_slug( i, val ) }`;
+									named[ tax ] = id_to_slug( i, val );
 									return;
 								}
 							}
-							content += ` ${ tax }=${ val }`;
+							named[ tax ] = String( val );
 						}
 					}
 
-					let content = '[documents ';
 					decode_taxo( attributes.taxonomy_0, attributes.term_0 );
 					decode_taxo( attributes.taxonomy_1, attributes.term_1 );
 					decode_taxo( attributes.taxonomy_2, attributes.term_2 );
 					if ( '' !== attributes.numberposts ) {
-						content += ` numberposts="${ attributes.numberposts }"`;
+						named.numberposts = String( attributes.numberposts );
 					}
 					if ( undefined !== attributes.orderby && '' !== attributes.orderby ) {
-						content += ` orderby="${ attributes.orderby }"`;
+						named.orderby = attributes.orderby;
 					}
 					if (
 						'' !== attributes.order &&
 						undefined !== attributes.orderby &&
 						'' !== attributes.orderby
 					) {
-						content += ` order="${ attributes.order }"`;
+						named.order = attributes.order;
 					}
 					if ( '' !== attributes.show_edit ) {
-						content += ` show_edit="${ attributes.show_edit }"`;
+						named.show_edit = String( attributes.show_edit );
 					}
 					if ( attributes.show_thumb ) {
-						content += ' show_thumb';
+						flags.push( 'show_thumb' );
 					}
 					if ( attributes.show_descr ) {
-						content += ' show_descr';
+						flags.push( 'show_descr' );
 					}
 					if ( attributes.show_pdf ) {
-						content += ' show_pdf';
+						flags.push( 'show_pdf' );
 					}
 					if ( attributes.new_tab ) {
-						content += ' new_tab';
+						flags.push( 'new_tab' );
 					}
-					if ( '' !== attributes.freeform && undefined !== attributes.freeform ) {
-						content += ` ${ attributes.freeform }`;
-					}
-					content += ' ]';
+					// Free-form parameters are parsed so they are re-serialized consistently.
+					const extra = parseAttrs( attributes.freeform );
+					Object.assign( named, extra.named );
+					flags.push( ...extra.numeric );
+					const content = buildShortcode( 'documents', named, flags );
 					return createBlock( 'core/shortcode', {
 						text: content,
 					} );

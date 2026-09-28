@@ -165,7 +165,6 @@ class WP_Document_Revisions {
 		add_filter( 'post_link', array( $this, 'permalink' ), 10, 3 );
 		add_filter( 'template_include', array( $this, 'serve_file' ), 10, 1 );
 		add_filter( 'serve_document_auth', array( $this, 'serve_document_auth' ), 10, 3 );
-		add_action( 'parse_request', array( $this, 'ie_cache_fix' ) );
 		add_filter( 'query_vars', array( $this, 'add_query_var' ) );
 		add_filter( 'default_feed', array( $this, 'hijack_feed' ) );
 		add_action( 'do_feed_revision_log', array( $this, 'do_feed_revision_log' ) );
@@ -1212,29 +1211,14 @@ class WP_Document_Revisions {
 	}
 
 	/**
-	 * Remove nocache headers from document downloads on IE < 8
-	 * Hooked into parse_request so we can fire after request is parsed, but before headers are sent
-	 * See http://support.microsoft.com/kb/323308.
+	 * Formerly removed nocache headers from document downloads on IE < 8. No longer hooked.
 	 *
-	 * @param WP $wp The global WP object. Passed by reference.
+	 * @deprecated 5.6.0 Internet Explorer is no longer supported.
+	 *
+	 * @param WP $wp The global WP object.
 	 * @return void
 	 */
-	public function ie_cache_fix( WP $wp ): void {
-		// SSL check.
-		if ( ! is_ssl() ) {
-			return;
-		}
-
-		// IE check.
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || stripos( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 'MSIE' ) === false ) {
-			return;
-		}
-
-		// verify that they are requesting a document.
-		if ( ! isset( $wp->query_vars['post_type'] ) || 'document' !== $wp->query_vars['post_type'] ) {
-			return;
-		}
-
-		add_filter( 'nocache_headers', '__return_empty_array' );
+	public function ie_cache_fix( WP $wp ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __METHOD__, '5.6.0' );
 	}
 }

@@ -67,7 +67,8 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	public function extract( string $file_path, string $mime_type ): string {
 		try {
 			$reader  = $this->reader_for( $mime_type );
-			$phpword = \PhpOffice\PhpWord\IOFactory::load( $file_path, $reader );
+			$factory = self::phpword_class( 'IOFactory' );
+			$phpword = $factory::load( $file_path, $reader );
 
 			return $this->extract_from_phpword( $phpword );
 		} catch ( \Throwable $e ) {
@@ -77,6 +78,16 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 			// the caching / opt-out phases.
 			return '';
 		}
+	}
+
+	/**
+	 * Resolve a PHPWord class name, scoped or not (see wpdr_vendor_class()).
+	 *
+	 * @param string $name class name relative to the PhpOffice\PhpWord namespace.
+	 * @return class-string resolved class name.
+	 */
+	private static function phpword_class( string $name ): string {
+		return wpdr_vendor_class( 'PhpOffice\\PhpWord\\' . $name );
 	}
 
 	/**
@@ -95,10 +106,10 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	/**
 	 * Walk every section in a parsed PhpWord document and join the text.
 	 *
-	 * @param \PhpOffice\PhpWord\PhpWord $phpword parsed document.
+	 * @param object $phpword parsed PhpWord document (scoped or unscoped class).
 	 * @return string concatenated text from sections, headers, and footers.
 	 */
-	private function extract_from_phpword( \PhpOffice\PhpWord\PhpWord $phpword ): string {
+	private function extract_from_phpword( object $phpword ): string {
 		$parts = array();
 		foreach ( $phpword->getSections() as $section ) {
 			$parts[] = $this->extract_from_section( $section );
@@ -109,10 +120,10 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	/**
 	 * Extract text from a single section, including its headers and footers.
 	 *
-	 * @param \PhpOffice\PhpWord\Element\Section $section section to walk.
+	 * @param object $section PhpWord Section element to walk.
 	 * @return string concatenated text.
 	 */
-	private function extract_from_section( \PhpOffice\PhpWord\Element\Section $section ): string {
+	private function extract_from_section( object $section ): string {
 		$parts = array();
 
 		foreach ( $section->getHeaders() as $header ) {
@@ -158,21 +169,21 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	 * @return string text contributed by this element.
 	 */
 	private function extract_from_element( $element ): string {
-		if ( $element instanceof \PhpOffice\PhpWord\Element\Text ) {
+		if ( is_a( $element, self::phpword_class( 'Element\Text' ) ) ) {
 			return (string) $element->getText();
 		}
 
-		if ( $element instanceof \PhpOffice\PhpWord\Element\TextRun ) {
+		if ( is_a( $element, self::phpword_class( 'Element\TextRun' ) ) ) {
 			return $this->extract_from_container( $element );
 		}
 
-		if ( $element instanceof \PhpOffice\PhpWord\Element\Table ) {
+		if ( is_a( $element, self::phpword_class( 'Element\Table' ) ) ) {
 			return $this->extract_from_table( $element );
 		}
 
-		if ( $element instanceof \PhpOffice\PhpWord\Element\ListItem ) {
+		if ( is_a( $element, self::phpword_class( 'Element\ListItem' ) ) ) {
 			$text_object = $element->getTextObject();
-			if ( $text_object instanceof \PhpOffice\PhpWord\Element\Text ) {
+			if ( is_a( $text_object, self::phpword_class( 'Element\Text' ) ) ) {
 				return (string) $text_object->getText();
 			}
 			return '';
@@ -191,10 +202,10 @@ class WP_Document_Revisions_DOCX_Text_Extractor implements WP_Document_Revisions
 	 * downstream consumers can still tell columns apart; rows are joined
 	 * with newlines.
 	 *
-	 * @param \PhpOffice\PhpWord\Element\Table $table table element.
+	 * @param object $table PhpWord Table element.
 	 * @return string flattened table text.
 	 */
-	private function extract_from_table( \PhpOffice\PhpWord\Element\Table $table ): string {
+	private function extract_from_table( object $table ): string {
 		$rows = array();
 		foreach ( $table->getRows() as $row ) {
 			$cell_texts = array();
