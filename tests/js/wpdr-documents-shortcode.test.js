@@ -45,9 +45,11 @@ jest.mock(
 	{ virtual: true }
 );
 
-jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
-	virtual: true,
-} );
+jest.mock(
+	'@wordpress/server-side-render',
+	() => ( { ServerSideRender: 'ServerSideRender' } ),
+	{ virtual: true }
+);
 jest.mock( '@wordpress/i18n', () => ( { __: jest.fn( ( text ) => text ) } ), {
 	virtual: true,
 } );

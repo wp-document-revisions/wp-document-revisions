@@ -817,7 +817,8 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// set the block styling.
-		$output = '<div ' . get_block_wrapper_attributes() . '>';
+		$wrapper = $this->get_block_attributes();
+		$output  = '<div ' . $wrapper . '>';
 
 		// if header set, then output as <h2>.
 		if ( isset( $atts['header'] ) ) {
@@ -951,8 +952,6 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function wpdr_revisions_shortcode_display( array $atts ): string {
-		// get instance of global class.
-		global $wpdr_fe;
 
 		$atts = shortcode_atts(
 			array(
@@ -973,7 +972,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// Check it is a document (and not its revision or attached document) so don't use verify_post_type.
-		if ( 'document' !== get_post_type( $atts['id'] ) ) {
+		if ( ( ! is_numeric( $atts['id'] ) ) || 'document' !== get_post_type( $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
@@ -983,9 +982,10 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// set the block styling.
-		$output  = '<div ' . get_block_wrapper_attributes() . '>';
+		$wrapper = $this->get_block_attributes();
+		$output  = '<div ' . $wrapper . '>';
 		$output .= '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
-		$output .= $wpdr_fe->revisions_shortcode( $atts ) . '</div>';
+		$output .= $this->revisions_shortcode( $atts ) . '</div>';
 		return $output;
 	}
 
@@ -1047,7 +1047,8 @@ class WP_Document_Revisions_Front_End {
 		$download_link = '<a href="' . esc_url( $url ) . '" class="document-download" download>' . esc_html__( 'Download document', 'wp-document-revisions' ) . '</a>';
 
 		// set the block styling.
-		$output  = '<div ' . get_block_wrapper_attributes() . '>';
+		$wrapper = $this->get_block_attributes();
+		$output  = '<div ' . $wrapper . '>';
 		$output .= '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
 
 		if ( $show_title ) {
@@ -1077,6 +1078,20 @@ class WP_Document_Revisions_Front_End {
 		$output .= '</div></div>';
 
 		return $output;
+	}
+
+	/**
+	 * Block wrapper attributes.
+	 *
+	 * The document permalink serves the latest revision inline through the authenticated
+	 * file handler (serve_file), so the browser previews it in place and access control is
+	 * enforced on the actual file request regardless of this callback.
+	 *
+	 * @return string the block attributes (empty for shortcodes).
+	 * @since 5.5.0
+	 */
+	public function get_block_attributes(): string {
+		return WP_Block_Supports::$block_to_render ? get_block_wrapper_attributes() : '';
 	}
 }
 
