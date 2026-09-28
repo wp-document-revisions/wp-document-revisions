@@ -95,7 +95,7 @@ Filters the lost lock document email text.
 
 In: trait-wp-document-revisions-file-handler.php
 
-Filters the http response code when a document or revision (attachment) is not found.
+Filters the HTTP response code when a document or revision has no file to serve. Default 404 (403 before 5.6.0). Receives the code, the document post and the document or revision ID selected (0 if none was found).
 
 > [!WARNING]  
 > Modifying the response code from the default value of 403 may introduce an existence vulnerability.
