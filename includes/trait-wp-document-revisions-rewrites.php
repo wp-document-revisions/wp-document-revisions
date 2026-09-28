@@ -128,21 +128,30 @@ trait WP_Document_Revisions_Rewrites {
 			$document          = $parent;
 		}
 
-		// if no permastruct.
+		/**
+		 * Filters the home_url() for WPML and translated documents.
+		 *
+		 * @param string  $home_url generated permalink.
+		 * @param WP_Post $document document object.
+		 */
+		$home_url = apply_filters( 'document_home_url', home_url(), $document );
+
+		// if no permastruct. Use the front-end URL, not site_url(), which points at the WordPress
+		// install directory (e.g. /wp/ on Bedrock) rather than the site.
 		if ( '' === $wp_rewrite->permalink_structure || empty( $document->post_name ) || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
-			$link = site_url( '?post_type=document&p=' . $document->ID );
+			// add_query_arg() keeps any query string the document_home_url filter added (e.g. ?lang=fr).
+			$base = false === strpos( $home_url, '?' ) ? trailingslashit( $home_url ) : $home_url;
+			$link = add_query_arg(
+				array(
+					'post_type' => 'document',
+					'p'         => $document->ID,
+				),
+				$base
+			);
 			if ( $revision_num ) {
 				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
 		} else {
-			/**
-			 * Filters the home_url() for WPML and translated documents.
-			 *
-			 * @param string  $home_url generated permalink.
-			 * @param WP_Post $document document object.
-			 */
-			$home_url = apply_filters( 'document_home_url', home_url(), $document );
-
 			// build documents(/yyyy/mm)/slug.
 			$extension  = $this->get_file_type( $document );
 			$year_month = ( $this->document_link_date() ? '' : '/' . str_replace( '-', '/', substr( $document->post_date, 0, 7 ) ) );
