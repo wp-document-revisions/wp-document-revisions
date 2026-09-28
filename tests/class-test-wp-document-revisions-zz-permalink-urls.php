@@ -79,6 +79,20 @@ class Test_WP_Document_Revisions_Zz_Permalink_Urls extends Test_Common_WPDR {
 	}
 
 	/**
+	 * A home URL with a query string (e.g. a language parameter) keeps it.
+	 */
+	public function test_draft_permalink_with_query_string_home_url() {
+		$filter = function () {
+			return 'https://example.org/?lang=fr';
+		};
+		add_filter( 'document_home_url', $filter );
+		$link = get_permalink( self::$draft_doc );
+		remove_filter( 'document_home_url', $filter );
+
+		self::assertSame( 'https://example.org/?lang=fr&post_type=document&p=' . self::$draft_doc, $link );
+	}
+
+	/**
 	 * Validate Structure accepts both the new home_url() and the older site_url() form of a draft's guid.
 	 */
 	public function test_validate_guid_accepts_home_and_site_url() {

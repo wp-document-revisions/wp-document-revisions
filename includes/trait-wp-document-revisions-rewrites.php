@@ -120,7 +120,15 @@ trait WP_Document_Revisions_Rewrites {
 		// if no permastruct. Use the front-end URL, not site_url(), which points at the WordPress
 		// install directory (e.g. /wp/ on Bedrock) rather than the site.
 		if ( '' === $wp_rewrite->permalink_structure || empty( $document->post_name ) || in_array( $document->post_status, array( 'pending', 'draft' ), true ) ) {
-			$link = trailingslashit( $home_url ) . '?post_type=document&p=' . $document->ID;
+			// add_query_arg() keeps any query string the document_home_url filter added (e.g. ?lang=fr).
+			$base = false === strpos( $home_url, '?' ) ? trailingslashit( $home_url ) : $home_url;
+			$link = add_query_arg(
+				array(
+					'post_type' => 'document',
+					'p'         => $document->ID,
+				),
+				$base
+			);
 			if ( $revision_num ) {
 				$link = add_query_arg( 'revision', $revision_num, $link );
 			}
