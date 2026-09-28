@@ -292,6 +292,26 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Whether to register the plugin's abilities (and their category) with the Abilities API.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	private function register_abilities_enabled(): bool {
+		/**
+		 * Filters whether to register WP Document Revisions' abilities with the Abilities API.
+		 *
+		 * Return false to keep documents out of the Abilities API entirely, including its
+		 * REST endpoints and any MCP adapter.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $register Whether to register the abilities. Default true.
+		 */
+		return (bool) apply_filters( 'document_register_abilities', true );
+	}
+
+	/**
 	 * Whether the classic document edit screen shows the Document Description editor.
 	 *
 	 * @since 5.6.0
@@ -318,7 +338,7 @@ class WP_Document_Revisions {
 	 * @return void
 	 */
 	public function register_ability_category(): void {
-		if ( ! function_exists( 'wp_register_ability_category' ) ) {
+		if ( ! function_exists( 'wp_register_ability_category' ) || ! $this->register_abilities_enabled() ) {
 			return;
 		}
 
@@ -343,7 +363,7 @@ class WP_Document_Revisions {
 	 * @return void
 	 */
 	public function register_abilities(): void {
-		if ( ! function_exists( 'wp_register_ability' ) ) {
+		if ( ! function_exists( 'wp_register_ability' ) || ! $this->register_abilities_enabled() ) {
 			return;
 		}
 
@@ -395,7 +415,16 @@ class WP_Document_Revisions {
 				'category'            => 'wp-document-revisions',
 				'execute_callback'    => array( $this, 'ability_get_document_info' ),
 				'permission_callback' => function () {
-					return current_user_can( 'read_documents' );
+					/**
+					 * Filters the capability needed to use the get-document-info ability.
+					 *
+					 * The ability also checks read_document on the specific document.
+					 *
+					 * @since 5.6.0
+					 *
+					 * @param string $capability Capability. Default 'read_documents'.
+					 */
+					return current_user_can( (string) apply_filters( 'document_get_info_ability_capability', 'read_documents' ) );
 				},
 				'input_schema'        => array(
 					'type'       => 'object',
