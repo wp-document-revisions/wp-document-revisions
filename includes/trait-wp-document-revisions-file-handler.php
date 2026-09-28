@@ -239,22 +239,23 @@ trait WP_Document_Revisions_File_Handler {
 			}
 		}
 
-		// Only compress text by default. PDFs, office files, images and archives are already
-		// compressed, so deflating them in PHP costs CPU and memory for little or no gain and
-		// forces the whole response to be buffered.
-		if ( $gzip_dflt && ! ( is_string( $mimetype ) && 0 === strpos( $mimetype, 'text/' ) ) ) {
+		// Only compress text-like types by default. PDFs, office files, images and archives are
+		// already compressed, so deflating them in PHP costs CPU and memory for little or no gain
+		// and forces the whole response to be buffered.
+		if ( $gzip_dflt && ! $this->is_compressible_mimetype( $mimetype ) ) {
 			$gzip_dflt = false;
 		}
 
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 		 *
-		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is text/*.
+		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is
+		 * compressible (see document_compressible_mimetypes).
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a text/* MIME type).
+		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a compressible MIME type).
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
@@ -520,6 +521,44 @@ trait WP_Document_Revisions_File_Handler {
 		return $deflt;
 	}
 
+
+	/**
+	 * Whether a document of this MIME type is compressed on download by default.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $mimetype the MIME type being served.
+	 * @return bool
+	 */
+	public function is_compressible_mimetype( $mimetype ): bool {
+		if ( ! is_string( $mimetype ) || '' === $mimetype ) {
+			return false;
+		}
+
+		/**
+		 * Filters the MIME types compressed on download by default (when the client accepts it).
+		 *
+		 * An entry ending in "/" matches every type with that prefix, e.g. "text/".
+		 * The document_serve_use_gzip filter still has the final say.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string[] $mimetypes MIME types or "type/" prefixes.
+		 */
+		$compressible = (array) apply_filters(
+			'document_compressible_mimetypes',
+			array( 'text/', 'application/json', 'application/ld+json', 'application/xml', 'image/svg+xml' )
+		);
+
+		$mimetype = strtolower( trim( explode( ';', $mimetype )[0] ) );
+		foreach ( $compressible as $type ) {
+			$type = strtolower( (string) $type );
+			if ( '/' === substr( $type, -1 ) ? 0 === strpos( $mimetype, $type ) : $mimetype === $type ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	/**
 	 * Calculated path to upload documents.
