@@ -337,13 +337,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @return string the rendered block markup.
 	 */
 	public function wpdr_documents_widget_display( array $atts, string $content = '' ) {
-		// get instance of front_end class.
-		global $wpdr_fe;
-
-		// set the block styling.
-		$wrapper = $wpdr_fe->get_block_attributes();
-		$output  = '<div ' . $wrapper . '>';
-
 		// Create the two parameter sets.
 		$args                    = array(
 			'before_widget' => '',
@@ -371,8 +364,17 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$args['after_title']  = '</h2>';
 		}
 
-		$output .= $this->widget_gen( $args, $instance ) . '</div>';
-		return $output;
+		$inner = $this->widget_gen( $args, $instance );
+		if ( empty( $inner ) ) {
+			return '';
+		}
+
+		// set the block styling.
+		// get instance of front_end class.
+		global $wpdr_fe;
+		$wrapper = $wpdr_fe->get_block_attributes();
+
+		return '<div ' . $wrapper . '>' . $inner . '</div>';
 	}
 
 	/**

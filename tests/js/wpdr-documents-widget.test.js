@@ -504,17 +504,15 @@ describe( 'Edit Function - JSX Rendering', () => {
 		expect( blockDiv ).toBeDefined();
 	} );
 
-	test( 'renders status wrapper div with className prop', () => {
+	test( 'renders status wrapper div with bottom margin', () => {
 		blockConfig.edit( {
 			attributes: defaultAttributes,
 			setAttributes: jest.fn(),
-			className: 'test-class',
 		} );
 
 		const calls = getAllJsxCalls();
-		const divCalls = findAllCalls( calls, 'div' );
-		const statusDiv = divCalls.find(
-			( c ) => c[ 1 ].className === 'test-class'
+		const statusDiv = findAllCalls( calls, 'div' ).find(
+			( c ) => c[ 1 ].style?.marginBottom === '16px'
 		);
 
 		expect( statusDiv ).toBeDefined();
