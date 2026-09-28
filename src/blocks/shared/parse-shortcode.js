@@ -1,49 +1,60 @@
 // @ts-check
 /**
- * Shared shortcode tokenizer for the block "from shortcode" transforms.
+ * Shared shortcode helpers for the block "from/to shortcode" transforms.
  *
- * The `[documents]` and `[document_revisions]` blocks both need to turn a raw
- * shortcode string into its parameter pairs before mapping them onto block
- * attributes. The tokenizing rules are identical between them, so they live
- * here rather than being duplicated in each block's transform.
+ * Tokenizing and serializing are delegated to `@wordpress/shortcode`, which
+ * follows the same attribute grammar as PHP's shortcode_parse_atts(), so
+ * quoted values containing spaces survive the round trip.
  */
+import { attrs, string } from '@wordpress/shortcode';
 
 /**
  * Parse a raw `[shortcode ...]` string into its lowercased parameter pairs.
  *
- * Strips the enclosing brackets and the leading tag name, splits the remaining
- * space-separated tokens on `=`, and removes a matching pair of surrounding
- * single or double quotes from each value. A bare flag (no `=`) yields a
- * single-element `[key]` pair, so callers can distinguish `show_pdf` from
+ * Strips the enclosing brackets and the leading tag name and hands the rest
+ * to `@wordpress/shortcode`'s attrs(). Named attributes come back as
+ * `[key, value]` pairs (in source order), followed by bare flags as
+ * single-element `[key]` pairs, so callers can distinguish `show_pdf` from
  * `show_pdf=true` via `pair.length`.
- *
- * Empty tokens (from doubled spaces) are skipped.
  *
  * @param {string} text Raw shortcode text, e.g. `[documents numberposts="3"]`.
  * @return {string[][]} Array of `[key]` or `[key, value]` pairs.
  */
 export function parseShortcodeParams( text ) {
-	let iput = text.toLowerCase();
-	if ( iput.indexOf( '[' ) === 0 ) {
-		iput = iput.slice( 1, iput.length - 1 );
-	}
-	const args = iput.split( ' ' );
-	// Drop the tag name (first token).
-	args.shift();
+	const inner = text
+		.toLowerCase()
+		.trim()
+		.replace( /^\[/, '' )
+		.replace( /\]$/, '' )
+		// Drop the tag name (first token).
+		.replace( /^\s*[^\s\]/]+/, '' );
 
-	const params = [];
-	for ( const arg of args ) {
-		if ( arg.length === 0 ) {
-			continue;
-		}
-		const parm = arg.split( '=' );
-		if (
-			parm.length > 1 &&
-			( parm[ 1 ].indexOf( "'" ) === 0 || parm[ 1 ].indexOf( '"' ) === 0 )
-		) {
-			parm[ 1 ] = parm[ 1 ].slice( 1, parm[ 1 ].length - 1 );
-		}
-		params.push( parm );
-	}
-	return params;
+	const { named, numeric } = attrs( inner );
+	return [
+		...Object.entries( named ).map( ( [ key, value ] ) => [ key, value ] ),
+		...numeric.map( ( flag ) => [ flag ] ),
+	];
+}
+
+/**
+ * Serialize a self-closing shortcode.
+ *
+ * @param {string}                 tag     Shortcode tag.
+ * @param {Record<string, string>} named   Named attributes (values are quoted on output).
+ * @param {string[]}               numeric Bare flags.
+ * @return {string} The shortcode text, e.g. `[documents show_pdf numberposts="5"]`.
+ */
+export function buildShortcode( tag, named = {}, numeric = [] ) {
+	return string( { tag, type: 'single', attrs: { named, numeric } } );
+}
+
+/**
+ * Parse a free-form attribute string (as typed into the block's "additional
+ * parameters" field) into named attributes and flags.
+ *
+ * @param {string} text Attribute text, e.g. `author="3" suppress_filters`.
+ * @return {{ named: Record<string, string>, numeric: string[] }} Parsed attributes.
+ */
+export function parseAttrs( text ) {
+	return attrs( text || '' );
 }
