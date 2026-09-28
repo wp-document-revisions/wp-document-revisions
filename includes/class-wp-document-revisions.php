@@ -84,6 +84,15 @@ class WP_Document_Revisions {
 	public static $doc_image = true;
 
 	/**
+	 * Whether a document file upload is in progress in this request.
+	 *
+	 * @var bool
+	 *
+	 * @since 5.6.0
+	 */
+	private static $document_upload = false;
+
+	/**
 	 * Identify if processing document or image directory.
 	 *
 	 * @return bool
@@ -200,6 +209,7 @@ class WP_Document_Revisions {
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
+		add_filter( 'wp_generate_attachment_metadata', array( $this, 'end_document_upload' ), 20, 2 );
 		// The document directory is resolved on first use and again after switch_blog().
 		add_action( 'switch_blog', array( $this, 'reset_document_upload_dir' ) );
 
