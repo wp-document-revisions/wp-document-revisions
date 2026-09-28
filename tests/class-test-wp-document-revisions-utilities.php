@@ -341,4 +341,37 @@ class Test_WP_Document_Revisions_Utilities extends Test_Common_WPDR {
 		self::assertSame( 'text/x-filtered', $wpdr->get_doc_mimetype( '/no/such/file.pdf', $attach_id ) );
 		remove_filter( 'document_revisions_mimetype', $filter );
 	}
+
+	/**
+	 * Test the image-size renaming helper used to hide attachment slugs.
+	 */
+	public function test_hide_size_file_names() {
+		global $wpdr;
+
+		$dir = trailingslashit( get_temp_dir() ) . 'wpdr-hide-' . wp_generate_password( 8, false ) . '/';
+		wp_mkdir_p( $dir );
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		file_put_contents( $dir . 'my-title-150x150.png', 'a' );
+		file_put_contents( $dir . 'other-300x300.png', 'b' );
+		// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+
+		$sizes = array(
+			'thumbnail' => array( 'file' => 'my-title-150x150.png' ),
+			'medium'    => array( 'file' => 'other-300x300.png' ),
+			'missing'   => array( 'file' => 'my-title-1024x1024.png' ),
+		);
+
+		$method = new ReflectionMethod( $wpdr, 'hide_size_file_names' );
+		$method->setAccessible( true );
+		$result = $method->invoke( $wpdr, $sizes, $dir, 'my-title' );
+
+		self::assertMatchesRegularExpression( '/^[a-f0-9]{32}-150x150\.png$/', $result['thumbnail']['file'], 'title-prefixed size not renamed' );
+		self::assertFileExists( $dir . $result['thumbnail']['file'], 'renamed file missing' );
+		self::assertFileDoesNotExist( $dir . 'my-title-150x150.png', 'original file left behind' );
+		self::assertSame( 'other-300x300.png', $result['medium']['file'], 'unrelated size renamed' );
+		self::assertSame( 'my-title-1024x1024.png', $result['missing']['file'], 'missing file entry changed' );
+
+		array_map( 'wp_delete_file', glob( $dir . '*' ) );
+		rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+	}
 }

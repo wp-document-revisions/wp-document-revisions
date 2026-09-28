@@ -443,30 +443,16 @@ trait WP_Document_Revisions_File_Handler {
 			$file_served = false;
 			if ( apply_filters( 'document_use_wp_filesystem', false, $file, $post->ID, $attach->ID ) ) {
 				// try WP_filesystem for $doc_dir.
-				// file code may not be already loaded.
-				if ( ! function_exists( 'get_filesystem_method' ) ) {
-					include ABSPATH . 'wp-admin/includes/file.php';
-				}
-				$method = get_filesystem_method( array(), dirname( $file ), false );
-
-				if ( 'direct' === $method ) {
-					// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-					$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, dirname( $file ), array(), false );
-
-					// initialize the API.
-					if ( WP_Filesystem( $creds ) ) {
-						// all good so far.
-						global $wp_filesystem;
-
-						// downloading a file, not normally WP text so don't sanitize.
-						$contents = $wp_filesystem->get_contents( $file );
-						if ( false !== $contents ) {
-							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							echo $contents;
-							$file_served = true;
-						}
-						// Fall through to readfile if get_contents fails.
+				$wp_filesystem = $this->direct_filesystem( dirname( $file ) );
+				if ( $wp_filesystem ) {
+					// downloading a file, not normally WP text so don't sanitize.
+					$contents = $wp_filesystem->get_contents( $file );
+					if ( false !== $contents ) {
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $contents;
+						$file_served = true;
 					}
+					// Fall through to readfile if get_contents fails.
 				}
 			}
 
@@ -680,51 +666,7 @@ trait WP_Document_Revisions_File_Handler {
 			$file     = get_attached_file( $attach->ID );
 			$file_dir = trailingslashit( dirname( $file ) );
 
-			// prepare to use WP_Filesystem if we can.
-			$use_wp_filesystem = false;
-			// file code may not be already loaded.
-			if ( ! function_exists( 'get_filesystem_method' ) ) {
-				include ABSPATH . 'wp-admin/includes/file.php';
-			}
-			$method = get_filesystem_method( array(), $file_dir, false );
-
-			if ( 'direct' === $method ) {
-				// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-				$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
-
-				// initialize the API.
-				if ( WP_Filesystem( $creds ) ) {
-					// all good so far.
-					global $wp_filesystem;
-					$use_wp_filesystem = true;
-				}
-			}
-
-			$title    = $attach->post_title;
-			$new_name = md5( $title . microtime() );
-			// move file and update.
-			foreach ( $metadata['sizes'] as $size => $sizeinfo ) {
-				if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
-					if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-						$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-						if ( $use_wp_filesystem ) {
-							$wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file );
-							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
-							$metadata['sizes'][ $size ]['file'] = $new_file;
-						} else {
-							$dummy = null;
-							// Use copy and unlink because rename breaks streams.
-							// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
-							if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-								@chmod( $file_dir . $new_file, 0664 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
-								wp_delete_file( $file_dir . $sizeinfo['file'] );
-								$metadata['sizes'][ $size ]['file'] = $new_file;
-							}
-							// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
-						}
-					}
-				}
-			}
+			$metadata['sizes'] = $this->hide_size_file_names( $metadata['sizes'], $file_dir, $attach->post_title );
 		}
 		// add indicator to note it has been changed (so no need to reprocess).
 		$metadata['wpdr_hidden'] = 1;
@@ -1072,50 +1014,8 @@ trait WP_Document_Revisions_File_Handler {
 		$file     = get_attached_file( $attachment_id );
 		$file_dir = trailingslashit( dirname( $file ) );
 
-		// prepare to use WP_Filesystem if we can.
-		$use_wp_filesystem = false;
-		// file code may not be already loaded.
-		if ( ! function_exists( 'get_filesystem_method' ) ) {
-			include ABSPATH . 'wp-admin/includes/file.php';
-		}
+		$meta_sizes = $this->hide_size_file_names( $meta_sizes, $file_dir, $attach->post_title );
 
-		$method = get_filesystem_method( array(), $file_dir, false );
-		if ( 'direct' === $method ) {
-			// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
-			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', $method, false, $file_dir, array(), false );
-
-			// initialize the API.
-			if ( WP_Filesystem( $creds ) ) {
-				// all good so far.
-				global $wp_filesystem;
-				$use_wp_filesystem = true;
-			}
-		}
-
-		$title    = $attach->post_title;
-		$new_name = md5( $title . microtime() );
-		// move file and update.
-		foreach ( $meta_sizes as $size => $sizeinfo ) {
-			if ( 0 === strpos( $sizeinfo['file'], $title ) ) {
-				if ( file_exists( $file_dir . $sizeinfo['file'] ) ) {
-					$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
-					if ( $use_wp_filesystem ) {
-						if ( $wp_filesystem->move( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							$wp_filesystem->chmod( $file_dir . $new_file, 0664 );
-							$meta_sizes[ $size ]['file'] = $new_file;
-						}
-					} else {
-						$dummy = null;
-						// Use copy and unlink because rename breaks streams.
-						// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-						if ( @copy( $file_dir . $sizeinfo['file'], $file_dir . $new_file ) ) {
-							wp_delete_file( $file_dir . $sizeinfo['file'] );
-							$meta_sizes[ $size ]['file'] = $new_file;
-						}
-					}
-				}
-			}
-		}
 		// update the metadata.
 		$meta['sizes']       = $meta_sizes;
 		$meta['wpdr_hidden'] = 1;
@@ -1288,5 +1188,74 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		return $image;
+	}
+
+	/**
+	 * Returns the WP_Filesystem instance when it can be used directly (no credentials) for a directory.
+	 *
+	 * @since 5.6.0
+	 * @param string $dir directory the caller will work in.
+	 * @return WP_Filesystem_Base|null the filesystem, or null when direct access is not available.
+	 */
+	private function direct_filesystem( string $dir ) {
+		// file code may not be already loaded.
+		if ( ! function_exists( 'get_filesystem_method' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( 'direct' !== get_filesystem_method( array(), $dir, false ) ) {
+			return null;
+		}
+
+		// can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL.
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', 'direct', false, $dir, array(), false );
+		if ( ! WP_Filesystem( $creds ) ) {
+			return null;
+		}
+
+		global $wp_filesystem;
+		return $wp_filesystem;
+	}
+
+	/**
+	 * Renames generated image-size files that start with the attachment title to an md5 name.
+	 *
+	 * A size entry is only updated when its file was actually moved, so the metadata
+	 * never points at a file that is not there.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, mixed> $sizes    the 'sizes' element of the attachment metadata.
+	 * @param string               $file_dir directory holding the files (with trailing slash).
+	 * @param string               $title    attachment title the file names start with.
+	 * @return array<string, mixed> the updated sizes.
+	 */
+	private function hide_size_file_names( array $sizes, string $file_dir, string $title ): array {
+		$wp_filesystem = $this->direct_filesystem( $file_dir );
+		$new_name      = md5( $title . microtime() );
+		foreach ( $sizes as $size => $sizeinfo ) {
+			if ( 0 !== strpos( $sizeinfo['file'], $title ) || ! file_exists( $file_dir . $sizeinfo['file'] ) ) {
+				continue;
+			}
+			$old_path = $file_dir . $sizeinfo['file'];
+			$new_file = str_replace( $title, $new_name, $sizeinfo['file'] );
+			$new_path = $file_dir . $new_file;
+			if ( $wp_filesystem ) {
+				if ( ! $wp_filesystem->move( $old_path, $new_path ) ) {
+					continue;
+				}
+				$wp_filesystem->chmod( $new_path, FS_CHMOD_FILE );
+			} else {
+				// Use copy and unlink because rename breaks streams.
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				if ( ! @copy( $old_path, $new_path ) ) {
+					continue;
+				}
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_operations_chmod
+				@chmod( $new_path, defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644 );
+				wp_delete_file( $old_path );
+			}
+			$sizes[ $size ]['file'] = $new_file;
+		}
+		return $sizes;
 	}
 }
