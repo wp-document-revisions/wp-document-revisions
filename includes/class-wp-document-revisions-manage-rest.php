@@ -90,9 +90,10 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		$post_type = get_post_type_object( 'document' );
-		$route     = $request->get_route();
-		$params    = $request->get_params();
-		$target    = '/' . $post_type->rest_namespace . '/' . $post_type->rest_base . '/';
+		// The REST server matches routes case-insensitively, so compare them that way too.
+		$route  = strtolower( $request->get_route() );
+		$params = $request->get_params();
+		$target = strtolower( '/' . $post_type->rest_namespace . '/' . $post_type->rest_base . '/' );
 		if ( false === strpos( $route . '/', $target ) ) {
 			return $response;
 		}
@@ -134,7 +135,7 @@ class WP_Document_Revisions_Manage_Rest {
 		// Additional validation for documents.
 
 		// No revisions unless allowed.
-		if ( strpos( $route, '/revisions/' ) && ! current_user_can( 'read_document_revisions' ) ) {
+		if ( strpos( $route . '/', '/revisions/' ) && ! current_user_can( 'read_document_revisions' ) ) {
 			return new WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to view revisions.', 'wp-document-revisions' ),
