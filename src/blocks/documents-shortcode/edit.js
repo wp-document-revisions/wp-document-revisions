@@ -185,6 +185,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
+						__nextHasNoMarginBottom
 						checked={ attributes.show_thumb }
 						label={ __( 'Show featured image?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -192,6 +193,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
+						__nextHasNoMarginBottom
 						checked={ attributes.show_descr }
 						label={ __( 'Show document description?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -199,6 +201,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
+						__nextHasNoMarginBottom
 						checked={ attributes.show_pdf }
 						label={ __( 'Show PDF File indication?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -206,6 +209,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
+						__nextHasNoMarginBottom
 						checked={ attributes.new_tab }
 						label={ __( 'Open documents in new tab?', 'wp-document-revisions' ) }
 						help={ __(

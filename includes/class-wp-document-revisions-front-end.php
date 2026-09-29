@@ -72,7 +72,7 @@ class WP_Document_Revisions_Front_End {
 		add_filter( 'document_shortcode_atts', array( $this, 'shortcode_atts_hyphen_filter' ) );
 
 		// Add blocks. Done after wp_loaded so that the taxonomies have been defined.
-		add_action( 'wp_loaded', array( $this, 'documents_shortcode_blocks' ), 100 );
+		add_action( 'init', array( $this, 'documents_shortcode_blocks' ) );
 
 		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front' ), 50 );
@@ -843,9 +843,9 @@ class WP_Document_Revisions_Front_End {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
-		// set the block styling.
+		// find the block styling.
 		$wrapper = $this->get_block_attributes();
-		$output  = '<div ' . $wrapper . '>';
+		$output  = '';
 
 		// if header set, then output as <h2>.
 		if ( isset( $atts['header'] ) ) {
@@ -967,7 +967,10 @@ class WP_Document_Revisions_Front_End {
 			$errs = '<div class="notice notice-error">' . $errs . '</div>';
 		}
 
-		$output .= $errs . $this->documents_shortcode_int( $atts ) . '</div>';
+		$output .= $errs . $this->documents_shortcode_int( $atts );
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
 		return $output;
 	}
 
@@ -1008,11 +1011,14 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['show_pdf'] );
 		}
 
-		// set the block styling.
+		// find the block styling.
 		$wrapper = $this->get_block_attributes();
-		$output  = '<div ' . $wrapper . '>';
-		$output .= '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
-		$output .= $this->revisions_shortcode( $atts ) . '</div>';
+
+		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
+		$output .= $this->revisions_shortcode( $atts );
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
 		return $output;
 	}
 
@@ -1025,7 +1031,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @param array<string, mixed> $atts shortcode/block attributes.
 	 * @return string the preview markup.
-	 * @since 5.4.0
+	 * @since 5.5.0
 	 */
 	public function wpdr_document_preview_display( array $atts ): string {
 		global $wpdr;
@@ -1073,10 +1079,9 @@ class WP_Document_Revisions_Front_End {
 
 		$download_link = '<a href="' . esc_url( $url ) . '" class="document-download" download>' . esc_html__( 'Download document', 'wp-document-revisions' ) . '</a>';
 
-		// set the block styling.
+		// find the block styling.
 		$wrapper = $this->get_block_attributes();
-		$output  = '<div ' . $wrapper . '>';
-		$output .= '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
+		$output  = '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
 
 		if ( $show_title ) {
 			$output .= '<h2 class="document-title">' . esc_html( get_the_title( $id ) ) . '</h2>';
@@ -1102,7 +1107,11 @@ class WP_Document_Revisions_Front_End {
 			$output .= '<p class="document-preview-download">' . $download_link . '</p>';
 		}
 
-		$output .= '</div></div>';
+		$output .= '</div>';
+
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
 
 		return $output;
 	}
@@ -1110,11 +1119,9 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Block wrapper attributes.
 	 *
-	 * The document permalink serves the latest revision inline through the authenticated
-	 * file handler (serve_file), so the browser previews it in place and access control is
-	 * enforced on the actual file request regardless of this callback.
+	 * The rendering code may be called outside the context of a block, i.e. with a shortcode.
 	 *
-	 * @return string the block attributes (empty for shortcodes).
+	 * @return string the block attributes if in context (empty for shortcodes).
 	 * @since 5.5.0
 	 */
 	public function get_block_attributes(): string {

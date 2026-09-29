@@ -229,7 +229,6 @@ class WP_Document_Revisions {
 			require_once __DIR__ . '/class-wp-document-revisions-recently-revised-widget.php';
 			$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
 			add_action( 'widgets_init', array( $wpdr_widget, 'wpdr_widgets_init' ) );
-			add_action( 'init', array( $wpdr_widget, 'wpdr_widgets_block_init' ), 99 );
 		}
 		// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound 
 

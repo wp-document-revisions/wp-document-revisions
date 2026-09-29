@@ -373,8 +373,11 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		// get instance of front_end class.
 		global $wpdr_fe;
 		$wrapper = $wpdr_fe->get_block_attributes();
+		if ( ! empty( $wrapper ) ) {
+			$inner = '<div ' . $wrapper . '>' . $inner . '</div>';
+		}
 
-		return '<div ' . $wrapper . '>' . $inner . '</div>';
+		return $inner;
 	}
 
 	/**
@@ -389,16 +392,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		global $wpdr_widget;
 
 		register_widget( $wpdr_widget );
-	}
 
-	/**
-	 * Callback to register the recently revised widget block.
-	 *
-	 * Call with low priority to let taxonomies be registered.
-	 */
-	public function wpdr_widgets_block_init(): void {
-		global $wpdr_widget;
-
+		// register the block.
 		$wpdr_widget->documents_widget_block();
 	}
 }

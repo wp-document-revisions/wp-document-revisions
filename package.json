@@ -14,10 +14,10 @@
     "type-check": "tsc -p jsconfig.json",
     "build": "npm run build:blocks && npm run build:editor && npm run build:admin",
     "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
-    "build:editor": "wp-scripts build src/editor-document-upload/index.js --output-path=build/editor-document-upload",
-    "build:admin": "wp-scripts build src/admin/wp-document-revisions.js src/admin/wp-document-revisions-validate.js src/admin/wp-document-revisions-ai-prefill.js --output-path=build/admin",
+    "build:editor": "wp-scripts build index.js --webpack-src-dir=src/editor-document-upload --output-path=build/editor-document-upload",
+    "build:admin": "wp-scripts build wp-document-revisions.js wp-document-revisions-validate.js wp-document-revisions-ai-prefill.js --webpack-src-dir=src/admin --output-path=build/admin",
     "start": "wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks",
-    "start:admin": "wp-scripts start src/admin/wp-document-revisions.js src/admin/wp-document-revisions-validate.js src/admin/wp-document-revisions-ai-prefill.js --output-path=build/admin",
+    "start:admin": "wp-scripts start wp-document-revisions.js wp-document-revisions-validate.js wp-document-revisions-ai-prefill.js --webpack-src-dir=src/admin --output-path=build/admin",
     "test:e2e": "npx playwright test --config=playwright.config.mjs",
     "test:e2e:ui": "npx playwright test --config=playwright.config.mjs --ui",
     "wp-env": "wp-env"
