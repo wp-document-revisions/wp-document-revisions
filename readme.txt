@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.6.0
+Stable tag: 5.6.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,14 @@ Thanks to everyone who has contributed translations, including:
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.6.1 =
+
+* Security: a user who could edit their own documents (Contributors and up, by default) could use the Validate Structure fix endpoint to rename and delete other media files on the site. Fixes now only touch the document's own attachments ([GHSA-wmqm-qwm3-9qgf](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-wmqm-qwm3-9qgf)).
+* Security: the documents shortcode, the Documents List and Latest Documents blocks, and the `get_documents()` template function could list other users' draft, pending and private documents (titles, descriptions and authors) when asked for those statuses, and showed descriptions of password-protected documents. Lists now only include documents the viewer can read, and skip the description and thumbnail of password-protected documents. The `post_password` shortcode attribute has been removed ([GHSA-xwv7-7xmq-wmxq](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-xwv7-7xmq-wmxq)).
+* Security: the document revisions shortcode and block listed the revision history of documents the viewer couldn't read. They now check the document can be read ([GHSA-cmhr-7795-vvfw](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-cmhr-7795-vvfw)).
+* Security: the AI summary and diff REST endpoints served password-protected documents, and summaries of earlier revisions to users without the `read_document_revisions` capability. They now check access the same way as downloading the file ([GHSA-987w-vg4c-32r3](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-987w-vg4c-32r3)).
+* Security: on sites that enable the REST API for documents (off by default), the plugin's REST checks could be skipped by changing the case of the route (for example `/wp/v2/Documents`), and did not apply to the revisions list route ([GHSA-fcf8-gjj8-pg9w](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-fcf8-gjj8-pg9w)).
+
 = 5.6.0 =
 
 * Speed up the Media Library on sites with many attachments. Hiding document files from the library joined the posts table to itself, which took several seconds per page on large libraries and ran on every scroll now that WordPress 7.1 loads the library with infinite scroll. It now uses a subquery that returns the same results in a fraction of the time. (#725, #730)
@@ -346,22 +354,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * New hooks are documented under [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/). (#759)
 
 = 5.5.0 =
-
-* Includes the security fix from 5.4.5 ([GHSA-2jh8-h8m6-3rw4](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2jh8-h8m6-3rw4)).
-* Includes the security fix from 5.4.4 ([GHSA-697p-7g2w-6q3q](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-697p-7g2w-6q3q)).
-* Translations now come from [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) language packs, which WordPress installs and updates automatically, and take priority over the translations bundled with the plugin. The project previously used Crowdin; its translations, along with machine translations for 30 languages, have been imported to translate.wordpress.org as suggestions for volunteers to review. A language's pack is published once 90% of its strings are approved. Until then, the plugin keeps its bundled translations for 20 languages as a fallback, frozen at their previous state, so strings added since then, and all block-editor and other JavaScript strings, appear in English for those languages. Bundled files will be removed as each language's pack is published. Anyone with a WordPress.org account can help by reviewing or suggesting translations; see [Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/). (#718, #719, #720, #739)
-* Fix revision-limit protection being skipped after an attachment-less document was deleted. Deleting a document with no attached file left internal "deleting a document" state set for the rest of the request, so later revision deletions in that request bypassed the revision limit. (#717)
-* Validate Structure now also flags document files, including those of earlier versions, stored under their original (unhashed) file names, which may be downloadable directly, and can rename them. Use it to find files uploaded through the block editor Document panel before 5.4.5 ([GHSA-2jh8-h8m6-3rw4](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2jh8-h8m6-3rw4)). (#738)
-* Fix Validate Structure's fix for document files whose names aren't md5-hashed, which never renamed the attachment. (#727)
-* Fix relative revision times ("Checked in 5 mins ago") being wrong when the browser and site are in different time zones or across daylight-saving changes. The block editor panel now uses WordPress's translated wording for these times. (#727)
-* Fix block ⇄ shortcode transforms mangling quoted values that contain spaces. Generated shortcodes now quote their values, e.g. `[document_revisions id="1" numberposts="5"]`. (#727)
-* Documents of unknown file types are now served as `application/octet-stream` instead of `image/<extension>`, and the attachment's stored MIME type is used first. The `document_revisions_mimetype` filter now also receives the attachment ID. (#727)
-* Documents are now gzip-compressed on download only when they're text (`text/*`) by default. PDFs, office files, images and archives were being compressed and fully buffered in PHP. The `document_serve_use_gzip` filter still overrides this. (#727)
-* Feed keys are now compared case-sensitively. (#727)
-* Renamed document files now get WordPress's standard file permissions (`FS_CHMOD_FILE`, usually 0644) instead of 0664. (#727)
-* New taxonomy terms now appear in the document blocks immediately instead of after the cache expires. (#727)
-* Replace custom code with WordPress core APIs and `@wordpress/*` packages, remove dead code (including the old WebKit notification path), and deprecate `WP_Document_Revisions::ie_cache_fix()`. (#727)
-
-= 5.4.5 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
