@@ -112,8 +112,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		add_meta_box( 'revision-summary', __( 'Revision Summary', 'wp-document-revisions' ), array( $this, 'revision_summary_cb' ), 'document', 'normal', 'default' );
 		add_meta_box( 'document', __( 'Document', 'wp-document-revisions' ), array( $this, 'document_metabox' ), 'document', 'normal', 'high' );
 
-		// $post object has the document id stripped out for editing, so check meta data.
-		if ( absint( get_post_meta( $post->ID, '_document_attachment_id', true ) ) > 0 ) {
+		// $post object has the document id stripped out for editing, so check meta data
+		// (populated from the raw content for documents that pre-date it).
+		if ( $this->populate_attachment_meta_from_raw( $post->ID ) > 0 ) {
 			add_meta_box( 'revision-log', __( 'Revision Log', 'wp-document-revisions' ), array( $this, 'revision_metabox' ), 'document', 'normal', 'low' );
 		}
 
@@ -169,13 +170,13 @@ trait WP_Document_Revisions_Admin_Editor {
 			$post->post_content = $wpdr->format_doc_id( $post->post_content );
 		}
 		// put the document id in metadata.
-		$attach = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
+		$attach = $this->populate_attachment_meta_from_raw( $post->ID );
 
 		// set the description field.
 		$descr = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post->post_content );
 		?>
 		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $descr ); ?>" />
-		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( $attach ); ?>" />
+		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( (string) $attach ); ?>" />
 		<input type="hidden" id="attach_ext" name="attach_ext" value="" />
 		<?php
 		$lock_holder = $wpdr->get_document_lock( $post );
@@ -433,6 +434,28 @@ trait WP_Document_Revisions_Admin_Editor {
 		return ( $attachment instanceof WP_Post
 			&& 'attachment' === $attachment->post_type
 			&& (int) $attachment->post_parent === $doc_id );
+	}
+
+
+	/**
+	 * Populates the attachment id meta for the edit screen, whose post_content has had the
+	 * id stripped (content_edit_pre). Documents created before 5.0 hold the id only in
+	 * post_content, so read it raw, but only trust an id parented to this document so a
+	 * forged marker left in stored content is never promoted to meta. (#726)
+	 *
+	 * @since 5.5.0
+	 * @param int $post_id the document id.
+	 * @return int the attachment id, or 0 if none.
+	 */
+	private function populate_attachment_meta_from_raw( int $post_id ): int {
+		$wpdr    = self::$parent;
+		$content = (string) get_post_field( 'post_content', $post_id, 'raw' );
+
+		if ( ! $this->attachment_belongs_to_document( absint( $wpdr->extract_document_id( $content ) ), $post_id ) ) {
+			$content = '';
+		}
+
+		return $wpdr->populate_attachment_meta( $post_id, $content );
 	}
 
 
