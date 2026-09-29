@@ -142,6 +142,11 @@ class WP_Document_Revisions_Front_End {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
+		// The user must be able to read this document.
+		if ( ! $this->can_read_revisions( (int) $id ) ) {
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
+		}
+
 		// get revisions.
 		$revisions = $this->get_revisions( $id );
 
@@ -1017,6 +1022,18 @@ class WP_Document_Revisions_Front_End {
 	}
 
 	/**
+	 * Whether the current user can see a document's revision list.
+	 *
+	 * @since 5.5.1
+	 *
+	 * @param int $id document ID.
+	 * @return bool
+	 */
+	public function can_read_revisions( int $id ): bool {
+		return current_user_can( 'read_document', $id ) && ! post_password_required( $id );
+	}
+
+	/**
 	 * Server side block to render the revisions list.
 	 *
 	 * @param array<string, mixed> $atts shortcode attributes.
@@ -1050,12 +1067,17 @@ class WP_Document_Revisions_Front_End {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
+		// The user must be able to read this document.
+		if ( ! $wpdr_fe->can_read_revisions( (int) $atts['id'] ) ) {
+			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
+		}
+
 		// Remove show_pdf if false.
 		if ( ! $atts['show_pdf'] ) {
 			unset( $atts['show_pdf'] );
 		}
 
-		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
+		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . esc_html( get_the_title( $atts['id'] ) ) . '</h2>';
 		$output .= $wpdr_fe->revisions_shortcode( $atts );
 		return $output;
 	}
