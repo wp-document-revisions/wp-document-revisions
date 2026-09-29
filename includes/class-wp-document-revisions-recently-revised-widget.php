@@ -125,7 +125,9 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			<li>
 				<h<?php echo esc_attr( (string) $h_n ); ?> class="wp-block-post-title"><a href="<?php echo esc_url( $link ); ?>"<?php echo ( $instance['new_tab'] ? ' target="_blank"' : '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static string ?>><?php echo esc_html( get_the_title( $document->ID ) ) . wp_kses_post( $pdf ); ?></a></h<?php echo esc_attr( (string) $h_n ); ?>>
 				<?php
-				if ( (bool) $instance['show_thumb'] ) {
+				// Password-protected documents don't show their thumbnail or description.
+				$protected = post_password_required( $document->ID );
+				if ( (bool) $instance['show_thumb'] && ! $protected ) {
 					$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
 					$thumb = get_post_thumbnail_id( $document->ID );
 					if ( $thumb ) {
@@ -155,7 +157,7 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 					echo $image . '<br />';
 				}
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo ( (bool) $instance['show_descr'] && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
+				echo ( (bool) $instance['show_descr'] && ! $protected && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
 				printf( esc_html( $format_string ), esc_html( human_time_diff( strtotime( $document->post_modified_gmt ) ) ), esc_html( get_the_author_meta( 'display_name', $document->post_author ) ) );
 				?>
 			</li>
