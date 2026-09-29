@@ -2,6 +2,19 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.7.0
+
+* AI summaries are no longer generated or shown for private or password-protected documents, since generating one sends the document's text to the site's AI provider. New documents are private by default, so sites that want summaries for them must opt in with the new `document_ai_summary_allow_private` filter. Opting a document out of text extraction now also deletes its stored AI summaries. (#784)
+* Files for drafts, private and password-protected documents, and revisions are now served with `Cache-Control: private, no-store`, so shared caches and proxies don't keep them. All served files also send `X-Content-Type-Options: nosniff`. (#781)
+* Document files are now stored under random names instead of names derived from the file name and upload time. (#780)
+* An upload is only handled as a document upload (hashed name, document directory, document file types) when it targets a document the user can edit. Other uploads are handled as normal media. (#782)
+* Users who can't manage workflow states (Contributors, by default) can no longer create new ones when saving a document from the Workflow State box, quick edit or bulk edit. They can still pick an existing state. (#783)
+* Text extraction skips files over 20 MB, and Word or OpenDocument files that unzip to more than 100 MB, instead of processing them. The limits can be changed with the new `wpdr_text_extraction_max_file_size` and `wpdr_text_extraction_max_uncompressed_size` filters. The AI diff endpoint now applies the extraction time limit. (#786)
+* Regenerating a feed key from another user's profile now changes that user's key, not yours. (#785)
+* Old URLs of renamed documents no longer redirect visitors who can't see the document. (#785)
+* Document REST requests that are refused no longer write document meta. (#785)
+* Uninstalling the plugin now also removes per-site feed keys and the notification settings. (#785)
+
 ### 5.6.1
 
 * Security: a user who could edit their own documents (Contributors and up, by default) could use the Validate Structure fix endpoint to rename and delete other media files on the site. Fixes now only touch the document's own attachments ([GHSA-wmqm-qwm3-9qgf](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-wmqm-qwm3-9qgf)).
