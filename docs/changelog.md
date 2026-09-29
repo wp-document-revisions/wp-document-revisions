@@ -2,6 +2,39 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.6.0
+
+* Speed up the Media Library on sites with many attachments. Hiding document files from the library joined the posts table to itself, which took several seconds per page on large libraries and ran on every scroll now that WordPress 7.1 loads the library with infinite scroll. It now uses a subquery that returns the same results in a fraction of the time. (#725, #730)
+* Fix other users' private documents appearing in status queries that span several post types (e.g. from search plugins). (#766)
+* Fix fatal errors when a theme or plugin applies core filters such as `get_next_post_where` with fewer or unexpected arguments. (#732, #744)
+* Fix the Revision Log box missing for documents created before 5.0. Their attachment id is stored only in the document content, which is stripped for editing before the plugin looked for it, so the id was never saved and the box stayed hidden until a new version was uploaded. (#726, #731)
+* Fix a doubled slash in the document upload path, which broke uploads through stream wrappers such as `s3://`. (#745)
+* Draft and pending document links now use the site's home URL rather than the WordPress install URL, fixing links on Bedrock and other subdirectory installs. (#746)
+* Fix the network "Document Date in Permalink" setting having no effect on multisite permalinks. (#747)
+* Fix stale document revision lists after revisions or attachments were added or deleted outside a document save, which persisted with a persistent object cache. (#751)
+* Validate Structure no longer treats a document's featured image, or another image uploaded to it later, as the document's file. (#767)
+* The `override-document-lock` ability now checks that you can edit the document before reporting its lock state, and overrides the lock the same way the editor does: it notifies the previous owner and fires `document_lock_override`. (#749)
+* The document editor, Revision Log, revision shortcode/block, feed, widgets and `get-document-revisions` ability now show who uploaded the current version instead of the document's owner. New `document_revision_author` filter. (#750)
+* Requests for a document with no file now return 404 instead of 403. `document_no_document_response_code` also receives the document and revision. (#761)
+* The front-end stylesheet now loads only on pages that show a document Edit link. New `document_register_blocks` filter to turn off the plugin's blocks. (#758)
+* JSON, XML and SVG documents are now compressed on download like text files. New `document_compressible_mimetypes` filter. (#760)
+* The document upload directory is now resolved when first needed and per site on multisite, so offload plugins such as S3-Uploads apply. New `document_upload_directory` filter. (#752)
+* Changing a document's slug from the edit screen now keeps its old URL working (redirected by WordPress), and fires a new `document_permalink_updated` action. (#753)
+* Validate Structure's script now loads only on its own screen, and a new `document_validate_structure_capability` filter controls who can use it. (#748)
+* New `wp document-revisions validate [--fix]` WP-CLI command runs the Validate Structure checks, and optionally the fixes, across all documents. (#768)
+* The documents list has sortable File and Revisions columns and a "Missing file" filter. (#770)
+* New `document_serve_redirect_url` filter to send authorized document requests to a CDN or signed storage URL, and a public `get_raw_attachment_url()`. (#763)
+* Documents can now be handed to the web server with X-Sendfile, X-Accel-Redirect or X-LiteSpeed-Location (opt-in via `document_serve_sendfile_header`). (#769)
+* New `is_document_upload()` method and `document_upload_start` / `document_upload_end` actions for integrations such as offload plugins. (#762)
+* New `document_allowed_mimes` and `document_upload_size_limit` filters set allowed file types and the size limit for document uploads separately from the Media Library (useful on multisite). (#771)
+* Document REST responses include a read-only `document_file` field (for users who can edit the document). (#765)
+* New `wpdr_get_document_text()` helper and `wpdr_text_cleared` action; `wpdr_text_extracted` also receives the document ID. (#764)
+* With text extraction or the AI pre-fill turned off sitewide, their meta box options and the summary/diff REST routes are no longer shown or registered. New `document_text_extraction_disabled` and `document_ai_prefill_disabled` filters. (#757)
+* New `document_show_empty_state` and `document_show_review_prompt` filters turn off the first-run notice and the review prompt. (#754)
+* New `document_register_abilities` and `document_get_info_ability_capability` filters control the plugin's Abilities API integration. (#755)
+* New `document_show_description_editor` filter hides the Document Description editor on the classic edit screen. (#756)
+* New hooks are documented under [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/). (#759)
+
 ### 5.5.0
 
 * Includes the security fix from 5.4.5 ([GHSA-2jh8-h8m6-3rw4](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2jh8-h8m6-3rw4)).
