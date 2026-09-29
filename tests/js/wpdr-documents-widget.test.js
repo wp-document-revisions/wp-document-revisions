@@ -46,9 +46,15 @@ jest.mock(
 	{ virtual: true }
 );
 
-jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
-	virtual: true,
-} );
+jest.mock(
+	'@wordpress/server-side-render',
+	() => ( {
+		__esModule: true,
+		ServerSideRender: 'ServerSideRender',
+		default: 'ServerSideRender', // In case anything still uses the default import.
+	} ),
+	{ virtual: true }
+);
 
 jest.mock(
 	'@wordpress/i18n',

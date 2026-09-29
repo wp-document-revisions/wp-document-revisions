@@ -770,17 +770,14 @@ class WP_Document_Revisions_Front_End {
 						continue;
 					}
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax_arr                 = (array) $tax_obj;
-					$tax_arr['hierarchical'] = false;
-					$tax_arr['label']        = 'Post Status';
-					$object_type             = $tax_arr['object_type'];
-					unset( $tax_arr['name'] );
-					unset( $tax_arr['object_type'] );
-					$tax     = new WP_Taxonomy( $tax_key, $object_type, $tax_arr );
-					$wf_efpp = 1;
+					$tax               = clone $tax_obj;
+					$tax->hierarchical = false;
+					$tax->label        = 'Post Status';
+					$wf_efpp           = 1;
 				} else {
 					$tax = get_taxonomy( $taxonomy );
 				}
+
 				if ( ! $tax instanceof WP_Taxonomy ) {
 					continue; // Not registered (e.g. unregistered, or bad name from the filter).
 				}
