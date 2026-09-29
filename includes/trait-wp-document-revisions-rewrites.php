@@ -447,6 +447,25 @@ trait WP_Document_Revisions_Rewrites {
 	}
 
 	/**
+	 * Stops old slug redirects to documents the visitor can't see.
+	 *
+	 * Core's wp_old_slug_redirect() doesn't check the post status, so an old URL of a
+	 * private document would redirect anyone to its new URL, revealing the new slug.
+	 *
+	 * @since 5.7.0
+	 * @param int $id the post ID found for the old slug (0 if none).
+	 * @return int the post ID, or 0 to cancel the redirect.
+	 */
+	public function old_slug_redirect_post_id( $id ) {
+		$id = absint( $id );
+		if ( $id && 'document' === get_post_type( $id ) && ! $this->can_list_document( $id ) ) {
+			return 0;
+		}
+
+		return $id;
+	}
+
+	/**
 	 * Filter to remove previous rewrite rules.
 	 *
 	 * @since 3.3.0

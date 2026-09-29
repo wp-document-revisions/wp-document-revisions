@@ -49,6 +49,8 @@ class WP_Document_Revisions_Manage_Rest {
 
 		// additional validation.
 		add_filter( 'rest_request_before_callbacks', array( $this, 'document_validation' ), 10, 3 );
+		// Runs after the permission check, unlike rest_request_before_callbacks.
+		add_filter( 'rest_dispatch_request', array( $this, 'populate_document_meta' ), 10, 2 );
 
 		// hide data.
 		add_filter( 'rest_prepare_document', array( $this, 'doc_clean_document' ), 10, 3 );
@@ -254,15 +256,36 @@ class WP_Document_Revisions_Manage_Rest {
 			}
 		}
 
-		// route is for a document. Make sure the document_attachment meta is set.
-		if ( isset( $params['id'] ) ) {
-			$wpdr    = self::$parent;
-			$post_id = absint( $params['id'] );
-			$content = get_post_field( 'post_content', $post_id );
-			$attach  = $wpdr->populate_attachment_meta( $post_id, $content );
+		return $response;
+	}
+
+	/**
+	 * Makes sure a document route's document_attachment meta is set before its callback runs.
+	 *
+	 * Runs on rest_dispatch_request, after the route's permission check has passed, so
+	 * requests that are refused (e.g. an anonymous read of a private document) write nothing.
+	 *
+	 * @since 5.7.0
+	 * @param mixed           $dispatch_result Dispatch result, will be used if not empty.
+	 * @param WP_REST_Request $request         Request used to generate the response.
+	 * @return mixed the unchanged dispatch result.
+	 */
+	public static function populate_document_meta( $dispatch_result, WP_REST_Request $request ) {
+		if ( null !== $dispatch_result || ! isset( $request['id'] ) ) {
+			return $dispatch_result;
 		}
 
-		return $response;
+		$post_type = get_post_type_object( 'document' );
+		// The REST server matches routes case-insensitively, so compare them that way too.
+		$target = strtolower( '/' . $post_type->rest_namespace . '/' . $post_type->rest_base . '/' );
+		if ( false === strpos( strtolower( $request->get_route() ) . '/', $target ) ) {
+			return $dispatch_result;
+		}
+
+		$post_id = absint( $request['id'] );
+		self::$parent->populate_attachment_meta( $post_id, get_post_field( 'post_content', $post_id ) );
+
+		return $dispatch_result;
 	}
 
 	/**
