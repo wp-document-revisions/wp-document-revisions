@@ -255,6 +255,61 @@ class Test_WP_Document_Revisions_Zz_Attachment_Ownership extends Test_Common_WPD
 	}
 
 	/**
+	 * An administrator may not edit the attachment id meta.
+	 */
+	public function test_attachment_meta_not_user_editable() {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$this->assertFalse( current_user_can( 'edit_post_meta', self::$author_doc, '_document_attachment_id' ) );
+		$this->assertFalse( current_user_can( 'add_post_meta', self::$author_doc, '_document_attachment_id' ) );
+		$this->assertFalse( current_user_can( 'delete_post_meta', self::$author_doc, '_document_attachment_id' ) );
+	}
+
+	/**
+	 * A REST save can't change the attachment id meta, even to the document's own attachment.
+	 */
+	public function test_rest_cannot_change_attachment_meta() {
+		global $wpdr_mr;
+		add_filter( 'document_use_block_editor', '__return_true' );
+		add_filter( 'rest_pre_insert_document', array( $wpdr_mr, 'sync_meta_to_content' ), 10, 2 );
+		if ( false === has_filter( 'rest_pre_insert_document', array( $wpdr_mr, 'drop_attachment_meta' ) ) ) {
+			add_filter( 'rest_pre_insert_document', array( $wpdr_mr, 'drop_attachment_meta' ), 5, 2 );
+		}
+
+		// A second file that does belong to the author's document.
+		$other = self::factory()->attachment->create_object(
+			array(
+				'file'           => 'other.txt',
+				'post_parent'    => self::$author_doc,
+				'post_mime_type' => 'text/plain',
+			)
+		);
+
+		wp_set_current_user( self::$author );
+		$request = new WP_REST_Request( 'POST', '/wp/v2/documents/' . self::$author_doc );
+		$request->set_header( 'x-wp-nonce', wp_create_nonce( 'wp_rest' ) );
+		$request->set_body_params(
+			array(
+				'title' => 'Author public',
+				'meta'  => array( '_document_attachment_id' => $other ),
+			)
+		);
+		$response = rest_do_request( $request );
+		clean_post_cache( self::$author_doc );
+
+		// Null asks core to delete the meta.
+		$request->set_body_params( array( 'meta' => array( '_document_attachment_id' => null ) ) );
+		$deleted = rest_do_request( $request );
+
+		wp_delete_attachment( $other, true );
+		remove_filter( 'rest_pre_insert_document', array( $wpdr_mr, 'sync_meta_to_content' ), 10 );
+		remove_filter( 'document_use_block_editor', '__return_true' );
+
+		$this->assertFalse( $response->is_error(), 'The save should succeed, ignoring the meta' );
+		$this->assertFalse( $deleted->is_error(), 'The save should succeed, ignoring the meta' );
+		$this->assertSame( self::$author_attach, (int) get_post_meta( self::$author_doc, '_document_attachment_id', true ) );
+	}
+
+	/**
 	 * The attachment id meta can't name another document's attachment.
 	 */
 	public function test_meta_guard() {

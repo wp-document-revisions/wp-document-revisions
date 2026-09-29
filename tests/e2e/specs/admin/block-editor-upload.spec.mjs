@@ -66,7 +66,7 @@ test.describe( 'Block Editor Document Upload', () => {
 		await expect( uploadButton ).toBeVisible();
 	} );
 
-	test( 'attachment meta syncs to post_content on REST save', async ( {
+	test( 'attachment meta is set by the server, not the client', async ( {
 		requestUtils,
 	} ) => {
 		// Upload a test file to get an attachment ID.
@@ -76,7 +76,7 @@ test.describe( 'Block Editor Document Upload', () => {
 		);
 		const media = await requestUtils.uploadMedia( filePath );
 
-		// Create the document first; its attachment must be parented to it.
+		// Create an empty document.
 		const doc = await requestUtils.rest( {
 			method: 'POST',
 			path: '/wp/v2/documents',
@@ -86,50 +86,15 @@ test.describe( 'Block Editor Document Upload', () => {
 			},
 		} );
 
-		// An attachment that doesn't belong to the document is refused.
-		await expect(
-			requestUtils.rest( {
-				method: 'POST',
-				path: `/wp/v2/documents/${ doc.id }`,
-				data: { meta: { _document_attachment_id: media.id } },
-			} )
-		).rejects.toMatchObject( { code: 'rest_meta_database_error' } );
-
-		// Attach the upload to the document (as a real document upload is), then link it.
-		await requestUtils.rest( {
-			method: 'POST',
-			path: `/wp/v2/media/${ media.id }`,
-			data: { post: doc.id },
-		} );
-		await requestUtils.rest( {
+		// Clients can't set the attachment meta: it's ignored.
+		const ignored = await requestUtils.rest( {
 			method: 'POST',
 			path: `/wp/v2/documents/${ doc.id }`,
 			data: { meta: { _document_attachment_id: media.id } },
 		} );
+		expect( ignored.meta._document_attachment_id ).toBe( 0 );
 
-		// Fetch the document to verify content was synced.
-		const saved = await requestUtils.rest( {
-			path: `/wp/v2/documents/${ doc.id }`,
-		} );
-
-		// post_content should contain the WPDR comment with the attachment ID.
-		expect( saved.content.rendered ).toBeDefined();
-
-		// Fetch raw content via edit context.
-		const raw = await requestUtils.rest( {
-			path: `/wp/v2/documents/${ doc.id }?context=edit`,
-		} );
-
-		// The meta should be populated in the response.
-		expect( raw.meta._document_attachment_id ).toBe( media.id );
-
-		// The raw content should have WPDR stripped (for block editor display).
-		expect( raw.content.raw ).not.toContain( '<!-- WPDR' );
-
-		// But the actual DB content should have it — verify by checking
-		// that the non-edit response contains the WPDR-formatted ID.
-		// (The view context's rendered content goes through wpautop etc.,
-		// so just verify the meta round-tripped correctly.)
+		// Linking a file is covered by the panel upload test below.
 
 		// Clean up.
 		await requestUtils.rest( {
