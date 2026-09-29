@@ -45,6 +45,8 @@ class Test_WP_Document_Revisions_Zz_Stored_File_Names extends WP_UnitTestCase {
 	 * @return void
 	 */
 	private function start_document_upload() {
+		// The upload flag only counts for a document the current user can edit.
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 		$doc = self::factory()->post->create( array( 'post_type' => 'document' ) );
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$_POST['upload_source'] = 'wp-document-revisions';

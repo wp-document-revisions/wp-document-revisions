@@ -853,6 +853,20 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Whether the current user may upload a file to the given document.
+	 *
+	 * @since 5.7.0
+	 * @param int $document_id the post the file is being uploaded to.
+	 * @return bool
+	 */
+	private function can_upload_to_document( int $document_id ): bool {
+		// Check the ID first: get_post( 0 ) would fall back to the global post.
+		return $document_id > 0
+			&& 'document' === get_post_type( $document_id )
+			&& current_user_can( 'edit_document', $document_id );
+	}
+
+	/**
 	 * Generates a random name for a stored document file.
 	 *
 	 * Private documents rely on stored file names being unguessable, so the name comes from a
@@ -875,8 +889,13 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	public function filename_rewrite( array $file ): array {
 		// verify if this is a document load as they have an additional parameter.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
-		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
+		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source']
+			// The flag only counts for a document the current user can edit.
+			|| ! $this->can_upload_to_document( $document_id ) ) {
 			// default - not a WPDR Document.
 			self::$doc_image       = true;
 			self::$document_upload = false;
@@ -905,9 +924,6 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
-		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
-
 		/**
 		 * Fires when a document file upload starts, before the file is moved into place.
 		 *
@@ -917,7 +933,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * @since 5.6.0
 		 *
 		 * @param array  $file          the upload, with the hashed file name.
-		 * @param int    $document_id   the document the file is being uploaded to (0 if unknown).
+		 * @param int    $document_id   the document the file is being uploaded to.
 		 * @param string $orig_filename the original file name.
 		 */
 		do_action( 'document_upload_start', $file, $document_id, $orig_filename );
