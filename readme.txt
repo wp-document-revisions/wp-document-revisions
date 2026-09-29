@@ -353,6 +353,6 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * New `document_show_description_editor` filter hides the Document Description editor on the classic edit screen. (#756)
 * New hooks are documented under [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/). (#759)
 
-= 5.5.0 =
+= 5.5.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)

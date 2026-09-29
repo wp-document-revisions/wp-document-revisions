@@ -44,6 +44,10 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * New `document_show_description_editor` filter hides the Document Description editor on the classic edit screen. (#756)
 * New hooks are documented under [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/). (#759)
 
+### 5.5.1
+
+* The security fixes from 5.6.1, for sites still on the 5.5 line.
+
 ### 5.5.0
 
 * Includes the security fix from 5.4.5 ([GHSA-2jh8-h8m6-3rw4](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2jh8-h8m6-3rw4)).
@@ -60,6 +64,10 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Renamed document files now get WordPress's standard file permissions (`FS_CHMOD_FILE`, usually 0644) instead of 0664. (#727)
 * New taxonomy terms now appear in the document blocks immediately instead of after the cache expires. (#727)
 * Replace custom code with WordPress core APIs and `@wordpress/*` packages, remove dead code (including the old WebKit notification path), and deprecate `WP_Document_Revisions::ie_cache_fix()`. (#727)
+
+### 5.4.6
+
+* The security fixes from 5.6.1, for sites still on the 5.4 line.
 
 ### 5.4.5
 
