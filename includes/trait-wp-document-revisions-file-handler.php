@@ -825,6 +825,20 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Generates a random name for a stored document file.
+	 *
+	 * Private documents rely on stored file names being unguessable, so the name comes from a
+	 * cryptographically secure source. It keeps the 32 lowercase hex character (MD5) format that
+	 * the hashed-name checks and the .htaccess rules look for.
+	 *
+	 * @since 5.7.0
+	 * @return string 32 lowercase hex characters.
+	 */
+	public static function random_file_name(): string {
+		return bin2hex( random_bytes( 16 ) );
+	}
+
+	/**
 	 * Rewrites uploaded revisions filename with secure hash to mask true location.
 	 *
 	 * @since 0.5
@@ -853,7 +867,7 @@ trait WP_Document_Revisions_File_Handler {
 		$orig_filename = $file['name'];
 
 		// hash and replace filename, appending extension.
-		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
+		$file['name'] = self::random_file_name() . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).
@@ -1569,7 +1583,7 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
-	 * Renames generated image-size files that start with the attachment title to an md5 name.
+	 * Renames generated image-size files that start with the attachment title to a random hashed name.
 	 *
 	 * A size entry is only updated when its file was actually moved, so the metadata
 	 * never points at a file that is not there.
@@ -1582,7 +1596,7 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	private function hide_size_file_names( array $sizes, string $file_dir, string $title ): array {
 		$wp_filesystem = $this->direct_filesystem( $file_dir );
-		$new_name      = md5( $title . microtime() );
+		$new_name      = self::random_file_name();
 		foreach ( $sizes as $size => $sizeinfo ) {
 			if ( 0 !== strpos( $sizeinfo['file'], $title ) || ! file_exists( $file_dir . $sizeinfo['file'] ) ) {
 				continue;
