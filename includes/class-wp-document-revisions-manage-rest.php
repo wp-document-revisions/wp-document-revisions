@@ -55,6 +55,9 @@ class WP_Document_Revisions_Manage_Rest {
 		add_filter( 'rest_prepare_revision', array( $this, 'doc_clean_revision' ), 10, 3 );
 		add_filter( 'rest_prepare_attachment', array( $this, 'doc_clean_attachment' ), 10, 3 );
 
+		// The attachment ID meta is server-only. Drop it from requests before core writes meta.
+		add_filter( 'rest_pre_insert_document', array( $this, 'drop_attachment_meta' ), 5, 2 );
+
 		// Block editor content/meta sync.
 		if ( apply_filters( 'document_use_block_editor', false ) ) {
 			add_filter( 'rest_pre_insert_document', array( $this, 'sync_meta_to_content' ), 10, 2 );
@@ -434,20 +437,13 @@ class WP_Document_Revisions_Manage_Rest {
 	 * @param WP_REST_Request $request       Request object.
 	 * @return stdClass|WP_Error Modified post object, or an error if the attachment does not belong to the document.
 	 */
-	public function sync_meta_to_content( $prepared_post, WP_REST_Request $request ) {
+	public function sync_meta_to_content( $prepared_post, WP_REST_Request $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$wpdr = self::$parent;
-		// Get attachment ID: prefer DB, fall back to request meta.
+		// Get attachment ID from the server, never the request: the stored meta, else the stored content.
 		$attach_id = absint( get_post_meta( $prepared_post->ID, '_document_attachment_id', true ) );
 		if ( ! $attach_id ) {
-			$meta = $request->get_param( 'meta' );
-			if ( isset( $meta['_document_attachment_id'] ) ) {
-				$attach_id = absint( $meta['_document_attachment_id'] );
-			}
-			if ( ! $attach_id ) {
-				// look if there is an existing value on the record (not the input as it may have been removed).
-				$content   = get_post_field( 'post_content', $prepared_post->ID );
-				$attach_id = absint( $wpdr->extract_document_id( $content ) );
-			}
+			$content   = get_post_field( 'post_content', $prepared_post->ID );
+			$attach_id = absint( $wpdr->extract_document_id( $content ) );
 		}
 
 		// Only rewrite content that the request actually supplies.
@@ -477,6 +473,27 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		$prepared_post->post_content = $content;
+
+		return $prepared_post;
+	}
+
+	/**
+	 * Drops the attachment ID meta from a document REST write.
+	 *
+	 * The meta is set by the server for the server, so a client may not change it. Dropping it
+	 * (rather than failing the save) lets the block editor, which echoes the value back, keep saving.
+	 *
+	 * @since 5.6.0
+	 * @param stdClass        $prepared_post An object representing a single post prepared for inserting or updating the database.
+	 * @param WP_REST_Request $request       Request object.
+	 * @return stdClass The unchanged post object.
+	 */
+	public function drop_attachment_meta( $prepared_post, WP_REST_Request $request ) {
+		$meta = $request->get_param( 'meta' );
+		if ( is_array( $meta ) && array_key_exists( '_document_attachment_id', $meta ) ) {
+			unset( $meta['_document_attachment_id'] );
+			$request->set_param( 'meta', $meta );
+		}
 
 		return $prepared_post;
 	}

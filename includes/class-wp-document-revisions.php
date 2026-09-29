@@ -914,19 +914,21 @@ class WP_Document_Revisions {
 		 */
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
 
-		// Register meta for block editor attachment ID management.
+		// Register the attachment ID meta so the block editor can read it. Only the server
+		// writes it (on upload), so users may not edit it. REST writes also drop it (see
+		// WP_Document_Revisions_Manage_Rest::drop_attachment_meta).
 		register_post_meta(
 			'document',
 			'_document_attachment_id',
 			array(
-				'show_in_rest'      => true,
+				'show_in_rest'      => array(
+					'schema' => array( 'readonly' => true ),
+				),
 				'single'            => true,
 				'type'              => 'integer',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_documents' );
-				},
+				'auth_callback'     => '__return_false',
 			)
 		);
 
