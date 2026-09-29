@@ -386,7 +386,6 @@ class WP_Document_Revisions_Validate_Structure {
 			if ( ! self::is_attachment_of( $parm, $id ) ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
 			}
-			$title     = get_post_field( 'post_title', $id );
 			$attach_id = $parm;
 			$attach    = get_post( $attach_id );
 
@@ -409,7 +408,7 @@ class WP_Document_Revisions_Validate_Structure {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
 			}
 
-			self::rename_to_hash( $attach_id, $id, $file, $title );
+			self::rename_to_hash( $attach_id, $id, $file );
 		}
 
 		if ( 15 === $params['code'] ) {
@@ -425,9 +424,8 @@ class WP_Document_Revisions_Validate_Structure {
 			// make sure we're looking at the document directory.
 			add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
 
-			$title = get_post_field( 'post_title', $id );
 			foreach ( self::identify_unhashed_files( $id ) as $attach_id => $paths ) {
-				self::rename_to_hash( $attach_id, $id, $paths['file'], $title, $paths['target'] );
+				self::rename_to_hash( $attach_id, $id, $paths['file'], $paths['target'] );
 			}
 		}
 
@@ -1361,22 +1359,21 @@ class WP_Document_Revisions_Validate_Structure {
 	}
 
 	/**
-	 * Renames a document file to an MD5-format (hashed) name.
+	 * Renames a document file to a random MD5-format (hashed) name.
 	 *
 	 * @since 5.5.0
 	 *
 	 * @param int    $attach_id id of the attachment post object.
 	 * @param int    $doc_id    id of the document post object.
 	 * @param string $file      current file path.
-	 * @param string $title     document title (seed for the new name).
 	 * @param string $dir       directory to store the renamed file in (default: the file's current directory).
 	 * @return void
 	 */
-	private static function rename_to_hash( int $attach_id, int $doc_id, string $file, string $title, string $dir = '' ): void {
+	private static function rename_to_hash( int $attach_id, int $doc_id, string $file, string $dir = '' ): void {
 		global $wpdb;
 
 		$dir      = ( '' === $dir ) ? dirname( $file ) : $dir;
-		$new_name = md5( $title . $attach_id . microtime() );
+		$new_name = WP_Document_Revisions::random_file_name();
 		if ( ! is_dir( $dir ) ) {
 			wp_mkdir_p( $dir );
 		}
