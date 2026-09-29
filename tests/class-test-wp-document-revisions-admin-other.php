@@ -1655,24 +1655,40 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Tests the media query code.
+	 * Tests the media query code excludes document attachments and keeps other media. (#725)
 	 */
 	public function test_media_query_code() {
 		global $wpdr;
 
-		$join = $wpdr->admin->filter_media_join( '' );
+		// the join is no longer needed, but kept as a no-op for back-compat.
+		self::assertEquals( '', $wpdr->admin->filter_media_join( '' ), 'join unchanged' );
 
-		self::assertNotEmpty( $join, 'join not empty' );
-		self::assertEquals( 2, (int) substr_count( $join, 'wpdr' ), '<wpdr not found twice 1' );
+		$page_id      = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		$doc_child    = self::factory()->attachment->create_object( 'doc-child.txt', self::$editor_public_post, array( 'post_mime_type' => 'text/plain' ) );
+		$page_child   = self::factory()->attachment->create_object( 'page-child.jpg', $page_id, array( 'post_mime_type' => 'image/jpeg' ) );
+		$unattached   = self::factory()->attachment->create_object( 'unattached.jpg', 0, array( 'post_mime_type' => 'image/jpeg' ) );
+		$media_params = array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		);
 
-		$where = $wpdr->admin->filter_media_where( '' );
+		$unfiltered = get_posts( $media_params + array( 'suppress_filters' => false ) );
+		self::assertContains( $doc_child, $unfiltered, 'document attachment present without filter' );
 
-		self::assertNotEmpty( $where, 'where not empty' );
-		self::assertEquals( 2, (int) substr_count( $where, 'wpdr' ), '<wpdr not found twice 2' );
+		$query = $wpdr->admin->filter_from_media_grid( array() );
+		self::assertSame( array(), $query, 'query args unchanged' );
 
-		$query = array();
-		$query = $wpdr->admin->filter_from_media_grid( $query );
-		self::assertTrue( true, 'run' );
+		$filtered = get_posts( $media_params + array( 'suppress_filters' => false ) );
+		remove_filter( 'posts_where_paged', array( $wpdr->admin, 'filter_media_where' ), 20 );
+
+		self::assertNotContains( $doc_child, $filtered, 'document attachment excluded' );
+		self::assertContains( $page_child, $filtered, 'page attachment kept' );
+		self::assertContains( $unattached, $filtered, 'unattached media kept' );
+		foreach ( $filtered as $id ) {
+			self::assertNotEquals( 'document', get_post_type( wp_get_post_parent_id( $id ) ), 'no document children remain' );
+		}
 	}
 
 	/**
