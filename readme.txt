@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.5.0
+Stable tag: 5.6.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -314,6 +314,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 = 5.6.0 =
 
 * Speed up the Media Library on sites with many attachments. Hiding document files from the library joined the posts table to itself, which took several seconds per page on large libraries and ran on every scroll now that WordPress 7.1 loads the library with infinite scroll. It now uses a subquery that returns the same results in a fraction of the time. (#725, #730)
+* The document's attachment id (`_document_attachment_id` meta) can now only be set by the plugin. REST requests that include it have it ignored, and users can no longer edit it as a custom field. (#774)
 * Fix other users' private documents appearing in status queries that span several post types (e.g. from search plugins). (#766)
 * Fix fatal errors when a theme or plugin applies core filters such as `get_next_post_where` with fewer or unexpected arguments. (#732, #744)
 * Fix the Revision Log box missing for documents created before 5.0. Their attachment id is stored only in the document content, which is stripped for editing before the plugin looked for it, so the id was never saved and the box stayed hidden until a new version was uploaded. (#726, #731)
@@ -321,7 +322,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Draft and pending document links now use the site's home URL rather than the WordPress install URL, fixing links on Bedrock and other subdirectory installs. (#746)
 * Fix the network "Document Date in Permalink" setting having no effect on multisite permalinks. (#747)
 * Fix stale document revision lists after revisions or attachments were added or deleted outside a document save, which persisted with a persistent object cache. (#751)
-* Validate Structure no longer treats a document's featured image, or another image uploaded to it later, as the document's file. (#767)
+* Validate Structure no longer treats a document's featured image, or another image uploaded to it later, as the document's file. It now uses the document's stored attachment id when that still names one of its files. (#767, #773)
 * The `override-document-lock` ability now checks that you can edit the document before reporting its lock state, and overrides the lock the same way the editor does: it notifies the previous owner and fires `document_lock_override`. (#749)
 * The document editor, Revision Log, revision shortcode/block, feed, widgets and `get-document-revisions` ability now show who uploaded the current version instead of the document's owner. New `document_revision_author` filter. (#750)
 * Requests for a document with no file now return 404 instead of 403. `document_no_document_response_code` also receives the document and revision. (#761)
