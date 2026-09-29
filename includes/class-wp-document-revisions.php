@@ -155,6 +155,7 @@ class WP_Document_Revisions {
 
 		// filter the queries to ensure readable.
 		add_action( 'pre_get_posts', array( $this, 'retrieve_documents' ) );
+		add_filter( 'posts_where', array( $this, 'restrict_private_documents' ), 10, 2 );
 
 		// rewrites and permalinks.
 		/**

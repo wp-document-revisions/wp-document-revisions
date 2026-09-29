@@ -102,21 +102,53 @@ trait WP_Document_Revisions_Query {
 	 */
 	public function retrieve_documents( WP_Query $query ): void {
 		$query_fields = (array) $query->query;
-		if ( isset( $query_fields['post_type'] ) && 'document' === $query_fields['post_type'] ) {
-			// not for administrator.
-			$user = wp_get_current_user();
-			if ( in_array( 'administrator', $user->roles, true ) ) {
-				return;
-			}
 
-			// dropped through initial tests.
-			if ( isset( $query_fields['post_status'] ) && ! empty( $query_fields['post_status'] ) ) {
-				if ( ! isset( $query_fields['perm'] ) ) {
-					// create/modify taxonomy query.
-					$query->set( 'perm', 'readable' );
-				}
-			}
+		// Only queries that ask for specific statuses skip WordPress's own visibility rules.
+		if ( empty( $query_fields['post_status'] ) || isset( $query_fields['perm'] ) ) {
+			return;
 		}
+
+		// Does the query include documents? post_type can be a string, an array, or 'any'.
+		$post_types = isset( $query_fields['post_type'] ) ? (array) $query_fields['post_type'] : array();
+		if ( ! in_array( 'document', $post_types, true ) && ! in_array( 'any', $post_types, true ) ) {
+			return;
+		}
+
+		// Users who can read every private document see them all anyway.
+		$doc_type = get_post_type_object( 'document' );
+		if ( ! $doc_type || current_user_can( $doc_type->cap->read_private_posts ) ) {
+			return;
+		}
+
+		if ( array( 'document' ) === $post_types ) {
+			$query->set( 'perm', 'readable' );
+			return;
+		}
+
+		// For several post types, core would check one combined capability that nobody
+		// has, hiding other users' private posts of every type. Only restrict documents.
+		$query->set( 'wpdr_restrict_private_documents', true );
+	}
+
+	/**
+	 * Hides other users' private documents from a multi-post-type query flagged by
+	 * retrieve_documents().
+	 *
+	 * @since 5.6.0
+	 * @param string   $where the WHERE clause.
+	 * @param WP_Query $query the query.
+	 * @return string
+	 */
+	public function restrict_private_documents( $where, $query ) {
+		if ( ! $query instanceof WP_Query || ! $query->get( 'wpdr_restrict_private_documents' ) ) {
+			return $where;
+		}
+
+		global $wpdb;
+		return $where . $wpdb->prepare(
+			" AND NOT ( {$wpdb->posts}.post_type = 'document' AND {$wpdb->posts}.post_status = 'private' AND {$wpdb->posts}.post_author <> %d )",
+			get_current_user_id()
+		);
 	}
 
 

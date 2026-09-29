@@ -173,6 +173,32 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		$file = apply_filters( 'document_serve', $file, $post->ID, $attach->ID );
 
+		/**
+		 * Filters a URL to send the (already authorized) request to instead of streaming the file
+		 * through PHP, e.g. a signed CDN or S3 URL for large files. Return '' to serve normally.
+		 *
+		 * The URL isn't restricted to this site, so only return URLs you trust, and prefer
+		 * short-lived signed URLs for private documents: anyone with the URL can use it until it
+		 * expires. get_raw_attachment_url() returns the attachment's storage URL.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $url    URL to redirect to. Default ''.
+		 * @param WP_Post $post   the document.
+		 * @param WP_Post $attach the attachment being served.
+		 * @param string  $file   path of the file to be served.
+		 */
+		$redirect = apply_filters( 'document_serve_redirect_url', '', $post, $attach, $file );
+		if ( is_string( $redirect ) && '' !== $redirect ) {
+			// The target may only be valid for this user, so don't let the redirect be cached.
+			nocache_headers();
+			wp_redirect( $redirect, 302, 'WP Document Revisions' ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- off-site storage URLs are the point.
+			if ( class_exists( 'WP_UnitTestCase' ) ) {
+				return $template;
+			}
+			exit;
+		}
+
 		// We may override this later.
 		status_header( 200 );
 
@@ -182,10 +208,8 @@ trait WP_Document_Revisions_File_Handler {
 		$filename      = $post->post_name;
 		$filename     .= ( 0 === $version_label ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version_label;
 
-		// we want the true attachment URL, not the permalink, so temporarily remove our filter.
-		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$filename .= $this->get_extension( wp_get_attachment_url( $attach->ID ) );
-		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
+		// we want the true attachment URL, not the permalink.
+		$filename .= $this->get_extension( (string) $this->get_raw_attachment_url( $attach->ID ) );
 
 		// Sanitize the filename for use in the Content-Disposition header to prevent header injection
 		// or quote-escape attacks via filterable extension/post slug values: strip control characters
@@ -553,6 +577,31 @@ trait WP_Document_Revisions_File_Handler {
 		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
 
 		return $metadata;
+	}
+
+	/**
+	 * Returns an attachment's real storage URL, bypassing the filter that replaces document
+	 * attachment URLs with the (authenticated) document permalink.
+	 *
+	 * Don't expose it for private documents unless the storage location itself is protected.
+	 *
+	 * @since 5.6.0
+	 * @param int $attach_id the attachment ID.
+	 * @return string|false the URL, or false if there is none.
+	 */
+	public function get_raw_attachment_url( int $attach_id ) {
+		$priority = has_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
+		if ( false !== $priority ) {
+			remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), $priority );
+		}
+
+		$url = wp_get_attachment_url( $attach_id );
+
+		if ( false !== $priority ) {
+			add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), $priority, 2 );
+		}
+
+		return $url;
 	}
 
 	/**
@@ -1004,9 +1053,7 @@ trait WP_Document_Revisions_File_Handler {
 		}
 
 		// temporarily remove our filter to get the true URL, not the permalink.
-		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$url = wp_get_attachment_url( $attach->ID );
-		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
+		$url = $this->get_raw_attachment_url( $attach->ID );
 
 		return $url;
 	}
