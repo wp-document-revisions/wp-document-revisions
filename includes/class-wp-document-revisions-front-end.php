@@ -1082,7 +1082,7 @@ class WP_Document_Revisions_Front_End {
 		// find the block styling.
 		$wrapper = $this->get_block_attributes();
 
-		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . get_the_title( $atts['id'] ) . '</h2>';
+		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . esc_html( get_the_title( $atts['id'] ) ) . '</h2>';
 		$output .= $this->revisions_shortcode( $atts );
 		if ( ! empty( $wrapper ) ) {
 			$output = '<div ' . $wrapper . '>' . $output . '</div>';
@@ -1194,7 +1194,12 @@ class WP_Document_Revisions_Front_End {
 	 * @since 5.5.0
 	 */
 	public function get_block_attributes(): string {
-		return WP_Block_Supports::$block_to_render ? get_block_wrapper_attributes() : '';
+		// $block_to_render is set while any dynamic block renders (e.g. core/post-content running shortcodes), so check it is ours.
+		$block = WP_Block_Supports::$block_to_render;
+		if ( ! is_array( $block ) || 0 !== strpos( (string) ( $block['blockName'] ?? '' ), 'wp-document-revisions/' ) ) {
+			return '';
+		}
+		return get_block_wrapper_attributes();
 	}
 }
 
