@@ -282,7 +282,6 @@ class WP_Document_Revisions_Front_End {
 			'post__not_in',
 			'post_name__in',
 			'has_password',
-			'post_password',
 			'post_status',
 			'numberposts',
 			'year',
@@ -450,7 +449,9 @@ class WP_Document_Revisions_Front_End {
 				);
 				echo '&nbsp;&nbsp;<small><a class="document-mod" href="' . esc_attr( $link ) . '">[' . esc_html__( 'Edit', 'wp-document-revisions' ) . ']</a></small><br />';
 			}
-			if ( $atts_show_thumb ) {
+			// Password-protected documents don't show their thumbnail or description.
+			$protected = post_password_required( $document->ID );
+			if ( $atts_show_thumb && ! $protected ) {
 				if ( is_null( $doc_dir ) ) {
 					// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
 					// so cannot change within call and may be wrong, so possibly replace it in the output.
@@ -497,7 +498,7 @@ class WP_Document_Revisions_Front_End {
 			}
 			// is_numeric is old format. WPDR comment will be stripped by wp_kses_post.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ( $atts_show_descr && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
+			echo ( $atts_show_descr && ! $protected && ! is_numeric( $document->post_content ) ) ? '<div class="wp-block-paragraph">' . wp_kses_post( $document->post_content ) . '</div>' : '';
 			?>
 			</li>
 		<?php } ?>

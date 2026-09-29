@@ -64,6 +64,9 @@ trait WP_Document_Revisions_Query {
 		$query  = new WP_Query( $args );
 		$output = array();
 
+		// perm=readable only restricts private statuses, so check each document.
+		$query->posts = array_values( array_filter( $query->posts, array( $this, 'can_list_document' ) ) );
+
 		if ( $return_attachments ) {
 
 			// loop through each document and build an array of attachment objects
@@ -89,6 +92,35 @@ trait WP_Document_Revisions_Query {
 		return $output;
 	}
 
+
+	/**
+	 * Whether the current user may see a document in a list.
+	 *
+	 * Published documents are listed like other published posts (unless document_read_uses_read
+	 * is turned off), other statuses need read_document, and trashed documents need edit_document.
+	 *
+	 * @since 5.5.1
+	 *
+	 * @param WP_Post|int $document document post or ID.
+	 * @return bool
+	 */
+	public function can_list_document( $document ): bool {
+		$document = get_post( $document );
+		if ( ! $document instanceof WP_Post ) {
+			return false;
+		}
+
+		if ( 'trash' === $document->post_status ) {
+			return current_user_can( 'edit_document', $document->ID );
+		}
+
+		// Don't hide published documents from logged-in users without a role here (e.g. on multisite).
+		if ( 'publish' === $document->post_status && apply_filters( 'document_read_uses_read', true ) ) {
+			return true;
+		}
+
+		return current_user_can( 'read_document', $document->ID );
+	}
 
 	/**
 	 * Try to retrieve only correct documents.
