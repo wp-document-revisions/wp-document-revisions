@@ -56,6 +56,16 @@ class WP_Document_Revisions {
 	public static $wpdr_document_dir = null;
 
 	/**
+	 * Set while resolving the default upload directory, so the document upload_dir
+	 * filter doesn't apply to its own lookup.
+	 *
+	 * @var bool
+	 *
+	 * @since 5.6.0
+	 */
+	private static $resolving_upload_dir = false;
+
+	/**
 	 * The document admin class.
 	 *
 	 * @var object | null
@@ -72,6 +82,15 @@ class WP_Document_Revisions {
 	 * @since 3.2
 	 */
 	public static $doc_image = true;
+
+	/**
+	 * Whether a document file upload is in progress in this request.
+	 *
+	 * @var bool
+	 *
+	 * @since 5.6.0
+	 */
+	private static $document_upload = false;
 
 	/**
 	 * Identify if processing document or image directory.
@@ -112,7 +131,9 @@ class WP_Document_Revisions {
 	public function __construct() {
 		self::$instance = $this;
 
-		// set the standard default directory - creating the cache (before applying filter).
+		// Kept for code that reads the static directly. The plugin itself resolves the
+		// uploads directory when it's needed (default_upload_dir()), after other plugins,
+		// such as S3-Uploads, have registered their upload_dir filters.
 		self::$wp_default_dir = wp_upload_dir( null, true, true );
 
 		// admin. translations need to be called on init, not plugins_loaded.
@@ -134,6 +155,7 @@ class WP_Document_Revisions {
 
 		// filter the queries to ensure readable.
 		add_action( 'pre_get_posts', array( $this, 'retrieve_documents' ) );
+		add_filter( 'posts_where', array( $this, 'restrict_private_documents' ), 10, 2 );
 
 		// rewrites and permalinks.
 		/**
@@ -188,14 +210,20 @@ class WP_Document_Revisions {
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
-		// initialise document directory (will itself populate cache).
-		$this->document_upload_dir();
+		add_filter( 'wp_generate_attachment_metadata', array( $this, 'end_document_upload' ), 20, 2 );
+		// Document-specific upload types and size limit (after core's multisite restrictions).
+		add_filter( 'upload_mimes', array( $this, 'document_upload_mimes' ), 20 );
+		add_filter( 'upload_size_limit', array( $this, 'document_upload_size_limit' ), 20 );
+		add_filter( 'site_option_fileupload_maxk', array( $this, 'document_fileupload_maxk' ), 20 );
+		// The document directory is resolved on first use and again after switch_blog().
+		add_action( 'switch_blog', array( $this, 'reset_document_upload_dir' ) );
 
 		// locking.
 		add_action( 'wp_ajax_override_lock', array( $this, 'override_lock' ) );
 
 		// cache clean.
 		add_action( 'save_post_document', array( $this, 'clear_cache' ), 20, 3 );
+		add_action( 'clean_post_cache', array( $this, 'flush_revision_cache' ), 10, 2 );
 
 		// Edit Flow or PublishPress Statuses.
 		add_action( 'ef_module_options_loaded', array( $this, 'edit_flow_support' ) );
@@ -212,6 +240,10 @@ class WP_Document_Revisions {
 
 		// block external processes from deleting revisions.
 		add_filter( 'pre_delete_post', array( $this, 'possibly_delete_revision' ), 9999, 3 );
+
+		// only allow the attachment id meta to point at an attachment of the same document.
+		add_filter( 'add_post_metadata', array( $this, 'guard_attachment_meta' ), 10, 4 );
+		add_filter( 'update_post_metadata', array( $this, 'guard_attachment_meta' ), 10, 4 );
 
 		// revisions management.
 		add_filter( 'wp_revisions_to_keep', array( $this, 'manage_document_revisions_limit' ), 999, 2 );
@@ -274,13 +306,53 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Whether to register the plugin's abilities (and their category) with the Abilities API.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	private function register_abilities_enabled(): bool {
+		/**
+		 * Filters whether to register WP Document Revisions' abilities with the Abilities API.
+		 *
+		 * Return false to keep documents out of the Abilities API entirely, including its
+		 * REST endpoints and any MCP adapter.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $register Whether to register the abilities. Default true.
+		 */
+		return (bool) apply_filters( 'document_register_abilities', true );
+	}
+
+	/**
+	 * Whether the classic document edit screen shows the Document Description editor.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function show_description_editor(): bool {
+		/**
+		 * Filters whether to show the Document Description editor on the classic edit screen.
+		 *
+		 * Return false for sites that don't use document descriptions. Existing
+		 * descriptions are kept. Has no effect in block editor mode, which needs the editor.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show Whether to show the editor. Default true.
+		 */
+		return (bool) apply_filters( 'document_show_description_editor', true );
+	}
+
+	/**
 	 * Registers the document ability category for the Abilities API.
 	 *
 	 * @since 3.9.1
 	 * @return void
 	 */
 	public function register_ability_category(): void {
-		if ( ! function_exists( 'wp_register_ability_category' ) ) {
+		if ( ! function_exists( 'wp_register_ability_category' ) || ! $this->register_abilities_enabled() ) {
 			return;
 		}
 
@@ -305,7 +377,7 @@ class WP_Document_Revisions {
 	 * @return void
 	 */
 	public function register_abilities(): void {
-		if ( ! function_exists( 'wp_register_ability' ) ) {
+		if ( ! function_exists( 'wp_register_ability' ) || ! $this->register_abilities_enabled() ) {
 			return;
 		}
 
@@ -357,7 +429,16 @@ class WP_Document_Revisions {
 				'category'            => 'wp-document-revisions',
 				'execute_callback'    => array( $this, 'ability_get_document_info' ),
 				'permission_callback' => function () {
-					return current_user_can( 'read_documents' );
+					/**
+					 * Filters the capability needed to use the get-document-info ability.
+					 *
+					 * The ability also checks read_document on the specific document.
+					 *
+					 * @since 5.6.0
+					 *
+					 * @param string $capability Capability. Default 'read_documents'.
+					 */
+					return current_user_can( (string) apply_filters( 'document_get_info_ability_capability', 'read_documents' ) );
 				},
 				'input_schema'        => array(
 					'type'       => 'object',
@@ -563,7 +644,7 @@ class WP_Document_Revisions {
 			);
 		}
 
-		if ( ! current_user_can( 'read_document', $document_id ) ) {
+		if ( ! current_user_can( 'read_document', $document_id ) || post_password_required( $post ) ) {
 			return new WP_Error(
 				'document_forbidden',
 				__( 'You do not have permission to view revisions for this document.', 'wp-document-revisions' ),
@@ -584,7 +665,7 @@ class WP_Document_Revisions {
 
 		if ( is_array( $revisions ) ) {
 			foreach ( $revisions as $revision ) {
-				$author   = get_userdata( (int) $revision->post_author );
+				$author   = get_userdata( $this->get_revision_author( $revision ) );
 				$result[] = array(
 					'id'     => $revision->ID,
 					'date'   => $revision->post_date,
@@ -616,6 +697,16 @@ class WP_Document_Revisions {
 			);
 		}
 
+		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive
+		// override cap, before saying anything about the document's lock.
+		if ( ! current_user_can( 'edit_document', $document_id ) ) {
+			return new WP_Error(
+				'document_forbidden',
+				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
+				array( 'status' => 403 )
+			);
+		}
+
 		$previous_lock = $this->get_document_lock( $document_id );
 
 		if ( ! $previous_lock ) {
@@ -625,16 +716,9 @@ class WP_Document_Revisions {
 			);
 		}
 
-		// Mirror the AJAX `override_lock` path: require per-document edit access, not just the primitive override cap.
-		if ( ! current_user_can( 'edit_document', $document_id ) ) {
-			return new WP_Error(
-				'document_forbidden',
-				__( 'You do not have permission to override the lock on this document.', 'wp-document-revisions' ),
-				array( 'status' => 403 )
-			);
-		}
-
-		delete_post_meta( $document_id, '_edit_lock' );
+		// Take the lock the same way the editor's override button does, so the previous owner is
+		// notified and document_lock_override fires.
+		$this->take_document_lock( $document_id, (int) wp_check_post_lock( $document_id ) );
 
 		return array(
 			'success'       => true,
@@ -703,6 +787,38 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Blocks writes of the attachment id meta that name another document's attachment.
+	 *
+	 * The meta is writable over REST (and by other code paths from forgeable input), so it
+	 * must not name an attachment that is parented to a different post.
+	 *
+	 * @since 5.5.0
+	 * @param null|bool $check      Whether to allow the write. Null to carry on.
+	 * @param int       $object_id  Post id.
+	 * @param string    $meta_key   Meta key.
+	 * @param mixed     $meta_value Meta value.
+	 * @return null|bool Null to allow the write, false to block it.
+	 */
+	public function guard_attachment_meta( $check, $object_id, $meta_key, $meta_value ) {
+		if ( '_document_attachment_id' !== $meta_key || null !== $check ) {
+			return $check;
+		}
+
+		$attach_id = absint( $meta_value );
+		if ( 0 === $attach_id ) {
+			return $check;
+		}
+
+		// Only an existing attachment of another post is a threat; anything else never resolves.
+		$attachment = get_post( $attach_id );
+		if ( $attachment instanceof WP_Post && 'attachment' === $attachment->post_type && (int) $attachment->post_parent !== (int) $object_id ) {
+			return false;
+		}
+
+		return $check;
+	}
+
+	/**
 	 * Registers the document custom post type.
 	 *
 	 * @since 0.5
@@ -763,6 +879,9 @@ class WP_Document_Revisions {
 		// Add excerpt support when block editor is enabled (used for Revision Summary).
 		if ( apply_filters( 'document_use_block_editor', false ) ) {
 			$args['supports'][] = 'excerpt';
+		} elseif ( ! $this->show_description_editor() ) {
+			// The block editor needs editor support, so this only applies to the classic editor.
+			$args['supports'] = array_values( array_diff( $args['supports'], array( 'editor' ) ) );
 		}
 
 		// Ordinarily read_post (read_document) maps to read, but if read not to be used, we need to map to primitive read_documents.
@@ -794,19 +913,21 @@ class WP_Document_Revisions {
 		 */
 		register_post_type( 'document', apply_filters( 'document_revisions_cpt', $args ) );
 
-		// Register meta for block editor attachment ID management.
+		// Register the attachment ID meta so the block editor can read it. Only the server
+		// writes it (on upload), so users may not edit it. REST writes also drop it (see
+		// WP_Document_Revisions_Manage_Rest::drop_attachment_meta).
 		register_post_meta(
 			'document',
 			'_document_attachment_id',
 			array(
-				'show_in_rest'      => true,
+				'show_in_rest'      => array(
+					'schema' => array( 'readonly' => true ),
+				),
 				'single'            => true,
 				'type'              => 'integer',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_documents' );
-				},
+				'auth_callback'     => '__return_false',
 			)
 		);
 
@@ -1212,12 +1333,12 @@ class WP_Document_Revisions {
 	/**
 	 * Formerly removed nocache headers from document downloads on IE < 8. No longer hooked.
 	 *
-	 * @deprecated 5.6.0 Internet Explorer is no longer supported.
+	 * @deprecated 5.5.0 Internet Explorer is no longer supported.
 	 *
 	 * @param WP $wp The global WP object.
 	 * @return void
 	 */
 	public function ie_cache_fix( WP $wp ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __METHOD__, '5.6.0' );
+		_deprecated_function( __METHOD__, '5.5.0' );
 	}
 }

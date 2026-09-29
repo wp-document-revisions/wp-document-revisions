@@ -246,6 +246,70 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Documents created before 5.0 carry the attachment id only in post_content.
+	 * Opening them in the editor must populate the meta and show the Revision Log,
+	 * even though the edit-context content has had the id stripped. A forged id
+	 * (an attachment not parented to the document) must not be promoted to meta. (#726)
+	 */
+	public function test_meta_cb_populates_meta_for_legacy_document() {
+		global $wpdr, $wpdb, $post, $wp_meta_boxes;
+
+		wp_set_current_user( self::$editor_user_id );
+
+		$other_doc = self::factory()->post->create( array( 'post_type' => 'document' ) );
+		$foreign   = self::factory()->attachment->create_object( 'foreign.txt', $other_doc, array( 'post_mime_type' => 'text/plain' ) );
+
+		foreach ( array( 'marker', 'numeric', 'forged' ) as $scenario ) {
+			$doc_id = self::factory()->post->create(
+				array(
+					'post_title'   => 'Legacy Content Doc - ' . $scenario,
+					'post_status'  => 'private',
+					'post_author'  => self::$editor_user_id,
+					'post_content' => '',
+					'post_type'    => 'document',
+				)
+			);
+			self::assertFalse( is_wp_error( $doc_id ), 'Failed inserting legacy-content document' );
+
+			$attach_id = ( 'forged' === $scenario ? $foreign : self::factory()->attachment->create_object( 'legacy.txt', $doc_id, array( 'post_mime_type' => 'text/plain' ) ) );
+			$content   = ( 'numeric' === $scenario ? (string) $attach_id : '<!-- WPDR ' . $attach_id . ' -->' );
+
+			// Simulate a pre-5.0 document: id only in post_content, no attachment id meta.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $doc_id ) );
+			clean_post_cache( $doc_id );
+			delete_post_meta( $doc_id, '_document_attachment_id' );
+			delete_post_meta( $doc_id, 'document_attachment_id' );
+
+			// remove_attachment_id() keys off the global post, as on post.php.
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$post = get_post( $doc_id );
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$post = get_post( $doc_id, OBJECT, 'edit' );
+			self::assertStringNotContainsString( (string) $attach_id, $post->post_content, 'edit context strips the id: ' . $scenario );
+
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$wp_meta_boxes = array();
+			$wpdr->admin->meta_cb();
+
+			$meta = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+			$low  = ( isset( $wp_meta_boxes['document']['normal']['low'] ) ? $wp_meta_boxes['document']['normal']['low'] : array() );
+			if ( 'forged' === $scenario ) {
+				self::assertEquals( 0, $meta, 'forged id not promoted to meta' );
+				self::assertArrayNotHasKey( 'revision-log', $low, 'no revision log for forged id' );
+			} else {
+				self::assertEquals( $attach_id, $meta, 'meta populated from raw content: ' . $scenario );
+				self::assertArrayHasKey( 'revision-log', $low, 'revision log shown: ' . $scenario );
+			}
+
+			wp_delete_post( $doc_id, true );
+		}
+
+		wp_delete_post( $foreign, true );
+		wp_delete_post( $other_doc, true );
+	}
+
+	/**
 	 * Orphan attachment detection (code 14) and the document_check_orphans
 	 * filter that disables it. (#571)
 	 */

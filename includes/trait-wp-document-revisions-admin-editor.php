@@ -112,8 +112,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		add_meta_box( 'revision-summary', __( 'Revision Summary', 'wp-document-revisions' ), array( $this, 'revision_summary_cb' ), 'document', 'normal', 'default' );
 		add_meta_box( 'document', __( 'Document', 'wp-document-revisions' ), array( $this, 'document_metabox' ), 'document', 'normal', 'high' );
 
-		// $post object has the document id stripped out for editing, so check meta data.
-		if ( absint( get_post_meta( $post->ID, '_document_attachment_id', true ) ) > 0 ) {
+		// $post object has the document id stripped out for editing, so check meta data
+		// (populated from the raw content for documents that pre-date it).
+		if ( $this->populate_attachment_meta_from_raw( $post->ID ) > 0 ) {
 			add_meta_box( 'revision-log', __( 'Revision Log', 'wp-document-revisions' ), array( $this, 'revision_metabox' ), 'document', 'normal', 'low' );
 		}
 
@@ -169,13 +170,13 @@ trait WP_Document_Revisions_Admin_Editor {
 			$post->post_content = $wpdr->format_doc_id( $post->post_content );
 		}
 		// put the document id in metadata.
-		$attach = $wpdr->populate_attachment_meta( $post->ID, $post->post_content );
+		$attach = $this->populate_attachment_meta_from_raw( $post->ID );
 
 		// set the description field.
 		$descr = preg_replace( '/<!-- WPDR \s*\d+ -->/', '', $post->post_content );
 		?>
 		<input type="hidden" id="post_content" name="post_content" value="<?php echo esc_attr( $descr ); ?>" />
-		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( $attach ); ?>" />
+		<input type="hidden" id="curr_attach" name="curr_attach" value="<?php echo esc_attr( (string) $attach ); ?>" />
 		<input type="hidden" id="attach_ext" name="attach_ext" value="" />
 		<?php
 		$lock_holder = $wpdr->get_document_lock( $post );
@@ -206,7 +207,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			<?php
 			$mod_date = $latest_version->post_modified;
 			// translators: %1$s is the post modified date in words, %2$s is the post modified date in time format, %3$s is how long ago the post was modified, %4$s is the author's name.
-			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $latest_version->post_author ) ) );
+			$checked_in = sprintf( __( 'Checked in <abbr class="timestamp" title="%1$s" id="A%2$s">%3$s</abbr> ago by %4$s', 'wp-document-revisions' ), esc_attr( $mod_date ), esc_attr( (string) get_post_modified_time( 'U', true, $latest_version ) ), esc_html( human_time_diff( (int) get_post_modified_time( 'U', true, $post->ID ), time() ) ), esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $latest_version ) ) ) );
 			echo wp_kses(
 				$checked_in,
 				array(
@@ -433,6 +434,28 @@ trait WP_Document_Revisions_Admin_Editor {
 		return ( $attachment instanceof WP_Post
 			&& 'attachment' === $attachment->post_type
 			&& (int) $attachment->post_parent === $doc_id );
+	}
+
+
+	/**
+	 * Populates the attachment id meta for the edit screen, whose post_content has had the
+	 * id stripped (content_edit_pre). Documents created before 5.0 hold the id only in
+	 * post_content, so read it raw, but only trust an id parented to this document so a
+	 * forged marker left in stored content is never promoted to meta. (#726)
+	 *
+	 * @since 5.5.0
+	 * @param int $post_id the document id.
+	 * @return int the attachment id, or 0 if none.
+	 */
+	private function populate_attachment_meta_from_raw( int $post_id ): int {
+		$wpdr    = self::$parent;
+		$content = (string) get_post_field( 'post_content', $post_id, 'raw' );
+
+		if ( ! $this->attachment_belongs_to_document( absint( $wpdr->extract_document_id( $content ) ), $post_id ) ) {
+			$content = '';
+		}
+
+		return $wpdr->populate_attachment_meta( $post_id, $content );
 	}
 
 
@@ -809,7 +832,7 @@ trait WP_Document_Revisions_Admin_Editor {
 	 * @param WP_Post $post Post object.
 	 */
 	public function prepare_editor( WP_Post $post ): void {
-		if ( 'document' !== $post->post_type ) {
+		if ( 'document' !== $post->post_type || ! self::$parent->show_description_editor() ) {
 			return;
 		}
 
@@ -1031,7 +1054,7 @@ trait WP_Document_Revisions_Admin_Editor {
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $fn ); ?>" title="<?php echo esc_attr( $mod_date ); ?>" class="timestamp"><?php echo esc_html( human_time_diff( strtotime( $revision->post_modified_gmt ), time() ) ); ?></a></td>
-				<td><?php echo esc_html( get_the_author_meta( 'display_name', $revision->post_author ) ); ?></td>
+				<td><?php echo esc_html( get_the_author_meta( 'display_name', $wpdr->get_revision_author( $revision ) ) ); ?></td>
 				<td><?php echo esc_html( $revision->post_excerpt ); ?></td>
 				<?php if ( $can_edit_doc && $post->ID !== $revision->ID && $attach && $attach_id !== $attach->ID ) { ?>
 					<td><a href="
@@ -1130,8 +1153,9 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 
 		// misuse of filter, but can use to determine whether the revisions can be merged.
-		// keep revision if title or content (document linked only) changed. Also if author changed.
-		if ( $post->post_title !== $last_revision->post_title || $post->post_author !== $last_revision->post_author ) {
+		// keep revision if title or content (document linked only) changed. Also if someone else saved the
+		// last revision (a revision's author is the user who saved it, whereas $post->post_author is the owner).
+		if ( $post->post_title !== $last_revision->post_title || get_current_user_id() !== (int) $last_revision->post_author ) {
 			return true;
 		}
 

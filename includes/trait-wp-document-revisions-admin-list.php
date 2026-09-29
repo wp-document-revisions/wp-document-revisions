@@ -61,7 +61,131 @@ trait WP_Document_Revisions_Admin_List {
 			// @phpstan-ignore argument.type ($args carry the custom 'wpdr_added' marker consumed by our pre_user_query filter; wp_dropdown_users() ignores keys it does not recognise)
 			wp_dropdown_users( $args );
 			remove_action( 'pre_user_query', array( $this, 'pre_user_query' ) );
+
+			// file filtering.
+			$file_filter = filter_input( INPUT_GET, 'wpdr_file', FILTER_SANITIZE_SPECIAL_CHARS );
+			echo '<label class="screen-reader-text" for="wpdr_file">' . esc_html__( 'Filter by file', 'wp-document-revisions' ) . '</label>';
+			echo '<select name="wpdr_file" id="wpdr_file">';
+			echo '<option value="">' . esc_html__( 'All files', 'wp-document-revisions' ) . '</option>';
+			echo '<option value="missing"' . selected( $file_filter, 'missing', false ) . '>' . esc_html__( 'Missing file', 'wp-document-revisions' ) . '</option>';
+			echo '</select>';
 		}
+	}
+
+	/**
+	 * Adds the Revisions and File columns to the documents list.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, string> $columns the columns.
+	 * @return array<string, string>
+	 */
+	public function add_file_columns( array $columns ): array {
+		$added = array(
+			'wpdr_file'      => __( 'File', 'wp-document-revisions' ),
+			'wpdr_revisions' => __( 'Revisions', 'wp-document-revisions' ),
+		);
+
+		// Before the date column, if there is one.
+		$position = array_search( 'date', array_keys( $columns ), true );
+		if ( false === $position ) {
+			return array_merge( $columns, $added );
+		}
+
+		return array_merge( array_slice( $columns, 0, $position, true ), $added, array_slice( $columns, $position, null, true ) );
+	}
+
+	/**
+	 * Outputs the Revisions and File columns.
+	 *
+	 * @since 5.6.0
+	 * @param string $column_name the column.
+	 * @param int    $post_id     the document ID.
+	 */
+	public function file_columns_cb( string $column_name, int $post_id ): void {
+		if ( 'wpdr_revisions' === $column_name ) {
+			// get_revisions() includes the document itself.
+			echo esc_html( number_format_i18n( max( 0, count( self::$parent->get_revisions( $post_id ) ) - 1 ) ) );
+			return;
+		}
+
+		if ( 'wpdr_file' !== $column_name ) {
+			return;
+		}
+
+		$attach = self::$parent->get_document( $post_id );
+		$file   = $attach instanceof WP_Post ? get_attached_file( $attach->ID ) : false;
+		if ( ! is_string( $file ) || ! is_file( $file ) ) {
+			echo '<strong class="wpdr-missing-file">' . esc_html__( 'Missing', 'wp-document-revisions' ) . '</strong>';
+			return;
+		}
+
+		$extension = strtoupper( ltrim( self::$parent->get_extension( $file ), '.' ) );
+		echo esc_html( $extension . ( '' !== $extension ? ', ' : '' ) . size_format( (int) filesize( $file ) ) );
+	}
+
+	/**
+	 * Makes the Revisions and File columns sortable.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, string> $columns sortable columns.
+	 * @return array<string, string>
+	 */
+	public function file_sortable_columns( array $columns ): array {
+		$columns['wpdr_revisions'] = 'wpdr_revisions';
+		$columns['wpdr_file']      = 'wpdr_file';
+		return $columns;
+	}
+
+	/**
+	 * Passes the "Missing file" list filter from the request to the documents query.
+	 *
+	 * @since 5.6.0
+	 * @param WP_Query $query the query.
+	 */
+	public function file_filter_query_var( WP_Query $query ): void {
+		if ( ! is_admin() || ! $query->is_main_query() || 'document' !== $query->get( 'post_type' ) ) {
+			return;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list filter.
+		if ( isset( $_GET['wpdr_file'] ) && 'missing' === sanitize_key( wp_unslash( $_GET['wpdr_file'] ) ) ) {
+			$query->set( 'wpdr_file', 'missing' );
+		}
+	}
+
+	/**
+	 * Sorts by the Revisions and File columns, and applies the "Missing file" filter.
+	 *
+	 * "Missing" here means the document isn't linked to an existing attachment; the File
+	 * column also reports files that are linked but gone from disk.
+	 *
+	 * @since 5.6.0
+	 * @param array<string, string> $clauses query clauses.
+	 * @param WP_Query              $query   the query.
+	 * @return array<string, string>
+	 */
+	public function file_columns_clauses( array $clauses, WP_Query $query ): array {
+		if ( ! is_admin() || 'document' !== $query->get( 'post_type' ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+		$attachment_id = "SELECT CAST( m.meta_value AS UNSIGNED ) FROM {$wpdb->postmeta} m WHERE m.post_id = {$wpdb->posts}.ID AND m.meta_key = '_document_attachment_id' LIMIT 1";
+
+		if ( 'missing' === $query->get( 'wpdr_file' ) ) {
+			$clauses['where'] .= " AND NOT EXISTS ( SELECT 1 FROM {$wpdb->posts} a WHERE a.ID = ( {$attachment_id} ) AND a.post_type = 'attachment' )";
+		}
+
+		$order = 'ASC' === strtoupper( (string) $query->get( 'order' ) ) ? 'ASC' : 'DESC';
+		switch ( $query->get( 'orderby' ) ) {
+			case 'wpdr_revisions':
+				$clauses['orderby'] = "( SELECT COUNT(*) FROM {$wpdb->posts} r WHERE r.post_parent = {$wpdb->posts}.ID AND r.post_type = 'revision' AND r.post_name NOT LIKE '%-autosave-%' ) {$order}, {$wpdb->posts}.ID {$order}";
+				break;
+			case 'wpdr_file':
+				$clauses['orderby'] = "( SELECT a.post_mime_type FROM {$wpdb->posts} a WHERE a.ID = ( {$attachment_id} ) ) {$order}, {$wpdb->posts}.ID {$order}";
+				break;
+		}
+
+		return $clauses;
 	}
 
 	/**
@@ -75,6 +199,17 @@ trait WP_Document_Revisions_Admin_List {
 	public function empty_state_notice(): void {
 		$screen = get_current_screen();
 		if ( is_null( $screen ) || 'edit-document' !== $screen->id ) {
+			return;
+		}
+
+		/**
+		 * Filters whether to show the first-run "add your first document" notice.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show Whether to show the notice. Default true.
+		 */
+		if ( ! apply_filters( 'document_show_empty_state', true ) ) {
 			return;
 		}
 
@@ -137,6 +272,21 @@ trait WP_Document_Revisions_Admin_List {
 	public function review_prompt(): void {
 		$screen = get_current_screen();
 		if ( is_null( $screen ) || 'edit-document' !== $screen->id ) {
+			return;
+		}
+
+		/**
+		 * Filters whether to show the WordPress.org review prompt.
+		 *
+		 * Return false to turn it off for everyone, e.g. on managed sites, rather than
+		 * faking each user's dismissal.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param bool $show    Whether to show the prompt. Default true.
+		 * @param int  $user_id Current user ID.
+		 */
+		if ( ! apply_filters( 'document_show_review_prompt', true, get_current_user_id() ) ) {
 			return;
 		}
 

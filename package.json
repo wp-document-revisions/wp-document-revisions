@@ -46,7 +46,7 @@
     "@wordpress/scripts": "^36.0.0",
     "@wordpress/shortcode": "4.56.0",
     "jest": "^30.5.2",
-    "jest-environment-jsdom": "~29.7.0",
+    "jest-environment-jsdom": "~30.5.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^5.9.3"

@@ -10,6 +10,12 @@ In: class-wp-document-revisions.php
 
 Filters the default workflow state values.
 
+## Filter document_ai_prefill_disabled
+
+In: class-wp-document-revisions-text-extraction-opt-out.php
+
+Filters whether the AI revision-log pre-fill is turned off sitewide. Defaults to whether `WPDR_AI_SUMMARY_PREFILL` is defined as `false`. When true, the pre-fill checkbox isn't shown in the "Text Extraction & AI" meta box. (Since 5.6.0.)
+
 ## Filter document_allow_revision_deletion
 
 In: trait-wp-document-revisions-revisions.php
@@ -61,6 +67,12 @@ In: trait-wp-document-revisions-file-handler.php
 
 Allows the document file extension to be manipulated.
 
+## Filter document_get_info_ability_capability
+
+In: class-wp-document-revisions.php
+
+Filters the capability needed to use the `get-document-info` ability. Default `read_documents`. The ability also checks `read_document` on the specific document. (Since 5.6.0.)
+
 ## Filter document_help_array
 
 In: trait-wp-document-revisions-admin-editor.php
@@ -71,7 +83,7 @@ Filters the default help text for current screen.
 
 In: trait-wp-document-revisions-rewrites.php
 
-Filters the home_url() for WPML and translated documents.
+Filters the home_url() for WPML and translated documents. Since 5.6.0 it also applies to draft and pending document links (`?post_type=document&p=N`).
 
 ## Filter document_internal_filename
 
@@ -95,7 +107,7 @@ Filters the lost lock document email text.
 
 In: trait-wp-document-revisions-file-handler.php
 
-Filters the http response code when a document or revision (attachment) is not found.
+Filters the HTTP response code when a document or revision has no file to serve. Default 404 (403 before 5.6.0). Receives the code, the document post and the document or revision ID selected (0 if none was found).
 
 > [!WARNING]  
 > Modifying the response code from the default value of 403 may introduce an existence vulnerability.
@@ -133,6 +145,24 @@ In: class-wp-document-revisions.php, class-wp-document-revisions-front-end.php, 
 
 Filters the users capacities to require read (default) (or read_document) capability to read a document.
 
+## Filter document_register_abilities
+
+In: class-wp-document-revisions.php
+
+Filters whether to register the plugin's abilities, and their category, with the Abilities API. Return `false` to keep documents out of the Abilities API entirely, including its REST endpoints and any MCP adapter. (Since 5.6.0.)
+
+## Filter document_register_blocks
+
+In: class-wp-document-revisions-front-end.php
+
+Filters whether to register the plugin's blocks (documents list, revisions list, document preview and recently revised documents). The shortcodes and the classic widget are unaffected. (Since 5.6.0.)
+
+## Filter document_revision_author
+
+In: trait-wp-document-revisions-revisions.php
+
+Filters the user shown as having saved a document version (the "Checked in ... by" line, Revision Log, revisions shortcode and block, feed, widgets and `get-document-revisions` ability). Receives the user ID and the document or revision post. By default, the current version shows the author of the latest revision, falling back to the document owner. (Since 5.6.0.)
+
 ## Filter document_revision_query
 
 In: trait-wp-document-revisions-revisions.php
@@ -167,7 +197,7 @@ Filters whether to merge two revisions for a change in excerpt (generally where 
 
 In: trait-wp-document-revisions-file-handler.php
 
-Filters the MIME type for a file before it is processed by WP Document Revisions.
+Filters the MIME type for a file before it is processed by WP Document Revisions. Receives the MIME type (null), the file path and, since 5.5.0, the attachment ID.
 
 ## Filter document_revisions_serve_file_headers
 
@@ -219,11 +249,29 @@ In: class-wp-document-revisions-front-end.php
 
 Filters the controlling option to display an edit option against each document.
 
+## Filter document_show_description_editor
+
+In: class-wp-document-revisions.php
+
+Filters whether the classic document edit screen shows the Document Description editor. Return `false` for sites that don't use descriptions; existing descriptions are kept. Has no effect in block editor mode. (Since 5.6.0.)
+
+## Filter document_show_empty_state
+
+In: trait-wp-document-revisions-admin-list.php
+
+Filters whether to show the first-run "Add your first document" notice on the documents list. (Since 5.6.0.)
+
 ## Filter document_show_in_rest
 
 In: class-wp-document-revisions.php
 
 Filters the show_in_rest parameter from its default value of false. Must be set to true to enable the block editor or REST API access for documents. Enabling this exposes document data via the WordPress REST API using document permissions. See [Block Editor Support](block-editor.md).
+
+## Filter document_show_review_prompt
+
+In: trait-wp-document-revisions-admin-list.php
+
+Filters whether to show the WordPress.org review prompt. Receives the current user ID. Return `false` to turn it off for everyone. (Since 5.6.0.)
 
 ## Filter document_slug
 
@@ -243,6 +291,12 @@ In: trait-wp-document-revisions-query.php
 
 Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
 
+## Filter document_text_extraction_disabled
+
+In: class-wp-document-revisions-text-extraction-opt-out.php
+
+Filters whether text extraction is turned off sitewide. Defaults to whether `WPDR_TEXT_EXTRACTION` is defined as `false`. When true, no text is extracted, the "Text Extraction & AI" meta box isn't shown and the `wpdr/v1` summary and diff REST routes aren't registered. (Since 5.6.0.)
+
 ## Filter document_thumbnail
 
 In: class-wp-document-revisions-front-end.php, class-wp-document-revisions-recently-revised-widget.php
@@ -260,6 +314,12 @@ Filter the document title from the post.
 In: trait-wp-document-revisions-admin-editor.php
 
 Filters setting the new document status to private.
+
+## Filter document_upload_directory
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the directory documents are stored in, e.g. to use a stream wrapper such as `s3://bucket/documents`. Applied when the directory is first needed on each site, after other plugins have loaded. (Since 5.6.0.)
 
 ## Filter document_use_block_editor
 
@@ -296,6 +356,12 @@ Filter to switch off md5 format attachment validation.
 In: class-wp-document-revisions-validate-structure.php
 
 Filters the list of orphan attachment records found for a document.
+
+## Filter document_validate_structure_capability
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the capability needed to see the Validate Structure screen and use its fixes. Default `edit_documents`; fixing a document also requires permission to edit it. For example, return `manage_options` to limit it to administrators. (Since 5.6.0.)
 
 ## Filter document_verify_feed_key
 

@@ -18,6 +18,9 @@ trait WP_Document_Revisions_Query {
 	/**
 	 * Returns the.document attachment associated with a post.
 	 *
+	 * The attachment id comes from (forgeable) post_content, so the attachment is only
+	 * returned if it is parented to the document that owns the post.
+	 *
 	 * @param int $post_id ID of a post object (document or revision).
 	 * @return WP_Post|false
 	 */
@@ -27,7 +30,12 @@ trait WP_Document_Revisions_Query {
 		if ( $attach_id ) {
 			$attach = get_post( $attach_id );
 			if ( (bool) $attach && 'attachment' === $attach->post_type ) {
-				return $attach;
+				// For a revision (or autosave) the owning document is its parent.
+				$post   = get_post( $post_id );
+				$doc_id = ( $post && 'revision' === $post->post_type ) ? $post->post_parent : ( $post ? $post->ID : 0 );
+				if ( $doc_id && (int) $attach->post_parent === (int) $doc_id ) {
+					return $attach;
+				}
 			}
 		}
 		// not a valid attachment.
@@ -56,6 +64,9 @@ trait WP_Document_Revisions_Query {
 		$query  = new WP_Query( $args );
 		$output = array();
 
+		// perm=readable only restricts private statuses, so check each document.
+		$query->posts = array_values( array_filter( $query->posts, array( $this, 'can_list_document' ) ) );
+
 		if ( $return_attachments ) {
 
 			// loop through each document and build an array of attachment objects
@@ -83,6 +94,35 @@ trait WP_Document_Revisions_Query {
 
 
 	/**
+	 * Whether the current user may see a document in a list.
+	 *
+	 * Published documents are listed like other published posts (unless document_read_uses_read
+	 * is turned off), other statuses need read_document, and trashed documents need edit_document.
+	 *
+	 * @since 5.5.1
+	 *
+	 * @param WP_Post|int $document document post or ID.
+	 * @return bool
+	 */
+	public function can_list_document( $document ): bool {
+		$document = get_post( $document );
+		if ( ! $document instanceof WP_Post ) {
+			return false;
+		}
+
+		if ( 'trash' === $document->post_status ) {
+			return current_user_can( 'edit_document', $document->ID );
+		}
+
+		// Don't hide published documents from logged-in users without a role here (e.g. on multisite).
+		if ( 'publish' === $document->post_status && apply_filters( 'document_read_uses_read', true ) ) {
+			return true;
+		}
+
+		return current_user_can( 'read_document', $document->ID );
+	}
+
+	/**
 	 * Try to retrieve only correct documents.
 	 *
 	 * Queries by post_status do not do proper permissions check.
@@ -94,21 +134,53 @@ trait WP_Document_Revisions_Query {
 	 */
 	public function retrieve_documents( WP_Query $query ): void {
 		$query_fields = (array) $query->query;
-		if ( isset( $query_fields['post_type'] ) && 'document' === $query_fields['post_type'] ) {
-			// not for administrator.
-			$user = wp_get_current_user();
-			if ( in_array( 'administrator', $user->roles, true ) ) {
-				return;
-			}
 
-			// dropped through initial tests.
-			if ( isset( $query_fields['post_status'] ) && ! empty( $query_fields['post_status'] ) ) {
-				if ( ! isset( $query_fields['perm'] ) ) {
-					// create/modify taxonomy query.
-					$query->set( 'perm', 'readable' );
-				}
-			}
+		// Only queries that ask for specific statuses skip WordPress's own visibility rules.
+		if ( empty( $query_fields['post_status'] ) || isset( $query_fields['perm'] ) ) {
+			return;
 		}
+
+		// Does the query include documents? post_type can be a string, an array, or 'any'.
+		$post_types = isset( $query_fields['post_type'] ) ? (array) $query_fields['post_type'] : array();
+		if ( ! in_array( 'document', $post_types, true ) && ! in_array( 'any', $post_types, true ) ) {
+			return;
+		}
+
+		// Users who can read every private document see them all anyway.
+		$doc_type = get_post_type_object( 'document' );
+		if ( ! $doc_type || current_user_can( $doc_type->cap->read_private_posts ) ) {
+			return;
+		}
+
+		if ( array( 'document' ) === $post_types ) {
+			$query->set( 'perm', 'readable' );
+			return;
+		}
+
+		// For several post types, core would check one combined capability that nobody
+		// has, hiding other users' private posts of every type. Only restrict documents.
+		$query->set( 'wpdr_restrict_private_documents', true );
+	}
+
+	/**
+	 * Hides other users' private documents from a multi-post-type query flagged by
+	 * retrieve_documents().
+	 *
+	 * @since 5.6.0
+	 * @param string   $where the WHERE clause.
+	 * @param WP_Query $query the query.
+	 * @return string
+	 */
+	public function restrict_private_documents( $where, $query ) {
+		if ( ! $query instanceof WP_Query || ! $query->get( 'wpdr_restrict_private_documents' ) ) {
+			return $where;
+		}
+
+		global $wpdb;
+		return $where . $wpdb->prepare(
+			" AND NOT ( {$wpdb->posts}.post_type = 'document' AND {$wpdb->posts}.post_status = 'private' AND {$wpdb->posts}.post_author <> %d )",
+			get_current_user_id()
+		);
 	}
 
 
@@ -214,10 +286,10 @@ trait WP_Document_Revisions_Query {
 	 * Prevents Attachment ID from being displayed on front end.
 	 *
 	 * @since 1.0.3
-	 * @param string $content the post content.
-	 * @return string either the original content or none
+	 * @param mixed $content the post content (a string, unless another filter misbehaves).
+	 * @return mixed either the original content or none
 	 */
-	public function content_filter( string $content ): string {
+	public function content_filter( $content ) {
 		if ( ! $this->verify_post_type( get_post() ) ) {
 			return $content;
 		}
@@ -235,13 +307,13 @@ trait WP_Document_Revisions_Query {
 	 * Adds revision number to document titles.
 	 *
 	 * @since 1.0
-	 * @param string $title   the title.
-	 * @param int    $post_id The ID of the post for which the title is being generated.
-	 * @return string the title possibly with the revision number
+	 * @param mixed $title   the title (a string, unless another filter misbehaves).
+	 * @param mixed $post_id The ID of the post for which the title is being generated.
+	 * @return mixed the title possibly with the revision number
 	 */
-	public function add_revision_num_to_title( string $title, $post_id = null ): string {
+	public function add_revision_num_to_title( $title, $post_id = null ) {
 		// If a post ID is not provided, do not attempt to filter the title.
-		if ( ! is_numeric( $post_id ) ) {
+		if ( ! is_string( $title ) || ! is_numeric( $post_id ) ) {
 			return $title;
 		}
 
@@ -446,13 +518,14 @@ trait WP_Document_Revisions_Query {
 	 * revision notes (except if the user could see them by editting the post).
 	 *
 	 * @since 3.3.0
-	 * @param string  $excerpt The original excerpt text associated with a post.
-	 * @param WP_Post $post    The post object.
+	 * @param mixed $excerpt The original excerpt text associated with a post.
+	 * @param mixed $post    The post object. Defaults to the current post.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function empty_excerpt_return( string $excerpt, WP_Post $post ): string {
-		if ( '' === $excerpt || ! $this->verify_post_type( $post ) ) {
+	public function empty_excerpt_return( $excerpt, $post = null ) {
+		$post = get_post( $post );
+		if ( ! is_string( $excerpt ) || '' === $excerpt || ! $post || ! $this->verify_post_type( $post ) ) {
 			return $excerpt;
 		}
 
@@ -472,16 +545,21 @@ trait WP_Document_Revisions_Query {
 	 *
 	 * @since 3.3.0
 	 *
-	 * @param string       $where          The `WHERE` clause in the SQL.
-	 * @param bool         $in_same_term   Whether post should be in a same taxonomy term.
-	 * @param int[]|string $excluded_terms Array of excluded term IDs, or comma-separated string.
-	 * @param string       $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
-	 * @param WP_Post      $post           WP_Post object.
+	 * Core always passes all five arguments, but themes and plugins sometimes apply
+	 * this filter themselves with fewer or non-canonical ones (#732), so accept
+	 * anything and fall back to the current post.
 	 *
-	 * @return string
+	 * @param mixed $where          The `WHERE` clause in the SQL.
+	 * @param mixed $in_same_term   Whether post should be in a same taxonomy term.
+	 * @param mixed $excluded_terms Array of excluded term IDs, or comma-separated string.
+	 * @param mixed $taxonomy       Taxonomy. Used to identify the term used when `$in_same_term` is true.
+	 * @param mixed $post           WP_Post object. Defaults to the current post.
+	 *
+	 * @return mixed
 	 */
-	public function suppress_adjacent_doc( string $where, bool $in_same_term, $excluded_terms, string $taxonomy, WP_Post $post ): string {
-		if ( ! $this->verify_post_type( $post ) ) {
+	public function suppress_adjacent_doc( $where, $in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $post = null ) {
+		$post = $post instanceof WP_Post ? $post : get_post();
+		if ( ! is_string( $where ) || ! $post || ! $this->verify_post_type( $post ) ) {
 			return $where;
 		}
 

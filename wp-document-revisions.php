@@ -3,7 +3,7 @@
 Plugin Name: WP Document Revisions
 Plugin URI: http://ben.balter.com/2011/08/29/wp-document-revisions-document-management-version-control-wordpress/
 Description: A document management and version control plugin for WordPress that allows teams of any size to collaboratively edit files and manage their workflow.
-Version: 5.5.0
+Version: 5.6.1
 Requires at least: 5.9
 Requires PHP: 8.0
 Author: Ben Balter
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  @copyright 2011-2026
  *  @license GPL-3.0-or-later
- *  @version 5.5.0
+ *  @version 5.6.1
  *  @package WP_Document_Revisions
  *  @author Ben Balter <ben@balter.com>
  */
@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // parsed by WordPress from the file header itself and must remain literal; this
 // constant is the canonical value for runtime PHP code (cache busters, etc.).
 if ( ! defined( 'WPDR_VERSION' ) ) {
-	define( 'WPDR_VERSION', '5.5.0' );
+	define( 'WPDR_VERSION', '5.6.1' );
 }
 
 // Composer autoloader for production dependencies.
@@ -99,7 +99,7 @@ if ( ! function_exists( 'wpdr_vendor_class' ) ) {
 	 * this rather than hard-coding `\Smalot\...` / `\PhpOffice\...`, because the
 	 * plugin files themselves are not rewritten by php-scoper.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param string $class_name unprefixed, fully-qualified class name.
 	 * @return class-string the class name to instantiate or compare against.
 	 */
@@ -181,6 +181,9 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		'document-revisions extract-text',
 		array( 'WP_Document_Revisions_Text_Extraction_CLI_Command', 'extract_text' )
 	);
+
+	require_once __DIR__ . '/includes/class-wp-document-revisions-validate-cli-command.php';
+	WP_CLI::add_command( 'document-revisions validate', 'WP_Document_Revisions_Validate_CLI_Command' );
 }
 
 // $wpdr is a global reference to the class.

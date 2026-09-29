@@ -58,13 +58,6 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
-		/*
-		 * Filters the http response code when a document or revision (attachment) is not found.
-		 *
-		 * @param int 403 The default respnse code when the file cannot be served.
-		 */
-		$response = apply_filters( 'document_no_document_response_code', 403 );
-
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
 			$revn = $this->get_latest_revision( $post->ID );
@@ -73,7 +66,7 @@ trait WP_Document_Revisions_File_Handler {
 				wp_die(
 					esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
 					'',
-					array( 'response' => absint( $response ) )
+					array( 'response' => absint( $this->no_document_response_code( $post, 0 ) ) )
 				);
 			}
 			$rev_id = $revn->ID;
@@ -104,7 +97,7 @@ trait WP_Document_Revisions_File_Handler {
 			wp_die(
 				esc_html( $msg ),
 				'',
-				array( 'response' => absint( $response ) )
+				array( 'response' => absint( $this->no_document_response_code( $post, (int) $rev_id ) ) )
 			);
 		}
 
@@ -180,6 +173,32 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		$file = apply_filters( 'document_serve', $file, $post->ID, $attach->ID );
 
+		/**
+		 * Filters a URL to send the (already authorized) request to instead of streaming the file
+		 * through PHP, e.g. a signed CDN or S3 URL for large files. Return '' to serve normally.
+		 *
+		 * The URL isn't restricted to this site, so only return URLs you trust, and prefer
+		 * short-lived signed URLs for private documents: anyone with the URL can use it until it
+		 * expires. get_raw_attachment_url() returns the attachment's storage URL.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $url    URL to redirect to. Default ''.
+		 * @param WP_Post $post   the document.
+		 * @param WP_Post $attach the attachment being served.
+		 * @param string  $file   path of the file to be served.
+		 */
+		$redirect = apply_filters( 'document_serve_redirect_url', '', $post, $attach, $file );
+		if ( is_string( $redirect ) && '' !== $redirect ) {
+			// The target may only be valid for this user, so don't let the redirect be cached.
+			nocache_headers();
+			wp_redirect( $redirect, 302, 'WP Document Revisions' ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- off-site storage URLs are the point.
+			if ( class_exists( 'WP_UnitTestCase' ) ) {
+				return $template;
+			}
+			exit;
+		}
+
 		// We may override this later.
 		status_header( 200 );
 
@@ -189,10 +208,8 @@ trait WP_Document_Revisions_File_Handler {
 		$filename      = $post->post_name;
 		$filename     .= ( 0 === $version_label ) ? '' : __( '-revision-', 'wp-document-revisions' ) . $version_label;
 
-		// we want the true attachment URL, not the permalink, so temporarily remove our filter.
-		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$filename .= $this->get_extension( wp_get_attachment_url( $attach->ID ) );
-		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
+		// we want the true attachment URL, not the permalink.
+		$filename .= $this->get_extension( (string) $this->get_raw_attachment_url( $attach->ID ) );
 
 		// Sanitize the filename for use in the Content-Disposition header to prevent header injection
 		// or quote-escape attacks via filterable extension/post slug values: strip control characters
@@ -239,22 +256,23 @@ trait WP_Document_Revisions_File_Handler {
 			}
 		}
 
-		// Only compress text by default. PDFs, office files, images and archives are already
-		// compressed, so deflating them in PHP costs CPU and memory for little or no gain and
-		// forces the whole response to be buffered.
-		if ( $gzip_dflt && ! ( is_string( $mimetype ) && 0 === strpos( $mimetype, 'text/' ) ) ) {
+		// Only compress text-like types by default. PDFs, office files, images and archives are
+		// already compressed, so deflating them in PHP costs CPU and memory for little or no gain
+		// and forces the whole response to be buffered.
+		if ( $gzip_dflt && ! $this->is_compressible_mimetype( $mimetype ) ) {
 			$gzip_dflt = false;
 		}
 
 		/**
 		 * Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 		 *
-		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is text/*.
+		 * Defaults to true only when the client accepts gzip/deflate and the MIME type is
+		 * compressible (see document_compressible_mimetypes).
 		 *
 		 * Note: Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to shortcircuit.
 		 *       This is always subject to browser negociation.
 		 *
-		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a text/* MIME type).
+		 * @param bool    $gzip_dflt Whether gzip will be used by default (client support and a compressible MIME type).
 		 * @param string  $mimetype  Mime type to be served.
 		 * @param integer $filesize  File size.
 		 */
@@ -308,6 +326,19 @@ trait WP_Document_Revisions_File_Handler {
 			$this->serve_headers( $headers, $file );
 			status_header( 304 );
 			return $template;
+		}
+
+		// Hand the file to the web server if the site has set that up.
+		$sendfile = $this->sendfile_header( $file, $attach );
+		if ( $sendfile ) {
+			// The server sends the body and works out its length and encoding.
+			unset( $headers['Content-Length'] );
+			$headers[ $sendfile[0] ] = $sendfile[1];
+			$this->serve_headers( $headers, $file );
+			if ( class_exists( 'WP_UnitTestCase' ) ) {
+				return $template;
+			}
+			exit;
 		}
 
 		// in case this is a large file, remove PHP time limits.
@@ -522,6 +553,207 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Whether a document of this MIME type is compressed on download by default.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $mimetype the MIME type being served.
+	 * @return bool
+	 */
+	public function is_compressible_mimetype( $mimetype ): bool {
+		if ( ! is_string( $mimetype ) || '' === $mimetype ) {
+			return false;
+		}
+
+		/**
+		 * Filters the MIME types compressed on download by default (when the client accepts it).
+		 *
+		 * An entry ending in "/" matches every type with that prefix, e.g. "text/".
+		 * The document_serve_use_gzip filter still has the final say.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string[] $mimetypes MIME types or "type/" prefixes.
+		 */
+		$compressible = (array) apply_filters(
+			'document_compressible_mimetypes',
+			array( 'text/', 'application/json', 'application/ld+json', 'application/xml', 'image/svg+xml' )
+		);
+
+		$mimetype = strtolower( trim( explode( ';', $mimetype )[0] ) );
+		foreach ( $compressible as $type ) {
+			$type = strtolower( (string) $type );
+			if ( '/' === substr( $type, -1 ) ? 0 === strpos( $mimetype, $type ) : $mimetype === $type ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Whether a document file is being uploaded in this request.
+	 *
+	 * True from document_upload_start until document_upload_end.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function is_document_upload(): bool {
+		return self::$document_upload;
+	}
+
+	/**
+	 * Filters the file types allowed while a document is being uploaded.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $mimes allowed MIME types keyed by extension pattern.
+	 * @return mixed
+	 */
+	public function document_upload_mimes( $mimes ) {
+		if ( ! is_array( $mimes ) || ! $this->is_document_upload() ) {
+			return $mimes;
+		}
+
+		/**
+		 * Filters the file types allowed for document uploads.
+		 *
+		 * Applied only while a document file is being uploaded, after WordPress's own
+		 * restrictions (on multisite, the network's "Upload file types"). For example,
+		 * return `array_merge( $mimes, $all )` to allow every type WordPress knows about
+		 * for documents without allowing them in the Media Library.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param array<string, string> $mimes Allowed MIME types keyed by extension pattern.
+		 * @param array<string, string> $all   Every MIME type WordPress knows (wp_get_mime_types()).
+		 */
+		return (array) apply_filters( 'document_allowed_mimes', $mimes, wp_get_mime_types() );
+	}
+
+	/**
+	 * Filters the maximum upload size on document screens and during document uploads.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $bytes the maximum upload size in bytes.
+	 * @return mixed
+	 */
+	public function document_upload_size_limit( $bytes ) {
+		if ( ! is_numeric( $bytes ) || ! ( $this->is_document_upload() || ( is_admin() && $this->verify_post_type() ) ) ) {
+			return $bytes;
+		}
+
+		/**
+		 * Filters the maximum size, in bytes, of a document upload.
+		 *
+		 * Applied on document screens (for the uploader's limit) and while a document is
+		 * uploaded, including multisite's "Max upload file size" check. It can't raise
+		 * PHP's own upload_max_filesize / post_max_size.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int $bytes Maximum upload size in bytes.
+		 */
+		return (int) apply_filters( 'document_upload_size_limit', (int) $bytes );
+	}
+
+	/**
+	 * Applies document_upload_size_limit to multisite's per-file limit during a document upload.
+	 *
+	 * Core's check_upload_size() reads the fileupload_maxk site option directly rather than
+	 * using upload_size_limit.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $kilobytes the fileupload_maxk site option.
+	 * @return mixed
+	 */
+	public function document_fileupload_maxk( $kilobytes ) {
+		if ( ! is_numeric( $kilobytes ) || ! $this->is_document_upload() ) {
+			return $kilobytes;
+		}
+
+		/** This filter is documented in includes/trait-wp-document-revisions-file-handler.php */
+		$bytes = (int) apply_filters( 'document_upload_size_limit', (int) $kilobytes * KB_IN_BYTES );
+
+		return (int) ceil( $bytes / KB_IN_BYTES );
+	}
+
+	/**
+	 * Marks the end of a document upload once WordPress has generated the attachment metadata.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $metadata      the attachment metadata.
+	 * @param mixed $attachment_id the attachment ID.
+	 * @return mixed the metadata, unchanged.
+	 */
+	public function end_document_upload( $metadata, $attachment_id = 0 ) {
+		if ( ! self::$document_upload ) {
+			return $metadata;
+		}
+		self::$document_upload = false;
+
+		$attachment_id = absint( $attachment_id );
+
+		/**
+		 * Fires when a document file upload has finished and its attachment metadata is generated.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int $attachment_id the new attachment.
+		 * @param int $document_id   the document it belongs to.
+		 */
+		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
+
+		return $metadata;
+	}
+
+	/**
+	 * Returns an attachment's real storage URL, bypassing the filter that replaces document
+	 * attachment URLs with the (authenticated) document permalink.
+	 *
+	 * Don't expose it for private documents unless the storage location itself is protected.
+	 *
+	 * @since 5.6.0
+	 * @param int $attach_id the attachment ID.
+	 * @return string|false the URL, or false if there is none.
+	 */
+	public function get_raw_attachment_url( int $attach_id ) {
+		$priority = has_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
+		if ( false !== $priority ) {
+			remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), $priority );
+		}
+
+		$url = wp_get_attachment_url( $attach_id );
+
+		if ( false !== $priority ) {
+			add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), $priority, 2 );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * HTTP status for a document request that has no file to serve.
+	 *
+	 * @since 5.6.0
+	 * @param WP_Post $post   the requested document.
+	 * @param int     $rev_id the document or revision selected, or 0 if none was found.
+	 * @return int
+	 */
+	private function no_document_response_code( WP_Post $post, int $rev_id ): int {
+		/**
+		 * Filters the HTTP response code when a document or revision has no file to serve.
+		 *
+		 * @since 5.6.0 Defaults to 404 (previously 403, which suggests an authorization failure)
+		 *              and receives the document and revision.
+		 *
+		 * @param int     $code   Response code. Default 404.
+		 * @param WP_Post $post   The requested document.
+		 * @param int     $rev_id The document or revision selected, or 0 if none was found.
+		 */
+		return absint( apply_filters( 'document_no_document_response_code', 404, $post, $rev_id ) );
+	}
+
+	/**
 	 * Calculated path to upload documents.
 	 *
 	 * @since 0.5
@@ -535,26 +767,58 @@ trait WP_Document_Revisions_File_Handler {
 		// If no options set, default to normal upload dir.
 		$dir = get_site_option( 'document_upload_directory' );
 		if ( ! ( $dir ) ) {
-			self::$wpdr_document_dir = self::$wp_default_dir['basedir'];
-			return self::$wpdr_document_dir;
-		}
-
-		self::$wpdr_document_dir = $dir;
-		if ( ! is_multisite() ) {
-			return $dir;
-		}
-
-		// make site specific on multisite.
-		// @phpstan-ignore booleanAnd.leftAlwaysTrue (phpstan-wordpress remembers an earlier is_multisite() result and treats this defensive re-check as constant; it is a genuine runtime guard)
-		if ( is_multisite() && ! is_network_admin() ) {
+			$dir = $this->default_upload_dir()['basedir'];
+		} elseif ( is_multisite() && ! is_network_admin() ) {
+			// make site specific on multisite.
 			if ( is_main_site() && get_current_network_id() === get_main_network_id() ) {
 				$dir = str_replace( '/sites/%site_id%', '', $dir );
 			}
 
 			global $wpdb;
-			$dir                     = str_replace( '%site_id%', $wpdb->blogid, $dir );
-			self::$wpdr_document_dir = $dir;
+			$dir = str_replace( '%site_id%', $wpdb->blogid, $dir );
 		}
+
+		/**
+		 * Filters the directory documents are stored in.
+		 *
+		 * Runs when the directory is first needed on each site, after other plugins
+		 * have loaded, rather than when WP Document Revisions loads.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string $dir absolute path, or stream wrapper URL such as s3://bucket/path.
+		 */
+		self::$wpdr_document_dir = (string) apply_filters( 'document_upload_directory', (string) $dir );
+
+		return self::$wpdr_document_dir;
+	}
+
+	/**
+	 * Forgets the resolved document directory, e.g. after switch_blog().
+	 *
+	 * @since 5.6.0
+	 */
+	public function reset_document_upload_dir(): void {
+		self::$wpdr_document_dir = null;
+	}
+
+	/**
+	 * Returns WordPress's uploads directory for the current site, without the document override.
+	 *
+	 * Resolved on each call so it reflects upload_dir filters registered after this plugin
+	 * loaded and the current site on multisite.
+	 *
+	 * @since 5.6.0
+	 * @return array<string, mixed> the wp_upload_dir() result.
+	 */
+	public function default_upload_dir(): array {
+		self::$resolving_upload_dir = true;
+		try {
+			$dir = wp_upload_dir( null, false );
+		} finally {
+			self::$resolving_upload_dir = false;
+		}
+		self::$wp_default_dir = $dir;
 
 		return $dir;
 	}
@@ -572,12 +836,14 @@ trait WP_Document_Revisions_File_Handler {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
 		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
 			// default - not a WPDR Document.
-			self::$doc_image = true;
+			self::$doc_image       = true;
+			self::$document_upload = false;
 			return $file;
 		}
 
 		// Parameter found, so is a document load.
-		self::$doc_image = false;
+		self::$doc_image       = false;
+		self::$document_upload = true;
 
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
@@ -596,6 +862,23 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param string $orig_filename original file name.
 		 */
 		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
+		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+		/**
+		 * Fires when a document file upload starts, before the file is moved into place.
+		 *
+		 * From here until document_upload_end, is_document_upload() returns true, e.g. for
+		 * offload plugins to set storage options (such as S3 ContentDisposition) for documents.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param array  $file          the upload, with the hashed file name.
+		 * @param int    $document_id   the document the file is being uploaded to (0 if unknown).
+		 * @param string $orig_filename the original file name.
+		 */
+		do_action( 'document_upload_start', $file, $document_id, $orig_filename );
 
 		return $file;
 	}
@@ -642,16 +925,22 @@ trait WP_Document_Revisions_File_Handler {
 	 *
 	 * @since 3.4.0.
 	 *
-	 * @param array<string, mixed> $metadata      An array of attachment meta data.
-	 * @param int                  $attachment_id Current attachment ID.
-	 * @param string               $context       Additional context. Can be 'create' when metadata was initially created for new attachment
-	 *                                             or 'update' when the metadata was updated.
-	 * @return array<string, mixed> the (possibly modified) attachment metadata.
+	 * @param mixed $metadata      An array of attachment meta data.
+	 * @param mixed $attachment_id Current attachment ID.
+	 * @param mixed $context       Additional context. Can be 'create' when metadata was initially created for new attachment
+	 *                             or 'update' when the metadata was updated.
+	 * @return mixed the (possibly modified) attachment metadata.
 	 */
-	public function hide_doc_attach_slug( array $metadata, int $attachment_id, string $context ): array {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	public function hide_doc_attach_slug( $metadata, $attachment_id = 0, $context = 'create' ) {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		// No attachment ID: don't fall back to the global post (get_post( 0 )).
+		if ( ! is_array( $metadata ) || ! is_numeric( $attachment_id ) || (int) $attachment_id <= 0 ) {
+			return $metadata;
+		}
+		$attachment_id = (int) $attachment_id;
+
 		// check that for a document.
 		$attach = get_post( $attachment_id );
-		if ( ! self::check_doc_attach( $attach ) ) {
+		if ( ! $attach || ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
@@ -809,6 +1098,63 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
+	 * Returns the header, if any, that tells the web server to send the file itself.
+	 *
+	 * Off unless a site opts in, because it only works when the server is configured
+	 * for it (mod_xsendfile, an nginx internal location, LiteSpeed).
+	 *
+	 * @since 5.6.0
+	 * @param string  $file   path of the file to be served.
+	 * @param WP_Post $attach the attachment being served.
+	 * @return array{0: string, 1: string}|null header name and value, or null to serve through PHP.
+	 */
+	private function sendfile_header( string $file, WP_Post $attach ): ?array {
+		/**
+		 * Filters which header hands document downloads to the web server instead of PHP.
+		 *
+		 * Return 'X-Sendfile' (Apache mod_xsendfile, lighttpd), 'X-Accel-Redirect'
+		 * (nginx) or 'X-LiteSpeed-Location' (LiteSpeed). Only enable it when the server
+		 * is configured for it and the document directory isn't otherwise web-accessible:
+		 * the plugin has already checked permissions when the header is sent.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $header Header name. Default '' (serve through PHP).
+		 * @param string  $file   Path of the file to be served.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$header = (string) apply_filters( 'document_serve_sendfile_header', '', $file, $attach );
+		if ( ! in_array( $header, array( 'X-Sendfile', 'X-Accel-Redirect', 'X-LiteSpeed-Location' ), true ) ) {
+			return null;
+		}
+
+		/**
+		 * Filters the value sent in the sendfile header.
+		 *
+		 * X-Sendfile takes the file path, which is the default. X-Accel-Redirect and
+		 * X-LiteSpeed-Location take a URI in an internal location that maps to the
+		 * document directory, so they have no default: return one, or the file is served
+		 * through PHP as usual.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $value  Header value. Default the file path for X-Sendfile, '' otherwise.
+		 * @param string  $file   Path of the file to be served.
+		 * @param string  $header Header name.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$value = (string) apply_filters( 'document_serve_sendfile_path', 'X-Sendfile' === $header ? $file : '', $file, $header, $attach );
+
+		// Header values can't contain line breaks.
+		$value = str_replace( array( "\r", "\n" ), '', $value );
+		if ( '' === $value ) {
+			return null;
+		}
+
+		return array( $header, $value );
+	}
+
+	/**
 	 * Find the mimetype.
 	 *
 	 * Resolution order: the `document_revisions_mimetype` filter, the attachment's
@@ -885,14 +1231,13 @@ trait WP_Document_Revisions_File_Handler {
 
 		$latest = $this->get_latest_revision( $id );
 
-		if ( ! $latest ) {
+		$attach = $latest ? $this->get_document( $latest->ID ) : false;
+		if ( ! $attach ) {
 			return false;
 		}
 
 		// temporarily remove our filter to get the true URL, not the permalink.
-		remove_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ) );
-		$url = wp_get_attachment_url( $this->get_document( $latest->ID )->ID );
-		add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url_filter' ), 10, 2 );
+		$url = $this->get_raw_attachment_url( $attach->ID );
 
 		return $url;
 	}
@@ -920,7 +1265,7 @@ trait WP_Document_Revisions_File_Handler {
 
 		// need to rebuild file name.
 		$file = get_post_meta( $attachment_id, '_wp_attached_file', true );
-		return trailingslashit( self::$wpdr_document_dir ) . $file;
+		return trailingslashit( $this->document_upload_dir() ) . $file;
 	}
 
 	/**
@@ -931,6 +1276,10 @@ trait WP_Document_Revisions_File_Handler {
 	 * @return array<string, mixed> modified directory
 	 */
 	public function document_upload_dir_filter( array $dir ): array {
+		if ( self::$resolving_upload_dir ) {
+			return $dir;
+		}
+
 		if ( ! $this->verify_post_type() ) {
 			// Ensure cookie variable is set correctly - if needed elsewhere.
 			self::$doc_image = true;
@@ -957,11 +1306,15 @@ trait WP_Document_Revisions_File_Handler {
 	public function document_upload_dir_set( array $dir ): array {
 
 		self::$doc_image = false;
-		$doc_dir         = untrailingslashit( self::$wpdr_document_dir );
-		$new_dir         = array(
-			'path'    => $doc_dir . '/' . $dir['subdir'],
-			'url'     => home_url( '/' . $this->document_slug() ) . $dir['subdir'],
-			'subdir'  => $dir['subdir'],
+		$doc_dir         = untrailingslashit( $this->document_upload_dir() );
+
+		// Core's subdir is either empty or starts with a slash ("/2026/09"). Joining it with
+		// another slash produced "uploads//2026/09", which breaks stream wrappers such as s3://.
+		$subdir  = isset( $dir['subdir'] ) && '' !== $dir['subdir'] ? '/' . ltrim( (string) $dir['subdir'], '/' ) : '';
+		$new_dir = array(
+			'path'    => $doc_dir . $subdir,
+			'url'     => home_url( '/' . $this->document_slug() ) . $subdir,
+			'subdir'  => $subdir,
 			'basedir' => $doc_dir,
 			'baseurl' => home_url( '/' . $this->document_slug() ),
 			'error'   => false,
@@ -1087,15 +1440,16 @@ trait WP_Document_Revisions_File_Handler {
 	 * Prevents direct access to files and ensures authentication.
 	 *
 	 * @since 1.2
-	 * @param string $url the original URL.
-	 * @param int    $post_id the attachment ID.
-	 * @return string the modified URL
+	 * @param mixed $url the original URL.
+	 * @param mixed $post_id the attachment ID.
+	 * @return mixed the modified URL
 	 */
-	public function attachment_url_filter( string $url, int $post_id ): string {
+	public function attachment_url_filter( $url, $post_id = 0 ) {
 		// not an attached attachment.
-		if ( ! $this->verify_post_type( $post_id ) ) {
+		if ( ! is_string( $url ) || ! is_numeric( $post_id ) || (int) $post_id <= 0 || ! $this->verify_post_type( (int) $post_id ) ) {
 			return $url;
 		}
+		$post_id = (int) $post_id;
 
 		$document = get_post( $post_id );
 
@@ -1190,7 +1544,7 @@ trait WP_Document_Revisions_File_Handler {
 	/**
 	 * Returns the WP_Filesystem instance when it can be used directly (no credentials) for a directory.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param string $dir directory the caller will work in.
 	 * @return WP_Filesystem_Base|null the filesystem, or null when direct access is not available.
 	 */
@@ -1220,7 +1574,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * A size entry is only updated when its file was actually moved, so the metadata
 	 * never points at a file that is not there.
 	 *
-	 * @since 5.6.0
+	 * @since 5.5.0
 	 * @param array<string, mixed> $sizes    the 'sizes' element of the attachment metadata.
 	 * @param string               $file_dir directory holding the files (with trailing slash).
 	 * @param string               $title    attachment title the file names start with.

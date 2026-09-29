@@ -120,7 +120,7 @@ function DocumentUploadPanel() {
  */
 function DocumentUploadPanelContent() {
 	const [ meta, setMeta ] = useEntityProp( 'postType', 'document', 'meta' );
-	const attachmentId = meta?.document_attachment_id || 0;
+	const attachmentId = meta?._document_attachment_id || 0;
 
 	const [ excerpt, setExcerpt ] = useEntityProp( 'postType', 'document', 'excerpt' );
 
@@ -194,7 +194,7 @@ function DocumentUploadPanelContent() {
 			}
 
 			const oldId = previousAttachmentId;
-			setMeta( { ...meta, document_attachment_id: media.id } );
+			setMeta( { ...meta, _document_attachment_id: media.id } );
 			setPreviousAttachmentId( media.id );
 
 			// Show appropriate success notice.
@@ -220,8 +220,22 @@ function DocumentUploadPanelContent() {
 		[ meta, setMeta, previousAttachmentId, createSuccessNotice, createErrorNotice ]
 	);
 
-	// Custom media frame that auto-closes after a fresh upload.
+	// Upload-only media frame that auto-closes after a fresh upload.
+	//
+	// Mirrors the classic editor (src/admin/wp-document-revisions.js): the
+	// upload is flagged with `upload_source` so the server stores it as a
+	// document (hashed name, protected document directory) and links it to
+	// this document. Existing library files can't be picked, as a document may
+	// only use attachments that belong to it.
 	const frameRef = useRef( null );
+	const boundUploaderRef = useRef( null );
+
+	// The frame is cached, so its handlers call the latest onSelectMedia via a ref
+	// rather than the (stale) one captured when the frame was created.
+	const onSelectRef = useRef( onSelectMedia );
+	useEffect( () => {
+		onSelectRef.current = onSelectMedia;
+	}, [ onSelectMedia ] );
 
 	const openMediaFrame = useCallback( () => {
 		// Reuse existing frame if already created.
@@ -230,45 +244,79 @@ function DocumentUploadPanelContent() {
 			return;
 		}
 
+		// A library with no content, so no existing files are listed.
+		const restrictedLibrary = new window.wp.media.model.Attachments( [], {
+			props: { orderby: 'date', order: 'DESC', query: true, uploadedTo: -1 },
+		} );
+
+		const title = attachmentId
+			? __( 'Upload New Version', 'wp-document-revisions' )
+			: __( 'Upload Document', 'wp-document-revisions' );
+
 		const frame = window.wp.media( {
-			title: attachmentId
-				? __( 'Upload New Version', 'wp-document-revisions' )
-				: __( 'Upload Document', 'wp-document-revisions' ),
+			title,
 			multiple: false,
 			button: {
 				text: __( 'Select', 'wp-document-revisions' ),
 			},
+			states: [
+				new window.wp.media.controller.Library( {
+					title,
+					filterable: 'uploaded',
+					multiple: false,
+					library: restrictedLibrary,
+				} ),
+			],
 		} );
 
-		// Standard select handler (user clicks "Select" button).
+		// Remove the library tab and open straight on the upload tab.
+		frame.on( 'menu:render:default', ( menu ) => {
+			menu.unset( 'library' );
+		} );
+		frame.on( 'open', () => {
+			frame.content.mode( 'upload' );
+			frame.$el.find( '.media-router' ).addClass( 'hidden' );
+		} );
+
+		// Standard select handler (user clicks "Select" after uploading).
 		frame.on( 'select', () => {
 			const selected = frame.state().get( 'selection' ).first()?.toJSON();
 			if ( selected ) {
-				onSelectMedia( selected );
+				onSelectRef.current( selected );
 			}
 		} );
 
-		// Auto-close: when a file finishes uploading, select it and close.
-		frame.on( 'content:activate:upload', () => {
+		// Flag the upload as a document, then select it and close once uploaded.
+		frame.on( 'uploader:ready', () => {
 			const uploader = frame.uploader?.uploader?.uploader;
-			if ( uploader ) {
-				uploader.bind( 'FileUploaded', ( up, file, response ) => {
-					try {
-						const data = JSON.parse( response.response );
-						if ( data?.success && data?.data?.id ) {
-							onSelectMedia( data.data );
-							frame.close();
-						}
-					} catch {
-						// Fall through to manual selection.
-					}
-				} );
+			if ( ! uploader ) {
+				return;
 			}
+			if ( uploader.settings?.multipart_params ) {
+				uploader.settings.multipart_params.upload_source = 'wp-document-revisions';
+			}
+			// Bind once per uploader instance; the event fires again when the
+			// cached frame is reopened.
+			if ( boundUploaderRef.current === uploader ) {
+				return;
+			}
+			boundUploaderRef.current = uploader;
+			uploader.bind( 'FileUploaded', ( up, file, response ) => {
+				try {
+					const data = JSON.parse( response.response );
+					if ( data?.success && data?.data?.id ) {
+						onSelectRef.current( data.data );
+						frame.close();
+					}
+				} catch {
+					// Fall through to manual selection.
+				}
+			} );
 		} );
 
 		frameRef.current = frame;
 		frame.open();
-	}, [ attachmentId, onSelectMedia ] );
+	}, [ attachmentId ] );
 
 	// Clean up frame on unmount.
 	useEffect( () => {
@@ -276,6 +324,7 @@ function DocumentUploadPanelContent() {
 			if ( frameRef.current ) {
 				frameRef.current.dispose();
 				frameRef.current = null;
+				boundUploaderRef.current = null;
 			}
 		};
 	}, [] );

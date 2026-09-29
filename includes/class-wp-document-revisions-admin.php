@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @method string format_doc_id( int $post_id )
  * @method string document_upload_dir()
  * @method string document_slug()
+ * @method bool document_link_date()
  * @method string|false get_document_lock( $document )
  */
 class WP_Document_Revisions_Admin {
@@ -118,6 +119,11 @@ class WP_Document_Revisions_Admin {
 		add_filter( 'manage_document_posts_columns', array( $this, 'add_currently_editing_column' ), 20 );
 		add_action( 'manage_document_posts_custom_column', array( $this, 'currently_editing_column_cb' ), 10, 2 );
 		add_action( 'restrict_manage_posts', array( $this, 'filter_documents_list' ) );
+		add_filter( 'manage_document_posts_columns', array( $this, 'add_file_columns' ), 30 );
+		add_action( 'manage_document_posts_custom_column', array( $this, 'file_columns_cb' ), 10, 2 );
+		add_filter( 'manage_edit-document_sortable_columns', array( $this, 'file_sortable_columns' ) );
+		add_action( 'pre_get_posts', array( $this, 'file_filter_query_var' ) );
+		add_filter( 'posts_clauses', array( $this, 'file_columns_clauses' ), 10, 2 );
 		add_action( 'parse_query', array( $this, 'convert_workflow_state_to_post_status' ) );
 		add_filter( 'wp_dropdown_users_args', array( $this, 'filter_user_dropdown' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'empty_state_notice' ) );
