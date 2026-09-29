@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.4.5
+Stable tag: 5.4.6
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -293,14 +293,18 @@ Interested in translating WP Document Revisions? You can do so [via Crowdin](htt
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.4.6 =
+
+* Security: a user who could edit their own documents (Contributors and up, by default) could use the Validate Structure fix endpoint to rename and delete other media files on the site. Fixes now only touch the document's own attachments ([GHSA-wmqm-qwm3-9qgf](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-wmqm-qwm3-9qgf)).
+* Security: the documents shortcode, the Documents List and Latest Documents blocks, and the `get_documents()` template function could list other users' draft, pending and private documents (titles, descriptions and authors) when asked for those statuses, and showed descriptions of password-protected documents. Lists now only include documents the viewer can read, and skip the description and thumbnail of password-protected documents. The `post_password` shortcode attribute has been removed ([GHSA-xwv7-7xmq-wmxq](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-xwv7-7xmq-wmxq)).
+* Security: the document revisions shortcode and block listed the revision history of documents the viewer couldn't read. They now check the document can be read ([GHSA-cmhr-7795-vvfw](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-cmhr-7795-vvfw)).
+* Security: the AI summary and diff REST endpoints served password-protected documents, and summaries of earlier revisions to users without the `read_document_revisions` capability. They now check access the same way as downloading the file ([GHSA-987w-vg4c-32r3](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-987w-vg4c-32r3)).
+* Security: on sites that enable the REST API for documents (off by default), the plugin's REST checks could be skipped by changing the case of the route (for example `/wp/v2/Documents`), and did not apply to the revisions list route ([GHSA-fcf8-gjj8-pg9w](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-fcf8-gjj8-pg9w)).
+
 = 5.4.5 =
 
 * Security: on sites that enable block editor mode for documents (off by default), files uploaded through the block editor's Document panel were stored under their original filenames in the normal uploads location, so a private or draft document's file could be downloaded directly by anyone who knew or guessed its URL. Panel uploads are now stored and protected like classic editor uploads (hashed name, document directory). Files already uploaded through the panel should be re-uploaded. The panel also now shows the attached file and saves the selection. (#735)
 
 = 5.4.4 =
-
-* Security: on sites that enable the REST API for documents (off by default), a user who could edit their own documents could point one of them at another document's file, including a private document they could not read, and so serve that file. A document now only ever resolves to, and can only be linked to, a file that belongs to it, and REST writes can no longer bypass the plugin's REST checks by requesting the `edit` context.
-
-= 5.4.3 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
