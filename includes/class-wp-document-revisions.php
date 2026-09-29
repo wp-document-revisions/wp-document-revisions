@@ -569,7 +569,7 @@ class WP_Document_Revisions {
 			);
 		}
 
-		if ( ! current_user_can( 'read_document', $document_id ) ) {
+		if ( ! current_user_can( 'read_document', $document_id ) || post_password_required( $post ) ) {
 			return new WP_Error(
 				'document_forbidden',
 				__( 'You do not have permission to view revisions for this document.', 'wp-document-revisions' ),
