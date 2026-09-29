@@ -263,7 +263,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 * Register route
 	 */
 	public function wpdr_register_route(): void {
-		$valid_codes = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15 );
+		$valid_codes = self::FIXABLE_CODES;
 		$args        = array(
 			'methods'             => \WP_REST_Server::EDITABLE,
 			'callback'            => array( $this, 'correct_document' ),
@@ -560,11 +560,24 @@ class WP_Document_Revisions_Validate_Structure {
 	}
 
 	/**
-	 * Display page of documents in error.
+	 * Codes of the problems Validate Structure can fix.
 	 *
-	 * @since 3.4.0
+	 * @var int[]
 	 */
-	public static function page_validate(): void {
+	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15 );
+
+	/**
+	 * Checks every document and returns the problems found.
+	 *
+	 * Used by the Validate Structure screen and the `wp document-revisions validate` command.
+	 *
+	 * @since 5.6.0
+	 *
+	 * @param bool $check_permissions only check documents the current user can edit.
+	 * @return array<int, array<string, mixed>> one row per problem: the document's fields plus
+	 *                                          code, error, msg, fix, parm and type ('structure' or 'guid').
+	 */
+	public static function find_problems( bool $check_permissions = true ): array {
 		// ensure not in document image mode.
 		$wpdr             = self::$parent;
 		$wpdr::$doc_image = false;
@@ -585,10 +598,8 @@ class WP_Document_Revisions_Validate_Structure {
 		// make sure we're looking at the document directory.
 		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
 
-		$num_doc = $wpdb->num_rows;
-		$fails   = array();
-		$guids   = array();
-		foreach ( $documents as $doc ) {
+		$problems = array();
+		foreach ( (array) $documents as $doc ) {
 			// created as a string - convert to integer.
 			$doc['ID'] = (int) $doc['ID'];
 			/**
@@ -603,22 +614,75 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 
 			// check that user can edit the document.
-			if ( current_user_can( 'edit_document', $doc['ID'] ) ) {
-				// get the attachment. Note may be false if none in content.
-				$attach_id = $wpdr->extract_document_id( $doc['post_content'] );
-				$test      = self::validate_document( $doc['ID'], $attach_id, $doc['post_modified_gmt'] );
-				if ( is_array( $test ) ) {
-					// failure.
-					$fails[] = array_merge( $doc, $test );
-				} else {
-					$test = self::validate_guid( $doc['ID'], $attach_id, $doc['post_status'], $doc['post_date'], $doc['post_name'], $doc['guid'] );
-					if ( is_array( $test ) ) {
-						// failure.
-						$guids[] = array_merge( $doc, $test );
-					}
-				}
+			if ( $check_permissions && ! current_user_can( 'edit_document', $doc['ID'] ) ) {
+				continue;
+			}
+
+			// get the attachment. Note may be false if none in content.
+			$attach_id = $wpdr->extract_document_id( $doc['post_content'] );
+			$test      = self::validate_document( $doc['ID'], $attach_id, $doc['post_modified_gmt'] );
+			if ( is_array( $test ) ) {
+				$problems[] = array_merge( $doc, $test, array( 'type' => 'structure' ) );
+				continue;
+			}
+
+			$test = self::validate_guid( $doc['ID'], $attach_id, $doc['post_status'], $doc['post_date'], $doc['post_name'], $doc['guid'] );
+			if ( is_array( $test ) ) {
+				$problems[] = array_merge( $doc, $test, array( 'type' => 'guid' ) );
 			}
 		}
+
+		return $problems;
+	}
+
+	/**
+	 * Applies the fix for one problem reported by find_problems().
+	 *
+	 * @since 5.6.0
+	 *
+	 * @param int $doc_id document ID.
+	 * @param int $code   problem code.
+	 * @param int $parm   the problem's parm value.
+	 * @return true|WP_Error
+	 */
+	public static function fix_problem( int $doc_id, int $code, int $parm ) {
+		if ( ! in_array( $code, self::FIXABLE_CODES, true ) ) {
+			return new WP_Error( 'not_fixable', __( 'This problem cannot be fixed automatically.', 'wp-document-revisions' ) );
+		}
+
+		$request = new WP_REST_Request( 'PUT', '/wpdr/v1/correct/' . $doc_id . '/type/' . $code . '/attach/' . $parm );
+		$request->set_param( 'id', $doc_id );
+		$request->set_param( 'code', $code );
+		$request->set_param( 'parm', $parm );
+
+		$result = self::correct_document( $request );
+		return is_wp_error( $result ) ? $result : true;
+	}
+
+	/**
+	 * Display page of documents in error.
+	 *
+	 * @since 3.4.0
+	 */
+	public static function page_validate(): void {
+		$problems = self::find_problems();
+		$fails    = array_values(
+			array_filter(
+				$problems,
+				static function ( $row ) {
+					return 'structure' === $row['type'];
+				}
+			)
+		);
+		$guids    = array_values(
+			array_filter(
+				$problems,
+				static function ( $row ) {
+					return 'guid' === $row['type'];
+				}
+			)
+		);
+
 		// No errors found.
 		if ( empty( $fails ) && empty( $guids ) ) {
 			echo '<h2 class="title">' . esc_html__( 'Invalid Document Internal Structures', 'wp-document-revisions' ) . '</h2>';

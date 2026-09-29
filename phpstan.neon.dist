@@ -23,7 +23,13 @@ parameters:
             identifier: class.notFound
             paths:
                 - includes/class-wp-document-revisions-text-extraction-cli-command.php
+                - includes/class-wp-document-revisions-validate-cli-command.php
                 - wp-document-revisions.php
+        -
+            message: '#^Function WP_CLI\\Utils\\format_items not found\.$#'
+            identifier: function.notFound
+            paths:
+                - includes/class-wp-document-revisions-validate-cli-command.php
     treatPhpDocTypesAsCertain: false
     parallel:
         maximumNumberOfProcesses: 4

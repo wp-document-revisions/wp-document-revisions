@@ -328,6 +328,19 @@ trait WP_Document_Revisions_File_Handler {
 			return $template;
 		}
 
+		// Hand the file to the web server if the site has set that up.
+		$sendfile = $this->sendfile_header( $file, $attach );
+		if ( $sendfile ) {
+			// The server sends the body and works out its length and encoding.
+			unset( $headers['Content-Length'] );
+			$headers[ $sendfile[0] ] = $sendfile[1];
+			$this->serve_headers( $headers, $file );
+			if ( class_exists( 'WP_UnitTestCase' ) ) {
+				return $template;
+			}
+			exit;
+		}
+
 		// in case this is a large file, remove PHP time limits.
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DiscouragedFunctions.Discouraged
 		@set_time_limit( 0 );
@@ -578,6 +591,47 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
+	 * Whether a document file is being uploaded in this request.
+	 *
+	 * True from document_upload_start until document_upload_end.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function is_document_upload(): bool {
+		return self::$document_upload;
+	}
+
+	/**
+	 * Marks the end of a document upload once WordPress has generated the attachment metadata.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $metadata      the attachment metadata.
+	 * @param mixed $attachment_id the attachment ID.
+	 * @return mixed the metadata, unchanged.
+	 */
+	public function end_document_upload( $metadata, $attachment_id = 0 ) {
+		if ( ! self::$document_upload ) {
+			return $metadata;
+		}
+		self::$document_upload = false;
+
+		$attachment_id = absint( $attachment_id );
+
+		/**
+		 * Fires when a document file upload has finished and its attachment metadata is generated.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int $attachment_id the new attachment.
+		 * @param int $document_id   the document it belongs to.
+		 */
+		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
+
+		return $metadata;
+	}
+
+	/**
 	 * Returns an attachment's real storage URL, bypassing the filter that replaces document
 	 * attachment URLs with the (authenticated) document permalink.
 	 *
@@ -707,12 +761,14 @@ trait WP_Document_Revisions_File_Handler {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
 		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
 			// default - not a WPDR Document.
-			self::$doc_image = true;
+			self::$doc_image       = true;
+			self::$document_upload = false;
 			return $file;
 		}
 
 		// Parameter found, so is a document load.
-		self::$doc_image = false;
+		self::$doc_image       = false;
+		self::$document_upload = true;
 
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
@@ -731,6 +787,23 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param string $orig_filename original file name.
 		 */
 		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
+		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+		/**
+		 * Fires when a document file upload starts, before the file is moved into place.
+		 *
+		 * From here until document_upload_end, is_document_upload() returns true, e.g. for
+		 * offload plugins to set storage options (such as S3 ContentDisposition) for documents.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param array  $file          the upload, with the hashed file name.
+		 * @param int    $document_id   the document the file is being uploaded to (0 if unknown).
+		 * @param string $orig_filename the original file name.
+		 */
+		do_action( 'document_upload_start', $file, $document_id, $orig_filename );
 
 		return $file;
 	}
@@ -947,6 +1020,63 @@ trait WP_Document_Revisions_File_Handler {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@header( $header . ': ' . $value );
 		}
+	}
+
+	/**
+	 * Returns the header, if any, that tells the web server to send the file itself.
+	 *
+	 * Off unless a site opts in, because it only works when the server is configured
+	 * for it (mod_xsendfile, an nginx internal location, LiteSpeed).
+	 *
+	 * @since 5.6.0
+	 * @param string  $file   path of the file to be served.
+	 * @param WP_Post $attach the attachment being served.
+	 * @return array{0: string, 1: string}|null header name and value, or null to serve through PHP.
+	 */
+	private function sendfile_header( string $file, WP_Post $attach ): ?array {
+		/**
+		 * Filters which header hands document downloads to the web server instead of PHP.
+		 *
+		 * Return 'X-Sendfile' (Apache mod_xsendfile, lighttpd), 'X-Accel-Redirect'
+		 * (nginx) or 'X-LiteSpeed-Location' (LiteSpeed). Only enable it when the server
+		 * is configured for it and the document directory isn't otherwise web-accessible:
+		 * the plugin has already checked permissions when the header is sent.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $header Header name. Default '' (serve through PHP).
+		 * @param string  $file   Path of the file to be served.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$header = (string) apply_filters( 'document_serve_sendfile_header', '', $file, $attach );
+		if ( ! in_array( $header, array( 'X-Sendfile', 'X-Accel-Redirect', 'X-LiteSpeed-Location' ), true ) ) {
+			return null;
+		}
+
+		/**
+		 * Filters the value sent in the sendfile header.
+		 *
+		 * X-Sendfile takes the file path, which is the default. X-Accel-Redirect and
+		 * X-LiteSpeed-Location take a URI in an internal location that maps to the
+		 * document directory, so they have no default: return one, or the file is served
+		 * through PHP as usual.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $value  Header value. Default the file path for X-Sendfile, '' otherwise.
+		 * @param string  $file   Path of the file to be served.
+		 * @param string  $header Header name.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$value = (string) apply_filters( 'document_serve_sendfile_path', 'X-Sendfile' === $header ? $file : '', $file, $header, $attach );
+
+		// Header values can't contain line breaks.
+		$value = str_replace( array( "\r", "\n" ), '', $value );
+		if ( '' === $value ) {
+			return null;
+		}
+
+		return array( $header, $value );
 	}
 
 	/**
