@@ -342,6 +342,10 @@ class WP_Document_Revisions_Validate_Structure {
 
 		if ( 6 === $params['code'] ) {
 			// Attachment file name not encoded.
+			// revalidate input values.
+			if ( ! self::is_attachment_of( $parm, $id ) ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
 			$title     = get_post_field( 'post_title', $id );
 			$attach_id = $parm;
 			$attach    = get_post( $attach_id );
@@ -389,6 +393,10 @@ class WP_Document_Revisions_Validate_Structure {
 
 		if ( 7 === $params['code'] ) {
 			// Attachment file in wrong location (media not document).
+			// revalidate input values.
+			if ( ! self::is_attachment_of( $parm, $id ) ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
 			$title     = get_post_field( 'post_title', $id );
 			$attach    = $parm;
 			$attach_id = get_post( $attach );
@@ -516,7 +524,25 @@ class WP_Document_Revisions_Validate_Structure {
 		if ( ! isset( $params['id'] ) ) {
 			return false;
 		}
+		// Only documents can be corrected.
+		if ( 'document' !== get_post_type( (int) $params['id'] ) ) {
+			return false;
+		}
 		return current_user_can( 'edit_document', $params['id'] );
+	}
+
+	/**
+	 * Whether a post is an attachment of the given document.
+	 *
+	 * @since 5.5.1
+	 *
+	 * @param int $attach_id id of the attachment post object.
+	 * @param int $doc_id    id of the document post object.
+	 * @return bool
+	 */
+	private static function is_attachment_of( int $attach_id, int $doc_id ): bool {
+		$attach = get_post( $attach_id );
+		return $attach instanceof WP_Post && 'attachment' === $attach->post_type && $doc_id === $attach->post_parent;
 	}
 
 	/**
