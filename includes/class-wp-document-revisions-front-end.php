@@ -1070,7 +1070,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// The user must be able to read this document.
-		if ( ! $wpdr_fe->can_read_revisions( (int) $atts['id'] ) ) {
+		if ( ! $this->can_read_revisions( (int) $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
