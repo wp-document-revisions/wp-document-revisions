@@ -120,7 +120,7 @@ class WP_Document_Revisions_AI_Summary_REST {
 		if ( is_wp_error( $ids ) ) {
 			return $ids;
 		}
-		if ( ! current_user_can( 'read_document', $ids['doc_id'] ) ) {
+		if ( ! self::can_read_revision( $ids['doc_id'], $ids['rev_id'] ) ) {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Insufficient permission to read this document.', 'wp-document-revisions' ),
@@ -166,7 +166,7 @@ class WP_Document_Revisions_AI_Summary_REST {
 		if ( is_wp_error( $ids ) ) {
 			return $ids;
 		}
-		if ( ! current_user_can( 'read_document', $ids['doc_id'] ) || ! current_user_can( 'read_document_revisions' ) ) {
+		if ( ! self::can_read_revision( $ids['doc_id'], $ids['rev_id'] ) || ! current_user_can( 'read_document_revisions' ) ) {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Insufficient permission to read this document revision diff.', 'wp-document-revisions' ),
@@ -331,6 +331,33 @@ class WP_Document_Revisions_AI_Summary_REST {
 			'doc_id' => $doc_id,
 			'rev_id' => $rev_id,
 		);
+	}
+
+	/**
+	 * Whether the current user can read a revision of a document, as when downloading it.
+	 *
+	 * Mirrors serve_document_auth(): the document must be readable and not password
+	 * protected, and revisions other than the current one need read_document_revisions.
+	 *
+	 * @since 5.5.1
+	 *
+	 * @param int $doc_id document post ID.
+	 * @param int $rev_id revision attachment post ID.
+	 * @return bool
+	 */
+	private static function can_read_revision( int $doc_id, int $rev_id ): bool {
+		global $wpdr;
+
+		if ( ! current_user_can( 'read_document', $doc_id ) || post_password_required( $doc_id ) ) {
+			return false;
+		}
+
+		$current = $wpdr->get_document( $doc_id );
+		if ( $current instanceof WP_Post && $rev_id === $current->ID ) {
+			return true;
+		}
+
+		return current_user_can( 'read_document_revisions' );
 	}
 
 	/**
