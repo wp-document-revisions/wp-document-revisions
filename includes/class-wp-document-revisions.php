@@ -211,6 +211,10 @@ class WP_Document_Revisions {
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'end_document_upload' ), 20, 2 );
+		// Document-specific upload types and size limit (after core's multisite restrictions).
+		add_filter( 'upload_mimes', array( $this, 'document_upload_mimes' ), 20 );
+		add_filter( 'upload_size_limit', array( $this, 'document_upload_size_limit' ), 20 );
+		add_filter( 'site_option_fileupload_maxk', array( $this, 'document_fileupload_maxk' ), 20 );
 		// The document directory is resolved on first use and again after switch_blog().
 		add_action( 'switch_blog', array( $this, 'reset_document_upload_dir' ) );
 

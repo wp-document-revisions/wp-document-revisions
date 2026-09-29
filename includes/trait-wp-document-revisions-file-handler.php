@@ -603,6 +603,81 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
+	 * Filters the file types allowed while a document is being uploaded.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $mimes allowed MIME types keyed by extension pattern.
+	 * @return mixed
+	 */
+	public function document_upload_mimes( $mimes ) {
+		if ( ! is_array( $mimes ) || ! $this->is_document_upload() ) {
+			return $mimes;
+		}
+
+		/**
+		 * Filters the file types allowed for document uploads.
+		 *
+		 * Applied only while a document file is being uploaded, after WordPress's own
+		 * restrictions (on multisite, the network's "Upload file types"). For example,
+		 * return `array_merge( $mimes, $all )` to allow every type WordPress knows about
+		 * for documents without allowing them in the Media Library.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param array<string, string> $mimes Allowed MIME types keyed by extension pattern.
+		 * @param array<string, string> $all   Every MIME type WordPress knows (wp_get_mime_types()).
+		 */
+		return (array) apply_filters( 'document_allowed_mimes', $mimes, wp_get_mime_types() );
+	}
+
+	/**
+	 * Filters the maximum upload size on document screens and during document uploads.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $bytes the maximum upload size in bytes.
+	 * @return mixed
+	 */
+	public function document_upload_size_limit( $bytes ) {
+		if ( ! is_numeric( $bytes ) || ! ( $this->is_document_upload() || ( is_admin() && $this->verify_post_type() ) ) ) {
+			return $bytes;
+		}
+
+		/**
+		 * Filters the maximum size, in bytes, of a document upload.
+		 *
+		 * Applied on document screens (for the uploader's limit) and while a document is
+		 * uploaded, including multisite's "Max upload file size" check. It can't raise
+		 * PHP's own upload_max_filesize / post_max_size.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int $bytes Maximum upload size in bytes.
+		 */
+		return (int) apply_filters( 'document_upload_size_limit', (int) $bytes );
+	}
+
+	/**
+	 * Applies document_upload_size_limit to multisite's per-file limit during a document upload.
+	 *
+	 * Core's check_upload_size() reads the fileupload_maxk site option directly rather than
+	 * using upload_size_limit.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $kilobytes the fileupload_maxk site option.
+	 * @return mixed
+	 */
+	public function document_fileupload_maxk( $kilobytes ) {
+		if ( ! is_numeric( $kilobytes ) || ! $this->is_document_upload() ) {
+			return $kilobytes;
+		}
+
+		/** This filter is documented in includes/trait-wp-document-revisions-file-handler.php */
+		$bytes = (int) apply_filters( 'document_upload_size_limit', (int) $kilobytes * KB_IN_BYTES );
+
+		return (int) ceil( $bytes / KB_IN_BYTES );
+	}
+
+	/**
 	 * Marks the end of a document upload once WordPress has generated the attachment metadata.
 	 *
 	 * @since 5.6.0
