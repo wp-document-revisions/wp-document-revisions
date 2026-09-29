@@ -204,6 +204,7 @@ class WP_Document_Revisions {
 		add_filter( 'image_downsize', array( $this, 'image_downsize' ), 10, 3 );
 		add_filter( 'document_path', array( $this, 'wamp_document_path_filter' ), 9, 1 );
 		add_filter( 'redirect_canonical', array( $this, 'redirect_canonical_filter' ), 10, 2 );
+		add_filter( 'old_slug_redirect_post_id', array( $this, 'old_slug_redirect_post_id' ) );
 		add_action( 'wp_ajax_sample-permalink', array( $this, 'update_post_slug_field' ), 0 );
 
 		// RSS.

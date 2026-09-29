@@ -722,10 +722,17 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Callback to handle profile updates.
 	 *
 	 * @since 0.5
+	 * @since 5.7.0 Regenerates the key of the user being edited, not the current user's.
+	 * @param int|null $user_id the ID of the user whose profile is being saved.
 	 */
-	public function profile_update_cb(): void {
+	public function profile_update_cb( $user_id = null ): void {
+		$user_id = $user_id ? absint( $user_id ) : get_current_user_id();
+		if ( ! $user_id || ! current_user_can( 'edit_user', $user_id ) ) {
+			return;
+		}
+
 		if ( isset( $_POST['generate-new-feed-key'] ) && isset( $_POST['_document_revisions_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_document_revisions_nonce'] ) ), 'generate-new-feed-key' ) ) {
-			$this->generate_new_feed_key();
+			$this->generate_new_feed_key( $user_id );
 		}
 	}
 

@@ -13,19 +13,47 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$options = array(
+	'document_upload_directory',
+	'document_slug',
+	'document_link_date',
+	'document_notify_enabled',
+	'document_notify_recipients',
+	'document_notify_on_state_change',
+	'document_notify_on_new_revision',
+);
+
 // Remove plugin options.
-delete_option( 'document_upload_directory' );
-delete_option( 'document_slug' );
-delete_option( 'document_link_date' );
+foreach ( $options as $option ) {
+	delete_option( $option );
+}
 delete_option( 'wpdr_db_version' );
 
 // Remove site options (multisite).
-delete_site_option( 'document_upload_directory' );
-delete_site_option( 'document_slug' );
-delete_site_option( 'document_link_date' );
+foreach ( $options as $option ) {
+	delete_site_option( $option );
+}
 
-// Remove user meta (feed keys).
-delete_metadata( 'user', 0, 'document_revisions_feed_key', '', true );
+// Remove user meta. Feed keys are saved with update_user_option(), so their meta key
+// has the site's table prefix (e.g. wp_document_revisions_feed_key, or wp_2_... on
+// multisite). The unprefixed key is also removed.
+global $wpdb;
+$feed_key_prefixes = array( '', $wpdb->get_blog_prefix() );
+if ( is_multisite() ) {
+	foreach ( get_sites(
+		array(
+			'fields' => 'ids',
+			'number' => 0,
+		)
+	) as $site_id ) {
+		$feed_key_prefixes[] = $wpdb->get_blog_prefix( $site_id );
+	}
+}
+foreach ( array_unique( $feed_key_prefixes ) as $feed_key_prefix ) {
+	delete_metadata( 'user', 0, $feed_key_prefix . 'document_revisions_feed_key', '', true );
+}
+delete_metadata( 'user', 0, 'wpdr_review_dismissed', '', true );
 
 // Remove custom capabilities from all roles.
 global $wp_roles;
@@ -33,7 +61,6 @@ if ( ! is_object( $wp_roles ) ) {
 	$wp_roles = new WP_Roles(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 }
 
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $caps = array(
 	'edit_documents',
 	'edit_others_documents',
