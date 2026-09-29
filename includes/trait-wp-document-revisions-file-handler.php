@@ -1310,7 +1310,15 @@ trait WP_Document_Revisions_File_Handler {
 
 		// Core's subdir is either empty or starts with a slash ("/2026/09"). Joining it with
 		// another slash produced "uploads//2026/09", which breaks stream wrappers such as s3://.
-		$subdir  = isset( $dir['subdir'] ) && '' !== $dir['subdir'] ? '/' . ltrim( (string) $dir['subdir'], '/' ) : '';
+		$subdir = isset( $dir['subdir'] ) && '' !== $dir['subdir'] ? '/' . ltrim( (string) $dir['subdir'], '/' ) : '';
+
+		// Core dates an upload's folder from the parent post, so a new version of an old document
+		// went into the document's original month while the attachment is dated today. File new
+		// versions under the upload date so the folder, guid and attachment date agree.
+		if ( $this->is_document_upload() && get_option( 'uploads_use_yearmonth_folders' ) ) {
+			$subdir = (string) preg_replace( '#/\d{4}/\d{2}$#', '/' . current_time( 'Y/m' ), $subdir );
+		}
+
 		$new_dir = array(
 			'path'    => $doc_dir . $subdir,
 			'url'     => home_url( '/' . $this->document_slug() ) . $subdir,
