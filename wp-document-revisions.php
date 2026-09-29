@@ -181,6 +181,9 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		'document-revisions extract-text',
 		array( 'WP_Document_Revisions_Text_Extraction_CLI_Command', 'extract_text' )
 	);
+
+	require_once __DIR__ . '/includes/class-wp-document-revisions-validate-cli-command.php';
+	WP_CLI::add_command( 'document-revisions validate', 'WP_Document_Revisions_Validate_CLI_Command' );
 }
 
 // $wpdr is a global reference to the class.
