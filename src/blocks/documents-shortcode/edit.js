@@ -147,7 +147,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<RadioControl
-						label={ __( 'Order sequence' ) }
+						label={ __( 'Order sequence', 'wp-document-revisions' ) }
 						selected={ attributes.order }
 						options={ [
 							{
