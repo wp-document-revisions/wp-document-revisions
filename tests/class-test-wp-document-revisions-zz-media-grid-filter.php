@@ -285,6 +285,18 @@ class Test_WP_Document_Revisions_Zz_Media_Grid_Filter extends Test_Common_WPDR {
 	}
 
 	/**
+	 * The attachment data doesn't reveal the document it belongs to.
+	 */
+	public function test_get_attachment_hides_document() {
+		$data = $this->get_attachment( self::$author, self::$private_attach );
+
+		$this->assertStringNotContainsString( 'Editor private', wp_json_encode( $data ), 'Document title exposed' );
+		foreach ( array( 'uploadedToLink', 'uploadedToTitle', 'editLink', 'alt', 'originalImageURL', 'originalImageName' ) as $key ) {
+			$this->assertEmpty( $data[ $key ] ?? '', "$key exposed" );
+		}
+	}
+
+	/**
 	 * Details of a document attachment the user can edit are not hidden.
 	 */
 	public function test_get_attachment_not_masked_for_editors() {

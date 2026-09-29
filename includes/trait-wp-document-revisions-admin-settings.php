@@ -835,6 +835,8 @@ trait WP_Document_Revisions_Admin_Settings {
 	 * Hides the details of a document attachment in the media modal when the user
 	 * cannot edit its document, as doc_clean_attachment() does for the REST API.
 	 *
+	 * @since 5.7.0
+	 *
 	 * @param array<string, mixed> $response   the attachment data for the media modal.
 	 * @param WP_Post              $attachment the attachment.
 	 * @return array<string, mixed>
@@ -854,7 +856,8 @@ trait WP_Document_Revisions_Admin_Settings {
 		$response['url']         = '';
 		$response['link']        = '';
 		$response['sizes']       = array();
-		unset( $response['filesizeInBytes'], $response['filesizeHumanReadable'], $response['image'], $response['thumb'] );
+		$response['alt']         = '';
+		unset( $response['filesizeInBytes'], $response['filesizeHumanReadable'], $response['image'], $response['thumb'], $response['originalImageURL'], $response['originalImageName'] );
 
 		return $response;
 	}
