@@ -292,7 +292,18 @@ trait WP_Document_Revisions_File_Handler {
 		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
 		$headers['ETag']          = $etag;
-		$headers['Cache-Control'] = 'no-cache';
+
+		if ( $this->is_public_document( $post, $version ) ) {
+			$headers['Cache-Control'] = 'no-cache';
+		} else {
+			// Only the requesting user may read this, so keep it out of shared caches and proxies.
+			$headers['Cache-Control'] = 'private, no-cache, no-store, max-age=0';
+			$headers['Pragma']        = 'no-cache';
+			$headers['Expires']       = 'Wed, 11 Jan 1984 05:00:00 GMT';
+		}
+
+		// Don't let browsers second-guess the served Content-Type.
+		$headers['X-Content-Type-Options'] = 'nosniff';
 
 		// could be compressed or not depending on browser capability.
 		$headers['Vary'] = 'Accept-Encoding';
@@ -551,6 +562,23 @@ trait WP_Document_Revisions_File_Handler {
 		return $deflt;
 	}
 
+
+	/**
+	 * Whether a document file can be read by anyone, i.e. without logging on or a password.
+	 *
+	 * Mirrors the anonymous-access branch of serve_document_auth().
+	 *
+	 * @since 5.7.0
+	 * @param WP_Post $post    the document being served.
+	 * @param mixed   $version revision requested, if any.
+	 * @return bool
+	 */
+	private function is_public_document( WP_Post $post, $version ): bool {
+		return ! $version
+			&& 'publish' === $post->post_status
+			&& '' === $post->post_password
+			&& apply_filters( 'document_read_uses_read', true );
+	}
 
 	/**
 	 * Whether a document of this MIME type is compressed on download by default.
@@ -825,6 +853,34 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Whether the current user may upload a file to the given document.
+	 *
+	 * @since 5.7.0
+	 * @param int $document_id the post the file is being uploaded to.
+	 * @return bool
+	 */
+	private function can_upload_to_document( int $document_id ): bool {
+		// Check the ID first: get_post( 0 ) would fall back to the global post.
+		return $document_id > 0
+			&& 'document' === get_post_type( $document_id )
+			&& current_user_can( 'edit_document', $document_id );
+	}
+
+	/**
+	 * Generates a random name for a stored document file.
+	 *
+	 * Private documents rely on stored file names being unguessable, so the name comes from a
+	 * cryptographically secure source. It keeps the 32 lowercase hex character (MD5) format that
+	 * the hashed-name checks and the .htaccess rules look for.
+	 *
+	 * @since 5.7.0
+	 * @return string 32 lowercase hex characters.
+	 */
+	public static function random_file_name(): string {
+		return bin2hex( random_bytes( 16 ) );
+	}
+
+	/**
 	 * Rewrites uploaded revisions filename with secure hash to mask true location.
 	 *
 	 * @since 0.5
@@ -833,8 +889,13 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	public function filename_rewrite( array $file ): array {
 		// verify if this is a document load as they have an additional parameter.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
-		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
+		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source']
+			// The flag only counts for a document the current user can edit.
+			|| ! $this->can_upload_to_document( $document_id ) ) {
 			// default - not a WPDR Document.
 			self::$doc_image       = true;
 			self::$document_upload = false;
@@ -853,7 +914,7 @@ trait WP_Document_Revisions_File_Handler {
 		$orig_filename = $file['name'];
 
 		// hash and replace filename, appending extension.
-		$file['name'] = md5( $file['name'] . microtime() ) . $this->get_extension( $file['name'] );
+		$file['name'] = self::random_file_name() . $this->get_extension( $file['name'] );
 
 		/**
 		 * Filters the encoded file name for the attached document (on save).
@@ -862,9 +923,6 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param string $orig_filename original file name.
 		 */
 		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
-		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
 
 		/**
 		 * Fires when a document file upload starts, before the file is moved into place.
@@ -875,7 +933,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * @since 5.6.0
 		 *
 		 * @param array  $file          the upload, with the hashed file name.
-		 * @param int    $document_id   the document the file is being uploaded to (0 if unknown).
+		 * @param int    $document_id   the document the file is being uploaded to.
 		 * @param string $orig_filename the original file name.
 		 */
 		do_action( 'document_upload_start', $file, $document_id, $orig_filename );
@@ -1569,7 +1627,7 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
-	 * Renames generated image-size files that start with the attachment title to an md5 name.
+	 * Renames generated image-size files that start with the attachment title to a random hashed name.
 	 *
 	 * A size entry is only updated when its file was actually moved, so the metadata
 	 * never points at a file that is not there.
@@ -1582,7 +1640,7 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	private function hide_size_file_names( array $sizes, string $file_dir, string $title ): array {
 		$wp_filesystem = $this->direct_filesystem( $file_dir );
-		$new_name      = md5( $title . microtime() );
+		$new_name      = self::random_file_name();
 		foreach ( $sizes as $size => $sizeinfo ) {
 			if ( 0 !== strpos( $sizeinfo['file'], $title ) || ! file_exists( $file_dir . $sizeinfo['file'] ) ) {
 				continue;

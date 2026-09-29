@@ -206,11 +206,14 @@ class WP_Document_Revisions_AI_Summary_REST {
 		// resolve_ids() already validated for the permission callback;
 		// we know it's an array here, not a WP_Error.
 
+		// Opted out, private or password protected: no summary will be generated.
+		$allowed = WP_Document_Revisions_AI_Summary::is_allowed_for_document( $ids['doc_id'] );
+
 		$stored = WP_Document_Revisions_AI_Summary::get( $ids['rev_id'] );
-		if ( null === $stored ) {
+		if ( null === $stored && $allowed ) {
 			return new WP_REST_Response( array( 'status' => 'pending' ), 200 );
 		}
-		if ( 'unavailable' === $stored['kind'] ) {
+		if ( null === $stored || 'unavailable' === $stored['kind'] ) {
 			return new WP_REST_Response(
 				array(
 					'status' => 'unavailable',
@@ -261,6 +264,16 @@ class WP_Document_Revisions_AI_Summary_REST {
 				),
 				200
 			);
+		}
+
+		// diff_revisions() extracts both files in this request when their
+		// text isn't cached yet, so cap it like the async extractor.
+		/** This filter is documented in includes/class-wp-document-revisions-text-extractor-scheduler.php */
+		$timeout = (int) apply_filters( 'wpdr_text_extraction_timeout', WP_Document_Revisions_Text_Extractor_Scheduler::DEFAULT_TIMEOUT, $ids['rev_id'] );
+		if ( $timeout > 0 ) {
+			// Advisory only; safe_mode / disable_functions can no-op this.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky,Squiz.PHP.DiscouragedFunctions.Discouraged
+			@set_time_limit( $timeout );
 		}
 
 		$result = WP_Document_Revisions_Text_Diff::diff_revisions( $prior_id, $ids['rev_id'] );

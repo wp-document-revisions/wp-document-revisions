@@ -198,9 +198,10 @@ There are four orthogonal switches. Pick the smallest one that fits your need.
 | Stop extraction for one document | "Skip text extraction" checkbox on the document edit screen | One document |
 | Stop AI summary pre-fill (keep extraction for search) | `define( 'WPDR_AI_SUMMARY_PREFILL', false );` | Sitewide |
 | Stop pre-fill for one document | "Do not pre-fill the revision log" checkbox on the document edit screen | One document |
+| Allow AI summaries for private and password-protected documents (skipped by default) | `add_filter( 'document_ai_summary_allow_private', '__return_true' );` | Sitewide |
 | Stop AI summary generation entirely | `define( 'WP_AI_SUPPORT', false );` (the WordPress core kill switch) | Sitewide |
 
-When the extraction opt-out is flipped on for a document, the plugin clears every cache-managed meta key on the document's revision attachments (`_wpdr_extracted_text`, `_wpdr_extracted_text_hash`, `_wpdr_extracted_text_extractor`, `_wpdr_extraction_failed`) and un-schedules any pending extraction cron events.
+When the extraction opt-out is flipped on for a document, the plugin clears every cache-managed meta key on the document's revision attachments (`_wpdr_extracted_text`, `_wpdr_extracted_text_hash`, `_wpdr_extracted_text_extractor`, `_wpdr_extraction_failed`) and un-schedules any pending extraction cron events. It also deletes any stored AI summaries (`_wpdr_ai_summary_*`) on those attachments.
 
 The pre-fill opt-out is UI-only — it doesn't touch any cached data, just stops the editor JS from writing into the revision log field.
 

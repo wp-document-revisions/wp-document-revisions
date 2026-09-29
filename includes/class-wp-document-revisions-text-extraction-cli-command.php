@@ -328,6 +328,7 @@ class WP_Document_Revisions_Text_Extraction_CLI_Command {
 		}
 
 		try {
+			WP_Document_Revisions_Text_Extractor_Registry::check_limits( $file_path, $mime_type );
 			$text = $extractor->extract( $file_path, $mime_type );
 		} catch ( Throwable $e ) {
 			WP_CLI::log(

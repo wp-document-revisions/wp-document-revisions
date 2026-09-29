@@ -16,6 +16,12 @@ In: class-wp-document-revisions-text-extraction-opt-out.php
 
 Filters whether the AI revision-log pre-fill is turned off sitewide. Defaults to whether `WPDR_AI_SUMMARY_PREFILL` is defined as `false`. When true, the pre-fill checkbox isn't shown in the "Text Extraction & AI" meta box. (Since 5.6.0.)
 
+## Filter document_ai_summary_allow_private
+
+In: class-wp-document-revisions-ai-summary.php
+
+Filters whether AI summaries are generated and shown for private and password-protected documents. Generating a summary sends the document's text to the site's AI provider, so these documents are skipped by default. Receives `$allow` (default `false`) and the document `WP_Post`. Return true to allow summaries. (Since 5.7.0.)
+
 ## Filter document_allow_revision_deletion
 
 In: trait-wp-document-revisions-revisions.php
@@ -409,7 +415,19 @@ Seconds between a revision attachment insert and the cron event that runs extrac
 
 In: includes/class-wp-document-revisions-text-extractor-scheduler.php
 
-Hard timeout, in seconds, applied via `set_time_limit()` inside the extraction cron handler. Default 30. Advisory only — no-op when `safe_mode` is on or `set_time_limit` is disabled.
+Hard timeout, in seconds, applied via `set_time_limit()` inside the extraction cron handler and the AI diff REST endpoint. Default 30. Advisory only — no-op when `safe_mode` is on or `set_time_limit` is disabled.
+
+## Filter wpdr_text_extraction_max_file_size
+
+In: includes/class-wp-document-revisions-text-extractor-registry.php
+
+Largest file, in bytes, that text extraction will process. Larger files are treated as failed extractions. Default 20 MB. Set to 0 to turn the check off. Receives the limit, the file path and the MIME type. (Since 5.7.0.)
+
+## Filter wpdr_text_extraction_max_uncompressed_size
+
+In: includes/class-wp-document-revisions-text-extractor-registry.php
+
+Largest total unzipped size, in bytes, of a Word or OpenDocument file that text extraction will process. This guards against zip bombs. Default 100 MB. Set to 0 to turn the check off. Receives the limit, the file path and the MIME type. (Since 5.7.0.)
 
 ## Filter wpdr_text_diff_context_lines
 
