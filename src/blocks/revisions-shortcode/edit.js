@@ -7,7 +7,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
 	return (
-			<>
+		<>
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Selection Criteria', 'wp-document-revisions' ) }
@@ -71,7 +71,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						skipBlockSupportAttributes
 					/>
 				) : (
-					<p>{ __( 'Enter a document ID to see its revisions.', 'wp-document-revisions' ) }</p>
+					<p>
+						{ __(
+							'Enter a document ID to see its revisions.',
+							'wp-document-revisions'
+						) }
+					</p>
 				) }
 			</div>
 		</>

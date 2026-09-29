@@ -270,11 +270,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 	 * @since 3.3.0
 	 */
 	public function documents_widget_block(): void {
-		if ( ! function_exists( 'register_block_type' ) ) {
-			// Gutenberg is not active, e.g. Old WP version installed.
-			return;
-		}
-
 		$dir       = dirname( __DIR__ );
 		$build_dir = $dir . '/build/blocks/documents-widget';
 
@@ -293,15 +288,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 					'render_callback' => array( $this, 'wpdr_documents_widget_display' ),
 				)
 			);
-		}
-
-		// set translations.
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			$registry = \WP_Block_Type_Registry::get_instance();
-			$block    = $registry->get_registered( 'wp-document-revisions/documents-widget' );
-			if ( $block && ! empty( $block->editor_script_handles ) ) {
-				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
-			}
 		}
 
 		// Find sizes for images for PDFs. (Logic based on /wp-admin/includes/image.php).

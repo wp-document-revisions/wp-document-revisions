@@ -71,8 +71,10 @@ class WP_Document_Revisions_Front_End {
 		add_shortcode( 'document_preview', array( $this, 'wpdr_document_preview_display' ) );
 		add_filter( 'document_shortcode_atts', array( $this, 'shortcode_atts_hyphen_filter' ) );
 
-		// Add blocks. Done after wp_loaded so that the taxonomies have been defined.
+		// Add blocks. Done on standard init so that the block supports will be taken into account.
 		add_action( 'init', array( $this, 'documents_shortcode_blocks' ) );
+		// Add taxonomy data. Done on enqueue_block_editor_assets so that the taxonomies have been defined.
+		add_action( 'enqueue_block_editor_assets', array( $this, 'documents_block_editor_data' ) );
 
 		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front' ), 50 );
@@ -575,11 +577,6 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function documents_shortcode_blocks(): void {
-		if ( ! function_exists( 'register_block_type' ) ) {
-			// Gutenberg is not active, e.g. Old WP version installed.
-			return;
-		}
-
 		// add the plugin category.
 		add_filter( 'block_categories_all', array( $this, 'wpdr_block_categories' ), 10, 2 );
 
@@ -640,6 +637,17 @@ class WP_Document_Revisions_Front_End {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Register revisions-shortcode block
+	 *
+	 * @since 5.5.0
+	 */
+	public function documents_block_editor_data(): void {
+		if ( ! is_admin() ) {
+			return;
+		}
 
 		// Add supplementary script for additional information.
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
@@ -651,22 +659,7 @@ class WP_Document_Revisions_Front_End {
 		$block    = $registry->get_registered( 'wp-document-revisions/documents-shortcode' );
 		if ( $block && ! empty( $block->editor_script_handles ) ) {
 			$handle = $block->editor_script_handles[0];
-			wp_add_inline_script( $handle, 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
-		}
-
-		// set translations.
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			if ( $block && ! empty( $block->editor_script_handles ) ) {
-				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
-			}
-			$rev_block = $registry->get_registered( 'wp-document-revisions/revisions-shortcode' );
-			if ( $rev_block && ! empty( $rev_block->editor_script_handles ) ) {
-				wp_set_script_translations( $rev_block->editor_script_handles[0], 'wp-document-revisions' );
-			}
-			$prev_block = $registry->get_registered( 'wp-document-revisions/document-preview' );
-			if ( $prev_block && ! empty( $prev_block->editor_script_handles ) ) {
-				wp_set_script_translations( $prev_block->editor_script_handles[0], 'wp-document-revisions' );
-			}
+			wp_add_inline_script( $handle, 'var wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 		}
 	}
 
@@ -745,7 +738,8 @@ class WP_Document_Revisions_Front_End {
 			// build and create cache entry. Get name only to allow easier filtering.
 			$taxos = get_object_taxonomies( 'document' );
 			// Make sure 'workflow_state' is in the list if not disabled. With EF/PP it uses the post_status taxonomy.
-			if ( ! empty( self::$parent->taxonomy_key() ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
+			$tax_key = self::$parent->taxonomy_key();
+			if ( ! empty( self::$parent->taxonomy_key() ) && taxonomy_exists( $tax_key ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
 				$taxos[] = 'workflow_state';
 			}
 
@@ -761,7 +755,6 @@ class WP_Document_Revisions_Front_End {
 			$taxonomy_elements = array();
 			// Has workflow_state been mangled? Note. set here as it could be filtered out.
 			$wf_efpp = 0;
-			$tax_key = self::$parent->taxonomy_key();
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
@@ -772,8 +765,12 @@ class WP_Document_Revisions_Front_End {
 				);
 				// Look up taxonomy.
 				if ( 'workflow_state' === $taxonomy && ! empty( $tax_key ) && 'workflow_state' !== $tax_key ) {
+					$tax_obj = get_taxonomy( $tax_key );
+					if ( ! $tax_obj instanceof WP_Taxonomy ) {
+						continue;
+					}
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax_arr                 = (array) get_taxonomy( $tax_key );
+					$tax_arr                 = (array) $tax_obj;
 					$tax_arr['hierarchical'] = false;
 					$tax_arr['label']        = 'Post Status';
 					$object_type             = $tax_arr['object_type'];
@@ -783,6 +780,9 @@ class WP_Document_Revisions_Front_End {
 					$wf_efpp = 1;
 				} else {
 					$tax = get_taxonomy( $taxonomy );
+				}
+				if ( ! $tax instanceof WP_Taxonomy ) {
+					continue; // Not registered (e.g. unregistered, or bad name from the filter).
 				}
 
 				// Hierarchical or flat taxonomy ?
@@ -1081,7 +1081,8 @@ class WP_Document_Revisions_Front_End {
 
 		// find the block styling.
 		$wrapper = $this->get_block_attributes();
-		$output  = '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
+
+		$output = '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
 
 		if ( $show_title ) {
 			$output .= '<h2 class="document-title">' . esc_html( get_the_title( $id ) ) . '</h2>';
