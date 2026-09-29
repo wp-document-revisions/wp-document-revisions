@@ -666,6 +666,6 @@ class Test_WP_Document_Revisions_Rest extends Test_Common_WPDR {
 		self::assertEquals( 401, $response->get_status(), 'Authorization error' );
 		$revision = $response->get_data();
 		self::assertEquals( 'rest_cannot_read', $revision['code'], 'revision wrong code' );
-		self::assertEquals( 'Sorry, you are not allowed to view revisions of this post.', $revision['message'], 'revision wrong message' );
+		self::assertEquals( 'Sorry, you are not allowed to view revisions.', $revision['message'], 'revision wrong message' );
 	}
 }
