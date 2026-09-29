@@ -39,7 +39,7 @@ class Test_WP_Document_Revisions_Zz_Validate_Last_Attachment extends Test_Common
 	}
 
 	/**
-	 * A featured image or other later image doesn't count as the document's file.
+	 * Without the meta, a later unhashed image doesn't count as the document's file.
 	 */
 	public function test_ignores_later_images() {
 		$doc      = self::factory()->post->create( array( 'post_type' => 'document' ) );
@@ -48,6 +48,33 @@ class Test_WP_Document_Revisions_Zz_Validate_Last_Attachment extends Test_Common
 		set_post_thumbnail( $doc, $featured );
 		$this->child( $doc, '2026/09/another-photo.jpg' );
 
+		self::assertSame( $file, $this->last_attachment( $doc ) );
+	}
+
+	/**
+	 * The attachment id meta wins while it names a child attachment.
+	 */
+	public function test_prefers_attachment_meta() {
+		$doc     = self::factory()->post->create( array( 'post_type' => 'document' ) );
+		$current = $this->child( $doc, '2026/08/' . md5( 'current' ) . '.pdf' );
+		$this->child( $doc, '2026/09/' . md5( 'newer' ) . '.pdf' );
+		update_post_meta( $doc, '_document_attachment_id', $current );
+
+		self::assertSame( $current, $this->last_attachment( $doc ) );
+	}
+
+	/**
+	 * Meta naming a missing or non-child attachment is ignored.
+	 */
+	public function test_ignores_stale_attachment_meta() {
+		$doc  = self::factory()->post->create( array( 'post_type' => 'document' ) );
+		$file = $this->child( $doc, '2026/09/' . md5( 'report' ) . '.pdf' );
+		$orph = self::factory()->attachment->create( array( 'post_parent' => 0 ) );
+
+		update_post_meta( $doc, '_document_attachment_id', $orph );
+		self::assertSame( $file, $this->last_attachment( $doc ) );
+
+		update_post_meta( $doc, '_document_attachment_id', PHP_INT_MAX );
 		self::assertSame( $file, $this->last_attachment( $doc ) );
 	}
 

@@ -1049,11 +1049,19 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return int|false
 	 */
 	private static function get_last_attachment( $doc_id ) {
-		// Newest first. Any child attachment counts, but the document's featured image isn't
-		// its file, and a later-uploaded image would otherwise win over the document file.
-		$children  = get_children(
+		$doc_id = (int) $doc_id;
+
+		// The upload process records the document's file in meta; trust it while it's still a child.
+		$meta_id = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		$meta    = $meta_id ? get_post( $meta_id ) : null;
+		if ( $meta instanceof WP_Post && 'attachment' === $meta->post_type && $doc_id === $meta->post_parent ) {
+			return $meta_id;
+		}
+
+		// Otherwise look at the child attachments, newest first.
+		$children = get_children(
 			array(
-				'post_parent' => (int) $doc_id,
+				'post_parent' => $doc_id,
 				'post_type'   => 'attachment',
 				'post_status' => 'any',
 				'orderby'     => 'ID',
@@ -1061,8 +1069,7 @@ class WP_Document_Revisions_Validate_Structure {
 				'fields'      => 'ids',
 			)
 		);
-		$thumbnail = (int) get_post_thumbnail_id( (int) $doc_id );
-		$children  = array_values( array_diff( array_map( 'intval', (array) $children ), array( $thumbnail ) ) );
+		$children = array_map( 'intval', array_values( (array) $children ) );
 		if ( empty( $children ) ) {
 			return false;
 		}
