@@ -4,6 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 5.7.0
 
+* Security: on sites that enable block editor mode for documents (off by default), the Media Library grid listed the files of other users' private, draft and password-protected documents to Authors and above, including their stored file names. In either mode, the media modal returned the same details for any attachment ID. Document files are now hidden from the grid in both modes, and the media modal hides the details of document files the user can't edit ([GHSA-2xcp-6j73-4cr7](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2xcp-6j73-4cr7)).
 * AI summaries are no longer generated or shown for private or password-protected documents, since generating one sends the document's text to the site's AI provider. New documents are private by default, so sites that want summaries for them must opt in with the new `document_ai_summary_allow_private` filter. Opting a document out of text extraction now also deletes its stored AI summaries. (#784)
 * Files for drafts, private and password-protected documents, and revisions are now served with `Cache-Control: private, no-store`, so shared caches and proxies don't keep them. All served files also send `X-Content-Type-Options: nosniff`. (#781)
 * Document files are now stored under random names instead of names derived from the file name and upload time. (#780)
