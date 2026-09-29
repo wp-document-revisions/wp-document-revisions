@@ -150,6 +150,7 @@ class WP_Document_Revisions_Admin {
 		// media filters.
 		add_action( 'admin_init', array( $this, 'filter_from_media' ) );
 		add_filter( 'ajax_query_attachments_args', array( $this, 'filter_from_media_grid' ) );
+		add_filter( 'wp_prepare_attachment_for_js', array( $this, 'clean_attachment_for_js' ), 10, 2 );
 
 		// cleanup.
 		add_action( 'before_delete_post', array( $this, 'list_attachments_with_document' ) );
