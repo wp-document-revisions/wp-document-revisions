@@ -266,6 +266,16 @@ class WP_Document_Revisions_AI_Summary_REST {
 			);
 		}
 
+		// diff_revisions() extracts both files in this request when their
+		// text isn't cached yet, so cap it like the async extractor.
+		/** This filter is documented in includes/class-wp-document-revisions-text-extractor-scheduler.php */
+		$timeout = (int) apply_filters( 'wpdr_text_extraction_timeout', WP_Document_Revisions_Text_Extractor_Scheduler::DEFAULT_TIMEOUT, $ids['rev_id'] );
+		if ( $timeout > 0 ) {
+			// Advisory only; safe_mode / disable_functions can no-op this.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky,Squiz.PHP.DiscouragedFunctions.Discouraged
+			@set_time_limit( $timeout );
+		}
+
 		$result = WP_Document_Revisions_Text_Diff::diff_revisions( $prior_id, $ids['rev_id'] );
 
 		return new WP_REST_Response(
