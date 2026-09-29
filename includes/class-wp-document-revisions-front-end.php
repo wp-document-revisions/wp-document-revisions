@@ -71,8 +71,10 @@ class WP_Document_Revisions_Front_End {
 		add_shortcode( 'document_preview', array( $this, 'wpdr_document_preview_display' ) );
 		add_filter( 'document_shortcode_atts', array( $this, 'shortcode_atts_hyphen_filter' ) );
 
-		// Add blocks. Done after wp_loaded so that the taxonomies have been defined.
-		add_action( 'wp_loaded', array( $this, 'documents_shortcode_blocks' ), 100 );
+		// Add blocks. Done on standard init so that the block supports will be taken into account.
+		add_action( 'init', array( $this, 'documents_shortcode_blocks' ) );
+		// Add taxonomy data. Done on enqueue_block_editor_assets so that the taxonomies have been defined.
+		add_action( 'enqueue_block_editor_assets', array( $this, 'documents_block_editor_data' ) );
 
 		// Queue up JS (low priority to be at end).
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front' ), 50 );
@@ -689,6 +691,17 @@ class WP_Document_Revisions_Front_End {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Register revisions-shortcode block
+	 *
+	 * @since 5.5.0
+	 */
+	public function documents_block_editor_data(): void {
+		if ( ! is_admin() ) {
+			return;
+		}
 
 		// Add supplementary script for additional information.
 		// document CPT has no default taxonomies, need to look up in wp_taxonomies.
@@ -700,22 +713,7 @@ class WP_Document_Revisions_Front_End {
 		$block    = $registry->get_registered( 'wp-document-revisions/documents-shortcode' );
 		if ( $block && ! empty( $block->editor_script_handles ) ) {
 			$handle = $block->editor_script_handles[0];
-			wp_add_inline_script( $handle, 'const wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
-		}
-
-		// set translations.
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			if ( $block && ! empty( $block->editor_script_handles ) ) {
-				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
-			}
-			$rev_block = $registry->get_registered( 'wp-document-revisions/revisions-shortcode' );
-			if ( $rev_block && ! empty( $rev_block->editor_script_handles ) ) {
-				wp_set_script_translations( $rev_block->editor_script_handles[0], 'wp-document-revisions' );
-			}
-			$prev_block = $registry->get_registered( 'wp-document-revisions/document-preview' );
-			if ( $prev_block && ! empty( $prev_block->editor_script_handles ) ) {
-				wp_set_script_translations( $prev_block->editor_script_handles[0], 'wp-document-revisions' );
-			}
+			wp_add_inline_script( $handle, 'var wpdr_data = ' . wp_json_encode( $taxonomies ), 'before' );
 		}
 	}
 
@@ -794,7 +792,8 @@ class WP_Document_Revisions_Front_End {
 			// build and create cache entry. Get name only to allow easier filtering.
 			$taxos = get_object_taxonomies( 'document' );
 			// Make sure 'workflow_state' is in the list if not disabled. With EF/PP it uses the post_status taxonomy.
-			if ( ! empty( self::$parent->taxonomy_key() ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
+			$tax_key = self::$parent->taxonomy_key();
+			if ( ! empty( self::$parent->taxonomy_key() ) && taxonomy_exists( $tax_key ) && ! in_array( 'workflow_state', (array) $taxos, true ) ) {
 				$taxos[] = 'workflow_state';
 			}
 
@@ -810,7 +809,6 @@ class WP_Document_Revisions_Front_End {
 			$taxonomy_elements = array();
 			// Has workflow_state been mangled? Note. set here as it could be filtered out.
 			$wf_efpp = 0;
-			$tax_key = self::$parent->taxonomy_key();
 			foreach ( $taxos as $taxonomy ) {
 				// Find the terms.
 				$terms    = array();
@@ -821,17 +819,21 @@ class WP_Document_Revisions_Front_End {
 				);
 				// Look up taxonomy.
 				if ( 'workflow_state' === $taxonomy && ! empty( $tax_key ) && 'workflow_state' !== $tax_key ) {
+					$tax_obj = get_taxonomy( $tax_key );
+					if ( ! $tax_obj instanceof WP_Taxonomy ) {
+						continue;
+					}
 					// EF/PP - Mis-use of 'post_status' taxonomy.
-					$tax_arr                 = (array) get_taxonomy( $tax_key );
-					$tax_arr['hierarchical'] = false;
-					$tax_arr['label']        = 'Post Status';
-					$object_type             = $tax_arr['object_type'];
-					unset( $tax_arr['name'] );
-					unset( $tax_arr['object_type'] );
-					$tax     = new WP_Taxonomy( $tax_key, $object_type, $tax_arr );
-					$wf_efpp = 1;
+					$tax               = clone $tax_obj;
+					$tax->hierarchical = false;
+					$tax->label        = 'Post Status';
+					$wf_efpp           = 1;
 				} else {
 					$tax = get_taxonomy( $taxonomy );
+				}
+
+				if ( ! $tax instanceof WP_Taxonomy ) {
+					continue; // Not registered (e.g. unregistered, or bad name from the filter).
 				}
 
 				// Hierarchical or flat taxonomy ?
@@ -881,24 +883,24 @@ class WP_Document_Revisions_Front_End {
 	/**
 	 * Server side block to render the documents list.
 	 *
-	 * @param array<string, mixed> $atts shortcode attributes.
+	 * @param array<mixed> $atts shortcode attributes.
 	 * @return string a UL with the revisions
 	 * @since 3.3.0
 	 */
 	public function wpdr_documents_shortcode_display( array $atts ): string {
-		// get instance of global class.
-		global $wpdr;
-
 		// sanity check.
 		// do not show output to users that do not have the read_documents capability and don't get it via read.
 		if ( ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_documents' ) ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
+		// find the block styling.
+		$wrapper = $this->get_block_attributes();
+		$output  = '';
+
 		// if header set, then output as <h2>.
-		$output = '';
 		if ( isset( $atts['header'] ) ) {
-			$output = '<h2>' . esc_html( $atts['header'] ) . '</h2>';
+			$output .= '<h2>' . esc_html( $atts['header'] ) . '</h2>';
 		}
 
 		$atts = shortcode_atts(
@@ -960,9 +962,8 @@ class WP_Document_Revisions_Front_End {
 		if ( ! empty( $atts['taxonomy_0'] ) && ! empty( $atts['term_0'] ) ) {
 			// get likely taxonomy.
 			$taxo = ( isset( $curr_taxos[0]['query'] ) && $atts['taxonomy_0'] === $curr_taxos[0]['query'] ? $curr_taxos[0]['slug'] : '' );
-			// create atts in the appropriate form tax->query_var = term slug.
-			// @phpstan-ignore argument.type (term_0 is a numeric term-ID string from the shortcode/block, which get_term() int-casts; a non-matching value falls through to the error branch below)
-			$term = get_term( $atts['term_0'], $taxo );
+			// create atts in the appropriate form tax->query_var = term slug. Ensure parameter is passed as an integer.
+			$term = get_term( (int) $atts['term_0'], $taxo );
 			if ( $term instanceof WP_Term ) {
 				$atts[ $atts['taxonomy_0'] ] = $term->slug;
 			} else {
@@ -1018,6 +1019,9 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		$output .= $errs . $this->documents_shortcode_int( $atts );
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
 		return $output;
 	}
 
@@ -1041,8 +1045,6 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function wpdr_revisions_shortcode_display( array $atts ): string {
-		// get instance of global class.
-		global $wpdr_fe;
 
 		$atts = shortcode_atts(
 			array(
@@ -1063,12 +1065,12 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		// Check it is a document (and not its revision or attached document) so don't use verify_post_type.
-		if ( 'document' !== get_post_type( $atts['id'] ) ) {
+		if ( ( ! is_numeric( $atts['id'] ) ) || 'document' !== get_post_type( $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'This is not a valid document.', 'wp-document-revisions' ) . '</p>';
 		}
 
 		// The user must be able to read this document.
-		if ( ! $wpdr_fe->can_read_revisions( (int) $atts['id'] ) ) {
+		if ( ! $this->can_read_revisions( (int) $atts['id'] ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
 		}
 
@@ -1077,8 +1079,14 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['show_pdf'] );
 		}
 
+		// find the block styling.
+		$wrapper = $this->get_block_attributes();
+
 		$output  = '<h2 class="document-title document-' . esc_attr( $atts['id'] ) . '">' . esc_html( get_the_title( $atts['id'] ) ) . '</h2>';
-		$output .= $wpdr_fe->revisions_shortcode( $atts );
+		$output .= $this->revisions_shortcode( $atts );
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
 		return $output;
 	}
 
@@ -1091,7 +1099,7 @@ class WP_Document_Revisions_Front_End {
 	 *
 	 * @param array<string, mixed> $atts shortcode/block attributes.
 	 * @return string the preview markup.
-	 * @since 5.4.0
+	 * @since 5.5.0
 	 */
 	public function wpdr_document_preview_display( array $atts ): string {
 		global $wpdr;
@@ -1139,6 +1147,9 @@ class WP_Document_Revisions_Front_End {
 
 		$download_link = '<a href="' . esc_url( $url ) . '" class="document-download" download>' . esc_html__( 'Download document', 'wp-document-revisions' ) . '</a>';
 
+		// find the block styling.
+		$wrapper = $this->get_block_attributes();
+
 		$output = '<div class="document-preview document-' . esc_attr( (string) $id ) . '">';
 
 		if ( $show_title ) {
@@ -1167,7 +1178,28 @@ class WP_Document_Revisions_Front_End {
 
 		$output .= '</div>';
 
+		if ( ! empty( $wrapper ) ) {
+			$output = '<div ' . $wrapper . '>' . $output . '</div>';
+		}
+
 		return $output;
+	}
+
+	/**
+	 * Block wrapper attributes.
+	 *
+	 * The rendering code may be called outside the context of a block, i.e. with a shortcode.
+	 *
+	 * @return string the block attributes if in context (empty for shortcodes).
+	 * @since 5.5.0
+	 */
+	public function get_block_attributes(): string {
+		// $block_to_render is set while any dynamic block renders (e.g. core/post-content running shortcodes), so check it is ours.
+		$block = WP_Block_Supports::$block_to_render;
+		if ( ! is_array( $block ) || 0 !== strpos( (string) ( $block['blockName'] ?? '' ), 'wp-document-revisions/' ) ) {
+			return '';
+		}
+		return get_block_wrapper_attributes();
 	}
 }
 

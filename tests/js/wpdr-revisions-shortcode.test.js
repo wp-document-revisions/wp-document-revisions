@@ -44,9 +44,15 @@ jest.mock(
 	{ virtual: true }
 );
 
-jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
-	virtual: true,
-} );
+jest.mock(
+	'@wordpress/server-side-render',
+	() => ( {
+		__esModule: true,
+		ServerSideRender: 'ServerSideRender',
+		default: 'ServerSideRender', // In case anything still uses the default import.
+	} ),
+	{ virtual: true }
+);
 
 jest.mock(
 	'@wordpress/i18n',
@@ -144,48 +150,6 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			expect( metadata.attributes.new_tab ).toEqual( {
 				type: 'boolean',
 				default: true,
-			} );
-		} );
-
-		test( 'defines align attribute as string', () => {
-			expect( metadata.attributes.align ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines backgroundColor attribute as string', () => {
-			expect( metadata.attributes.backgroundColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines linkColor attribute as string', () => {
-			expect( metadata.attributes.linkColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines textColor attribute as string', () => {
-			expect( metadata.attributes.textColor ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines gradient attribute as string', () => {
-			expect( metadata.attributes.gradient ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines fontSize attribute as string', () => {
-			expect( metadata.attributes.fontSize ).toEqual( {
-				type: 'string',
-			} );
-		} );
-
-		test( 'defines style attribute as object', () => {
-			expect( metadata.attributes.style ).toEqual( {
-				type: 'object',
 			} );
 		} );
 	} );

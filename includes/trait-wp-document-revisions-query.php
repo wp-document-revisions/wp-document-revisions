@@ -86,7 +86,7 @@ trait WP_Document_Revisions_Query {
 			}
 		}
 
-		// remove empty rows, e.g., created by autodraft, etc.
+		// remove empty rows, e.g., created by autodraft, etc. This can reduce the number of rows returned.
 		$output = array_filter( $output );
 
 		return $output;

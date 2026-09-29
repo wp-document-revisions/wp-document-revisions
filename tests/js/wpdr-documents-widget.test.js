@@ -46,9 +46,15 @@ jest.mock(
 	{ virtual: true }
 );
 
-jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
-	virtual: true,
-} );
+jest.mock(
+	'@wordpress/server-side-render',
+	() => ( {
+		__esModule: true,
+		ServerSideRender: 'ServerSideRender',
+		default: 'ServerSideRender', // In case anything still uses the default import.
+	} ),
+	{ virtual: true }
+);
 
 jest.mock(
 	'@wordpress/i18n',
@@ -166,16 +172,6 @@ describe( 'Block Attributes', () => {
 		expect( metadata.attributes.show_author.type ).toBe( 'boolean' );
 		expect( metadata.attributes.show_pdf.type ).toBe( 'boolean' );
 		expect( metadata.attributes.new_tab.type ).toBe( 'boolean' );
-	} );
-
-	test( 'defines styling attributes', () => {
-		expect( metadata.attributes.align.type ).toBe( 'string' );
-		expect( metadata.attributes.backgroundColor.type ).toBe( 'string' );
-		expect( metadata.attributes.linkColor.type ).toBe( 'string' );
-		expect( metadata.attributes.textColor.type ).toBe( 'string' );
-		expect( metadata.attributes.gradient.type ).toBe( 'string' );
-		expect( metadata.attributes.fontSize.type ).toBe( 'string' );
-		expect( metadata.attributes.style.type ).toBe( 'object' );
 	} );
 } );
 
@@ -512,17 +508,15 @@ describe( 'Edit Function - JSX Rendering', () => {
 		expect( blockDiv ).toBeDefined();
 	} );
 
-	test( 'renders status wrapper div with className prop', () => {
+	test( 'renders status wrapper div with bottom margin', () => {
 		blockConfig.edit( {
 			attributes: defaultAttributes,
 			setAttributes: jest.fn(),
-			className: 'test-class',
 		} );
 
 		const calls = getAllJsxCalls();
-		const divCalls = findAllCalls( calls, 'div' );
-		const statusDiv = divCalls.find(
-			( c ) => c[ 1 ].className === 'test-class'
+		const statusDiv = findAllCalls( calls, 'div' ).find(
+			( c ) => c[ 1 ].style?.marginBottom === '16px'
 		);
 
 		expect( statusDiv ).toBeDefined();

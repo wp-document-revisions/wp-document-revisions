@@ -45,9 +45,16 @@ jest.mock(
 	{ virtual: true }
 );
 
-jest.mock( '@wordpress/server-side-render', () => 'ServerSideRender', {
-	virtual: true,
-} );
+jest.mock(
+	'@wordpress/server-side-render',
+	() => ( {
+		__esModule: true,
+		ServerSideRender: 'ServerSideRender',
+		default: 'ServerSideRender', // In case anything still uses the default import.
+	} ),
+	{ virtual: true }
+);
+
 jest.mock( '@wordpress/i18n', () => ( { __: jest.fn( ( text ) => text ) } ), {
 	virtual: true,
 } );
@@ -286,30 +293,6 @@ describe( 'wpdr-documents-shortcode block', () => {
 			expect( metadata.attributes.freeform ).toEqual( {
 				type: 'string',
 				default: '',
-			} );
-		} );
-
-		test( 'should define style attributes for block supports', () => {
-			expect( metadata.attributes.align ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.backgroundColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.textColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.linkColor ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.gradient ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.fontSize ).toEqual( {
-				type: 'string',
-			} );
-			expect( metadata.attributes.style ).toEqual( {
-				type: 'object',
 			} );
 		} );
 	} );

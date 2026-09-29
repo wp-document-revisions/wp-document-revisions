@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "wp-document-revisions/revisions-shortcode",
-	"version": "3.9.0",
+	"version": "5.5.0",
 	"title": "Document Revisions",
 	"category": "wpdr-category",
 	"icon": "list-view",
@@ -29,27 +29,6 @@
 		"new_tab": {
 			"type": "boolean",
 			"default": true
-		},
-		"align": {
-			"type": "string"
-		},
-		"backgroundColor": {
-			"type": "string"
-		},
-		"linkColor": {
-			"type": "string"
-		},
-		"textColor": {
-			"type": "string"
-		},
-		"gradient": {
-			"type": "string"
-		},
-		"fontSize": {
-			"type": "string"
-		},
-		"style": {
-			"type": "object"
 		}
 	},
 	"supports": {

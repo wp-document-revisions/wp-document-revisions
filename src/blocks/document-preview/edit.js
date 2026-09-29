@@ -7,11 +7,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
 	return (
-		<div { ...blockProps }>
-			<ServerSideRender
-				block="wp-document-revisions/document-preview"
-				attributes={ attributes }
-			/>
+		<>
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Preview Settings', 'wp-document-revisions' ) }
@@ -22,7 +18,8 @@ export default function Edit( { attributes, setAttributes } ) {
 						value={ attributes.id }
 						label={ __( 'Document Id', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
-							setAttributes( { id: parseInt( val ) } );
+							const id = parseInt( val, 10 );
+							setAttributes( { id: Number.isNaN( id ) ? undefined : id } );
 						} }
 					/>
 					<RangeControl
@@ -36,7 +33,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						step={ 50 }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_title }
 						label={ __( 'Show Document Title?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -44,7 +41,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_download }
 						label={ __( 'Show Download Link?', 'wp-document-revisions' ) }
 						help={ __(
@@ -57,6 +54,17 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-		</div>
+			<div { ...blockProps }>
+				{ attributes.id > 0 ? (
+					<ServerSideRender
+						block="wp-document-revisions/document-preview"
+						attributes={ attributes }
+						skipBlockSupportAttributes
+					/>
+				) : (
+					<p>{ __( 'Enter a document ID to preview it.', 'wp-document-revisions' ) }</p>
+				) }
+			</div>
+		</>
 	);
 }

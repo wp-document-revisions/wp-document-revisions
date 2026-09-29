@@ -9,15 +9,11 @@ import {
 import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
 
-export default function Edit( { attributes, setAttributes, className } ) {
+export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
 	return (
-		<div { ...blockProps }>
-			<ServerSideRender
-				block="wp-document-revisions/documents-widget"
-				attributes={ attributes }
-			/>
+		<>
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Latest Documents Settings', 'wp-document-revisions' ) }
@@ -42,7 +38,7 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						min={ 1 }
 						max={ 25 }
 					/>
-					<div className={ className }>
+					<div style={ { marginBottom: '16px' } }>
 						<p>{ __( 'Document Statuses to Display', 'wp-document-revisions' ) }</p>
 						<CheckboxControl
 							checked={ attributes.post_stat_publish }
@@ -73,11 +69,11 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						/>
 					</div>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_thumb }
 						label={ __( 'Show featured image?', 'wp-document-revisions' ) }
 						help={ __(
-							'Under certain conditons WordPress can generate an image for Page 1 of PDF documents. If created this will be used as the Featured Image.',
+							'Under certain conditions WordPress can generate an image for Page 1 of PDF documents. If created this will be used as the Featured Image.',
 							'wp-document-revisions'
 						) }
 						onChange={ ( val ) => {
@@ -85,7 +81,7 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_descr }
 						label={ __( 'Show document description?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -93,7 +89,7 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_author }
 						label={ __( 'Show author name?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -101,7 +97,7 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_pdf }
 						label={ __( 'Show PDF File indication?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -109,11 +105,11 @@ export default function Edit( { attributes, setAttributes, className } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.new_tab }
 						label={ __( 'Open documents in new tab?', 'wp-document-revisions' ) }
 						help={ __(
-							'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
+							'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will leave the current page.',
 							'wp-document-revisions'
 						) }
 						onChange={ ( val ) => {
@@ -122,6 +118,13 @@ export default function Edit( { attributes, setAttributes, className } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-		</div>
+			<div { ...blockProps }>
+				<ServerSideRender
+					block="wp-document-revisions/documents-widget"
+					attributes={ attributes }
+					skipBlockSupportAttributes
+				/>
+			</div>
+		</>
 	);
 }

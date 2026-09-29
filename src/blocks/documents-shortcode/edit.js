@@ -104,11 +104,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	}
 
 	return (
-		<div { ...blockProps }>
-			<ServerSideRender
-				block="wp-document-revisions/documents-shortcode"
-				attributes={ attributes }
-			/>
+		<>
 			<InspectorControls>
 				<TextControl
 					type="string"
@@ -189,7 +185,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_thumb }
 						label={ __( 'Show featured image?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -197,7 +193,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_descr }
 						label={ __( 'Show document description?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -205,7 +201,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.show_pdf }
 						label={ __( 'Show PDF File indication?', 'wp-document-revisions' ) }
 						onChange={ ( val ) => {
@@ -213,7 +209,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						} }
 					/>
 					<ToggleControl
-						type="boolean"
+						__nextHasNoMarginBottom
 						checked={ attributes.new_tab }
 						label={ __( 'Open documents in new tab?', 'wp-document-revisions' ) }
 						help={ __(
@@ -244,6 +240,13 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-		</div>
+			<div { ...blockProps }>
+				<ServerSideRender
+					block="wp-document-revisions/documents-shortcode"
+					attributes={ attributes }
+					skipBlockSupportAttributes
+				/>
+			</div>
+		</>
 	);
 }

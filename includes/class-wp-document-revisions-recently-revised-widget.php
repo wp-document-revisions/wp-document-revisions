@@ -297,15 +297,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			);
 		}
 
-		// set translations.
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			$registry = \WP_Block_Type_Registry::get_instance();
-			$block    = $registry->get_registered( 'wp-document-revisions/documents-widget' );
-			if ( $block && ! empty( $block->editor_script_handles ) ) {
-				wp_set_script_translations( $block->editor_script_handles[0], 'wp-document-revisions' );
-			}
-		}
-
 		// Find sizes for images for PDFs. (Logic based on /wp-admin/includes/image.php).
 		$merged_sizes = array(
 			'thumbnail',
@@ -366,8 +357,20 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 			$args['after_title']  = '</h2>';
 		}
 
-		$output = $this->widget_gen( $args, $instance );
-		return $output;
+		$inner = $this->widget_gen( $args, $instance );
+		if ( empty( $inner ) ) {
+			return '';
+		}
+
+		// set the block styling.
+		// get instance of front_end class.
+		global $wpdr_fe;
+		$wrapper = $wpdr_fe->get_block_attributes();
+		if ( ! empty( $wrapper ) ) {
+			$inner = '<div ' . $wrapper . '>' . $inner . '</div>';
+		}
+
+		return $inner;
 	}
 
 	/**
@@ -382,16 +385,8 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		global $wpdr_widget;
 
 		register_widget( $wpdr_widget );
-	}
 
-	/**
-	 * Callback to register the recently revised widget block.
-	 *
-	 * Call with low priority to let taxonomies be registered.
-	 */
-	public function wpdr_widgets_block_init(): void {
-		global $wpdr_widget;
-
+		// register the block.
 		$wpdr_widget->documents_widget_block();
 	}
 }
