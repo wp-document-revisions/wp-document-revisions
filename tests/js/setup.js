@@ -44,30 +44,11 @@ global.wpApiSettings = {
 	nonce: 'test-nonce',
 };
 
-// Mock window.location.
-//
-// jsdom 25+ (bundled with jest-environment-jsdom 30.x) makes the location
-// property non-configurable in a way that `delete window.location` and a
-// plain `window.location = {...}` assignment no longer work — the setter is
-// trapped and either silently fails or triggers an "Error: Not implemented:
-// navigation" warning, leaving the real jsdom Location object in place. As
-// a result tests that expect `window.location.reload` to be a `jest.fn()`,
-// or that set `window.location.protocol = 'https:'`, end up exercising the
-// real (and read-only) Location instead.
-//
-// `Object.defineProperty` bypasses the setter trap and installs an ordinary
-// writable object whose `reload` is a Jest mock and whose `protocol` / `href`
-// are mutable. Tests can then read and overwrite these properties freely.
-Object.defineProperty( window, 'location', {
-	configurable: true,
-	enumerable: true,
-	writable: true,
-	value: {
-		href: 'https://example.com',
-		protocol: 'https:',
-		reload: jest.fn(),
-	},
-} );
+// window.location is left as jsdom's real Location. Since jsdom 21 its
+// properties are unforgeable (non-configurable), so it can't be replaced or
+// spied on. jsdom reports navigation (setting href, reload()) as a
+// "Not implemented: navigation" error, which Jest forwards to console.error;
+// tests that need to see a navigation spy on that instead.
 
 // Mock window.dialogArguments (used by IE) - must be explicitly undefined
 window.dialogArguments = undefined;
