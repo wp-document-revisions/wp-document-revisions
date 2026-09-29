@@ -327,6 +327,19 @@ trait WP_Document_Revisions_File_Handler {
 			return $template;
 		}
 
+		// Hand the file to the web server if the site has set that up.
+		$sendfile = $this->sendfile_header( $file, $attach );
+		if ( $sendfile ) {
+			// The server sends the body and works out its length and encoding.
+			unset( $headers['Content-Length'] );
+			$headers[ $sendfile[0] ] = $sendfile[1];
+			$this->serve_headers( $headers, $file );
+			if ( class_exists( 'WP_UnitTestCase' ) ) {
+				return $template;
+			}
+			exit;
+		}
+
 		// in case this is a large file, remove PHP time limits.
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,Squiz.PHP.DiscouragedFunctions.Discouraged
 		@set_time_limit( 0 );
@@ -908,6 +921,63 @@ trait WP_Document_Revisions_File_Handler {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@header( $header . ': ' . $value );
 		}
+	}
+
+	/**
+	 * Returns the header, if any, that tells the web server to send the file itself.
+	 *
+	 * Off unless a site opts in, because it only works when the server is configured
+	 * for it (mod_xsendfile, an nginx internal location, LiteSpeed).
+	 *
+	 * @since 5.6.0
+	 * @param string  $file   path of the file to be served.
+	 * @param WP_Post $attach the attachment being served.
+	 * @return array{0: string, 1: string}|null header name and value, or null to serve through PHP.
+	 */
+	private function sendfile_header( string $file, WP_Post $attach ): ?array {
+		/**
+		 * Filters which header hands document downloads to the web server instead of PHP.
+		 *
+		 * Return 'X-Sendfile' (Apache mod_xsendfile, lighttpd), 'X-Accel-Redirect'
+		 * (nginx) or 'X-LiteSpeed-Location' (LiteSpeed). Only enable it when the server
+		 * is configured for it and the document directory isn't otherwise web-accessible:
+		 * the plugin has already checked permissions when the header is sent.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $header Header name. Default '' (serve through PHP).
+		 * @param string  $file   Path of the file to be served.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$header = (string) apply_filters( 'document_serve_sendfile_header', '', $file, $attach );
+		if ( ! in_array( $header, array( 'X-Sendfile', 'X-Accel-Redirect', 'X-LiteSpeed-Location' ), true ) ) {
+			return null;
+		}
+
+		/**
+		 * Filters the value sent in the sendfile header.
+		 *
+		 * X-Sendfile takes the file path, which is the default. X-Accel-Redirect and
+		 * X-LiteSpeed-Location take a URI in an internal location that maps to the
+		 * document directory, so they have no default: return one, or the file is served
+		 * through PHP as usual.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param string  $value  Header value. Default the file path for X-Sendfile, '' otherwise.
+		 * @param string  $file   Path of the file to be served.
+		 * @param string  $header Header name.
+		 * @param WP_Post $attach The attachment being served.
+		 */
+		$value = (string) apply_filters( 'document_serve_sendfile_path', 'X-Sendfile' === $header ? $file : '', $file, $header, $attach );
+
+		// Header values can't contain line breaks.
+		$value = str_replace( array( "\r", "\n" ), '', $value );
+		if ( '' === $value ) {
+			return null;
+		}
+
+		return array( $header, $value );
 	}
 
 	/**
