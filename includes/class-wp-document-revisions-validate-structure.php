@@ -985,24 +985,34 @@ class WP_Document_Revisions_Validate_Structure {
 	 * @return int|false
 	 */
 	private static function get_last_attachment( $doc_id ) {
-		global $wpdb;
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		$attach = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT MAX(ID) AS ID
-				 FROM {$wpdb->posts} 
-				 WHERE post_type = 'attachment'
-				 AND post_parent = %d
-				",
-				$doc_id
-			),
-			ARRAY_A
+		// Newest first. Any child attachment counts, but the document's featured image isn't
+		// its file, and a later-uploaded image would otherwise win over the document file.
+		$children  = get_children(
+			array(
+				'post_parent' => (int) $doc_id,
+				'post_type'   => 'attachment',
+				'post_status' => 'any',
+				'orderby'     => 'ID',
+				'order'       => 'DESC',
+				'fields'      => 'ids',
+			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-		if ( 0 === $wpdb->num_rows ) {
+		$thumbnail = (int) get_post_thumbnail_id( (int) $doc_id );
+		$children  = array_values( array_diff( array_map( 'intval', (array) $children ), array( $thumbnail ) ) );
+		if ( empty( $children ) ) {
 			return false;
 		}
-		return ( is_null( $attach['ID'] ) ? false : (int) $attach['ID'] );
+
+		// Document files are stored under an md5-hashed name; prefer the newest of those.
+		foreach ( $children as $child ) {
+			$file = (string) get_post_meta( $child, '_wp_attached_file', true );
+			if ( preg_match( '/^[0-9a-f]{32}\./', wp_basename( $file ) ) ) {
+				return $child;
+			}
+		}
+
+		// Older documents may predate hashing (Validate Structure flags those separately).
+		return $children[0];
 	}
 
 	/**
