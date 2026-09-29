@@ -30,7 +30,7 @@ class Test_WP_Document_Revisions_Zz_Document_Upload_Limits extends WP_UnitTestCa
 		remove_all_filters( 'document_allowed_mimes' );
 		remove_all_filters( 'document_upload_size_limit' );
 		remove_filter( 'upload_dir', array( $wpdr, 'document_upload_dir_filter' ) );
-		unset( $_POST['upload_source'] );
+		unset( $_POST['upload_source'], $_POST['post_id'] );
 		WP_Document_Revisions::$doc_image = true;
 		parent::tear_down();
 	}
@@ -116,8 +116,11 @@ class Test_WP_Document_Revisions_Zz_Document_Upload_Limits extends WP_UnitTestCa
 		global $wpdr;
 
 		$this->allow_dwg();
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$_POST['upload_source'] = 'wp-document-revisions';
+		$_POST['post_id']       = self::factory()->post->create( array( 'post_type' => 'document' ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$wpdr->filename_rewrite( array( 'name' => 'plan.dwg' ) );
 
 		self::assertArrayHasKey( 'dwg', get_allowed_mime_types() );

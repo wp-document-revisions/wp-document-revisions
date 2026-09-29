@@ -118,8 +118,21 @@ class Test_Common_WPDR extends WP_UnitTestCase {
 		// create file structure.
 		$file_name = array( 'name' => basename( $file ) );
 
+		// the upload is only a document upload if the current user can edit the document,
+		// and these fixtures are often created with no user logged in.
+		$can_edit = function ( $caps, $cap, $user_id, $args ) use ( $post_id ) {
+			// core maps edit_document to edit_post before this filter runs.
+			if ( in_array( $cap, array( 'edit_post', 'edit_document' ), true ) && isset( $args[0] ) && (int) $args[0] === (int) $post_id ) {
+				return array( 'exist' );
+			}
+			return $caps;
+		};
+		add_filter( 'map_meta_cap', $can_edit, 10, 4 );
+
 		// call coding function.
 		$new_name = $wpdr->filename_rewrite( $file_name );
+
+		remove_filter( 'map_meta_cap', $can_edit, 10 );
 
 		$new_file = wp_upload_dir()['path'] . '/' . $new_name['name'];
 

@@ -41,6 +41,7 @@ class Test_WP_Document_Revisions_Zz_Document_Upload_Hooks extends WP_UnitTestCas
 	public function test_document_upload_lifecycle() {
 		global $wpdr;
 
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 		$doc = self::factory()->post->create( array( 'post_type' => 'document' ) );
 
 		$events = array();
