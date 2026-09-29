@@ -292,7 +292,18 @@ trait WP_Document_Revisions_File_Handler {
 		$etag                     = '"' . md5( $last_modified ) . '"';
 		$headers['Last-Modified'] = $last_modified . ' GMT';
 		$headers['ETag']          = $etag;
-		$headers['Cache-Control'] = 'no-cache';
+
+		if ( $this->is_public_document( $post, $version ) ) {
+			$headers['Cache-Control'] = 'no-cache';
+		} else {
+			// Only the requesting user may read this, so keep it out of shared caches and proxies.
+			$headers['Cache-Control'] = 'private, no-cache, no-store, max-age=0';
+			$headers['Pragma']        = 'no-cache';
+			$headers['Expires']       = 'Wed, 11 Jan 1984 05:00:00 GMT';
+		}
+
+		// Don't let browsers second-guess the served Content-Type.
+		$headers['X-Content-Type-Options'] = 'nosniff';
 
 		// could be compressed or not depending on browser capability.
 		$headers['Vary'] = 'Accept-Encoding';
@@ -551,6 +562,23 @@ trait WP_Document_Revisions_File_Handler {
 		return $deflt;
 	}
 
+
+	/**
+	 * Whether a document file can be read by anyone, i.e. without logging on or a password.
+	 *
+	 * Mirrors the anonymous-access branch of serve_document_auth().
+	 *
+	 * @since 5.7.0
+	 * @param WP_Post $post    the document being served.
+	 * @param mixed   $version revision requested, if any.
+	 * @return bool
+	 */
+	private function is_public_document( WP_Post $post, $version ): bool {
+		return ! $version
+			&& 'publish' === $post->post_status
+			&& '' === $post->post_password
+			&& apply_filters( 'document_read_uses_read', true );
+	}
 
 	/**
 	 * Whether a document of this MIME type is compressed on download by default.
