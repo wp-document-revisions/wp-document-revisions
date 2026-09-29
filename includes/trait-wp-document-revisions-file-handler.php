@@ -552,6 +552,47 @@ trait WP_Document_Revisions_File_Handler {
 
 
 	/**
+	 * Whether a document file is being uploaded in this request.
+	 *
+	 * True from document_upload_start until document_upload_end.
+	 *
+	 * @since 5.6.0
+	 * @return bool
+	 */
+	public function is_document_upload(): bool {
+		return self::$document_upload;
+	}
+
+	/**
+	 * Marks the end of a document upload once WordPress has generated the attachment metadata.
+	 *
+	 * @since 5.6.0
+	 * @param mixed $metadata      the attachment metadata.
+	 * @param mixed $attachment_id the attachment ID.
+	 * @return mixed the metadata, unchanged.
+	 */
+	public function end_document_upload( $metadata, $attachment_id = 0 ) {
+		if ( ! self::$document_upload ) {
+			return $metadata;
+		}
+		self::$document_upload = false;
+
+		$attachment_id = absint( $attachment_id );
+
+		/**
+		 * Fires when a document file upload has finished and its attachment metadata is generated.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param int $attachment_id the new attachment.
+		 * @param int $document_id   the document it belongs to.
+		 */
+		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
+
+		return $metadata;
+	}
+
+	/**
 	 * Returns an attachment's real storage URL, bypassing the filter that replaces document
 	 * attachment URLs with the (authenticated) document permalink.
 	 *
@@ -681,12 +722,14 @@ trait WP_Document_Revisions_File_Handler {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing 
 		if ( ! isset( $_POST['upload_source'] ) || 'wp-document-revisions' !== $_POST['upload_source'] ) {
 			// default - not a WPDR Document.
-			self::$doc_image = true;
+			self::$doc_image       = true;
+			self::$document_upload = false;
 			return $file;
 		}
 
 		// Parameter found, so is a document load.
-		self::$doc_image = false;
+		self::$doc_image       = false;
+		self::$document_upload = true;
 
 		// we are going to load the attachment into the upload directory, so invoke filter.
 		add_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
@@ -705,6 +748,23 @@ trait WP_Document_Revisions_File_Handler {
 		 * @param string $orig_filename original file name.
 		 */
 		$file = apply_filters( 'document_internal_filename', $file, $orig_filename );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only lookup of the upload target; core verifies the upload nonce.
+		$document_id = isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0;
+
+		/**
+		 * Fires when a document file upload starts, before the file is moved into place.
+		 *
+		 * From here until document_upload_end, is_document_upload() returns true, e.g. for
+		 * offload plugins to set storage options (such as S3 ContentDisposition) for documents.
+		 *
+		 * @since 5.6.0
+		 *
+		 * @param array  $file          the upload, with the hashed file name.
+		 * @param int    $document_id   the document the file is being uploaded to (0 if unknown).
+		 * @param string $orig_filename the original file name.
+		 */
+		do_action( 'document_upload_start', $file, $document_id, $orig_filename );
 
 		return $file;
 	}
