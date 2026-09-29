@@ -558,8 +558,18 @@ trait WP_Document_Revisions_Admin_Editor {
 		}
 		$ws = ( isset( $_POST['workflow_state'] ) ? sanitize_text_field( wp_unslash( $_POST['workflow_state'] ) ) : '' );
 
-		// Save it.
-		wp_set_post_terms( $doc_id, array( $ws ), 'workflow_state' );
+		// Save it. Only assign an existing state (by slug, name or id); unknown values are ignored.
+		if ( '' === $ws ) {
+			wp_set_post_terms( $doc_id, array(), 'workflow_state' );
+		} else {
+			$term = term_exists( $ws, 'workflow_state' );
+			if ( ! $term && ctype_digit( $ws ) ) {
+				$term = term_exists( (int) $ws, 'workflow_state' );
+			}
+			if ( is_array( $term ) ) {
+				wp_set_post_terms( $doc_id, array( (int) $term['term_id'] ), 'workflow_state' );
+			}
+		}
 
 		// is the permalink useful.
 		$doc_post = get_post( $doc_id );

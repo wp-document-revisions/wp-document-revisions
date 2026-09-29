@@ -113,6 +113,13 @@ class WP_Document_Revisions {
 	public static $taxonomy_key_val = 'workflow_state';
 
 	/**
+	 * Whether the default workflow states are being created.
+	 *
+	 * @var bool
+	 */
+	private static $seeding_workflow_states = false;
+
+	/**
 	 * Function to return Taxonomy key.
 	 *
 	 * @return string
@@ -145,6 +152,7 @@ class WP_Document_Revisions {
 		add_action( 'init', array( $this, 'register_cpt' ) );
 		add_action( 'init', array( $this, 'register_ct' ), 2000 ); // note: low priority to allow for edit flow/publishpress support.
 		add_action( 'admin_init', array( $this, 'initialize_workflow_states' ) );
+		add_filter( 'pre_insert_term', array( $this, 'restrict_workflow_state_insert' ), 10, 2 );
 
 		// Abilities API (WP 6.9+).
 		add_action( 'wp_abilities_api_categories_init', array( $this, 'register_ability_category' ) );
@@ -1036,6 +1044,8 @@ class WP_Document_Revisions {
 		 */
 		$states = apply_filters( 'default_workflow_states', $states ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
+		// Seeding runs for whoever loads the admin first, so bypass the creation check.
+		self::$seeding_workflow_states = true;
 		foreach ( $states as $state => $desc ) {
 			wp_insert_term(
 				$state,
@@ -1045,6 +1055,32 @@ class WP_Document_Revisions {
 				)
 			);
 		}
+		self::$seeding_workflow_states = false;
+	}
+
+	/**
+	 * Stops users who can't edit workflow states from creating them.
+	 *
+	 * Assigning a term by name (e.g. quick edit, bulk edit or tax_input) creates it when it
+	 * doesn't exist, and core only checks the taxonomy's assign_terms capability for that.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param string|WP_Error $term     the term name to add, or a WP_Error object.
+	 * @param string          $taxonomy the taxonomy slug.
+	 * @return string|WP_Error
+	 */
+	public function restrict_workflow_state_insert( $term, $taxonomy ) {
+		if ( 'workflow_state' !== $taxonomy || self::$seeding_workflow_states || is_wp_error( $term ) || ! is_user_logged_in() ) {
+			return $term;
+		}
+
+		$tax = get_taxonomy( $taxonomy );
+		if ( $tax && ! current_user_can( $tax->cap->edit_terms ) ) {
+			return new WP_Error( 'wpdr_cannot_create_workflow_state', __( 'Sorry, you are not allowed to create workflow states.', 'wp-document-revisions' ) );
+		}
+
+		return $term;
 	}
 
 	/**
