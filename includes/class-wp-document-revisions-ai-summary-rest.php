@@ -206,11 +206,14 @@ class WP_Document_Revisions_AI_Summary_REST {
 		// resolve_ids() already validated for the permission callback;
 		// we know it's an array here, not a WP_Error.
 
+		// Opted out, private or password protected: no summary will be generated.
+		$allowed = WP_Document_Revisions_AI_Summary::is_allowed_for_document( $ids['doc_id'] );
+
 		$stored = WP_Document_Revisions_AI_Summary::get( $ids['rev_id'] );
-		if ( null === $stored ) {
+		if ( null === $stored && $allowed ) {
 			return new WP_REST_Response( array( 'status' => 'pending' ), 200 );
 		}
-		if ( 'unavailable' === $stored['kind'] ) {
+		if ( null === $stored || 'unavailable' === $stored['kind'] ) {
 			return new WP_REST_Response(
 				array(
 					'status' => 'unavailable',

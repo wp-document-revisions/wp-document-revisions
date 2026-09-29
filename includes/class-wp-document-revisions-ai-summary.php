@@ -34,6 +34,11 @@
  *                                  via the REST endpoint, or 0.
  *   _wpdr_ai_summary_reviewed_at   Unix timestamp of review, or 0.
  *
+ * Documents opted out of text extraction are never summarised. Private
+ * and password-protected documents are skipped too unless the
+ * `document_ai_summary_allow_private` filter returns true, since
+ * generating a summary sends the document's text to the AI provider.
+ *
  * Sites without WordPress 7.0 (or with `WP_AI_SUPPORT` set to false)
  * skip silently — the cron event runs but stores nothing, the REST
  * endpoint reports status `unavailable`. Tests inject a generator via
@@ -173,6 +178,50 @@ class WP_Document_Revisions_AI_Summary {
 	}
 
 	/**
+	 * Whether AI summaries may be generated and served for a document.
+	 *
+	 * False when text extraction is off for the document (sitewide or via the
+	 * per-document opt-out). Private and password-protected documents are also
+	 * skipped by default, since generating a summary sends their text to a
+	 * third-party AI provider; the `document_ai_summary_allow_private` filter
+	 * can opt them back in.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param int $document_id ID of the document post.
+	 * @return bool true when summaries are allowed for this document.
+	 */
+	public static function is_allowed_for_document( int $document_id ): bool {
+		if ( $document_id <= 0 || WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $document_id ) ) {
+			return false;
+		}
+
+		$document = get_post( $document_id );
+		if ( ! $document instanceof WP_Post || 'document' !== $document->post_type ) {
+			return false;
+		}
+
+		$status_object = get_post_status_object( $document->post_status );
+		$is_private    = 'private' === $document->post_status || ( $status_object && ! empty( $status_object->private ) );
+		if ( ! $is_private && '' === $document->post_password ) {
+			return true;
+		}
+
+		/**
+		 * Filters whether AI summaries are generated for private and password-protected documents.
+		 *
+		 * Generating a summary sends the document's text to the site's AI provider,
+		 * so these documents are skipped unless this returns true.
+		 *
+		 * @since 5.7.0
+		 *
+		 * @param bool    $allow    Whether to allow summaries. Default false.
+		 * @param WP_Post $document The private or password-protected document.
+		 */
+		return (bool) apply_filters( 'document_ai_summary_allow_private', false, $document );
+	}
+
+	/**
 	 * Hook callback for `wpdr_text_extracted`. Queues a single cron
 	 * event for the attachment if one is not already scheduled.
 	 *
@@ -189,7 +238,7 @@ class WP_Document_Revisions_AI_Summary {
 			return;
 		}
 
-		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
+		if ( ! self::is_allowed_for_document( $parent_id ) ) {
 			return;
 		}
 
@@ -236,7 +285,7 @@ class WP_Document_Revisions_AI_Summary {
 			return;
 		}
 
-		if ( WP_Document_Revisions_Text_Extraction_Opt_Out::is_disabled_for_document( $parent_id ) ) {
+		if ( ! self::is_allowed_for_document( $parent_id ) ) {
 			return;
 		}
 
@@ -506,6 +555,33 @@ class WP_Document_Revisions_AI_Summary {
 	}
 
 	/**
+	 * Delete a revision attachment's stored summary and review state, and
+	 * unschedule any pending generation for it.
+	 *
+	 * @since 5.7.0
+	 *
+	 * @param int $attachment_id revision attachment whose summary to delete.
+	 * @return void
+	 */
+	public static function clear( int $attachment_id ): void {
+		if ( $attachment_id <= 0 ) {
+			return;
+		}
+		$keys = array(
+			self::META_KEY_TEXT,
+			self::META_KEY_KIND,
+			self::META_KEY_INPUT_HASH,
+			self::META_KEY_GENERATED_AT,
+			self::META_KEY_REVIEWED_BY,
+			self::META_KEY_REVIEWED_AT,
+		);
+		foreach ( $keys as $key ) {
+			delete_post_meta( $attachment_id, $key );
+		}
+		wp_clear_scheduled_hook( self::CRON_ACTION, array( $attachment_id ) );
+	}
+
+	/**
 	 * Mark a summary as human-reviewed by the current user. Returns
 	 * false when the attachment has no stored summary to review.
 	 *
@@ -514,7 +590,7 @@ class WP_Document_Revisions_AI_Summary {
 	 * @return bool true on success.
 	 */
 	public static function set_reviewed( int $attachment_id, int $user_id ): bool {
-		if ( $attachment_id <= 0 ) {
+		if ( $attachment_id <= 0 || ! self::is_allowed_for_document( (int) wp_get_post_parent_id( $attachment_id ) ) ) {
 			return false;
 		}
 		$kind = (string) get_post_meta( $attachment_id, self::META_KEY_KIND, true );
@@ -536,13 +612,15 @@ class WP_Document_Revisions_AI_Summary {
 	 *
 	 * Returns null when nothing has been stored yet (the cron event has
 	 * not run, or has not yet completed). Callers use this to drive the
-	 * REST `pending` vs `ready` distinction.
+	 * REST `pending` vs `ready` distinction. Also returns null when
+	 * summaries aren't allowed for the parent document (see
+	 * {@see self::is_allowed_for_document()}), even if one was stored earlier.
 	 *
 	 * @param int $attachment_id revision attachment ID.
 	 * @return array{text: string, kind: string, generated_at: int, reviewed_by: int, reviewed_at: int}|null
 	 */
 	public static function get( int $attachment_id ): ?array {
-		if ( $attachment_id <= 0 ) {
+		if ( $attachment_id <= 0 || ! self::is_allowed_for_document( (int) wp_get_post_parent_id( $attachment_id ) ) ) {
 			return null;
 		}
 		$kind = (string) get_post_meta( $attachment_id, self::META_KEY_KIND, true );

@@ -253,6 +253,9 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 			);
 			?>
 		</p>
+		<p class="description">
+			<?php esc_html_e( 'AI summaries are not generated for private or password-protected documents by default.', 'wp-document-revisions' ); ?>
+		</p>
 		<?php
 		// The pre-fill checkbox does nothing when the pre-fill is off sitewide.
 		if ( self::is_prefill_globally_disabled() ) {
@@ -346,11 +349,12 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 	}
 
 	/**
-	 * Clear cached extracted text and unschedule pending async events for
-	 * every revision attachment of a document.
+	 * Clear cached extracted text and AI summaries, and unschedule pending
+	 * async events, for every revision attachment of a document.
 	 *
 	 * Called on the transition from "extraction allowed" to "extraction
-	 * disabled" so previously-cached output cannot satisfy a future read,
+	 * disabled" so previously-cached output (including summaries built
+	 * from it) cannot satisfy a future read,
 	 * and a cron event already on the queue does not burn CPU running an
 	 * extractor whose result will be discarded.
 	 *
@@ -372,6 +376,7 @@ class WP_Document_Revisions_Text_Extraction_Opt_Out {
 				continue;
 			}
 			WP_Document_Revisions_Text_Extractor_Cache::clear( $attachment_id );
+			WP_Document_Revisions_AI_Summary::clear( $attachment_id );
 			wp_clear_scheduled_hook(
 				WP_Document_Revisions_Text_Extractor_Scheduler::CRON_ACTION,
 				array( $attachment_id )

@@ -91,6 +91,11 @@ class WP_Document_Revisions_AI_Summary_Prefill {
 			return;
 		}
 
+		// No summary is generated for this document (e.g., it's private), so there's nothing to pre-fill.
+		if ( ! WP_Document_Revisions_AI_Summary::is_allowed_for_document( $document_id ) ) {
+			return;
+		}
+
 		if ( ! current_user_can( 'read_document', $document_id ) ) {
 			return;
 		}
