@@ -575,6 +575,21 @@ describe('WPDocumentRevisions', () => {
 	});
 
 	describe('postAutosaveCallback', () => {
+		// jsdom can't navigate, so location.reload() surfaces as a
+		// "Not implemented: navigation" error on console.error.
+		const reloadAttempts = () =>
+			console.error.mock.calls.filter( ( [ error ] ) =>
+				String( error?.message ?? error ).includes( 'Not implemented: navigation' )
+			);
+
+		beforeEach(() => {
+			jest.spyOn(console, 'error').mockImplementation(() => {});
+		});
+
+		afterEach(() => {
+			console.error.mockRestore();
+		});
+
 		test('should reload page when lock notice is visible and autosave alert exists', () => {
 			const originalNotice = wp_document_revisions.lostLockNotice;
 			document.getElementById = jest.fn((id) => {
@@ -589,7 +604,7 @@ describe('WPDocumentRevisions', () => {
 			expect(global.alert).toHaveBeenCalledWith(
 				expect.stringContaining('Test Document')
 			);
-			expect(window.location.reload).toHaveBeenCalledWith(true);
+			expect(reloadAttempts()).toHaveLength(1);
 
 			wp_document_revisions.lostLockNotice = originalNotice;
 		});
@@ -599,7 +614,7 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.postAutosaveCallback();
 
-			expect(window.location.reload).not.toHaveBeenCalled();
+			expect(reloadAttempts()).toHaveLength(0);
 		});
 
 		test('should not reload when lock-notice is not visible', () => {
@@ -611,7 +626,7 @@ describe('WPDocumentRevisions', () => {
 
 			WPDocumentRevisions.postAutosaveCallback();
 
-			expect(window.location.reload).not.toHaveBeenCalled();
+			expect(reloadAttempts()).toHaveLength(0);
 		});
 	});
 
