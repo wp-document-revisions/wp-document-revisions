@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.7.0
+Stable tag: 5.7.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,12 @@ Thanks to everyone who has contributed translations, including:
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.7.1 =
+
+* Toggle settings in the plugin's blocks render correctly in the block editor again, and the blocks now pick up the theme's color, typography and spacing settings through standard block supports instead of their own style attributes. (#728, #729)
+* New document versions are now stored in the current year/month upload folder instead of the document's original month, so the file path, guid and attachment date agree. Existing files don't move. (#777)
+* The "Order sequence" setting in the Documents block is now translatable. (#789)
+
 = 5.7.0 =
 
 * Security: on sites that enable block editor mode for documents (off by default), the Media Library grid listed the files of other users' private, draft and password-protected documents to Authors and above, including their stored file names. In either mode, the media modal returned the same details for any attachment ID. Document files are now hidden from the grid in both modes, and the media modal hides the details of document files the user can't edit ([GHSA-2xcp-6j73-4cr7](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2xcp-6j73-4cr7)).
@@ -326,13 +332,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Uninstalling the plugin now also removes per-site feed keys and the notification settings. (#785)
 
 = 5.6.1 =
-
-* Security: a user who could edit their own documents (Contributors and up, by default) could use the Validate Structure fix endpoint to rename and delete other media files on the site. Fixes now only touch the document's own attachments ([GHSA-wmqm-qwm3-9qgf](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-wmqm-qwm3-9qgf)).
-* Security: the documents shortcode, the Documents List and Latest Documents blocks, and the `get_documents()` template function could list other users' draft, pending and private documents (titles, descriptions and authors) when asked for those statuses, and showed descriptions of password-protected documents. Lists now only include documents the viewer can read, and skip the description and thumbnail of password-protected documents. The `post_password` shortcode attribute has been removed ([GHSA-xwv7-7xmq-wmxq](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-xwv7-7xmq-wmxq)).
-* Security: the document revisions shortcode and block listed the revision history of documents the viewer couldn't read. They now check the document can be read ([GHSA-cmhr-7795-vvfw](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-cmhr-7795-vvfw)).
-* Security: the AI summary and diff REST endpoints served password-protected documents, and summaries of earlier revisions to users without the `read_document_revisions` capability. They now check access the same way as downloading the file ([GHSA-987w-vg4c-32r3](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-987w-vg4c-32r3)).
-* Security: on sites that enable the REST API for documents (off by default), the plugin's REST checks could be skipped by changing the case of the route (for example `/wp/v2/Documents`), and did not apply to the revisions list route ([GHSA-fcf8-gjj8-pg9w](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-fcf8-gjj8-pg9w)).
-
-= 5.6.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
