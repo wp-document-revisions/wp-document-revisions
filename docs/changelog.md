@@ -2,6 +2,12 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.7.1
+
+* Toggle settings in the plugin's blocks render correctly in the block editor again, and the blocks now pick up the theme's color, typography and spacing settings through standard block supports instead of their own style attributes. (#728, #729)
+* New document versions are now stored in the current year/month upload folder instead of the document's original month, so the file path, guid and attachment date agree. Existing files don't move. (#777)
+* The "Order sequence" setting in the Documents block is now translatable. (#789)
+
 ### 5.7.0
 
 * Security: on sites that enable block editor mode for documents (off by default), the Media Library grid listed the files of other users' private, draft and password-protected documents to Authors and above, including their stored file names. In either mode, the media modal returned the same details for any attachment ID. Document files are now hidden from the grid in both modes, and the media modal hides the details of document files the user can't edit ([GHSA-2xcp-6j73-4cr7](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-2xcp-6j73-4cr7)).
