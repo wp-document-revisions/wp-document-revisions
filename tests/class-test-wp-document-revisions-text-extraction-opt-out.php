@@ -270,7 +270,7 @@ class Test_WP_Document_Revisions_Text_Extraction_Opt_Out extends Test_Common_WPD
 			(string) get_post_meta( $attach_id, WP_Document_Revisions_Text_Extractor_Cache::META_KEY_TEXT, true )
 		);
 
-		// Sanity check: there should be a scheduled event from the original
+		// Quick check: there should be a scheduled event from the original
 		// add_attachment fire, since the document was not opted out yet.
 		self::assertNotFalse(
 			wp_next_scheduled(

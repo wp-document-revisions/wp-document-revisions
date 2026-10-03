@@ -470,7 +470,7 @@ trait WP_Document_Revisions_Query {
 
 			$attachment = $this->get_document( $latest_revision->ID );
 
-			// sanity check in case post_content somehow doesn't represent an attachment,
+			// quick check in case post_content somehow doesn't represent an attachment,
 			// or in case some sort of non-document, non-attachment object/ID was passed.
 			if ( ! $attachment ) {
 				return '';

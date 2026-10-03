@@ -889,7 +889,7 @@ class WP_Document_Revisions_Front_End {
 	 * @since 3.3.0
 	 */
 	public function wpdr_documents_shortcode_display( array $atts ): string {
-		// sanity check.
+		// quick check.
 		// do not show output to users that do not have the read_documents capability and don't get it via read.
 		if ( ( ! apply_filters( 'document_read_uses_read', true ) && ! current_user_can( 'read_documents' ) ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';
@@ -1059,7 +1059,7 @@ class WP_Document_Revisions_Front_End {
 			'document'
 		);
 
-		// sanity check.
+		// quick check.
 		// do not show output to users that do not have the read_document_revisions capability.
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			return '<p>' . esc_html__( 'You are not authorized to read this data', 'wp-document-revisions' ) . '</p>';

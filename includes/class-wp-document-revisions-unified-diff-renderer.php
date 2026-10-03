@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Sanity guard — this file MUST be required after wp-diff.php has loaded.
+// Load-order guard — this file MUST be required after wp-diff.php has loaded.
 if ( ! class_exists( 'Text_Diff_Renderer' ) ) {
 	return;
 }
