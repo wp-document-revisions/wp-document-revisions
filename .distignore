@@ -3,6 +3,7 @@
 /.git/
 /.github/
 .devcontainer/
+CLAUDE.md
 .distignore
 .gitattributes
 .editorconfig

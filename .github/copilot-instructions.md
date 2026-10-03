@@ -173,7 +173,7 @@ wp-document-revisions/
 - Always check `class-wp-document-revisions.php` after making core functionality changes
 - Always check `class-wp-document-revisions-admin.php` after making admin interface changes
 - Review `wp-document-revisions.php` for any plugin-level configuration changes
-- Update version numbers in both `wp-document-revisions.php` and `readme.txt` for releases
+- For a release, update the version in `wp-document-revisions.php` (the `Version:` header, `@version`, and `WPDR_VERSION`) and `Stable tag:` in `docs/header.md`, then run `script/build-readme` to regenerate `readme.txt`. Never edit `readme.txt` by hand. Releases happen only after the owner approves them
 
 ### Dependencies and Requirements
 

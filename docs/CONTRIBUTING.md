@@ -91,6 +91,8 @@ A plain `composer install` is enough — both dev tools and production deps land
 
 ### Release workflow
 
+Pushing any tag deploys to WordPress.org, so tag a release only after the owner approves it.
+
 The deploy workflow (`.github/workflows/deploy.yml`) runs `composer install --no-dev` before invoking the WordPress.org deploy action so the release artifact contains only production deps in `vendor/`. `.distignore` is set up so `vendor/` ships and `composer.json` / `composer.lock` do not.
 
 ### Optional: scoped vendor (work in progress)
