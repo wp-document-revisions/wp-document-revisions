@@ -55,6 +55,33 @@ jobs:
             - name: PHPStan
               run: php -d memory_limit=-1 bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress
 
+    # readme.txt is generated from docs/ by script/build-readme and committed
+    # for WordPress.org. The "Update README" workflow only regenerates it
+    # after a push to main, so a PR can merge with a stale readme and ship it
+    # if a release is cut before the bot PR lands. Fail the PR instead.
+    readme:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Verify readme.txt is up to date
+        steps:
+            - uses: actions/checkout@v7
+
+            # script/build-readme is plain Ruby with no gems. Same version as
+            # build-readme.yml so both produce identical output.
+            - name: Setup Ruby
+              uses: ruby/setup-ruby@v1
+              with:
+                  ruby-version: '4.0.7'
+
+            - name: Regenerate readme.txt and fail on drift
+              run: |
+                  script/build-readme
+                  if ! git diff --exit-code readme.txt; then
+                      echo "::error file=readme.txt::readme.txt is out of date. Run script/build-readme and commit the result."
+                      exit 1
+                  fi
+
     # End-to-end smoke test for the scoper build pipeline. Runs in its own
     # job because it needs `composer install --no-dev`, which would remove
     # the dev tools (phpcs, phpstan) that `code-quality` relies on.
