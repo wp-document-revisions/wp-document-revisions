@@ -2,21 +2,21 @@
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 5.7.1 5.7.1\n"
+"Project-Id-Version: WP Document Revisions 5.7.2 5.7.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T01:50:31+00:00\n"
+"POT-Creation-Date: 2026-10-03T17:35:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-document-revisions\n"
 
 #. Plugin Name of the plugin
 #: wp-document-revisions.php
-#: includes/class-wp-document-revisions-front-end.php:616
+#: includes/class-wp-document-revisions-front-end.php:617
 msgid "WP Document Revisions"
 msgstr ""
 
@@ -58,20 +58,20 @@ msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:138
 #: includes/class-wp-document-revisions-front-end.php:149
-#: includes/class-wp-document-revisions-front-end.php:894
-#: includes/class-wp-document-revisions-front-end.php:1064
-#: includes/class-wp-document-revisions-front-end.php:1074
+#: includes/class-wp-document-revisions-front-end.php:895
+#: includes/class-wp-document-revisions-front-end.php:1065
+#: includes/class-wp-document-revisions-front-end.php:1075
 msgid "You are not authorized to read this data"
 msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:144
-#: includes/class-wp-document-revisions-front-end.php:1069
-#: includes/class-wp-document-revisions-front-end.php:1122
+#: includes/class-wp-document-revisions-front-end.php:1070
+#: includes/class-wp-document-revisions-front-end.php:1123
 msgid "This is not a valid document."
 msgstr ""
 
 #: includes/class-wp-document-revisions-front-end.php:172
-#: includes/class-wp-document-revisions-front-end.php:354
+#: includes/class-wp-document-revisions-front-end.php:356
 #: includes/class-wp-document-revisions-recently-revised-widget.php:121
 msgid "(PDF)"
 msgstr ""
@@ -80,42 +80,42 @@ msgstr ""
 msgid "ago by"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:457
+#: includes/class-wp-document-revisions-front-end.php:458
 msgid "Edit"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:477
+#: includes/class-wp-document-revisions-front-end.php:478
 #: includes/class-wp-document-revisions-recently-revised-widget.php:131
 msgid "No thumbnail available."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:817
+#: includes/class-wp-document-revisions-front-end.php:818
 msgid "No selection"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:936
+#: includes/class-wp-document-revisions-front-end.php:937
 msgid " Taxonomy details in this block have changed."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:970
-#: includes/class-wp-document-revisions-front-end.php:984
-#: includes/class-wp-document-revisions-front-end.php:998
+#: includes/class-wp-document-revisions-front-end.php:971
+#: includes/class-wp-document-revisions-front-end.php:985
+#: includes/class-wp-document-revisions-front-end.php:999
 msgid " Taxonomy term does not belong to this taxonomy."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1132
+#: includes/class-wp-document-revisions-front-end.php:1133
 msgid "You are not authorized to read this document."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1137
+#: includes/class-wp-document-revisions-front-end.php:1138
 msgid "This document has no file to preview."
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1148
+#: includes/class-wp-document-revisions-front-end.php:1149
 msgid "Download document"
 msgstr ""
 
-#: includes/class-wp-document-revisions-front-end.php:1170
+#: includes/class-wp-document-revisions-front-end.php:1171
 msgid "This file type cannot be previewed inline."
 msgstr ""
 
@@ -270,8 +270,8 @@ msgstr ""
 msgid "Open documents in new tab:"
 msgstr ""
 
-#: includes/class-wp-document-revisions-recently-revised-widget.php:380
-#: includes/class-wp-document-revisions-recently-revised-widget.php:383
+#: includes/class-wp-document-revisions-recently-revised-widget.php:358
+#: includes/class-wp-document-revisions-recently-revised-widget.php:361
 #: includes/trait-wp-document-revisions-admin-settings.php:274
 msgid "Recently Revised Documents"
 msgstr ""
@@ -910,7 +910,7 @@ msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-editor.php:130
 #: includes/trait-wp-document-revisions-admin-editor.php:1214
-#: includes/trait-wp-document-revisions-admin-list.php:416
+#: includes/trait-wp-document-revisions-admin-list.php:422
 msgid "Owner"
 msgstr ""
 
@@ -1079,60 +1079,64 @@ msgid "All owners"
 msgstr ""
 
 #: includes/trait-wp-document-revisions-admin-list.php:67
+msgid "Filter by owner"
+msgstr ""
+
+#: includes/trait-wp-document-revisions-admin-list.php:73
 msgid "Filter by file"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:69
+#: includes/trait-wp-document-revisions-admin-list.php:75
 msgid "All files"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:70
+#: includes/trait-wp-document-revisions-admin-list.php:76
 msgid "Missing file"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:84
+#: includes/trait-wp-document-revisions-admin-list.php:90
 msgid "File"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:85
+#: includes/trait-wp-document-revisions-admin-list.php:91
 msgid "Revisions"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:118
+#: includes/trait-wp-document-revisions-admin-list.php:124
 msgid "Missing"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:237
+#: includes/trait-wp-document-revisions-admin-list.php:243
 msgid "Add your first document"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:242
+#: includes/trait-wp-document-revisions-admin-list.php:248
 msgid "read the documentation"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:247
+#: includes/trait-wp-document-revisions-admin-list.php:253
 msgid "Welcome to WP Document Revisions!"
 msgstr ""
 
 #. translators: 1: link to add a new document, 2: link to the documentation
-#: includes/trait-wp-document-revisions-admin-list.php:251
+#: includes/trait-wp-document-revisions-admin-list.php:257
 #, php-format
 msgid "You have not added any documents yet. %1$s to start tracking revisions and workflow, or %2$s."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:321
+#: includes/trait-wp-document-revisions-admin-list.php:327
 msgid "You have been managing your documents with WP Document Revisions — thank you! If it has been useful, would you consider leaving a quick review? It genuinely helps other teams discover the plugin."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:323
+#: includes/trait-wp-document-revisions-admin-list.php:329
 msgid "Leave a review"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:324
+#: includes/trait-wp-document-revisions-admin-list.php:330
 msgid "No thanks"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-admin-list.php:434
+#: includes/trait-wp-document-revisions-admin-list.php:440
 msgid "Currently Editing"
 msgstr ""
 
