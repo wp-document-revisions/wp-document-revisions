@@ -31,6 +31,18 @@ interface WpdrData {
 // eslint-disable-next-line no-var
 declare var wpdr_data: WpdrData;
 
+/** The `wpdr_library_data` object localized for the Document Library block. */
+interface WpdrLibraryData {
+	taxonomies: Array< {
+		slug: string;
+		label: string;
+		terms: Array< { id: number; name: string } >;
+	} >;
+}
+
+// eslint-disable-next-line no-var
+declare var wpdr_library_data: WpdrLibraryData;
+
 declare module '@wordpress/blocks' {
 	export function createBlock(
 		name: string,

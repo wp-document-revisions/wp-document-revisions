@@ -129,4 +129,35 @@ test.describe( 'Accessibility', () => {
 		);
 		expect( critical ).toEqual( [] );
 	} );
+
+	test( 'document-library table has no critical violations on the frontend', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( { title: 'A11y Library Test' } );
+
+		await editor.insertBlock( {
+			name: 'wp-document-revisions/document-library',
+			attributes: {
+				layout: 'table',
+				fields: [ 'title', 'file_type', 'workflow_state', 'modified', 'download' ],
+			},
+		} );
+		await editor.publishPost();
+		const postId = await page.evaluate( () =>
+			window.wp.data.select( 'core/editor' ).getCurrentPostId()
+		);
+		await page.goto( `/?p=${ postId }` );
+
+		const results = await new AxeBuilder( { page } )
+			.include( '.wpdr-library' )
+			.disableRules( WP_CORE_RULES_TO_DISABLE )
+			.analyze();
+
+		const critical = results.violations.filter(
+			( v ) => v.impact === 'critical' || v.impact === 'serious'
+		);
+		expect( critical ).toEqual( [] );
+	} );
 } );

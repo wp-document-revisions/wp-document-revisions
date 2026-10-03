@@ -97,6 +97,18 @@ In: trait-wp-document-revisions-file-handler.php
 
 Filters the encoded file name for the attached document (on save).
 
+## Filter document_library_query_args
+
+In: class-wp-document-revisions-document-library.php
+
+Filters the query arguments of the Document Library block and `[document_library]` shortcode. Documents the viewer can't read are still removed.
+
+## Filter document_library_row
+
+In: class-wp-document-revisions-document-library.php
+
+Filters the HTML of each field shown for a document in the Document Library. Return an empty string for a field to leave it out of that document's row.
+
 ## Filter document_lock_check
 
 In: trait-wp-document-revisions-revisions.php
