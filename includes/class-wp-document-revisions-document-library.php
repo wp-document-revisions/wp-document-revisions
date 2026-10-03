@@ -65,9 +65,22 @@ class WP_Document_Revisions_Document_Library {
 	const MAX_DOCUMENTS = 100;
 
 	/**
+	 * Whether the hooks have been added.
+	 *
+	 * @var bool
+	 */
+	private static $hooked = false;
+
+	/**
 	 * Registers the shortcode and block.
 	 */
 	public function __construct() {
+		// WP_Document_Revisions can be constructed more than once; only hook once.
+		if ( self::$hooked ) {
+			return;
+		}
+		self::$hooked = true;
+
 		add_shortcode( 'document_library', array( $this, 'shortcode' ) );
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_data' ) );
