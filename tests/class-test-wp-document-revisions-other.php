@@ -467,7 +467,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		$document = get_post( self::$editor_public_post );
 
 		// test routine before attachment.
-		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post, 'dummy_title', 'dummy_slug', $document );
+		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post, 'placeholder_title', 'placeholder_slug', $document );
 		self::assertEmpty( $html, 'pre attach' );
 
 		// add attachment.
@@ -477,7 +477,7 @@ class Test_WP_Document_Revisions_Other extends Test_Common_WPDR {
 		self::add_document_attachment( self::factory(), self::$editor_public_post, self::$test_file2 );
 
 		// test routine.
-		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post, 'dummy_title', 'dummy_slug', $document );
+		$html = $wpdr->sample_permalink_html_filter( 'initial', self::$editor_public_post, 'placeholder_title', 'placeholder_slug', $document );
 		self::assertSame( 'initial', $html, 'post-thumbnail' );
 	}
 
