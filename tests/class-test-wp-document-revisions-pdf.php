@@ -290,6 +290,24 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Does [documents] treat show_pdf as a boolean like its sibling flags?
+	 */
+	public function test_documents_shortcode_show_pdf() {
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		wp_set_current_user( 0 );
+
+		self::assertSame( 2, substr_count( do_shortcode( '[documents show_pdf]' ), '(PDF)' ), 'bare flag' );
+		self::assertSame( 2, substr_count( do_shortcode( '[documents show_pdf="true"]' ), '(PDF)' ), 'true' );
+		self::assertSame( 0, substr_count( do_shortcode( '[documents show_pdf="false"]' ), '(PDF)' ), 'false' );
+		self::assertSame( 0, substr_count( do_shortcode( '[documents]' ), '(PDF)' ), 'omitted' );
+	}
+
+	/**
 	 * Can the public access a public file - doc_id using read? (yes).
 	 */
 	public function test_public_document_docid_read() {

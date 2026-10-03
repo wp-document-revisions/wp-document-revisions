@@ -350,11 +350,12 @@ class WP_Document_Revisions_Front_End {
 			$atts_show_descr = false;
 		}
 
+		$atts_show_pdf = '';
 		if ( isset( $atts['show_pdf'] ) ) {
-			$atts_show_pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
+			if ( filter_var( $atts['show_pdf'], FILTER_VALIDATE_BOOLEAN ) ) {
+				$atts_show_pdf = ' <small>' . __( '(PDF)', 'wp-document-revisions' ) . '</small>';
+			}
 			unset( $atts['show_pdf'] );
-		} else {
-			$atts_show_pdf = '';
 		}
 
 		if ( isset( $atts['new_tab'] ) ) {
