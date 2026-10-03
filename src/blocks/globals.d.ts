@@ -31,6 +31,18 @@ interface WpdrData {
 // eslint-disable-next-line no-var
 declare var wpdr_data: WpdrData;
 
+/** The `wpdr_library_data` object localized for the Document Library block. */
+interface WpdrLibraryData {
+	taxonomies: Array< {
+		slug: string;
+		label: string;
+		terms: Array< { id: number; name: string } >;
+	} >;
+}
+
+// eslint-disable-next-line no-var
+declare var wpdr_library_data: WpdrLibraryData;
+
 declare module '@wordpress/blocks' {
 	export function createBlock(
 		name: string,
@@ -41,3 +53,10 @@ declare module '@wordpress/blocks' {
 		settings: Record< string, unknown >
 	): unknown;
 }
+
+/**
+ * Stylesheets imported for their side effect (wp-scripts extracts them into
+ * the block's CSS asset). TS 6 reports unresolved side-effect imports
+ * (TS2882), so declare them for the `// @ts-check`'d block entry points.
+ */
+declare module '*.css';

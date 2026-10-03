@@ -386,10 +386,6 @@ class WP_Document_Revisions_Front_End {
 
 		$documents = $wpdr->get_documents( $atts );
 
-		// We'll use these variables below for thumbnails if $atts_show_thumb is true.
-		$doc_dir    = null;
-		$thumb_size = null;
-
 		// Determine whether to output edit option - shortcode value will override.
 		if ( is_null( $atts_show_edit ) ) {
 			// check whether to show update option. Default - only administrator role.
@@ -460,49 +456,8 @@ class WP_Document_Revisions_Front_End {
 			// Password-protected documents don't show their thumbnail or description.
 			$protected = post_password_required( $document->ID );
 			if ( $atts_show_thumb && ! $protected ) {
-				if ( is_null( $doc_dir ) ) {
-					// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
-					// so cannot change within call and may be wrong, so possibly replace it in the output.
-					$doc_dir = str_replace( ABSPATH, '', $wpdr->document_upload_dir() );
-
-					/**
-					 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
-					 *
-					 * @since 3.7.0
-					 *
-					 * @param string $size Requested image size. Can be any registered image size name.
-					 */
-					$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
-				}
-
-				$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
-				$thumb = get_post_thumbnail_id( $document->ID );
-				if ( $thumb ) {
-					$image = wp_get_attachment_image( $thumb, $thumb_size );
-				} else {
-					$attach = $wpdr->get_document( $document->ID );
-					if ( $attach instanceof WP_Post ) {
-						// ensure document slug hidden from attachment.
-						$wpdr->hide_exist_doc_attach_slug( $attach->ID );
-						// find the image (if there).
-						$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
-						if ( is_array( $meta ) && array_key_exists( 'sizes', $meta ) ) {
-							$sizes = $meta['sizes'];
-							if ( array_key_exists( $thumb_size, $sizes ) ) {
-								$doc_thumb = $sizes[ $thumb_size ];
-								// find the location of the attachment image.
-								// The document permalink will contain the slug plus the correct sub_dir (if used).
-								// Replace 'file name' and then the slug for directory.
-								$url   = untrailingslashit( $permalink );
-								$url   = substr( $url, 0, strrpos( $url, '/' ) + 1 ) . $doc_thumb['file'];
-								$url   = str_replace( '/' . $wpdr->document_slug() . '/', '/' . $doc_dir . '/', $url );
-								$image = '<img width="' . esc_attr( $doc_thumb['width'] ) . '" height="' . esc_attr( $doc_thumb['height'] ) . '" src="' . esc_url( $url ) . '" class="attachment-' . esc_attr( $thumb_size ) . ' size-' . esc_attr( $thumb_size ) . '" alt="' . esc_html( get_the_title( $document->ID ) ) . '"  decoding="async" loading="lazy" >';
-							}
-						}
-					}
-				}
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo $image . '<br />';
+				echo $this->document_thumbnail( $document, $permalink ) . '<br />';
 			}
 			// is_numeric is old format. WPDR comment will be stripped by wp_kses_post.
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -514,6 +469,59 @@ class WP_Document_Revisions_Front_End {
 		<?php
 		// grab buffer contents and remove.
 		return ob_get_clean();
+	}
+
+	/**
+	 * Thumbnail image HTML for a document in a list.
+	 *
+	 * Uses the featured image, or else the image generated from the first page of a PDF.
+	 *
+	 * @since 5.8.0
+	 * @param WP_Post $document  the document.
+	 * @param string  $permalink the document's permalink.
+	 * @return string an img tag, or an HTML comment when there is no thumbnail.
+	 */
+	public function document_thumbnail( WP_Post $document, string $permalink ): string {
+		// PDF files may have a generated image, and the access call uses a cached version of the (std) upload directory
+		// so cannot change within call and may be wrong, so possibly replace it in the output.
+		$doc_dir = str_replace( ABSPATH, '', self::$parent->document_upload_dir() );
+
+		/**
+		 * Filters the post thumbnail size on blocks/shortcodes - default thumbnail.
+		 *
+		 * @since 3.7.0
+		 *
+		 * @param string $size Requested image size. Can be any registered image size name.
+		 */
+		$thumb_size = apply_filters( 'document_thumbnail', 'thumbnail' );
+
+		$image = '<!-- ' . __( 'No thumbnail available.', 'wp-document-revisions' ) . ' -->';
+		$thumb = get_post_thumbnail_id( $document->ID );
+		if ( $thumb ) {
+			$image = wp_get_attachment_image( $thumb, $thumb_size );
+		} else {
+			$attach = self::$parent->get_document( $document->ID );
+			if ( $attach instanceof WP_Post ) {
+				// ensure document slug hidden from attachment.
+				self::$parent->hide_exist_doc_attach_slug( $attach->ID );
+				// find the image (if there).
+				$meta = get_post_meta( $attach->ID, '_wp_attachment_metadata', true );
+				if ( is_array( $meta ) && array_key_exists( 'sizes', $meta ) ) {
+					$sizes = $meta['sizes'];
+					if ( array_key_exists( $thumb_size, $sizes ) ) {
+						$doc_thumb = $sizes[ $thumb_size ];
+						// find the location of the attachment image.
+						// The document permalink will contain the slug plus the correct sub_dir (if used).
+						// Replace 'file name' and then the slug for directory.
+						$url   = untrailingslashit( $permalink );
+						$url   = substr( $url, 0, strrpos( $url, '/' ) + 1 ) . $doc_thumb['file'];
+						$url   = str_replace( '/' . self::$parent->document_slug() . '/', '/' . $doc_dir . '/', $url );
+						$image = '<img width="' . esc_attr( $doc_thumb['width'] ) . '" height="' . esc_attr( $doc_thumb['height'] ) . '" src="' . esc_url( $url ) . '" class="attachment-' . esc_attr( $thumb_size ) . ' size-' . esc_attr( $thumb_size ) . '" alt="' . esc_html( get_the_title( $document->ID ) ) . '"  decoding="async" loading="lazy" >';
+					}
+				}
+			}
+		}
+		return $image;
 	}
 
 	/**
