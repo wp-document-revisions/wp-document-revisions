@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.7.2
+
+* New document versions are stored in the document's own year/month upload folder again, matching the `/yyyy/mm` in its permalink. This reverts the 5.7.1 change that filed them under the current month. Files uploaded under 5.7.1 keep working and don't need to move. (#795)
+
 ### 5.7.1
 
 * Toggle settings in the plugin's blocks render correctly in the block editor again, and the blocks now pick up the theme's color, typography and spacing settings through standard block supports instead of their own style attributes. (#728, #729)
