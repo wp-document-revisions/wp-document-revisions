@@ -53,3 +53,10 @@ declare module '@wordpress/blocks' {
 		settings: Record< string, unknown >
 	): unknown;
 }
+
+/**
+ * Stylesheets imported for their side effect (wp-scripts extracts them into
+ * the block's CSS asset). TS 6 reports unresolved side-effect imports
+ * (TS2882), so declare them for the `// @ts-check`'d block entry points.
+ */
+declare module '*.css';
