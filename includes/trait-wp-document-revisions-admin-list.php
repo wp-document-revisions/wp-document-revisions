@@ -57,10 +57,16 @@ trait WP_Document_Revisions_Admin_List {
 				'order'               => 'ASC',
 				'wpdr_added'          => 'list',
 				'has_published_posts' => array( 'document' ),
+				'echo'                => false,
 			);
 			// @phpstan-ignore argument.type ($args carry the custom 'wpdr_added' marker consumed by our pre_user_query filter; wp_dropdown_users() ignores keys it does not recognise)
-			wp_dropdown_users( $args );
+			$owner_dropdown = wp_dropdown_users( $args );
 			remove_action( 'pre_user_query', array( $this, 'pre_user_query' ) );
+			// wp_dropdown_users() returns nothing when no owner has a published document, so only label a select that exists.
+			if ( ! empty( $owner_dropdown ) ) {
+				echo '<label class="screen-reader-text" for="author">' . esc_html__( 'Filter by owner', 'wp-document-revisions' ) . '</label>';
+				echo $owner_dropdown; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup built and escaped by wp_dropdown_users().
+			}
 
 			// file filtering.
 			$file_filter = filter_input( INPUT_GET, 'wpdr_file', FILTER_SANITIZE_SPECIAL_CHARS );
