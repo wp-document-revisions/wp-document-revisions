@@ -95,18 +95,18 @@ class Test_WP_Document_Revisions_Zz_Upload_Date_Folder extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A new document file goes in the current month, not the document's.
+	 * A new version of a backdated document goes in the document's month folder, so the
+	 * file folder matches the permalink's /yyyy/mm (#777 reverted).
 	 */
-	public function test_document_upload_uses_upload_date() {
+	public function test_document_upload_keeps_document_month() {
 		global $wpdr;
 		$this->start_document_upload();
 
 		$dir = $wpdr->document_upload_dir_set( self::$backdated );
 
-		$month = '/' . current_time( 'Y/m' );
-		$this->assertSame( $month, $dir['subdir'] );
-		$this->assertStringEndsWith( $month, $dir['path'] );
-		$this->assertStringEndsWith( $month, $dir['url'] );
+		$this->assertSame( '/2024/05', $dir['subdir'] );
+		$this->assertStringEndsWith( '/2024/05', $dir['path'] );
+		$this->assertStringEndsWith( '/2024/05', $dir['url'] );
 	}
 
 	/**
