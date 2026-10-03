@@ -891,6 +891,8 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		self::assertSame( 1, (int) substr_count( $output, 'value="under-review">Under Review' ), 'review' );
 
 		self::assertSame( 1, (int) substr_count( $output, "value='0'>All owners" ), 'all owners' );
+		self::assertSame( 1, (int) substr_count( $output, '<label class="screen-reader-text" for="author">Filter by owner</label>' ), 'owner label' );
+		self::assertSame( 1, (int) substr_count( $output, "id='author'" ), 'owner select id' );
 		self::assertSame( 0, (int) substr_count( $output, "value='1'>admin" ), 'admin' );
 		self::assertSame( 1, (int) substr_count( $output, $current_user->display_name ), 'editor' );
 	}
