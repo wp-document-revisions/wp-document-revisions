@@ -52,7 +52,7 @@ As delivered, administrators will have the show_edit implicitly active. A filter
 
 `show_descr` (with a true/false parameter) that will output the entered description if provided.
 
-All these boolean variables can be entered without a value (with default value true except for `show_thumb` whose default value is false).
+All these boolean variables can be entered without a value, which means true. A variable left out is false, except `show_edit`, which defaults to true for administrators. Note that the `Document List` block turns `show_descr` on by default.
 
 ### Block Usage
 
