@@ -227,7 +227,7 @@ class WP_Document_Revisions_Front_End {
 
 		// Only need to do something if workflow_state points to post_status.
 		if ( 'workflow_state' !== self::$parent->taxonomy_key() ) {
-			if ( in_array( 'workflow_state', $atts, true ) ) {
+			if ( array_key_exists( 'workflow_state', $atts ) ) {
 				$atts['post_status'] = $atts['workflow_state'];
 				unset( $atts['workflow_state'] );
 			}

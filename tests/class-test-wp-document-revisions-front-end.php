@@ -530,6 +530,32 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Tests that workflow_state maps to post_status when EditFlow/PublishPress own statuses.
+	 */
+	public function test_document_shortcode_wfs_maps_to_post_status() {
+		$saved_key                               = WP_Document_Revisions::$taxonomy_key_val;
+		WP_Document_Revisions::$taxonomy_key_val = 'post_status';
+
+		$captured = null;
+		$capture  = function ( $atts ) use ( &$captured ) {
+			$captured = $atts;
+			return $atts;
+		};
+		add_filter( 'document_shortcode_atts', $capture );
+
+		try {
+			do_shortcode( '[documents workflow_state="final"]' );
+		} finally {
+			remove_filter( 'document_shortcode_atts', $capture );
+			WP_Document_Revisions::$taxonomy_key_val = $saved_key;
+		}
+
+		self::assertIsArray( $captured, 'document_shortcode_atts not applied' );
+		self::assertArrayNotHasKey( 'workflow_state', $captured, 'workflow_state not removed' );
+		self::assertSame( 'final', $captured['post_status'] ?? null, 'workflow_state not mapped to post_status' );
+	}
+
+	/**
 	 * Test document shortcode with a post_meta filter.
 	 */
 	public function test_document_shortcode_post_meta_filter() {
