@@ -296,28 +296,6 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 				)
 			);
 		}
-
-		// Find sizes for images for PDFs. (Logic based on /wp-admin/includes/image.php).
-		$merged_sizes = array(
-			'thumbnail',
-			'medium',
-			'large',
-		);
-
-		/**
-		 * Filters the image sizes generated for non-image mime types.
-		 *
-		 * @since 4.7.0
-		 *
-		 * @param string[] $merged_sizes An array of image size names.
-		 * @param array    $metadata     Current attachment metadata.
-		 */
-		$merged_sizes = apply_filters( 'fallback_intermediate_image_sizes', $merged_sizes, array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-
-		if ( function_exists( 'get_intermediate_image_sizes' ) ) {
-			$registered_sizes = get_intermediate_image_sizes();
-			$merged_sizes     = array_merge( $registered_sizes, $merged_sizes );
-		}
 	}
 
 
