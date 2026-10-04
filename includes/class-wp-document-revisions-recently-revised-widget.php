@@ -209,9 +209,12 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		</p>
 		<p>
 			<?php esc_html_e( 'Posts to Show:', 'wp-document-revisions' ); ?><br />
-			<?php foreach ( $instance['post_status'] as $status => $value ) : ?>
-				<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>" type="text" <?php checked( $value ); ?> />
-				<label for="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>"><?php echo esc_html( ucwords( $status ) ); ?></label><br />
+			<?php
+			foreach ( $instance['post_status'] as $status => $value ) :
+				$status_object = get_post_status_object( $status );
+				?>
+				<input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_status_' . $status ) ); ?>" <?php checked( $value ); ?> />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'post_status_' . $status ) ); ?>"><?php echo esc_html( $status_object ? $status_object->label : ucwords( $status ) ); ?></label><br />
 			<?php endforeach; ?>
 		</p>
 		<p>
