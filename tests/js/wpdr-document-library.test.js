@@ -33,8 +33,14 @@ describe( 'document-library shortcodeToAttributes', () => {
 		} );
 	} );
 
-	it( 'drops non-numeric terms', () => {
-		expect( shortcodeToAttributes( '[document_library category="final"]' ) ).toEqual( {} );
+	it( 'keeps slugs as strings, like the PHP shortcode', () => {
+		expect(
+			shortcodeToAttributes(
+				'[document_library workflow_state="final" category="design, 4,2024-reports,"]'
+			)
+		).toEqual( {
+			taxonomies: { workflow_state: [ 'final' ], category: [ 'design', 4, '2024-reports' ] },
+		} );
 	} );
 
 	it( 'accepts new_tab as a bare flag or a value', () => {
@@ -83,7 +89,7 @@ describe( 'document-library attributesToShortcode', () => {
 		const attributes = {
 			...defaults,
 			layout: 'table',
-			taxonomies: { category: [ 4 ] },
+			taxonomies: { category: [ 4 ], workflow_state: [ 'final', '2024-reports' ] },
 			numberposts: 25,
 		};
 		const parsed = shortcodeToAttributes( attributesToShortcode( attributes ) );

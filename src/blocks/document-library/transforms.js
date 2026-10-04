@@ -20,7 +20,9 @@ const ATTRIBUTE_KEYS = [
  * Block attributes from shortcode text.
  *
  * Any key that isn't a block attribute is treated as a taxonomy filter with a
- * comma-separated list of term IDs, matching what the PHP shortcode accepts.
+ * comma-separated list of term IDs or slugs, matching what the PHP shortcode
+ * accepts. Only all-digit values become IDs, so a slug such as `2024-reports`
+ * stays a slug rather than turning into term 2024.
  *
  * @param {string} text Raw shortcode text, e.g. `[document_library layout="table"]`.
  * @return {Record<string, unknown>} Block attributes.
@@ -28,7 +30,7 @@ const ATTRIBUTE_KEYS = [
 export function shortcodeToAttributes( text ) {
 	/** @type {Record<string, unknown>} */
 	const attributes = {};
-	/** @type {Record<string, number[]>} */
+	/** @type {Record<string, Array<number|string>>} */
 	const taxonomies = {};
 
 	for ( const [ key, value ] of parseShortcodeParams( text ) ) {
@@ -53,8 +55,9 @@ export function shortcodeToAttributes( text ) {
 		} else {
 			const terms = value
 				.split( ',' )
-				.map( ( term ) => parseInt( term, 10 ) )
-				.filter( ( term ) => ! Number.isNaN( term ) );
+				.map( ( term ) => term.trim() )
+				.filter( Boolean )
+				.map( ( term ) => ( /^\d+$/.test( term ) ? Number( term ) : term ) );
 			if ( terms.length ) {
 				taxonomies[ key ] = terms;
 			}
@@ -70,7 +73,7 @@ export function shortcodeToAttributes( text ) {
 /**
  * Shortcode text from block attributes.
  *
- * @param {{layout?: string, columns?: number, fields?: string[], taxonomies?: Record<string, number[]>, orderby?: string, order?: string, numberposts?: number, new_tab?: boolean}} attributes Block attributes.
+ * @param {{layout?: string, columns?: number, fields?: string[], taxonomies?: Record<string, Array<number|string>>, orderby?: string, order?: string, numberposts?: number, new_tab?: boolean}} attributes Block attributes.
  * @return {string} The shortcode.
  */
 export function attributesToShortcode( attributes ) {

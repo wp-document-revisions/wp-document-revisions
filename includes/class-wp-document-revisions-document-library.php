@@ -133,6 +133,7 @@ class WP_Document_Revisions_Document_Library {
 					$terms[] = array(
 						'id'   => (int) $term[0],
 						'name' => trim( (string) $term[1] ),
+						'slug' => (string) ( $term[2] ?? '' ),
 					);
 				}
 			}

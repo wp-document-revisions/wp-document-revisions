@@ -33,10 +33,26 @@ function fieldOptions() {
 /**
  * Document taxonomies and their terms, from PHP.
  *
- * @return {Array<{slug: string, label: string, terms: Array<{id: number, name: string}>}>} Taxonomies.
+ * @return {Array<{slug: string, label: string, terms: Array<{id: number, name: string, slug: string}>}>} Taxonomies.
  */
 function documentTaxonomies() {
 	return typeof wpdr_library_data !== 'undefined' ? wpdr_library_data.taxonomies : [];
+}
+
+/**
+ * The term a filter value refers to: a term ID, or a slug from a converted shortcode.
+ *
+ * @param {{terms: Array<{id: number, name: string, slug: string}>}} taxonomy Taxonomy.
+ * @param {number|string}                                            value    Term ID or slug.
+ * @return {{id: number, name: string, slug: string}|undefined} The term.
+ */
+function findTerm( taxonomy, value ) {
+	if ( typeof value === 'number' || /^\d+$/.test( value ) ) {
+		return taxonomy.terms.find( ( term ) => term.id === Number( value ) );
+	}
+	// PHP passes slugs with hyphens written as underscores.
+	const slug = value.replace( /-/g, '_' );
+	return taxonomy.terms.find( ( term ) => term.slug === slug );
 }
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -119,9 +135,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								__nextHasNoMarginBottom
 								label={ taxonomy.label }
 								value={ ( taxonomies[ taxonomy.slug ] || [] )
-									.map( ( id ) =>
-										taxonomy.terms.find( ( term ) => term.id === Number( id ) )
-									)
+									.map( ( value ) => findTerm( taxonomy, value ) )
 									.filter( Boolean )
 									.map( ( term ) => term.name ) }
 								suggestions={ taxonomy.terms.map( ( term ) => term.name ) }
