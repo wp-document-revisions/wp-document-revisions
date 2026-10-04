@@ -48,6 +48,8 @@ class WP_Document_Revisions_Front_End {
 		'show_thumb'  => false,
 		'show_descr'  => true,
 		'new_tab'     => true,
+		'summary'     => false,
+		'show_pdf'    => false,
 	);
 
 	/**
@@ -126,6 +128,15 @@ class WP_Document_Revisions_Front_End {
 			unset( $atts['number'] );
 		}
 
+		// summary, show_pdf and new_tab may be entered without a value (implies true).
+		foreach ( array( 'summary', 'show_pdf', 'new_tab' ) as $flag ) {
+			$pos = array_search( $flag, $atts, true );
+			if ( is_int( $pos ) ) {
+				$atts[ $flag ] = true;
+				unset( $atts[ $pos ] );
+			}
+		}
+
 		// normalize args.
 		$atts = shortcode_atts( $this->shortcode_defaults, $atts, 'document' );
 		// Extract recognized shortcode attributes into explicit local variables
@@ -164,7 +175,7 @@ class WP_Document_Revisions_Front_End {
 		}
 
 		$atts_show_pdf = '';
-		if ( isset( $atts['show_pdf'] ) ) {
+		if ( filter_var( $atts['show_pdf'], FILTER_VALIDATE_BOOLEAN ) ) {
 			$attach = $wpdr->get_document( $id );
 			$file   = $attach ? get_attached_file( $attach->ID ) : false;
 			if ( $file ) {

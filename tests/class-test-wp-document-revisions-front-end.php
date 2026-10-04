@@ -391,6 +391,36 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Verify the summary flag reaches the revisions shortcode and block.
+	 */
+	public function test_revisions_summary() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['editor']->ID );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$id = self::$editor_public_post;
+
+		self::assertEquals( 3, substr_count( do_shortcode( '[document_revisions id="' . $id . '" summary="true"]' ), '<br/>' ), 'shortcode summary' );
+		self::assertEquals( 3, substr_count( do_shortcode( '[document_revisions id="' . $id . '" summary]' ), '<br/>' ), 'shortcode bare summary' );
+		self::assertEquals( 0, substr_count( do_shortcode( '[document_revisions id="' . $id . '" summary="false"]' ), '<br/>' ), 'shortcode no summary' );
+		self::assertEquals( 0, substr_count( do_shortcode( '[document_revisions id="' . $id . '"]' ), '<br/>' ), 'shortcode default summary' );
+
+		$block = $wpdr_fe->wpdr_revisions_shortcode_display(
+			array(
+				'id'      => $id,
+				'summary' => true,
+			)
+		);
+		self::assertEquals( 3, substr_count( $block, '<br/>' ), 'block summary' );
+	}
+
+	/**
 	 * Tests the documents shortcode.
 	 *
 	 * An unauthorised user cannot see post revisions.

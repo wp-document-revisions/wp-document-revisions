@@ -268,6 +268,35 @@ class Test_WP_Document_Revisions_PDF extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Does show_pdf reach the revisions shortcode and block?
+	 */
+	public function test_revisions_show_pdf() {
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		wp_set_current_user( self::$users['editor']->ID );
+
+		$id    = self::$editor_public_post;
+		$count = substr_count( do_shortcode( '[document_revisions id="' . $id . '"]' ), '<li' );
+		self::assertGreaterThan( 0, $count, 'no revisions' );
+
+		self::assertSame( $count, substr_count( do_shortcode( '[document_revisions id="' . $id . '" show_pdf="true"]' ), '(PDF)' ), 'shortcode true' );
+		self::assertSame( $count, substr_count( do_shortcode( '[document_revisions id="' . $id . '" show_pdf]' ), '(PDF)' ), 'shortcode bare flag' );
+		self::assertSame( 0, substr_count( do_shortcode( '[document_revisions id="' . $id . '" show_pdf="false"]' ), '(PDF)' ), 'shortcode false' );
+
+		$block = $wpdr_fe->wpdr_revisions_shortcode_display(
+			array(
+				'id'       => $id,
+				'show_pdf' => true,
+			)
+		);
+		self::assertSame( $count, substr_count( $block, '(PDF)' ), 'block' );
+	}
+
+	/**
 	 * Does the document archive work?
 	 */
 	public function test_archive() {
