@@ -561,9 +561,21 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, '[title]" type="text" value="Recently Revised Documents"' ), 'widget_title' );
 		self::assertEquals( 1, (int) substr_count( $output, '[numberposts]" type="text" value="5"' ), 'widget_numberposts' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]" type="text"  checked=\'checked\' /' ), 'widget_publish' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]" type="text"  /' ), 'widget_private' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]" type="text"  /' ), 'widget_draft' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]"  checked=\'checked\' /' ), 'widget_publish' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]"  /' ), 'widget_private' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]"  /' ), 'widget_draft' );
+
+		// Each status label names its checkbox, so clicking the label toggles it and screen readers announce it.
+		foreach ( array( 'publish', 'private', 'draft' ) as $status ) {
+			$id = $wpdr_widget->get_field_id( 'post_status_' . $status );
+			self::assertEquals( 1, (int) substr_count( $output, 'id="' . $id . '"' ), 'widget_status_id_' . $status );
+			self::assertEquals( 1, (int) substr_count( $output, 'for="' . $id . '"' ), 'widget_status_for_' . $status );
+		}
+
+		// The status names are the translated labels WordPress registers, not the slugs.
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'publish' )->label . '</label>' ), 'widget_publish_label' );
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'private' )->label . '</label>' ), 'widget_private_label' );
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'draft' )->label . '</label>' ), 'widget_draft_label' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_thumb]"  /' ), 'widget_show_thumb"  /' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_descr]"  checked=\'checked\' /' ), 'widget_descr' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_author]"  checked=\'checked\' /' ), 'widget_author' );
