@@ -177,9 +177,16 @@ trait WP_Document_Revisions_File_Handler {
 		 * Filters a URL to send the (already authorized) request to instead of streaming the file
 		 * through PHP, e.g. a signed CDN or S3 URL for large files. Return '' to serve normally.
 		 *
-		 * The URL isn't restricted to this site, so only return URLs you trust, and prefer
-		 * short-lived signed URLs for private documents: anyone with the URL can use it until it
-		 * expires. get_raw_attachment_url() returns the attachment's storage URL.
+		 * The browser follows the redirect, so the user sees the target URL and can keep or share
+		 * it. Anyone with the URL can use it until it stops working, without the plugin's permission
+		 * checks. The URL isn't restricted to this site, so only return URLs you trust, and return
+		 * short-lived signed URLs for private documents. Don't return the attachment's storage URL
+		 * (get_raw_attachment_url()) for a document that isn't public: it doesn't expire, and it
+		 * reveals the stored file name the plugin otherwise keeps hidden.
+		 *
+		 * Redirecting skips the rest of serving: the download keeps the stored file name rather
+		 * than the document's, the document_revisions_serve_file_headers filter doesn't run, and
+		 * the document_serve_done action doesn't fire.
 		 *
 		 * @since 5.6.0
 		 *
@@ -1174,6 +1181,13 @@ trait WP_Document_Revisions_File_Handler {
 		 * (nginx) or 'X-LiteSpeed-Location' (LiteSpeed). Only enable it when the server
 		 * is configured for it and the document directory isn't otherwise web-accessible:
 		 * the plugin has already checked permissions when the header is sent.
+		 *
+		 * If the server isn't handling the header, it reaches the browser as-is, which for
+		 * X-Sendfile reveals the file's full path, and the download is empty. Check that the
+		 * header doesn't appear in the response (e.g. with curl -I). For nginx, the location
+		 * the header points to must be marked internal.
+		 *
+		 * Like a redirect, this skips the document_serve_done action.
 		 *
 		 * @since 5.6.0
 		 *
