@@ -1,0 +1,99 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-document-revisions/document-library",
+	"version": "5.8.0",
+	"title": "Document Library",
+	"category": "wpdr-category",
+	"icon": "portfolio",
+	"description": "List documents as a list, table or grid, with a choice of fields such as file type, workflow state and last modified date.",
+	"keywords": [ "documents", "files", "table", "grid", "library" ],
+	"textdomain": "wp-document-revisions",
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"enum": [ "list", "table", "grid" ],
+			"default": "list"
+		},
+		"columns": {
+			"type": "number",
+			"default": 3
+		},
+		"fields": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [ "title", "file_type", "author", "modified", "download" ]
+		},
+		"taxonomies": {
+			"type": "object",
+			"default": {}
+		},
+		"orderby": {
+			"type": "string",
+			"enum": [ "modified", "date", "title", "menu_order" ],
+			"default": "modified"
+		},
+		"order": {
+			"type": "string",
+			"enum": [ "ASC", "DESC" ],
+			"default": "DESC"
+		},
+		"numberposts": {
+			"type": "number",
+			"default": 10
+		},
+		"new_tab": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"variations": [
+		{
+			"name": "document-list",
+			"title": "Document List",
+			"description": "Documents as a list, with details under each title.",
+			"icon": "list-view",
+			"isDefault": true,
+			"attributes": { "variant": "list" },
+			"isActive": [ "variant" ],
+			"scope": [ "inserter", "transform" ]
+		},
+		{
+			"name": "document-table",
+			"title": "Document Table",
+			"description": "Documents as a table, one column per field.",
+			"icon": "editor-table",
+			"attributes": { "variant": "table" },
+			"isActive": [ "variant" ],
+			"scope": [ "inserter", "transform" ]
+		},
+		{
+			"name": "document-grid",
+			"title": "Document Grid",
+			"description": "Documents as a grid of cards.",
+			"icon": "grid-view",
+			"attributes": { "variant": "grid", "fields": [ "thumbnail", "title", "file_type", "modified", "download" ] },
+			"isActive": [ "variant" ],
+			"scope": [ "inserter", "transform" ]
+		}
+	],
+	"supports": {
+		"align": true,
+		"color": {
+			"gradients": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	}
+}

@@ -1,0 +1,114 @@
+.wpdr-library__items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.wpdr-library__item {
+	padding: 0.75em 0;
+	border-bottom: 1px solid color-mix(in srgb, currentcolor 20%, transparent);
+}
+
+.wpdr-library__item > * {
+	margin: 0 0 0.35em;
+}
+
+.wpdr-library__item > :last-child {
+	margin-bottom: 0;
+}
+
+.wpdr-library__title {
+	font-weight: 600;
+}
+
+.wpdr-library__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25em 0.75em;
+	font-size: 0.875em;
+	opacity: 0.85;
+}
+
+.wpdr-library__badge {
+	display: inline-block;
+	padding: 0 0.4em;
+	border: 1px solid currentcolor;
+	border-radius: 3px;
+	font-size: 0.75em;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	line-height: 1.6;
+}
+
+.wpdr-library__download.wp-element-button {
+	display: inline-block;
+	padding: 0.4em 1em;
+	font-size: 0.875em;
+	text-decoration: none;
+}
+
+.wpdr-library--grid .wpdr-library__items {
+	display: grid;
+	grid-template-columns: repeat(var(--wpdr-library-columns, 3), minmax(0, 1fr));
+	gap: 1.5em;
+}
+
+.wpdr-library--grid .wpdr-library__item {
+	display: flex;
+	flex-direction: column;
+	padding: 1em;
+	border: 1px solid color-mix(in srgb, currentcolor 20%, transparent);
+	border-radius: 4px;
+}
+
+.wpdr-library--grid .wpdr-library__actions {
+	margin-top: auto;
+	padding-top: 0.5em;
+}
+
+.wpdr-library--grid .wpdr-library__thumbnail img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+@media (max-width: 600px) {
+	.wpdr-library--grid .wpdr-library__items {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.wpdr-library__scroll {
+	overflow-x: auto;
+}
+
+.wpdr-library__table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.wpdr-library__table th,
+.wpdr-library__table td {
+	padding: 0.5em 0.75em;
+	border-bottom: 1px solid color-mix(in srgb, currentcolor 20%, transparent);
+	text-align: start;
+	vertical-align: middle;
+}
+
+.wpdr-library__table thead th {
+	font-size: 0.875em;
+}
+
+.wpdr-library__table tbody th {
+	font-weight: 600;
+}
+
+.wpdr-library__table img {
+	max-width: 4em;
+	height: auto;
+}
+
+.wpdr-library__table .wpdr-library__col--modified,
+.wpdr-library__table .wpdr-library__col--download {
+	white-space: nowrap;
+}

@@ -6,6 +6,9 @@
  */
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 import AxeBuilder from '@axe-core/playwright';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname( fileURLToPath( import.meta.url ) );
 
 // Known WordPress core a11y issues to exclude from our tests.
 const WP_CORE_RULES_TO_DISABLE = [
@@ -128,5 +131,68 @@ test.describe( 'Accessibility', () => {
 			( v ) => v.impact === 'critical' || v.impact === 'serious'
 		);
 		expect( critical ).toEqual( [] );
+	} );
+
+	test( 'document-library table has no critical violations on the frontend', async ( {
+		admin,
+		editor,
+		page,
+		requestUtils,
+	} ) => {
+		// A published document with a file, so the table has a row to check.
+		const doc = await requestUtils.rest( {
+			method: 'POST',
+			path: '/wp/v2/documents',
+			data: { title: 'A11y Library Document', status: 'draft' },
+		} );
+		const media = await requestUtils.uploadMedia(
+			path.resolve( __dirname, '../../fixtures/test-document.txt' )
+		);
+		await requestUtils.rest( {
+			method: 'POST',
+			path: `/wp/v2/media/${ media.id }`,
+			data: { post: doc.id },
+		} );
+		await requestUtils.rest( {
+			method: 'POST',
+			path: `/wp/v2/documents/${ doc.id }`,
+			data: { content: `<!-- WPDR ${ media.id } -->`, status: 'publish' },
+		} );
+
+		await admin.createNewPost( { title: 'A11y Library Test' } );
+
+		await editor.insertBlock( {
+			name: 'wp-document-revisions/document-library',
+			attributes: {
+				variant: 'table',
+				fields: [ 'title', 'file_type', 'workflow_state', 'modified', 'download' ],
+			},
+		} );
+		await editor.publishPost();
+		const postId = await page.evaluate( () =>
+			window.wp.data.select( 'core/editor' ).getCurrentPostId()
+		);
+		await page.goto( `/?p=${ postId }` );
+
+		await expect(
+			page.locator( '.wpdr-library__table tbody', { hasText: 'A11y Library Document' } )
+		).toBeVisible();
+
+		const results = await new AxeBuilder( { page } )
+			.include( '.wpdr-library' )
+			.disableRules( WP_CORE_RULES_TO_DISABLE )
+			.analyze();
+
+		const critical = results.violations.filter(
+			( v ) => v.impact === 'critical' || v.impact === 'serious'
+		);
+		expect( critical ).toEqual( [] );
+
+		await requestUtils.rest( {
+			method: 'DELETE',
+			path: `/wp/v2/documents/${ doc.id }`,
+			params: { force: true },
+		} );
+		await requestUtils.deleteMedia( media.id );
 	} );
 } );

@@ -277,6 +277,10 @@ class WP_Document_Revisions {
 		require_once __DIR__ . '/class-wp-document-revisions-validate-structure.php';
 		new WP_Document_Revisions_Validate_Structure( $this );
 
+		// load the document library block and shortcode.
+		require_once __DIR__ . '/class-wp-document-revisions-document-library.php';
+		new WP_Document_Revisions_Document_Library();
+
 		// load email notifications.
 		require_once __DIR__ . '/class-wp-document-revisions-notifications.php';
 		new WP_Document_Revisions_Notifications();
