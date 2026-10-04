@@ -242,9 +242,10 @@ trait WP_Document_Revisions_Admin_List {
 			esc_url( admin_url( 'post-new.php?post_type=document' ) ),
 			esc_html__( 'Add your first document', 'wp-document-revisions' )
 		);
-		$docs_link = sprintf(
+		$docs_url  = WP_Document_Revisions::feedback_urls()['docs'];
+		$docs_link = '' === $docs_url ? '' : sprintf(
 			'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-			esc_url( 'https://wp-document-revisions.github.io/wp-document-revisions/' ),
+			esc_url( $docs_url ),
 			esc_html__( 'read the documentation', 'wp-document-revisions' )
 		);
 		?>
@@ -252,12 +253,20 @@ trait WP_Document_Revisions_Admin_List {
 			<p>
 				<strong><?php esc_html_e( 'Welcome to WP Document Revisions!', 'wp-document-revisions' ); ?></strong>
 				<?php
-				printf(
-					/* translators: 1: link to add a new document, 2: link to the documentation */
-					esc_html__( 'You have not added any documents yet. %1$s to start tracking revisions and workflow, or %2$s.', 'wp-document-revisions' ),
-					$add_link, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
-					$docs_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
-				);
+				if ( '' === $docs_link ) {
+					printf(
+						/* translators: %s: link to add a new document */
+						esc_html__( 'You have not added any documents yet. %s to start tracking revisions and workflow.', 'wp-document-revisions' ),
+						$add_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
+					);
+				} else {
+					printf(
+						/* translators: 1: link to add a new document, 2: link to the documentation */
+						esc_html__( 'You have not added any documents yet. %1$s to start tracking revisions and workflow, or %2$s.', 'wp-document-revisions' ),
+						$add_link, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
+						$docs_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchor assembled from esc_url() and esc_html__() above.
+					);
+				}
 				?>
 			</p>
 		</div>
@@ -305,6 +314,11 @@ trait WP_Document_Revisions_Admin_List {
 			return;
 		}
 
+		$urls = WP_Document_Revisions::feedback_urls();
+		if ( '' === $urls['review'] ) {
+			return;
+		}
+
 		// Engagement gate: only ask users with a real, successful library.
 		$counts = array_map( 'intval', (array) wp_count_posts( 'document' ) );
 		if ( array_sum( $counts ) < self::REVIEW_MIN_DOCS ) {
@@ -329,8 +343,76 @@ trait WP_Document_Revisions_Admin_List {
 				<a href="<?php echo esc_url( $review_url ); ?>" class="button button-primary" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Leave a review', 'wp-document-revisions' ); ?></a>
 				<a href="<?php echo esc_url( $dismiss_url ); ?>" class="button-link"><?php esc_html_e( 'No thanks', 'wp-document-revisions' ); ?></a>
 			</p>
+			<?php
+			// Offered alongside the review, not instead of it, so the prompt never filters reviews by sentiment.
+			$other = self::feedback_links( array( 'ideas', 'support' ) );
+			if ( $other ) :
+				?>
+				<p><?php echo esc_html__( 'Something missing or not working?', 'wp-document-revisions' ) . ' ' . implode( ' | ', $other ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- anchors built by feedback_links() from esc_url() and esc_html(). ?></p>
+			<?php endif; ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Builds the documentation, support, ideas and review links, skipping any filtered to empty.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @param string[] $keys which links, in display order.
+	 * @return array<string, string> anchor HTML keyed by purpose.
+	 */
+	public static function feedback_links( array $keys = array( 'docs', 'support', 'ideas', 'review' ) ): array {
+		$labels = array(
+			'docs'    => __( 'Documentation', 'wp-document-revisions' ),
+			'support' => __( 'Get support', 'wp-document-revisions' ),
+			'ideas'   => __( 'Suggest an idea', 'wp-document-revisions' ),
+			'review'  => __( 'Leave a review', 'wp-document-revisions' ),
+		);
+		$urls   = WP_Document_Revisions::feedback_urls();
+		$links  = array();
+		foreach ( $keys as $key ) {
+			if ( empty( $urls[ $key ] ) || ! isset( $labels[ $key ] ) ) {
+				continue;
+			}
+			$links[ $key ] = sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+				esc_url( $urls[ $key ] ),
+				esc_html( $labels[ $key ] )
+			);
+		}
+		return $links;
+	}
+
+	/**
+	 * Adds documentation, support, ideas and review links under the plugin on the Plugins screen.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @param string[] $links the plugin's row meta links.
+	 * @param string   $file  plugin file, relative to the plugins directory.
+	 * @return string[]
+	 */
+	public function plugin_row_meta( $links, $file ) {
+		if ( plugin_basename( dirname( __DIR__ ) . '/wp-document-revisions.php' ) !== $file ) {
+			return $links;
+		}
+		return array_merge( (array) $links, array_values( self::feedback_links() ) );
+	}
+
+	/**
+	 * Help sidebar listing where to get help or send feedback.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @return string sidebar HTML, or '' when every link is filtered out.
+	 */
+	public static function help_sidebar(): string {
+		$links = self::feedback_links();
+		if ( ! $links ) {
+			return '';
+		}
+		return '<p><strong>' . esc_html__( 'For more information:', 'wp-document-revisions' ) . '</strong></p><p>' . implode( '</p><p>', $links ) . '</p>';
 	}
 
 	/**
@@ -355,9 +437,12 @@ trait WP_Document_Revisions_Admin_List {
 		update_user_meta( get_current_user_id(), self::REVIEW_DISMISSED_META, 1 );
 
 		if ( $go ) {
-			// External redirect to the review page is intentional.
-			wp_redirect( 'https://wordpress.org/support/plugin/wp-document-revisions/reviews/#new-post' ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
-			exit;
+			$review = WP_Document_Revisions::feedback_urls()['review'];
+			if ( '' !== $review ) {
+				// External redirect to the review page is intentional.
+				wp_redirect( $review ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
+				exit;
+			}
 		}
 
 		wp_safe_redirect( remove_query_arg( array( 'wpdr_review_dismiss', 'wpdr_review_nonce', 'wpdr_review_go' ) ) );

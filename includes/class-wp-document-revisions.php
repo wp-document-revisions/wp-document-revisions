@@ -131,6 +131,41 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Where admins can read the documentation, get support, suggest an idea or leave a review.
+	 *
+	 * Problems go to the WordPress.org support forum, which every WordPress.org user can post to;
+	 * ideas go to GitHub Discussions, where they can be discussed and upvoted.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @return array{docs: string, support: string, ideas: string, review: string}
+	 */
+	public static function feedback_urls(): array {
+		$urls = array(
+			'docs'    => 'https://wp-document-revisions.github.io/wp-document-revisions/',
+			'support' => 'https://wordpress.org/support/plugin/wp-document-revisions/',
+			'ideas'   => 'https://github.com/wp-document-revisions/wp-document-revisions/discussions/categories/ideas',
+			'review'  => 'https://wordpress.org/support/plugin/wp-document-revisions/reviews/#new-post',
+		);
+
+		/**
+		 * Filters the documentation, support, ideas and review links shown in the admin.
+		 *
+		 * Set a link to an empty string to hide it, e.g. on a managed site with its own help desk.
+		 *
+		 * @since 5.8.0
+		 *
+		 * @param array{docs: string, support: string, ideas: string, review: string} $urls links keyed by purpose.
+		 */
+		$filtered = (array) apply_filters( 'document_feedback_urls', $urls );
+		foreach ( $urls as $key => $url ) {
+			$urls[ $key ] = isset( $filtered[ $key ] ) && is_string( $filtered[ $key ] ) ? $filtered[ $key ] : '';
+		}
+
+		return $urls;
+	}
+
+	/**
 	 * Initiates an instance of the class and adds hooks.
 	 *
 	 * @since 0.5

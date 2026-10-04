@@ -73,6 +73,12 @@ In: trait-wp-document-revisions-file-handler.php
 
 Allows the document file extension to be manipulated.
 
+## Filter document_feedback_urls
+
+In: class-wp-document-revisions.php
+
+Filters the documentation, support, ideas and review links shown on the Plugins screen, in the Help tab sidebar, in the review prompt and in the Document Library block. Receives an array keyed `docs`, `support`, `ideas` and `review`. Set a link to an empty string to hide it, e.g. on a managed site with its own help desk. (Since 5.8.0.)
+
 ## Filter document_get_info_ability_capability
 
 In: class-wp-document-revisions.php
