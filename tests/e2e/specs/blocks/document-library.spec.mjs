@@ -22,11 +22,11 @@ test.describe( 'Document Library Block', () => {
 
 		await editor.insertBlock( {
 			name: 'wp-document-revisions/document-library',
-			attributes: { layout: 'table' },
+			attributes: { variant: 'table' },
 		} );
 
 		const blocks = await editor.getBlocks();
-		expect( blocks[ 0 ].attributes.layout ).toBe( 'table' );
+		expect( blocks[ 0 ].attributes.variant ).toBe( 'table' );
 
 		await expect(
 			editor.canvas.locator( '[data-type="wp-document-revisions/document-library"]' )
@@ -46,7 +46,7 @@ test.describe( 'Document Library Block', () => {
 		for ( const layout of [ 'list', 'table', 'grid' ] ) {
 			await editor.insertBlock( {
 				name: 'wp-document-revisions/document-library',
-				attributes: { layout },
+				attributes: { variant: layout },
 			} );
 		}
 

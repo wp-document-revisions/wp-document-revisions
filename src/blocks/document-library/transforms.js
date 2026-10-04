@@ -7,7 +7,7 @@ import { buildShortcode, parseShortcodeParams } from '../shared/parse-shortcode'
 
 /** Shortcode keys that are block attributes rather than taxonomy filters. */
 const ATTRIBUTE_KEYS = [
-	'layout',
+	'variant',
 	'columns',
 	'fields',
 	'orderby',
@@ -24,7 +24,7 @@ const ATTRIBUTE_KEYS = [
  * accepts. Only all-digit values become IDs, so a slug such as `2024-reports`
  * stays a slug rather than turning into term 2024.
  *
- * @param {string} text Raw shortcode text, e.g. `[document_library layout="table"]`.
+ * @param {string} text Raw shortcode text, e.g. `[document_library variant="table"]`.
  * @return {Record<string, unknown>} Block attributes.
  */
 export function shortcodeToAttributes( text ) {
@@ -73,15 +73,15 @@ export function shortcodeToAttributes( text ) {
 /**
  * Shortcode text from block attributes.
  *
- * @param {{layout?: string, columns?: number, fields?: string[], taxonomies?: Record<string, Array<number|string>>, orderby?: string, order?: string, numberposts?: number, new_tab?: boolean}} attributes Block attributes.
+ * @param {{variant?: string, columns?: number, fields?: string[], taxonomies?: Record<string, Array<number|string>>, orderby?: string, order?: string, numberposts?: number, new_tab?: boolean}} attributes Block attributes.
  * @return {string} The shortcode.
  */
 export function attributesToShortcode( attributes ) {
 	/** @type {Record<string, string>} */
 	const named = {
-		layout: String( attributes.layout || 'list' ),
+		variant: String( attributes.variant || 'list' ),
 	};
-	if ( attributes.layout === 'grid' ) {
+	if ( attributes.variant === 'grid' ) {
 		named.columns = String( attributes.columns );
 	}
 	if ( Array.isArray( attributes.fields ) && attributes.fields.length ) {

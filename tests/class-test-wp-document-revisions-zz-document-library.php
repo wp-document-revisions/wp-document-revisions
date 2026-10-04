@@ -157,8 +157,8 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 		$html = $this->render_as(
 			self::$editor,
 			array(
-				'layout' => 'table',
-				'fields' => array( 'modified', 'title' ),
+				'variant' => 'table',
+				'fields'  => array( 'modified', 'title' ),
 			)
 		);
 
@@ -176,7 +176,7 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 		$html = $this->render_as(
 			self::$editor,
 			array(
-				'layout'  => 'grid',
+				'variant' => 'grid',
 				'columns' => 4,
 			)
 		);
@@ -188,13 +188,13 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 			array(
 				'columns'     => 99,
 				'numberposts' => $too_many,
-				'layout'      => 'carousel',
+				'variant'     => 'carousel',
 				'orderby'     => 'rand',
 			)
 		);
 		$this->assertSame( 6, $settings['columns'] );
 		$this->assertSame( WP_Document_Revisions_Document_Library::MAX_DOCUMENTS, $settings['numberposts'] );
-		$this->assertSame( 'list', $settings['layout'] );
+		$this->assertSame( 'list', $settings['variant'] );
 		$this->assertSame( 'modified', $settings['orderby'] );
 	}
 
@@ -215,7 +215,7 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 	 */
 	public function test_shortcode_taxonomy_by_slug() {
 		wp_set_current_user( self::$editor );
-		$html = do_shortcode( '[document_library layout="table" wpdr_topic="minutes"]' );
+		$html = do_shortcode( '[document_library variant="table" wpdr_topic="minutes"]' );
 
 		$this->assertStringContainsString( 'wpdr-library--table', $html );
 		$this->assertStringContainsString( 'Library publish', $html );
@@ -299,6 +299,22 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 
 		$this->assertStringContainsString( 'Filtered', $html );
 		$this->assertStringNotContainsString( 'Library publish', $html );
+	}
+
+	/**
+	 * Under EF/PP the workflow state field shows the post status, since they keep no post_status terms on documents.
+	 */
+	public function test_workflow_state_uses_post_status_under_efpp() {
+		$key                                     = WP_Document_Revisions::$taxonomy_key_val;
+		WP_Document_Revisions::$taxonomy_key_val = 'post_status';
+		try {
+			$html = $this->render_as( self::$editor, array( 'fields' => array( 'title', 'workflow_state' ) ) );
+		} finally {
+			WP_Document_Revisions::$taxonomy_key_val = $key;
+		}
+
+		$this->assertStringContainsString( '<span class="wpdr-library__state">Published</span>', $html );
+		$this->assertStringContainsString( '<span class="wpdr-library__state">Private</span>', $html );
 	}
 
 	/**

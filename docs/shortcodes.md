@@ -134,7 +134,7 @@ The library shows the same documents as the `[documents]` shortcode would for th
 
 ### Parameters
 
-`layout` is `list` (the default), `table` or `grid`.
+`variant` is `list` (the default), `table` or `grid`.
 
 `columns` (with a number parameter, 1 to 6) sets the number of columns in the grid layout. The default is 3.
 
@@ -144,7 +144,7 @@ The library shows the same documents as the `[documents]` shortcode would for th
 - `title`: the title, linked to the document
 - `description`: the start of the document's description
 - `file_type`: the file extension, e.g. PDF
-- `workflow_state`: the document's workflow state
+- `workflow_state`: the document's workflow state, or its post status when EditFlow or PublishPress Statuses manages document statuses
 - `author`: the document's author
 - `modified`: the date the document was last modified
 - `revisions`: the number of revisions, only shown to users who can read revisions
@@ -158,11 +158,13 @@ The default is `title,file_type,author,modified,download`.
 
 `new_tab` (with a true/false parameter) opens documents in a new browser tab.
 
-To filter by a taxonomy, use the taxonomy's name as the parameter, with a comma-separated list of term IDs or slugs. For example, `[document_library layout="table" workflow_state="final"]` lists only final documents.
+To filter by a taxonomy, use the taxonomy's name as the parameter, with a comma-separated list of term IDs or slugs. For example, `[document_library variant="table" workflow_state="final"]` lists only final documents.
 
 ### Block Usage
 
 The block version of the shortcode is called `Document Library`, and the inserter offers it as `Document List`, `Document Table` and `Document Grid`. Its settings cover all the parameters above, with no limit on how many taxonomies you can filter by. It can be converted to and from a shortcode block.
+
+The Document Library is new. If you use it, please tell us what works and what's missing, such as pagination, search or sortable columns, in the [Document Library discussion](https://github.com/wp-document-revisions/wp-document-revisions/discussions/796).
 
 ## Latest Documents Widget
 

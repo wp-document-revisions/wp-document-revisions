@@ -23,11 +23,11 @@ class WP_Document_Revisions_Document_Library {
 	const BLOCK = 'wp-document-revisions/document-library';
 
 	/**
-	 * Available layouts.
+	 * Available variants.
 	 *
 	 * @var string[]
 	 */
-	const LAYOUTS = array( 'list', 'table', 'grid' );
+	const VARIANTS = array( 'list', 'table', 'grid' );
 
 	/**
 	 * Available fields, in display order.
@@ -191,11 +191,11 @@ class WP_Document_Revisions_Document_Library {
 	 * Turns block attributes or shortcode attributes into validated settings.
 	 *
 	 * @param array<string, mixed> $atts raw attributes.
-	 * @return array{layout: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool}
+	 * @return array{variant: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool}
 	 */
 	public function normalize( array $atts ): array {
-		$layout = isset( $atts['layout'] ) ? (string) $atts['layout'] : 'list';
-		$layout = in_array( $layout, self::LAYOUTS, true ) ? $layout : 'list';
+		$variant = isset( $atts['variant'] ) ? (string) $atts['variant'] : 'list';
+		$variant = in_array( $variant, self::VARIANTS, true ) ? $variant : 'list';
 
 		$fields = $atts['fields'] ?? self::DEFAULT_FIELDS;
 		if ( is_string( $fields ) ) {
@@ -234,7 +234,7 @@ class WP_Document_Revisions_Document_Library {
 		$new_tab = $atts['new_tab'] ?? false;
 
 		return array(
-			'layout'      => $layout,
+			'variant'     => $variant,
 			'columns'     => min( 6, max( 1, (int) ( $atts['columns'] ?? 3 ) ) ),
 			'fields'      => $fields,
 			'taxonomies'  => $taxonomies,
@@ -264,7 +264,7 @@ class WP_Document_Revisions_Document_Library {
 	/**
 	 * Renders the library.
 	 *
-	 * @param array{layout: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
+	 * @param array{variant: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
 	 * @return string
 	 */
 	public function render( array $settings ): string {
@@ -276,8 +276,8 @@ class WP_Document_Revisions_Document_Library {
 		global $wpdr;
 		$documents = $wpdr->get_documents( $this->query_args( $settings ) );
 
-		$layout = $settings['layout'];
-		$fields = $settings['fields'];
+		$variant = $settings['variant'];
+		$fields  = $settings['fields'];
 		if ( ! current_user_can( 'read_document_revisions' ) ) {
 			$fields = array_values( array_diff( $fields, array( 'revisions' ) ) );
 		}
@@ -298,20 +298,20 @@ class WP_Document_Revisions_Document_Library {
 			 *
 			 * @param array<string, string> $cells    field HTML keyed by field name, in display order.
 			 * @param WP_Post               $document the document.
-			 * @param string                $layout   list, table or grid.
+			 * @param string                $variant  list, table or grid.
 			 */
-			$rows[] = (array) apply_filters( 'document_library_row', $cells, $document, $layout );
+			$rows[] = (array) apply_filters( 'document_library_row', $cells, $document, $variant );
 		}
 
-		$classes = 'wpdr-library wpdr-library--' . $layout;
+		$classes = 'wpdr-library wpdr-library--' . $variant;
 		$extra   = array( 'class' => $classes );
-		if ( 'grid' === $layout ) {
+		if ( 'grid' === $variant ) {
 			$extra['style'] = '--wpdr-library-columns:' . $settings['columns'] . ';';
 		}
 
 		if ( ! $rows ) {
 			$inner = '<p class="wpdr-library__empty">' . esc_html__( 'No documents found.', 'wp-document-revisions' ) . '</p>';
-		} elseif ( 'table' === $layout ) {
+		} elseif ( 'table' === $variant ) {
 			$inner = $this->table( $fields, $rows );
 		} else {
 			$inner = $this->items( $rows );
@@ -323,7 +323,7 @@ class WP_Document_Revisions_Document_Library {
 	/**
 	 * Builds the get_documents() query.
 	 *
-	 * @param array{layout: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
+	 * @param array{variant: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
 	 * @return array<string, mixed>
 	 */
 	private function query_args( array $settings ): array {
@@ -363,15 +363,15 @@ class WP_Document_Revisions_Document_Library {
 	/**
 	 * HTML for one field of a document.
 	 *
-	 * @param string                                                                                                                                                               $field    field name.
-	 * @param WP_Post                                                                                                                                                              $document the document.
-	 * @param array{layout: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
+	 * @param string                                                                                                                                                                $field    field name.
+	 * @param WP_Post                                                                                                                                                               $document the document.
+	 * @param array{variant: string, columns: int, fields: string[], taxonomies: array<string, array<int|string>>, orderby: string, order: string, numberposts: int, new_tab: bool} $settings normalized settings.
 	 * @return string
 	 */
 	private function field( string $field, WP_Post $document, array $settings ): string {
 		global $wpdr, $wpdr_fe;
 
-		$table     = 'table' === $settings['layout'];
+		$table     = 'table' === $settings['variant'];
 		$id        = $document->ID;
 		$title     = get_the_title( $id );
 		$permalink = (string) get_permalink( $id );
@@ -404,7 +404,15 @@ class WP_Document_Revisions_Document_Library {
 
 			case 'workflow_state':
 				$taxonomy = WP_Document_Revisions::taxonomy_key();
-				if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+				if ( '' === $taxonomy ) {
+					return '';
+				}
+				// EF/PP keep the state in the post's own status, not in post_status terms.
+				if ( 'workflow_state' !== $taxonomy ) {
+					$status = get_post_status_object( (string) get_post_status( $document ) );
+					return $status ? '<span class="wpdr-library__state">' . esc_html( (string) $status->label ) . '</span>' : '';
+				}
+				if ( ! taxonomy_exists( $taxonomy ) ) {
 					return '';
 				}
 				$terms = get_the_terms( $id, $taxonomy );

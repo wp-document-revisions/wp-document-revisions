@@ -12,7 +12,7 @@
 	"editorScript": "file:./index.js",
 	"style": "file:./style-index.css",
 	"attributes": {
-		"layout": {
+		"variant": {
 			"type": "string",
 			"enum": [ "list", "table", "grid" ],
 			"default": "list"
@@ -58,8 +58,8 @@
 			"description": "Documents as a list, with details under each title.",
 			"icon": "list-view",
 			"isDefault": true,
-			"attributes": { "layout": "list" },
-			"isActive": [ "layout" ],
+			"attributes": { "variant": "list" },
+			"isActive": [ "variant" ],
 			"scope": [ "inserter", "transform" ]
 		},
 		{
@@ -67,8 +67,8 @@
 			"title": "Document Table",
 			"description": "Documents as a table, one column per field.",
 			"icon": "editor-table",
-			"attributes": { "layout": "table" },
-			"isActive": [ "layout" ],
+			"attributes": { "variant": "table" },
+			"isActive": [ "variant" ],
 			"scope": [ "inserter", "transform" ]
 		},
 		{
@@ -76,8 +76,8 @@
 			"title": "Document Grid",
 			"description": "Documents as a grid of cards.",
 			"icon": "grid-view",
-			"attributes": { "layout": "grid", "fields": [ "thumbnail", "title", "file_type", "modified", "download" ] },
-			"isActive": [ "layout" ],
+			"attributes": { "variant": "grid", "fields": [ "thumbnail", "title", "file_type", "modified", "download" ] },
+			"isActive": [ "variant" ],
 			"scope": [ "inserter", "transform" ]
 		}
 	],

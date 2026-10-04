@@ -164,7 +164,7 @@ test.describe( 'Accessibility', () => {
 		await editor.insertBlock( {
 			name: 'wp-document-revisions/document-library',
 			attributes: {
-				layout: 'table',
+				variant: 'table',
 				fields: [ 'title', 'file_type', 'workflow_state', 'modified', 'download' ],
 			},
 		} );

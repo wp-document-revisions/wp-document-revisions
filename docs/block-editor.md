@@ -90,7 +90,7 @@ WP Document Revisions also provides five Gutenberg blocks for displaying documen
 - **Recently Revised Documents** (`wp-document-revisions/documents-widget`) — Shows recently updated documents, equivalent to the sidebar widget
 - **Document Revisions** (`wp-document-revisions/revisions-shortcode`) — Shows the revision history for a specific document, equivalent to the `[document_revisions]` shortcode
 - **Document Preview** (`wp-document-revisions/document-preview`) — Embeds an inline preview of a document's latest revision, equivalent to the `[document_preview]` shortcode
-- **Document Library** (`wp-document-revisions/document-library`) — Lists documents as a list, table or grid with a choice of fields, equivalent to the `[document_library]` shortcode
+- **Document Library** (`wp-document-revisions/document-library`) — Lists documents as a list, table or grid with a choice of fields, equivalent to the `[document_library]` shortcode. It is new, so please share feedback in the [Document Library discussion](https://github.com/wp-document-revisions/wp-document-revisions/discussions/796)
 
 ## Known Limitations
 

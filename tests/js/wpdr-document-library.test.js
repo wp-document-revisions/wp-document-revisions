@@ -10,13 +10,13 @@ import {
 } from '../../src/blocks/document-library/transforms';
 
 describe( 'document-library shortcodeToAttributes', () => {
-	it( 'reads layout, fields, numbers and order', () => {
+	it( 'reads variant, fields, numbers and order', () => {
 		expect(
 			shortcodeToAttributes(
-				'[document_library layout="table" fields="title,modified" numberposts="5" columns="4" orderby="title" order="asc"]'
+				'[document_library variant="table" fields="title,modified" numberposts="5" columns="4" orderby="title" order="asc"]'
 			)
 		).toEqual( {
-			layout: 'table',
+			variant: 'table',
 			fields: [ 'title', 'modified' ],
 			numberposts: 5,
 			columns: 4,
@@ -55,7 +55,7 @@ describe( 'document-library shortcodeToAttributes', () => {
 
 describe( 'document-library attributesToShortcode', () => {
 	const defaults = {
-		layout: 'list',
+		variant: 'list',
 		columns: 3,
 		fields: [ 'title', 'file_type', 'author', 'modified', 'download' ],
 		taxonomies: {},
@@ -67,7 +67,7 @@ describe( 'document-library attributesToShortcode', () => {
 
 	it( 'serializes the defaults', () => {
 		expect( attributesToShortcode( defaults ) ).toBe(
-			'[document_library layout="list" fields="title,file_type,author,modified,download" orderby="modified" order="DESC" numberposts="10"]'
+			'[document_library variant="list" fields="title,file_type,author,modified,download" orderby="modified" order="DESC" numberposts="10"]'
 		);
 	} );
 
@@ -75,20 +75,20 @@ describe( 'document-library attributesToShortcode', () => {
 		expect(
 			attributesToShortcode( {
 				...defaults,
-				layout: 'grid',
+				variant: 'grid',
 				columns: 4,
 				taxonomies: { category: [ 4, 9 ], empty: [] },
 				new_tab: true,
 			} )
 		).toBe(
-			'[document_library layout="grid" columns="4" fields="title,file_type,author,modified,download" category="4,9" orderby="modified" order="DESC" numberposts="10" new_tab="true"]'
+			'[document_library variant="grid" columns="4" fields="title,file_type,author,modified,download" category="4,9" orderby="modified" order="DESC" numberposts="10" new_tab="true"]'
 		);
 	} );
 
 	it( 'round-trips through the shortcode', () => {
 		const attributes = {
 			...defaults,
-			layout: 'table',
+			variant: 'table',
 			taxonomies: { category: [ 4 ], workflow_state: [ 'final', '2024-reports' ] },
 			numberposts: 25,
 		};

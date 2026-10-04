@@ -57,7 +57,7 @@ function findTerm( taxonomy, value ) {
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
-	const { layout, columns, fields, taxonomies, orderby, order, numberposts, new_tab } =
+	const { variant, columns, fields, taxonomies, orderby, order, numberposts, new_tab } =
 		attributes;
 
 	const toggleField = ( field, checked ) => {
@@ -92,15 +92,15 @@ export default function Edit( { attributes, setAttributes } ) {
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
 						label={ __( 'Layout', 'wp-document-revisions' ) }
-						value={ layout }
+						value={ variant }
 						options={ [
 							{ value: 'list', label: __( 'List', 'wp-document-revisions' ) },
 							{ value: 'table', label: __( 'Table', 'wp-document-revisions' ) },
 							{ value: 'grid', label: __( 'Grid', 'wp-document-revisions' ) },
 						] }
-						onChange={ ( value ) => setAttributes( { layout: value } ) }
+						onChange={ ( value ) => setAttributes( { variant: value } ) }
 					/>
-					{ layout === 'grid' && (
+					{ variant === 'grid' && (
 						<RangeControl
 							__next40pxDefaultSize
 							__nextHasNoMarginBottom
