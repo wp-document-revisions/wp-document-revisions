@@ -2,6 +2,7 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	CheckboxControl,
+	ExternalLink,
 	FormTokenField,
 	PanelBody,
 	RangeControl,
@@ -37,6 +38,15 @@ function fieldOptions() {
  */
 function documentTaxonomies() {
 	return typeof wpdr_library_data !== 'undefined' ? wpdr_library_data.taxonomies : [];
+}
+
+/**
+ * Where to send feedback on the block, from PHP.
+ *
+ * @return {string} URL, or '' when the site has turned feedback links off.
+ */
+function feedbackUrl() {
+	return typeof wpdr_library_data !== 'undefined' ? wpdr_library_data.feedback || '' : '';
 }
 
 /**
@@ -192,6 +202,22 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { new_tab: value } ) }
 					/>
 				</PanelBody>
+				{ feedbackUrl() && (
+					<PanelBody
+						title={ __( 'Feedback', 'wp-document-revisions' ) }
+						initialOpen={ false }
+					>
+						<p>
+							{ __(
+								'This block is new. Tell us what works and what is missing.',
+								'wp-document-revisions'
+							) }
+						</p>
+						<ExternalLink href={ feedbackUrl() }>
+							{ __( 'Share feedback', 'wp-document-revisions' ) }
+						</ExternalLink>
+					</PanelBody>
+				) }
 			</InspectorControls>
 			<div { ...blockProps }>
 				<ServerSideRender
