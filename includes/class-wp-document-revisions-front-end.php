@@ -1117,12 +1117,26 @@ class WP_Document_Revisions_Front_End {
 	 * file handler (serve_file), so the browser previews it in place and access control is
 	 * enforced on the actual file request regardless of this callback.
 	 *
-	 * @param array<string, mixed> $atts shortcode/block attributes.
+	 * @param array<string, mixed>|string $atts shortcode/block attributes (WordPress passes an empty string when a shortcode has none).
 	 * @return string the preview markup.
 	 * @since 5.5.0
 	 */
-	public function wpdr_document_preview_display( array $atts ): string {
+	public function wpdr_document_preview_display( $atts ): string {
 		global $wpdr;
+
+		// WordPress passes empty string when shortcode has no attributes.
+		if ( ! is_array( $atts ) ) {
+			$atts = array();
+		}
+
+		// show_title and show_download may be entered without a value (implies true).
+		foreach ( array( 'show_title', 'show_download' ) as $flag ) {
+			$pos = array_search( $flag, $atts, true );
+			if ( is_int( $pos ) ) {
+				$atts[ $flag ] = true;
+				unset( $atts[ $pos ] );
+			}
+		}
 
 		$atts = shortcode_atts(
 			array(
