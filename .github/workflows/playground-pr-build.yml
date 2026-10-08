@@ -1,0 +1,28 @@
+name: Playground preview (PR) - Build
+
+# Builds the plugin zip for a pull request, plus a blueprint that installs it
+# with the demo content. playground-pr-publish.yml then adds a "Preview in
+# WordPress Playground" button to the PR. Split in two (the action's
+# fork-safe pattern): this half runs the PR's code with read-only
+# permissions; the publish half runs from main with write access.
+
+on:
+    pull_request:
+        branches: [main]
+
+concurrency:
+    group: playground-pr-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    build:
+        uses: WordPress/action-wp-playground-pr-preview/.github/workflows/preview-build.yml@v4
+        with:
+            node-version: '24'
+            php-version: '8.2'
+            artifacts: wp-document-revisions=dist/wp-document-revisions.zip
+            build-command: script/build-plugin-zip && script/build-blueprints --pr
+            blueprint-from-build: playground/blueprint-pr.json
