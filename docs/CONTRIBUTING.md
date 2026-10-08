@@ -19,6 +19,7 @@ Here are a few tips for writing _great_ bug reports:
 - Describe the specific problem (e.g., "widget doesn't turn clockwise" versus "getting an error")
 - Include the steps to reproduce the bug, what you expected to happen, and what happened instead
 - Check that you are using the latest version of the project and its dependencies
+- Try to reproduce it in [WordPress Playground running the latest development version](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/main/playground/blueprint-main.json). It opens a throwaway site in your browser with sample documents, so you can check whether the bug is already fixed and share exact steps that start from the same place
 - Include what version of the project your using, as well as any relevant dependencies
 - Only include one bug per issue. If you have discovered two bugs, please file two issues
 - Include screenshots or screencasts whenever possible
@@ -37,7 +38,7 @@ Feature requests are welcome. But take a moment to find out whether your idea fi
 ## Ways to Contribute
 
 - **Everyone** - Jump in and answer questions in [the support forums](http://wordpress.org/support/plugin/wp-document-revisions), or help expand the projects [documentation](https://github.com/wp-document-revisions/wp-document-revisions/tree/master/docs) to make it easier for other users to get started
-- **Users** - download the latest [development version](https://github.com/wp-document-revisions/wp-document-revisions/) of the plugin, and [submit bug/feature requests](https://github.com/wp-document-revisions/wp-document-revisions/issues).
+- **Users** - [try the latest development version in WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/main/playground/blueprint-main.json) (nothing to install; it's rebuilt from `main` on every merge), and [submit bug/feature requests](https://github.com/wp-document-revisions/wp-document-revisions/issues).
 - **Non-English Speaking Users** - [Review or contribute translations](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) on translate.wordpress.org. No technical knowledge is required, and thirty languages have suggestions waiting for a fluent reviewer. See [Translations](./translations.md) for how to get started.
 - **Developers** - [Fork the development version](https://github.com/wp-document-revisions/wp-document-revisions/) and submit a pull request, especially for any [known issues](https://github.com/wp-document-revisions/wp-document-revisions/issues?direction=desc&sort=created&state=open)
 
@@ -49,6 +50,16 @@ We'd love for you to contribute to the project. Unsure where to begin contributi
 - [Help wanted issues](https://github.com/wp-document-revisions/wp-document-revisions/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) - issues which may be a bit more involved, but are specifically seeking community contributions
 
 _p.s. Feel free to ask for help; everyone is a beginner at first_ :smiley_cat:
+
+## Trying changes in WordPress Playground
+
+[WordPress Playground](https://wordpress.org/playground/) runs WordPress entirely in the browser. Three blueprints set up the same sample documents, with revision history and workflow states:
+
+- **Released version:** the WordPress.org [Live Preview](https://wordpress.org/plugins/wp-document-revisions/?preview=1) (`.wordpress-org/blueprints/blueprint.json`)
+- **Latest `main`:** [open in Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/main/playground/blueprint-main.json) (`playground/blueprint-main.json`). CI rebuilds the plugin zip on every merge to `main` and attaches it to the [`playground-main` prerelease](https://github.com/wp-document-revisions/wp-document-revisions/releases/tag/playground-main).
+- **Your local checkout:** run `npm run build`, then `npm run playground` (`playground/blueprint-local.json`)
+
+All three are generated from [`playground/demo-content.php`](../playground/demo-content.php) by `script/build-blueprints`, so edit that file and rerun the script rather than editing the JSON. CI fails if they drift, and boots each one to check the demo content loads.
 
 ## How to propose changes
 

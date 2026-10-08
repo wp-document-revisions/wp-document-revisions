@@ -1,0 +1,60 @@
+name: Playground preview (main)
+
+# Publishes a zip of the latest main to the rolling `playground-main`
+# prerelease, so playground/blueprint-main.json can install the unreleased
+# plugin. Lets anyone try the next release, or reproduce a bug against main,
+# without building the blocks themselves.
+#
+# The release's tag doesn't start with `v`, so deploy.yml (which only deploys
+# `v*` tags to WordPress.org) ignores it. Tags created with GITHUB_TOKEN don't
+# trigger workflows anyway; the filter guards against a manual push.
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+concurrency:
+    group: playground-main
+    cancel-in-progress: true
+
+jobs:
+    publish:
+        name: Build and publish preview zip
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: '24'
+                  cache: 'npm'
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Build plugin zip
+              run: script/build-plugin-zip
+
+            - name: Upload to the playground-main prerelease
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  notes="Development build of main at ${GITHUB_SHA}, for WordPress Playground previews. Not a release; don't install it on a production site.
+
+                  Try it: https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/playground/blueprint-main.json"
+                  if ! gh release view playground-main >/dev/null 2>&1; then
+                      gh release create playground-main --prerelease --latest=false \
+                          --target "$GITHUB_SHA" --title "Playground preview (main)" --notes "$notes"
+                  else
+                      gh release edit playground-main --notes "$notes"
+                  fi
+                  gh release upload playground-main dist/wp-document-revisions.zip --clobber

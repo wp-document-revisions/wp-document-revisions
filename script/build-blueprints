@@ -1,0 +1,85 @@
+#!/usr/bin/env node
+/**
+ * Generates the WordPress Playground blueprints from one list of steps, so the
+ * demo content (playground/demo-content.php) has a single source of truth.
+ *
+ * Outputs:
+ *   .wordpress-org/blueprints/blueprint.json  WordPress.org Live Preview (released plugin)
+ *   playground/blueprint-main.json            latest main, from the rolling CI-built zip
+ *   playground/blueprint-local.json           a local checkout mounted by `npm run playground`
+ *
+ * CI fails if the committed files differ from what this script writes.
+ *
+ * Usage: script/build-blueprints
+ */
+const fs = require( 'fs' );
+const path = require( 'path' );
+
+const root = path.resolve( __dirname, '..' );
+const slug = 'wp-document-revisions';
+const mainZip = `https://github.com/wp-document-revisions/${ slug }/releases/download/playground-main/${ slug }.zip`;
+const demoContent = fs.readFileSync( path.join( root, 'playground/demo-content.php' ), 'utf8' );
+
+/**
+ * Builds a blueprint around the step that puts the plugin in place.
+ *
+ * @param {Object} pluginStep installPlugin or activatePlugin step.
+ * @param {Object} meta       blueprint meta (title, description).
+ * @return {Object} blueprint.
+ */
+function blueprint( pluginStep, meta ) {
+	return {
+		$schema: 'https://playground.wordpress.net/blueprint-schema.json',
+		meta: { author: 'wp-document-revisions', ...meta },
+		landingPage: '/wp-admin/edit.php?post_type=document',
+		preferredVersions: { php: '8.3', wp: 'latest' },
+		features: { networking: true },
+		steps: [
+			{ step: 'login', username: 'admin', password: 'password' },
+			pluginStep,
+			{ step: 'writeFile', path: '/tmp/wpdr-demo-content.php', data: demoContent },
+			{
+				step: 'runPHP',
+				code: "<?php require '/wordpress/wp-load.php'; require '/tmp/wpdr-demo-content.php'; wpdr_demo_load();",
+			},
+			{ step: 'login', username: 'editor', password: 'password' },
+		],
+	};
+}
+
+const outputs = {
+	'.wordpress-org/blueprints/blueprint.json': blueprint(
+		{
+			step: 'installPlugin',
+			pluginData: { resource: 'wordpress.org/plugins', slug },
+			options: { activate: true },
+		},
+		{
+			title: 'WP Document Revisions',
+			description: 'Sample documents with revision history and workflow states.',
+		}
+	),
+	'playground/blueprint-main.json': blueprint(
+		{
+			step: 'installPlugin',
+			pluginData: { resource: 'url', url: mainZip },
+			options: { activate: true },
+		},
+		{
+			title: 'WP Document Revisions (latest main)',
+			description: 'The unreleased development version, built from the main branch, with sample documents.',
+		}
+	),
+	'playground/blueprint-local.json': blueprint(
+		{ step: 'activatePlugin', pluginPath: `/wordpress/wp-content/plugins/${ slug }` },
+		{
+			title: 'WP Document Revisions (local checkout)',
+			description: 'A local checkout mounted by `npm run playground`. Run `npm run build` first.',
+		}
+	),
+};
+
+for ( const [ file, data ] of Object.entries( outputs ) ) {
+	fs.writeFileSync( path.join( root, file ), JSON.stringify( data, null, '\t' ) + '\n' );
+	console.log( `Wrote ${ file }` );
+}

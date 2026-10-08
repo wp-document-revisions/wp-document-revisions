@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+/**
+ * Smoke-tests a Playground blueprint: runs it headless with @wp-playground/cli,
+ * then a final step that throws (failing the run) unless the demo content was
+ * seeded: documents exist, carry revision history, and have workflow states.
+ *
+ * Usage: script/test-blueprints <blueprint.json> [extra @wp-playground/cli args]
+ * e.g.   script/test-blueprints playground/blueprint-local.json --mount=dist/wp-document-revisions:/wordpress/wp-content/plugins/wp-document-revisions
+ */
+const fs = require( 'fs' );
+const os = require( 'os' );
+const path = require( 'path' );
+const { spawnSync } = require( 'child_process' );
+
+const [ file, ...cliArgs ] = process.argv.slice( 2 );
+if ( ! file ) {
+	console.error( 'Usage: script/test-blueprints <blueprint.json> [cli args]' );
+	process.exit( 2 );
+}
+
+const check = `<?php
+require '/wordpress/wp-load.php';
+$docs = get_posts( array( 'post_type' => 'document', 'post_status' => 'any', 'numberposts' => -1 ) );
+if ( count( $docs ) < 3 ) {
+	throw new Exception( 'Expected at least 3 seeded documents, found ' . count( $docs ) );
+}
+foreach ( $docs as $doc ) {
+	if ( count( wp_get_post_revisions( $doc->ID ) ) < 2 ) {
+		throw new Exception( "Document {$doc->ID} has no revision history" );
+	}
+	if ( ! get_post_meta( $doc->ID, '_document_attachment_id', true ) ) {
+		throw new Exception( "Document {$doc->ID} has no attachment" );
+	}
+	if ( ! wp_get_object_terms( $doc->ID, 'workflow_state' ) ) {
+		throw new Exception( "Document {$doc->ID} has no workflow state" );
+	}
+}
+`;
+
+const blueprint = JSON.parse( fs.readFileSync( file, 'utf8' ) );
+blueprint.steps.push( { step: 'runPHP', code: check } );
+
+const tmp = path.join( fs.mkdtempSync( path.join( os.tmpdir(), 'wpdr-blueprint-' ) ), 'blueprint.json' );
+fs.writeFileSync( tmp, JSON.stringify( blueprint ) );
+
+console.log( `Running ${ file }…` );
+const result = spawnSync(
+	'npx',
+	[ '-y', '@wp-playground/cli@latest', 'run-blueprint', `--blueprint=${ tmp }`, ...cliArgs ],
+	{ stdio: 'inherit' }
+);
+if ( result.status !== 0 ) {
+	console.error( `${ file }: FAILED` );
+	process.exit( result.status || 1 );
+}
+console.log( `${ file }: demo content seeded correctly` );
