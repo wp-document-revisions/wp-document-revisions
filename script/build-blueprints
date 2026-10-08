@@ -10,7 +10,12 @@
  *
  * CI fails if the committed files differ from what this script writes.
  *
- * Usage: script/build-blueprints
+ * With --pr it writes only playground/blueprint-pr.json (not committed), the
+ * template for per-PR previews: the publish workflow of
+ * WordPress/action-wp-playground-pr-preview swaps the placeholder for the URL
+ * of that PR's zip.
+ *
+ * Usage: script/build-blueprints [--pr]
  */
 const fs = require( 'fs' );
 const path = require( 'path' );
@@ -79,7 +84,21 @@ const outputs = {
 	),
 };
 
-for ( const [ file, data ] of Object.entries( outputs ) ) {
+const pr = {
+	'playground/blueprint-pr.json': blueprint(
+		{
+			step: 'installPlugin',
+			pluginData: { resource: 'url', url: `{{ARTIFACT_URL:${ slug }}}` },
+			options: { activate: true },
+		},
+		{
+			title: 'WP Document Revisions (pull request)',
+			description: 'The plugin built from a pull request, with sample documents.',
+		}
+	),
+};
+
+for ( const [ file, data ] of Object.entries( process.argv.includes( '--pr' ) ? pr : outputs ) ) {
 	fs.writeFileSync( path.join( root, file ), JSON.stringify( data, null, '\t' ) + '\n' );
 	console.log( `Wrote ${ file }` );
 }
