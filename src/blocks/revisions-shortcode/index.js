@@ -46,7 +46,7 @@ registerBlockType( metadata, {
 							}
 						}
 						if ( parm[ 0 ] === 'new_tab' ) {
-							if ( parm.length === 1 || parm[ 1 ] === 'false' ) {
+							if ( parm.length === 2 && parm[ 1 ] === 'false' ) {
 								snew_tab = false;
 							}
 						}

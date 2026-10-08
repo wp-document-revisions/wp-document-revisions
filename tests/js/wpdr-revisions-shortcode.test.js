@@ -786,14 +786,14 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			);
 		} );
 
-		test( 'new_tab bare flag parses as false (special case)', () => {
+		test( 'new_tab bare flag parses as true', () => {
 			fromTransform.transform( {
 				text: '[document_revisions new_tab]',
 			} );
 
 			expect( createBlock ).toHaveBeenCalledWith(
 				'wp-document-revisions/revisions-shortcode',
-				expect.objectContaining( { new_tab: false } )
+				expect.objectContaining( { new_tab: true } )
 			);
 		} );
 
