@@ -2,7 +2,8 @@
 /**
  * Smoke-tests a Playground blueprint: runs it headless with @wp-playground/cli,
  * then a final step that throws (failing the run) unless the demo content was
- * seeded: documents exist, carry revision history, and have workflow states.
+ * seeded: documents exist, carry revision history, and have workflow states,
+ * and at least one sits in several folders.
  *
  * Usage: script/test-blueprints <blueprint.json> [extra @wp-playground/cli args]
  * e.g.   script/test-blueprints playground/blueprint-local.json --mount=dist/wp-document-revisions:/wordpress/wp-content/plugins/wp-document-revisions
@@ -34,6 +35,18 @@ foreach ( $docs as $doc ) {
 	if ( ! wp_get_object_terms( $doc->ID, 'workflow_state' ) ) {
 		throw new Exception( "Document {$doc->ID} has no workflow state" );
 	}
+}
+if ( ! taxonomy_exists( 'folder' ) ) {
+	throw new Exception( 'The Folders taxonomy is not registered' );
+}
+$multi = array_filter( $docs, function ( $doc ) {
+	return count( wp_get_object_terms( $doc->ID, 'folder' ) ) > 1;
+} );
+if ( ! $multi ) {
+	throw new Exception( 'No document is filed in more than one folder' );
+}
+if ( ! get_page_by_path( 'document-library' ) ) {
+	throw new Exception( 'The Document Library page is missing' );
 }
 `;
 
