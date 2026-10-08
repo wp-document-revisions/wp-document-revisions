@@ -1,5 +1,6 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
+	Disabled,
 	PanelBody,
 	RadioControl,
 	RangeControl,
@@ -241,11 +242,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<ServerSideRender
-					block="wp-document-revisions/documents-shortcode"
-					attributes={ attributes }
-					skipBlockSupportAttributes
-				/>
+				<Disabled>
+					<ServerSideRender
+						block="wp-document-revisions/documents-shortcode"
+						attributes={ attributes }
+						skipBlockSupportAttributes
+					/>
+				</Disabled>
 			</div>
 		</>
 	);

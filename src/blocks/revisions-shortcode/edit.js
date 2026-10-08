@@ -1,5 +1,11 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, RangeControl, TextControl, ToggleControl } from '@wordpress/components';
+import {
+	Disabled,
+	PanelBody,
+	RangeControl,
+	TextControl,
+	ToggleControl,
+} from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
 
@@ -65,11 +71,13 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 			<div { ...blockProps }>
 				{ attributes.id > 0 ? (
-					<ServerSideRender
-						block="wp-document-revisions/revisions-shortcode"
-						attributes={ attributes }
-						skipBlockSupportAttributes
-					/>
+					<Disabled>
+						<ServerSideRender
+							block="wp-document-revisions/revisions-shortcode"
+							attributes={ attributes }
+							skipBlockSupportAttributes
+						/>
+					</Disabled>
 				) : (
 					<p>
 						{ __(

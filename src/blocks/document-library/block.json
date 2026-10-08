@@ -34,7 +34,7 @@
 		},
 		"orderby": {
 			"type": "string",
-			"enum": [ "modified", "date", "title", "menu_order" ],
+			"enum": [ "modified", "date", "title" ],
 			"default": "modified"
 		},
 		"order": {
