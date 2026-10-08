@@ -37,7 +37,7 @@ registerBlockType( metadata, {
 							}
 						}
 						if ( parm[ 0 ] === 'show_download' ) {
-							if ( parm.length === 1 || parm[ 1 ] === 'false' ) {
+							if ( parm.length === 2 && parm[ 1 ] === 'false' ) {
 								sshow_download = false;
 							}
 						}
