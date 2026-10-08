@@ -37,6 +37,12 @@ function blueprint( pluginStep, meta ) {
 		steps: [
 			{ step: 'login', username: 'admin', password: 'password' },
 			pluginStep,
+			// Defines the Folders taxonomy used by the demo (see demo-content.php).
+			{
+				step: 'installPlugin',
+				pluginData: { resource: 'wordpress.org/plugins', slug: 'simple-taxonomy-refreshed' },
+				options: { activate: true },
+			},
 			{ step: 'writeFile', path: '/tmp/wpdr-demo-content.php', data: demoContent },
 			{
 				step: 'runPHP',
@@ -56,7 +62,7 @@ const outputs = {
 		},
 		{
 			title: 'WP Document Revisions',
-			description: 'Sample documents with revision history and workflow states.',
+			description: 'Sample documents with revision history, workflow states and folders.',
 		}
 	),
 	'playground/blueprint-main.json': blueprint(
