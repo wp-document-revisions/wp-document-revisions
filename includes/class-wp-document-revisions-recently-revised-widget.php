@@ -254,11 +254,11 @@ class WP_Document_Revisions_Recently_Revised_Widget extends WP_Widget {
 		$instance                = $old_instance;
 		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
 		$instance['numberposts'] = (int) $new_instance['numberposts'];
-		$instance['show_thumb']  = (bool) $new_instance['show_thumb'];
-		$instance['show_descr']  = (bool) $new_instance['show_descr'];
-		$instance['show_author'] = (bool) $new_instance['show_author'];
-		$instance['show_pdf']    = (bool) $new_instance['show_pdf'];
-		$instance['new_tab']     = (bool) $new_instance['new_tab'];
+		$instance['show_thumb']  = ! empty( $new_instance['show_thumb'] );
+		$instance['show_descr']  = ! empty( $new_instance['show_descr'] );
+		$instance['show_author'] = ! empty( $new_instance['show_author'] );
+		$instance['show_pdf']    = ! empty( $new_instance['show_pdf'] );
+		$instance['new_tab']     = ! empty( $new_instance['new_tab'] );
 
 		// merge post statuses into an array.
 		foreach ( $this->defaults['post_status'] as $status => $value ) {
