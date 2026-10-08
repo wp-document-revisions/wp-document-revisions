@@ -21,7 +21,7 @@
     "test:e2e": "npx playwright test --config=playwright.config.mjs",
     "test:e2e:ui": "npx playwright test --config=playwright.config.mjs --ui",
     "wp-env": "wp-env",
-    "playground": "npx @wp-playground/cli server --mount=.:/wordpress/wp-content/plugins/wp-document-revisions --blueprint=playground/blueprint-local.json",
+    "playground": "npx -y @wp-playground/cli@latest server --mount=.:/wordpress/wp-content/plugins/wp-document-revisions --blueprint=playground/blueprint-local.json",
     "build:blueprints": "script/build-blueprints"
   },
   "repository": {

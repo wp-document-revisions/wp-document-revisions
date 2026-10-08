@@ -15,9 +15,11 @@ on:
             - main
     workflow_dispatch:
 
+# Queue rather than cancel: `--clobber` deletes the old asset before uploading
+# the new one, so a run cancelled in between would leave no zip at all.
 concurrency:
     group: playground-main
-    cancel-in-progress: true
+    cancel-in-progress: false
 
 jobs:
     publish:
