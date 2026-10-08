@@ -59,7 +59,7 @@ _p.s. Feel free to ask for help; everyone is a beginner at first_ :smiley_cat:
 - **Latest `main`:** [open in Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/wp-document-revisions/wp-document-revisions/main/playground/blueprint-main.json) (`playground/blueprint-main.json`). CI rebuilds the plugin zip on every merge to `main` and attaches it to the [`playground-main` prerelease](https://github.com/wp-document-revisions/wp-document-revisions/releases/tag/playground-main).
 - **Your local checkout:** run `npm run build`, then `npm run playground` (`playground/blueprint-local.json`)
 
-All three are generated from [`playground/demo-content.php`](../playground/demo-content.php) by `script/build-blueprints`, so edit that file and rerun the script rather than editing the JSON. CI fails if they drift, and boots each one to check the demo content loads.
+All three are generated from [`playground/demo-content.php`](../playground/demo-content.php) by `script/build-blueprints`, so edit that file and rerun the script rather than editing the JSON. CI fails if they drift, and boots the WordPress.org blueprint (released plugin) and the local one (that commit's build) to check the demo content loads.
 
 ## How to propose changes
 
