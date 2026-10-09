@@ -15,7 +15,7 @@ command -v jq >/dev/null || exit 0
 file=$(jq -r '.tool_input.file_path // ""')
 [ -n "$file" ] || exit 0
 [ -e "$file" ] && exit 0
-root=$(git -C "${CLAUDE_PROJECT_DIR:-.}" rev-parse --show-toplevel 2>/dev/null) || exit 0
+root=$(git -C "$(dirname "$file")" rev-parse --show-toplevel 2>/dev/null) || exit 0
 rel=${file#"$root"/}
 
 case "$rel" in
