@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# PostToolUse check for Edit/Write/MultiEdit: lints just the edited src/ JS
+# file with the repo's eslint.config.cjs (the config `npm run lint-js` uses in
+# CI) and feeds errors back while the file is still open.
+#
+# No --fix: rewriting the file right after Claude's Edit would make its next
+# Edit fail on a stale read.
+#
+# Input: the hook JSON on stdin. Output: a "block" decision whose reason is fed
+# back to Claude (the edit itself stays), or nothing.
+
+command -v jq >/dev/null || exit 0
+file=$(jq -r '.tool_input.file_path // ""')
+[ -f "$file" ] || exit 0
+root=$(git -C "$(dirname "$file")" rev-parse --show-toplevel 2>/dev/null) || exit 0
+rel=${file#"$root"/}
+case "$rel" in src/*.js | src/*.jsx) ;; *) exit 0 ;; esac
+cd "$root" || exit 0
+[ -x node_modules/.bin/eslint ] || exit 0
+
+out=$(node_modules/.bin/eslint --no-warn-ignored --quiet "$rel" 2>&1) && exit 0
+
+jq -n --arg out "${out:0:4000}" '{
+  decision: "block",
+  reason: ("ESLint errors in the file you just edited (fix them; do not run lint-js --fix repo-wide):\n" + $out)
+}'
