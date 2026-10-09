@@ -2,8 +2,8 @@
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"meta": {
 		"author": "wp-document-revisions",
-		"title": "WP Document Revisions",
-		"description": "Sample documents with revision history and workflow states."
+		"title": "WP Document Revisions (latest main)",
+		"description": "The unreleased development version, built from the main branch, with sample documents."
 	},
 	"landingPage": "/wp-admin/edit.php?post_type=document",
 	"preferredVersions": {
@@ -22,8 +22,8 @@
 		{
 			"step": "installPlugin",
 			"pluginData": {
-				"resource": "wordpress.org/plugins",
-				"slug": "wp-document-revisions"
+				"resource": "url",
+				"url": "https://github.com/wp-document-revisions/wp-document-revisions/releases/download/playground-main/wp-document-revisions.zip"
 			},
 			"options": {
 				"activate": true

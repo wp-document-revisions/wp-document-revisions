@@ -2,8 +2,10 @@ name: Deploy to WordPress.org
 
 on:
     push:
+        # Release tags only. Other tags (the rolling `playground-main` and
+        # `ci-artifacts` preview releases) must never deploy to WordPress.org.
         tags:
-            - '*'
+            - 'v*'
 
 jobs:
     tag:

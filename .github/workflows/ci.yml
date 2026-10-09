@@ -82,6 +82,47 @@ jobs:
                       exit 1
                   fi
 
+    # The Playground blueprints are generated from playground/demo-content.php
+    # by script/build-blueprints. Fail on drift, then boot each blueprint
+    # headless and check the demo content was seeded. The WordPress.org Live
+    # Preview installs the *released* plugin and goes live as soon as it lands
+    # on main, so this also proves the seed still works against the release.
+    playground:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        name: Playground blueprints
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 24
+                  cache: 'npm'
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+
+            - name: Regenerate blueprints and fail on drift
+              run: |
+                  script/build-blueprints
+                  if ! git diff --exit-code .wordpress-org/blueprints playground; then
+                      echo "::error::Playground blueprints are out of date. Run script/build-blueprints and commit the result."
+                      exit 1
+                  fi
+
+            - name: Build plugin zip
+              run: script/build-plugin-zip
+
+            - name: WordPress.org Live Preview (released plugin)
+              run: script/test-blueprints .wordpress-org/blueprints/blueprint.json
+
+            - name: This commit (built plugin)
+              run: script/test-blueprints playground/blueprint-local.json "--mount=$GITHUB_WORKSPACE/dist/wp-document-revisions:/wordpress/wp-content/plugins/wp-document-revisions"
+
     # End-to-end smoke test for the scoper build pipeline. Runs in its own
     # job because it needs `composer install --no-dev`, which would remove
     # the dev tools (phpcs, phpstan) that `code-quality` relies on.

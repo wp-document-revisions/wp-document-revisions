@@ -55,6 +55,9 @@ script/
 TEST_IMPROVEMENTS.md
 wp-cli.local.yml
 tests/
+# Playground demo content and CI-built preview zips.
+playground/
+dist/
 .github
 node_modules/
 src/

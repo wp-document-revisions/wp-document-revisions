@@ -1,0 +1,22 @@
+#!/bin/sh
+# Builds dist/wp-document-revisions.zip: the same files the WordPress.org
+# deploy ships (see .github/workflows/deploy.yml), for Playground previews of
+# unreleased code. build/ and vendor/ aren't committed, so Playground can't
+# install the plugin straight from git the way a build-free plugin can.
+#
+# Usage: script/build-plugin-zip
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+npm ci
+npm run build
+composer install --no-dev --no-progress --no-interaction
+
+rm -rf dist
+mkdir -p dist/wp-document-revisions
+rsync -a --exclude='.git' --exclude='/dist' --exclude-from=.distignore ./ dist/wp-document-revisions/
+(cd dist && zip -qr wp-document-revisions.zip wp-document-revisions)
+
+echo "Built dist/wp-document-revisions.zip"

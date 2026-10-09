@@ -2,8 +2,8 @@
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"meta": {
 		"author": "wp-document-revisions",
-		"title": "WP Document Revisions",
-		"description": "Sample documents with revision history and workflow states."
+		"title": "WP Document Revisions (local checkout)",
+		"description": "A local checkout mounted by `npm run playground`. Run `npm run build` first."
 	},
 	"landingPage": "/wp-admin/edit.php?post_type=document",
 	"preferredVersions": {
@@ -20,14 +20,8 @@
 			"password": "password"
 		},
 		{
-			"step": "installPlugin",
-			"pluginData": {
-				"resource": "wordpress.org/plugins",
-				"slug": "wp-document-revisions"
-			},
-			"options": {
-				"activate": true
-			}
+			"step": "activatePlugin",
+			"pluginPath": "/wordpress/wp-content/plugins/wp-document-revisions"
 		},
 		{
 			"step": "writeFile",
