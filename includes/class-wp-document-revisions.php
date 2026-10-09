@@ -794,7 +794,7 @@ class WP_Document_Revisions {
 			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conflicting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
-			</p></div>
+			</p><p>
 			<?php esc_html_e( 'You should first check whether you have multiple roles and that each has edit_documents capability.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
