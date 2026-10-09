@@ -13,6 +13,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Converting a `[document_revisions]` or `[document_preview]` shortcode to a block now reads a bare `new_tab` or `show_download` as true. (#830) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
 * Saving the Recently Revised Documents widget with options unchecked no longer logs "Undefined array key" warnings. (#831) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
 * In the Recently Revised Documents widget, clicking a status label now toggles its checkbox, and the status names are translated. (#819, #825) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* If activating the plugin leaves you without the `edit_documents` capability, the warning that appears now shows its last sentence, which says how to fix this, inside the notice box. (#839, #840)
 * The owner filter on the All Documents screen now has a label for screen readers. (#803, #810)
 * Removed an unused image size lookup that ran on every page load. (#802, #809)
 * The [filter](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [action](https://wp-document-revisions.github.io/wp-document-revisions/actions/) references now cover the hooks added in 5.6.0, and the shortcode docs no longer list the removed `post_password` attribute. (#801, #806, #817, #841) Thanks to [@switchcasestudio](https://github.com/switchcasestudio) and [@Maurenz2530](https://github.com/Maurenz2530).
