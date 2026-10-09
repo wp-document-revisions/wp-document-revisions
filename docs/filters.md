@@ -29,6 +29,12 @@ In: trait-wp-document-revisions-revisions.php
 Filter to allow revision deletion. Set to true to bypass these tests and allow delete.
 Note that this should be used when deleting revisions by trusted plugins e.g. PublishPress Revisions.
 
+## Filter document_allowed_mimes
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the file types allowed for document uploads. Applied only while a document file is being uploaded, after WordPress's own restrictions (on multisite, the network's "Upload file types"). Receives `$mimes`, the allowed MIME types keyed by extension pattern, and `$all`, every MIME type WordPress knows (`wp_get_mime_types()`). For example, return `array_merge( $mimes, $all )` to allow every type WordPress knows about for documents without allowing them in the Media Library. (Since 5.6.0.)
+
 ## Filter document_block_taxonomies
 
 In: class-wp-document-revisions-front-end.php
@@ -53,6 +59,12 @@ Note that by default all custom roles will have the default Subscriber access.
 In: class-wp-document-revisionsvalidate-structure.php
 
 Filter to Switch off checking for orphan documents.
+
+## Filter document_compressible_mimetypes
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the MIME types compressed on download by default, when the browser accepts it. Receives `$mimetypes`, a list of MIME types or "type/" prefixes; an entry ending in "/" matches every type with that prefix, e.g. "text/". Defaults to `text/`, `application/json`, `application/ld+json`, `application/xml` and `image/svg+xml`. The `document_serve_use_gzip` filter still has the final say. (Since 5.6.0.)
 
 ## Filter document_content_disposition_inline
 
@@ -253,13 +265,41 @@ In: trait-wp-document-revisions-file-handler.php
 
 Filter the attachment post to serve (Return false to stop display).
 
+## Filter document_serve_redirect_url
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters a URL to send the already authorized request to instead of streaming the file through PHP, e.g. a signed CDN or S3 URL for large files. Receives `$url` (default `''`), the document `WP_Post`, the attachment `WP_Post` being served and the path of the file. Return `''` to serve normally.
+
+The browser follows the redirect, so the user sees the target URL and can keep or share it. Anyone with the URL can use it until it stops working, without the plugin's permission checks. The URL isn't restricted to this site, so only return URLs you trust, and return short-lived signed URLs for private documents. Don't return the attachment's storage URL (`get_raw_attachment_url()`) for a document that isn't public: it doesn't expire, and it reveals the stored file name the plugin otherwise keeps hidden.
+
+Redirecting skips the rest of serving: the download keeps the stored file name rather than the document's, the `document_revisions_serve_file_headers` filter doesn't run, and the `document_serve_done` action doesn't fire. (Since 5.6.0.)
+
+## Filter document_serve_sendfile_header
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters which header hands document downloads to the web server instead of PHP. Receives `$header` (default `''`, serve through PHP), the path of the file and the attachment `WP_Post` being served. Return `X-Sendfile` (Apache mod_xsendfile, lighttpd), `X-Accel-Redirect` (nginx) or `X-LiteSpeed-Location` (LiteSpeed). The plugin has already checked permissions when the header is sent.
+
+Only enable it when the server is configured for it and the document directory isn't otherwise web-accessible. If the server isn't handling the header, it reaches the browser as-is, which for `X-Sendfile` reveals the file's full path, and the download is empty. Check that the header doesn't appear in the response (e.g. with `curl -I`). For nginx, the location the header points to must be marked `internal`.
+
+Like a redirect, this skips the `document_serve_done` action. (Since 5.6.0.)
+
+## Filter document_serve_sendfile_path
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the value sent in the sendfile header chosen with `document_serve_sendfile_header`. Receives `$value`, the path of the file, the header name and the attachment `WP_Post` being served. `X-Sendfile` takes the file path, which is the default. `X-Accel-Redirect` and `X-LiteSpeed-Location` take a URI in an internal location that maps to the document directory, so they have no default: return one, or the file is served through PHP as usual.
+
+The same exposure applies as for `document_serve_sendfile_header`: if the server isn't handling the header, this value reaches the browser, and for `X-Sendfile` it's the file's full path. (Since 5.6.0.)
+
 ## Filter document_serve_use_gzip
 
 In: trait-wp-document-revisions-file-handler.php
 
 Filter to determine if gzip should be used to serve file (subject to browser negotiation).
 
-Defaults to true only when the browser accepts gzip/deflate and the document's MIME type is `text/*`. Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to compress other types too.
+Defaults to true only when the browser accepts gzip/deflate and the document's MIME type is compressible, as set by the `document_compressible_mimetypes` filter. Use `add_filter( 'document_serve_use_gzip', '__return_true' )` to compress other types too.
 
 ## Filter document_shortcode_atts
 
@@ -344,6 +384,12 @@ Filters setting the new document status to private.
 In: trait-wp-document-revisions-file-handler.php
 
 Filters the directory documents are stored in, e.g. to use a stream wrapper such as `s3://bucket/documents`. Applied when the directory is first needed on each site, after other plugins have loaded. (Since 5.6.0.)
+
+## Filter document_upload_size_limit
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters the maximum size, in bytes, of a document upload. Receives `$bytes`, the maximum upload size in bytes. Applied on document screens (for the uploader's limit) and while a document is uploaded, including multisite's "Max upload file size" check. It can't raise PHP's own `upload_max_filesize` or `post_max_size`. (Since 5.6.0.)
 
 ## Filter document_use_block_editor
 
