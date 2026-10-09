@@ -9,12 +9,13 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * The "Show Revision Summaries?" and "Show PDF File indication?" settings of the Document Revisions block and the `summary` and `show_pdf` attributes of `[document_revisions]` now work. Pages that already turned them on will start showing revision summaries and the "(PDF)" label. (#807, #812)
 * `[documents show_pdf="false"]` now hides the "(PDF)" label. (#800, #811)
 * `[documents workflow_state="…"]` now filters correctly on sites where EditFlow or PublishPress Statuses manage document statuses. (#799, #808)
-* `[document_preview]` with no attributes no longer causes an error, and a bare `show_title` or `show_download` now means true. (#818, #828)
-* Converting a `[document_revisions]` or `[document_preview]` shortcode to a block now reads a bare `new_tab` or `show_download` as true. (#830)
-* Saving the Recently Revised Documents widget with options unchecked no longer logs "Undefined array key" warnings. (#831)
-* In the Recently Revised Documents widget, clicking a status label now toggles its checkbox, and the status names are translated. (#819, #825)
+* `[document_preview]` with no attributes no longer causes an error, and a bare `show_title` or `show_download` now means true. (#818, #828) Thanks to [@Triunitech-Dat](https://github.com/Triunitech-Dat).
+* Converting a `[document_revisions]` or `[document_preview]` shortcode to a block now reads a bare `new_tab` or `show_download` as true. (#830) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* Saving the Recently Revised Documents widget with options unchecked no longer logs "Undefined array key" warnings. (#831) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* In the Recently Revised Documents widget, clicking a status label now toggles its checkbox, and the status names are translated. (#819, #825) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
 * The owner filter on the All Documents screen now has a label for screen readers. (#803, #810)
 * Removed an unused image size lookup that ran on every page load. (#802, #809)
+* The [filter](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [action](https://wp-document-revisions.github.io/wp-document-revisions/actions/) references now cover the hooks added in 5.6.0, and the shortcode docs no longer list the removed `post_password` attribute. (#801, #806, #817, #841) Thanks to [@switchcasestudio](https://github.com/switchcasestudio) and [@Maurenz2530](https://github.com/Maurenz2530).
 
 ### 5.7.2
 
