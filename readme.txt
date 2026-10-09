@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.7.2
+Stable tag: 5.8.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,16 +311,24 @@ Thanks to everyone who has contributed translations, including:
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.8.0 =
+
+* New Document Library block, with Document List, Document Table and Document Grid variations, and a matching `[document_library]` shortcode. Pick which fields to show (thumbnail, title, description, file type, workflow state, author, last modified, revisions and a download button) and filter by any number of document taxonomies. It only lists documents the viewer can read, and shows the download button and revision count only to users allowed to see them. Developers can adjust it with the new `document_library_query_args` and `document_library_row` filters. (#796, #804)
+* The Plugins screen, the Help tab on document screens and the review prompt now link to the documentation, the support forum and GitHub Discussions for ideas. The new `document_feedback_urls` filter changes or hides these links. (#823)
+* The "Show Revision Summaries?" and "Show PDF File indication?" settings of the Document Revisions block and the `summary` and `show_pdf` attributes of `[document_revisions]` now work. Pages that already turned them on will start showing revision summaries and the "(PDF)" label. (#807, #812)
+* `[documents show_pdf="false"]` now hides the "(PDF)" label. (#800, #811)
+* `[documents workflow_state="…"]` now filters correctly on sites where EditFlow or PublishPress Statuses manage document statuses. (#799, #808)
+* `[document_preview]` with no attributes no longer causes an error, and a bare `show_title` or `show_download` now means true. (#818, #828)
+* Converting a `[document_revisions]` or `[document_preview]` shortcode to a block now reads a bare `new_tab` or `show_download` as true. (#830)
+* Saving the Recently Revised Documents widget with options unchecked no longer logs "Undefined array key" warnings. (#831)
+* In the Recently Revised Documents widget, clicking a status label now toggles its checkbox, and the status names are translated. (#819, #825)
+* The owner filter on the All Documents screen now has a label for screen readers. (#803, #810)
+* Removed an unused image size lookup that ran on every page load. (#802, #809)
+
 = 5.7.2 =
 
 * New document versions are stored in the document's own year/month upload folder again, matching the `/yyyy/mm` in its permalink. This reverts the 5.7.1 change that filed them under the current month. Files uploaded under 5.7.1 keep working and don't need to move. (#795)
 
 = 5.7.1 =
-
-* Toggle settings in the plugin's blocks render correctly in the block editor again, and the blocks now pick up the theme's color, typography and spacing settings through standard block supports instead of their own style attributes. (#728, #729)
-* New document versions are now stored in the current year/month upload folder instead of the document's original month, so the file path, guid and attachment date agree. Existing files don't move. (#777)
-* The "Order sequence" setting in the Documents block is now translatable. (#789)
-
-= 5.7.0 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
