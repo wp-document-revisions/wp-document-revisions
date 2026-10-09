@@ -59,10 +59,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 						checked={ attributes.new_tab }
 						label={ __( 'Open in New Tab?', 'wp-document-revisions' ) }
-						help={ __(
-							'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will leave the current page.',
-							'wp-document-revisions'
-						) }
 						onChange={ ( val ) => {
 							setAttributes( { new_tab: val } );
 						} }
