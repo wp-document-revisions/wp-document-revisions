@@ -1,0 +1,21 @@
+name: Playground preview (PR) - Publish
+
+# Publishes the zip built by playground-pr-build.yml to the `ci-artifacts`
+# prerelease and adds a "Preview in WordPress Playground" button to the PR.
+# workflow_run always runs this file from main, so changes to it only take
+# effect after they merge. The `ci-artifacts` tag doesn't start with `v`, so
+# deploy.yml ignores it.
+
+on:
+    workflow_run:
+        workflows: ['Playground preview (PR) - Build']
+        types: [completed]
+
+jobs:
+    publish:
+        permissions:
+            contents: write
+            pull-requests: write
+        uses: WordPress/action-wp-playground-pr-preview/.github/workflows/preview-publish.yml@v4
+        with:
+            blueprint-from-artifact: true
