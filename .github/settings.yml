@@ -1,16 +1,34 @@
-# Repository settings set via https://github.com/probot/settings
-# Note: Please Don't edit this file directly.
-# Edit https://github.com/benbalter/shared-community-files instead.
+# Repository settings, synced to GitHub by the Repository Settings app
+# (https://github.com/repository-settings/app) whenever this file changes on main.
+#
+# This file is the source of truth: settings changed in the GitHub UI are
+# overwritten on the next sync. Docs for each section:
+# https://github.com/repository-settings/app/tree/master/docs/plugins
+#
+# Anyone who can merge to main can change admin-level settings through this
+# file, so CODEOWNERS plus the "main" ruleset's code-owner review rule require
+# @benbalter's approval to change it.
 
 repository:
+    description: A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
+    homepage: https://wp-document-revisions.github.io/wp-document-revisions
+    # Comma-separated; replaces the full topic list.
+    topics: wordpress, wordpress-plugin, document-management, collaboration
     has_issues: true
+    has_discussions: true
     has_wiki: false
     has_projects: false
     has_downloads: false
+    allow_merge_commit: true
+    allow_squash_merge: true
+    allow_rebase_merge: true
+    allow_auto_merge: true
+    delete_branch_on_merge: true
 
+# The app deletes any label not listed here and matches names case-sensitively,
+# so list every label, including the ones Dependabot and workflows create.
 labels:
     - name: help wanted
-      oldname: help-wanted
       color: 0e8a16
     - name: more-information-needed
       color: d93f0b
@@ -20,14 +38,29 @@ labels:
       color: 1d76db
     - name: good first issue
       color: '5319e7'
+    - name: wontfix
+      color: ffffff
+    - name: needs-maintainer-review
+      color: D93F0B
+      description: Changes behavior; needs a co-maintainer's approval before merge
+    - name: dependencies
+      color: 0025ff
+      description: Pull requests that update a dependency file
+    - name: github_actions
+      color: '000000'
+      description: Pull requests that update GitHub Actions code
+    - name: php
+      color: 45229e
+      description: Pull requests that update Php code
+    - name: javascript
+      color: '168700'
+      description: Pull requests that update javascript code
+    - name: language-packs
+      color: 0e8a16
+      description: translate.wordpress.org language pack progress
+    - name: agentic-workflows
+      color: ededed
 
-# Not currently implemented by probot/settings, but manually implemented in script/deploy
-branch_protection:
-    restrictions: null
-    enforce_admins: false
-    required_status_checks:
-        strict: true
-        contexts:
-            - 'continuous-integration/travis-ci'
-    required_pull_request_reviews:
-        require_code_owner_reviews: true
+# Branch protection for main lives in the "main" repository ruleset, managed in
+# the GitHub UI. The app's ruleset support is experimental, and listing any
+# ruleset here would delete the ones not listed, so rulesets are left out.
