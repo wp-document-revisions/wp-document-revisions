@@ -10,10 +10,11 @@
 # @benbalter's approval to change it.
 
 repository:
-    description: A document management and version control plugin that allows teams of any size to collaboratively edit files and manage their workflow.
-    homepage: https://wp-document-revisions.github.io/wp-document-revisions
+    # Matches the WordPress.org short description in docs/header.md.
+    description: Document management and version control for WordPress. Collaborate on files, track every revision, and auto-generate change summaries with AI.
+    homepage: https://wp-document-revisions.github.io/wp-document-revisions/
     # Comma-separated; replaces the full topic list.
-    topics: wordpress, wordpress-plugin, document-management, collaboration
+    topics: wordpress, wordpress-plugin, document-management, version-control, revisions, documents, collaboration
     has_issues: true
     has_discussions: true
     has_wiki: false
@@ -30,16 +31,22 @@ repository:
 labels:
     - name: help wanted
       color: 0e8a16
+      description: The maintainers would welcome a pull request for this
     - name: more-information-needed
       color: d93f0b
+      description: Waiting on details from the reporter before we can act
     - name: bug
       color: b60205
+      description: Something isn't working as documented
     - name: feature
       color: 1d76db
+      description: New functionality or an improvement to existing behavior
     - name: good first issue
       color: '5319e7'
+      description: A well-scoped starting point for new contributors
     - name: wontfix
       color: ffffff
+      description: Out of scope or not planned
     - name: needs-maintainer-review
       color: D93F0B
       description: Changes behavior; needs a co-maintainer's approval before merge
@@ -58,8 +65,6 @@ labels:
     - name: language-packs
       color: 0e8a16
       description: translate.wordpress.org language pack progress
-    - name: agentic-workflows
-      color: ededed
 
 # Branch protection for main lives in the "main" repository ruleset, managed in
 # the GitHub UI. The app's ruleset support is experimental, and listing any
