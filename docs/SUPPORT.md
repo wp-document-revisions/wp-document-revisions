@@ -3,7 +3,11 @@
 - For getting started and general documentation, please browse, and feel free to contribute to [the project documentation](https://wp-document-revisions.github.io/wp-document-revisions/).
 - For support questions ("How do I", "I can't seem to", etc.) please search and if not already answered, open a thread in the [Support Forums](https://wordpress.org/support/plugin/wp-document-revisions).
 - For technical issues (e.g., to submit a bug or feature request) please search and if not already filed, [open an issue on GitHub](https://github.com/wp-document-revisions/wp-document-revisions/issues).
-- For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, post a topic to the [general discussion list serve](https://groups.google.com/forum/#!forum/wp-document-revisions)
+- For ideas and suggestions ("It would be great if..."), please search, and if not already suggested, start a topic in [GitHub Discussions](https://github.com/wp-document-revisions/wp-document-revisions/discussions/categories/ideas).
+- For implementation, and all general questions ("Is it possible to..", "Has anyone..."), please search, and if not already answered, start a topic in [GitHub Discussions](https://github.com/wp-document-revisions/wp-document-revisions/discussions).
+- If the plugin is useful to you, please consider [leaving a review](https://wordpress.org/support/plugin/wp-document-revisions/reviews/#new-post). It helps other teams find it.
+
+You can reach all of these from inside WordPress too: they're linked under the plugin on the Plugins screen and in the Help tab on the Documents screens.
 
 ## Things to check before reporting an issue
 

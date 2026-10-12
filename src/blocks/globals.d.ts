@@ -38,6 +38,8 @@ interface WpdrLibraryData {
 		label: string;
 		terms: Array< { id: number; name: string } >;
 	} >;
+	/** Where to send feedback on the block, or '' to hide the link. */
+	feedback: string;
 }
 
 // eslint-disable-next-line no-var

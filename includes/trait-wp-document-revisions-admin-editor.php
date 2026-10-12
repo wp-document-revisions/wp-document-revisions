@@ -82,6 +82,11 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( 'document' !== $screen->post_type ) {
 			return;
 		}
+		$sidebar = self::help_sidebar();
+		if ( '' !== $sidebar ) {
+			$screen->set_help_sidebar( $sidebar );
+		}
+
 		// loop through each tab in the help array and add.
 		foreach ( $this->get_help_text( $screen ) as $title => $content ) {
 			$screen->add_help_tab(

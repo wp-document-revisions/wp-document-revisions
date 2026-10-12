@@ -129,6 +129,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_notices', array( $this, 'empty_state_notice' ) );
 		add_action( 'admin_notices', array( $this, 'review_prompt' ) );
 		add_action( 'admin_init', array( $this, 'handle_review_dismissal' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
 		// settings.
 		add_action( 'admin_init', array( $this, 'settings_fields' ) );

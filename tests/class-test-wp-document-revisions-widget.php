@@ -614,4 +614,37 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertFalse( $instance['post_status']['private'], 'private' );
 		self::assertFalse( $instance['post_status']['draft'], 'draft' );
 	}
+
+	/**
+	 * Verify update with unchecked checkboxes, which a form submission leaves out.
+	 */
+	public function test_update_function_unchecked_checkboxes() {
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		$checkboxes  = array( 'show_thumb', 'show_descr', 'show_author', 'show_pdf', 'new_tab' );
+
+		// previously saved with every checkbox checked.
+		$old_instance = array_fill_keys( $checkboxes, true );
+
+		// all unchecked: only the text fields are submitted.
+		$new_instance = array(
+			'title'       => 'Test Title',
+			'numberposts' => 5,
+		);
+
+		$instance = $wpdr_widget->update( $new_instance, $old_instance );
+
+		foreach ( $checkboxes as $checkbox ) {
+			self::assertFalse( $instance[ $checkbox ], $checkbox . ' unchecked' );
+		}
+
+		// all checked: a checkbox without a value attribute submits "on".
+		$new_instance = array_merge( $new_instance, array_fill_keys( $checkboxes, 'on' ) );
+
+		$instance = $wpdr_widget->update( $new_instance, array() );
+
+		foreach ( $checkboxes as $checkbox ) {
+			self::assertTrue( $instance[ $checkbox ], $checkbox . ' checked' );
+		}
+	}
 }

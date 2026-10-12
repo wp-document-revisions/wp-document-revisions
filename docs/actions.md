@@ -52,6 +52,18 @@ Called just after serving the file to the user.
 
 In: trait-wp-document-revisions-file-handler.php
 
+## Action document_upload_end
+
+Called when a document file upload has finished and its attachment metadata is generated. Receives the new attachment ID and the ID of the document it belongs to. (Since 5.6.0.)
+
+In: trait-wp-document-revisions-file-handler.php
+
+## Action document_upload_start
+
+Called when a document file upload starts, before the file is moved into place. Receives the upload array (with the hashed file name), the ID of the document the file is being uploaded to and the original file name. From here until `document_upload_end`, `is_document_upload()` returns true, e.g. for offload plugins to set storage options (such as S3 ContentDisposition) for documents. (Since 5.6.0.)
+
+In: trait-wp-document-revisions-file-handler.php
+
 ## Action serve_document
 
 Called just before serving the file to the user.

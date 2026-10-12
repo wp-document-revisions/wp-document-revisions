@@ -13,3 +13,6 @@ build
 clover.xml
 tests/e2e/results
 tests/e2e/config/.auth
+.claude/settings.local.json
+.claude/worktrees
+.claude/scheduled_tasks.lock

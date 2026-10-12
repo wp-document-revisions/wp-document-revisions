@@ -1480,5 +1480,10 @@ class WP_Document_Revisions_Validate_Structure {
 				)
 			);
 		}
+
+		$sidebar = WP_Document_Revisions_Admin::help_sidebar();
+		if ( '' !== $sidebar ) {
+			$screen->set_help_sidebar( $sidebar );
+		}
 	}
 }

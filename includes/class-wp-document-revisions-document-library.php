@@ -23,6 +23,13 @@ class WP_Document_Revisions_Document_Library {
 	const BLOCK = 'wp-document-revisions/document-library';
 
 	/**
+	 * Discussion where people can give feedback on the block while it's new.
+	 *
+	 * @var string
+	 */
+	const FEEDBACK_URL = 'https://github.com/wp-document-revisions/wp-document-revisions/discussions/796';
+
+	/**
 	 * Available variants.
 	 *
 	 * @var string[]
@@ -144,7 +151,12 @@ class WP_Document_Revisions_Document_Library {
 			);
 		}
 
-		wp_add_inline_script( $block->editor_script_handles[0], 'var wpdr_library_data = ' . wp_json_encode( array( 'taxonomies' => $taxos ) ) . ';', 'before' );
+		$data = array(
+			'taxonomies' => $taxos,
+			// Hidden wherever the general ideas link has been filtered out.
+			'feedback'   => '' === WP_Document_Revisions::feedback_urls()['ideas'] ? '' : self::FEEDBACK_URL,
+		);
+		wp_add_inline_script( $block->editor_script_handles[0], 'var wpdr_library_data = ' . wp_json_encode( $data ) . ';', 'before' );
 	}
 
 	/**

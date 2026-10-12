@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# PostToolUse check for Edit/Write/MultiEdit: runs PHPCS (WordPress Coding
+# Standards via phpcs.ruleset.xml, the CI gate in script/cibuild-phpcs) on just
+# the edited PHP file and feeds violations back.
+#
+# Runs only where php and composer's bin/phpcs exist (Codespaces, local PHP
+# installs); otherwise it's a silent no-op and CI catches violations.
+# Check-only, no phpcbf, for the same stale-read reason as eslint-check.
+#
+# Input: the hook JSON on stdin. Output: a "block" decision whose reason is fed
+# back to Claude (the edit itself stays), or nothing.
+
+command -v jq >/dev/null || exit 0
+command -v php >/dev/null || exit 0
+file=$(jq -r '.tool_input.file_path // ""')
+[ -f "$file" ] || exit 0
+case "$file" in *.php) ;; *) exit 0 ;; esac
+root=$(git -C "$(dirname "$file")" rev-parse --show-toplevel 2>/dev/null) || exit 0
+rel=${file#"$root"/}
+case "$rel" in vendor/* | vendor-*/* | build/* | node_modules/*) exit 0 ;; esac
+cd "$root" || exit 0
+[ -x bin/phpcs ] || exit 0
+
+out=$(bin/phpcs --standard=phpcs.ruleset.xml -q --report=emacs "$rel" 2>&1) && exit 0
+
+jq -n --arg out "${out:0:4000}" '{
+  decision: "block",
+  reason: ("PHPCS violations in the file you just edited (fix them by hand or with bin/phpcbf on this file only):\n" + $out)
+}'
