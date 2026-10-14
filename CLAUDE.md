@@ -15,6 +15,7 @@ A version-bump pull request changes:
 
 - the version in [`wp-document-revisions.php`](wp-document-revisions.php), in all three places: the `Version:` header, the `@version` tag, and the `WPDR_VERSION` constant
 - `Stable tag:` in [`docs/header.md`](docs/header.md)
+- `version` in [`package.json`](package.json) and [`package-lock.json`](package-lock.json), via `npm version <x.y.z> --no-git-tag-version` (plain `npm version` creates a tag). [`tests/js/version-consistency.test.js`](tests/js/version-consistency.test.js) fails CI if any of these drift.
 - a new entry at the top of [`docs/changelog.md`](docs/changelog.md)
 - [`readme.txt`](readme.txt), regenerated with `script/build-readme` and committed in the same pull request. [`build-readme.yml`](.github/workflows/build-readme.yml) only opens its "Update README" pull request after the docs reach `main`, so a tag pushed before that merges ships the old `Stable tag`.
 
