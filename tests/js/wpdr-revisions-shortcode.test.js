@@ -636,17 +636,15 @@ describe( 'WP Document Revisions - Revisions Shortcode Block', () => {
 			);
 		} );
 
-		test( 'new_tab ToggleControl has help text', () => {
+		// The editor preview is wrapped in <Disabled>, so the old "turn this
+		// on while editing" advice no longer applies (#838).
+		test( 'new_tab ToggleControl has no help text', () => {
 			const toggleCall = calls.find(
 				( call ) =>
 					call[ 0 ] === 'ToggleControl' &&
 					call[ 1 ].label === 'Open in New Tab?'
 			);
-			expect( toggleCall[ 1 ].help ).toBeDefined();
-			expect( typeof toggleCall[ 1 ].help ).toBe( 'string' );
-			expect( toggleCall[ 1 ].help.length ).toBeGreaterThan(
-				0
-			);
+			expect( toggleCall[ 1 ].help ).toBeUndefined();
 		} );
 
 		test( 'renders div wrapper with blockProps', () => {
