@@ -1,6 +1,6 @@
 {
   "name": "wp-document-revisions",
-  "version": "5.7.2",
+  "version": "5.8.0",
   "description": "Document management and version control for WordPress",
   "engines": {
     "node": ">=20"
