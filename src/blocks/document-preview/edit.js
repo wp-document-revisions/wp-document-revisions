@@ -54,7 +54,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<div { ...blockProps }>
+			<div
+				{ ...blockProps }
+				// Stop preview links from navigating the editor. Unlike <Disabled>, this keeps the embedded file scrollable.
+				onClickCapture={ ( event ) => {
+					if ( event.target.closest( 'a' ) ) {
+						event.preventDefault();
+					}
+				} }
+			>
 				{ attributes.id > 0 ? (
 					<ServerSideRender
 						block="wp-document-revisions/document-preview"

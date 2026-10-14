@@ -1,5 +1,6 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
+	Disabled,
 	PanelBody,
 	RadioControl,
 	RangeControl,
@@ -212,10 +213,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 						checked={ attributes.new_tab }
 						label={ __( 'Open documents in new tab?', 'wp-document-revisions' ) }
-						help={ __(
-							'Setting this on will open the document in a new tab. This should be set on whilst editing the page using this block as clicking on a link whilst editing will force the current page to be left.',
-							'wp-document-revisions'
-						) }
 						onChange={ ( val ) => {
 							setAttributes( { new_tab: val } );
 						} }
@@ -241,11 +238,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<ServerSideRender
-					block="wp-document-revisions/documents-shortcode"
-					attributes={ attributes }
-					skipBlockSupportAttributes
-				/>
+				<Disabled>
+					<ServerSideRender
+						block="wp-document-revisions/documents-shortcode"
+						attributes={ attributes }
+						skipBlockSupportAttributes
+					/>
+				</Disabled>
 			</div>
 		</>
 	);
