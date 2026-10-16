@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.8.0
+Stable tag: 5.8.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,10 @@ Thanks to everyone who has contributed translations, including:
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.8.1 =
+
+* Uploading a new version of a document whose file name has capitals, spaces or accented characters (for example "Annual Report.pdf") now replaces the document's file. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting and diagnosing it.
+
 = 5.8.0 =
 
 * New Document Library block, with Document List, Document Table and Document Grid variations, and a matching `[document_library]` shortcode. Pick which fields to show (thumbnail, title, description, file type, workflow state, author, last modified, revisions and a download button) and filter by any number of document taxonomies. It only lists documents the viewer can read, and shows the download button and revision count only to users allowed to see them. Developers can adjust it with the new `document_library_query_args` and `document_library_row` filters. (#796, #804, #832, #838)
@@ -329,9 +333,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * The [filter](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [action](https://wp-document-revisions.github.io/wp-document-revisions/actions/) references now cover the hooks added in 5.6.0, and the shortcode docs no longer list the removed `post_password` attribute. (#801, #806, #817, #841) Thanks to [@switchcasestudio](https://github.com/switchcasestudio) and [@Maurenz2530](https://github.com/Maurenz2530).
 
 = 5.7.2 =
-
-* New document versions are stored in the document's own year/month upload folder again, matching the `/yyyy/mm` in its permalink. This reverts the 5.7.1 change that filed them under the current month. Files uploaded under 5.7.1 keep working and don't need to move. (#795)
-
-= 5.7.1 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
