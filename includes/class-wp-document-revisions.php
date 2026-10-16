@@ -1133,13 +1133,14 @@ class WP_Document_Revisions {
 		if ( 'document' !== get_post_type( $attach->post_parent ) ) {
 			return false;
 		}
-		// normal document attachment.
-		if ( $attach->post_title === $attach->post_name ) {
-			return true;
-		}
-		// duplicate name.
-		if ( 0 === strpos( $attach->post_name, $attach->post_title . '-' ) ) {
-			return true;
+		// Core titles an upload from its original file name and derives the slug from that title,
+		// so "My File.pdf" has title "My File" and slug "my-file". Accept either form.
+		$bases = array_unique( array( $attach->post_title, sanitize_title( $attach->post_title ) ) );
+		foreach ( $bases as $base ) {
+			// normal document attachment, or a duplicate name with core's -N suffix.
+			if ( $base === $attach->post_name || 0 === strpos( $attach->post_name, $base . '-' ) ) {
+				return true;
+			}
 		}
 		return false;
 	}
