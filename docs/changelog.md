@@ -2,6 +2,10 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.8.1
+
+* Uploading a new version of a document whose file name has capitals, spaces or accented characters (for example "Annual Report.pdf") now replaces the document's file. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting and diagnosing it.
+
 ### 5.8.0
 
 * New Document Library block, with Document List, Document Table and Document Grid variations, and a matching `[document_library]` shortcode. Pick which fields to show (thumbnail, title, description, file type, workflow state, author, last modified, revisions and a download button) and filter by any number of document taxonomies. It only lists documents the viewer can read, and shows the download button and revision count only to users allowed to see them. Developers can adjust it with the new `document_library_query_args` and `document_library_row` filters. (#796, #804, #832, #838)

@@ -996,9 +996,14 @@ trait WP_Document_Revisions_File_Handler {
 		}
 		$attachment_id = (int) $attachment_id;
 
-		// check that for a document.
+		// check that for a document. During a validated document upload, don't rely on the
+		// title/slug heuristic: missing this upload leaves the document on its old file.
 		$attach = get_post( $attachment_id );
-		if ( ! $attach || ! self::check_doc_attach( $attach ) ) {
+		if ( ! $attach ) {
+			return $metadata;
+		}
+		$is_upload = self::$document_upload && 'document' === get_post_type( $attach->post_parent );
+		if ( ! $is_upload && ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
