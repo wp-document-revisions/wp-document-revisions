@@ -731,6 +731,9 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
 
+		// At end of loading the attachment into the upload directory, so remove it.
+		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
+
 		return $metadata;
 	}
 
@@ -1019,9 +1022,6 @@ trait WP_Document_Revisions_File_Handler {
 		}
 		// add indicator to note it has been changed (so no need to reprocess).
 		$metadata['wpdr_hidden'] = 1;
-
-		// have finished loading the attachment into the upload directory, so remove it.
-		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
 
 		// store the attachment in postmeta for fallback on initial file load.
 		update_post_meta( $attach->post_parent, '_document_attachment_id', $attachment_id );
