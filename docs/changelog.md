@@ -4,7 +4,7 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 
 ### 5.8.1
 
-* Uploading a new version of a document whose file name has capitals, spaces or accented characters (for example "Annual Report.pdf") now replaces the document's file. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting and diagnosing it.
+* Uploading a new version of a document now replaces the document's file in a few rare cases where it didn't, such as an image or audio file with an embedded title, or a site using the `document_internal_filename` filter. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting it.
 
 ### 5.8.0
 
