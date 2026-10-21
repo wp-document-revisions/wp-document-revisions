@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Document Revisions 5.7.2 5.7.2\n"
+"Project-Id-Version: WP Document Revisions 5.8.1 5.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-document-revisions\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-14T17:42:35+00:00\n"
+"POT-Creation-Date: 2026-10-18T13:52:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-document-revisions\n"
@@ -1390,7 +1390,7 @@ msgstr ""
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:1492
+#: includes/trait-wp-document-revisions-file-handler.php:1497
 msgid "Sorry, this is a private feed."
 msgstr ""
 
