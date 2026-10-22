@@ -60,7 +60,7 @@
       "uuid": "^11.1.1"
     },
     "@wordpress/scripts": {
-      "cssnano": "^7.1.9"
+      "cssnano": "^9.0.0"
     }
   },
   "jest": {
