@@ -47,8 +47,8 @@
     "@wordpress/shortcode": "4.57.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "~30.5.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^6.0.0"
   },
   "overrides": {
