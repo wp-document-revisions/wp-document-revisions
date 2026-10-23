@@ -111,6 +111,31 @@ class Test_WP_Document_Revisions_Zz_Validate_Unlinked_Upload extends WP_UnitTest
 	}
 
 	/**
+	 * The full validation reports the unlinked upload as code 16, not code 4. Code 4 compares the
+	 * post_content marker with _document_attachment_id, and after #858 those still agree.
+	 */
+	public function test_full_validation_reports_code_16() {
+		global $wpdr;
+		list( $doc, $old ) = $this->document();
+		$new               = $this->child( $doc, '2026/10/' . md5( 'second' ) . '.pdf' );
+
+		// The linked file has to exist, or an earlier check reports it missing.
+		add_filter( 'get_attached_file', array( $wpdr, 'get_attached_file_filter' ), 10, 2 );
+		$file = get_attached_file( $old );
+		wp_mkdir_p( dirname( $file ) );
+		file_put_contents( $file, 'first' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+
+		$rows = wp_list_filter( WP_Document_Revisions_Validate_Structure::find_problems( false ), array( 'ID' => $doc ) );
+		wp_delete_file( $file );
+
+		self::assertCount( 1, $rows );
+		$row = array_shift( $rows );
+		self::assertSame( 'structure', $row['type'] );
+		self::assertSame( 16, $row['code'] );
+		self::assertSame( $new, $row['parm'] );
+	}
+
+	/**
 	 * With several unlinked uploads, the newest one is offered.
 	 */
 	public function test_newest_unlinked_upload_wins() {
