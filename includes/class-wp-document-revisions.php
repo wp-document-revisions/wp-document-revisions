@@ -194,6 +194,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_abilities_api_init', array( $this, 'register_abilities' ) );
 
 		add_filter( 'update_post_term_count_statuses', array( $this, 'review_count_statuses' ), 30, 2 );
+		add_action( 'rest_api_init', array( $this, 'filter_rest_term_counts' ) );
 		add_filter( 'the_content', array( $this, 'content_filter' ), 1 );
 
 		// filter the queries to ensure readable.
