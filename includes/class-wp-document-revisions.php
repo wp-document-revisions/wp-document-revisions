@@ -1013,17 +1013,6 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
-		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
-		global $wp_version;
-		$vers = strpos( $wp_version, '-' );
-		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		if ( version_compare( $vers, '5.7' ) >= 0 ) {
-			// core method introduced with version 5.7. callback not needed.
-			$ucc = '';
-		} else {
-			$ucc = array( $this, 'term_count_cb' );
-		}
-
 		/**
 		 * Filters the default structure and label values of the workflow_state taxonomy on declaration.
 		 *
@@ -1041,7 +1030,7 @@ class WP_Document_Revisions {
 					'labels'                => $labels,
 					'show_ui'               => true,
 					'rewrite'               => false,
-					'update_count_callback' => $ucc,
+					'update_count_callback' => '',
 					'show_admin_column'     => true,
 					'show_in_rest'          => true,
 				)
