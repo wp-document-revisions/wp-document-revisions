@@ -283,6 +283,13 @@ class WP_Document_Revisions_Manage_Rest {
 		}
 
 		$post_id = absint( $request['id'] );
+		// On the nested revisions and autosaves routes the id is a revision, whose meta WordPress
+		// writes to its parent: that parent may be a document the route's permission check never
+		// covered, and the revision's old attachment would replace the document's current one.
+		if ( 'document' !== get_post_type( $post_id ) ) {
+			return $dispatch_result;
+		}
+
 		self::$parent->populate_attachment_meta( $post_id, get_post_field( 'post_content', $post_id ) );
 
 		return $dispatch_result;

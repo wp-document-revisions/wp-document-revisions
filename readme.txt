@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.8.1
+Stable tag: 5.8.2
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,27 +311,18 @@ Thanks to everyone who has contributed translations, including:
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.8.2 =
+
+* Security: WordPress's embed lookup (oEmbed) gave out the stored file name of a document's files. Document files sit in the uploads folder by default, so on sites that don't block that folder, anyone could use the name to download the file of a password-protected document, or any earlier version of a published one. The embed lookup now refuses document files, and visitors who can't edit a document see the document's title instead of a file's stored name ([GHSA-5452-pc3q-85f6](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-5452-pc3q-85f6)).
+* Security: on sites that turn on documents in the REST API with the `document_show_in_rest` filter (off by default), a Contributor could make another user's document go back to serving one of its older files the next time that document was saved. If a document is serving an old file, upload the current file again ([GHSA-c47p-xwvp-x5rm](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-c47p-xwvp-x5rm)).
+* Security: REST term counts for document taxonomies included draft, pending and private documents, so anyone could see how many non-public documents carry each workflow state or custom document taxonomy term. They now count only published documents, unless the user can already see every document ([GHSA-vp9c-qx2m-x9r8](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-vp9c-qx2m-x9r8)). Thanks to Andrew Melek for reporting it.
+* A document URL with a malformed `revision` value, such as `?revision=abc`, now gets the normal not-found response instead of a server error. (#874) Thanks to Andrew Melek for reporting it.
+* The plugin now stops sending uploads to the document folder in the same place it marks a document upload as finished, so that redirect can't stay on for the rest of the request when its file-name step is skipped. (#862)
+
 = 5.8.1 =
 
 * Uploading a new version of a document whose file name has capitals, spaces or accented characters (for example "Annual Report.pdf") now replaces the document's file. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting and diagnosing it.
 
 = 5.8.0 =
-
-* New Document Library block, with Document List, Document Table and Document Grid variations, and a matching `[document_library]` shortcode. Pick which fields to show (thumbnail, title, description, file type, workflow state, author, last modified, revisions and a download button) and filter by any number of document taxonomies. It only lists documents the viewer can read, and shows the download button and revision count only to users allowed to see them. Developers can adjust it with the new `document_library_query_args` and `document_library_row` filters. (#796, #804, #832, #838)
-* The Plugins screen, the Help tab on document screens and the review prompt now link to the documentation, the support forum and GitHub Discussions for ideas. The new `document_feedback_urls` filter changes or hides these links. (#823)
-* Clicking a link in the block editor preview of the Documents List, Latest Documents or Document Revisions block no longer navigates the editor away from the post. A click now selects the block. In the Document Preview block, the download link no longer navigates the editor, and the embedded PDF can still be scrolled. (#832, #838)
-* The "Show Revision Summaries?" and "Show PDF File indication?" settings of the Document Revisions block and the `summary` and `show_pdf` attributes of `[document_revisions]` now work. Pages that already turned them on will start showing revision summaries and the "(PDF)" label. (#807, #812)
-* `[documents show_pdf="false"]` now hides the "(PDF)" label. (#800, #811)
-* `[documents workflow_state="…"]` now filters correctly on sites where EditFlow or PublishPress Statuses manage document statuses. (#799, #808)
-* `[document_preview]` with no attributes no longer causes an error, and a bare `show_title` or `show_download` now means true. (#818, #828) Thanks to [@Triunitech-Dat](https://github.com/Triunitech-Dat).
-* Converting a `[document_revisions]` or `[document_preview]` shortcode to a block now reads a bare `new_tab` or `show_download` as true. (#830) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
-* Saving the Recently Revised Documents widget with options unchecked no longer logs "Undefined array key" warnings. (#831) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
-* In the Recently Revised Documents widget, clicking a status label now toggles its checkbox, and the status names are translated. (#819, #825) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
-* If activating the plugin leaves you without the `edit_documents` capability, the warning that appears now shows its last sentence, which says how to fix this, inside the notice box. (#839, #840)
-* The owner filter on the All Documents screen now has a label for screen readers. (#803, #810)
-* Removed an unused image size lookup that ran on every page load. (#802, #809)
-* The [filter](https://wp-document-revisions.github.io/wp-document-revisions/filters/) and [action](https://wp-document-revisions.github.io/wp-document-revisions/actions/) references now cover the hooks added in 5.6.0, and the shortcode docs no longer list the removed `post_password` attribute. (#801, #806, #817, #841) Thanks to [@switchcasestudio](https://github.com/switchcasestudio) and [@Maurenz2530](https://github.com/Maurenz2530).
-
-= 5.7.2 =
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
