@@ -3,12 +3,15 @@ name: Deploy to WordPress.org
 on:
     push:
         tags:
-            - '*'
+            - 'v*'
 
 jobs:
     tag:
         name: New tag
         runs-on: ubuntu-latest
+        # The SVN credentials live in this environment, which only v* tags and main can
+        # deploy from and which waits for a maintainer's approval before the job starts.
+        environment: wordpress-org
         permissions:
             contents: read
 

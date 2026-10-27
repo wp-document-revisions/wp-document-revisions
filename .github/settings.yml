@@ -69,3 +69,7 @@ labels:
 # Branch protection for main lives in the "main" repository ruleset, managed in
 # the GitHub UI. The app's ruleset support is experimental, and listing any
 # ruleset here would delete the ones not listed, so rulesets are left out.
+# The same goes for the "release tags" tag ruleset (only admins can create,
+# move or delete v* tags) and the "wordpress-org" deployment environment,
+# which holds the SVN credentials, only accepts v* tags and main, and needs
+# @benbalter's approval for each deploy.

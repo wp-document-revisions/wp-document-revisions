@@ -17,6 +17,8 @@ jobs:
     assets:
         name: Update directory assets
         runs-on: ubuntu-latest
+        # Holds the SVN credentials; see deploy.yml.
+        environment: wordpress-org
         permissions:
             contents: read
 
