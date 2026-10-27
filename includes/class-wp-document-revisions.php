@@ -246,6 +246,7 @@ class WP_Document_Revisions {
 		add_filter( 'private_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'protected_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'the_title', array( $this, 'add_revision_num_to_title' ), 20, 2 );
+		add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id' ) );
 
 		// uploads.
 		add_filter( 'attachment_link', array( $this, 'attachment_link_filter' ), 10, 2 );

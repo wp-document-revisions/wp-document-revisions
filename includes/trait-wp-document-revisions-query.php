@@ -304,6 +304,38 @@ trait WP_Document_Revisions_Query {
 
 
 	/**
+	 * Whether a post is a document's attachment that the current user can't edit the document of.
+	 *
+	 * @since 5.8.2
+	 * @param mixed $post the post.
+	 * @return bool
+	 */
+	private function is_hidden_document_attachment( $post ): bool {
+		return $post instanceof WP_Post
+			&& 'attachment' === $post->post_type
+			&& 'document' === get_post_type( $post->post_parent )
+			&& ! current_user_can( 'edit_document', $post->post_parent );
+	}
+
+	/**
+	 * Keeps oEmbed from describing a document's attachments.
+	 *
+	 * Core treats the attachments of a published document as public, including one that's
+	 * password protected or an earlier revision's file, and returns their title, the stored
+	 * file name, in the oEmbed response.
+	 *
+	 * @since 5.8.2
+	 * @param mixed $post_id ID of the post the oEmbed URL resolved to.
+	 * @return mixed the post ID, or 0 for a document's attachment.
+	 */
+	public function oembed_request_post_id( $post_id ) {
+		if ( is_numeric( $post_id ) && 'attachment' === get_post_type( (int) $post_id ) && 'document' === get_post_type( wp_get_post_parent_id( (int) $post_id ) ) ) {
+			return 0;
+		}
+		return $post_id;
+	}
+
+	/**
 	 * Adds revision number to document titles.
 	 *
 	 * @since 1.0
@@ -318,6 +350,14 @@ trait WP_Document_Revisions_Query {
 		}
 
 		$post = get_post( $post_id );
+
+		// A document's attachment is titled with its stored file name, which is enough to fetch
+		// the file straight from the uploads folder, so show the document's title instead to
+		// anyone who can't edit the document.
+		if ( $this->is_hidden_document_attachment( $post ) ) {
+			$title = get_post_field( 'post_title', $post->post_parent );
+			$post  = get_post( $post->post_parent );
+		}
 
 		// verify post type.
 		if ( ! $this->verify_post_type( $post ) ) {
