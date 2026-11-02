@@ -209,6 +209,27 @@ trait WP_Document_Revisions_File_Handler {
 			exit;
 		}
 
+		// Fail with a real error, before any download headers go out, if the server won't let PHP
+		// read the file. Without this, the readability check further down ends in a blank 500,
+		// which gives a site owner nothing to go on. The usual cause is file permissions, e.g.
+		// after a PHP or server upgrade starts running PHP as a different system account.
+		if ( ! is_readable( $file ) ) {
+			// Log the path for whoever runs the server, but never show it in the browser.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( sprintf( 'WP Document Revisions: PHP cannot read the file for document %d (%s). Check that the account PHP runs as has read access to it.', $post->ID, $file ) );
+
+			$msg = __( 'Sorry, this document is temporarily unavailable. Please contact the site administrator.', 'wp-document-revisions' );
+			if ( class_exists( 'WP_Document_Revisions_Validate_Structure' ) && current_user_can( WP_Document_Revisions_Validate_Structure::capability() ) ) {
+				$msg = __( 'The server could not read this document\'s file. This is usually a file-permission problem: make sure the account PHP runs as can read your document upload directory. Documents → Validate Structure lists every affected document.', 'wp-document-revisions' );
+			}
+
+			wp_die(
+				esc_html( $msg ),
+				esc_html__( 'Document unavailable', 'wp-document-revisions' ),
+				array( 'response' => 500 )
+			);
+		}
+
 		// We may override this later.
 		status_header( 200 );
 
