@@ -2,6 +2,14 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.8.2
+
+* Security: WordPress's embed lookup (oEmbed) gave out the stored file name of a document's files. Document files sit in the uploads folder by default, so on sites that don't block that folder, anyone could use the name to download the file of a password-protected document, or any earlier version of a published one. The embed lookup now refuses document files, and visitors who can't edit a document see the document's title instead of a file's stored name ([GHSA-5452-pc3q-85f6](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-5452-pc3q-85f6)).
+* Security: on sites that turn on documents in the REST API with the `document_show_in_rest` filter (off by default), a Contributor could make another user's document go back to serving one of its older files the next time that document was saved. If a document is serving an old file, upload the current file again ([GHSA-c47p-xwvp-x5rm](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-c47p-xwvp-x5rm)).
+* Security: REST term counts for document taxonomies included draft, pending and private documents, so anyone could see how many non-public documents carry each workflow state or custom document taxonomy term. They now count only published documents, unless the user can already see every document ([GHSA-vp9c-qx2m-x9r8](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-vp9c-qx2m-x9r8)). Thanks to Andrew Melek for reporting it.
+* A document URL with a malformed `revision` value, such as `?revision=abc`, now gets the normal not-found response instead of a server error. (#874) Thanks to Andrew Melek for reporting it.
+* The plugin now stops sending uploads to the document folder in the same place it marks a document upload as finished, so that redirect can't stay on for the rest of the request when its file-name step is skipped. (#862)
+
 ### 5.8.1
 
 * Uploading a new version of a document whose file name has capitals, spaces or accented characters (for example "Annual Report.pdf") now replaces the document's file. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting and diagnosing it.
