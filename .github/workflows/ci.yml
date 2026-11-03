@@ -237,6 +237,11 @@ jobs:
                     - php-versions: '8.1'
                       wp-multisite: 1
                       coverage: false
+                    # Newest PHP release, to catch deprecations and breaking
+                    # changes before users upgrade into them.
+                    - php-versions: '8.5'
+                      wp-multisite: 0
+                      coverage: false
         name: PHP ${{ matrix.php-versions }} Test WP latest MS ${{ matrix.wp-multisite }}
         steps:
             - name: Start DB
@@ -310,6 +315,9 @@ jobs:
                       wp-multisite: 0
                       wp-version: 'latest'
                     - php-versions: '8.3'
+                      wp-multisite: 0
+                      wp-version: 'latest'
+                    - php-versions: '8.4'
                       wp-multisite: 0
                       wp-version: 'latest'
                     - php-versions: '8.0'
