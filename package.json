@@ -1,6 +1,6 @@
 {
   "name": "wp-document-revisions",
-  "version": "5.7.2",
+  "version": "5.8.2",
   "description": "Document management and version control for WordPress",
   "engines": {
     "node": ">=20"
@@ -42,13 +42,14 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "@wordpress/date": "5.56.0",
-    "@wordpress/e2e-test-utils-playwright": "2.1.0",
-    "@wordpress/env": "^11.15.0",
-    "@wordpress/scripts": "^36.0.0",
-    "@wordpress/shortcode": "4.56.0",
+    "@wordpress/date": "6.0.0",
+    "@wordpress/e2e-test-utils-playwright": "3.1.0",
+    "@wordpress/env": "^12.0.0",
+    "@wordpress/scripts": "^37.0.0",
+    "@wordpress/shortcode": "5.0.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "~30.5.0",
+    "js-yaml": "5.5.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^6.0.0"
@@ -59,7 +60,10 @@
       "serialize-javascript": "^7.0.5"
     },
     "sockjs": {
-      "uuid": "^11.1.1"
+      "uuid": "^14.0.0"
+    },
+    "@wordpress/scripts": {
+      "cssnano": "^9.0.0"
     }
   },
   "jest": {

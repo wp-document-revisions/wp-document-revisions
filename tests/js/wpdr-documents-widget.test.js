@@ -475,7 +475,9 @@ describe( 'Edit Function - JSX Rendering', () => {
 		expect( thumbToggle[ 1 ].help ).toContain( 'Under certain' );
 	} );
 
-	test( 'new_tab toggle includes help text', () => {
+	// The editor preview is wrapped in <Disabled>, so the old "turn this on
+	// while editing" advice no longer applies (#838).
+	test( 'new_tab toggle has no help text', () => {
 		blockConfig.edit( {
 			attributes: defaultAttributes,
 			setAttributes: jest.fn(),
@@ -488,8 +490,7 @@ describe( 'Edit Function - JSX Rendering', () => {
 			( c ) => c[ 1 ].label === 'Open documents in new tab?'
 		);
 
-		expect( newTabToggle[ 1 ].help ).toBeDefined();
-		expect( newTabToggle[ 1 ].help ).toContain( 'Setting this on' );
+		expect( newTabToggle[ 1 ].help ).toBeUndefined();
 	} );
 
 	test( 'renders wrapper div with blockProps', () => {

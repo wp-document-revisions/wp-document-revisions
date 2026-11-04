@@ -71,8 +71,12 @@ class Test_WP_Document_Revisions_Z_Last extends Test_Common_WPDR {
 		set_transient( 'wpdr_activation_issue', get_current_user_id() );
 		ob_start();
 		$wpdr->activation_error_notice();
-		$output = ob_get_clean();
-		self::assertTrue( true, 'activation_error_notice' );
+		$output = (string) ob_get_clean();
+		// Every paragraph, including the last, sits inside the one notice.
+		self::assertSame( 1, substr_count( $output, '<div' ), 'activation_error_notice div' );
+		self::assertSame( 1, substr_count( $output, '</div>' ), 'activation_error_notice closing div' );
+		self::assertSame( 4, substr_count( $output, '<p>' ), 'activation_error_notice paragraphs' );
+		self::assertMatchesRegularExpression( '#You should first check[^<]*</p></div>#', $output, 'activation_error_notice last paragraph' );
 
 		// test is_doc_image.
 		self::assertTrue( $wpdr->is_doc_image(), 'is_doc_image' );
