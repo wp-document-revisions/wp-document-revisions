@@ -440,16 +440,6 @@ trait WP_Document_Revisions_File_Handler {
 		// Make sure that there is a buffer to be written on close.
 		ob_start( null, $buffsize );
 
-		// Check file readability before committing to response headers (covers both branches:
-		// compressed streaming via fopen/deflate and uncompressed via readfile/WP_Filesystem).
-		if ( ! is_readable( $file ) ) {
-			status_header( 500 );
-			if ( $under_test ) {
-				return $template;
-			}
-			exit;
-		}
-
 		// If we made it this far, just serve the file.
 		if ( $compress ) {
 			// Stream the file through an incremental deflate context so the entire raw file
