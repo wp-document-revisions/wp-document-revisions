@@ -128,7 +128,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v7
               with:
-                  node-version: 24
+                  node-version: 26
 
             - name: Cache Node modules
               uses: actions/cache@v6
@@ -189,7 +189,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v7
               with:
-                  node-version: 24
+                  node-version: 26
 
             - name: Install dependencies
               run: npm ci
@@ -236,6 +236,11 @@ jobs:
                       coverage: true
                     - php-versions: '8.1'
                       wp-multisite: 1
+                      coverage: false
+                    # Newest PHP release, to catch deprecations and breaking
+                    # changes before users upgrade into them.
+                    - php-versions: '8.5'
+                      wp-multisite: 0
                       coverage: false
         name: PHP ${{ matrix.php-versions }} Test WP latest MS ${{ matrix.wp-multisite }}
         steps:
@@ -312,6 +317,9 @@ jobs:
                     - php-versions: '8.3'
                       wp-multisite: 0
                       wp-version: 'latest'
+                    - php-versions: '8.4'
+                      wp-multisite: 0
+                      wp-version: 'latest'
                     - php-versions: '8.0'
                       wp-multisite: 1
                       wp-version: 'latest'
@@ -383,7 +391,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v7
               with:
-                  node-version: 24
+                  node-version: 26
 
             - name: Cache Node modules
               uses: actions/cache@v6

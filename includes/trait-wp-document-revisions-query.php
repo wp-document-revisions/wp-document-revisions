@@ -304,6 +304,38 @@ trait WP_Document_Revisions_Query {
 
 
 	/**
+	 * Whether a post is a document's attachment that the current user can't edit the document of.
+	 *
+	 * @since 5.8.2
+	 * @param mixed $post the post.
+	 * @return bool
+	 */
+	private function is_hidden_document_attachment( $post ): bool {
+		return $post instanceof WP_Post
+			&& 'attachment' === $post->post_type
+			&& 'document' === get_post_type( $post->post_parent )
+			&& ! current_user_can( 'edit_document', $post->post_parent );
+	}
+
+	/**
+	 * Keeps oEmbed from describing a document's attachments.
+	 *
+	 * Core treats the attachments of a published document as public, including one that's
+	 * password protected or an earlier revision's file, and returns their title, the stored
+	 * file name, in the oEmbed response.
+	 *
+	 * @since 5.8.2
+	 * @param mixed $post_id ID of the post the oEmbed URL resolved to.
+	 * @return mixed the post ID, or 0 for a document's attachment.
+	 */
+	public function oembed_request_post_id( $post_id ) {
+		if ( is_numeric( $post_id ) && 'attachment' === get_post_type( (int) $post_id ) && 'document' === get_post_type( wp_get_post_parent_id( (int) $post_id ) ) ) {
+			return 0;
+		}
+		return $post_id;
+	}
+
+	/**
 	 * Adds revision number to document titles.
 	 *
 	 * @since 1.0
@@ -318,6 +350,14 @@ trait WP_Document_Revisions_Query {
 		}
 
 		$post = get_post( $post_id );
+
+		// A document's attachment is titled with its stored file name, which is enough to fetch
+		// the file straight from the uploads folder, so show the document's title instead to
+		// anyone who can't edit the document.
+		if ( $this->is_hidden_document_attachment( $post ) ) {
+			$title = get_post_field( 'post_title', $post->post_parent );
+			$post  = get_post( $post->post_parent );
+		}
 
 		// verify post type.
 		if ( ! $this->verify_post_type( $post ) ) {
@@ -367,18 +407,7 @@ trait WP_Document_Revisions_Query {
 		$tax_name   = $taxonomy->name;
 		$tax_status = wp_cache_get( 'wpdr_statuses_' . $tax_name );
 		if ( false === $tax_status ) {
-			// if filtered out, don't need to look at taxonomy. N.B. Odd format for compatibility.
-			/**
-			 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
-			 *
-			 * In prior versions input parameter was an array of all affected post types.
-			 *
-			 * @param array $taxs document taxonomies .
-			 */
-			if ( ! in_array( $tax_name, apply_filters( 'document_taxonomy_term_count', array( $tax_name ) ), true ) ) {
-				$tax_status = $statuses;
-			} elseif ( '' !== $taxonomy->update_count_callback || ! in_array( 'document', $taxonomy->object_type, true ) ) {
-				// check if taxonomy has a callback defined or is not for documents.
+			if ( ! $this->counts_all_statuses( $taxonomy ) ) {
 				$tax_status = $statuses;
 			} else {
 				// get the list of statuses.
@@ -394,6 +423,170 @@ trait WP_Document_Revisions_Query {
 		return $tax_status;
 	}
 
+
+	/**
+	 * Whether review_count_statuses() widens a taxonomy's term counts to every non-trashed status.
+	 *
+	 * @since 5.8.2
+	 * @param WP_Taxonomy $taxonomy the taxonomy.
+	 * @return bool
+	 */
+	public function counts_all_statuses( WP_Taxonomy $taxonomy ): bool {
+		// if filtered out, don't need to look at taxonomy. N.B. Odd format for compatibility.
+		/**
+		 * Filter to select which taxonomies with default term count to be modified to count all non-trashed posts.
+		 *
+		 * In prior versions input parameter was an array of all affected post types.
+		 *
+		 * @param array $taxs document taxonomies .
+		 */
+		if ( ! in_array( $taxonomy->name, apply_filters( 'document_taxonomy_term_count', array( $taxonomy->name ) ), true ) ) {
+			return false;
+		}
+
+		// check if taxonomy has a callback defined or is not for documents.
+		return '' === $taxonomy->update_count_callback && in_array( 'document', $taxonomy->object_type, true );
+	}
+
+	/**
+	 * Hooks the REST term responses of taxonomies whose counts include non-public documents.
+	 *
+	 * @since 5.8.2
+	 * @return void
+	 */
+	public function filter_rest_term_counts(): void {
+		foreach ( get_object_taxonomies( 'document', 'objects' ) as $taxonomy ) {
+			if ( $taxonomy->show_in_rest && $this->counts_all_statuses( $taxonomy ) ) {
+				add_filter( 'rest_' . $taxonomy->name . '_query', array( $this, 'rest_term_public_query' ), 10, 2 );
+				add_filter( 'rest_prepare_' . $taxonomy->name, array( $this, 'rest_term_public_count' ), 10, 2 );
+			}
+		}
+	}
+
+	/**
+	 * Whether the current user may see term counts that include every user's non-public documents.
+	 *
+	 * @since 5.8.2
+	 * @return bool
+	 */
+	private function can_see_all_status_counts(): bool {
+		return current_user_can( 'edit_others_documents' ) && current_user_can( 'read_private_documents' );
+	}
+
+	/**
+	 * Makes hide_empty and orderby=count in REST term queries use published-only counts.
+	 *
+	 * Both otherwise use the stored all-status count, which would reveal terms that only
+	 * non-public documents carry, and their relative sizes.
+	 *
+	 * @since 5.8.2
+	 * @param array<string, mixed> $args    get_terms() arguments.
+	 * @param WP_REST_Request      $request the request.
+	 * @return array<string, mixed>
+	 */
+	public function rest_term_public_query( $args, $request ) {
+		unset( $request );
+		if ( $this->can_see_all_status_counts() || ! is_array( $args ) || empty( $args['taxonomy'] ) ) {
+			return $args;
+		}
+
+		if ( isset( $args['orderby'] ) && 'count' === $args['orderby'] ) {
+			$args['orderby'] = 'name';
+		}
+
+		if ( ! empty( $args['hide_empty'] ) ) {
+			$tt_ids  = array_keys( $this->published_term_counts( (string) $args['taxonomy'] ) );
+			$visible = get_terms(
+				array(
+					'taxonomy'         => $args['taxonomy'],
+					'term_taxonomy_id' => $tt_ids ? $tt_ids : array( 0 ),
+					'hide_empty'       => false,
+					'fields'           => 'ids',
+				)
+			);
+			$visible = is_array( $visible ) ? array_map( 'intval', $visible ) : array();
+			if ( ! empty( $args['include'] ) ) {
+				$visible = array_intersect( $visible, wp_parse_id_list( $args['include'] ) );
+			}
+			$args['include']    = $visible ? array_values( $visible ) : array( 0 );
+			$args['hide_empty'] = false;
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Replaces a REST term's count with its published-only count for users who can't see every non-public document.
+	 *
+	 * The stored count includes drafts, pending and private documents (see review_count_statuses()),
+	 * which the Documents screens show on purpose but anonymous REST requests mustn't see.
+	 *
+	 * @since 5.8.2
+	 * @param WP_REST_Response $response the term response.
+	 * @param WP_Term          $term     the term.
+	 * @return WP_REST_Response
+	 */
+	public function rest_term_public_count( $response, $term ) {
+		if ( $this->can_see_all_status_counts() || ! $response instanceof WP_REST_Response || ! $term instanceof WP_Term ) {
+			return $response;
+		}
+
+		$data = $response->get_data();
+		if ( isset( $data['count'] ) ) {
+			$counts        = $this->published_term_counts( $term->taxonomy );
+			$data['count'] = $counts[ (int) $term->term_taxonomy_id ] ?? 0;
+			$response->set_data( $data );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Published-only term counts for a taxonomy, keyed by term_taxonomy_id, computed once per request.
+	 *
+	 * Counts what core would count without review_count_statuses(): published objects of the taxonomy's post types.
+	 *
+	 * @since 5.8.2
+	 * @param string $taxonomy taxonomy name.
+	 * @return array<int, int>
+	 */
+	private function published_term_counts( string $taxonomy ): array {
+		wp_cache_add_non_persistent_groups( 'wpdr_term_counts' );
+		$counts = wp_cache_get( $taxonomy, 'wpdr_term_counts' );
+		if ( is_array( $counts ) ) {
+			return $counts;
+		}
+
+		global $wpdb;
+		$tax_obj    = get_taxonomy( $taxonomy );
+		$post_types = $tax_obj ? array_values( array_filter( $tax_obj->object_type, 'post_type_exists' ) ) : array();
+
+		$counts = array();
+		if ( empty( $post_types ) ) {
+			return $counts;
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT tr.term_taxonomy_id, COUNT(*) AS cnt FROM {$wpdb->term_relationships} tr
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+				INNER JOIN {$wpdb->posts} p ON p.ID = tr.object_id
+				WHERE tt.taxonomy = %s AND p.post_status = 'publish' AND p.post_type IN ( {$placeholders} )
+				GROUP BY tr.term_taxonomy_id",
+				array_merge( array( $taxonomy ), $post_types )
+			)
+		);
+		// phpcs:enable
+
+		foreach ( (array) $rows as $row ) {
+			$counts[ (int) $row->term_taxonomy_id ] = (int) $row->cnt;
+		}
+		wp_cache_set( $taxonomy, $counts, 'wpdr_term_counts' );
+
+		return $counts;
+	}
 
 	/**
 	 * Ensures that any system limit on revisions does not apply to documents.

@@ -4,9 +4,9 @@
 
 ## Releasing and deploying
 
-Two workflows publish to the WordPress.org SVN repository, and nobody has to approve either run:
+Two workflows publish to the WordPress.org SVN repository. Both run in the `wordpress-org` deployment environment, which holds the SVN credentials, accepts only `v*` tags and `main`, and waits for the owner's approval before each run. Only admins can create, move or delete `v*` tags (the "release tags" ruleset).
 
-- [`deploy.yml`](.github/workflows/deploy.yml) runs on a push of any tag. It builds and ships the plugin to every site that auto-updates it, without running tests or checking that the tag matches the plugin version. Creating a GitHub Release creates its tag, so it deploys too.
+- [`deploy.yml`](.github/workflows/deploy.yml) runs on a push of a `v*` tag. Once approved, it builds and ships the plugin to every site that auto-updates it, without running tests or checking that the tag matches the plugin version. Creating a GitHub Release creates its tag, so it deploys too.
 - [`deploy-assets.yml`](.github/workflows/deploy-assets.yml) syncs [`.wordpress-org/`](.wordpress-org/) (icon, banner, screenshots) to the plugin directory whenever a change to it lands on `main`.
 
 Releases happen only after the owner explicitly approves that release. Agents may prepare a version-bump pull request, but never push a tag, create a GitHub Release, or run an SVN deploy. Push branches with `git push --no-follow-tags`, so a local tag can't ride along and trigger a deploy.
