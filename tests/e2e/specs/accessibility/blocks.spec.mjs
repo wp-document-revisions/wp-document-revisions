@@ -19,6 +19,14 @@ const WP_CORE_RULES_TO_DISABLE = [
 	'region',
 ];
 
+// WordPress core controls that axe 4.14's label-content-name-mismatch rule
+// flags: their visible text isn't part of their aria-label. Excluded by
+// element rather than disabling the rule, so plugin UI is still checked.
+const WP_CORE_ELEMENTS_TO_EXCLUDE = [
+	'#collapse-button', // Admin menu "Collapse Menu".
+	'button[aria-label="Template options"]', // Editor sidebar template picker.
+];
+
 test.describe( 'Accessibility', () => {
 	test( 'documents list page has no critical violations', async ( {
 		admin,
@@ -48,8 +56,11 @@ test.describe( 'Accessibility', () => {
 		} );
 		await page.waitForLoadState( 'domcontentloaded' );
 
-		const results = await new AxeBuilder( { page } )
-			.exclude( 'iframe' )
+		let axe = new AxeBuilder( { page } ).exclude( 'iframe' );
+		for ( const selector of WP_CORE_ELEMENTS_TO_EXCLUDE ) {
+			axe = axe.exclude( selector );
+		}
+		const results = await axe
 			.disableRules( WP_CORE_RULES_TO_DISABLE )
 			.analyze();
 
