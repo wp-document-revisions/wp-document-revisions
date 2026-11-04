@@ -20,7 +20,9 @@
     "start:admin": "wp-scripts start wp-document-revisions.js wp-document-revisions-validate.js wp-document-revisions-ai-prefill.js --webpack-src-dir=src/admin --output-path=build/admin",
     "test:e2e": "npx playwright test --config=playwright.config.mjs",
     "test:e2e:ui": "npx playwright test --config=playwright.config.mjs --ui",
-    "wp-env": "wp-env"
+    "wp-env": "wp-env",
+    "playground": "npx -y @wp-playground/cli@latest server --mount=.:/wordpress/wp-content/plugins/wp-document-revisions --blueprint=playground/blueprint-local.json",
+    "build:blueprints": "script/build-blueprints"
   },
   "repository": {
     "type": "git",
