@@ -126,20 +126,26 @@ jobs:
             - uses: actions/checkout@v7
 
             - name: Setup Node.js
+              id: setup-node
               uses: actions/setup-node@v7
               with:
                   node-version: 26
 
+            # Restore node_modules and skip `npm ci` on an exact match. npm ci
+            # deletes node_modules before installing, so caching it only pays off
+            # when the install is skipped. The key has no restore-keys fallback,
+            # because a partial match with a skipped install would run stale
+            # packages; it includes the exact Node version for native modules.
             - name: Cache Node modules
+              id: node-modules
               uses: actions/cache@v6
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-22-
+                  key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
 
             - name: Install dependencies
-              run: npm ci
+              if: steps.node-modules.outputs.cache-hit != 'true'
+              run: npm ci --no-audit --no-fund
 
             - name: Audit dependencies
               run: npm audit --omit=dev
@@ -187,12 +193,26 @@ jobs:
             - uses: actions/checkout@v7
 
             - name: Setup Node.js
+              id: setup-node
               uses: actions/setup-node@v7
               with:
                   node-version: 26
 
+            # Restore node_modules and skip `npm ci` on an exact match. npm ci
+            # deletes node_modules before installing, so caching it only pays off
+            # when the install is skipped. The key has no restore-keys fallback,
+            # because a partial match with a skipped install would run stale
+            # packages; it includes the exact Node version for native modules.
+            - name: Cache Node modules
+              id: node-modules
+              uses: actions/cache@v6
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
             - name: Install dependencies
-              run: npm ci
+              if: steps.node-modules.outputs.cache-hit != 'true'
+              run: npm ci --no-audit --no-fund
 
             - name: Build assets
               run: npm run build
@@ -389,20 +409,26 @@ jobs:
               uses: actions/checkout@v7
 
             - name: Setup Node.js
+              id: setup-node
               uses: actions/setup-node@v7
               with:
                   node-version: 26
 
+            # Restore node_modules and skip `npm ci` on an exact match. npm ci
+            # deletes node_modules before installing, so caching it only pays off
+            # when the install is skipped. The key has no restore-keys fallback,
+            # because a partial match with a skipped install would run stale
+            # packages; it includes the exact Node version for native modules.
             - name: Cache Node modules
+              id: node-modules
               uses: actions/cache@v6
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-22-
+                  key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
 
             - name: Install dependencies
-              run: npm ci
+              if: steps.node-modules.outputs.cache-hit != 'true'
+              run: npm ci --no-audit --no-fund
 
             - name: Build assets
               # Full build (blocks + editor + admin). The classic-admin scripts
