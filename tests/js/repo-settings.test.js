@@ -22,3 +22,35 @@ describe('repository settings', () => {
 		expect(description[1].trim()).toBe(tagline[1].trim());
 	});
 });
+
+/**
+ * The "main" ruleset in .github/settings.yml requires CI jobs by name. Renaming
+ * a job without updating the ruleset blocks every merge on a check that never
+ * reports, and dropping a ruleset from the file makes the Settings app delete it.
+ */
+describe('repository rulesets', () => {
+	const yaml = require('js-yaml');
+	const settings = yaml.load(read('.github/settings.yml'));
+	const ci = yaml.load(read('.github/workflows/ci.yml'));
+	const rulesets = settings.rulesets || [];
+
+	test('keeps the rulesets the Settings app would otherwise delete', () => {
+		const names = rulesets.map((ruleset) => ruleset.name);
+		expect(names).toEqual(expect.arrayContaining(['main', 'release tags']));
+	});
+
+	test('every required status check names a CI job that runs on every pull request', () => {
+		const main = rulesets.find((ruleset) => ruleset.name === 'main');
+		const rule = main.rules.find(({ type }) => type === 'required_status_checks');
+		const contexts = rule.parameters.required_status_checks.map(({ context }) => context);
+		expect(contexts.length).toBeGreaterThan(0);
+
+		// A job's check is named by its `name`, or its ID when it has none. Jobs with an
+		// `if:` or a matrix-templated name can't be required safely, so they don't count.
+		const jobs = Object.entries(ci.jobs)
+			.filter(([, job]) => !job.if && !String(job.name || '').includes('${{'))
+			.map(([id, job]) => job.name || id);
+
+		expect(jobs).toEqual(expect.arrayContaining(contexts));
+	});
+});
