@@ -67,13 +67,8 @@ jobs:
         steps:
             - uses: actions/checkout@v7
 
-            # script/build-readme is plain Ruby with no gems. Same version as
-            # build-readme.yml so both produce identical output.
-            - name: Setup Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  ruby-version: '4.0.9'
-
+            # script/build-readme only uses Node's built-in modules, so the
+            # runner's preinstalled Node is enough.
             - name: Regenerate readme.txt and fail on drift
               run: |
                   script/build-readme
