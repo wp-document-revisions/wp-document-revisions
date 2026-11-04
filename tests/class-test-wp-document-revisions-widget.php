@@ -561,9 +561,21 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 
 		self::assertEquals( 1, (int) substr_count( $output, '[title]" type="text" value="Recently Revised Documents"' ), 'widget_title' );
 		self::assertEquals( 1, (int) substr_count( $output, '[numberposts]" type="text" value="5"' ), 'widget_numberposts' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]" type="text"  checked=\'checked\' /' ), 'widget_publish' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]" type="text"  /' ), 'widget_private' );
-		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]" type="text"  /' ), 'widget_draft' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_publish]"  checked=\'checked\' /' ), 'widget_publish' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_private]"  /' ), 'widget_private' );
+		self::assertEquals( 1, (int) substr_count( $output, '[post_status_draft]"  /' ), 'widget_draft' );
+
+		// Each status label names its checkbox, so clicking the label toggles it and screen readers announce it.
+		foreach ( array( 'publish', 'private', 'draft' ) as $status ) {
+			$id = $wpdr_widget->get_field_id( 'post_status_' . $status );
+			self::assertEquals( 1, (int) substr_count( $output, 'id="' . $id . '"' ), 'widget_status_id_' . $status );
+			self::assertEquals( 1, (int) substr_count( $output, 'for="' . $id . '"' ), 'widget_status_for_' . $status );
+		}
+
+		// The status names are the translated labels WordPress registers, not the slugs.
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'publish' )->label . '</label>' ), 'widget_publish_label' );
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'private' )->label . '</label>' ), 'widget_private_label' );
+		self::assertEquals( 1, (int) substr_count( $output, '>' . get_post_status_object( 'draft' )->label . '</label>' ), 'widget_draft_label' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_thumb]"  /' ), 'widget_show_thumb"  /' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_descr]"  checked=\'checked\' /' ), 'widget_descr' );
 		self::assertEquals( 1, (int) substr_count( $output, '[show_author]"  checked=\'checked\' /' ), 'widget_author' );
@@ -601,5 +613,38 @@ class Test_WP_Document_Revisions_Widget extends Test_Common_WPDR {
 		self::assertTrue( $instance['post_status']['publish'], 'publish' );
 		self::assertFalse( $instance['post_status']['private'], 'private' );
 		self::assertFalse( $instance['post_status']['draft'], 'draft' );
+	}
+
+	/**
+	 * Verify update with unchecked checkboxes, which a form submission leaves out.
+	 */
+	public function test_update_function_unchecked_checkboxes() {
+
+		$wpdr_widget = new WP_Document_Revisions_Recently_Revised_Widget();
+		$checkboxes  = array( 'show_thumb', 'show_descr', 'show_author', 'show_pdf', 'new_tab' );
+
+		// previously saved with every checkbox checked.
+		$old_instance = array_fill_keys( $checkboxes, true );
+
+		// all unchecked: only the text fields are submitted.
+		$new_instance = array(
+			'title'       => 'Test Title',
+			'numberposts' => 5,
+		);
+
+		$instance = $wpdr_widget->update( $new_instance, $old_instance );
+
+		foreach ( $checkboxes as $checkbox ) {
+			self::assertFalse( $instance[ $checkbox ], $checkbox . ' unchecked' );
+		}
+
+		// all checked: a checkbox without a value attribute submits "on".
+		$new_instance = array_merge( $new_instance, array_fill_keys( $checkboxes, 'on' ) );
+
+		$instance = $wpdr_widget->update( $new_instance, array() );
+
+		foreach ( $checkboxes as $checkbox ) {
+			self::assertTrue( $instance[ $checkbox ], $checkbox . ' checked' );
+		}
 	}
 }

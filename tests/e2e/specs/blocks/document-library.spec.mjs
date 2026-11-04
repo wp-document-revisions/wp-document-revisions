@@ -33,11 +33,17 @@ test.describe( 'Document Library Block', () => {
 		).toBeVisible( { timeout: 10000 } );
 
 		await editor.openDocumentSettingsSidebar();
-		for ( const panel of [ 'Layout', 'Fields', 'Order' ] ) {
+		for ( const panel of [ 'Layout', 'Fields', 'Order', 'Feedback' ] ) {
 			await expect(
 				page.locator( '.components-panel__body-title', { hasText: panel } )
 			).toBeVisible();
 		}
+
+		await page.locator( '.components-panel__body-title', { hasText: 'Feedback' } ).click();
+		await expect( page.getByRole( 'link', { name: /Share feedback/ } ) ).toHaveAttribute(
+			'href',
+			/discussions\/796/
+		);
 	} );
 
 	test( 'renders each layout on the frontend', async ( { admin, editor, page } ) => {

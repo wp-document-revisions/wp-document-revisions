@@ -1,7 +1,10 @@
 /* global wpdr_library_data */
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
+	BaseControl,
 	CheckboxControl,
+	Disabled,
+	ExternalLink,
 	FormTokenField,
 	PanelBody,
 	RangeControl,
@@ -33,10 +36,19 @@ function fieldOptions() {
 /**
  * Document taxonomies and their terms, from PHP.
  *
- * @return {Array<{slug: string, label: string, terms: Array<{id: number, name: string, slug: string}>}>} Taxonomies.
+ * @return {Array<{slug: string, label: string, hierarchical: boolean, terms: Array<{id: number, name: string, slug: string, depth: number}>}>} Taxonomies.
  */
 function documentTaxonomies() {
 	return typeof wpdr_library_data !== 'undefined' ? wpdr_library_data.taxonomies : [];
+}
+
+/**
+ * Where to send feedback on the block, from PHP.
+ *
+ * @return {string} URL, or '' when the site has turned feedback links off.
+ */
+function feedbackUrl() {
+	return typeof wpdr_library_data !== 'undefined' ? wpdr_library_data.feedback || '' : '';
 }
 
 /**
@@ -70,11 +82,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		} );
 	};
 
-	const setTerms = ( taxonomy, names ) => {
-		const ids = names
-			.map( ( name ) => taxonomy.terms.find( ( term ) => term.name === name ) )
-			.filter( Boolean )
-			.map( ( term ) => term.id );
+	const selectedTerms = ( taxonomy ) =>
+		( taxonomies[ taxonomy.slug ] || [] )
+			.map( ( value ) => findTerm( taxonomy, value ) )
+			.filter( Boolean );
+
+	const setTermIds = ( taxonomy, ids ) => {
 		const next = { ...taxonomies };
 		if ( ids.length ) {
 			next[ taxonomy.slug ] = ids;
@@ -128,21 +141,80 @@ export default function Edit( { attributes, setAttributes } ) {
 						title={ __( 'Filter', 'wp-document-revisions' ) }
 						initialOpen={ false }
 					>
-						{ documentTaxonomies().map( ( taxonomy ) => (
-							<FormTokenField
-								key={ taxonomy.slug }
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-								label={ taxonomy.label }
-								value={ ( taxonomies[ taxonomy.slug ] || [] )
-									.map( ( value ) => findTerm( taxonomy, value ) )
-									.filter( Boolean )
-									.map( ( term ) => term.name ) }
-								suggestions={ taxonomy.terms.map( ( term ) => term.name ) }
-								onChange={ ( names ) => setTerms( taxonomy, names ) }
-								__experimentalExpandOnFocus
-							/>
-						) ) }
+						{ documentTaxonomies().map( ( taxonomy ) => {
+							const selected = selectedTerms( taxonomy );
+							const ids = selected.map( ( term ) => term.id );
+							if ( taxonomy.hierarchical ) {
+								// Checkboxes, like the editor's Categories panel, so child terms can be indented.
+								return (
+									<fieldset
+										key={ taxonomy.slug }
+										style={ { border: 0, margin: '16px 0', padding: 0 } }
+									>
+										<BaseControl.VisualLabel as="legend">
+											{ taxonomy.label }
+										</BaseControl.VisualLabel>
+										<div
+											style={ {
+												display: 'grid',
+												gap: '8px',
+												maxHeight: '14em',
+												overflowY: 'auto',
+											} }
+										>
+											{ taxonomy.terms.map( ( term ) => (
+												<div
+													key={ term.id }
+													style={ {
+														paddingInlineStart: `${ term.depth * 1.5 }em`,
+													} }
+												>
+													<CheckboxControl
+														__nextHasNoMarginBottom
+														label={ term.name }
+														checked={ ids.includes( term.id ) }
+														onChange={ ( checked ) =>
+															setTermIds(
+																taxonomy,
+																checked
+																	? [ ...ids, term.id ]
+																	: ids.filter(
+																			( id ) => id !== term.id
+																		)
+															)
+														}
+													/>
+												</div>
+											) ) }
+										</div>
+									</fieldset>
+								);
+							}
+							return (
+								<FormTokenField
+									key={ taxonomy.slug }
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+									label={ taxonomy.label }
+									value={ selected.map( ( term ) => term.name ) }
+									suggestions={ taxonomy.terms.map( ( term ) => term.name ) }
+									onChange={ ( names ) =>
+										setTermIds(
+											taxonomy,
+											names
+												.map( ( name ) =>
+													taxonomy.terms.find(
+														( term ) => term.name === name
+													)
+												)
+												.filter( Boolean )
+												.map( ( term ) => term.id )
+										)
+									}
+									__experimentalExpandOnFocus
+								/>
+							);
+						} ) }
 					</PanelBody>
 				) }
 				<PanelBody title={ __( 'Order', 'wp-document-revisions' ) } initialOpen={ false }>
@@ -158,10 +230,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							},
 							{ value: 'date', label: __( 'Date created', 'wp-document-revisions' ) },
 							{ value: 'title', label: __( 'Title', 'wp-document-revisions' ) },
-							{
-								value: 'menu_order',
-								label: __( 'Menu order', 'wp-document-revisions' ),
-							},
 						] }
 						onChange={ ( value ) => setAttributes( { orderby: value } ) }
 					/>
@@ -192,13 +260,31 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { new_tab: value } ) }
 					/>
 				</PanelBody>
+				{ feedbackUrl() && (
+					<PanelBody
+						title={ __( 'Feedback', 'wp-document-revisions' ) }
+						initialOpen={ false }
+					>
+						<p>
+							{ __(
+								'This block is new. Tell us what works and what is missing.',
+								'wp-document-revisions'
+							) }
+						</p>
+						<ExternalLink href={ feedbackUrl() }>
+							{ __( 'Share feedback', 'wp-document-revisions' ) }
+						</ExternalLink>
+					</PanelBody>
+				) }
 			</InspectorControls>
 			<div { ...blockProps }>
-				<ServerSideRender
-					block="wp-document-revisions/document-library"
-					attributes={ attributes }
-					skipBlockSupportAttributes
-				/>
+				<Disabled>
+					<ServerSideRender
+						block="wp-document-revisions/document-library"
+						attributes={ attributes }
+						skipBlockSupportAttributes
+					/>
+				</Disabled>
 			</div>
 		</>
 	);

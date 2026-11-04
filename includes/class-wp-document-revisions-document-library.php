@@ -23,6 +23,13 @@ class WP_Document_Revisions_Document_Library {
 	const BLOCK = 'wp-document-revisions/document-library';
 
 	/**
+	 * Discussion where people can give feedback on the block while it's new.
+	 *
+	 * @var string
+	 */
+	const FEEDBACK_URL = 'https://github.com/wp-document-revisions/wp-document-revisions/discussions/796';
+
+	/**
 	 * Available variants.
 	 *
 	 * @var string[]
@@ -55,7 +62,7 @@ class WP_Document_Revisions_Document_Library {
 	 *
 	 * @var string[]
 	 */
-	const ORDERBY = array( 'modified', 'date', 'title', 'menu_order' );
+	const ORDERBY = array( 'modified', 'date', 'title' );
 
 	/**
 	 * Most documents one library shows.
@@ -126,25 +133,36 @@ class WP_Document_Revisions_Document_Library {
 			if ( ! empty( $details['wf_efpp'] ) && 'workflow_state' !== $taxo['slug'] && WP_Document_Revisions::taxonomy_key() === $taxo['slug'] ) {
 				continue;
 			}
-			$terms = array();
+			$tax_obj      = get_taxonomy( $taxo['slug'] );
+			$hierarchical = $tax_obj instanceof WP_Taxonomy && $tax_obj->hierarchical;
+			$terms        = array();
 			foreach ( $taxo['terms'] as $term ) {
 				// Skip the "No selection" entry.
 				if ( 0 !== (int) $term[0] ) {
+					$name = (string) $term[1];
+					// get_taxonomy_details() indents child terms with one space per level.
 					$terms[] = array(
-						'id'   => (int) $term[0],
-						'name' => trim( (string) $term[1] ),
-						'slug' => (string) ( $term[2] ?? '' ),
+						'id'    => (int) $term[0],
+						'name'  => trim( $name ),
+						'slug'  => (string) ( $term[2] ?? '' ),
+						'depth' => $hierarchical ? strlen( $name ) - strlen( ltrim( $name, ' ' ) ) : 0,
 					);
 				}
 			}
 			$taxos[] = array(
-				'slug'  => $taxo['slug'],
-				'label' => $taxo['label'],
-				'terms' => $terms,
+				'slug'         => $taxo['slug'],
+				'label'        => $taxo['label'],
+				'hierarchical' => $hierarchical,
+				'terms'        => $terms,
 			);
 		}
 
-		wp_add_inline_script( $block->editor_script_handles[0], 'var wpdr_library_data = ' . wp_json_encode( array( 'taxonomies' => $taxos ) ) . ';', 'before' );
+		$data = array(
+			'taxonomies' => $taxos,
+			// Hidden wherever the general ideas link has been filtered out.
+			'feedback'   => '' === WP_Document_Revisions::feedback_urls()['ideas'] ? '' : self::FEEDBACK_URL,
+		);
+		wp_add_inline_script( $block->editor_script_handles[0], 'var wpdr_library_data = ' . wp_json_encode( $data ) . ';', 'before' );
 	}
 
 	/**
@@ -430,7 +448,10 @@ class WP_Document_Revisions_Document_Library {
 				return esc_html( $table ? $name : sprintf( __( 'By %s', 'wp-document-revisions' ), $name ) );
 
 			case 'modified':
-				$time = '<time datetime="' . esc_attr( (string) get_post_modified_time( 'c', true, $id ) ) . '">' . esc_html( (string) get_the_modified_date( '', $id ) ) . '</time>';
+				// A short numeric date keeps the table column narrow, like the admin list tables.
+				/* translators: short date format for the document library table, see https://www.php.net/manual/datetime.format.php */
+				$format = $table ? __( 'Y/m/d', 'wp-document-revisions' ) : '';
+				$time   = '<time datetime="' . esc_attr( (string) get_post_modified_time( 'c', true, $id ) ) . '">' . esc_html( (string) get_the_modified_date( $format, $id ) ) . '</time>';
 				/* translators: %s: date the document was last modified. */
 				return $table ? $time : sprintf( esc_html__( 'Updated %s', 'wp-document-revisions' ), $time );
 

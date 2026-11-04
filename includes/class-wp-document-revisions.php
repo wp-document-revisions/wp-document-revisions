@@ -131,6 +131,41 @@ class WP_Document_Revisions {
 	}
 
 	/**
+	 * Where admins can read the documentation, get support, suggest an idea or leave a review.
+	 *
+	 * Problems go to the WordPress.org support forum, which every WordPress.org user can post to;
+	 * ideas go to GitHub Discussions, where they can be discussed and upvoted.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @return array{docs: string, support: string, ideas: string, review: string}
+	 */
+	public static function feedback_urls(): array {
+		$urls = array(
+			'docs'    => 'https://wp-document-revisions.github.io/wp-document-revisions/',
+			'support' => 'https://wordpress.org/support/plugin/wp-document-revisions/',
+			'ideas'   => 'https://github.com/wp-document-revisions/wp-document-revisions/discussions/categories/ideas',
+			'review'  => 'https://wordpress.org/support/plugin/wp-document-revisions/reviews/#new-post',
+		);
+
+		/**
+		 * Filters the documentation, support, ideas and review links shown in the admin.
+		 *
+		 * Set a link to an empty string to hide it, e.g. on a managed site with its own help desk.
+		 *
+		 * @since 5.8.0
+		 *
+		 * @param array{docs: string, support: string, ideas: string, review: string} $urls links keyed by purpose.
+		 */
+		$filtered = (array) apply_filters( 'document_feedback_urls', $urls );
+		foreach ( $urls as $key => $url ) {
+			$urls[ $key ] = isset( $filtered[ $key ] ) && is_string( $filtered[ $key ] ) ? $filtered[ $key ] : '';
+		}
+
+		return $urls;
+	}
+
+	/**
 	 * Initiates an instance of the class and adds hooks.
 	 *
 	 * @since 0.5
@@ -159,6 +194,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_abilities_api_init', array( $this, 'register_abilities' ) );
 
 		add_filter( 'update_post_term_count_statuses', array( $this, 'review_count_statuses' ), 30, 2 );
+		add_action( 'rest_api_init', array( $this, 'filter_rest_term_counts' ) );
 		add_filter( 'the_content', array( $this, 'content_filter' ), 1 );
 
 		// filter the queries to ensure readable.
@@ -211,6 +247,7 @@ class WP_Document_Revisions {
 		add_filter( 'private_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'protected_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'the_title', array( $this, 'add_revision_num_to_title' ), 20, 2 );
+		add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id' ) );
 
 		// uploads.
 		add_filter( 'attachment_link', array( $this, 'attachment_link_filter' ), 10, 2 );
@@ -759,7 +796,7 @@ class WP_Document_Revisions {
 			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conflicting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
-			</p></div>
+			</p><p>
 			<?php esc_html_e( 'You should first check whether you have multiple roles and that each has edit_documents capability.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
@@ -978,17 +1015,6 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
-		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
-		global $wp_version;
-		$vers = strpos( $wp_version, '-' );
-		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		if ( version_compare( $vers, '5.7' ) >= 0 ) {
-			// core method introduced with version 5.7. callback not needed.
-			$ucc = '';
-		} else {
-			$ucc = array( $this, 'term_count_cb' );
-		}
-
 		/**
 		 * Filters the default structure and label values of the workflow_state taxonomy on declaration.
 		 *
@@ -1006,7 +1032,7 @@ class WP_Document_Revisions {
 					'labels'                => $labels,
 					'show_ui'               => true,
 					'rewrite'               => false,
-					'update_count_callback' => $ucc,
+					'update_count_callback' => '',
 					'show_admin_column'     => true,
 					'show_in_rest'          => true,
 				)
@@ -1098,13 +1124,14 @@ class WP_Document_Revisions {
 		if ( 'document' !== get_post_type( $attach->post_parent ) ) {
 			return false;
 		}
-		// normal document attachment.
-		if ( $attach->post_title === $attach->post_name ) {
-			return true;
-		}
-		// duplicate name.
-		if ( 0 === strpos( $attach->post_name, $attach->post_title . '-' ) ) {
-			return true;
+		// Core titles an upload from its original file name and derives the slug from that title,
+		// so "My File.pdf" has title "My File" and slug "my-file". Accept either form.
+		$bases = array_unique( array( $attach->post_title, sanitize_title( $attach->post_title ) ) );
+		foreach ( $bases as $base ) {
+			// normal document attachment, or a duplicate name with core's -N suffix.
+			if ( $base === $attach->post_name || 0 === strpos( $attach->post_name, $base . '-' ) ) {
+				return true;
+			}
 		}
 		return false;
 	}

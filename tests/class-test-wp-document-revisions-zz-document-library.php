@@ -167,6 +167,8 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 		$this->assertMatchesRegularExpression( '#<thead><tr><th scope="col" class="wpdr-library__col--title">Title</th><th scope="col" class="wpdr-library__col--modified">Last Modified</th></tr></thead>#', $html );
 		$this->assertStringContainsString( '<th scope="row" class="wpdr-library__col--title">', $html );
 		$this->assertStringNotContainsString( 'By Edna Editor', $html );
+		// The table uses a short numeric date so the column stays narrow.
+		$this->assertMatchesRegularExpression( '#<time datetime="[^"]+">\d{4}/\d{2}/\d{2}</time>#', $html );
 	}
 
 	/**
@@ -195,6 +197,10 @@ class Test_WP_Document_Revisions_Zz_Document_Library extends WP_UnitTestCase {
 		$this->assertSame( 6, $settings['columns'] );
 		$this->assertSame( WP_Document_Revisions_Document_Library::MAX_DOCUMENTS, $settings['numberposts'] );
 		$this->assertSame( 'list', $settings['variant'] );
+		$this->assertSame( 'modified', $settings['orderby'] );
+
+		// Documents have no UI to set a menu order, so it isn't offered.
+		$settings = $this->library->normalize( array( 'orderby' => 'menu_order' ) );
 		$this->assertSame( 'modified', $settings['orderby'] );
 	}
 

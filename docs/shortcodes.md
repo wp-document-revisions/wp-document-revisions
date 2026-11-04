@@ -152,7 +152,7 @@ The library shows the same documents as the `[documents]` shortcode would for th
 
 The default is `title,file_type,author,modified,download`.
 
-`orderby` is `modified` (the default), `date`, `title` or `menu_order`, and `order` is `DESC` (the default) or `ASC`.
+`orderby` is `modified` (the default), `date` or `title`, and `order` is `DESC` (the default) or `ASC`.
 
 `numberposts` (with a number parameter, up to 100) is the maximum number of documents to show. The default is 10.
 

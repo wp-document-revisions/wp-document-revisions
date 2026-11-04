@@ -421,6 +421,44 @@ class Test_WP_Document_Revisions_Front_End extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Verify the document preview shortcode copes with no attributes and bare flags.
+	 */
+	public function test_document_preview_shortcode() {
+		global $current_user;
+		unset( $current_user );
+		wp_set_current_user( self::$users['editor']->ID );
+		wp_cache_flush();
+
+		global $wpdr_fe;
+		if ( ! $wpdr_fe ) {
+			$wpdr_fe = new WP_Document_Revisions_Front_End();
+		}
+
+		$id = self::$editor_public_post;
+
+		// WordPress (before 6.5) passes an empty string when the shortcode has no attributes.
+		self::assertStringContainsString( 'This is not a valid document.', $wpdr_fe->wpdr_document_preview_display( '' ), 'empty string atts' );
+		self::assertStringContainsString( 'This is not a valid document.', do_shortcode( '[document_preview]' ), 'shortcode no atts' );
+
+		self::assertStringContainsString( 'document-title', do_shortcode( '[document_preview id="' . $id . '" show_title]' ), 'shortcode bare show_title' );
+		self::assertStringContainsString( 'document-title', do_shortcode( '[document_preview id="' . $id . '" show_title="true"]' ), 'shortcode show_title true' );
+		self::assertStringNotContainsString( 'document-title', do_shortcode( '[document_preview id="' . $id . '" show_title="false"]' ), 'shortcode show_title false' );
+		self::assertStringNotContainsString( 'document-title', do_shortcode( '[document_preview id="' . $id . '"]' ), 'shortcode default show_title' );
+
+		// A bare show_download keeps the download link.
+		self::assertStringContainsString( 'document-download', do_shortcode( '[document_preview id="' . $id . '" show_download]' ), 'shortcode bare show_download' );
+
+		// The block render path (always an array) is unchanged.
+		$block = $wpdr_fe->wpdr_document_preview_display(
+			array(
+				'id'         => $id,
+				'show_title' => true,
+			)
+		);
+		self::assertStringContainsString( 'document-title', $block, 'block show_title' );
+	}
+
+	/**
 	 * Tests the documents shortcode.
 	 *
 	 * An unauthorised user cannot see post revisions.
