@@ -1,58 +1,108 @@
-#! /usr/bin/env ruby
+#!/usr/bin/env node
+/**
+ * Builds readme.txt (the WordPress.org plugin readme) from docs/*.md.
+ *
+ * Run from the repository root: script/build-readme
+ * Never edit readme.txt by hand; edit docs/ and rerun this.
+ */
 
-exclude = %w[README header _config.yml CODE_OF_CONDUCT CONTRIBUTING data-structure actions filters shortcodes changelog frequently-asked-questions block-editor SUPPORT SECURITY]
-docs_url = "https://wp-document-revisions.github.io/wp-document-revisions/"
-output = File.open("./docs/header.md").read
+const fs = require( 'fs' );
+const path = require( 'path' );
 
-# Add Description section header after the short description
-output << "\n## Description\n"
+const exclude = [
+	'README',
+	'header',
+	'_config.yml',
+	'CODE_OF_CONDUCT',
+	'CONTRIBUTING',
+	'data-structure',
+	'actions',
+	'filters',
+	'shortcodes',
+	'changelog',
+	'frequently-asked-questions',
+	'block-editor',
+	'SUPPORT',
+	'SECURITY',
+];
+const docsUrl = 'https://wp-document-revisions.github.io/wp-document-revisions/';
+const read = ( file ) => fs.readFileSync( file, 'utf8' );
 
-# Remove title, badge, and description from README
-readme = File.open("./docs/README.md").read
-readme = "\n#" + readme.split("#")[2..-1].join("#")
-output << readme
+/**
+ * Builds the readme.txt contents from a repository's docs/ folder.
+ *
+ * @param {string} root Repository root that contains docs/.
+ * @return {string} The readme.txt contents.
+ */
+function buildReadme( root ) {
+	const docs = path.join( root, 'docs' );
 
-docs = Dir["./docs/*"]
-features = docs.delete("./docs/features.md")
-docs.unshift(features)
+	let output = read( path.join( docs, 'header.md' ) );
 
-docs.each do |file|
-  next if File.directory?(file)
-  next if exclude.include?(File.basename(file,".md"))
-  output << "\n\n"
-  output << File.open(file).read
-end
+	// Add Description section header after the short description.
+	output += '\n## Description\n';
 
-# Add truncated changelog (only recent versions)
-changelog_content = File.open("./docs/changelog.md").read
-changelog_lines = changelog_content.split("\n")
-output << "\n\n"
+	// Drop the title, badges and short description from the README: keep
+	// everything from its second heading on. Trailing empty pieces are dropped,
+	// as Ruby's String#split (which this script was ported from) does.
+	const readme = read( path.join( docs, 'README.md' ) ).split( '#' );
+	while ( readme.length && readme[ readme.length - 1 ] === '' ) {
+		readme.pop();
+	}
+	output += '\n#' + readme.slice( 2 ).join( '#' );
 
-# Find first version line and include only first 5 versions
-version_count = 0
-in_changelog = false
-changelog_lines.each do |line|
-  if line.match(/^## Changelog/)
-    in_changelog = true
-  end
-  
-  if in_changelog
-    output << line + "\n"
-    if line.match(/^### \d+\.\d+/)
-      version_count += 1
-      if version_count >= 3
-        output << "\nFor complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)\n"
-        break
-      end
-    end
-  end
-end
+	// features.md goes first; the rest follow in byte order.
+	const features = path.join( docs, 'features.md' );
+	const files = fs
+		.readdirSync( docs )
+		.sort()
+		.map( ( name ) => path.join( docs, name ) )
+		.filter( ( file ) => file !== features );
+	files.unshift( features );
 
-output.gsub! /^### ?(.*?)$/im, "= \\1 ="
-output.gsub! /^## ?(.*?)$/im, "== \\1 =="
-output.gsub! /^# ?(.*?)$/im, "=== \\1 ==="
-output.gsub! /\]\(\.?\/?(.*?)\.md/, "](#{docs_url}\\1/"
+	for ( const file of files ) {
+		if ( fs.statSync( file ).isDirectory() ) {
+			continue;
+		}
+		if ( exclude.includes( path.basename( file, '.md' ) ) ) {
+			continue;
+		}
+		output += '\n\n' + read( file );
+	}
 
-File.open("readme.txt", "wb") do |file|
-  file << output
-end
+	// Add the changelog, truncated to the three most recent versions.
+	output += '\n\n';
+	let inChangelog = false;
+	let versionCount = 0;
+	for ( const line of read( path.join( docs, 'changelog.md' ) ).split( '\n' ) ) {
+		if ( /^## Changelog/.test( line ) ) {
+			inChangelog = true;
+		}
+		if ( ! inChangelog ) {
+			continue;
+		}
+		output += line + '\n';
+		if ( /^### \d+\.\d+/.test( line ) ) {
+			versionCount++;
+			if ( versionCount >= 3 ) {
+				output += `\nFor complete changelog, see [GitHub](${ docsUrl }changelog/)\n`;
+				break;
+			}
+		}
+	}
+
+	// Convert Markdown headings and doc links to readme.txt syntax.
+	output = output
+		.replace( /^### ?(.*?)$/gim, '= $1 =' )
+		.replace( /^## ?(.*?)$/gim, '== $1 ==' )
+		.replace( /^# ?(.*?)$/gim, '=== $1 ===' )
+		.replace( /\]\(\.?\/?(.*?)\.md/g, `](${ docsUrl }$1/` );
+
+	return output;
+}
+
+module.exports = { buildReadme };
+
+if ( require.main === module ) {
+	fs.writeFileSync( 'readme.txt', buildReadme( '.' ) );
+}

@@ -194,6 +194,7 @@ class WP_Document_Revisions {
 		add_action( 'wp_abilities_api_init', array( $this, 'register_abilities' ) );
 
 		add_filter( 'update_post_term_count_statuses', array( $this, 'review_count_statuses' ), 30, 2 );
+		add_action( 'rest_api_init', array( $this, 'filter_rest_term_counts' ) );
 		add_filter( 'the_content', array( $this, 'content_filter' ), 1 );
 
 		// filter the queries to ensure readable.
@@ -246,6 +247,7 @@ class WP_Document_Revisions {
 		add_filter( 'private_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'protected_title_format', array( $this, 'no_title_prepend' ), 20 );
 		add_filter( 'the_title', array( $this, 'add_revision_num_to_title' ), 20, 2 );
+		add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id' ) );
 
 		// uploads.
 		add_filter( 'attachment_link', array( $this, 'attachment_link_filter' ), 10, 2 );
@@ -333,6 +335,13 @@ class WP_Document_Revisions {
 	 */
 	public function activation_hook(): void {
 		$this->add_caps();
+		// The current user's capabilities were loaded before add_caps() gave their roles the
+		// document capabilities, so reload them. Otherwise the check below fails on every first
+		// activation (and on every WordPress Playground boot) and shows a false warning.
+		$user = wp_get_current_user();
+		if ( $user->exists() ) {
+			$user->get_role_caps();
+		}
 		flush_rewrite_rules();
 		update_option( 'wpdr_db_version', '1.0' );
 		if ( ! current_user_can( 'edit_documents' ) ) {
@@ -794,7 +803,7 @@ class WP_Document_Revisions {
 			<?php esc_html_e( 'You do not have the edit_documents capability possibly due to multiple conflicting roles or use of a custom role!', 'wp-document-revisions' ); ?>
 			</p><p>
 			<?php esc_html_e( 'The Documents menu may not be displayed completely with the "All Documents" and "Add Document" options missing', 'wp-document-revisions' ); ?>
-			</p></div>
+			</p><p>
 			<?php esc_html_e( 'You should first check whether you have multiple roles and that each has edit_documents capability.', 'wp-document-revisions' ); ?>
 			</p></div>
 			<?php
@@ -1013,17 +1022,6 @@ class WP_Document_Revisions {
 			'menu_name'         => __( 'Workflow States', 'wp-document-revisions' ),
 		);
 
-		// check whether to invoke old or new count method (Change will need #38843 - deal with beta release).
-		global $wp_version;
-		$vers = strpos( $wp_version, '-' );
-		$vers = $vers ? substr( $wp_version, 0, $vers ) : $wp_version;
-		if ( version_compare( $vers, '5.7' ) >= 0 ) {
-			// core method introduced with version 5.7. callback not needed.
-			$ucc = '';
-		} else {
-			$ucc = array( $this, 'term_count_cb' );
-		}
-
 		/**
 		 * Filters the default structure and label values of the workflow_state taxonomy on declaration.
 		 *
@@ -1041,7 +1039,7 @@ class WP_Document_Revisions {
 					'labels'                => $labels,
 					'show_ui'               => true,
 					'rewrite'               => false,
-					'update_count_callback' => $ucc,
+					'update_count_callback' => '',
 					'show_admin_column'     => true,
 					'show_in_rest'          => true,
 				)
@@ -1133,13 +1131,14 @@ class WP_Document_Revisions {
 		if ( 'document' !== get_post_type( $attach->post_parent ) ) {
 			return false;
 		}
-		// normal document attachment.
-		if ( $attach->post_title === $attach->post_name ) {
-			return true;
-		}
-		// duplicate name.
-		if ( 0 === strpos( $attach->post_name, $attach->post_title . '-' ) ) {
-			return true;
+		// Core titles an upload from its original file name and derives the slug from that title,
+		// so "My File.pdf" has title "My File" and slug "my-file". Accept either form.
+		$bases = array_unique( array( $attach->post_title, sanitize_title( $attach->post_title ) ) );
+		foreach ( $bases as $base ) {
+			// normal document attachment, or a duplicate name with core's -N suffix.
+			if ( $base === $attach->post_name || 0 === strpos( $attach->post_name, $base . '-' ) ) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -1242,6 +1241,7 @@ class WP_Document_Revisions {
 			),
 		);
 
+		$added = false;
 		foreach ( $wp_roles->role_names as $role => $label ) {
 
 			// if the role is a standard role, map the default caps, otherwise, map as a subscriber.
@@ -1265,8 +1265,15 @@ class WP_Document_Revisions {
 				// add only missing capabilities.
 				if ( ! array_key_exists( $cap, $role_caps ) ) {
 					$wp_roles->add_cap( $role, $cap, $grant );
+					$added = true;
 				}
 			}
+		}
+
+		// WP_Roles::add_cap() updates the role arrays but not the WP_Role objects that get_role()
+		// and WP_User::get_role_caps() read, so rebuild those for the rest of this request.
+		if ( $added ) {
+			$wp_roles->init_roles();
 		}
 	}
 

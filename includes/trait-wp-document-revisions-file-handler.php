@@ -58,6 +58,16 @@ trait WP_Document_Revisions_File_Handler {
 		// grab the post revision if any.
 		$version = get_query_var( 'revision' );
 
+		// The query var comes straight from the request (?revision=abc, ?revision[]=1), so accept
+		// only a whole number; anything else is treated like a revision that doesn't exist.
+		if ( $version && ( ! is_scalar( $version ) || ! preg_match( '/^\d+$/', (string) $version ) ) ) {
+			wp_die(
+				esc_html__( 'No document file is attached.', 'wp-document-revisions' ),
+				'',
+				array( 'response' => absint( $this->no_document_response_code( $post, 0 ) ) )
+			);
+		}
+
 		// if there's not a post revision given, default to the latest.
 		if ( ! $version ) {
 			$revn = $this->get_latest_revision( $post->ID );
@@ -71,7 +81,7 @@ trait WP_Document_Revisions_File_Handler {
 			}
 			$rev_id = $revn->ID;
 		} else {
-			$rev_id = $this->get_revision_id( $version, $post->ID );
+			$rev_id = $this->get_revision_id( (int) $version, $post->ID );
 		}
 
 		// ensure we use the document upload directory.
@@ -177,9 +187,16 @@ trait WP_Document_Revisions_File_Handler {
 		 * Filters a URL to send the (already authorized) request to instead of streaming the file
 		 * through PHP, e.g. a signed CDN or S3 URL for large files. Return '' to serve normally.
 		 *
-		 * The URL isn't restricted to this site, so only return URLs you trust, and prefer
-		 * short-lived signed URLs for private documents: anyone with the URL can use it until it
-		 * expires. get_raw_attachment_url() returns the attachment's storage URL.
+		 * The browser follows the redirect, so the user sees the target URL and can keep or share
+		 * it. Anyone with the URL can use it until it stops working, without the plugin's permission
+		 * checks. The URL isn't restricted to this site, so only return URLs you trust, and return
+		 * short-lived signed URLs for private documents. Don't return the attachment's storage URL
+		 * (get_raw_attachment_url()) for a document that isn't public: it doesn't expire, and it
+		 * reveals the stored file name the plugin otherwise keeps hidden.
+		 *
+		 * Redirecting skips the rest of serving: the download keeps the stored file name rather
+		 * than the document's, the document_revisions_serve_file_headers filter doesn't run, and
+		 * the document_serve_done action doesn't fire.
 		 *
 		 * @since 5.6.0
 		 *
@@ -197,6 +214,27 @@ trait WP_Document_Revisions_File_Handler {
 				return $template;
 			}
 			exit;
+		}
+
+		// Fail with a real error, before any download headers go out, if the server won't let PHP
+		// read the file. Without this, the readability check further down ends in a blank 500,
+		// which gives a site owner nothing to go on. The usual cause is file permissions, e.g.
+		// after a PHP or server upgrade starts running PHP as a different system account.
+		if ( ! is_readable( $file ) ) {
+			// Log the path for whoever runs the server, but never show it in the browser.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( sprintf( 'WP Document Revisions: PHP cannot read the file for document %d (%s). Check that the account PHP runs as has read access to it.', $post->ID, $file ) );
+
+			$msg = __( 'Sorry, this document is temporarily unavailable. Please contact the site administrator.', 'wp-document-revisions' );
+			if ( class_exists( 'WP_Document_Revisions_Validate_Structure' ) && current_user_can( WP_Document_Revisions_Validate_Structure::capability() ) ) {
+				$msg = __( 'The server could not read this document\'s file. This is usually a file-permission problem: make sure the account PHP runs as can read your document upload directory. Documents → Validate Structure lists every affected document.', 'wp-document-revisions' );
+			}
+
+			wp_die(
+				esc_html( $msg ),
+				esc_html__( 'Document unavailable', 'wp-document-revisions' ),
+				array( 'response' => 500 )
+			);
 		}
 
 		// We may override this later.
@@ -408,16 +446,6 @@ trait WP_Document_Revisions_File_Handler {
 
 		// Make sure that there is a buffer to be written on close.
 		ob_start( null, $buffsize );
-
-		// Check file readability before committing to response headers (covers both branches:
-		// compressed streaming via fopen/deflate and uncompressed via readfile/WP_Filesystem).
-		if ( ! is_readable( $file ) ) {
-			status_header( 500 );
-			if ( $under_test ) {
-				return $template;
-			}
-			exit;
-		}
 
 		// If we made it this far, just serve the file.
 		if ( $compress ) {
@@ -731,6 +759,9 @@ trait WP_Document_Revisions_File_Handler {
 		 */
 		do_action( 'document_upload_end', $attachment_id, (int) wp_get_post_parent_id( $attachment_id ) );
 
+		// At end of loading the attachment into the upload directory, so remove it.
+		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
+
 		return $metadata;
 	}
 
@@ -996,9 +1027,14 @@ trait WP_Document_Revisions_File_Handler {
 		}
 		$attachment_id = (int) $attachment_id;
 
-		// check that for a document.
+		// check that for a document. During a validated document upload, don't rely on the
+		// title/slug heuristic: missing this upload leaves the document on its old file.
 		$attach = get_post( $attachment_id );
-		if ( ! $attach || ! self::check_doc_attach( $attach ) ) {
+		if ( ! $attach ) {
+			return $metadata;
+		}
+		$is_upload = self::$document_upload && 'document' === get_post_type( $attach->post_parent );
+		if ( ! $is_upload && ! self::check_doc_attach( $attach ) ) {
 			return $metadata;
 		}
 
@@ -1014,9 +1050,6 @@ trait WP_Document_Revisions_File_Handler {
 		}
 		// add indicator to note it has been changed (so no need to reprocess).
 		$metadata['wpdr_hidden'] = 1;
-
-		// have finished loading the attachment into the upload directory, so remove it.
-		remove_filter( 'upload_dir', array( $this, 'document_upload_dir_filter' ) );
 
 		// store the attachment in postmeta for fallback on initial file load.
 		update_post_meta( $attach->post_parent, '_document_attachment_id', $attachment_id );
@@ -1174,6 +1207,13 @@ trait WP_Document_Revisions_File_Handler {
 		 * (nginx) or 'X-LiteSpeed-Location' (LiteSpeed). Only enable it when the server
 		 * is configured for it and the document directory isn't otherwise web-accessible:
 		 * the plugin has already checked permissions when the header is sent.
+		 *
+		 * If the server isn't handling the header, it reaches the browser as-is, which for
+		 * X-Sendfile reveals the file's full path, and the download is empty. Check that the
+		 * header doesn't appear in the response (e.g. with curl -I). For nginx, the location
+		 * the header points to must be marked internal.
+		 *
+		 * Like a redirect, this skips the document_serve_done action.
 		 *
 		 * @since 5.6.0
 		 *

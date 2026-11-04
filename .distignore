@@ -2,6 +2,7 @@
 /.wordpress-org
 /.git/
 /.github/
+.claude/
 .devcontainer/
 CLAUDE.md
 .distignore

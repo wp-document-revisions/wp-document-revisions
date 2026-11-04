@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# PreToolUse guard for Write: denies creating a new PHPUnit test class whose
+# filename doesn't sort after the existing suite.
+#
+# The PHPUnit suite is order-dependent: many tests assert exact document or
+# revision counts, and a new class that runs earlier leaves fixtures behind that
+# break them. New classes must sort last, so they use the "zz-" prefix
+# (file class-test-wp-document-revisions-zz-<name>.php, class
+# Test_WP_Document_Revisions_Zz_<Name>). Existing files can be rewritten freely.
+#
+# Input: the hook JSON on stdin. Output: a "deny" decision whose reason is fed
+# back to Claude, or nothing.
+
+command -v jq >/dev/null || exit 0
+file=$(jq -r '.tool_input.file_path // ""')
+[ -n "$file" ] || exit 0
+[ -e "$file" ] && exit 0
+root=$(git -C "$(dirname "$file")" rev-parse --show-toplevel 2>/dev/null) || exit 0
+rel=${file#"$root"/}
+
+case "$rel" in
+  tests/class-test-*.php) ;;
+  *) exit 0 ;;
+esac
+case "$rel" in
+  tests/class-test-wp-document-revisions-zz-*.php) exit 0 ;;
+esac
+
+name=${rel#tests/class-test-}
+name=${name#wp-document-revisions-}
+name=${name%.php}
+reason="New PHPUnit test classes must run after the existing suite, which is order-dependent (count assertions break if a new class runs earlier). Name it tests/class-test-wp-document-revisions-zz-${name}.php with class Test_WP_Document_Revisions_Zz_<Name>."
+
+jq -n --arg reason "$reason" '{
+  hookSpecificOutput: {
+    hookEventName: "PreToolUse",
+    permissionDecision: "deny",
+    permissionDecisionReason: $reason
+  }
+}'

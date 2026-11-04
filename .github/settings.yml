@@ -1,33 +1,175 @@
-# Repository settings set via https://github.com/probot/settings
-# Note: Please Don't edit this file directly.
-# Edit https://github.com/benbalter/shared-community-files instead.
+# Repository settings, synced to GitHub by the Repository Settings app
+# (https://github.com/repository-settings/app) whenever this file changes on main.
+#
+# This file is the source of truth: settings changed in the GitHub UI are
+# overwritten on the next sync. Docs for each section:
+# https://github.com/repository-settings/app/tree/master/docs/plugins
+#
+# Anyone who can merge to main can change admin-level settings through this
+# file, so CODEOWNERS plus the "main" ruleset's code-owner review rule require
+# @benbalter's approval to change it.
 
 repository:
+    # Matches the WordPress.org short description in docs/header.md.
+    description: Document management and version control for WordPress. Collaborate on files, track every revision, and auto-generate change summaries with AI.
+    homepage: https://wp-document-revisions.github.io/wp-document-revisions/
+    # Comma-separated; replaces the full topic list.
+    topics: wordpress, wordpress-plugin, document-management, version-control, revisions, documents, collaboration
     has_issues: true
+    has_discussions: true
     has_wiki: false
     has_projects: false
     has_downloads: false
+    allow_merge_commit: true
+    allow_squash_merge: true
+    allow_rebase_merge: true
+    allow_auto_merge: true
+    delete_branch_on_merge: true
+    # Dependabot alerts stay on because Renovate reads them, but Renovate opens
+    # the fixes, so Dependabot's own security-update PRs stay off.
+    enable_vulnerability_alerts: true
+    enable_automated_security_fixes: false
 
+# The app deletes any label not listed here and matches names case-sensitively,
+# so list every label, including the ones Dependabot and workflows create.
 labels:
     - name: help wanted
-      oldname: help-wanted
       color: 0e8a16
+      description: The maintainers would welcome a pull request for this
     - name: more-information-needed
       color: d93f0b
+      description: Waiting on details from the reporter before we can act
     - name: bug
       color: b60205
+      description: Something isn't working as documented
     - name: feature
       color: 1d76db
+      description: New functionality or an improvement to existing behavior
     - name: good first issue
       color: '5319e7'
+      description: A well-scoped starting point for new contributors
+    - name: wontfix
+      color: ffffff
+      description: Out of scope or not planned
+    - name: needs-maintainer-review
+      color: D93F0B
+      description: Changes behavior; needs a co-maintainer's approval before merge
+    - name: dependencies
+      color: 0025ff
+      description: Pull requests that update a dependency file
+    - name: github_actions
+      color: '000000'
+      description: Pull requests that update GitHub Actions code
+    - name: php
+      color: 45229e
+      description: Pull requests that update Php code
+    - name: javascript
+      color: '168700'
+      description: Pull requests that update javascript code
+    - name: language-packs
+      color: 0e8a16
+      description: translate.wordpress.org language pack progress
 
-# Not currently implemented by probot/settings, but manually implemented in script/deploy
-branch_protection:
-    restrictions: null
-    enforce_admins: false
-    required_status_checks:
-        strict: true
-        contexts:
-            - 'continuous-integration/travis-ci'
-    required_pull_request_reviews:
-        require_code_owner_reviews: true
+# The app sends each ruleset to GitHub's rulesets API as written, matching on
+# name, and DELETES any repository ruleset not listed here. Keep every ruleset
+# in this list, including disabled ones. tests/js/repo-settings.test.js checks
+# that the required status checks still name jobs in ci.yml, since renaming a
+# job would otherwise block every merge on a check that never runs.
+rulesets:
+    - name: main
+      target: branch
+      enforcement: active
+      conditions:
+          ref_name:
+              include: ['~DEFAULT_BRANCH']
+              exclude: []
+      bypass_actors:
+          - actor_id: null
+            actor_type: OrganizationAdmin
+            bypass_mode: always
+      rules:
+          - type: deletion
+          - type: pull_request
+            parameters:
+                allowed_merge_methods: [merge, squash, rebase]
+                dismiss_stale_reviews_on_push: false
+                dismissal_restriction:
+                    allowed_actors: []
+                    enabled: false
+                require_code_owner_review: true
+                require_extra_approval_for_unattributed_changes: false
+                require_last_push_approval: false
+                required_approving_review_count: 0
+                required_review_thread_resolution: false
+                required_reviewers: []
+          - type: code_scanning
+            parameters:
+                code_scanning_tools:
+                    - tool: CodeQL
+                      alerts_threshold: errors
+                      security_alerts_threshold: high_or_higher
+          - type: copilot_code_review
+            parameters:
+                review_draft_pull_requests: false
+                review_on_push: false
+          # Jobs in ci.yml with stable names that run on every pull request,
+          # forks included. The PHPUnit jobs are left out because their names
+          # come from the version matrix and change whenever it does.
+          # integration_id 15368 is GitHub Actions.
+          - type: required_status_checks
+            parameters:
+                strict_required_status_checks_policy: false
+                do_not_enforce_on_create: false
+                required_status_checks:
+                    - context: code-quality
+                      integration_id: 15368
+                    - context: JavaScript Tests
+                      integration_id: 15368
+                    - context: E2E Tests
+                      integration_id: 15368
+                    - context: Plugin Check
+                      integration_id: 15368
+                    - context: Verify readme.txt is up to date
+                      integration_id: 15368
+                    - context: Scoper pipeline smoke test
+                      integration_id: 15368
+
+    # Only admins can create, move or delete v* tags, since pushing one deploys
+    # to WordPress.org (see CLAUDE.md).
+    - name: release tags
+      target: tag
+      enforcement: active
+      conditions:
+          ref_name:
+              include: ['refs/tags/v*']
+              exclude: []
+      bypass_actors:
+          - actor_id: null
+            actor_type: OrganizationAdmin
+            bypass_mode: always
+          - actor_id: 5
+            actor_type: RepositoryRole
+            bypass_mode: always
+      rules:
+          - type: creation
+          - type: update
+          - type: deletion
+
+    # Disabled. Listed only so the app doesn't delete it.
+    - name: Code Quality Copilot review for default branch
+      target: branch
+      enforcement: disabled
+      conditions:
+          ref_name:
+              include: ['~DEFAULT_BRANCH']
+              exclude: []
+      bypass_actors: []
+      rules:
+          - type: copilot_code_review
+            parameters:
+                review_draft_pull_requests: true
+                review_on_push: true
+
+# The "wordpress-org" deployment environment, which holds the SVN credentials,
+# only accepts v* tags and main, and needs @benbalter's approval for each
+# deploy, is managed in the GitHub UI and left out of this file.

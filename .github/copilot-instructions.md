@@ -93,8 +93,7 @@ When making changes, ALWAYS test these core workflows:
 - All existing PHPUnit tests must pass
 - All Jest unit tests must pass
 - All Playwright E2E tests must pass
-- PHP compatibility tested across versions 7.2-8.3
-- WordPress compatibility tested with latest and 4.9 minimum versions
+- PHP and WordPress compatibility tested across the matrix in `.github/workflows/ci.yml`, down to the minimums in the `wp-document-revisions.php` header
 - CI uses a two-stage pipeline: fast checks (lint, audit, Jest) gate slow checks (PHPUnit, E2E)
 
 ## Security Guidelines
@@ -173,12 +172,11 @@ wp-document-revisions/
 - Always check `class-wp-document-revisions.php` after making core functionality changes
 - Always check `class-wp-document-revisions-admin.php` after making admin interface changes
 - Review `wp-document-revisions.php` for any plugin-level configuration changes
-- For a release, update the version in `wp-document-revisions.php` (the `Version:` header, `@version`, and `WPDR_VERSION`) and `Stable tag:` in `docs/header.md`, then run `script/build-readme` to regenerate `readme.txt`. Never edit `readme.txt` by hand. Releases happen only after the owner approves them
+- For a release, update the version in `wp-document-revisions.php` (the `Version:` header, `@version`, and `WPDR_VERSION`), `Stable tag:` in `docs/header.md`, and `package.json`/`package-lock.json` (`npm version <x.y.z> --no-git-tag-version`), then run `script/build-readme` to regenerate `readme.txt`. Never edit `readme.txt` by hand. Releases happen only after the owner approves them
 
 ### Dependencies and Requirements
 
-- **PHP**: 7.2+ (tested up to 8.3)
-- **WordPress**: 4.9+ (tested up to latest)
+- **PHP** and **WordPress**: the `Requires PHP` and `Requires at least` headers in `wp-document-revisions.php` set the minimums
 - **Database**: MySQL 5.7+ or MariaDB equivalent
 - **Development Tools**: Composer, PHPUnit, PHPCS with WordPress standards
 
