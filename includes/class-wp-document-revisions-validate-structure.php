@@ -151,7 +151,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Type     Warning
  * Message  The document has images or other media attached to it that are not document files.
  * Fixable  Yes
- * Cause    Before 5.9.1 a featured image, or an image added to the description, uploaded on the document was attached to it.
+ * Cause    Before 5.8.3 a featured image, or an image added to the description, uploaded on the document was attached to it.
  *          These are identified as an attachment of the document that is not referenced as a document file (WPDR marker
  *          in the document or a revision, or the attachment meta) but is the featured image, or is referenced in the
  *          post_content of the document or of one of its revisions (wp-image-N / wp-att-N class, block id, gallery ids,
@@ -1423,7 +1423,7 @@ class WP_Document_Revisions_Validate_Structure {
 	/**
 	 * Identifies media (featured image, description images) attached to a document.
 	 *
-	 * Before 5.9.1 an image uploaded on the document edit screen, other than a document file, was
+	 * Before 5.8.3 an image uploaded on the document edit screen, other than a document file, was
 	 * attached to the document. These are attachments of the document that are not one of its
 	 * document files but are:
 	 * - the document's featured image, or
@@ -1433,7 +1433,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * Media no longer referenced anywhere cannot be told from orphan document files this way.
 	 *
-	 * @since 5.9.1
+	 * @since 5.8.3
 	 *
 	 * @param int $doc_id id of the document post object.
 	 * @return array<int, int> map of attachment id => attachment id.
@@ -1541,7 +1541,7 @@ class WP_Document_Revisions_Validate_Structure {
 		/**
 		 * Filters the attachments of a document identified as media (not document files).
 		 *
-		 * @since 5.9.1
+		 * @since 5.8.3
 		 *
 		 * @param array<int, int> $media  map of attachment id => attachment id.
 		 * @param int             $doc_id document post ID.

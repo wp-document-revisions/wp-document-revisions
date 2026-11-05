@@ -101,7 +101,7 @@ class WP_Document_Revisions {
 	 *
 	 * @var string
 	 *
-	 * @since 5.9.1
+	 * @since 5.8.3
 	 */
 	private static $media_upload_url = '';
 

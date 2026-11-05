@@ -131,16 +131,16 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	/**
 	 * Creates an attachment as media_handle_upload() does.
 	 *
-	 * @param int    $parent post parent.
-	 * @param string $url    guid.
+	 * @param int    $parent_id post parent.
+	 * @param string $url       guid.
 	 * @return int
 	 */
-	private function attachment( $parent, $url ) {
+	private function attachment( $parent_id, $url ) {
 		return self::factory()->attachment->create(
 			array(
 				'guid'           => $url,
 				'post_mime_type' => 'image/jpeg',
-				'post_parent'    => $parent,
+				'post_parent'    => $parent_id,
 			)
 		);
 	}

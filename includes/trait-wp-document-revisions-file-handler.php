@@ -773,7 +773,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * document. Only document file uploads (flagged with upload_source, see filename_rewrite())
 	 * belong there, so unparent_media_upload() uses this to detach the others.
 	 *
-	 * @since 5.9.1
+	 * @since 5.8.3
 	 * @param mixed $upload the result of wp_handle_upload().
 	 * @return mixed the result, unchanged.
 	 */
@@ -792,7 +792,7 @@ trait WP_Document_Revisions_File_Handler {
 	 * Only the attachment of the file just uploaded (matched on its URL) is changed, so document
 	 * files and attachments created by other code (imports, tests) keep their parent.
 	 *
-	 * @since 5.9.1
+	 * @since 5.8.3
 	 * @param mixed $data                sanitized post data to be inserted.
 	 * @param mixed $postarr             sanitized post data passed to wp_insert_post().
 	 * @param mixed $unsanitized_postarr post data as originally passed to wp_insert_post().
@@ -834,7 +834,7 @@ trait WP_Document_Revisions_File_Handler {
 		 * By default these (featured images, images in the description) are not attached to the document,
 		 * so they can never be mistaken for one of its document files.
 		 *
-		 * @since 5.9.1
+		 * @since 5.8.3
 		 *
 		 * @param bool  $keep   whether to keep the document as the attachment's parent. Default false.
 		 * @param int   $parent the document id.
