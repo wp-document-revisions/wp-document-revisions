@@ -93,6 +93,19 @@ class WP_Document_Revisions {
 	private static $document_upload = false;
 
 	/**
+	 * URL of the file just uploaded in this request that is not a document file (a featured
+	 * image or an image for the description), or '' if none is pending.
+	 *
+	 * Set when WordPress has moved the file into place and used, then cleared, when its
+	 * attachment record is created.
+	 *
+	 * @var string
+	 *
+	 * @since 5.9.1
+	 */
+	private static $media_upload_url = '';
+
+	/**
 	 * Identify if processing document or image directory.
 	 *
 	 * @return bool
@@ -254,6 +267,11 @@ class WP_Document_Revisions {
 		add_filter( 'get_attached_file', array( $this, 'get_attached_file_filter' ), 10, 2 );
 		add_filter( 'wp_handle_upload_prefilter', array( $this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
+		// Only document files are attached to a document; other uploads made on it are not.
+		add_filter( 'wp_handle_upload', array( $this, 'note_media_upload' ), 20, 1 );
+		// WP 6.0+ filters attachments with wp_insert_attachment_data; 5.9 with wp_insert_post_data.
+		add_filter( 'wp_insert_attachment_data', array( $this, 'unparent_media_upload' ), 10, 3 );
+		add_filter( 'wp_insert_post_data', array( $this, 'unparent_media_upload' ), 10, 3 );
 		// Hide slug by changing metadata name - do early in case of WPML.
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'hide_doc_attach_slug' ), 5, 3 );
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'end_document_upload' ), 20, 2 );

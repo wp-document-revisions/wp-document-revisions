@@ -489,7 +489,7 @@ trait WP_Document_Revisions_Admin_Editor {
 
 
 	/**
-	 * Callback to unlink loaded featured image.
+	 * Callback on saving a document: recovers its attachment link, workflow state and guid.
 	 *
 	 * @since 3.3
 	 * @param int $doc_id the ID of the post being edited.
@@ -509,22 +509,8 @@ trait WP_Document_Revisions_Admin_Editor {
 		if ( false !== $parent ) {
 			$doc_id = $parent;
 		}
-		// if document has featured image loaded with document, then make sure it has no parent
-		// done after we make sure that we have doc_id being parent.
-		$thumb = get_post_meta( $doc_id, '_thumbnail_id', true );
-		if ( $thumb > 0 ) {
-			global $wpdb;
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			$post_table = "{$wpdb->posts}";
-			$sql        = $wpdb->prepare(
-				"UPDATE `$post_table` SET `post_parent` = 0 WHERE `id` = %d AND `post_parent` = %d ",
-				$thumb,
-				$doc_id
-			);
-			$wpdb->query( $sql );
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
-			clean_post_cache( $thumb );
-		}
+		// Featured images (and description images) are no longer attached to the document
+		// when uploaded, see unparent_media_upload().
 
 		$wpdr = self::$parent;
 		// find the attachment id now (as content might be cached) and we might delete the cache.

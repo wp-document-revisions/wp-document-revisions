@@ -22,7 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This underlying document is held as an attachment WP post type.
  * Each new version of the document will be uploaded as an attachment to the original document post.
  * Therefore all attachments and document revisions will have their post_parent set to the original document post.
- * [Note. If a featured image is loaded then it would also have its attachment post with post_parent. This is explicitly set to 0 on loading.]
+ * [Note. A featured image or an image for the description uploaded on the document is created with post_parent 0, as if it had
+ *  been added to the Media Library first. Older documents may still have such images attached to them - see code 17.]
  * The attachment record contains the link to actual data file.
  * The actual attachment to use is held in the post_content field.
  * Whilst it is normal that the latest loaded attachment, this is not necessarily so if a revision is reverted.
@@ -144,6 +145,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Message  The document contains additional document files that are inaccessible. They should be deleted to reduce storage.
  * Fixable  Yes
  * Cause    Document files have been uploaded without the document post being saved. Or multiple uploads have been done before a document save.
+ *          Attachments identified as media (see code 17) are never included.
+ *
+ * Code     17
+ * Type     Warning
+ * Message  The document has images or other media attached to it that are not document files.
+ * Fixable  Yes
+ * Cause    Before 5.9.1 a featured image, or an image added to the description, uploaded on the document was attached to it.
+ *          These are identified as an attachment of the document that is not referenced as a document file (WPDR marker
+ *          in the document or a revision, or the attachment meta) but is the featured image, or is referenced in the
+ *          post_content of the document or of one of its revisions (wp-image-N / wp-att-N class, block id, gallery ids,
+ *          or the URL of the file or one of its generated sizes).
+ *          The fix detaches them (post_parent 0), as if added to the Media Library first. Nothing is deleted.
+ *          Checked before codes 15 and 14, as their fixes would otherwise rename/move or delete these files.
  */
 
 /**
@@ -429,6 +443,31 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 		}
 
+		if ( 17 === $params['code'] ) {
+			// Media (featured image, description images) attached to the document.
+			// revalidate input values.
+			$media = ( $id === $parm ) ? self::identify_media_children( $id ) : array();
+			if ( empty( $media ) ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
+
+			// Detach them, as if added to the Media Library first. Direct SQL so no hooks run.
+			$ids = implode( ',', array_map( 'intval', $media ) );
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->posts} SET post_parent = 0 WHERE post_type = 'attachment' AND post_parent = %d AND ID IN ( $ids )",
+					$id
+				)
+			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+			foreach ( $media as $attach_id ) {
+				clean_post_cache( $attach_id );
+			}
+			clean_post_cache( $id );
+			wp_cache_delete( $id, 'document_revisions' );
+		}
+
 		if ( 7 === $params['code'] ) {
 			// Attachment file in wrong location (media not document).
 			// revalidate input values.
@@ -588,7 +627,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @var int[]
 	 */
-	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15 );
+	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17 );
 
 	/**
 	 * Checks every document and returns the problems found.
@@ -934,6 +973,18 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 		}
 
+		// if otherwise no error, look for media (featured image, description images) attached to the document.
+		// Checked first, as the fixes for codes 15 and 14 would rename/move or delete these files.
+		if ( ! $att_error && self::identify_media_children( $doc_id ) ) {
+			$att_error = array(
+				'code'  => 17,
+				'error' => 0,
+				'msg'   => __( 'The document has images or other media attached to it that are not document files. They should be detached from it.', 'wp-document-revisions' ),
+				'fix'   => 1,
+				'parm'  => $doc_id,
+			);
+		}
+
 		// if otherwise no error, look for document files stored under unhashed names.
 		if ( ! $att_error && apply_filters( 'document_validate_md5', true ) && self::identify_unhashed_files( $doc_id ) ) {
 			$att_error = array(
@@ -1094,6 +1145,8 @@ class WP_Document_Revisions_Validate_Structure {
 			)
 		);
 		$children = array_map( 'intval', array_values( (array) $children ) );
+		// Media attached to the document (featured image, description images) are not document files.
+		$children = array_values( array_diff( $children, self::identify_media_children( $doc_id ) ) );
 		if ( empty( $children ) ) {
 			return false;
 		}
@@ -1267,6 +1320,9 @@ class WP_Document_Revisions_Validate_Structure {
 		$attachs = wp_list_pluck( $attachs, 'ID', 'ID' );
 		$all_att = $attachs + array( $attach_id => $attach_id );
 
+		// Media attached to the document (featured image, description images) are never orphans.
+		$attachs = array_diff_key( $attachs, self::identify_media_children( $doc_id ) );
+
 		// get a list of revisions.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$revns = $wpdb->get_results(
@@ -1332,9 +1388,15 @@ class WP_Document_Revisions_Validate_Structure {
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 
+		// Media attached to the document (featured image, description images) are not document files.
+		$media = self::identify_media_children( $doc_id );
+
 		$unhashed = array();
 		foreach ( $attachs as $attach_id ) {
 			$attach_id = (int) $attach_id;
+			if ( isset( $media[ $attach_id ] ) ) {
+				continue;
+			}
 			// where the file belongs (document directory).
 			$target = self::check_document_folder( (string) get_attached_file( $attach_id ) );
 			$file   = $target;
@@ -1356,6 +1418,135 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		return $unhashed;
+	}
+
+	/**
+	 * Identifies media (featured image, description images) attached to a document.
+	 *
+	 * Before 5.9.1 an image uploaded on the document edit screen, other than a document file, was
+	 * attached to the document. These are attachments of the document that are not one of its
+	 * document files but are:
+	 * - the document's featured image, or
+	 * - referenced in the post_content of the document or one of its revisions, by a wp-image-N or
+	 *   wp-att-N class, an "id"/"mediaId" in a block comment, a gallery shortcode's ids, or the
+	 *   URL of the file (or of its original or generated sizes) - e.g. in an <img src> or <a href>.
+	 *
+	 * Media no longer referenced anywhere cannot be told from orphan document files this way.
+	 *
+	 * @since 5.9.1
+	 *
+	 * @param int $doc_id id of the document post object.
+	 * @return array<int, int> map of attachment id => attachment id.
+	 */
+	private static function identify_media_children( int $doc_id ): array {
+		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$children = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID
+				 FROM {$wpdb->posts}
+				 WHERE post_type = 'attachment'
+				 AND post_parent = %d
+				",
+				$doc_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		if ( empty( $children ) ) {
+			return array();
+		}
+		$children = array_map( 'intval', $children );
+		$children = array_combine( $children, $children );
+
+		// content of the document and its revisions (descriptions may have changed over time).
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$contents = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT post_content
+				 FROM {$wpdb->posts}
+				 WHERE ID = %d
+				 OR ( post_type = 'revision' AND post_parent = %d )
+				",
+				$doc_id,
+				$doc_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+
+		// Document files are never media.
+		$wpdr = self::$parent;
+		unset( $children[ absint( get_post_meta( $doc_id, '_document_attachment_id', true ) ) ] );
+		foreach ( $contents as $content ) {
+			unset( $children[ absint( $wpdr->extract_document_id( (string) $content ) ) ] );
+		}
+		if ( empty( $children ) ) {
+			return array();
+		}
+
+		$content = implode( "\n", array_map( 'strval', $contents ) );
+
+		// ids referenced in the content.
+		$ids     = array( absint( get_post_meta( $doc_id, '_thumbnail_id', true ) ) );
+		$matches = array();
+		if ( preg_match_all( '/\bwp-(?:image|att)-(\d+)\b/', $content, $matches ) ) {
+			$ids = array_merge( $ids, $matches[1] );
+		}
+		if ( preg_match_all( '/<!--\s+wp:\S+\s+\{[^>]*?"(?:id|mediaId)":(\d+)/', $content, $matches ) ) {
+			$ids = array_merge( $ids, $matches[1] );
+		}
+		if ( preg_match_all( '/\[gallery[^\]]*?\bids=["\']?([\d,\s]+)/', $content, $matches ) ) {
+			foreach ( $matches[1] as $list ) {
+				$ids = array_merge( $ids, preg_split( '/[\s,]+/', $list, -1, PREG_SPLIT_NO_EMPTY ) );
+			}
+		}
+		$ids = array_flip( array_map( 'intval', $ids ) );
+
+		$media = array();
+		foreach ( $children as $attach_id ) {
+			if ( isset( $ids[ $attach_id ] ) ) {
+				$media[ $attach_id ] = $attach_id;
+				continue;
+			}
+
+			// is the file (or one of its sizes) referenced by URL.
+			$file = (string) get_post_meta( $attach_id, '_wp_attached_file', true );
+			if ( '' === $file || '' === $content ) {
+				continue;
+			}
+			$dir   = dirname( $file );
+			$dir   = ( '.' === $dir ) ? '' : trailingslashit( $dir );
+			$names = array( wp_basename( $file ) );
+			$meta  = get_post_meta( $attach_id, '_wp_attachment_metadata', true );
+			if ( is_array( $meta ) ) {
+				if ( ! empty( $meta['original_image'] ) ) {
+					$names[] = (string) $meta['original_image'];
+				}
+				if ( ! empty( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
+					foreach ( $meta['sizes'] as $size ) {
+						if ( is_array( $size ) && ! empty( $size['file'] ) ) {
+							$names[] = (string) $size['file'];
+						}
+					}
+				}
+			}
+			foreach ( array_unique( $names ) as $name ) {
+				// a path segment of a URL, ending at a quote, whitespace, query or fragment.
+				if ( preg_match( '#/' . preg_quote( $dir . $name, '#' ) . '(?=["\'\s?\#)<]|$)#', $content ) ) {
+					$media[ $attach_id ] = $attach_id;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters the attachments of a document identified as media (not document files).
+		 *
+		 * @since 5.9.1
+		 *
+		 * @param array<int, int> $media  map of attachment id => attachment id.
+		 * @param int             $doc_id document post ID.
+		 */
+		return (array) apply_filters( 'document_validate_media_children', $media, $doc_id );
 	}
 
 	/**
@@ -1467,7 +1658,10 @@ class WP_Document_Revisions_Validate_Structure {
 				'<p>' . __( 'The nature of the web technology used to deliver WordPress means that if you know the name of the file held on the server then you can access the file directly', 'wp-document-revisions' ) . '<br/>' .
 				__( 'It is a design feature of this plugin that you should only be able to access a document if you go via WordPress itself.', 'wp-document-revisions' ) . '<br/>' .
 				__( 'So to deliver this the plugin changes the file name to an md5-encoded file name and then hides it from you when using the application.', 'wp-document-revisions' ) . '</p><p>' .
-				__( 'The fix is therefore to md5-encode the file name.', 'wp-document-revisions' ) . '</p>',
+				__( 'The fix is therefore to md5-encode the file name.', 'wp-document-revisions' ) . '</p><p>' .
+				__( 'Images uploaded on the document for its featured image or its description were attached to the document by earlier versions of the plugin.', 'wp-document-revisions' ) . '<br/>' .
+				__( 'These are found when they are the featured image or are used in the description (of the document or of one of its revisions).', 'wp-document-revisions' ) . '<br/>' .
+				__( 'The fix detaches them from the document, as if they had been added to the Media Library first. Nothing is deleted.', 'wp-document-revisions' ) . '</p>',
 		);
 
 		// loop through each tab in the help array and add.
