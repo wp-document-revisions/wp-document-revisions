@@ -144,6 +144,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Message  The document contains additional document files that are inaccessible. They should be deleted to reduce storage.
  * Fixable  Yes
  * Cause    Document files have been uploaded without the document post being saved. Or multiple uploads have been done before a document save.
+ *          A newer orphan that looks like a document upload is reported as code 16 instead.
+ *
+ * Code     15
+ * Type     Warning
+ * Message  Some of this document's files (current or earlier versions) are stored under their original file names.
+ * Fixable  Yes
+ * Cause    Document files (current or earlier versions) are not stored under an MD5-format (hashed) name, so anyone who can guess
+ *          their address may download them directly. Typically files loaded before hashing applied, or by a filter or another process.
+ *          The fix renames each such file (and its attachment record) to a hashed name in the document directory.
+ *          Only tested when the document_validate_md5 filter is true (default). Checked before the orphan tests (codes 16 and 14).
+ *
+ * Code     16
+ * Type     Warning
+ * Message  A newer file was uploaded for this document but never linked to it, so the document still serves the older file.
+ * Fixable  Yes
+ * Cause    An orphan attachment (not referenced by the document or any of its revisions) has a hashed (document file) name and an
+ *          id higher than the current document file. So it was uploaded later, but the document was not updated to use it
+ *          (e.g. #858, where the attachment title did not match its slug).
+ *          The fix links the newest such file to the document, as for code 4. Any remaining orphans are then reported as code 14.
+ *          It is part of the orphan check, so it is tested last, only when the document_check_orphans filter is true (default),
+ *          and only considers attachments that the orphan check would report as code 14.
  */
 
 /**
