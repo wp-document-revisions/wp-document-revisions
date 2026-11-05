@@ -18,11 +18,8 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v7
 
-            - name: Setup Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  ruby-version: '4.0.7'
-
+            # script/build-readme only uses Node's built-in modules, so the
+            # runner's preinstalled Node is enough.
             - name: Build readme
               run: script/build-readme
 

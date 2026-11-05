@@ -25,6 +25,10 @@ repository:
     allow_rebase_merge: true
     allow_auto_merge: true
     delete_branch_on_merge: true
+    # Dependabot alerts stay on because Renovate reads them, but Renovate opens
+    # the fixes, so Dependabot's own security-update PRs stay off.
+    enable_vulnerability_alerts: true
+    enable_automated_security_fixes: false
 
 # The app deletes any label not listed here and matches names case-sensitively,
 # so list every label, including the ones Dependabot and workflows create.
@@ -66,10 +70,106 @@ labels:
       color: 0e8a16
       description: translate.wordpress.org language pack progress
 
-# Branch protection for main lives in the "main" repository ruleset, managed in
-# the GitHub UI. The app's ruleset support is experimental, and listing any
-# ruleset here would delete the ones not listed, so rulesets are left out.
-# The same goes for the "release tags" tag ruleset (only admins can create,
-# move or delete v* tags) and the "wordpress-org" deployment environment,
-# which holds the SVN credentials, only accepts v* tags and main, and needs
-# @benbalter's approval for each deploy.
+# The app sends each ruleset to GitHub's rulesets API as written, matching on
+# name, and DELETES any repository ruleset not listed here. Keep every ruleset
+# in this list, including disabled ones. tests/js/repo-settings.test.js checks
+# that the required status checks still name jobs in ci.yml, since renaming a
+# job would otherwise block every merge on a check that never runs.
+rulesets:
+    - name: main
+      target: branch
+      enforcement: active
+      conditions:
+          ref_name:
+              include: ['~DEFAULT_BRANCH']
+              exclude: []
+      bypass_actors:
+          - actor_id: null
+            actor_type: OrganizationAdmin
+            bypass_mode: always
+      rules:
+          - type: deletion
+          - type: pull_request
+            parameters:
+                allowed_merge_methods: [merge, squash, rebase]
+                dismiss_stale_reviews_on_push: false
+                dismissal_restriction:
+                    allowed_actors: []
+                    enabled: false
+                require_code_owner_review: true
+                require_extra_approval_for_unattributed_changes: false
+                require_last_push_approval: false
+                required_approving_review_count: 0
+                required_review_thread_resolution: false
+                required_reviewers: []
+          - type: code_scanning
+            parameters:
+                code_scanning_tools:
+                    - tool: CodeQL
+                      alerts_threshold: errors
+                      security_alerts_threshold: high_or_higher
+          - type: copilot_code_review
+            parameters:
+                review_draft_pull_requests: false
+                review_on_push: false
+          # Jobs in ci.yml with stable names that run on every pull request,
+          # forks included. The PHPUnit jobs are left out because their names
+          # come from the version matrix and change whenever it does.
+          # integration_id 15368 is GitHub Actions.
+          - type: required_status_checks
+            parameters:
+                strict_required_status_checks_policy: false
+                do_not_enforce_on_create: false
+                required_status_checks:
+                    - context: code-quality
+                      integration_id: 15368
+                    - context: JavaScript Tests
+                      integration_id: 15368
+                    - context: E2E Tests
+                      integration_id: 15368
+                    - context: Plugin Check
+                      integration_id: 15368
+                    - context: Verify readme.txt is up to date
+                      integration_id: 15368
+                    - context: Scoper pipeline smoke test
+                      integration_id: 15368
+
+    # Only admins can create, move or delete v* tags, since pushing one deploys
+    # to WordPress.org (see CLAUDE.md).
+    - name: release tags
+      target: tag
+      enforcement: active
+      conditions:
+          ref_name:
+              include: ['refs/tags/v*']
+              exclude: []
+      bypass_actors:
+          - actor_id: null
+            actor_type: OrganizationAdmin
+            bypass_mode: always
+          - actor_id: 5
+            actor_type: RepositoryRole
+            bypass_mode: always
+      rules:
+          - type: creation
+          - type: update
+          - type: deletion
+
+    # Disabled. Listed only so the app doesn't delete it.
+    - name: Code Quality Copilot review for default branch
+      target: branch
+      enforcement: disabled
+      conditions:
+          ref_name:
+              include: ['~DEFAULT_BRANCH']
+              exclude: []
+      bypass_actors: []
+      rules:
+          - type: copilot_code_review
+            parameters:
+                review_draft_pull_requests: true
+                review_on_push: true
+
+# The "wordpress-org" deployment environment, which holds the SVN credentials,
+# only accepts v* tags and main, and needs @benbalter's approval for each
+# deploy, is managed in the GitHub UI and left out of this file.

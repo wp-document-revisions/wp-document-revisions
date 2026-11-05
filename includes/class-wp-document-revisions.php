@@ -335,6 +335,13 @@ class WP_Document_Revisions {
 	 */
 	public function activation_hook(): void {
 		$this->add_caps();
+		// The current user's capabilities were loaded before add_caps() gave their roles the
+		// document capabilities, so reload them. Otherwise the check below fails on every first
+		// activation (and on every WordPress Playground boot) and shows a false warning.
+		$user = wp_get_current_user();
+		if ( $user->exists() ) {
+			$user->get_role_caps();
+		}
 		flush_rewrite_rules();
 		update_option( 'wpdr_db_version', '1.0' );
 		if ( ! current_user_can( 'edit_documents' ) ) {
@@ -1234,6 +1241,7 @@ class WP_Document_Revisions {
 			),
 		);
 
+		$added = false;
 		foreach ( $wp_roles->role_names as $role => $label ) {
 
 			// if the role is a standard role, map the default caps, otherwise, map as a subscriber.
@@ -1257,8 +1265,15 @@ class WP_Document_Revisions {
 				// add only missing capabilities.
 				if ( ! array_key_exists( $cap, $role_caps ) ) {
 					$wp_roles->add_cap( $role, $cap, $grant );
+					$added = true;
 				}
 			}
+		}
+
+		// WP_Roles::add_cap() updates the role arrays but not the WP_Role objects that get_role()
+		// and WP_User::get_role_caps() read, so rebuild those for the rest of this request.
+		if ( $added ) {
+			$wp_roles->init_roles();
 		}
 	}
 
