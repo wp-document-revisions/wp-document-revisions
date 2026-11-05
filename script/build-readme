@@ -29,6 +29,59 @@ const docsUrl = 'https://wp-document-revisions.github.io/wp-document-revisions/'
 const read = ( file ) => fs.readFileSync( file, 'utf8' );
 
 /**
+ * Converts fenced code blocks to indented ones and Markdown headings to
+ * readme.txt headings.
+ *
+ * WordPress.org's readme parser doesn't understand fenced code blocks: it
+ * reads a backtick at the start of a line as inline code, so a fence turns
+ * into an empty block followed by the code as a paragraph, where WordPress
+ * curls quotes and turns `--flag` into an en dash. Indented code blocks are
+ * the form it renders as <pre><code>. A fence inside a list item is indented
+ * past the item's own indent, so the code stays part of the item.
+ *
+ * Headings are converted in the same pass so a `#` comment inside a code
+ * block stays a comment.
+ *
+ * @param {string} text Markdown to convert.
+ * @return {string} The converted text.
+ */
+function convertCodeAndHeadings( text ) {
+	const FENCE_MARK = '\u0000';
+	let fence = null;
+	const lines = text.split( '\n' ).map( ( line ) => {
+		if ( fence ) {
+			if ( line.trim() === fence.marker ) {
+				fence = null;
+				return FENCE_MARK;
+			}
+			if ( line.trim() === '' ) {
+				return '';
+			}
+			return ' '.repeat( fence.indent ) + line.replace( new RegExp( `^ {0,${ fence.strip }}` ), '' );
+		}
+
+		const open = line.match( /^(\s*)(```|~~~)/ );
+		if ( open ) {
+			const strip = open[ 1 ].length;
+			const listIndent = strip === 0 ? 0 : 4 * Math.floor( ( strip + 3 ) / 4 );
+			fence = { marker: open[ 2 ], strip, indent: listIndent + 4 };
+			return FENCE_MARK;
+		}
+
+		return line
+			.replace( /^### ?(.*?)$/, '= $1 =' )
+			.replace( /^## ?(.*?)$/, '== $1 ==' )
+			.replace( /^# ?(.*?)$/, '=== $1 ===' );
+	} );
+	if ( fence ) {
+		throw new Error( 'unclosed code fence' );
+	}
+
+	// Replace each fence line, and the blank lines around it, with one blank line.
+	return lines.join( '\n' ).replace( new RegExp( `\\n*(?:${ FENCE_MARK }\\n*)+`, 'g' ), '\n\n' );
+}
+
+/**
  * Builds the readme.txt contents from a repository's docs/ folder.
  *
  * @param {string} root Repository root that contains docs/.
@@ -91,12 +144,7 @@ function buildReadme( root ) {
 		}
 	}
 
-	// Convert Markdown headings and doc links to readme.txt syntax.
-	output = output
-		.replace( /^### ?(.*?)$/gim, '= $1 =' )
-		.replace( /^## ?(.*?)$/gim, '== $1 ==' )
-		.replace( /^# ?(.*?)$/gim, '=== $1 ===' )
-		.replace( /\]\(\.?\/?(.*?)\.md/g, `](${ docsUrl }$1/` );
+	output = convertCodeAndHeadings( output ).replace( /\]\(\.?\/?(.*?)\.md/g, `](${ docsUrl }$1/` );
 
 	return output;
 }

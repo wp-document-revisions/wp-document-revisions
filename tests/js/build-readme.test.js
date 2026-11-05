@@ -147,6 +147,40 @@ describe( 'build-readme', () => {
 		expect( output ).toContain( `[FAQ](${ DOCS_URL }frequently-asked-questions/)` );
 	} );
 
+	test( 'converts fenced code blocks to indented ones', () => {
+		const output = build( {
+			'installation.md': [
+				'Run:',
+				'',
+				'```bash',
+				'# clone it',
+				'git clone --depth 1 "x"',
+				'```',
+				'',
+				'~~~php',
+				'echo 1;',
+				'~~~',
+				'',
+			].join( '\n' ),
+		} );
+		expect( output ).toContain( 'Run:\n\n    # clone it\n    git clone --depth 1 "x"\n\n    echo 1;\n\n' );
+		expect( output ).not.toMatch( /^(```|~~~)/m );
+		expect( output ).not.toContain( '=== clone it ===' );
+	} );
+
+	test( 'indents fences inside list items past the item indent', () => {
+		const output = build( {
+			'installation.md': '1. Step\n\n   ```sh\n   ls -la\n   ```\n\n2. Next\n',
+		} );
+		expect( output ).toContain( '1. Step\n\n        ls -la\n\n2. Next' );
+	} );
+
+	test( 'fails on an unclosed code fence', () => {
+		const dir = fixture( { 'installation.md': '```sh\nls\n' } );
+		dirs.push( dir );
+		expect( () => buildReadme( dir ) ).toThrow( 'unclosed code fence' );
+	} );
+
 	// Ruby's String#split, which the script was ported from, drops trailing
 	// empty pieces, so a README ending in "#" loses those characters.
 	test( 'drops trailing # characters from the README like the Ruby original', () => {
