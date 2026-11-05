@@ -335,9 +335,6 @@ class WP_Document_Revisions {
 	 */
 	public function activation_hook(): void {
 		$this->add_caps();
-		// Rebuild the current user's capabilities using the updated roles.
-		wp_get_current_user()->get_role_caps();
-
 		flush_rewrite_rules();
 		update_option( 'wpdr_db_version', '1.0' );
 		if ( ! current_user_can( 'edit_documents' ) ) {
