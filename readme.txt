@@ -144,11 +144,9 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 
 For development or contributing:
 
-```bash
-git clone https://github.com/wp-document-revisions/wp-document-revisions.git
-cd wp-document-revisions
-composer install --no-dev
-```
+    git clone https://github.com/wp-document-revisions/wp-document-revisions.git
+    cd wp-document-revisions
+    composer install --no-dev
 
 = ⚙️ Requirements =
 
@@ -221,23 +219,21 @@ Every part of the behavior is filterable. See [Filters](https://wp-document-revi
 
 = Example: route "Under Review" to a review team =
 
-```php
-add_filter(
-	'document_notification_recipients',
-	function ( $emails, $doc_id, $event, $actor_id ) {
-		if ( 'state_change' !== $event ) {
-			return $emails;
-		}
-		$states = wp_get_object_terms( $doc_id, 'workflow_state', array( 'fields' => 'names' ) );
-		if ( in_array( 'Under Review', $states, true ) ) {
-			$emails[] = 'review-team@example.com';
-		}
-		return $emails;
-	},
-	10,
-	4
-);
-```
+    add_filter(
+    	'document_notification_recipients',
+    	function ( $emails, $doc_id, $event, $actor_id ) {
+    		if ( 'state_change' !== $event ) {
+    			return $emails;
+    		}
+    		$states = wp_get_object_terms( $doc_id, 'workflow_state', array( 'fields' => 'names' ) );
+    		if ( in_array( 'Under Review', $states, true ) ) {
+    			$emails[] = 'review-team@example.com';
+    		}
+    		return $emails;
+    	},
+    	10,
+    	4
+    );
 
 == Delivery ==
 
