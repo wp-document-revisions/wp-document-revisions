@@ -46,6 +46,7 @@ See [**the full list of features**](./features.md) for more information.
 - **[Plugin Actions](./actions.md)** - Available WordPress actions
 - **[Plugin Filters](./filters.md)** - Available WordPress filters
 - **[Plugin Shortcodes and Widget](./shortcodes.md)** - Display documents on your site
+- **[Document Notifications](./notifications.md)** - Email people when a document changes state or gets a new revision
 - **[Useful Plugins and Tools](./useful-plugins-and-tools.md)** - Extend functionality
 - **[Cookbook](./cookbook/README.md)** - Integration guides and recipes
 - **[Translations](./translations.md)** - Multi-language support

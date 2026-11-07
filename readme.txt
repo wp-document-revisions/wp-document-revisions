@@ -51,6 +51,7 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - **[Plugin Actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/)** - Available WordPress actions
 - **[Plugin Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/)** - Available WordPress filters
 - **[Plugin Shortcodes and Widget](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/)** - Display documents on your site
+- **[Document Notifications](https://wp-document-revisions.github.io/wp-document-revisions/notifications/)** - Email people when a document changes state or gets a new revision
 - **[Useful Plugins and Tools](https://wp-document-revisions.github.io/wp-document-revisions/useful-plugins-and-tools/)** - Extend functionality
 - **[Cookbook](https://wp-document-revisions.github.io/wp-document-revisions/cookbook/README/)** - Integration guides and recipes
 - **[Translations](https://wp-document-revisions.github.io/wp-document-revisions/translations/)** - Multi-language support
@@ -111,7 +112,9 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 - Opt-in email notifications when a document changes workflow state or gains a new revision, with a configurable recipient list (see [Document Notifications](https://wp-document-revisions.github.io/wp-document-revisions/notifications/))
 
-= Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) =
+= Features Available via the Code Cookbook =
+
+The [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) has sample code for these:
 
 - **Audit Trail** - creates check in / check out audit trail for all documents
 - **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
@@ -122,6 +125,153 @@ See [**the full list of features**](https://wp-document-revisions.github.io/wp-d
 - **Track Changes** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 - **Change Tracker** - Auto-generates and appends revision summaries for changes to taxonomies, title, and visibility
 - **WPML Support** - Integration with WPML
+
+
+== Frequently Asked Questions ==
+
+= I'm a user/developer/administrator... can I contribute? =
+
+Of course. Please! WP Document Revisions is an open source project and is supported by the efforts of an entire community. We'd love for you to get involved. Whatever your level of skill or however much time you can give, your contribution is greatly appreciated. Check out the "[How to Contribute" page](https://github.com/wp-document-revisions/wp-document-revisions/wiki/How-to-Contribute) for more information.
+
+= Does it work on Mac? PC? Mobile? =
+
+WP Document Revisions should work on just about any system with a browser. You can easily collaborate between, Mac, PC, and even Linux systems. Mobile browsers, such as iOS or Android should be able to download files, but may not be able to upload new versions in all cases.
+
+= What are the different levels of visibility? =
+
+Each document can have one of three "visibilities":
+
+- Private - visible only to logged in users (this can be further refined either based on users or based on the document's status)
+- Password Protected - Non-logged in users can view files, but they will require a document-specific password
+- Public - Anyone with the document's URL can download and view the file
+
+= How many people can access a document at a time? =
+
+A virtually unlimited number of people can _view_ a document at the same time, but only one user can _edit_ a document at a time.
+
+= While a file is "checked out" can others view it? What about a previous versions? =
+
+Yes.
+
+= Is there a time limit for checking out a file? =
+
+No. So long as the user remains on the document page (it's okay if the window is minimized, etc.), the user will retain the file lock. By default, administrators can override this lock at any time. The origin lock-holder will receive a notification.
+
+= Does it keep track of each individual's changes? =
+
+Yes and no. It will track who uploaded each version of the file, and will provide an opportunity to describe those changes. For more granular history, the plugin is designed to work with a format's unique history features, such as tracked changes in Microsoft Word.
+
+= How do permissions work? =
+
+There are default permissions (based off the default post permissions), but they can be overridden either with third-party plugins such as the [Members plugin](https://wordpress.org/plugins/members/), or for developers, via the <code>document_caps</code> filter.
+
+= What types of documents can my team collaborate on? =
+
+In short, any. By default, WordPress accepts [most common file types](http://en.support.wordpress.com/accepted-filetypes/), but this can easily by modified to accept just about any file type. In WordPress multisite, the allowed file types are set on the Network Admin page. In non-multisite installs, you can simply install a 3d party plugin to do the same. The only other limitation may be maximum file size, which can be modified in your php.ini file or directly in wp-config.php
+
+= Are the documents I upload secure? =
+
+WP Document Revisions was built from the ground up with security in mind. Each request for a file is run through WordPress's time-tested and proven authentication system (the same system that prevents private or un-published posts from being viewed) and documents filenames are hashed upon upload, thus preventing them from being accessed directly. For additional security, you can move the document upload folder above the web root, (via settings->media->document upload folder). Because WP Document Revisions relies on a custom capability, user permissions can be further refined to prevent certain user roles from accessing certain documents.
+
+= Is there any additional documentation? =
+
+In the top right corner of the edit document screen (where you upload the document or make other changes) and on the document list (where you can search or sort documents), there is a small menu labeled "help". Both should provide some contextual guidance. Additional information may be available on the [WP Document Revisions page](http://ben.balter.com/2011/08/29/document-management-version-control-for-wordpress/).
+
+= What happens if I lose internet connectivity while I have a file checked out? =
+
+WP Document Revisions will "ping" the server every minute to let it know that you have the file open. If for some reason you lose connectivity, the server will give you roughly a two minute grace period before it lifts the file lock. If it's brief (e.g., WiFi disconnected), you should be fine, but if it's for an extended period of time (e.g., a flight), you may find that someone else has checked the file out. You do not need to re-download the file (if no one else has modified it), simply remain on the document page to maintain the file lock.
+
+= How do I show documents on the front end of my site? =
+
+Add the Document Library block, or the `[document_library]` shortcode, to any post or page. It lists documents as a list, a table or a grid of cards, shows only the documents each visitor can read, and lets you pick which details appear, such as workflow state, author and revision count. The plugin also has blocks and shortcodes for a document's revisions and for recently revised documents. See [Shortcodes and blocks](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/).
+
+You can also link straight to any public document. Its permalink always serves the latest revision. Because documents are WordPress posts, a list of the documents each user can see is at yourdomain.com/documents/, and many built-in WordPress features, such as search and archives, work with them.
+
+For a fully custom front end, developers can use the `get_documents()` and `get_document_revisions()` functions and the plugin's [actions](https://wp-document-revisions.github.io/wp-document-revisions/actions/) and [filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/).
+
+= Can WP Document Revisions work in my language? =
+
+Yes! WP Document Revisions is fully internationalized, and WordPress installs its translations automatically as language packs. Translations are contributed by volunteers on [translate.wordpress.org](https://wp-document-revisions.github.io/wp-document-revisions/https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/). If your language isn't complete yet, you can help: see [Translations](./translations/) for how to review and suggest translations. It only takes a WordPress.org account.
+
+= Will it work with WordPress Multisite? =
+
+Yes! Each site can have its own document repository (with the ability to give users different permissions on each repository), or you can create one shared document repository across all sites.
+
+= Will it work over HTTPS (SSL)? =
+
+Yes. Just follow the [standard WordPress SSL instructions](https://wordpress.org/support/article/administration-over-ssl/).
+
+= Can I tag my documents? What about categories or some other grouping? =
+
+Yes. You can use the [Simple Taxonomy Refreshed plugin](https://wordpress.org/plugins/simple-taxonomy-refreshed/) to add taxonomies, or can share your existing taxonomies (e.g., the ones you use for posts) with documents.
+
+= Can I put my documents in folders? =
+
+WP Document Revisions doesn't use the traditional folder metaphor to organize files. Instead, the same document can be described multiple ways, or in folder terms, be in multiple folders at once. This gives you more control over your documents and how they are organized. You can add a folder taxonomy with the [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/) plugin. Just add the taxonomy with a post type of "Documents", and as the "Hierarchical" set to True.
+
+Since a document can have many categories assigned at the same time, this is logically equivalent to being in many folders simultaneously.
+
+= What if I want even more control over my workflow? =
+
+Take a look at the [Edit Flow Plugin](https://wordpress.org/plugins/edit-flow/) which allows you to set up notifications based on roles, in-line comments, assign all sorts of metadata to posts, create a team calendar, budget, etc. WP Document Revisions will detect if [Edit Flow](http://ben.balter.com/2011/10/24/advanced-workflow-management-tools-for-wp-document-revisions/) is installed and activated, and will adapt accordingly (removing the workflow-state dialogs, registering documents with Edit Flow, etc.). If you're looking for even more control over your team's work flow, using the two plugins in conjunction is the way to go.
+
+Equally the [PublishPress Plugin](https://publishpress.com), a fork of Edit Flow, is detected and can be used with WP Document Revisions in exactly the same manner as Edit Flow.
+
+= I want some small changes to the processing, but there are few configuration options. How do I do this? =
+
+Yes, there are few Settings. However there are many filters that allows processing to be configured to your requirement. These are described [here](https://wp-document-revisions.github.io/wp-document-revisions/filters/). This will need some coding to be done.
+
+= Can I make it so that users can only access documents assigned to them (or documents that they create)? =
+
+Yes. Each document has an "owner" which can be changed from a dialog on the edit-document screen at the time you create it, or later in the process (by default, the document owner is the person that creates it). If the document is marked as private, only users with the read_private_documents capability can access it. Out of the box, this is set to Authors and below, but you can customize things via the [Members plugin](https://wordpress.org/plugins/members/) (head over to roles after installing).
+
+= How do I use the documents shortcode? =
+
+In a post or page, simply type `[documents]` to display a list of documents.
+More information is on [this](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/) page.
+
+= How do I use the document revisions shortcode? =
+
+In a post or page, simply type `[document_revisions id="100"]` where ID is the ID of the document for which you would like to list revisions.
+More information is on [this](https://wp-document-revisions.github.io/wp-document-revisions/shortcodes/) page.
+
+= How do I use the recently revised documents widget? =
+
+Go to your theme's widgets page (if your theme supports widgets), and drag the widget to a sidebar of you choice. Once in a sidebar, you will be presented with options to customize the widget's functionality.
+
+= How do I use the `get_documents` function in my theme or plugin? =
+
+Simply call `get_documents()`. Get documents accepts an array of [Standard WP_Query parameters](https://developer.wordpress.org/reference/classes/wp_query/#parameters) as an argument. Use it as you would get_posts. It returns an array of document objects. The `post_content` of each document object is the attachment ID of the revision. `get_permalink()` with that document's ID will also get the proper document permalink (e.g., to link to the document).
+
+= How do I use the `get_document_revisions` function in my theme or plugin? =
+
+Simply call `get_document_revisions( 100 )` where 100 represents the ID of the document you'd like to query. The function returns an array of revisions objects. Each revisions's `post_content` represents the ID of that revisions attachment object. `get_permalink()` should work with that revision's ID to get the revision permalink (e.g., to link to the revision directly).
+
+= Can I set the upload directory on multisite installs if I don't want to network activate the plugin? =
+
+Yes. There's a plugin in the [WP Document Revisions Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) to help with that. Just install and network activate.
+
+= Can I limit access to documents based on workflow state, department, or some other custom taxonomy? =
+
+Yes. Download (and optionally customize) the [taxonomy permissions](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/taxonomy-permissions.php) plugin from the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook). Out of the box, it will register a "departments" taxonomy (which can be easily changed at the top of the file, if you want to limit access by a different taxonomy), and will create additional permissions based on that taxonomy's terms using WordPress's built-in capabilities system. So for example, instead simply looking at `edit_document` to determine permissions, it will also look at `edit_document_in_marketing`, for example. You can create additional roles and assign capabilities using a plugin like [Members](https://wordpress.org/plugins/members).
+
+= Is it possible to do a bulk import of existing documents / files already on the server? =
+
+Yes. It will need to be slightly customized to meet your needs, but take a look at the [Bulk Import Script](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook/blob/master/bulk-import.php) in the code cookbook.
+
+= Can I use the block editor (Gutenberg) with documents? =
+
+Yes. Block editor support is opt-in — by default, documents use the classic editor, which provides a streamlined, purpose-built upload interface. To enable the block editor, add both the `document_show_in_rest` and `document_use_block_editor` filters to your theme's `functions.php` or a custom plugin. See the [Block Editor Support](https://wp-document-revisions.github.io/wp-document-revisions/block-editor/) page for full details, including known limitations.
+
+= What happens when I delete (uninstall) the plugin? =
+
+WP Document Revisions includes an `uninstall.php` that runs when the plugin is deleted from the WordPress admin. It removes plugin options (`document_upload_directory`, `document_slug`, `document_link_date`, `wpdr_db_version`), user meta (feed keys), and all 13 custom document capabilities from every role. Your uploaded document files and document posts are **not** deleted — only the plugin's settings and capabilities are cleaned up.
+
+= What is the Abilities API? =
+
+Starting with WordPress 6.9, the plugin registers 4 document abilities (`check-document-access`, `get-document-info`, `get-document-revisions`, `override-document-lock`) via the WordPress Abilities API. These make document operations discoverable by REST clients, AI agents, and the WordPress command palette. The abilities are feature-gated and only registered when WordPress 6.9+ is detected.
+
+The three read-only abilities (`check-document-access`, `get-document-info`, `get-document-revisions`) are also exposed to AI agents over the [Model Context Protocol](https://modelcontextprotocol.io/) when the [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter) is installed — no separate MCP server is required. Every request still runs through the same per-document permission checks (`read_document`, `read_document_revisions`), so agents only ever see documents the authenticated user is allowed to read. The `override-document-lock` ability changes state and is deliberately **not** exposed over MCP, keeping the agent-facing surface read-only.
 
 
 == Installation ==
@@ -177,130 +327,11 @@ Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-r
 - **[How to Contribute](https://wp-document-revisions.github.io/wp-document-revisions/CONTRIBUTING/)** - Join our community
 
 
-=== Document Notifications ===
-
-WP Document Revisions can email interested people when a document moves through your workflow — when it **changes workflow state** (for example, moved to *Under Review* or *Approved*) or when a **new revision** is saved. This turns workflow states from passive labels into an active review loop: the reviewer actually hears about it.
-
-Notifications are **opt-in and disabled by default**, so enabling the plugin (or upgrading) never starts sending mail on its own.
-
-== Enabling notifications ==
-
-Notifications are configured under **Settings → Media**, in the **Document Notifications** section:
-
-- **Email notifications when documents change** — the master switch. Off by default; nothing is sent until you turn it on.
-- **Notify these email addresses** — a site-wide recipient list (one address per line, or comma-separated).
-- **Notify when a document changes workflow state** — on by default (only takes effect once the master switch is on).
-- **Notify when a new revision of a document is saved** — off by default.
-
-== Who gets notified ==
-
-For each event, the recipients are:
-
-- everyone on the site-wide recipient list, **plus**
-- the document's author,
-
-with two rules always applied:
-
-- **the person who made the change is never notified of their own change**, and
-- duplicate and invalid addresses are removed.
-
-Each recipient receives their own copy — the recipient list is never exposed to the others, and no stray copy is sent to the site administrator.
-
-> **Note on bulk edits:** because a notification is sent per document, changing the workflow state of many documents at once (for example, a bulk edit) sends one notification per document. Use the `document_notification_recipients` filter to suppress or reroute mail in that situation if needed.
-
-== Customizing with filters ==
-
-Every part of the behavior is filterable. See [Filters](https://wp-document-revisions.github.io/wp-document-revisions/filters/) for full signatures. In brief:
-
-- `document_notify_enabled`, `document_notify_on_state_change`, `document_notify_on_new_revision` — force-enable or force-disable the master switch and each event.
-- `document_notification_recipients` — receives `( array $emails, int $doc_id, string $event, int $actor_id )`. This is the seam for advanced routing: notify prior editors, or route by workflow state (e.g. send *Under Review* transitions to a review team).
-- `document_notification_subject`, `document_notification_message` — customize the email subject and body.
-- `document_notification_headers` — add email headers (e.g. a `From:` or `Reply-To:`).
-
-= Example: route "Under Review" to a review team =
-
-    add_filter(
-    	'document_notification_recipients',
-    	function ( $emails, $doc_id, $event, $actor_id ) {
-    		if ( 'state_change' !== $event ) {
-    			return $emails;
-    		}
-    		$states = wp_get_object_terms( $doc_id, 'workflow_state', array( 'fields' => 'names' ) );
-    		if ( in_array( 'Under Review', $states, true ) ) {
-    			$emails[] = 'review-team@example.com';
-    		}
-    		return $emails;
-    	},
-    	10,
-    	4
-    );
-
-== Delivery ==
-
-Notifications are sent through WordPress's standard `wp_mail()`. On sites with high mail volume or a slow mail server, install a transactional-email/SMTP plugin so delivery does not add latency to saving a document.
-
-
 == Screenshots ==
 
 1. Every document keeps a complete, audited revision history — who changed what and when, each with a summary and one-click restore.
 2. Manage all your documents in one place — see each document's owner, workflow state, and who currently has it checked out, and filter by state or owner.
 3. Model your team's review process with fully customizable workflow states.
-
-
-== Translations ==
-
-**Help bring WP Document Revisions to your language.** Translations are managed on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/), and WordPress installs them automatically as language packs, so every translated string reaches every site using that language. No coding or GitHub account is needed. A free WordPress.org account is enough.
-
-= The most helpful thing you can do: review suggestions =
-
-Thirty languages already have a nearly complete set of suggested translations waiting for review. Some carry over from the plugin's earlier translators, and most are machine translations that need a fluent speaker to check them. A language pack is published once a language reaches 90% approved translations, so reviewing is the fastest way to get the plugin working in your language.
-
-1. Sign in with your [WordPress.org account](https://login.wordpress.org/register).
-2. Open the [plugin's translation project](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) and choose your language.
-3. Filter by **Waiting** to see the suggestions, then fix anything that reads wrong. You can also translate any untranslated strings.
-4. To approve suggestions yourself, [request Project Translation Editor access](https://make.wordpress.org/polyglots/handbook/plugin-theme-authors-guide/pte-request/) for your language, or ask your language's [local Polyglots team](https://make.wordpress.org/polyglots/teams/) to review them.
-
-New to translating WordPress? The [Polyglots handbook](https://make.wordpress.org/polyglots/handbook/translating/) covers the basics, including each language's style guide and glossary.
-
-= Found a bad translation? =
-
-Suggest a better one on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/) rather than opening a pull request. Translation files bundled with the plugin are overridden by WordPress.org language packs, so fixes belong there.
-
-Thanks to everyone who has contributed translations, including:
-
-- French - [Hubert CAMPAN](http://omnimaki.com/)
-- Spanish - [IBIDEM GROUP](https://www.ibidemgroup.com), [TradiArt](http://www.tradiart.com/), and [elarequi](http://www.labitacoradeltigre.com)
-- Norwegian - Daniel Haugen
-- German -[Konstantin Obenland](http://en.wp.obenland.it/)
-- Chinese - Tim Ren
-- Swedish - Daniel Kroon, [Examinare AB](http://www.examinare.biz/), Sweden.
-- Czech - Hynek Šťavík
-- Italian - @guterboit
-- Russian - Evgeny Vlasov
-- Dutch - @tijscruysen
-
-
-== Useful plugins and tools ==
-
-= Permissions management =
-
-- [Members - Membership & User Role Editor Plugin](https://wordpress.org/plugins/members/)
-
-  (Previously called Members)
-
-= Taxonomy management =
-
-- [Simple Taxonomy Refreshed](https://wordpress.org/plugins/simple-taxonomy-refreshed/)
-
-= Email notification and distribution =
-
-- [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/)
-
-= Document workflow management =
-
-- [Edit Flow](https://wordpress.org/plugins/edit-flow/)
-- [PublishPress Statuses](https://wordpress.org/plugins/publishpress-statuses/)
-- [PublishPress Revisions](https://wp-document-revisions.github.io/wp-document-revisions/https://wordpress.org/plugins/publishpress-revisions/) - See the [integration guide](cookbook/publishpress-revisions-integration/) for scheduling document revisions
 
 
 == Changelog ==

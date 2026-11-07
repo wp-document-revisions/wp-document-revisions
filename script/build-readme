@@ -20,11 +20,17 @@ const exclude = [
 	'filters',
 	'shortcodes',
 	'changelog',
-	'frequently-asked-questions',
 	'block-editor',
 	'SUPPORT',
 	'SECURITY',
+	// WordPress.org folds every section without its own tab into Description,
+	// which it cuts off after 2,500 words. These have their own pages on the
+	// docs site, which the README links to.
+	'notifications',
+	'translations',
+	'useful-plugins-and-tools',
 ];
+const descriptionWordLimit = 2500;
 const docsUrl = 'https://wp-document-revisions.github.io/wp-document-revisions/';
 const read = ( file ) => fs.readFileSync( file, 'utf8' );
 
@@ -143,6 +149,38 @@ function buildReadme( root ) {
 	}
 
 	output = convertCodeAndHeadings( output ).replace( /\]\(\.?\/?(.*?)\.md/g, `](${ docsUrl }$1/` );
+
+	// The readme parser shows a link in a heading as raw Markdown.
+	const linkedHeading = output.match( /^=+ .*\]\(.*=+$/m );
+	if ( linkedHeading ) {
+		throw new Error(
+			`WordPress.org shows links in headings as raw Markdown; move the link out of: ${ linkedHeading[ 0 ] }`
+		);
+	}
+
+	// Fail here rather than ship a plugin page that ends mid-sentence. The
+	// readme parser counts words split on whitespace. Installation, FAQ,
+	// Screenshots, Changelog and Upgrade Notice get their own tabs (FAQ and
+	// Changelog get 5,000 words each); every other section counts toward
+	// Description's 2,500.
+	const tabbed = [ 'Installation', 'Frequently Asked Questions', 'FAQ', 'Screenshots', 'Changelog', 'Upgrade Notice' ];
+	let words = 0;
+	let inTab = true;
+	for ( const line of output.split( '\n' ) ) {
+		const section = line.match( /^== (.*) ==$/ );
+		if ( section ) {
+			inTab = tabbed.includes( section[ 1 ] );
+		}
+		if ( ! inTab ) {
+			words += line.split( /\s+/ ).filter( Boolean ).length;
+		}
+	}
+	if ( words > descriptionWordLimit ) {
+		throw new Error(
+			`Description is ${ words } words; WordPress.org cuts it off at ${ descriptionWordLimit }. ` +
+				'Shorten a doc, or add one that has its own page on the docs site to the exclude list.'
+		);
+	}
 
 	return output;
 }

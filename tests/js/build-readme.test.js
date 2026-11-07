@@ -135,6 +135,27 @@ describe( 'build-readme', () => {
 		);
 	} );
 
+	test( 'fails on a link inside a heading', () => {
+		expect( () =>
+			build( { 'installation.md': '### See [the docs](https://example.com)\n' } )
+		).toThrow( /links in headings/ );
+	} );
+
+	test( 'fails when Description runs past the WordPress.org word limit', () => {
+		expect( () =>
+			build( { 'installation.md': '## Extra\n\n' + 'word '.repeat( 2501 ) } )
+		).toThrow( /Description is \d+ words/ );
+	} );
+
+	test( 'does not count tabbed sections toward the Description limit', () => {
+		expect( () =>
+			build( {
+				'frequently-asked-questions.md':
+					'## Frequently Asked Questions\n\n' + 'word '.repeat( 3000 ),
+			} )
+		).not.toThrow();
+	} );
+
 	test( 'converts Markdown headings to readme.txt headings', () => {
 		const output = build( { 'installation.md': '# One\n## Two\n### Three\n' } );
 		expect( output ).toContain( '=== One ===\n== Two ==\n= Three =\n' );
