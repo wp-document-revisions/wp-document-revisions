@@ -127,8 +127,9 @@ describe( 'build-readme', () => {
 		expect( output ).toContain( '= 4.0.0 =' );
 		expect( output ).toContain( '= 3.0.0 =' );
 		expect( output ).toContain( '= 2.0.0 =' );
-		expect( output ).not.toContain( '* Two.' );
+		expect( output ).toContain( '* Two.' );
 		expect( output ).not.toContain( '1.0.0 =' );
+		expect( output ).not.toContain( '* One.' );
 		expect( output ).toContain(
 			`For complete changelog, see [GitHub](${ DOCS_URL }changelog/)`
 		);

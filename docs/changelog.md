@@ -2,6 +2,13 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.8.3
+
+* Activating the plugin for the first time no longer shows a false "You do not have the edit_documents capability" warning. On WordPress Playground, including the Live Preview on WordPress.org, the plugin activates on every visit, so every session showed it. (#887, #890) Thanks to [@NeilWJames](https://github.com/NeilWJames) for reporting it.
+* When the server can't read a document's file, for example after a PHP upgrade changes the account PHP runs as, opening the document now shows a message explaining that the file isn't readable, instead of a blank error page. (#885, #889)
+* The plugin no longer bundles its Norwegian (Bokmål), Polish and Turkish translations. WordPress now installs these from translate.wordpress.org language packs, so nothing changes on sites using those languages. (#894)
+* Code examples on the WordPress.org plugin page now display as code. (#901)
+
 ### 5.8.2
 
 * Security: WordPress's embed lookup (oEmbed) gave out the stored file name of a document's files. Document files sit in the uploads folder by default, so on sites that don't block that folder, anyone could use the name to download the file of a password-protected document, or any earlier version of a published one. The embed lookup now refuses document files, and visitors who can't edit a document see the document's title instead of a file's stored name ([GHSA-5452-pc3q-85f6](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-5452-pc3q-85f6)).

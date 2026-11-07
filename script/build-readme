@@ -134,14 +134,12 @@ function buildReadme( root ) {
 		if ( ! inChangelog ) {
 			continue;
 		}
-		output += line + '\n';
-		if ( /^### \d+\.\d+/.test( line ) ) {
-			versionCount++;
-			if ( versionCount >= 3 ) {
-				output += `\nFor complete changelog, see [GitHub](${ docsUrl }changelog/)\n`;
-				break;
-			}
+		// Stop at the fourth version's heading, so the third keeps its entries.
+		if ( /^### \d+\.\d+/.test( line ) && ++versionCount > 3 ) {
+			output += `For complete changelog, see [GitHub](${ docsUrl }changelog/)\n`;
+			break;
 		}
+		output += line + '\n';
 	}
 
 	output = convertCodeAndHeadings( output ).replace( /\]\(\.?\/?(.*?)\.md/g, `](${ docsUrl }$1/` );
