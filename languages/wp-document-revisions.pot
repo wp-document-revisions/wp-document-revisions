@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-04T19:00:33+00:00\n"
+"POT-Creation-Date: 2026-11-04T19:49:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-document-revisions\n"
@@ -1378,32 +1378,32 @@ msgstr ""
 msgid "You are not authorized to access that file."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:221
+#: includes/trait-wp-document-revisions-file-handler.php:228
 msgid "Sorry, this document is temporarily unavailable. Please contact the site administrator."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:223
+#: includes/trait-wp-document-revisions-file-handler.php:230
 msgid "The server could not read this document's file. This is usually a file-permission problem: make sure the account PHP runs as can read your document upload directory. Documents → Validate Structure lists every affected document."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:228
+#: includes/trait-wp-document-revisions-file-handler.php:235
 msgid "Document unavailable"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:240
+#: includes/trait-wp-document-revisions-file-handler.php:247
 #: includes/trait-wp-document-revisions-rewrites.php:134
 msgid "-revision-"
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:415
+#: includes/trait-wp-document-revisions-file-handler.php:422
 msgid "Sorry, Output buffer exists with data. Filewriting suppressed."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:421
+#: includes/trait-wp-document-revisions-file-handler.php:428
 msgid "Sorry, Output has already been written, so your file cannot be downloaded."
 msgstr ""
 
-#: includes/trait-wp-document-revisions-file-handler.php:1518
+#: includes/trait-wp-document-revisions-file-handler.php:1532
 msgid "Sorry, this is a private feed."
 msgstr ""
 
