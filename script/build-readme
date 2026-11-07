@@ -9,27 +9,17 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 
-const exclude = [
-	'README',
-	'header',
-	'_config.yml',
-	'CODE_OF_CONDUCT',
-	'CONTRIBUTING',
-	'data-structure',
-	'actions',
-	'filters',
-	'shortcodes',
-	'changelog',
-	'block-editor',
-	'SUPPORT',
-	'SECURITY',
-	// WordPress.org folds every section without its own tab into Description,
-	// which it cuts off after 2,500 words. These have their own pages on the
-	// docs site, which the README links to.
-	'notifications',
-	'translations',
-	'useful-plugins-and-tools',
-];
+// The docs that go into readme.txt, in order, after the README. Docs missing
+// from this list stay on the docs site only, so a new doc has to be added
+// here to ship on WordPress.org.
+//
+// WordPress.org gives Installation, Frequently Asked Questions, Screenshots
+// and Changelog their own tabs and folds every other section into
+// Description, which it cuts off after 2,500 words. So developer docs
+// (actions, filters, shortcodes, block editor, data structure) and long
+// how-tos (notifications, translations, useful plugins and tools) stay on the
+// docs site, where the README links to them.
+const sections = [ 'features', 'frequently-asked-questions', 'installation', 'links', 'screenshots' ];
 const descriptionWordLimit = 2500;
 const docsUrl = 'https://wp-document-revisions.github.io/wp-document-revisions/';
 const read = ( file ) => fs.readFileSync( file, 'utf8' );
@@ -110,21 +100,10 @@ function buildReadme( root ) {
 	}
 	output += '\n#' + readme.slice( 2 ).join( '#' );
 
-	// features.md goes first; the rest follow in byte order.
-	const features = path.join( docs, 'features.md' );
-	const files = fs
-		.readdirSync( docs )
-		.sort()
-		.map( ( name ) => path.join( docs, name ) )
-		.filter( ( file ) => file !== features );
-	files.unshift( features );
-
-	for ( const file of files ) {
-		if ( fs.statSync( file ).isDirectory() ) {
-			continue;
-		}
-		if ( exclude.includes( path.basename( file, '.md' ) ) ) {
-			continue;
+	for ( const name of sections ) {
+		const file = path.join( docs, `${ name }.md` );
+		if ( ! fs.existsSync( file ) ) {
+			throw new Error( `Missing docs/${ name }.md; remove it from the sections list in script/build-readme if it was deleted on purpose.` );
 		}
 		output += '\n\n' + read( file );
 	}
