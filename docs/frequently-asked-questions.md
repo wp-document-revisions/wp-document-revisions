@@ -52,23 +52,23 @@ In the top right corner of the edit document screen (where you upload the docume
 
 WP Document Revisions will "ping" the server every minute to let it know that you have the file open. If for some reason you lose connectivity, the server will give you roughly a two minute grace period before it lifts the file lock. If it's brief (e.g., WiFi disconnected), you should be fine, but if it's for an extended period of time (e.g., a flight), you may find that someone else has checked the file out. You do not need to re-download the file (if no one else has modified it), simply remain on the document page to maintain the file lock.
 
-### Do you have any plans to implement a front end?
+### How do I show documents on the front end of my site?
 
-In short, "no", because each site's use would be radically different. Although, you can always link directly to the permalink of any public document, which will always point the latest revision and is available on the document edit screen (right click on the "download" link), or through the add-link wizard when editing a post or page (simply search for the document you want). The long answer, is "it's really easy to adapt a front end to your needs." There are more than 35 document-specific API hooks, and the plugin exposes two global functions, `get_documents()` and `get_document_revisions()`, all of which are designed to allow plugin and theme developers to extend the plugins native functionality (details below). Looking for a slightly more out-of-the-box solution? One site I know of uses a combination of two plugins [count shortcode](https://wordpress.org/plugins/count-shortcode/), which can make a front end to browse documents, especially in coordination with a [faceted search widget](https://wordpress.org/plugins/faceted-search-widget/).
+Add the Document Library block, or the `[document_library]` shortcode, to any post or page. It lists documents as a list, a table or a grid of cards, shows only the documents each visitor can read, and lets you pick which details appear, such as workflow state, author and revision count. The plugin also has blocks and shortcodes for a document's revisions and for recently revised documents. See [Shortcodes and blocks](shortcodes.md).
 
-### No really, how do I present documents on the front end?
+You can also link straight to any public document. Its permalink always serves the latest revision. Because documents are WordPress posts, a list of the documents each user can see is at yourdomain.com/documents/, and many built-in WordPress features, such as search and archives, work with them.
 
-A chronological list of all documents a user has access to can be seen at yourdomain.com/documents/. Moreover, because documents are really posts, many built in WordPress features should work and public documents should act similar to posts on the front end (searching, archives, etc.). The plugin comes with a customizable recently revised documents widget, as well as two shortcodes to display documents and document revisions (details below).
+For a fully custom front end, developers can use the `get_documents()` and `get_document_revisions()` functions and the plugin's [actions](actions.md) and [filters](filters.md).
 
 ### Can WP Document Revisions work in my language?
 
 Yes! WP Document Revisions is fully internationalized, and WordPress installs its translations automatically as language packs. Translations are contributed by volunteers on [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-document-revisions/). If your language isn't complete yet, you can help: see [Translations](./translations.md) for how to review and suggest translations. It only takes a WordPress.org account.
 
-### Will in work with WordPress MultiSite
+### Will it work with WordPress Multisite?
 
 Yes! Each site can have its own document repository (with the ability to give users different permissions on each repository), or you can create one shared document repository across all sites.
 
-### Will it work over HTTPS (SSL)
+### Will it work over HTTPS (SSL)?
 
 Yes. Just follow the [standard WordPress SSL instructions](https://wordpress.org/support/article/administration-over-ssl/).
 
