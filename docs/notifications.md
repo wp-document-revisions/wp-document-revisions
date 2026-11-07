@@ -61,3 +61,7 @@ add_filter(
 ## Delivery
 
 Notifications are sent through WordPress's standard `wp_mail()`. On sites with high mail volume or a slow mail server, install a transactional-email/SMTP plugin so delivery does not add latency to saving a document.
+
+## Notifying readers
+
+These notifications are for the people working on documents. To email readers when a document is published, including people without an account on your site, use the [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/) add-on.
