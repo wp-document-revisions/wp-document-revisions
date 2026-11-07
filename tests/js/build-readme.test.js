@@ -27,6 +27,10 @@ function fixture( files ) {
 		'README.md': '# Title\n\nBadges and tagline.\n\n## About\n\nAbout text.\n',
 		'features.md': '## Features\n\nFeature list.\n',
 		'changelog.md': '## Changelog\n\n### 1.0.0\n\n* First.\n',
+		'frequently-asked-questions.md': '## Frequently Asked Questions\n\nFAQ text.\n',
+		'installation.md': '## Installation\n\nInstall steps.\n',
+		'links.md': '## Links\n\nLink list.\n',
+		'screenshots.md': '## Screenshots\n\nScreenshot list.\n',
 	};
 	for ( const [ name, contents ] of Object.entries( { ...defaults, ...files } ) ) {
 		fs.writeFileSync( path.join( docs, name ), contents );
@@ -67,45 +71,27 @@ describe( 'build-readme', () => {
 		expect( output ).toContain( '== About ==\n\nAbout text.' );
 	} );
 
-	test( 'puts features.md first and the other docs in byte order', () => {
-		// Directory listing order depends on the file system, so hand the script
-		// a reversed listing to prove it sorts rather than relying on luck.
-		const readdirSync = fs.readdirSync;
-		const spy = jest
-			.spyOn( fs, 'readdirSync' )
-			.mockImplementation( ( ...args ) => readdirSync( ...args ).reverse() );
-		let output;
-		try {
-			output = build( {
-				'zebra.md': 'Zebra doc.\n',
-				'apple.md': 'Apple doc.\n',
-				'Upper.md': 'Upper doc.\n',
-			} );
-		} finally {
-			spy.mockRestore();
-		}
-		const order = [ 'Feature list.', 'Upper doc.', 'Apple doc.', 'Zebra doc.' ].map(
+	test( 'includes only the listed docs, in list order', () => {
+		const output = build( {
+			'filters.md': 'Filter reference.\n',
+			'CONTRIBUTING.md': 'How to contribute.\n',
+			'notifications.md': 'Notification setup.\n',
+		} );
+		const order = [ 'Feature list.', 'FAQ text.', 'Install steps.', 'Link list.', 'Screenshot list.' ].map(
 			( text ) => output.indexOf( text )
 		);
 		expect( order.every( ( index ) => index !== -1 ) ).toBe( true );
 		expect( [ ...order ].sort( ( a, b ) => a - b ) ).toEqual( order );
-	} );
-
-	test( 'skips excluded docs and subdirectories', () => {
-		const dir = fixture( {
-			'filters.md': 'Filter reference.\n',
-			'CONTRIBUTING.md': 'How to contribute.\n',
-			'installation.md': 'Install steps.\n',
-		} );
-		dirs.push( dir );
-		fs.mkdirSync( path.join( dir, 'docs', 'cookbook' ) );
-		fs.writeFileSync( path.join( dir, 'docs', 'cookbook', 'recipe.md' ), 'Recipe.\n' );
-
-		const output = buildReadme( dir );
-		expect( output ).toContain( 'Install steps.' );
 		expect( output ).not.toContain( 'Filter reference.' );
 		expect( output ).not.toContain( 'How to contribute.' );
-		expect( output ).not.toContain( 'Recipe.' );
+		expect( output ).not.toContain( 'Notification setup.' );
+	} );
+
+	test( 'fails when a listed doc is missing', () => {
+		const dir = fixture( {} );
+		dirs.push( dir );
+		fs.rmSync( path.join( dir, 'docs', 'links.md' ) );
+		expect( () => buildReadme( dir ) ).toThrow( /Missing docs\/links\.md/ );
 	} );
 
 	test( 'keeps only the three most recent changelog versions', () => {
