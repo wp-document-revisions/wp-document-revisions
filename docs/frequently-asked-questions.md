@@ -48,6 +48,8 @@ It records who uploaded each version and when, and asks for a short summary of w
 
 Yes. Turn on notifications under **Settings → Media**, and the plugin emails your list of addresses, plus the document's author, when a document changes workflow state. Emails for new versions are a separate option. Both are off until you turn them on, and the person who made the change never gets an email about it. See [Document Notifications](notifications.md).
 
+Those emails are for the people working on documents. To tell readers when a document is published, including people without an account on your site, use the [Email Notice for WP Document Revisions](https://wordpress.org/plugins/email-notice-wp-document-revisions/) add-on. It emails your users, who can opt out, and mailing lists you match to document categories or other terms, and keeps a log of what it sent.
+
 ### What file types can I upload?
 
 Anything WordPress allows, which covers [the common file types](https://wordpress.org/documentation/article/media-library-screen/) out of the box. On multisite, the network admin sets the allowed types under **Network Admin → Settings**. On a single site, a plugin can add more, and developers can allow extra types for documents only with the `document_allowed_mimes` filter. The other limit is file size, which your host sets in PHP's `upload_max_filesize` and `post_max_size`.
