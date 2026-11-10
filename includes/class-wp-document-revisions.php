@@ -268,7 +268,7 @@ class WP_Document_Revisions {
 		add_filter( 'wp_handle_upload_prefilter', array( $this, 'filename_rewrite' ) );
 		add_filter( 'wp_handle_upload', array( $this, 'rewrite_file_url' ), 10, 1 );
 		// Only document files are attached to a document; other uploads made on it are not.
-		add_filter( 'wp_handle_upload', array( $this, 'note_media_upload' ), 20, 1 );
+		add_filter( 'wp_handle_upload', array( $this, 'note_media_upload' ), PHP_INT_MAX, 1 );
 		// WP 6.0+ filters attachments with wp_insert_attachment_data; 5.9 with wp_insert_post_data.
 		add_filter( 'wp_insert_attachment_data', array( $this, 'unparent_media_upload' ), 10, 3 );
 		add_filter( 'wp_insert_post_data', array( $this, 'unparent_media_upload' ), 10, 3 );
