@@ -109,6 +109,12 @@ In: trait-wp-document-revisions-rewrites.php
 
 Filters the home_url() for WPML and translated documents. Since 5.6.0 it also applies to draft and pending document links (`?post_type=document&p=N`).
 
+## Filter document_keep_media_parent
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters whether a file uploaded on a document, that is not a document file, is attached to it.
+
 ## Filter document_internal_filename
 
 In: trait-wp-document-revisions-file-handler.php
