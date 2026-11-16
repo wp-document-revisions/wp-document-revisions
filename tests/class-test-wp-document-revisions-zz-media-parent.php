@@ -278,6 +278,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		sort( $expected );
 		self::assertSame( $expected, array_values( $media ), 'Media children not identified' );
 		self::assertArrayNotHasKey( $doc_file, $media, 'Document file identified as media' );
+		self::assertArrayNotHasKey( $old_version, $media, 'Older document file identified as media' );
 
 		// Media are never orphans (which would be deleted).
 		$orphans = (array) $this->validate_call( 'identify_orphans', $doc_file, self::$doc );
