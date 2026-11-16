@@ -120,6 +120,8 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	 */
 	private function uploaded( $url ) {
 		global $wpdr;
+		// The media modal posts the post being edited; note_media_upload() ignores other uploads.
+		$_POST['post_id'] = self::$doc;
 		$wpdr->note_media_upload(
 			array(
 				'file' => '/tmp/' . basename( $url ),
