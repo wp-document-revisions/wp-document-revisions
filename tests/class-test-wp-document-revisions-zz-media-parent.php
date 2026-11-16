@@ -317,5 +317,6 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		// tidy up the remaining test children.
 		wp_delete_attachment( $unused, true );
 		wp_delete_attachment( $similar, true );
+		wp_delete_attachment( $old_version, true );
 	}
 }
