@@ -263,6 +263,10 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		$similar = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/url.jpg' );
 		update_post_meta( $similar, '_wp_attached_file', '2026/11/url.jpg' );
 
+		// An older document file (hashed name) linked from the description is not media.
+		$old_version = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/' . md5( 'old' ) . '.txt' );
+		update_post_meta( $old_version, '_wp_attached_file', '2026/11/' . md5( 'old' ) . '.txt' );
+
 		// Description referencing the images (no revision created).
 		$content = $wpdr->format_doc_id( $doc_file ) .
 			'<p><img class="alignnone size-full wp-image-' . $by_class . '" src="http://example.org/wp-content/uploads/2026/11/by-class.jpg" /></p>' .
