@@ -266,7 +266,8 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		// Description referencing the images (no revision created).
 		$content = $wpdr->format_doc_id( $doc_file ) .
 			'<p><img class="alignnone size-full wp-image-' . $by_class . '" src="http://example.org/wp-content/uploads/2026/11/by-class.jpg" /></p>' .
-			'<p><img src="http://example.org/wp-content/uploads/2026/11/by-url-300x200.jpg" alt="" /></p>';
+			'<p><img src="http://example.org/wp-content/uploads/2026/11/by-url-300x200.jpg" alt="" /></p>' .
+			'<p><a href="http://example.org/?attachment_id=' . $old_version . '" rel="attachment wp-att-' . $old_version . '">Previous version</a></p>';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => self::$doc ) );
 		clean_post_cache( self::$doc );
