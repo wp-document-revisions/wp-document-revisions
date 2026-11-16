@@ -184,6 +184,24 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	}
 
 	/**
+	 * Uploads that don't come from the media modal (REST, sideload, WP-CLI) keep their parent.
+	 */
+	public function test_upload_without_post_id_kept() {
+		global $wpdr;
+		$url = 'http://example.org/wp-content/uploads/2026/11/sideload.jpg';
+		$wpdr->note_media_upload(
+			array(
+				'file' => '/tmp/sideload.jpg',
+				'url'  => $url,
+				'type' => 'image/jpeg',
+			)
+		);
+		$id = $this->attachment( self::$doc, $url );
+
+		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $id ) );
+	}
+
+	/**
 	 * A document file upload is attached to the document.
 	 */
 	public function test_document_upload_kept() {
