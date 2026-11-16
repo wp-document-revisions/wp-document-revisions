@@ -303,6 +303,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		}
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $doc_file ), 'Document file detached' );
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $unused ), 'Unreferenced attachment detached' );
+		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $old_version ), 'Older document file detached' );
 		self::assertSame( array(), $this->validate_call( 'identify_media_children', self::$doc ), 'Media still found after fix' );
 
 		// Nothing left to fix.
