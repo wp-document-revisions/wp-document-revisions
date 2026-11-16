@@ -82,6 +82,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	 * Reset the per-request upload state.
 	 */
 	public function tear_down() {
+		unset( $_POST['post_id'] );
 		$this->set_static( 'document_upload', false );
 		$this->set_static( 'media_upload_url', '' );
 		parent::tear_down();
