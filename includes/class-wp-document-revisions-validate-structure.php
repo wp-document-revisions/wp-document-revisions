@@ -151,13 +151,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Type     Warning
  * Message  The document has images or other media attached to it that are not document files.
  * Fixable  Yes
- * Cause    Before 5.8.3 a featured image, or an image added to the description, uploaded on the document was attached to it.
+ * Cause    Before 5.8.5 a featured image, or an image added to the description, uploaded on the document was attached to it.
  *          These are identified as an attachment of the document that is not referenced as a document file (WPDR marker
  *          in the document or a revision, or the attachment meta) but is the featured image, or is referenced in the
  *          post_content of the document or of one of its revisions (wp-image-N / wp-att-N class, block id, gallery ids,
  *          or the URL of the file or one of its generated sizes).
  *          The fix detaches them (post_parent 0), as if added to the Media Library first. Nothing is deleted.
  *          Checked before codes 15 and 14, as their fixes would otherwise rename/move or delete these files.
+ *
+ * Code     18
+ * Type     Warning
+ * Message  The document has revisions that refer to a non-existant not document files.
+ * Fixable  Yes
+ * Cause    There are document revision record that contain a reference to a document file attachment that does not exist.
+ *          The fix deletes the revision record.
+ *          Checked after other attachment record contents.
  */
 
 /**
@@ -586,6 +594,19 @@ class WP_Document_Revisions_Validate_Structure {
 			wp_cache_delete( $id, 'document_revisions' );
 		}
 
+		if ( 18 === $params['code'] ) {
+			// invalid revisions found.
+			$revisions = self::identify_invalid_revisions( $id );
+			foreach ( $revisions as $rev => $revision ) {
+				remove_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999 );
+				wp_delete_post_revision( $rev );
+				add_filter( 'pre_delete_post', array( $wpdr, 'possibly_delete_revision' ), 9999, 3 );
+			}
+
+			clean_post_cache( $id );
+			wp_cache_delete( $id, 'document_revisions' );
+		}
+
 		$response = 'Success.';
 		return rest_ensure_response( $response );
 	}
@@ -627,7 +648,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @var int[]
 	 */
-	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17 );
+	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17, 18 );
 
 	/**
 	 * Checks every document and returns the problems found.
@@ -1011,6 +1032,21 @@ class WP_Document_Revisions_Validate_Structure {
 			$att_error = self::check_for_orphans( $attach_id, $doc_id );
 		}
 
+		// if otherwise no error, look for revisions that do not have a valid document file.
+		/**
+		 * Filter to Switch off checking for revisions that do not have a valid document file.
+		 *
+		 * Whilst basically an on/off switch, it is called for each document.
+		 * Adding the document id allows only a segment of documents to be checked.
+		 *
+		 * @since 5.1.0
+		 * @param bool $check  Whether to check invalid revision records (default true).
+		 * @param ?int $doc_id Document post id.
+		 */
+		if ( ! $att_error && apply_filters( 'document_check_revisions', true, $doc_id ) ) {
+			$att_error = self::check_revisions( $doc_id );
+		}
+
 		// return any attachment found.
 		return $att_error;
 	}
@@ -1293,6 +1329,8 @@ class WP_Document_Revisions_Validate_Structure {
 	/**
 	 * Checks whether there are any orphaned document attachments.
 	 *
+	 *  Media attached to the document (featured image, description images) have already been removed.
+	 *
 	 * @since 4.1.0
 	 *
 	 * @param int $attach_id id of an attachment post object.
@@ -1319,9 +1357,6 @@ class WP_Document_Revisions_Validate_Structure {
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 		$attachs = wp_list_pluck( $attachs, 'ID', 'ID' );
 		$all_att = $attachs + array( $attach_id => $attach_id );
-
-		// Media attached to the document (featured image, description images) are never orphans.
-		$attachs = array_diff_key( $attachs, self::identify_media_children( $doc_id ) );
 
 		// get a list of revisions.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
@@ -1357,6 +1392,99 @@ class WP_Document_Revisions_Validate_Structure {
 		// are there any attachments left.
 		if ( ! empty( $attachs ) ) {
 			return $attachs;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether there are any invalid revision records.
+	 *
+	 * @since 4.1.0
+	 *
+	 * @param int $doc_id    id of the document post object.
+	 * @return mixed[]|false
+	 */
+	private static function check_revisions( int $doc_id ): array|false {
+		// identify any invalid revisions.
+		$revisions = self::identify_invalid_revisions( $doc_id );
+		if ( $revisions ) {
+			return array(
+				'code'  => 18,
+				'error' => 0,
+				'msg'   => __( 'The document contains revisions that refer to document files that do not exist. They should be deleted to reduce storage.', 'wp-document-revisions' ),
+				'fix'   => 1,
+				'parm'  => 0,
+			);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether there are any revisions that do not point to a document file.
+	 *
+	 *  Media attached to the document (featured image, description images) have already been removed.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @param int $doc_id    id of the document post object.
+	 * @return mixed[]|false
+	 */
+	private static function identify_invalid_revisions( int $doc_id ): array|false {
+		global $wpdb;
+		// get an array of attachments other than the one on the document.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$attachs = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID
+				 FROM {$wpdb->posts} 
+				 WHERE post_type = 'attachment'
+				 AND post_parent = %d
+				",
+				$doc_id
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$attachs = wp_list_pluck( $attachs, 'ID', 'ID' );
+
+		// get a list of revisions.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$revns = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID, post_content
+				 FROM {$wpdb->posts} 
+				 WHERE post_type = 'revision'
+				 AND post_parent = %d
+				",
+				$doc_id
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$revns = wp_list_pluck( $revns, 'post_content', 'ID' );
+
+		$wpdr = self::$parent;
+		foreach ( $revns as $id => $revn ) {
+			$att = $wpdr->extract_document_id( $revn );
+			if ( array_key_exists( $att, $attachs ) ) {
+				unset( $revns[ $id ] );
+			}
+		}
+
+		/**
+		 * Filters the list of invalid revision records found for a document.
+		 *
+		 * @param array $revns   Array of revisions that don't have an attachment.
+		 * @param int   $doc_id  Document post ID.
+		 * @param array $attachs Array of all attachments for the document.
+		 */
+		$revns = apply_filters( 'document_validate_revisions', $revns, $doc_id, $attachs );
+
+		// are there any revns left.
+		if ( ! empty( $revns ) ) {
+			return $revns;
 		}
 
 		return false;
@@ -1423,7 +1551,7 @@ class WP_Document_Revisions_Validate_Structure {
 	/**
 	 * Identifies media (featured image, description images) attached to a document.
 	 *
-	 * Before 5.8.3 an image uploaded on the document edit screen, other than a document file, was
+	 * Before 5.8.5 an image uploaded on the document edit screen, other than a document file, was
 	 * attached to the document. These are attachments of the document that are not one of its
 	 * document files but are:
 	 * - the document's featured image, or
@@ -1433,7 +1561,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * Media no longer referenced anywhere cannot be told from orphan document files this way.
 	 *
-	 * @since 5.8.3
+	 * @since 5.8.5
 	 *
 	 * @param int $doc_id id of the document post object.
 	 * @return array<int, int> map of attachment id => attachment id.
@@ -1473,9 +1601,10 @@ class WP_Document_Revisions_Validate_Structure {
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
 
-		// Document files are never media.
+		// Document files are never media, so remove them.
 		$wpdr = self::$parent;
-		unset( $children[ absint( get_post_meta( $doc_id, '_document_attachment_id', true ) ) ] );
+		$doca = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
+		unset( $children[ $doca ] );
 		foreach ( $contents as $content ) {
 			unset( $children[ absint( $wpdr->extract_document_id( (string) $content ) ) ] );
 		}
@@ -1483,70 +1612,48 @@ class WP_Document_Revisions_Validate_Structure {
 			return array();
 		}
 
-		$content = implode( "\n", array_map( 'strval', $contents ) );
-
-		// ids referenced in the content.
-		$ids     = array( absint( get_post_meta( $doc_id, '_thumbnail_id', true ) ) );
-		$matches = array();
-		if ( preg_match_all( '/\bwp-(?:image|att)-(\d+)\b/', $content, $matches ) ) {
-			$ids = array_merge( $ids, $matches[1] );
-		}
-		if ( preg_match_all( '/<!--\s+wp:\S+\s+\{[^>]*?"(?:id|mediaId)":(\d+)/', $content, $matches ) ) {
-			$ids = array_merge( $ids, $matches[1] );
-		}
-		if ( preg_match_all( '/\[gallery[^\]]*?\bids=["\']?([\d,\s]+)/', $content, $matches ) ) {
-			foreach ( $matches[1] as $list ) {
-				$ids = array_merge( $ids, preg_split( '/[\s,]+/', $list, -1, PREG_SPLIT_NO_EMPTY ) );
-			}
-		}
-		$ids = array_flip( array_map( 'intval', $ids ) );
-
-		$media = array();
+		// Try to identify orphan document files. They normally get a hashed (MD5) name, while images uploaded on a document keep their own.
+		// but could try to match on the file type or whether the file is in the document or media directory (only if different).
+		$doct    = pathinfo( $doca, PATHINFO_EXTENSION );
+		$std_dir = trailingslashit( $wpdr->default_upload_dir()['basedir'] );
+		$doc_dir = trailingslashit( $wpdr->document_upload_dir() );
+		/**
+		 * Filters the document filetype to see if its children attachments should be considered document files.
+		 *
+		 * @since 5.8.5
+		 *
+		 * @param string $doct   type of attachment file of document (return empty if no match).
+		 * @param int    $doc_id document post ID.
+		 */
+		$doct = apply_filters( 'document_validate_doc_type', $doct, $doc_id );
 		foreach ( $children as $attach_id ) {
-			if ( isset( $ids[ $attach_id ] ) ) {
-				$media[ $attach_id ] = $attach_id;
-				continue;
-			}
-
-			// is the file (or one of its sizes) referenced by URL.
-			$file = (string) get_post_meta( $attach_id, '_wp_attached_file', true );
-			if ( '' === $file || '' === $content ) {
-				continue;
-			}
-			$dir   = dirname( $file );
-			$dir   = ( '.' === $dir ) ? '' : trailingslashit( $dir );
-			$names = array( wp_basename( $file ) );
-			$meta  = get_post_meta( $attach_id, '_wp_attachment_metadata', true );
-			if ( is_array( $meta ) ) {
-				if ( ! empty( $meta['original_image'] ) ) {
-					$names[] = (string) $meta['original_image'];
-				}
-				if ( ! empty( $meta['sizes'] ) && is_array( $meta['sizes'] ) ) {
-					foreach ( $meta['sizes'] as $size ) {
-						if ( is_array( $size ) && ! empty( $size['file'] ) ) {
-							$names[] = (string) $size['file'];
-						}
-					}
-				}
-			}
-			foreach ( array_unique( $names ) as $name ) {
-				// a path segment of a URL, ending at a quote, whitespace, query or fragment.
-				if ( preg_match( '#/' . preg_quote( $dir . $name, '#' ) . '(?=["\'\s?\#)<]|$)#', $content ) ) {
-					$media[ $attach_id ] = $attach_id;
-					break;
-				}
+			$attch = (string) get_post_meta( $attach_id, '_wp_attached_file', true );
+			$file  = wp_basename( $attch );
+			if ( preg_match( '/^[0-9a-f]{32}\./', $file ) ) {
+				unset( $children[ $attach_id ] );
+			} elseif ( pathinfo( $file, PATHINFO_EXTENSION ) === $doct ) {
+				unset( $children[ $attach_id ] );
+			} elseif ( $doc_dir !== $std_dir && file_exists( $doc_dir . $attch ) ) {
+				unset( $children[ $attach_id ] );
 			}
 		}
+		if ( empty( $children ) ) {
+			return array();
+		}
+
+		// Only media files should remain. These should all have their parent removed.
+		// Why don't we check them? Because we simply want them removed as parents and may be orphans themselves.
+		// They will become visible in the Media tab (as they are filtered from the Media view).
 
 		/**
 		 * Filters the attachments of a document identified as media (not document files).
 		 *
-		 * @since 5.8.3
+		 * @since 5.8.5
 		 *
-		 * @param array<int, int> $media  map of attachment id => attachment id.
-		 * @param int             $doc_id document post ID.
+		 * @param array<int, int> $children  map of attachment id => attachment id of non document files.
+		 * @param int             $doc_id    document post ID.
 		 */
-		return (array) apply_filters( 'document_validate_media_children', $media, $doc_id );
+		return (array) apply_filters( 'document_validate_media_children', $children, $doc_id );
 	}
 
 	/**

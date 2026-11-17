@@ -60,6 +60,12 @@ In: class-wp-document-revisionsvalidate-structure.php
 
 Filter to Switch off checking for orphan documents.
 
+## Filter document_check_revisions
+
+In: class-wp-document-revisionsvalidate-structure.php
+
+Filter to Switch off checking for revisions that do not have a valid document file.
+
 ## Filter document_compressible_mimetypes
 
 In: trait-wp-document-revisions-file-handler.php
@@ -432,6 +438,12 @@ Filter to switch off md5 format attachment validation.
 In: class-wp-document-revisions-validate-structure.php
 
 Filters the list of orphan attachment records found for a document.
+
+## Filter document_validate_revisions
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the list of invalid revision records found for a document.
 
 ## Filter document_validate_structure_capability
 
