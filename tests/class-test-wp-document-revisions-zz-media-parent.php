@@ -82,6 +82,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	 * Reset the per-request upload state.
 	 */
 	public function tear_down() {
+		unset( $_POST['post_id'] );
 		$this->set_static( 'document_upload', false );
 		$this->set_static( 'media_upload_url', '' );
 		parent::tear_down();
@@ -119,6 +120,8 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	 */
 	private function uploaded( $url ) {
 		global $wpdr;
+		// The media modal posts the post being edited; note_media_upload() ignores other uploads.
+		$_POST['post_id'] = self::$doc;
 		$wpdr->note_media_upload(
 			array(
 				'file' => '/tmp/' . basename( $url ),
@@ -178,6 +181,24 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 	public function test_other_attachment_kept() {
 		$this->uploaded( 'http://example.org/wp-content/uploads/2026/11/a.jpg' );
 		$id = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/b.jpg' );
+
+		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $id ) );
+	}
+
+	/**
+	 * Uploads that don't come from the media modal (REST, sideload, WP-CLI) keep their parent.
+	 */
+	public function test_upload_without_post_id_kept() {
+		global $wpdr;
+		$url = 'http://example.org/wp-content/uploads/2026/11/sideload.jpg';
+		$wpdr->note_media_upload(
+			array(
+				'file' => '/tmp/sideload.jpg',
+				'url'  => $url,
+				'type' => 'image/jpeg',
+			)
+		);
+		$id = $this->attachment( self::$doc, $url );
 
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $id ) );
 	}
@@ -244,10 +265,15 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		$similar = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/url.jpg' );
 		update_post_meta( $similar, '_wp_attached_file', '2026/11/url.jpg' );
 
+		// An older document file (hashed name) linked from the description is not media.
+		$old_version = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/' . md5( 'old' ) . '.txt' );
+		update_post_meta( $old_version, '_wp_attached_file', '2026/11/' . md5( 'old' ) . '.txt' );
+
 		// Description referencing the images (no revision created).
 		$content = $wpdr->format_doc_id( $doc_file ) .
 			'<p><img class="alignnone size-full wp-image-' . $by_class . '" src="http://example.org/wp-content/uploads/2026/11/by-class.jpg" /></p>' .
-			'<p><img src="http://example.org/wp-content/uploads/2026/11/by-url-300x200.jpg" alt="" /></p>';
+			'<p><img src="http://example.org/wp-content/uploads/2026/11/by-url-300x200.jpg" alt="" /></p>' .
+			'<p><a href="http://example.org/?attachment_id=' . $old_version . '" rel="attachment wp-att-' . $old_version . '">Previous version</a></p>';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => self::$doc ) );
 		clean_post_cache( self::$doc );
@@ -258,6 +284,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		sort( $expected );
 		self::assertSame( $expected, array_values( $media ), 'Media children not identified' );
 		self::assertArrayNotHasKey( $doc_file, $media, 'Document file identified as media' );
+		self::assertArrayNotHasKey( $old_version, $media, 'Older document file identified as media' );
 
 		// Media are never orphans (which would be deleted).
 		$orphans = (array) $this->validate_call( 'identify_orphans', $doc_file, self::$doc );
@@ -283,6 +310,7 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		}
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $doc_file ), 'Document file detached' );
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $unused ), 'Unreferenced attachment detached' );
+		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $old_version ), 'Older document file detached' );
 		self::assertSame( array(), $this->validate_call( 'identify_media_children', self::$doc ), 'Media still found after fix' );
 
 		// Nothing left to fix.
@@ -291,5 +319,6 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 		// tidy up the remaining test children.
 		wp_delete_attachment( $unused, true );
 		wp_delete_attachment( $similar, true );
+		wp_delete_attachment( $old_version, true );
 	}
 }

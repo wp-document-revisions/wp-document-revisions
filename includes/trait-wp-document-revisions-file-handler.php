@@ -779,7 +779,8 @@ trait WP_Document_Revisions_File_Handler {
 	 */
 	public function note_media_upload( $upload ) {
 		self::$media_upload_url = '';
-		if ( ! self::$document_upload && is_array( $upload ) && empty( $upload['error'] ) && ! empty( $upload['url'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- only the media modal posts post_id; core verifies its nonce.
+		if ( ! self::$document_upload && isset( $_POST['post_id'] ) && is_array( $upload ) && empty( $upload['error'] ) && ! empty( $upload['url'] ) ) {
 			self::$media_upload_url = (string) $upload['url'];
 		}
 		return $upload;
