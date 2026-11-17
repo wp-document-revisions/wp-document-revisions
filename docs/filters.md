@@ -425,7 +425,13 @@ Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevan
 
 In: class-wp-document-revisions-validate-structure.php
 
-Filter whether to validate the document structure for a documrnt.
+Filter whether to validate the document structure for a document.
+
+## Filter document_validate_doc_type
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the document filetype to see if its children attachments should be considered document files.
 
 ## Filter document_validate_md5
 
