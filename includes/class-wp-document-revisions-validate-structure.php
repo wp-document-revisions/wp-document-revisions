@@ -1614,7 +1614,7 @@ class WP_Document_Revisions_Validate_Structure {
 
 		// Try to identify orphan document files. They normally get a hashed (MD5) name, while images uploaded on a document keep their own.
 		// but could try to match on the file type or whether the file is in the document or media directory (only if different).
-		$file    = (string) get_post_meta( $attach_id, '_wp_attached_file', true );
+		$file    = (string) get_post_meta( $doca, '_wp_attached_file', true );
 		$doct    = pathinfo( $file, PATHINFO_EXTENSION );
 		$std_dir = trailingslashit( $wpdr->default_upload_dir()['basedir'] );
 		$doc_dir = trailingslashit( $wpdr->document_upload_dir() );
