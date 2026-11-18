@@ -339,7 +339,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-		dump_document( self::$editor_public_post );
+		self::dump_document( self::$editor_public_post );
 		console_log( $output );
 		self::assertGreaterThan( 0, substr_count( $output, $needle ), 'orphan attachment reported' );
 
