@@ -1476,7 +1476,7 @@ class WP_Document_Revisions_Validate_Structure {
 		// Document files are never media, so remove them.
 		$wpdr = self::$parent;
 		$doca = absint( get_post_meta( $doc_id, '_document_attachment_id', true ) );
-		$doca = ( ! $doca ) ? $doca : $wpdr->extract_document_id( (string) $contents[0] );
+		$doca = ( $doca ) ? $doca : $wpdr->extract_document_id( (string) $contents[0] );
 		if ( ! $doca ) {
 			// There is no document file attached to the document.
 			// Whilst we could go a process to sort through these, don't bother - (possibly) pretend there are none.
