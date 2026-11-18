@@ -95,10 +95,10 @@ class Test_WP_Document_Revisions_Notifications extends Test_Common_WPDR {
 	 */
 	public function tear_down() {
 		remove_filter( 'pre_wp_mail', array( $this, 'capture_mail' ), 10 );
-		delete_site_option( 'document_notify_enabled' );
-		delete_site_option( 'document_notify_recipients' );
-		delete_site_option( 'document_notify_on_state_change' );
-		delete_site_option( 'document_notify_on_new_revision' );
+		delete_option( 'document_notify_enabled' );
+		delete_option( 'document_notify_recipients' );
+		delete_option( 'document_notify_on_state_change' );
+		delete_option( 'document_notify_on_new_revision' );
 		wp_set_current_user( 0 );
 		parent::tear_down();
 	}
@@ -116,7 +116,8 @@ class Test_WP_Document_Revisions_Notifications extends Test_Common_WPDR {
 	}
 
 	/**
-	 * Configures the four notification options and flushes the cache.
+	 * Configures the four notification options the way the Media settings
+	 * screen saves them (per site) and flushes the cache.
 	 *
 	 * @param string $enabled   master toggle value.
 	 * @param string $recipients recipient list.
@@ -124,10 +125,10 @@ class Test_WP_Document_Revisions_Notifications extends Test_Common_WPDR {
 	 * @param string $on_rev    new-revision toggle value.
 	 */
 	private function configure( string $enabled, string $recipients, string $on_state, string $on_rev ): void {
-		update_site_option( 'document_notify_enabled', $enabled );
-		update_site_option( 'document_notify_recipients', $recipients );
-		update_site_option( 'document_notify_on_state_change', $on_state );
-		update_site_option( 'document_notify_on_new_revision', $on_rev );
+		update_option( 'document_notify_enabled', $enabled );
+		update_option( 'document_notify_recipients', $recipients );
+		update_option( 'document_notify_on_state_change', $on_state );
+		update_option( 'document_notify_on_new_revision', $on_rev );
 		wp_cache_flush();
 	}
 
@@ -272,5 +273,25 @@ class Test_WP_Document_Revisions_Notifications extends Test_Common_WPDR {
 		self::assertCount( 2, $to, 'duplicates collapsed and invalid dropped (team + author)' );
 		self::assertContains( 'team@example.com', $to, 'valid address kept' );
 		self::assertNotContains( 'not-an-email', $to, 'invalid address dropped' );
+	}
+
+	/**
+	 * The Media screen controls show the values saved for this site.
+	 */
+	public function test_settings_controls_show_site_values() {
+		global $wpdr;
+		if ( ! class_exists( 'WP_Document_Revisions_Admin' ) ) {
+			$wpdr->admin_init();
+		}
+		$this->configure( '1', 'list@example.com', '', '1' );
+
+		ob_start();
+		$wpdr->admin->document_notifications_cb();
+		$html = (string) ob_get_clean();
+
+		$this->assertMatchesRegularExpression( '/id="document_notify_enabled"[^>]*checked/', $html, 'master toggle should be checked' );
+		$this->assertStringContainsString( 'list@example.com', $html, 'saved recipients should be shown' );
+		$this->assertDoesNotMatchRegularExpression( '/id="document_notify_on_state_change"[^>]*checked/', $html, 'state-change toggle should be unchecked' );
+		$this->assertMatchesRegularExpression( '/id="document_notify_on_new_revision"[^>]*checked/', $html, 'new-revision toggle should be checked' );
 	}
 }
