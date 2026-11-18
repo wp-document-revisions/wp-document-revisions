@@ -258,12 +258,13 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 			)
 		);
 
+		// Media no longer referenced anywhere still counts: unhashed, and not the document's file type.
 		$unused = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/unused.jpg' );
 		update_post_meta( $unused, '_wp_attached_file', '2026/11/unused.jpg' );
 
-		// A similar name that is not referenced must not match.
-		$similar = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/url.jpg' );
-		update_post_meta( $similar, '_wp_attached_file', '2026/11/url.jpg' );
+		// An unreferenced file of the document's own type (an older, unhashed version) is not media.
+		$legacy = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/old-report.txt' );
+		update_post_meta( $legacy, '_wp_attached_file', '2026/11/old-report.txt' );
 
 		// An older document file (hashed name) linked from the description is not media.
 		$old_version = $this->attachment( self::$doc, 'http://example.org/wp-content/uploads/2026/11/' . md5( 'old' ) . '.txt' );
@@ -280,18 +281,12 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 
 		$media = $this->validate_call( 'identify_media_children', self::$doc );
 		ksort( $media );
-		$expected = array( $featured, $by_class, $by_url );
+		$expected = array( $featured, $by_class, $by_url, $unused );
 		sort( $expected );
 		self::assertSame( $expected, array_values( $media ), 'Media children not identified' );
 		self::assertArrayNotHasKey( $doc_file, $media, 'Document file identified as media' );
 		self::assertArrayNotHasKey( $old_version, $media, 'Older document file identified as media' );
-
-		// Media are never orphans (which would be deleted).
-		$orphans = (array) $this->validate_call( 'identify_orphans', $doc_file, self::$doc );
-		foreach ( $expected as $id ) {
-			self::assertArrayNotHasKey( $id, $orphans, 'Media listed as orphan' );
-		}
-		self::assertArrayHasKey( $unused, $orphans, 'Unreferenced attachment not an orphan' );
+		self::assertArrayNotHasKey( $legacy, $media, 'Unhashed file of the document type identified as media' );
 
 		// Reported as code 17 (ahead of 14).
 		wp_cache_flush();
@@ -309,16 +304,51 @@ class Test_WP_Document_Revisions_Zz_Media_Parent extends Test_Common_WPDR {
 			self::assertSame( 0, (int) get_post_field( 'post_parent', $id ), 'Media not detached' );
 		}
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $doc_file ), 'Document file detached' );
-		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $unused ), 'Unreferenced attachment detached' );
+		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $legacy ), 'Unhashed file of the document type detached' );
 		self::assertSame( self::$doc, (int) get_post_field( 'post_parent', $old_version ), 'Older document file detached' );
 		self::assertSame( array(), $this->validate_call( 'identify_media_children', self::$doc ), 'Media still found after fix' );
+
+		// Only document files are left for the orphan check (code 14), which runs once code 17 is clear.
+		$orphans = (array) $this->validate_call( 'identify_orphans', $doc_file, self::$doc );
+		self::assertArrayHasKey( $legacy, $orphans, 'Unreferenced document file not an orphan' );
+		foreach ( $expected as $id ) {
+			self::assertArrayNotHasKey( $id, $orphans, 'Media listed as orphan' );
+		}
 
 		// Nothing left to fix.
 		self::assertWPError( WP_Document_Revisions_Validate_Structure::fix_problem( self::$doc, 17, self::$doc ) );
 
 		// tidy up the remaining test children.
 		wp_delete_attachment( $unused, true );
-		wp_delete_attachment( $similar, true );
+		wp_delete_attachment( $legacy, true );
 		wp_delete_attachment( $old_version, true );
+	}
+
+	/**
+	 * Media is still found when the document file is named only by the marker in post_content (no attachment id meta).
+	 */
+	public function test_media_children_without_meta() {
+		global $wpdb, $wpdr;
+		$doc  = self::factory()->post->create( array( 'post_type' => 'document' ) );
+		$file = $this->attachment( $doc, 'http://example.org/wp-content/uploads/2019/01/old-report.pdf' );
+		update_post_meta( $file, '_wp_attached_file', '2019/01/old-report.pdf' );
+		$image = $this->attachment( $doc, 'http://example.org/wp-content/uploads/2019/01/cover.jpg' );
+		update_post_meta( $image, '_wp_attached_file', '2019/01/cover.jpg' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->update( $wpdb->posts, array( 'post_content' => $wpdr->format_doc_id( $file ) ), array( 'ID' => $doc ) );
+		clean_post_cache( $doc );
+		delete_post_meta( $doc, '_document_attachment_id' );
+
+		self::assertSame( array( $image => $image ), $this->validate_call( 'identify_media_children', $doc ) );
+
+		// With neither the meta nor the marker, nothing can be told apart.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->update( $wpdb->posts, array( 'post_content' => '' ), array( 'ID' => $doc ) );
+		clean_post_cache( $doc );
+		self::assertSame( array(), $this->validate_call( 'identify_media_children', $doc ) );
+
+		wp_delete_attachment( $image, true );
+		wp_delete_attachment( $file, true );
+		wp_delete_post( $doc, true );
 	}
 }
