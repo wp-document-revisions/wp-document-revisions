@@ -1512,7 +1512,7 @@ class WP_Document_Revisions_Validate_Structure {
 				unset( $children[ $attach_id ] );
 			} elseif ( pathinfo( $file, PATHINFO_EXTENSION ) === $doct ) {
 				unset( $children[ $attach_id ] );
-			} elseif ( $doc_dir !== $std_dir && file_exists( $doc_dir . $attch ) ) {
+			} elseif ( '' !== $attch && $doc_dir !== $std_dir && file_exists( $doc_dir . $attch ) ) {
 				unset( $children[ $attach_id ] );
 			}
 		}
