@@ -459,7 +459,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		// There will be various bits found.
 		self::assertEquals( 1, (int) substr_count( $output, 'Document Settings' ), 'heading' );
 		self::assertEquals( 1, (int) substr_count( $output, 'id="document_upload_directory"' ), 'directory' );
-		self::assertEquals( 1, (int) substr_count( $output, 'value="/tmp/wordpress/wp-content/uploads"' ), 'directoryv' );
+		self::assertEquals( 1, (int) substr_count( $output, 'value="' . WP_CONTENT_DIR . '/uploads"' ), 'directoryv' );
 		self::assertEquals( 1, (int) substr_count( $output, 'id="document_slug"' ), 'slug' );
 		self::assertEquals( 1, (int) substr_count( $output, 'value="documents"' ), 'slugv' );
 	}
@@ -1251,7 +1251,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
 		// $orig does not have a trailing slash.
-		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads', 'Original not reset correctly 1' );
+		self::assertEquals( $new, WP_CONTENT_DIR . '/uploads', 'Original not reset correctly 1' );
 
 		$new = $wpdr->admin->sanitize_upload_dir( '/tmp/wp' );
 
@@ -1259,7 +1259,7 @@ class Test_WP_Document_Revisions_Admin_Other extends Test_Common_WPDR {
 
 		$new = $wpdr->admin->sanitize_upload_dir( $orig );
 
-		self::assertEquals( $new, '/tmp/wordpress/wp-content/uploads/', 'Original not reset correctly 2' );
+		self::assertEquals( $new, WP_CONTENT_DIR . '/uploads/', 'Original not reset correctly 2' );
 		self::assertTrue( true, 'run' );
 	}
 
