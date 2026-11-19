@@ -539,19 +539,19 @@ Hard timeout, in seconds, for a single summary generation call. Default 60. Appl
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Master switch for document email notifications. Receives the boolean value of the `document_notify_enabled` site option. Return true to force-enable or false to force-disable notifications regardless of the setting.
+Master switch for document email notifications. Receives the boolean value of the per-site `document_notify_enabled` option. Return true to force-enable or false to force-disable notifications regardless of the setting.
 
 ## Filter document_notify_on_state_change
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Whether to notify on workflow-state changes. Receives the boolean value of the `document_notify_on_state_change` site option (default true). Return false to suppress state-change notifications.
+Whether to notify on workflow-state changes. Receives the boolean value of the per-site `document_notify_on_state_change` option (default true). Return false to suppress state-change notifications.
 
 ## Filter document_notify_on_new_revision
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Whether to notify when a new revision is saved. Receives the boolean value of the `document_notify_on_new_revision` site option (default false). Return true to enable new-revision notifications.
+Whether to notify when a new revision is saved. Receives the boolean value of the per-site `document_notify_on_new_revision` option (default false). Return true to enable new-revision notifications.
 
 ## Filter document_notification_recipients
 
