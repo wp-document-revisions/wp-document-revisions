@@ -83,11 +83,20 @@ $caps = array(
 	'override_document_lock',
 );
 
-foreach ( $wp_roles->role_names as $role_name => $label ) {
-	$role_obj = $wp_roles->get_role( $role_name );
-	if ( $role_obj ) {
-		foreach ( $caps as $cap ) {
-			$role_obj->remove_cap( $cap );
+// Roles are saved per site, and switch_to_blog() loads each site's roles into $wp_roles.
+foreach ( $site_ids ? $site_ids : array( 0 ) as $site_id ) {
+	if ( $site_id ) {
+		switch_to_blog( $site_id );
+	}
+	foreach ( $wp_roles->role_names as $role_name => $label ) {
+		$role_obj = $wp_roles->get_role( $role_name );
+		if ( $role_obj ) {
+			foreach ( $caps as $cap ) {
+				$role_obj->remove_cap( $cap );
+			}
 		}
+	}
+	if ( $site_id ) {
+		restore_current_blog();
 	}
 }

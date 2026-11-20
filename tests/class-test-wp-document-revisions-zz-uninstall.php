@@ -89,4 +89,36 @@ class Test_WP_Document_Revisions_Zz_Uninstall extends WP_UnitTestCase {
 			self::assertFalse( get_blog_option( $site, $option ), "$option is removed on site $site." );
 		}
 	}
+
+	/**
+	 * Uninstalling removes the document capabilities from the current site's roles.
+	 */
+	public function test_uninstall_removes_current_site_caps() {
+		get_role( 'editor' )->add_cap( 'edit_documents' );
+
+		$this->uninstall();
+
+		self::assertFalse( get_role( 'editor' )->has_cap( 'edit_documents' ) );
+	}
+
+	/**
+	 * On multisite, uninstalling removes the document capabilities from every site's roles.
+	 */
+	public function test_uninstall_removes_caps_on_every_site() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Multisite only.' );
+		}
+
+		$site = self::factory()->blog->create();
+		switch_to_blog( $site );
+		get_role( 'editor' )->add_cap( 'edit_documents' );
+		restore_current_blog();
+
+		$this->uninstall();
+
+		switch_to_blog( $site );
+		$has_cap = get_role( 'editor' )->has_cap( 'edit_documents' );
+		restore_current_blog();
+		self::assertFalse( $has_cap, "edit_documents is removed on site $site." );
+	}
 }
