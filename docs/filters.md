@@ -109,6 +109,12 @@ In: trait-wp-document-revisions-rewrites.php
 
 Filters the home_url() for WPML and translated documents. Since 5.6.0 it also applies to draft and pending document links (`?post_type=document&p=N`).
 
+## Filter document_keep_media_parent
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters whether a file uploaded on a document, that is not a document file, is attached to it.
+
 ## Filter document_internal_filename
 
 In: trait-wp-document-revisions-file-handler.php
@@ -413,7 +419,13 @@ Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevan
 
 In: class-wp-document-revisions-validate-structure.php
 
-Filter whether to validate the document structure for a documrnt.
+Filter whether to validate the document structure for a document.
+
+## Filter document_validate_doc_type
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the document filetype to see if its children attachments should be considered document files.
 
 ## Filter document_validate_md5
 

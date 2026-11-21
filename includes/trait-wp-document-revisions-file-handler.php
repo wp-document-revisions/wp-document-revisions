@@ -766,6 +766,90 @@ trait WP_Document_Revisions_File_Handler {
 	}
 
 	/**
+	 * Notes the URL of an uploaded file that is not a document file.
+	 *
+	 * The media modal on the document edit screen sends the document as the upload's post, so
+	 * WordPress would attach a featured image, or an image added to the description, to the
+	 * document. Only document file uploads (flagged with upload_source, see filename_rewrite())
+	 * belong there, so unparent_media_upload() uses this to detach the others.
+	 *
+	 * @since 5.8.3
+	 * @param mixed $upload the result of wp_handle_upload().
+	 * @return mixed the result, unchanged.
+	 */
+	public function note_media_upload( $upload ) {
+		self::$media_upload_url = '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- only the media modal posts post_id; core verifies its nonce.
+		if ( ! self::$document_upload && isset( $_POST['post_id'] ) && is_array( $upload ) && empty( $upload['error'] ) && ! empty( $upload['url'] ) ) {
+			self::$media_upload_url = (string) $upload['url'];
+		}
+		return $upload;
+	}
+
+	/**
+	 * Creates the attachment of a featured image or description image uploaded on a document
+	 * with no parent, as if it had been added to the Media Library first and then chosen.
+	 *
+	 * Only the attachment of the file just uploaded (matched on its URL) is changed, so document
+	 * files and attachments created by other code (imports, tests) keep their parent.
+	 *
+	 * @since 5.8.3
+	 * @param mixed $data                sanitized post data to be inserted.
+	 * @param mixed $postarr             sanitized post data passed to wp_insert_post().
+	 * @param mixed $unsanitized_postarr post data as originally passed to wp_insert_post().
+	 * @return mixed the post data.
+	 */
+	public function unparent_media_upload( $data, $postarr = array(), $unsanitized_postarr = array() ) {
+		if ( '' === self::$media_upload_url || ! is_array( $data ) || 'attachment' !== ( $data['post_type'] ?? '' ) ) {
+			return $data;
+		}
+
+		// New attachments only.
+		if ( is_array( $postarr ) && ! empty( $postarr['ID'] ) ) {
+			return $data;
+		}
+
+		// Is it the attachment of the file just uploaded.
+		$guids = array( (string) ( $data['guid'] ?? '' ) );
+		if ( is_array( $postarr ) && isset( $postarr['guid'] ) ) {
+			$guids[] = (string) $postarr['guid'];
+		}
+		if ( is_array( $unsanitized_postarr ) && isset( $unsanitized_postarr['guid'] ) ) {
+			$guids[] = wp_unslash( (string) $unsanitized_postarr['guid'] );
+		}
+		if ( ! in_array( self::$media_upload_url, $guids, true ) ) {
+			return $data;
+		}
+
+		// One upload, one attachment.
+		self::$media_upload_url = '';
+
+		$parent = (int) ( $data['post_parent'] ?? 0 );
+		if ( $parent <= 0 || 'document' !== get_post_type( $parent ) ) {
+			return $data;
+		}
+
+		/**
+		 * Filters whether a file uploaded on a document, that is not a document file, is attached to it.
+		 *
+		 * By default these (featured images, images in the description) are not attached to the document,
+		 * so they can never be mistaken for one of its document files.
+		 *
+		 * @since 5.8.3
+		 *
+		 * @param bool  $keep   whether to keep the document as the attachment's parent. Default false.
+		 * @param int   $parent the document id.
+		 * @param array $data   the attachment post data.
+		 */
+		if ( apply_filters( 'document_keep_media_parent', false, $parent, $data ) ) {
+			return $data;
+		}
+
+		$data['post_parent'] = 0;
+		return $data;
+	}
+
+	/**
 	 * Returns an attachment's real storage URL, bypassing the filter that replaces document
 	 * attachment URLs with the (authenticated) document permalink.
 	 *

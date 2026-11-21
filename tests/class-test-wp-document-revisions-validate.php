@@ -318,6 +318,7 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 
 		// Add an orphan: an attachment parented to the document but not referenced
 		// by its post_content nor by any revision.
+		// Initially created with no attach file reference, so looks like media.
 		$orphan_id = self::factory()->attachment->create(
 			array(
 				'post_parent'    => self::$editor_public_post,
@@ -333,7 +334,18 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		wp_cache_flush();
 		add_filter( 'document_validate_md5', '__return_false' );
 
+		$needle = 'images or other media attached to it that are not document files';
+
+		// Since not a document file, appears like media.
+		ob_start();
+		WP_Document_Revisions_Validate_Structure::page_validate();
+		$output = ob_get_clean();
+		self::assertGreaterThan( 0, substr_count( $output, $needle ), 'media attachment reported' );
+
 		$needle = 'additional document files that are inaccessible';
+
+		// Add a file reference with a hashed name proves it's a document file, so it's an orphan (code 14), not media (code 17).
+		update_post_meta( $orphan_id, '_wp_attached_file', gmdate( 'Y/m/' ) . md5( 'orphan' ) . '.txt' );
 
 		// With orphan checking on (default) the validator reports the orphan.
 		ob_start();
@@ -380,9 +392,6 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		ob_start();
 		WP_Document_Revisions_Validate_Structure::page_validate();
 		$output = ob_get_clean();
-
-		// dump document data.
-		self::dump_document( self::$editor_public_post_2 );
 
 		// should be nothing found - as all valid...
 		self::assertEquals( 1, (int) substr_count( $output, 'No invalid documents found' ), 'edit - structure_ok' );
