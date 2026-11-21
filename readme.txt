@@ -5,7 +5,7 @@ Tags: documents, document management, version control, collaboration, revisions
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 5.8.3
+Stable tag: 5.8.4
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,6 +312,13 @@ Need help? Check our [FAQ](https://wp-document-revisions.github.io/wp-document-r
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+= 5.8.4 =
+
+* Email notifications can now be turned on on multisite. The notification settings on each site's Media screen saved, but the plugin read them from the network instead, so they never took effect and the checkboxes appeared to reset. Settings a site saved before this release take effect once you update, so emails may start going out. (#906, #917) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* Images uploaded as a document's featured image or into its description are no longer attached to the document as if they were document files. Before, Validate Structure could list them as inaccessible document files and offer to delete them. It now finds images attached this way in the past and offers to detach them instead, which leaves the images in the Media Library. Developers can adjust this with the new `document_keep_media_parent` and `document_validate_doc_type` filters. (#900) Thanks to [@NeilWJames](https://github.com/NeilWJames).
+* Deleting the plugin on multisite now removes its settings and document capabilities from every site, not just the main site. (#919) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* The WordPress.org plugin page now has an FAQ tab. Its answers were checked against the current plugin, and it explains how to email readers when a document is published with the Email Notice add-on. (#904, #905, #907)
+
 = 5.8.3 =
 
 * Activating the plugin for the first time no longer shows a false "You do not have the edit_documents capability" warning. On WordPress Playground, including the Live Preview on WordPress.org, the plugin activates on every visit, so every session showed it. (#887, #890) Thanks to [@NeilWJames](https://github.com/NeilWJames) for reporting it.
@@ -326,9 +333,5 @@ Numbers in brackets show the issue number in https://github.com/wp-document-revi
 * Security: REST term counts for document taxonomies included draft, pending and private documents, so anyone could see how many non-public documents carry each workflow state or custom document taxonomy term. They now count only published documents, unless the user can already see every document ([GHSA-vp9c-qx2m-x9r8](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-vp9c-qx2m-x9r8)). Thanks to Andrew Melek for reporting it.
 * A document URL with a malformed `revision` value, such as `?revision=abc`, now gets the normal not-found response instead of a server error. (#874) Thanks to Andrew Melek for reporting it.
 * The plugin now stops sending uploads to the document folder in the same place it marks a document upload as finished, so that redirect can't stay on for the rest of the request when its file-name step is skipped. (#862)
-
-= 5.8.1 =
-
-* Uploading a new version of a document now replaces the document's file in a few rare cases where it didn't, such as an image or audio file with an embedded title, or a site using the `document_internal_filename` filter. Before, the upload appeared to succeed, but clicking Update put the document back on its old file. If a document got stuck on its old file, upload the new version again. (#858) Thanks to [@cvladan](https://profiles.wordpress.org/cvladan/) for reporting it.
 
 For complete changelog, see [GitHub](https://wp-document-revisions.github.io/wp-document-revisions/changelog/)
