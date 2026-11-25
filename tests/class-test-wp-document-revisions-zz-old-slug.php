@@ -154,8 +154,7 @@ class Test_WP_Document_Revisions_Zz_Old_Slug extends WP_UnitTestCase {
 	 * Core's old-slug redirect sends the old document URL to the new one.
 	 */
 	public function test_old_url_redirects() {
-		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+		$this->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		$doc     = $this->create_document( 'redirect-original' );
 		$old_url = get_permalink( $doc );
@@ -173,7 +172,7 @@ class Test_WP_Document_Revisions_Zz_Old_Slug extends WP_UnitTestCase {
 		wp_old_slug_redirect();
 		remove_filter( 'old_slug_redirect_url', $capture );
 		$expected = get_permalink( $doc );
-		$wp_rewrite->set_permalink_structure( '' );
+		$this->set_permalink_structure( '' );
 
 		self::assertSame( $expected, $redirect );
 	}
