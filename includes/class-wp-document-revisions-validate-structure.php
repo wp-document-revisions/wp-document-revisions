@@ -146,6 +146,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fixable  Yes
  * Cause    Document files have been uploaded without the document post being saved. Or multiple uploads have been done before a document save.
  *          Attachments identified as media (see code 17) are never included.
+ *          A newer orphan that looks like a document upload is reported as code 16 instead.
+ *
+ * Code     15
+ * Type     Warning
+ * Message  Some of this document's files (current or earlier versions) are stored under their original file names.
+ * Fixable  Yes
+ * Cause    Document files (current or earlier versions) are not stored under an MD5-format (hashed) name, so anyone who can guess
+ *          their address may download them directly. Typically files loaded before hashing applied, or by a filter or another process.
+ *          The fix renames each such file (and its attachment record) to a hashed name in the document directory.
+ *          Only tested when the document_validate_md5 filter is true (default). Checked before the orphan tests (codes 16 and 14).
+ *
+ * Code     16
+ * Type     Warning
+ * Message  A newer file was uploaded for this document but never linked to it, so the document still serves the older file.
+ * Fixable  Yes
+ * Cause    An orphan attachment (not referenced by the document or any of its revisions) has a hashed (document file) name and an
+ *          id higher than the current document file. So it was uploaded later, but the document was not updated to use it
+ *          (e.g. #858, where the attachment title did not match its slug).
+ *          The fix links the newest such file to the document, as for code 4. Any remaining orphans are then reported as code 14.
+ *          It is part of the orphan check, so it is tested last, only when the document_check_orphans filter is true (default),
+ *          and only considers attachments that the orphan check would report as code 14.
  *
  * Code     17
  * Type     Warning
@@ -327,7 +348,22 @@ class WP_Document_Revisions_Validate_Structure {
 		$params = $request->get_params();
 		$id     = $params['id'];
 		$parm   = $params['parm'];
-		if ( 4 === $params['code'] ) {
+		if ( 16 === $params['code'] ) {
+			// A newer upload was never linked; link it as code 4 does, once it's still that upload.
+			$current = (int) $wpdr->extract_document_id( (string) get_post_field( 'post_content', $id, 'db' ) );
+			$orphans = $current ? self::identify_orphans( $current, $id ) : false;
+			if ( ! $orphans || self::newest_unlinked_upload( $orphans, $current ) !== $parm ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
+			if ( get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
+			// The current file is about to be replaced. Unless a revision already links it, keep the
+			// document as it is now as a revision, or the current file would itself become an orphan.
+			self::preserve_current_file( $id, $current );
+		}
+
+		if ( 4 === $params['code'] || 16 === $params['code'] ) {
 			// Attachment exists but post_content does not contain it.
 			// revalidate input values.
 			if ( get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
@@ -627,7 +663,7 @@ class WP_Document_Revisions_Validate_Structure {
 	 *
 	 * @var int[]
 	 */
-	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17 );
+	const FIXABLE_CODES = array( 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17 );
 
 	/**
 	 * Checks every document and returns the problems found.
@@ -1277,6 +1313,24 @@ class WP_Document_Revisions_Validate_Structure {
 	private static function check_for_orphans( int $attach_id, int $doc_id ): array|false {
 		// identify any orphans.
 		$orphans = self::identify_orphans( $attach_id, $doc_id );
+
+		// A newer document file that nothing links to is most likely an upload that never got
+		// linked (#858), so offer to link it rather than to delete it with the other orphans.
+		$unlinked = $orphans ? self::newest_unlinked_upload( $orphans, $attach_id ) : 0;
+		if ( $unlinked ) {
+			$current_date = get_date_from_gmt( get_post_field( 'post_modified_gmt', $attach_id, 'db' ) );
+			$newer_date   = get_date_from_gmt( get_post_field( 'post_modified_gmt', $unlinked, 'db' ) );
+			return array(
+				'code'  => 16,
+				'error' => 0,
+				'msg'   => __( 'A newer file was uploaded for this document but never linked to it, so the document still serves the older file', 'wp-document-revisions' ),
+				// translators: %1$s is the current file's last modified date, %2$s is the newer file's last modified date.
+				'msg2'  => sprintf( __( '[Modified Date: Current file - %1$s, Newer file - %2$s]', 'wp-document-revisions' ), $current_date, $newer_date ),
+				'fix'   => 1,
+				'parm'  => $unlinked,
+			);
+		}
+
 		if ( $orphans ) {
 			return array(
 				'code'  => 14,
@@ -1288,6 +1342,73 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Makes sure a revision of the document links its current file, creating one from the
+	 * document as it is now if none does.
+	 *
+	 * Used before the document is relinked to another file (code 16), so that the file it
+	 * replaces stays in the revision history instead of becoming an orphan.
+	 *
+	 * @param int $doc_id    document ID.
+	 * @param int $attach_id the document's current attachment id.
+	 * @return void
+	 *
+	 * @global $wpdb Database object.
+	 */
+	private static function preserve_current_file( int $doc_id, int $attach_id ): void {
+		global $wpdb;
+		$wpdr = self::$parent;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$revns = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT post_content
+				 FROM {$wpdb->posts}
+				 WHERE post_type = 'revision'
+				 AND post_parent = %d
+				",
+				$doc_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+
+		foreach ( $revns as $revn ) {
+			if ( (int) $wpdr->extract_document_id( (string) $revn ) === $attach_id ) {
+				// already in the revision history.
+				return;
+			}
+		}
+
+		// Save the document as it is now (dated at its last modification) as a revision. This follows
+		// the site's revision settings, so nothing is saved if document revisions are turned off.
+		clean_post_cache( $doc_id );
+		wp_save_post_revision( $doc_id );
+		wp_cache_delete( $doc_id, 'document_revisions' );
+	}
+
+	/**
+	 * Finds the newest orphan stored as a document file (hashed name) that is newer than the
+	 * document's current file.
+	 *
+	 * A restored older version leaves newer files referenced by revisions, so they are never
+	 * orphans and don't count.
+	 *
+	 * @param array<int|string, int|string> $orphans   orphan attachment ids.
+	 * @param int                           $attach_id the document's current attachment id.
+	 * @return int the attachment id, or 0 if there is none.
+	 */
+	private static function newest_unlinked_upload( array $orphans, int $attach_id ): int {
+		$newest = 0;
+		foreach ( $orphans as $orphan ) {
+			$orphan = (int) $orphan;
+			$file   = (string) get_post_meta( $orphan, '_wp_attached_file', true );
+			if ( $orphan > max( $newest, $attach_id ) && preg_match( '/^[0-9a-f]{32}\./', wp_basename( $file ) ) ) {
+				$newest = $orphan;
+			}
+		}
+		return $newest;
 	}
 
 	/**
