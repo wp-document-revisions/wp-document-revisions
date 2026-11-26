@@ -2,6 +2,11 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.8.5
+
+* Ready for WordPress 7.2. On sites that edit documents in the block editor (turned on with the `document_use_block_editor` filter), WordPress 7.2 would have saved an image uploaded as a document's file, such as a JPG or PNG uploaded in Chrome, to the public uploads folder under its original name. Document screens now keep using the classic upload path, so the file gets the usual protected, hashed name. Sites using the classic editor, the default, and non-image files like PDFs weren't affected. (#925)
+* Tested up to WordPress 7.2. (#925)
+
 ### 5.8.4
 
 * Email notifications can now be turned on on multisite. The notification settings on each site's Media screen saved, but the plugin read them from the network instead, so they never took effect and the checkboxes appeared to reset. Settings a site saved before this release take effect once you update, so emails may start going out. (#906, #917) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
