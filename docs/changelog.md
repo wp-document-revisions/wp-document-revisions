@@ -2,6 +2,25 @@
 
 Numbers in brackets show the issue number in https://github.com/wp-document-revisions/wp-document-revisions/issues/
 
+### 5.8.5
+
+* Ready for WordPress 7.2. On sites that edit documents in the block editor (turned on with the `document_use_block_editor` filter), WordPress 7.2 would have saved an image uploaded as a document's file, such as a JPG or PNG uploaded in Chrome, to the public uploads folder under its original name. Document screens now keep using the classic upload path, so the file gets the usual protected, hashed name. Sites using the classic editor, the default, and non-image files like PDFs weren't affected. (#925)
+* Tested up to WordPress 7.2. (#925)
+
+### 5.8.4
+
+* Email notifications can now be turned on on multisite. The notification settings on each site's Media screen saved, but the plugin read them from the network instead, so they never took effect and the checkboxes appeared to reset. Settings a site saved before this release take effect once you update, so emails may start going out. (#906, #917) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* Images uploaded as a document's featured image or into its description are no longer attached to the document as if they were document files. Before, Validate Structure could list them as inaccessible document files and offer to delete them. It now finds images attached this way in the past and offers to detach them instead, which leaves the images in the Media Library. Developers can adjust this with the new `document_keep_media_parent` and `document_validate_doc_type` filters. (#900) Thanks to [@NeilWJames](https://github.com/NeilWJames).
+* Deleting the plugin on multisite now removes its settings and document capabilities from every site, not just the main site. (#919) Thanks to [@switchcasestudio](https://github.com/switchcasestudio).
+* The WordPress.org plugin page now has an FAQ tab. Its answers were checked against the current plugin, and it explains how to email readers when a document is published with the Email Notice add-on. (#904, #905, #907)
+
+### 5.8.3
+
+* Activating the plugin for the first time no longer shows a false "You do not have the edit_documents capability" warning. On WordPress Playground, including the Live Preview on WordPress.org, the plugin activates on every visit, so every session showed it. (#887, #890) Thanks to [@NeilWJames](https://github.com/NeilWJames) for reporting it.
+* When the server can't read a document's file, for example after a PHP upgrade changes the account PHP runs as, opening the document now shows a message explaining that the file isn't readable, instead of a blank error page. (#885, #889)
+* The plugin no longer bundles its Norwegian (Bokmål), Polish and Turkish translations. WordPress now installs these from translate.wordpress.org language packs, so nothing changes on sites using those languages. (#894)
+* Code examples on the WordPress.org plugin page now display as code. (#901)
+
 ### 5.8.2
 
 * Security: WordPress's embed lookup (oEmbed) gave out the stored file name of a document's files. Document files sit in the uploads folder by default, so on sites that don't block that folder, anyone could use the name to download the file of a password-protected document, or any earlier version of a published one. The embed lookup now refuses document files, and visitors who can't edit a document see the document's title instead of a file's stored name ([GHSA-5452-pc3q-85f6](https://github.com/wp-document-revisions/wp-document-revisions/security/advisories/GHSA-5452-pc3q-85f6)).

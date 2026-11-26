@@ -46,7 +46,9 @@
 - Recently Revised Documents Widget, shortcodes, and templating functions for front-end integration
 - Opt-in email notifications when a document changes workflow state or gains a new revision, with a configurable recipient list (see [Document Notifications](notifications.md))
 
-### Features Available via the [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook)
+### Features Available via the Code Cookbook
+
+The [Code Cookbook](https://github.com/wp-document-revisions/wp-document-revisions-Code-Cookbook) has sample code for these:
 
 - **Audit Trail** - creates check in / check out audit trail for all documents
 - **Taxonomy-based Permissions** - allows setting user-level permissions based on a custom taxonomy such as department
