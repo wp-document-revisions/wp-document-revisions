@@ -63,4 +63,9 @@ tests_add_filter( 'document_revisions_serve_file_headers', '_remove_headers', 10
 tests_add_filter( 'wp_die_xml_handler', '_wpdr_die_handler_filter' );
 
 require $_tests_dir . '/includes/bootstrap.php';
+
+// Grant the document capabilities before any test class runs. From WordPress 7.2
+// the test library restores the options table (where role capabilities live) to
+// this starting state after every class, so caps a class adds don't carry over.
+$GLOBALS['wpdr']->add_caps();
 require __DIR__ . '/class-test-wp-document-revisions-common.php';

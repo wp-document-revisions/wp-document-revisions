@@ -36,7 +36,7 @@ class WP_Document_Revisions_Notifications {
 		 *
 		 * @param bool $enabled whether notifications are enabled.
 		 */
-		return (bool) apply_filters( 'document_notify_enabled', (bool) get_site_option( 'document_notify_enabled', false ) );
+		return (bool) apply_filters( 'document_notify_enabled', (bool) get_option( 'document_notify_enabled', false ) );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class WP_Document_Revisions_Notifications {
 		$emails = array();
 
 		// site-wide list.
-		$raw = (string) get_site_option( 'document_notify_recipients', '' );
+		$raw = (string) get_option( 'document_notify_recipients', '' );
 		foreach ( preg_split( '/[\s,]+/', $raw ) as $addr ) {
 			$addr = sanitize_email( trim( (string) $addr ) );
 			if ( is_email( $addr ) ) {
@@ -121,7 +121,7 @@ class WP_Document_Revisions_Notifications {
 		 *
 		 * @param bool $enabled whether to notify on state changes.
 		 */
-		if ( ! apply_filters( 'document_notify_on_state_change', (bool) get_site_option( 'document_notify_on_state_change', true ) ) ) {
+		if ( ! apply_filters( 'document_notify_on_state_change', (bool) get_option( 'document_notify_on_state_change', true ) ) ) {
 			return;
 		}
 
@@ -177,7 +177,7 @@ class WP_Document_Revisions_Notifications {
 		 *
 		 * @param bool $enabled whether to notify on new revisions.
 		 */
-		if ( ! apply_filters( 'document_notify_on_new_revision', (bool) get_site_option( 'document_notify_on_new_revision', false ) ) ) {
+		if ( ! apply_filters( 'document_notify_on_new_revision', (bool) get_option( 'document_notify_on_new_revision', false ) ) ) {
 			return;
 		}
 

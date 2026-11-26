@@ -24,11 +24,24 @@ $options = array(
 	'document_notify_on_new_revision',
 );
 
+// On multisite, each site saves its own options and feed keys.
+$site_ids = is_multisite() ? get_sites(
+	array(
+		'fields' => 'ids',
+		'number' => 0,
+	)
+) : array();
+
 // Remove plugin options.
-foreach ( $options as $option ) {
+$site_options = array_merge( $options, array( 'wpdr_db_version' ) );
+foreach ( $site_options as $option ) {
 	delete_option( $option );
 }
-delete_option( 'wpdr_db_version' );
+foreach ( $site_ids as $site_id ) {
+	foreach ( $site_options as $option ) {
+		delete_blog_option( $site_id, $option );
+	}
+}
 
 // Remove site options (multisite).
 foreach ( $options as $option ) {
@@ -40,15 +53,8 @@ foreach ( $options as $option ) {
 // multisite). The unprefixed key is also removed.
 global $wpdb;
 $feed_key_prefixes = array( '', $wpdb->get_blog_prefix() );
-if ( is_multisite() ) {
-	foreach ( get_sites(
-		array(
-			'fields' => 'ids',
-			'number' => 0,
-		)
-	) as $site_id ) {
-		$feed_key_prefixes[] = $wpdb->get_blog_prefix( $site_id );
-	}
+foreach ( $site_ids as $site_id ) {
+	$feed_key_prefixes[] = $wpdb->get_blog_prefix( $site_id );
 }
 foreach ( array_unique( $feed_key_prefixes ) as $feed_key_prefix ) {
 	delete_metadata( 'user', 0, $feed_key_prefix . 'document_revisions_feed_key', '', true );
@@ -77,11 +83,20 @@ $caps = array(
 	'override_document_lock',
 );
 
-foreach ( $wp_roles->role_names as $role_name => $label ) {
-	$role_obj = $wp_roles->get_role( $role_name );
-	if ( $role_obj ) {
-		foreach ( $caps as $cap ) {
-			$role_obj->remove_cap( $cap );
+// Roles are saved per site, and switch_to_blog() loads each site's roles into $wp_roles.
+foreach ( $site_ids ? $site_ids : array( 0 ) as $site_id ) {
+	if ( $site_id ) {
+		switch_to_blog( $site_id );
+	}
+	foreach ( $wp_roles->role_names as $role_name => $label ) {
+		$role_obj = $wp_roles->get_role( $role_name );
+		if ( $role_obj ) {
+			foreach ( $caps as $cap ) {
+				$role_obj->remove_cap( $cap );
+			}
 		}
+	}
+	if ( $site_id ) {
+		restore_current_blog();
 	}
 }

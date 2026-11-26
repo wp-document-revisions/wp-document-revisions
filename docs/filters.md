@@ -109,6 +109,12 @@ In: trait-wp-document-revisions-rewrites.php
 
 Filters the home_url() for WPML and translated documents. Since 5.6.0 it also applies to draft and pending document links (`?post_type=document&p=N`).
 
+## Filter document_keep_media_parent
+
+In: trait-wp-document-revisions-file-handler.php
+
+Filters whether a file uploaded on a document, that is not a document file, is attached to it.
+
 ## Filter document_internal_filename
 
 In: trait-wp-document-revisions-file-handler.php
@@ -413,7 +419,13 @@ Filter whether WP_FileSystem used to serve document (or PHP readfile). Irrelevan
 
 In: class-wp-document-revisions-validate-structure.php
 
-Filter whether to validate the document structure for a documrnt.
+Filter whether to validate the document structure for a document.
+
+## Filter document_validate_doc_type
+
+In: class-wp-document-revisions-validate-structure.php
+
+Filters the document filetype to see if its children attachments should be considered document files.
 
 ## Filter document_validate_md5
 
@@ -539,19 +551,19 @@ Hard timeout, in seconds, for a single summary generation call. Default 60. Appl
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Master switch for document email notifications. Receives the boolean value of the `document_notify_enabled` site option. Return true to force-enable or false to force-disable notifications regardless of the setting.
+Master switch for document email notifications. Receives the boolean value of the per-site `document_notify_enabled` option. Return true to force-enable or false to force-disable notifications regardless of the setting.
 
 ## Filter document_notify_on_state_change
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Whether to notify on workflow-state changes. Receives the boolean value of the `document_notify_on_state_change` site option (default true). Return false to suppress state-change notifications.
+Whether to notify on workflow-state changes. Receives the boolean value of the per-site `document_notify_on_state_change` option (default true). Return false to suppress state-change notifications.
 
 ## Filter document_notify_on_new_revision
 
 In: includes/class-wp-document-revisions-notifications.php
 
-Whether to notify when a new revision is saved. Receives the boolean value of the `document_notify_on_new_revision` site option (default false). Return true to enable new-revision notifications.
+Whether to notify when a new revision is saved. Receives the boolean value of the per-site `document_notify_on_new_revision` option (default false). Return true to enable new-revision notifications.
 
 ## Filter document_notification_recipients
 

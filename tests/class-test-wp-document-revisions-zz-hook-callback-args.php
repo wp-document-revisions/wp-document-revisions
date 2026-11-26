@@ -39,6 +39,19 @@ class Test_WP_Document_Revisions_Zz_Hook_Callback_Args extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Start from plain permalinks.
+	 *
+	 * Earlier classes set a pretty structure on $wp_rewrite. From WordPress 7.2
+	 * the test library restores the permalink_structure option between classes
+	 * but not $wp_rewrite, so get_permalink() would build a link go_to() can't
+	 * resolve.
+	 */
+	public function set_up() {
+		parent::set_up();
+		$this->set_permalink_structure( '' );
+	}
+
+	/**
 	 * Point the global post and main query at the document, as on its single page.
 	 */
 	private function go_to_document() {
