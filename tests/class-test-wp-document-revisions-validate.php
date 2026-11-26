@@ -342,10 +342,12 @@ class Test_WP_Document_Revisions_Validate extends Test_Common_WPDR {
 		$output = ob_get_clean();
 		self::assertGreaterThan( 0, substr_count( $output, $needle ), 'media attachment reported' );
 
-		$needle = 'additional document files that are inaccessible';
-
-		// Add a file reference with a hashed name proves it's a document file, so it's an orphan (code 14), not media (code 17).
+		// Add a file reference with a hashed name proves it's a document file, so it's an orphan, not media (code 17).
+		// Being newer than the document's current file, it's reported as an upload that never got linked (code 16)
+		// rather than as a plain orphan (code 14). Both are part of the orphan check.
 		update_post_meta( $orphan_id, '_wp_attached_file', gmdate( 'Y/m/' ) . md5( 'orphan' ) . '.txt' );
+
+		$needle = 'A newer file was uploaded for this document but never linked to it';
 
 		// With orphan checking on (default) the validator reports the orphan.
 		ob_start();
