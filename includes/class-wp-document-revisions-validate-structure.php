@@ -1381,13 +1381,11 @@ class WP_Document_Revisions_Validate_Structure {
 			}
 		}
 
-		// Copy the document as it is now (dated at its last modification) into a revision.
+		// Save the document as it is now (dated at its last modification) as a revision. This follows
+		// the site's revision settings, so nothing is saved if document revisions are turned off.
 		clean_post_cache( $doc_id );
-		$document = get_post( $doc_id );
-		if ( $document ) {
-			_wp_put_post_revision( $document );
-			wp_cache_delete( $doc_id, 'document_revisions' );
-		}
+		wp_save_post_revision( $doc_id );
+		wp_cache_delete( $doc_id, 'document_revisions' );
 	}
 
 	/**

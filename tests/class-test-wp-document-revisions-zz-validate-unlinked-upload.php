@@ -251,6 +251,35 @@ class Test_WP_Document_Revisions_Zz_Validate_Unlinked_Upload extends WP_UnitTest
 	}
 
 	/**
+	 * With document revisions turned off, fixing code 16 still links the newer file but saves
+	 * no revision, so the replaced file is then a plain orphan (code 14).
+	 */
+	public function test_fix_saves_no_revision_when_revisions_are_off() {
+		global $wpdb, $wpdr;
+		list( $doc, $old ) = $this->document();
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->posts,
+			array(
+				'post_type'   => 'revision',
+				'post_parent' => $doc,
+			)
+		);
+		clean_post_cache( $doc );
+		wp_cache_delete( $doc, 'document_revisions' );
+		$new = $this->child( $doc, '2026/10/' . md5( 'second' ) . '.pdf' );
+
+		add_filter( 'document_revisions_limit', '__return_zero' );
+		$fixed = WP_Document_Revisions_Validate_Structure::fix_problem( $doc, 16, $new );
+		remove_filter( 'document_revisions_limit', '__return_zero' );
+
+		self::assertTrue( $fixed );
+		self::assertSame( $new, (int) $wpdr->extract_document_id( get_post_field( 'post_content', $doc, 'db' ) ) );
+		self::assertCount( 0, $this->revisions( $doc ) );
+		$problem = $this->check( $new, $doc );
+		self::assertSame( 14, $problem['code'] );
+	}
+
+	/**
 	 * When a revision already links the current file, fixing code 16 adds no revision.
 	 */
 	public function test_fix_adds_no_revision_when_current_file_is_kept() {
