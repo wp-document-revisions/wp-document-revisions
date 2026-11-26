@@ -109,6 +109,7 @@ class WP_Document_Revisions_Admin {
 		add_action( 'admin_head', array( $this, 'check_upload_files' ) );
 		// Although the Post Type Supports Editor, don't use block editor.
 		add_filter( 'use_block_editor_for_post', array( $this, 'no_use_block_editor' ), 10, 2 );
+		add_filter( 'wp_client_side_media_processing_enabled', array( $this, 'no_client_side_media_for_documents' ) );
 		add_action( 'edit_form_after_title', array( $this, 'prepare_editor' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'document_editor_setting' ), 10, 2 );
 		add_filter( 'tiny_mce_before_init', array( $this, 'modify_content_class' ) );

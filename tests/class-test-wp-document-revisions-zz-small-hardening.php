@@ -195,12 +195,11 @@ class Test_WP_Document_Revisions_Zz_Small_Hardening extends WP_UnitTestCase {
 	 * Anonymous visitors aren't sent to a private document's new slug.
 	 */
 	public function test_old_slug_redirect_hides_private_document() {
-		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+		$this->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		list( , $old_url ) = $this->document_with_old_slug( 'private' );
 		$redirect          = $this->old_slug_redirect( $old_url, 0 );
-		$wp_rewrite->set_permalink_structure( '' );
+		$this->set_permalink_structure( '' );
 
 		self::assertNull( $redirect );
 	}
@@ -209,13 +208,12 @@ class Test_WP_Document_Revisions_Zz_Small_Hardening extends WP_UnitTestCase {
 	 * Users who can read the private document are still redirected.
 	 */
 	public function test_old_slug_redirect_private_document_for_reader() {
-		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+		$this->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		list( $doc, $old_url ) = $this->document_with_old_slug( 'private' );
 		$redirect              = $this->old_slug_redirect( $old_url, self::$editor );
 		$expected              = get_permalink( $doc );
-		$wp_rewrite->set_permalink_structure( '' );
+		$this->set_permalink_structure( '' );
 
 		self::assertSame( $expected, $redirect );
 	}
@@ -224,13 +222,12 @@ class Test_WP_Document_Revisions_Zz_Small_Hardening extends WP_UnitTestCase {
 	 * Anonymous visitors are still redirected to a published document's new slug.
 	 */
 	public function test_old_slug_redirect_published_document_for_anonymous() {
-		global $wp_rewrite;
-		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
+		$this->set_permalink_structure( '/%year%/%monthnum%/%postname%/' );
 
 		list( $doc, $old_url ) = $this->document_with_old_slug( 'publish' );
 		$redirect              = $this->old_slug_redirect( $old_url, 0 );
 		$expected              = get_permalink( $doc );
-		$wp_rewrite->set_permalink_structure( '' );
+		$this->set_permalink_structure( '' );
 
 		self::assertSame( $expected, $redirect );
 	}

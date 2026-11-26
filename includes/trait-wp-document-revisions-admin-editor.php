@@ -841,6 +841,34 @@ trait WP_Document_Revisions_Admin_Editor {
 	}
 
 	/**
+	 * Keep document edit screens on the classic upload path.
+	 *
+	 * WordPress 7.2 sends media-modal image uploads on cross-origin-isolated
+	 * screens (including the block editor) through the client-side pipeline,
+	 * which posts to /wp/v2/media without the `post_id` field the plugin uses
+	 * to recognize a document upload. Those files would be stored in the public
+	 * uploads directory under their original names. Turning the pipeline off
+	 * here leaves the screen un-isolated, so uploads go through async-upload.php.
+	 *
+	 * @since 5.8.5
+	 *
+	 * @param bool $enabled Whether client-side media processing is enabled.
+	 * @return bool
+	 */
+	public function no_client_side_media_for_documents( bool $enabled ): bool {
+		if ( ! $enabled || ! function_exists( 'get_current_screen' ) ) {
+			return $enabled;
+		}
+
+		$screen = get_current_screen();
+		if ( $screen && 'document' === $screen->post_type ) {
+			return false;
+		}
+
+		return $enabled;
+	}
+
+	/**
 	 * Invoke the editor for a description to be entered.
 	 *
 	 * @ since 3.4.0
