@@ -192,6 +192,91 @@ class Test_WP_Document_Revisions_Zz_Validate_Unlinked_Upload extends WP_UnitTest
 	}
 
 	/**
+	 * The revisions of a document, newest first.
+	 *
+	 * @param int $doc_id document ID.
+	 * @return WP_Post[]
+	 */
+	private function revisions( $doc_id ) {
+		return array_values(
+			wp_get_post_revisions(
+				$doc_id,
+				array(
+					'order'            => 'DESC',
+					'suppress_filters' => true,
+				)
+			)
+		);
+	}
+
+	/**
+	 * When no revision links the current file, fixing code 16 first saves the document as it
+	 * is as a revision, so the replaced file stays in the history rather than becoming an orphan.
+	 */
+	public function test_fix_saves_current_file_as_revision() {
+		global $wpdb, $wpdr;
+		list( $doc, $old ) = $this->document();
+
+		// Remove every revision, so nothing links the current file but the document itself.
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->posts,
+			array(
+				'post_type'   => 'revision',
+				'post_parent' => $doc,
+			)
+		);
+		clean_post_cache( $doc );
+		wp_cache_delete( $doc, 'document_revisions' );
+		self::assertCount( 0, $this->revisions( $doc ) );
+
+		$new         = $this->child( $doc, '2026/10/' . md5( 'second' ) . '.pdf' );
+		$old_content = get_post_field( 'post_content', $doc, 'db' );
+		$old_title   = get_post_field( 'post_title', $doc, 'db' );
+
+		self::assertSame( 16, $this->check( $old, $doc )['code'] );
+		self::assertTrue( WP_Document_Revisions_Validate_Structure::fix_problem( $doc, 16, $new ) );
+
+		// The document now serves the new file...
+		self::assertSame( $new, (int) $wpdr->extract_document_id( get_post_field( 'post_content', $doc, 'db' ) ) );
+
+		// ...and a single revision holds the document as it was, linking the old file.
+		$revisions = $this->revisions( $doc );
+		self::assertCount( 1, $revisions );
+		self::assertSame( $old_content, $revisions[0]->post_content );
+		self::assertSame( $old_title, $revisions[0]->post_title );
+		self::assertSame( $old, (int) $wpdr->extract_document_id( $revisions[0]->post_content ) );
+
+		// So the old file is not an orphan, and nothing is left to report.
+		self::assertFalse( $this->check( $new, $doc ) );
+	}
+
+	/**
+	 * When a revision already links the current file, fixing code 16 adds no revision.
+	 */
+	public function test_fix_adds_no_revision_when_current_file_is_kept() {
+		list( $doc, $old ) = $this->document();
+		$new               = $this->child( $doc, '2026/10/' . md5( 'second' ) . '.pdf' );
+		$before            = wp_list_pluck( $this->revisions( $doc ), 'ID' );
+
+		self::assertTrue( WP_Document_Revisions_Validate_Structure::fix_problem( $doc, 16, $new ) );
+
+		self::assertSame( $before, wp_list_pluck( $this->revisions( $doc ), 'ID' ) );
+		self::assertFalse( $this->check( $new, $doc ) );
+	}
+
+	/**
+	 * A rejected fix adds no revision.
+	 */
+	public function test_rejected_fix_adds_no_revision() {
+		list( $doc, $old ) = $this->document();
+		$this->child( $doc, '2026/10/' . md5( 'second' ) . '.pdf' );
+		$before = wp_list_pluck( $this->revisions( $doc ), 'ID' );
+
+		self::assertWPError( WP_Document_Revisions_Validate_Structure::fix_problem( $doc, 16, $old ) );
+		self::assertSame( $before, wp_list_pluck( $this->revisions( $doc ), 'ID' ) );
+	}
+
+	/**
 	 * The fix only links the attachment the check would offer.
 	 */
 	public function test_fix_rejects_other_attachments() {

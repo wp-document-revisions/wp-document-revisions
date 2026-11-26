@@ -355,6 +355,12 @@ class WP_Document_Revisions_Validate_Structure {
 			if ( ! $orphans || self::newest_unlinked_upload( $orphans, $current ) !== $parm ) {
 				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
 			}
+			if ( get_post_field( 'post_parent', $parm, 'db' ) !== $id ) {
+				return new WP_Error( 'inconsistent_parms', __( 'Inconsistent data sent to Interface', 'wp-document-revisions' ), array( 'status' => 400 ) );
+			}
+			// The current file is about to be replaced. Unless a revision already links it, keep the
+			// document as it is now as a revision, or the current file would itself become an orphan.
+			self::preserve_current_file( $id, $current );
 		}
 
 		if ( 4 === $params['code'] || 16 === $params['code'] ) {
@@ -1336,6 +1342,52 @@ class WP_Document_Revisions_Validate_Structure {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Makes sure a revision of the document links its current file, creating one from the
+	 * document as it is now if none does.
+	 *
+	 * Used before the document is relinked to another file (code 16), so that the file it
+	 * replaces stays in the revision history instead of becoming an orphan.
+	 *
+	 * @param int $doc_id    document ID.
+	 * @param int $attach_id the document's current attachment id.
+	 * @return void
+	 *
+	 * @global $wpdb Database object.
+	 */
+	private static function preserve_current_file( int $doc_id, int $attach_id ): void {
+		global $wpdb;
+		$wpdr = self::$parent;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+		$revns = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT post_content
+				 FROM {$wpdb->posts}
+				 WHERE post_type = 'revision'
+				 AND post_parent = %d
+				",
+				$doc_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery
+
+		foreach ( $revns as $revn ) {
+			if ( (int) $wpdr->extract_document_id( (string) $revn ) === $attach_id ) {
+				// already in the revision history.
+				return;
+			}
+		}
+
+		// Copy the document as it is now (dated at its last modification) into a revision.
+		clean_post_cache( $doc_id );
+		$document = get_post( $doc_id );
+		if ( $document ) {
+			_wp_put_post_revision( $document );
+			wp_cache_delete( $doc_id, 'document_revisions' );
+		}
 	}
 
 	/**
